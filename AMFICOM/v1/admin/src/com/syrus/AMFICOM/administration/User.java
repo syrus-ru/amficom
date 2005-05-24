@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.20 2005/05/23 18:45:12 bass Exp $
+ * $Id: User.java,v 1.21 2005/05/24 13:24:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/23 18:45:12 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -49,7 +50,7 @@ public final class User extends StorableObject {
 	public User(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
+		UserDatabase database = (UserDatabase) DatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

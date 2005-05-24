@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.31 2005/05/23 18:45:16 bass Exp $
+ * $Id: SchemeElement.java,v 1.32 2005/05/24 13:25:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/23 18:45:16 $
+ * @version $Revision: 1.32 $, $Date: 2005/05/24 13:25:02 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -86,7 +87,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	SchemeElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeElementDatabase = (SchemeElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
+		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
 		try {
 			this.schemeElementDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -142,7 +143,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		assert parentScheme == null || parentSchemeElement == null: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
-		this.schemeElementDatabase = (SchemeElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
+		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
 	}
 
 	/**
@@ -150,7 +151,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @throws CreateObjectException
 	 */
 	SchemeElement(final SchemeElement_Transferable transferable) throws CreateObjectException {
-		this.schemeElementDatabase = (SchemeElementDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
+		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

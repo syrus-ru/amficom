@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.55 2005/05/23 18:45:17 bass Exp $
+ * $Id: PhysicalLink.java,v 1.56 2005/05/24 13:25:03 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -53,7 +54,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/05/23 18:45:17 $
+ * @version $Revision: 1.56 $, $Date: 2005/05/24 13:25:03 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -113,7 +114,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	PhysicalLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
+		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

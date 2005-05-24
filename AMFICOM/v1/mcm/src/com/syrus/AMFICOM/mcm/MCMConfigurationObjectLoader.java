@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.37 2005/05/23 18:45:11 bass Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.38 2005/05/24 13:24:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mcm;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/23 18:45:11 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -49,7 +49,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	/* Load multiple objects*/
 
 	public Set loadMeasurementPortTypes(Set ids) throws RetrieveObjectException {
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -96,7 +96,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 	public Set loadMeasurementPorts(Set ids) throws RetrieveObjectException {
-		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
+		MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -141,7 +141,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	}
 
 	public Set loadKISs(Set ids) throws RetrieveObjectException {
-		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
+		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -186,7 +186,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	}
 
 	public Set loadMonitoredElements(Set ids) throws RetrieveObjectException {
-		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
+		MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -236,7 +236,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	/* Load multiple objects but ids*/
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
+		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);

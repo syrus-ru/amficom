@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.7 2005/05/23 18:45:10 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.8 2005/05/24 13:24:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.HashSet;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -27,7 +28,6 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Test;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/23 18:45:10 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/24 13:24:56 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -65,7 +65,7 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 						throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
 					}
 				}
-				ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
+				ResultDatabase resultDatabase = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
 				try {
 					resultDatabase.insert(results);
 				}
@@ -108,7 +108,7 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 				objects.add(object);
 		}
 
-		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		TestDatabase testDatabase = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			testDatabase.update(objects, modifierId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);

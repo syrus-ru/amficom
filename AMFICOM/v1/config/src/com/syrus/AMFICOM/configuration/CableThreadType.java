@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.34 2005/05/23 18:45:19 bass Exp $
+ * $Id: CableThreadType.java,v 1.35 2005/05/24 13:25:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.34 $, $Date: 2005/05/23 18:45:19 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/24 13:25:04 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -56,7 +57,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	public CableThreadType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.16 2005/05/23 18:45:10 bass Exp $
+ * $Id: ARServerImpl.java,v 1.17 2005/05/24 13:24:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.arserver.corba.ARServerOperations;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -39,7 +40,6 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceDatabase;
-import com.syrus.AMFICOM.resource.ResourceDatabaseContext;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/23 18:45:10 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/24 13:24:56 $
  * @author $Author: bass $
  * @module arserver_v1
  */
@@ -102,7 +102,7 @@ public final class ARServerImpl extends ServerCore implements ARServerOperations
 				StorableObjectPool.putStorableObject(abstractImageResource);
 				imageResources.add(abstractImageResource);
 			}
-			((ImageResourceDatabase) ResourceDatabaseContext.getDatabase(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE)).update(
+			((ImageResourceDatabase) DatabaseContext.getDatabase(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE)).update(
 					imageResources,
 					new Identifier(userId),
 					force

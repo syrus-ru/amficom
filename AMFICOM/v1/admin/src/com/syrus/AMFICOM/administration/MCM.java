@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.23 2005/05/23 18:45:11 bass Exp $
+ * $Id: MCM.java,v 1.24 2005/05/24 13:24:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/23 18:45:11 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -58,7 +59,7 @@ public class MCM extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
+		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

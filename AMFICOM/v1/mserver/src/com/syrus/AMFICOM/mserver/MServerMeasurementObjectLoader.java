@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.28 2005/05/24 12:39:21 bob Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.29 2005/05/24 13:24:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -33,7 +34,6 @@ import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/24 12:39:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/05/24 13:24:56 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
@@ -58,7 +58,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 
 	public Set loadMeasurements(Set ids) throws RetrieveObjectException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 
 		Identifier id;
@@ -109,7 +109,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	}
 
 	public Set loadAnalyses(Set ids) throws RetrieveObjectException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
+		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 
 		Identifier id;
@@ -159,7 +159,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	}
 
 	public Set loadEvaluations(Set ids) throws RetrieveObjectException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
+		EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 
 		Identifier id;
@@ -354,7 +354,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 
 		Identifier id;
@@ -430,7 +430,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	}
 
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
+		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 
 		Identifier id;
@@ -505,7 +505,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 		return objects;
 	}
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
+		EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 
 		Identifier id;

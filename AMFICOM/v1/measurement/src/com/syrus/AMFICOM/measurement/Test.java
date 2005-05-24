@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.118 2005/05/23 18:45:14 bass Exp $
+ * $Id: Test.java,v 1.119 2005/05/24 13:25:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.118 $, $Date: 2005/05/23 18:45:14 $
+ * @version $Revision: 1.119 $, $Date: 2005/05/24 13:25:00 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -90,7 +91,7 @@ public class Test extends StorableObject {
 		super(id);
 		this.measurementSetupIds = new HashSet();
 
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -389,7 +390,7 @@ public class Test extends StorableObject {
 	}
 
 	public java.util.Set retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return (java.util.Set) database.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
 		}
@@ -399,7 +400,7 @@ public class Test extends StorableObject {
 	}
 	
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 		}
@@ -409,7 +410,7 @@ public class Test extends StorableObject {
 	}
 
 	public int retrieveNumberOfResults(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return ((Integer) database.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
 		}

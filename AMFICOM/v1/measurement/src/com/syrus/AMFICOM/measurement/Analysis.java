@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.58 2005/05/23 18:45:15 bass Exp $
+ * $Id: Analysis.java,v 1.59 2005/05/24 13:25:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/05/23 18:45:15 $
+ * @version $Revision: 1.59 $, $Date: 2005/05/24 13:25:00 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -49,7 +50,7 @@ public class Analysis extends Action {
 	public Analysis(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
+		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

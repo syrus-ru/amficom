@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.6 2005/05/23 18:45:12 bass Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.7 2005/05/24 13:24:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/23 18:45:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/24 13:24:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -32,17 +33,17 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Load multiple objects*/
 
 	public Set loadEventTypes(Set ids) throws ApplicationException {
-		EventTypeDatabase database = (EventTypeDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
+		EventTypeDatabase database = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadEvents(Set ids) throws ApplicationException {
-		EventDatabase database = (EventDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
+		EventDatabase database = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadEventSources(Set ids) throws ApplicationException {
-		EventSourceDatabase database = (EventSourceDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
+		EventSourceDatabase database = (EventSourceDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
@@ -51,17 +52,17 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Load multiple objects but ids*/
 
 	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventTypeDatabase database = (EventTypeDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
+		EventTypeDatabase database = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventDatabase database = (EventDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
+		EventDatabase database = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventSourceDatabase database = (EventSourceDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
+		EventSourceDatabase database = (EventSourceDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
@@ -70,17 +71,17 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Save multiple objects*/
 
 	public void saveEventTypes(Set collection, boolean force) throws ApplicationException {
-		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
+		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		eventTypeDatabase.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvents(Set collection, boolean force) throws ApplicationException {
-		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
+		EventDatabase eventDatabase = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
 		eventDatabase.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEventSources(Set collection, boolean force) throws ApplicationException {
-		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
+		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		eventSourceDatabase.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -94,7 +95,7 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 
 		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 
-		StorableObjectDatabase database = EventDatabaseContext.getDatabase(entityCode);
+		StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 
 		if (database != null)
 			return database.refresh(storableObjects);
@@ -132,7 +133,7 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
 			final Short entityCode = (Short) entityCodeIterator.next();
 			final Set entityObjects = (Set) map.get(entityCode);
-			final StorableObjectDatabase storableObjectDatabase = EventDatabaseContext.getDatabase(entityCode);
+			final StorableObjectDatabase storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);
 		}

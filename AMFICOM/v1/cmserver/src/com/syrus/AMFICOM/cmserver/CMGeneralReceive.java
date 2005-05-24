@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.21 2005/05/23 18:45:13 bass Exp $
+ * $Id: CMGeneralReceive.java,v 1.22 2005/05/24 13:24:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/23 18:45:13 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/24 13:24:59 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -72,7 +72,7 @@ public abstract class CMGeneralReceive extends ServerCore implements CMServerOpe
 				objects.add(object);
 		}
 
-		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -115,7 +115,7 @@ public abstract class CMGeneralReceive extends ServerCore implements CMServerOpe
 				objects.add(object);
 		}
 
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -158,7 +158,7 @@ public abstract class CMGeneralReceive extends ServerCore implements CMServerOpe
 				objects.add(object);
 		}
 
-		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);

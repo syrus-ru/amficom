@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.25 2005/05/23 18:45:16 bass Exp $
+ * $Id: SchemePort.java,v 1.26 2005/05/24 13:25:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -39,7 +40,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/23 18:45:16 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/24 13:25:02 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -55,7 +56,7 @@ public final class SchemePort extends AbstractSchemePort {
 	SchemePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemePortDatabase = (SchemePortDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PORT_ENTITY_CODE);
+		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PORT_ENTITY_CODE);
 		try {
 			this.schemePortDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -93,7 +94,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 		assert port == null || port.getSort().value() == PortSort._PORT_SORT_PORT;
 
-		this.schemePortDatabase = (SchemePortDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PORT_ENTITY_CODE);
+		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PORT_ENTITY_CODE);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	SchemePort(final SchemePort_Transferable transferable) throws CreateObjectException {
-		this.schemePortDatabase = (SchemePortDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PORT_ENTITY_CODE);
+		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PORT_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.6 2005/05/23 18:45:12 bass Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.7 2005/05/24 13:24:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/23 18:45:12 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/24 13:24:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -34,27 +35,27 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 	/* Load multiple objects*/
 
 	public Set loadUsers(Set ids) throws ApplicationException {
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
+		UserDatabase database = (UserDatabase) DatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadDomains(Set ids) throws ApplicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
+		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadServers(Set ids) throws ApplicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
+		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadMCMs(Set ids) throws ApplicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
+		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadServerProcesses(Set ids) throws ApplicationException {
-		ServerProcessDatabase database = (ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
+		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
@@ -67,27 +68,27 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 	/* Load multiple objects but ids*/
 
 	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
+		UserDatabase database = (UserDatabase) DatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
+		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
+		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
+		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		ServerProcessDatabase database = (ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
+		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
@@ -100,27 +101,27 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 	/* Save multiple objects*/
 
 	public void saveUsers(Set collection, boolean force) throws ApplicationException {
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
+		UserDatabase database = (UserDatabase) DatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
 		database.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveDomains(Set collection, boolean force) throws ApplicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
+		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
 		database.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveServers(Set collection, boolean force) throws ApplicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
+		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
 		database.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMCMs(Set collection, boolean force) throws ApplicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
+		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		database.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveServerProcesses(Set collection, boolean force) throws ApplicationException {
-		ServerProcessDatabase database = (ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
+		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 		database.update(collection, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -136,7 +137,7 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 
-		StorableObjectDatabase database = AdministrationDatabaseContext.getDatabase(entityCode);
+		StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 
 		if (database != null)
 			return database.refresh(storableObjects);
@@ -173,10 +174,9 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
 			final Short entityCode = (Short) entityCodeIterator.next();
 			final Set entityObjects = (Set) map.get(entityCode);
-			final StorableObjectDatabase storableObjectDatabase = AdministrationDatabaseContext.getDatabase(entityCode);
+			final StorableObjectDatabase storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);
 		}
 	}
-
 }

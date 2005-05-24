@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.22 2005/05/23 18:45:13 bass Exp $
+ * $Id: CMConfigurationReceive.java,v 1.23 2005/05/24 13:24:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.configuration.CableThread;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentType;
@@ -56,6 +55,7 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/23 18:45:13 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/24 13:24:59 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -105,7 +105,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 					storableObjects.add(storableObject);
 			}
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-			final StorableObjectDatabase storableObjectDatabase = ConfigurationDatabaseContext.getDatabase(entityCode);
+			final StorableObjectDatabase storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
 			storableObjectDatabase.update(storableObjects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(storableObjects);
 			
@@ -145,7 +145,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.PORTTYPE_ENTITY_CODE);
+		PortTypeDatabase database = (PortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PORTTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -188,7 +188,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -231,7 +231,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -274,7 +274,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.LINKTYPE_ENTITY_CODE);
+		LinkTypeDatabase database = (LinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.LINKTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -317,7 +317,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+		CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -360,7 +360,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -405,7 +405,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_ENTITY_CODE);
+		EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -448,7 +448,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.PORT_ENTITY_CODE);
+		PortDatabase database = (PortDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -491,7 +491,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
+		MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -534,7 +534,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.TRANSPATH_ENTITY_CODE);
+		TransmissionPathDatabase database = (TransmissionPathDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -577,7 +577,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
+		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -620,7 +620,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
+		MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -663,7 +663,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.LINK_ENTITY_CODE);
+		LinkDatabase database = (LinkDatabase) DatabaseContext.getDatabase(ObjectEntities.LINK_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);
@@ -706,7 +706,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 				objects.add(object);
 		}
 
-		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_ENTITY_CODE);
+		CableThreadDatabase database = (CableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_ENTITY_CODE);
 		try {
 			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(objects);

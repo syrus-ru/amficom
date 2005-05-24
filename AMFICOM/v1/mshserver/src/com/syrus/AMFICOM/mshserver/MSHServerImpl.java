@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.13 2005/05/23 09:02:09 bass Exp $
+ * $Id: MSHServerImpl.java,v 1.14 2005/05/24 13:25:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,9 @@ package com.syrus.AMFICOM.mshserver;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -23,13 +23,11 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.map.MapDatabaseContext;
-import com.syrus.AMFICOM.scheme.SchemeDatabaseContext;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/23 09:02:09 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/24 13:25:05 $
  * @author $Author: bass $
  * @module mshserver_1
  */
@@ -88,14 +86,7 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 					+ ObjectEntities.codeToString(entityCode)
 					+ "(s) as requested by user '" + userId + '\'',
 					Log.INFO);
-			StorableObjectDatabase storableObjectDatabase = null;
-			if (ObjectGroupEntities.isInMapGroup(entityCode))
-				storableObjectDatabase = MapDatabaseContext.getDatabase(entityCode);
-			else if (ObjectGroupEntities.isInSchemeGroup(entityCode))
-				storableObjectDatabase = SchemeDatabaseContext.getDatabase(entityCode);
-			else
-				assert false;
-			storableObjectDatabase.update(storableObjects,
+			DatabaseContext.getDatabase(entityCode).update(storableObjects,
 					new Identifier(userId.value),
 					force
 						? StorableObjectDatabase.UPDATE_FORCE

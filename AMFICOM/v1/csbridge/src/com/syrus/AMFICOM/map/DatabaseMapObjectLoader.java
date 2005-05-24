@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMapObjectLoader.java,v 1.4 2005/05/23 18:45:12 bass Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.5 2005/05/24 13:24:58 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -23,53 +24,53 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/23 18:45:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/24 13:24:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
 public class DatabaseMapObjectLoader extends DatabaseObjectLoader implements MapObjectLoader {
 	public Set loadCollectors(final Set ids) throws ApplicationException {
-		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
+		CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadMaps(final Set ids) throws ApplicationException {
-		MapDatabase database = (MapDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
+		MapDatabase database = (MapDatabase) DatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadMarks(final Set ids) throws ApplicationException {
-		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
+		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadNodeLinks(final Set ids) throws ApplicationException {
-		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
+		NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadPhysicalLinks(final Set ids) throws ApplicationException {
-		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
+		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadPhysicalLinkTypes(final Set ids) throws ApplicationException {
-		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadSiteNodes(final Set ids) throws ApplicationException {
-		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
+		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
 	public Set loadSiteNodeTypes(final Set ids) throws ApplicationException {
-		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}	
 
 	public Set loadTopologicalNodes(final Set ids) throws ApplicationException {
-		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
+		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
 		return super.retrieveFromDatabase(database, ids);
 	}
 
@@ -78,92 +79,92 @@ public class DatabaseMapObjectLoader extends DatabaseObjectLoader implements Map
 
 
 	public Set loadCollectorsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
+		CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadMapsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		MapDatabase database = (MapDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
+		MapDatabase database = (MapDatabase) DatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadMarksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
+		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadNodeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
+		NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadPhysicalLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
+		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 	
 	public Set loadSiteNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
+		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadSiteNodeTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public Set loadTopologicalNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
+		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
 		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
 	public void saveCollectors(final Set list, final boolean force) throws ApplicationException {
-		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
+		CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMaps(final Set list, final boolean force) throws ApplicationException {
-		MapDatabase database = (MapDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
+		MapDatabase database = (MapDatabase) DatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMarks(final Set list, final boolean force) throws ApplicationException {
-		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
+		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveNodeLinks(final Set list, final boolean force) throws ApplicationException {
-		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
+		NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void savePhysicalLinks(final Set list, final boolean force) throws ApplicationException {
-		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
+		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void savePhysicalLinkTypes(final Set list, final boolean force) throws ApplicationException {
-		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveSiteNodes(final Set list, final boolean force) throws ApplicationException {
-		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
+		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveSiteNodeTypes(final Set list, final boolean force) throws ApplicationException {
-		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTopologicalNodes(final Set list, final boolean force) throws ApplicationException {
-		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
+		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
 		database.update(list, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -177,7 +178,7 @@ public class DatabaseMapObjectLoader extends DatabaseObjectLoader implements Map
 
 		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 
-		StorableObjectDatabase database = MapDatabaseContext.getDatabase(entityCode);
+		StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 
 		if (database != null)
 			return database.refresh(storableObjects);
@@ -210,7 +211,7 @@ public class DatabaseMapObjectLoader extends DatabaseObjectLoader implements Map
 		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
 			final Short entityCode = (Short) entityCodeIterator.next();
 			final Set entityObjects = (Set) map.get(entityCode);
-			final StorableObjectDatabase storableObjectDatabase = MapDatabaseContext.getDatabase(entityCode);
+			final StorableObjectDatabase storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.87 2005/05/23 18:45:19 bass Exp $
+ * $Id: Equipment.java,v 1.88 2005/05/24 13:25:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/05/23 18:45:19 $
+ * @version $Revision: 1.88 $, $Date: 2005/05/24 13:25:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -68,7 +69,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 		this.characteristics = new HashSet();
 
-		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_ENTITY_CODE);
+		EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

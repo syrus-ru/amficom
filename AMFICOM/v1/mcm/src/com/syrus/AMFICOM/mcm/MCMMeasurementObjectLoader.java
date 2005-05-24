@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.49 2005/05/23 18:45:11 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.50 2005/05/24 13:24:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,7 +35,6 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.IntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/05/23 18:45:11 $
+ * @version $Revision: 1.50 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -67,7 +67,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	/* Load multiple objects*/
 
 	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws RetrieveObjectException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -112,7 +112,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws RetrieveObjectException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+		AnalysisTypeDatabase database = (AnalysisTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -157,7 +157,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws RetrieveObjectException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -204,7 +204,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws RetrieveObjectException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
+		MeasurementSetupDatabase database = (MeasurementSetupDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -249,7 +249,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadSets(java.util.Set ids) throws RetrieveObjectException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.SET_ENTITY_CODE);
+		SetDatabase database = (SetDatabase) DatabaseContext.getDatabase(ObjectEntities.SET_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -294,7 +294,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
-		CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE);
+		CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -339,7 +339,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadIntervalsTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
-		IntervalsTemporalPatternDatabase database = (IntervalsTemporalPatternDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE);
+		IntervalsTemporalPatternDatabase database = (IntervalsTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -384,7 +384,7 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	}
 
 	public java.util.Set loadPeriodicalTemporalPatterns(java.util.Set ids) throws RetrieveObjectException {
-		PeriodicalTemporalPatternDatabase database = (PeriodicalTemporalPatternDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
+		PeriodicalTemporalPatternDatabase database = (PeriodicalTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
 		java.util.Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)

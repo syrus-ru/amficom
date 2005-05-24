@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.67 2005/05/23 18:45:15 bass Exp $
+ * $Id: Measurement.java,v 1.68 2005/05/24 13:25:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/05/23 18:45:15 $
+ * @version $Revision: 1.68 $, $Date: 2005/05/24 13:25:01 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -61,7 +62,7 @@ public class Measurement extends Action {
 	public Measurement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

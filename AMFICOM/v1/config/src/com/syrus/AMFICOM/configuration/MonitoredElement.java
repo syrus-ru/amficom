@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.50 2005/05/23 18:45:19 bass Exp $
+ * $Id: MonitoredElement.java,v 1.51 2005/05/24 13:25:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/05/23 18:45:19 $
+ * @version $Revision: 1.51 $, $Date: 2005/05/24 13:25:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -50,7 +51,7 @@ public class MonitoredElement extends DomainMember {
 
 		this.monitoredDomainMemberIds = new HashSet();
 
-		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
+		MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

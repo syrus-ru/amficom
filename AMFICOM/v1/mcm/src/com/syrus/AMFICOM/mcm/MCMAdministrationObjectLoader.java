@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.21 2005/05/23 18:45:11 bass Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.22 2005/05/24 13:24:57 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mcm;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
@@ -25,6 +24,7 @@ import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/23 18:45:11 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -44,7 +44,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	/* Load multiple objects*/
 
 	public Set loadServers(Set ids) throws RetrieveObjectException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
+		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -89,7 +89,7 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	}
 
 	public Set loadMCMs(Set ids) throws RetrieveObjectException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
+		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)

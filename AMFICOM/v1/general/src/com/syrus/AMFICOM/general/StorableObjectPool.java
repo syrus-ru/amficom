@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.86 2005/05/23 16:18:42 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.87 2005/05/24 13:24:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/05/23 16:18:42 $
+ * @version $Revision: 1.87 $, $Date: 2005/05/24 13:24:59 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -83,13 +83,13 @@ public abstract class StorableObjectPool {
 
 	private static final void registerPool(final short groupCode, final StorableObjectPool pool) {
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
-		assert GROUP_CODE_POOL_MAP.get(groupCode) == null;
+		assert !GROUP_CODE_POOL_MAP.containsKey(groupCode);
 		GROUP_CODE_POOL_MAP.put(groupCode, pool);
 	}
 
 	protected static final void registerFactory(final short entityCode, final StorableObjectFactory factory) {
 		assert ObjectEntities.isEntityCodeValid(entityCode);
-		assert ENTITY_CODE_FACTORY_MAP.get(entityCode) == null;
+		assert !ENTITY_CODE_FACTORY_MAP.containsKey(entityCode);
 		ENTITY_CODE_FACTORY_MAP.put(entityCode, factory);
 	}
 
@@ -1001,7 +1001,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.86 $, $Date: 2005/05/23 16:18:42 $
+	 * @version $Revision: 1.87 $, $Date: 2005/05/24 13:24:59 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

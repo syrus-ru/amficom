@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.24 2005/05/23 18:45:16 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.25 2005/05/24 13:25:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/23 18:45:16 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/24 13:25:02 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -85,7 +86,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	SchemeOptimizeInfo(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
 		try {
 			this.schemeOptimizeInfoDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -150,7 +151,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param transferable
 	 */
 	SchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable transferable) {
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

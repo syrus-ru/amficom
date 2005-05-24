@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.27 2005/05/23 18:45:15 bass Exp $
+ * $Id: ModelingType.java,v 1.28 2005/05/24 13:25:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/23 18:45:15 $
+ * @version $Revision: 1.28 $, $Date: 2005/05/24 13:25:01 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -55,7 +56,7 @@ public class ModelingType extends ActionType {
 		this.inParameterTypeIds = new HashSet();
 		this.outParameterTypeIds = new HashSet();
 
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.MODELINGTYPE_ENTITY_CODE);
+		ModelingTypeDatabase database = (ModelingTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELINGTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

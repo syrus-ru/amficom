@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.28 2005/05/23 18:45:16 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.29 2005/05/24 13:25:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/05/23 18:45:16 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/24 13:25:02 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -67,7 +68,7 @@ public final class SchemeMonitoringSolution extends
 	SchemeMonitoringSolution(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE);
+		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE);
 		try {
 			this.schemeMonitoringSolutionDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -104,7 +105,7 @@ public final class SchemeMonitoringSolution extends
 	 * @param transferable
 	 */
 	SchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable transferable) {
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE);
+		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.28 2005/05/23 18:45:12 bass Exp $
+ * $Id: Domain.java,v 1.29 2005/05/24 13:24:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/23 18:45:12 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -54,7 +55,7 @@ public class Domain extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
+		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

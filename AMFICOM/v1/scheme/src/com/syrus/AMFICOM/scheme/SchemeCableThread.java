@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.30 2005/05/23 18:45:16 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.31 2005/05/24 13:25:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/05/23 18:45:16 $
+ * @version $Revision: 1.31 $, $Date: 2005/05/24 13:25:02 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -75,7 +76,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE);
+		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE);
 		try {
 			this.schemeCableThreadDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -121,7 +122,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeCableThread(final SchemeCableThread_Transferable transferable) throws CreateObjectException {
-		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE);
+		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

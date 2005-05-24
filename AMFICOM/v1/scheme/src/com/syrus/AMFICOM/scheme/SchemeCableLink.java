@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.29 2005/05/23 18:45:16 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.30 2005/05/24 13:25:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:16 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/24 13:25:02 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -56,7 +57,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	SchemeCableLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
+		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
 		try {
 			this.schemeCableLinkDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -89,7 +90,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				sourceSchemeCablePort, targetSchemeCablePort,
 				parentScheme);
 
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
+		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
 	}
 
 	/**
@@ -97,7 +98,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	SchemeCableLink(final SchemeCableLink_Transferable transferable) throws CreateObjectException {
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
+		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

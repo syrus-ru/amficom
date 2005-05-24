@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.36 2005/05/23 18:45:17 bass Exp $
+ * $Id: Mark.java,v 1.37 2005/05/24 13:25:03 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/05/23 18:45:17 $
+ * @version $Revision: 1.37 $, $Date: 2005/05/24 13:25:03 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -85,7 +86,7 @@ public class Mark extends AbstractNode {
 	Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
+		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

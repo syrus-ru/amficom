@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.29 2005/05/23 18:45:16 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.30 2005/05/24 13:25:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:16 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/24 13:25:02 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -73,7 +74,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	SchemeProtoGroup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 		try {
 			this.schemeProtoGroupDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -106,14 +107,14 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 
-		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	SchemeProtoGroup(final SchemeProtoGroup_Transferable transferable) {
-		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) SchemeDatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
 		fromTransferable(transferable);
 	}
 

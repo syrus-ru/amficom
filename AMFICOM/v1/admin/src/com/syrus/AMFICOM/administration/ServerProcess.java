@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.4 2005/05/23 18:45:12 bass Exp $
+ * $Id: ServerProcess.java,v 1.5 2005/05/24 13:24:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.administration.corba.ServerProcess_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/23 18:45:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module admin_v1
  */
@@ -49,7 +50,7 @@ public class ServerProcess extends StorableObject {
 	public ServerProcess(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		ServerProcessDatabase database = (ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
+		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

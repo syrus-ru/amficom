@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.23 2005/05/23 18:45:19 bass Exp $
+ * $Id: CableThread.java,v 1.24 2005/05/24 13:25:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/23 18:45:19 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/24 13:25:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -45,7 +46,7 @@ public class CableThread extends DomainMember implements TypedObject {
 	public CableThread(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_ENTITY_CODE);
+		CableThreadDatabase database = (CableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

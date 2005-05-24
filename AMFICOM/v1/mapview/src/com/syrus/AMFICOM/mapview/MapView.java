@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.29 2005/05/23 18:45:17 bass Exp $
+* $Id: MapView.java,v 1.30 2005/05/24 13:25:03 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -54,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:17 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/24 13:25:03 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -93,7 +94,7 @@ public class MapView extends DomainMember implements Namable {
 	public MapView(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.mapViewDatabase = (MapViewDatabase) MapViewDatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
+		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
 		try {
 			this.mapViewDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -137,7 +138,7 @@ public class MapView extends DomainMember implements Namable {
 
 		this.schemes = new HashSet();
 
-		this.mapViewDatabase = (MapViewDatabase) MapViewDatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
+		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
 	}	
 	
 	public static MapView createInstance(final Identifier creatorId,

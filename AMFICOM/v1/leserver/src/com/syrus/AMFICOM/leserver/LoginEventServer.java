@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.16 2005/05/23 18:45:11 bass Exp $
+ * $Id: LoginEventServer.java,v 1.17 2005/05/24 13:24:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.leserver;
 
-import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Application;
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/23 18:45:11 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/24 13:24:56 $
  * @author $Author: bass $
  * @module leserver_v1
  */
@@ -104,7 +104,7 @@ public final class LoginEventServer {
 					ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			eventProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 					ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
+			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
 			final ServerProcess loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
 			final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
 			// TODO something with loginServerProcess and eventServerProcess

@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.19 2005/05/23 18:45:11 bass Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.20 2005/05/24 13:24:57 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/23 18:45:11 $
+ * @version $Revision: 1.20 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -44,7 +44,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	/* Load multiple objects*/
 
 	public Set loadParameterTypes(Set ids) throws RetrieveObjectException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -89,7 +89,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	}
 
 	public Set loadCharacteristicTypes(Set ids) throws RetrieveObjectException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
@@ -128,7 +128,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	}
 
 	public Set loadCharacteristics(Set ids) throws RetrieveObjectException {
-		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)

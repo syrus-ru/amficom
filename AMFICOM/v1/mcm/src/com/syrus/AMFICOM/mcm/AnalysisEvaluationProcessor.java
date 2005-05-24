@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.29 2005/05/23 18:45:11 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.30 2005/05/24 13:24:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -21,7 +22,6 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Set;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/23 18:45:11 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/24 13:24:57 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -92,7 +92,7 @@ public class AnalysisEvaluationProcessor {
 					measurement,
 					ANALYSIS_NAME + " '" + measurement.getId() + "'",
 					criteriaSet);
-			((AnalysisDatabase) MeasurementDatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE)).insert(analysis);
+			((AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE)).insert(analysis);
 			return analysis;
 		}
 		catch (ApplicationException ae) {

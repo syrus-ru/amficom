@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.36 2005/05/23 18:45:17 bass Exp $
+ * $Id: SiteNode.java,v 1.37 2005/05/24 13:25:03 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -52,7 +53,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/05/23 18:45:17 $
+ * @version $Revision: 1.37 $, $Date: 2005/05/24 13:25:03 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -89,7 +90,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	SiteNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
+		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}

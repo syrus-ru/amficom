@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.41 2005/05/23 18:45:17 bass Exp $
+ * $Id: Collector.java,v 1.42 2005/05/24 13:25:03 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/05/23 18:45:17 $
+ * @version $Revision: 1.42 $, $Date: 2005/05/24 13:25:03 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -75,7 +76,7 @@ public class Collector extends StorableObject implements MapElement {
 		this.physicalLinks = new HashSet();
 		this.characteristics = new HashSet();
 
-		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
+		CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
