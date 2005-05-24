@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.2 2005/05/11 06:44:47 arseniy Exp $
+ * $Id: CommonTest.java,v 1.3 2005/05/24 12:25:48 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/11 06:44:47 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 12:25:48 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -77,6 +77,8 @@ public abstract class CommonTest extends TestCase {
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
+
+	protected static User creatorUser;
 
 	public CommonTest(String name) {
 		super(name);
@@ -166,7 +168,9 @@ public abstract class CommonTest extends TestCase {
 
 	private static void initStorableObjectPools() {
 		try {
-			User sysUser = AdministrationDatabaseContext.getUserDatabase().retrieveForLogin(UserWrapper.SYS_LOGIN);
+			UserDatabase userDatabase = (UserDatabase) AdministrationDatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
+			User sysUser = userDatabase.retrieveForLogin(UserWrapper.SYS_LOGIN);
+			creatorUser = sysUser;
 			DatabaseObjectLoader.init(sysUser.getId());
 		}
 		catch (ApplicationException ae) {
