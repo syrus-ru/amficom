@@ -37,9 +37,9 @@ JAVAH_FLAGS := \
 
 $(call checkenve,JAVA_HOME)
 
-
 .PHONY:	clean cleanmach arch install
 
+PACKAGES = com/syrus/AMFICOM/analysis com/syrus/AMFICOM/analysis/dadara com/syrus/AMFICOM/analysis/dadara/events
 
 $(LIBNAME):	.mach .native
 	$(JAR) -cf $@ \
@@ -48,9 +48,7 @@ $(LIBNAME):	.mach .native
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/*.java) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/events/*.java)
+		$(foreach dir,$(PACKAGES),$(wildcard $(SRCDIR)/$(dir)/*.java))
 
 	touch $@
 
@@ -67,8 +65,7 @@ clean:	cleanmach
 
 cleanmach:
 	$(RM) \
-		$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/analysis/*.class) \
-		$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/analysis/dadara/*.class) \
+		$(foreach dir,$(PACKAGES),$(wildcard $(CLASSDIR)/$(dir)/*.class))
 	$(RM) .mach
 
 #### Install ####
@@ -80,6 +77,5 @@ install: $(LIBNAME)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SRCDIR)/com/syrus/AMFICOM/analysis/*.java \
-		$(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java
+		$(foreach dir,$(PACKAGES),$(wildcard $(SRCDIR)/$(dir)/*.java))
 
