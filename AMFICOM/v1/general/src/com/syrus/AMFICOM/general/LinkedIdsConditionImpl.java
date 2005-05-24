@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/04/04 13:07:03 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/05/24 17:18:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/04 13:07:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/05/24 17:18:55 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -38,8 +38,13 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				Characteristic characteristic = (Characteristic) storableObject;
-				Identifier id = characteristic.getCharacterizableId();
-				condition = super.conditionTest(id);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+						condition = super.conditionTest(characteristic.getType().getId());
+						break;
+					default:
+						condition = super.conditionTest(characteristic.getCharacterizableId());
+				}
 				break;
 			default:
 				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
