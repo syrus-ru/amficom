@@ -27,34 +27,34 @@ public class HistogrammPanel extends ScaledGraphPanel
 	// seem to produce results of the same as TYPE_SINX.
 	// So I prefer to use SINX //saa
 
-	//private static int wLetTyp = Wavelet.TYPE_ABSXSINX;
-	private static int wLetTyp = Wavelet.TYPE_SINX;
+	//private static int WLET_TYP = Wavelet.TYPE_ABSXSINX;
+	private static int WLET_TYP = Wavelet.TYPE_SINX;
 
-	protected int nBins = 400;
-	protected double down_limit = -0.4;
-	protected double up_limit = 0.8;
-	protected double level = 0.2;
+	private int nBins = 400;
+	private double downLimit = -0.4;
+	private double upLimit = 0.8;
+	private double level = 0.2;
 
-	protected double[] derivative;
-	protected double[] gauss;
-	protected double[] threshold;
+	private double[] derivative;
+	private double[] gauss;
+	private double[] threshold;
 
-	private static float gauss_w = 1.6f; // width of gaussian in pixels
-	public static Stroke GAUSS_STROKE = new BasicStroke(gauss_w);
-	public static Stroke THRESHOLD_STROKE = new BasicStroke(1);
+	private static float GAUSS_W = 1.6f; // width of gaussian in pixels
+	private static Stroke GAUSS_STROKE = new BasicStroke(GAUSS_W);
+	private static Stroke THRESHOLD_STROKE = new BasicStroke(1);
 
-	protected Color gaussColor;
-	protected Color thresholdColor;
+	private Color gaussColor;
+	private Color thresholdColor;
 
-	private boolean move_level = false;
+	private boolean moveLevel = false;
 
 	public HistogrammPanel(ResizableLayeredPanel panel, double[] y, double deltaX)
 	{
 		super(panel, y, deltaX);
 		inversed_y = false;
-		grid_shift_x = down_limit;
+		grid_shift_x = downLimit;
 
-		Kx = (up_limit - down_limit) / nBins;
+		Kx = (upLimit - downLimit) / nBins;
 		Ky = 1;
 
 		init();
@@ -69,7 +69,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	public void init()
 	{
 		int event_size = ReflectogramMath.getReflectiveEventSize(y, 0.1);
-		derivative = ReflectogramMath.getDerivative(y, event_size, wLetTyp);
+		derivative = ReflectogramMath.getDerivative(y, event_size, WLET_TYP);
 
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = -derivative[i];
@@ -160,7 +160,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		if (SwingUtilities.isRightMouseButton(e) ||
 				Math.abs(currpos.y-(int)((maxY - level - top)*scaleY)) < MOUSE_COUPLING)
 		{
-			move_level = true;
+			moveLevel = true;
 			level = coord2value(currpos.y);
 			setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 			parent.repaint();
@@ -172,7 +172,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 	protected void this_mouseDragged(MouseEvent e)
 	{
-		if (move_level)
+		if (moveLevel)
 		{
 			upd_currpos(e);
 
@@ -185,9 +185,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 	protected void this_mouseReleased(MouseEvent e)
 	{
-		if (move_level)
+		if (moveLevel)
 		{
-			move_level = false;
+			moveLevel = false;
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
 			return;
@@ -195,10 +195,10 @@ public class HistogrammPanel extends ScaledGraphPanel
 		super.this_mouseReleased(e);
 	}
 
-	public void updateHistogrammData(int start, int end)
+	public void updateHistogrammData(int start1, int end1)
 	{
-		Histogramm histo = new Histogramm(down_limit, up_limit, nBins);
-		y = histo.init(derivative, start, end);
+		Histogramm histo = new Histogramm(downLimit, upLimit, nBins);
+		y = histo.init(derivative, start1, end1);
 		int max_index = histo.getMaximumIndex();
 
 		init(y, deltaX);
