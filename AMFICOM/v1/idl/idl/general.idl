@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.81 2005/05/18 10:54:25 bass Exp $
+ * $Id: general.idl,v 1.82 2005/05/24 12:32:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -66,6 +66,7 @@ module corba {
 		ERROR_NOT_FOUND,
 		ERROR_RETRIEVE,
 		ERROR_UPDATE,
+		ERROR_DELETE,
 		ERROR_VERSION_COLLISION,
 		ERROR_ILLEGAL_LOGIN,
 		ERROR_ILLEGAL_PASSWORD,
