@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.70 2005/05/24 10:00:05 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.71 2005/05/24 16:36:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.70 $, $Date: 2005/05/24 10:00:05 $
+ * @version $Revision: 1.71 $, $Date: 2005/05/24 16:36:50 $
  * @module
  */
 
@@ -155,18 +155,17 @@ public class CoreAnalysisManager
 
 	public static double[] calcGaussian(double[] y, int maxIndex) {
 		double[] gauss = new double[y.length];
-		int width = 0;
 
 		double maxValue = y[maxIndex];
 
-		maxValue *= .2;
+        int width = 0;
 		for (int i = 0; i < y.length; i++)
-			if (y[i] > maxValue)
+			if (y[i] > maxValue * 0.6)
 				width++;
-		maxValue /= .2;
 
-		double[] d = gauss(y, maxIndex, maxValue, width);
-		double center = d[0];
+        double[] d = gauss(y, maxIndex, maxValue, width);
+
+        double center = d[0];
 		maxValue = d[1];
 		double sigmaSquared = d[2] * d[2];
 
