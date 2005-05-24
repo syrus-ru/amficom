@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleReflectogramEventComparer.java,v 1.4 2005/05/24 08:06:51 saa Exp $
+ * $Id: SimpleReflectogramEventComparer.java,v 1.5 2005/05/24 10:29:47 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
  * <p>
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/05/24 08:06:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/24 10:29:47 $
  * @module
  */
 public class SimpleReflectogramEventComparer {
@@ -109,7 +109,7 @@ public class SimpleReflectogramEventComparer {
      */
     public int getEtalonIdByProbeId(int probeId)
     {
-        return probe2etalon[probeId] >= 0 ? probe2etalon[probeId] : -1;
+        return probe2etalon[probeId] >= 0 ? probe2etalon[probeId] : UNPAIRED;
     }
     
     /**
@@ -119,7 +119,7 @@ public class SimpleReflectogramEventComparer {
      */
     public int getProbeIdByEtalonId(int etalonId)
     {
-        return etalon2probe[etalonId] >= 0 ? etalon2probe[etalonId] : -1;
+        return etalon2probe[etalonId] >= 0 ? etalon2probe[etalonId] : UNPAIRED;
     }
 
     public boolean isProbeEventNew(int probeId)
@@ -313,7 +313,7 @@ public class SimpleReflectogramEventComparer {
         {
             int j = fwd[i];
             if (j >= 0 && backwd[j] != i)
-                fwd[i] = -1;
+                fwd[i] = UNPAIRED;
         }
     }
 
@@ -324,7 +324,7 @@ public class SimpleReflectogramEventComparer {
         {
             // наилучшее по нашей метрике парное событие
             double bestDistance = -1; // Stands for +inf
-            int bestJ = -1;
+            int bestJ = UNPAIRED;
             // значимые нелин. события - потенциальные кандидаты в новые/потерянные
             boolean reliablyNewOrLost = X[i].getEventType() != SimpleReflectogramEvent.LINEAR
                 && (X[i] instanceof ReliabilitySimpleReflectogramEvent)
