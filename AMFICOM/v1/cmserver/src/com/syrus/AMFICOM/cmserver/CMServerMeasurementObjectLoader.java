@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.45 2005/05/24 13:24:59 bass Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.46 2005/05/24 15:02:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/05/24 13:24:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/05/24 15:02:47 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -370,12 +370,12 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		}
 
 	}
-	
+
 	public void delete(Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty()) {
 			return;
 		}
-		
+
 		Set nonTestIdentifiers = null;
 		Set testIdentifiers = null;
 		for (Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
@@ -385,29 +385,32 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					testIdentifiers = new HashSet();
 				}
 				testIdentifiers.add(id);
-			} else {
+			}
+			else {
 				if (nonTestIdentifiers == null) {
 					nonTestIdentifiers = new HashSet();
 				}
 				nonTestIdentifiers.add(id);
-			}			
+			}
 		}
-		
+
 		if (nonTestIdentifiers != null) {
 			super.delete(nonTestIdentifiers);
 		}
-		
+
 		if (testIdentifiers != null) {
 			try {
 				MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-				mServerRef.deleteTests(Identifier.createTransferables(testIdentifiers));				
-			} catch (CommunicationException ce) {
+				mServerRef.deleteTests(Identifier.createTransferables(testIdentifiers));
+			}
+			catch (CommunicationException ce) {
 				Log.errorException(ce);
-			} catch (AMFICOMRemoteException e) {
+			}
+			catch (AMFICOMRemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
 
