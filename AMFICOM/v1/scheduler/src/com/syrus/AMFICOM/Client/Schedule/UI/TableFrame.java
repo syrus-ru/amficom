@@ -85,7 +85,9 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					maxRowIndex = maxRowIndex > selectedRows[i] ? maxRowIndex : selectedRows[i];
 					minRowIndex = minRowIndex < selectedRows[i] ? minRowIndex : selectedRows[i];
 				}
-				this.listTable.removeRowSelectionInterval(minRowIndex, maxRowIndex);
+				if (maxRowIndex != Integer.MIN_VALUE && minRowIndex != Integer.MAX_VALUE) {
+					this.listTable.removeRowSelectionInterval(minRowIndex, maxRowIndex);
+				}
 			}
 
 		} else {
