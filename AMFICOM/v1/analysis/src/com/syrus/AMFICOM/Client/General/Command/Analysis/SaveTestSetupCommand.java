@@ -15,9 +15,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
 
@@ -135,7 +135,9 @@ public class SaveTestSetupCommand extends VoidCommand
 		 */
 		try
 		{
-			MeasurementStorableObjectPool.flush(true);
+			StorableObjectPool.flushGroup(
+                    ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
+                    true);
 		}
 		catch(ApplicationException ex)
 		{ // FIXME: exceptions: process exception
