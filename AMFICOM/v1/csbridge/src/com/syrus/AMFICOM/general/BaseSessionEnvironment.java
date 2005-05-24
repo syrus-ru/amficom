@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.8 2005/05/19 15:10:08 max Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.9 2005/05/24 15:18:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,20 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Date;
+
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/19 15:10:08 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/05/24 15:18:12 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class BaseSessionEnvironment {
 	protected BaseConnectionManager baseConnectionManager;
 	private PoolContext poolContext;
+	private Date sessionEstablishDate;
+	private boolean sessionEstablished;
 
 	private class LogoutShutdownHook extends Thread {
 
@@ -45,6 +49,9 @@ public abstract class BaseSessionEnvironment {
 		this.poolContext.init();
 
 		this.logoutShutdownHook = new LogoutShutdownHook();
+
+		this.sessionEstablishDate = null;
+		this.sessionEstablished = false;
 	}
 
 	public BaseConnectionManager getConnectionManager() {
@@ -55,18 +62,32 @@ public abstract class BaseSessionEnvironment {
 //		return this.poolContext;
 //	}
 
+	public Date getSessionEstablishDate() {
+		return this.sessionEstablishDate;
+	}
+
+	public boolean sessionEstablished() {
+		return this.sessionEstablished;
+	}
+
 	public void login(String login, String password) throws CommunicationException, LoginException {
 		LoginManager.login(login, password);
 		IdentifierPool.deserialize();
 		this.poolContext.deserialize();
 
 		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
+
+		this.sessionEstablishDate = new Date(System.currentTimeMillis());
+		this.sessionEstablished = true;
 	}
 
 	public void logout() throws CommunicationException, LoginException {
 		this.baseConnectionManager.getCORBAServer().removeShutdownHook(this.logoutShutdownHook);
 
 		this.logout0();
+
+		this.sessionEstablishDate = null;
+		this.sessionEstablished = false;
 	}
 
 	void logout0() throws CommunicationException, LoginException {
