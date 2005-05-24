@@ -159,7 +159,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 			}
 			if (model.getIndexOfObject(test1) < 0) {
 				Log.debugMessage("TableFrame.setTests | added ", Log.FINEST);
-				model.getContents().add(test1);
+				model.getValues().add(test1);
 			}
 		}
 		this.listTable.revalidate();
@@ -170,7 +170,10 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		if (this.panel == null) {
 			this.panel = new JPanel(new BorderLayout());
 
-			this.listTable = new WrapperedTable(TestController.getInstance());
+			this.listTable = new WrapperedTable(TestController.getInstance(), new String[] {
+					TestController.KEY_TEMPORAL_TYPE, TestController.KEY_MONITORED_ELEMENT,
+					TestController.KEY_TEST_OBJECT, TestController.KEY_MEASUREMENT_TYPE, TestController.KEY_START_TIME,
+					TestController.KEY_STATUS});
 			this.listTable.setDefaultTableCellRenderer();
 			ListSelectionModel rowSM = this.listTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
@@ -244,7 +247,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 										for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
 											Test test1 = (Test) it.next();
 											TableFrame.this.schedulerModel.removeTest(test1);
-											model.getContents().remove(test1);
+											model.getValues().remove(test1);
 
 										}
 										table.revalidate();
