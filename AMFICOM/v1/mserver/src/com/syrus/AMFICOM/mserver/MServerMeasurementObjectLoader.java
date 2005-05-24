@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.26 2005/05/23 18:45:10 bass Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.27 2005/05/24 12:25:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,15 +37,15 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/23 18:45:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/05/24 12:25:12 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
 public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	protected static Identifier preferredMCMId;
 	protected static Object lock;
-	
+
 	static {
 		lock = new Object();
 	}
