@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.2 2005/04/19 16:05:17 max Exp $
+ * $Id: SchemeElementWrapper.java,v 1.3 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/19 16:05:17 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 13:58:41 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
-public class SchemeElementWrapper extends StorableObjectWrapper {
+public final class SchemeElementWrapper extends StorableObjectWrapper {
 
 //	schemeelement.sql
 //	
@@ -45,6 +45,8 @@ public class SchemeElementWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_SCHEME_CELL_ID = "scheme_cell_id";
 	public static final String COLUMN_PARENT_SCHEME_ID = "parent_scheme_id";
 	public static final String COLUMN_PARENT_SCHEME_ELEMENT_ID = "parent_scheme_element_id";
+
+	private static SchemeElementWrapper instance;
 
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("SchemeElementWrapper | not implemented yet");
@@ -80,5 +82,11 @@ public class SchemeElementWrapper extends StorableObjectWrapper {
 
 	public void setValue(Object object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemeElementWrapper | not implemented yet");
+	}
+
+	public static SchemeElementWrapper getInstance() {
+		if (instance == null)
+			instance = new SchemeElementWrapper();
+		return instance;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.3 2005/04/27 10:40:16 bass Exp $
+ * $Id: SchemePathWrapper.java,v 1.4 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,19 +9,23 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.List;
 
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/27 10:40:16 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/24 13:58:41 $
  * @author $Author: bass $
  * @module scheme_v1
  */
-public class SchemePathWrapper {
+public final class SchemePathWrapper extends StorableObjectWrapper {
 	
 	//TODO: create a table in the database
 	
 	//TODO: Wrong colunm name, too many characters
 	public static final String COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID = "parent_scheme_monitoring_solution_id";
 	public static final String COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
-	
+
+	private static SchemePathWrapper instance;
+
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
 	}
@@ -56,5 +60,11 @@ public class SchemePathWrapper {
 
 	public void setValue(Object object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+	}
+
+	public static SchemePathWrapper getInstance() {
+		if (instance == null)
+			instance = new SchemePathWrapper();
+		return instance;
 	}
 }

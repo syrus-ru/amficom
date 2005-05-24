@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.2 2005/04/19 12:52:17 max Exp $
+ * $Id: PathElementWrapper.java,v 1.3 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/19 12:52:17 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 13:58:41 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
-public class PathElementWrapper extends StorableObjectWrapper {
+public final class PathElementWrapper extends StorableObjectWrapper {
 	
 //	pathelement.sql
 //	
@@ -35,6 +35,8 @@ public class PathElementWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_END_ABSTRACT_SCHEME_PORT_ID = "end_abstract_scheme_port_id";
 	public static final String COLUMN_SCHEME_CABLE_THREAD_ID = "scheme_cable_thread_id";
 	public static final String COLUMN_SCHEME_LINK_ID = "scheme_link_id";
+
+	private static PathElementWrapper instance;
 
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
@@ -72,5 +74,9 @@ public class PathElementWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
-
+	public static PathElementWrapper getInstance() {
+		if (instance == null)
+			instance = new PathElementWrapper();
+		return instance;
+	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.2 2005/04/27 09:59:56 bass Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.3 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/27 09:59:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 13:58:41 $
  * @author $Author: bass $
  * @module scheme_v1
  */
-public class SchemeCablePortWrapper extends StorableObjectWrapper {
+public final class SchemeCablePortWrapper extends StorableObjectWrapper {
 	
 //	schemecableport.sql
 //	
@@ -34,7 +34,9 @@ public class SchemeCablePortWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_CABLE_PORT_ID = "cable_port_id";
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
 	public static final String COLUMN_PARENT_DEVICE_ID = "parent_device_id";
-	
+
+	private static SchemeCablePortWrapper instance;
+
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
 	}
@@ -69,5 +71,11 @@ public class SchemeCablePortWrapper extends StorableObjectWrapper {
 
 	public void setValue(Object object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	}
+
+	public static SchemeCablePortWrapper getInstance() {
+		if (instance == null)
+			instance = new SchemeCablePortWrapper();
+		return instance;
 	}
 }

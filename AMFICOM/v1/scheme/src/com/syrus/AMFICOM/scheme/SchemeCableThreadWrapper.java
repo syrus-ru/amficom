@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadWrapper.java,v 1.1 2005/04/22 16:23:00 max Exp $
+ * $Id: SchemeCableThreadWrapper.java,v 1.2 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:23:00 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/05/24 13:58:41 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
-public class SchemeCableThreadWrapper extends StorableObjectWrapper {
+public final class SchemeCableThreadWrapper extends StorableObjectWrapper {
 	
 	//TODO: insert creation sql
 		
@@ -25,7 +25,9 @@ public class SchemeCableThreadWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_PARENT_SCHEME_CABLE_LINK_ID = "parent_scheme_cable_link_id";
 	public static final String COLUMN_SOURCE_SCHEME_PORT_ID = "source_scheme_port_id";
 	public static final String COLUMN_TARGET_SCHEME_PORT_ID = "target_scheme_port_id";
-	
+
+	private static SchemeCableThreadWrapper instance;
+
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("SchemeCableThreadWrapper | not implemented yet");
 	}
@@ -62,4 +64,9 @@ public class SchemeCableThreadWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeCableThreadWrapper | not implemented yet");
 	}
 
+	public static SchemeCableThreadWrapper getInstance() {
+		if (instance == null)
+			instance = new SchemeCableThreadWrapper();
+		return instance;
+	}
 }

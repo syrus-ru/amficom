@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.2 2005/04/19 11:30:22 max Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.3 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/19 11:30:22 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 13:58:41 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
-public class SchemeProtoGroupWrapper extends StorableObjectWrapper {
+public final class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 	
 //	schemeprotogroup.sql
 //	
@@ -28,6 +28,8 @@ public class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";
 	public static final String COLUMN_PARENT_SCHEME_PROTO_GROUP_ID  = "parent_scheme_proto_group_id";
+
+	private static SchemeProtoGroupWrapper instance;
 
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
@@ -63,5 +65,11 @@ public class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 
 	public void setValue(Object object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
+	}
+
+	public static SchemeProtoGroupWrapper getInstance() {
+		if (instance == null)
+			instance = new SchemeProtoGroupWrapper();
+		return instance;
 	}
 }

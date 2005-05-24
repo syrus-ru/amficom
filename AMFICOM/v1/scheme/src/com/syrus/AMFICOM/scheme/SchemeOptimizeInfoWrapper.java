@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoWrapper.java,v 1.1 2005/04/22 16:23:00 max Exp $
+ * $Id: SchemeOptimizeInfoWrapper.java,v 1.2 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:23:00 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/05/24 13:58:41 $
+ * @author $Author: bass $
  * @module scheme_v1
  */
-public class SchemeOptimizeInfoWrapper  extends StorableObjectWrapper {
+public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper {
 	
 //	schemeoptimizeinfo.sql
 //	
@@ -54,7 +54,9 @@ public class SchemeOptimizeInfoWrapper  extends StorableObjectWrapper {
 	public static final String COLUMN_SURVIVOR_RATE = "survivor_rate";
 	
 	public static final String COLUMN_SCHEME_ID = "scheme_id";
-	
+
+	private static SchemeOptimizeInfoWrapper instance;
+
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("SchemeOptimizeInfoWrapper | not implemented yet");
 	}
@@ -89,5 +91,11 @@ public class SchemeOptimizeInfoWrapper  extends StorableObjectWrapper {
 
 	public void setValue(Object object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemeOptimizeInfoWrapper | not implemented yet");
+	}
+
+	public static SchemeOptimizeInfoWrapper getInstance() {
+		if (instance == null)
+			instance = new SchemeOptimizeInfoWrapper();
+		return instance;
 	}
 }

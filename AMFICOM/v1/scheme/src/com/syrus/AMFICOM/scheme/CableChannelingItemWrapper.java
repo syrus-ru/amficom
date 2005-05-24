@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.3 2005/05/18 12:03:15 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.4 2005/05/24 13:58:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:03:15 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/24 13:58:41 $
  * @author $Author: bass $
  * @module scheme_v1
  */
-public class CableChannelingItemWrapper extends StorableObjectWrapper {
+public final class CableChannelingItemWrapper extends StorableObjectWrapper {
 	
 	//TODO: insert creation sql
 	
@@ -29,7 +29,9 @@ public class CableChannelingItemWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_START_SITE_NODE_ID = "start_site_node_id";
 	public static final String COLUMN_END_SITE_NODE_ID = "end_site_node_id";
 	public static final String COLUMN_PARENT_SCHEME_CABLE_LINK_ID = "parent_scheme_sable_link_id";
-		
+
+	private static CableChannelingItemWrapper instance;
+
 	public String getKey(int index) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
@@ -64,5 +66,11 @@ public class CableChannelingItemWrapper extends StorableObjectWrapper {
 
 	public void setValue(Object object, String key, Object value) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
+	}
+
+	public static CableChannelingItemWrapper getInstance() {
+		if (instance == null)
+			instance = new CableChannelingItemWrapper();
+		return instance;
 	}
 }
