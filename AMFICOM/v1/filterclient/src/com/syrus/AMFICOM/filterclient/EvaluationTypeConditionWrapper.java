@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeConditionWrapper.java,v 1.1 2005/04/01 17:07:37 max Exp $
+ * $Id: EvaluationTypeConditionWrapper.java,v 1.2 2005/05/24 13:45:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.filterclient;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 17:07:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/24 13:45:42 $
  * @author $Author: max $
  * @module filterclient_v1
  */
@@ -81,7 +82,7 @@ public class EvaluationTypeConditionWrapper implements ConditionWrapper {
 		return (String) this.storableObjectInitialName.get(storableObject);		
 	}
 	
-	public String[] getKeys() {return keys;}
+	public Collection getKeys() {return Collections.EMPTY_LIST;}
 	public String[] getKeyNames() {return keyNames;}
 	public short getEntityCode() {return entityCode;}
 	public byte[] getTypes() {return keyTypes;}

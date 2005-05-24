@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.filterclient;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,7 +16,7 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/01 17:06:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 13:45:42 $
  * @author $Author: max $
  * @module filterclient_v1
  */
@@ -75,7 +76,7 @@ public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 		return (String) this.storableObjectInitialName.get(storableObject);		
 	}
 	
-	public String[] getKeys() {return keys;}
+	public Collection getKeys() {return Collections.EMPTY_LIST;}
 	public String[] getKeyNames() {return keyNames;}
 	public short getEntityCode() {return entityCode;}
 	public byte[] getTypes() {return keyTypes;}

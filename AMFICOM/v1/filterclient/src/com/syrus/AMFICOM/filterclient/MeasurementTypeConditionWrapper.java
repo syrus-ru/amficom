@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeConditionWrapper.java,v 1.6 2005/04/01 17:06:06 max Exp $
+ * $Id: MeasurementTypeConditionWrapper.java,v 1.7 2005/05/24 13:45:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.filterclient;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 17:06:06 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/24 13:45:42 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -80,7 +81,7 @@ public class MeasurementTypeConditionWrapper implements ConditionWrapper {
 		return (String) this.storableObjectInitialName.get(storableObject);		
 	}
 	
-	public String[] getKeys() {return keys;}
+	public Collection getKeys() {return Collections.EMPTY_LIST;}
 	public String[] getKeyNames() {return keyNames;}
 	public short getEntityCode() {return entityCode;}
 	public byte[] getTypes() {return keyTypes;}
