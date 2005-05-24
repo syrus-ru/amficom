@@ -76,6 +76,7 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -846,20 +847,25 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 	void updFrames()
 	{
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		double deltaX = bs.getResolution();
-
-		double[] filtered = Heap.getRefAnalysisPrimary().filtered;
-		double[] noise = Heap.getRefAnalysisPrimary().noise;
-		
-		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
-		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
-
-		noiseFrame.setGraph(noise, deltaX, false, Heap.PRIMARY_TRACE_KEY);
-		noiseFrame.updScales();
-		noiseFrame.setVisible(true);
-		filteredFrame.setGraph(filtered, deltaX, true, Heap.PRIMARY_TRACE_KEY);
-		filteredFrame.updScales();
-		filteredFrame.setVisible(true);
+        RefAnalysis ra = Heap.getRefAnalysisPrimary();
+        if (bs == null || ra == null) {
+            closeFrames();
+        } else {
+    		double deltaX = bs.getResolution();
+    
+    		double[] filtered = Heap.getRefAnalysisPrimary().filtered;
+    		double[] noise = Heap.getRefAnalysisPrimary().noise;
+    		
+    		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
+    		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
+    
+    		noiseFrame.setGraph(noise, deltaX, false, Heap.PRIMARY_TRACE_KEY);
+    		noiseFrame.updScales();
+    		noiseFrame.setVisible(true);
+    		filteredFrame.setGraph(filtered, deltaX, true, Heap.PRIMARY_TRACE_KEY);
+    		filteredFrame.updScales();
+    		filteredFrame.setVisible(true);
+        }
 	}
 
 	void setActiveRefId(String id)
@@ -929,6 +935,13 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		}
 	}
 
+    private void closeFrames() {
+        ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
+        noiseFrame.setVisible(false);
+        ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
+        filteredFrame.setVisible(false);
+    }
+
 	public void bsHashRemovedAll()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
@@ -976,10 +989,7 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setEnabled("menuWindowThresholds", false);
 
 		aModel.fireModelChanged("");
-		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
-		noiseFrame.setVisible(false);
-		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
-		filteredFrame.setVisible(false);
+        updFrames();
 	}
 
 	/*
