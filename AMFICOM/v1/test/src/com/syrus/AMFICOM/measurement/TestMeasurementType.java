@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementType.java,v 1.2 2005/05/16 17:44:04 arseniy Exp $
+ * $Id: TestMeasurementType.java,v 1.3 2005/05/24 12:25:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,10 +20,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.Com
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/16 17:44:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 12:25:56 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -47,7 +47,7 @@ public class TestMeasurementType extends CommonTest {
 
 	public void testTransferable() throws ApplicationException {
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-		MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Measurement type: '" + measurementType.getId() + "'");
 
 		MeasurementType_Transferable mtt = (MeasurementType_Transferable) measurementType.getTransferable();
@@ -64,7 +64,7 @@ public class TestMeasurementType extends CommonTest {
 
 	public void testChangeParameterTypes() throws ApplicationException {
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-		MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Measurement type: '" + measurementType.getId() + "'");
 
 		Set inParTypIds = measurementType.getInParameterTypeIds();
@@ -92,7 +92,11 @@ public class TestMeasurementType extends CommonTest {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
-		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH,
+		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME));
+		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
@@ -116,7 +120,7 @@ public class TestMeasurementType extends CommonTest {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
-		Set parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
+		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
 		Map parTypeIdsCodename = new HashMap();
 		for (Iterator it = parameterTypes.iterator(); it.hasNext();) {
 			final ParameterType parameterType = (ParameterType) it.next();
@@ -127,7 +131,8 @@ public class TestMeasurementType extends CommonTest {
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_WAVELENGTH));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_LENGTH));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_RESOLUTION));
-		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_PULSE_WIDTH));
+		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES));
+		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_AVERAGE_COUNT));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON));
@@ -137,6 +142,6 @@ public class TestMeasurementType extends CommonTest {
 		measurementType.setInParameterTypeIds(inParTypIds);
 		measurementType.setOutParameterTypeIds(outParTypIds);
 
-		MeasurementStorableObjectPool.flush(measurementType.getId(), false);
+		StorableObjectPool.flush(measurementType.getId(), false);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.5 2005/05/16 17:44:04 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.6 2005/05/24 12:25:56 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -8,15 +8,12 @@ import java.util.Set;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.UserWrapper;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/16 17:44:04 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/24 12:25:56 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -31,20 +28,11 @@ public class TestParameterType extends CommonTest {
 	}
 
 	public void t1estCreateInstance() throws ApplicationException {
-//	sys user
-		TypicalCondition tc = new TypicalCondition(UserWrapper.SYS_LOGIN,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.USER_ENTITY_CODE,
-				UserWrapper.COLUMN_LOGIN);
-		Set users = AdministrationStorableObjectPool.getStorableObjectsByCondition(tc, true);
-		User sysUser = (User) users.iterator().next();
-		System.out.println("sys user: '" + sysUser.getId() + "'");
-
 		String codename = ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON;
 		String name = "Gain splice flag";
 		String description = "Gain splice on/off";
 		DataType dataType = DataType.DATA_TYPE_BOOLEAN;
-		ParameterType parameterType = ParameterType.createInstance(sysUser.getId(), codename, description, name, dataType);
+		ParameterType parameterType = ParameterType.createInstance(creatorUser.getId(), codename, description, name, dataType);
 
 		ParameterType_Transferable ptt = (ParameterType_Transferable) parameterType.getTransferable();
 		ParameterType parameterType1 = new ParameterType(ptt);
@@ -58,14 +46,14 @@ public class TestParameterType extends CommonTest {
 		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
 		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
 
-		GeneralStorableObjectPool.putStorableObject(parameterType);
+		StorableObjectPool.putStorableObject(parameterType);
 
 
 		codename = ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT;
 		name = "Live fiber detect flag";
 		description = "Live fiber detect on/off";
 		dataType = DataType.DATA_TYPE_BOOLEAN;
-		parameterType = ParameterType.createInstance(sysUser.getId(), codename, description, name, dataType);
+		parameterType = ParameterType.createInstance(creatorUser.getId(), codename, description, name, dataType);
 
 		ptt = (ParameterType_Transferable) parameterType.getTransferable();
 		parameterType1 = new ParameterType(ptt);
@@ -79,22 +67,31 @@ public class TestParameterType extends CommonTest {
 		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
 		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
 
-		GeneralStorableObjectPool.putStorableObject(parameterType);
+		StorableObjectPool.putStorableObject(parameterType);
 
 
-		GeneralStorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
 	}
 
 	public void testUpdate() throws ApplicationException {
-		TypicalCondition tc = new TypicalCondition("ref_flag_gain_splice",
+		TypicalCondition tc = new TypicalCondition("ref_pulswd",
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
-		Set objects = GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true);
+		Set objects = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 		ParameterType parameterType = (ParameterType) objects.iterator().next();
 		System.out.println("Parameter type: '" + parameterType.getId() + "'");
-		parameterType.setCodename(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON);
-		GeneralStorableObjectPool.flush(parameterType.getId(), false);
+		parameterType.setCodename(ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES);
+		parameterType.setName("Ширина импульса");
+		parameterType.setDescription("Ширина импульса в режиме высокого разрешения");
+
+		parameterType = ParameterType.createInstance(creatorUser.getId(),
+				ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES,
+				"Ширина импульса в режиме низкого разрешения",
+				"Ширина импульса",
+				parameterType.getDataType());
+		StorableObjectPool.putStorableObject(parameterType);
+		StorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, false);
 	}
 
 //	public void testRetrieveByCondition() throws ApplicationException {
