@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleReflectogramEventComparer.java,v 1.3 2005/05/05 11:45:28 saa Exp $
+ * $Id: SimpleReflectogramEventComparer.java,v 1.4 2005/05/24 08:06:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
  * <p>
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/05/05 11:45:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/24 08:06:51 $
  * @module
  */
 public class SimpleReflectogramEventComparer {
@@ -273,14 +273,38 @@ public class SimpleReflectogramEventComparer {
 
     // internal events comparison
 
-    private boolean eventsOverlaps(SimpleReflectogramEvent x, SimpleReflectogramEvent y)
+    // degree of events overlapping
+    private double eventsOverlap(SimpleReflectogramEvent x, SimpleReflectogramEvent y)
     {
-        return Math.max(x.getBegin(), y.getBegin()) <= Math.min(x.getEnd(), y.getEnd());
+        //return Math.max(x.getBegin(), y.getBegin()) <= Math.min(x.getEnd(), y.getEnd());
+        // we write '<', not '<=' because we want to treat adjacent events as different
+        //return Math.max(x.getBegin(), y.getBegin()) < Math.min(x.getEnd(), y.getEnd()) ? 1 : 0;
+        double xb = x.getBegin();
+        double xe = x.getEnd();
+        double yb = y.getBegin();
+        double ye = y.getEnd();
+        double diff1 = Math.min(xe, ye) - Math.max(xb, yb);
+        if (diff1 <= 0)
+            return 0;
+        double diff2 = Math.max(xe, ye) - Math.min(xb, yb); // diff2 >= diff1
+        return diff1 / diff2;
     }
 
-    private int calcEventsDistance(SimpleReflectogramEvent x, SimpleReflectogramEvent y)
+    private double calcEventsDistance(SimpleReflectogramEvent x, SimpleReflectogramEvent y)
     {
-        return Math.abs(x.getBegin() - y.getBegin()) + Math.abs(x.getEnd() - y.getEnd());
+        double dist1 = Math.abs(x.getBegin() - y.getBegin()) + Math.abs(x.getEnd() - y.getEnd());
+        double mult;
+        // same type
+        if (x.getEventType() == y.getEventType())
+            mult = 1.0;
+        // one event is linear, another is not
+        else if (x.getEventType() == SimpleReflectogramEvent.LINEAR
+                || y.getEventType() == SimpleReflectogramEvent.LINEAR)
+            mult = 3.0;
+        // all other cases
+        else
+            mult = 2.0;
+        return dist1 * mult;
     }
 
     private void removeNonPaired(int[] fwd, int[] backwd)
@@ -299,7 +323,7 @@ public class SimpleReflectogramEventComparer {
         for (int i = 0; i < X.length; i++)
         {
             // наилучшее по нашей метрике парное событие
-            double bestDistance = UNPAIRED; // Stands for +inf
+            double bestDistance = -1; // Stands for +inf
             int bestJ = -1;
             // значимые нелин. события - потенциальные кандидаты в новые/потерянные
             boolean reliablyNewOrLost = X[i].getEventType() != SimpleReflectogramEvent.LINEAR
@@ -308,9 +332,13 @@ public class SimpleReflectogramEventComparer {
                 && ((ReliabilitySimpleReflectogramEvent)X[i]).getReliability() > ReliabilitySimpleReflectogramEvent.RELIABLE; 
             for (int j = 0; j < Y.length; j++)
             {
-                if (eventsOverlaps(X[i], Y[j]))
+                double overlap = eventsOverlap(X[i], Y[j]);
+                if (overlap > 0)
                 {
-                    double distance = calcEventsDistance(X[i], Y[j]); 
+                    // оцениваем степень несоответствия событий
+                    // (эвристический метод)
+                    double distance = calcEventsDistance(X[i], Y[j])
+                        / ( 1.0 + overlap);
                     if (bestDistance < 0 || distance < bestDistance)
                     {
                         bestJ = j;
