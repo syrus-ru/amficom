@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.29 2005/05/24 13:24:56 bass Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.30 2005/05/24 14:59:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,12 @@
 
 package com.syrus.AMFICOM.mserver;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -42,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/24 13:24:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/05/24 14:59:12 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -579,13 +582,13 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 		return objects;
 	}
-	
+
 	public void delete(Set identifiables) {
 
 		if (identifiables == null || identifiables.isEmpty()) {
 			return;
 		}
-		
+
 		Set nonTestIdentifiers = null;
 		Set testIdentifiers = null;
 		for (Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
@@ -595,57 +598,77 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 					testIdentifiers = new HashSet();
 				}
 				testIdentifiers.add(id);
-			} else {
+			}
+			else {
 				if (nonTestIdentifiers == null) {
 					nonTestIdentifiers = new HashSet();
 				}
 				nonTestIdentifiers.add(id);
-			}			
+			}
 		}
-		
+
 		if (nonTestIdentifiers != null) {
 			super.delete(nonTestIdentifiers);
 		}
-		
+
 		if (testIdentifiers != null) {
-			MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 			Set nonProcessingIdentifiers = null;
+			Map mcmIdTestIdsMap = new HashMap();
 			for (Iterator iterator = testIdentifiers.iterator(); iterator.hasNext();) {
 				Identifier testId = (Identifier) iterator.next();
 				try {
-					Test test = (Test) StorableObjectPool.getStorableObject(testId, true);
-					TestStatus status = test.getStatus();
-					Identifier mcmId = test.getMCMId();
-					MCM verifiedMCMReference = sessionEnvironment.getMServerServantManager().getVerifiedMCMReference(mcmId);
+					final Test test = (Test) StorableObjectPool.getStorableObject(testId, true);
+					final TestStatus status = test.getStatus();
 					switch (status.value()) {
 						case TestStatus._TEST_STATUS_NEW:
-						case TestStatus._TEST_STATUS_SCHEDULED: 
+						case TestStatus._TEST_STATUS_SCHEDULED:
 							if (nonProcessingIdentifiers == null) {
 								nonProcessingIdentifiers = new HashSet();
 							}
 							nonProcessingIdentifiers.add(testId);
-							super.delete(Collections.singleton(testId));							
-							verifiedMCMReference.abortTest((Identifier_Transferable) testId.getTransferable());
+							super.delete(Collections.singleton(testId));
 							break;
-						default: 
+						default:
 							test.setStatus(TestStatus.TEST_STATUS_ABORTED);
-							verifiedMCMReference.abortTest((Identifier_Transferable) testId.getTransferable());
 							break;
-
 					}
-				} catch (ApplicationException ae) {
+
+					final Identifier mcmId = test.getMCMId();
+					java.util.Set mcmIdTestIds = (java.util.Set) mcmIdTestIdsMap.get(mcmId);
+					if (mcmIdTestIds == null) {
+						mcmIdTestIds = new HashSet();
+						mcmIdTestIdsMap.put(mcmId, mcmIdTestIds);
+					}
+					mcmIdTestIds.add(testId);
+				}
+				catch (ApplicationException ae) {
 					Log.errorException(ae);
-				} catch (AMFICOMRemoteException e) {
-					Log.errorException(e);
-				}				
+				}
 			}
-			
+
 			if (nonProcessingIdentifiers != null) {
 				super.delete(nonProcessingIdentifiers);
 			}
-			
+
+			MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
+			for (final Iterator it = mcmIdTestIdsMap.keySet().iterator(); it.hasNext();) {
+				final Identifier mcmId = (Identifier) it.next();
+				final Identifier_Transferable[] idsT = Identifier.createTransferables((Collection) mcmIdTestIdsMap.get(mcmId));
+				final MCM mcmRef;
+				try {
+					mcmRef = sessionEnvironment.getMServerServantManager().getVerifiedMCMReference(mcmId);
+					mcmRef.abortTests(idsT);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage(are.message);
+				}
+			}
+
 		}
-	
+
 	}
 
 }
