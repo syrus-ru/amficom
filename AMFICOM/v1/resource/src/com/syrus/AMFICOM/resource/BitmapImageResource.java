@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.14 2005/05/18 11:37:17 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.15 2005/05/24 16:40:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/05/18 11:37:17 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/24 16:40:06 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -36,7 +36,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 
 	private byte image[];
 
-	public BitmapImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	BitmapImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 	}
 
@@ -45,7 +45,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
 	 * @throws CreateObjectException
 	 */
-	public BitmapImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
+	BitmapImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._BITMAP;
@@ -54,7 +54,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 		this.image = bitmapImageResourceData.image;
 	}
 
-	protected BitmapImageResource(final Identifier id,
+	BitmapImageResource(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String codename,

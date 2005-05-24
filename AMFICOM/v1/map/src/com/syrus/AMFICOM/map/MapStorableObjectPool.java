@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.23 2005/05/23 13:51:17 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.24 2005/05/24 16:40:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/23 13:51:17 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/24 16:40:06 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -64,6 +64,16 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	private MapStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAP_GROUP_CODE, cacheMapClass);
+
+		registerFactory(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, new SiteNodeTypeFactory());
+		registerFactory(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, new PhysicalLinkTypeFactory());
+		registerFactory(ObjectEntities.SITE_NODE_ENTITY_CODE, new SiteNodeFactory());
+		registerFactory(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, new TopologicalNodeFactory());
+		registerFactory(ObjectEntities.NODE_LINK_ENTITY_CODE, new NodeLinkFactory());
+		registerFactory(ObjectEntities.MARK_ENTITY_CODE, new MarkFactory());
+		registerFactory(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, new PhysicalLinkFactory());
+		registerFactory(ObjectEntities.COLLECTOR_ENTITY_CODE, new CollectorFactory());
+		registerFactory(ObjectEntities.MAP_ENTITY_CODE, new MapFactory());
 	}
 
 	public static void init(final MapObjectLoader mapObjectLoader1, final int size) {

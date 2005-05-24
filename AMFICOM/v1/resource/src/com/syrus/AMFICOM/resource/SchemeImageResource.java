@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.16 2005/05/18 11:37:17 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.17 2005/05/24 16:40:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/05/18 11:37:17 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/24 16:40:06 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -44,7 +44,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 
 	private List data;
 
-	public SchemeImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	SchemeImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 	}
 
@@ -53,7 +53,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
 	 * @throws CreateObjectException
 	 */
-	public SchemeImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
+	SchemeImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
@@ -65,7 +65,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * be set explicitly via {@link #setData(List)} or
 	 * {@link #setData0(List)}.
 	 */
-	protected SchemeImageResource(final Identifier id,
+	SchemeImageResource(final Identifier id,
 			final Identifier creatorId,
 			final long version) {
 		super(id,

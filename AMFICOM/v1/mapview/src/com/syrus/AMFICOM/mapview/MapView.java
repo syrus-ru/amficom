@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.30 2005/05/24 13:25:03 bass Exp $
+* $Id: MapView.java,v 1.31 2005/05/24 16:40:05 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/05/24 13:25:03 $
+ * @version $Revision: 1.31 $, $Date: 2005/05/24 16:40:05 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -91,7 +91,7 @@ public class MapView extends DomainMember implements Namable {
 	/** Список маркеров. */
 	protected transient Set markers = new HashSet();
 
-	public MapView(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	MapView(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
@@ -102,7 +102,7 @@ public class MapView extends DomainMember implements Namable {
 		}
 	}
 
-	public MapView(MapView_Transferable mvt) throws CreateObjectException {
+	MapView(MapView_Transferable mvt) throws CreateObjectException {
 		try {
 			fromTransferable(mvt);
 		} catch (final ApplicationException ae) {
@@ -110,7 +110,7 @@ public class MapView extends DomainMember implements Namable {
 		}
 	}
 
-	protected MapView(final Identifier id,
+	MapView(final Identifier id,
 				  final Identifier creatorId,
 				  final long version,
 				  final Identifier domainId,

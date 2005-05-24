@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.15 2005/05/18 11:37:17 bass Exp $
+ * $Id: FileImageResource.java,v 1.16 2005/05/24 16:40:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/05/18 11:37:17 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/24 16:40:06 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -33,7 +33,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 	private String fileName;
 
-	public FileImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	FileImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 	}
 
@@ -42,14 +42,14 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
 	 * @throws CreateObjectException
 	 */
-	public FileImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
+	FileImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._FILE;
 		this.fileName = imageResourceData.fileName();
 	}
 
-	protected FileImageResource(final Identifier id,
+	FileImageResource(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String fileName) {
