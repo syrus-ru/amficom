@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.68 2005/05/24 08:00:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.69 2005/05/24 09:57:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.68 $, $Date: 2005/05/24 08:00:34 $
+ * @version $Revision: 1.69 $, $Date: 2005/05/24 09:57:34 $
  * @module
  */
 
@@ -53,16 +53,21 @@ public class CoreAnalysisManager
 	 *   тем меньше чувствительность и больше достоверность.
 	 *   (1.0 - макс. чувствительность, по уровню 3 сигма; рекомендованы
 	 *   значения порядка 1.5 .. 3.0)
-	 * @param reflSize хар. размер отраж. события (в точках),
-	 *   влияет на макс. длину коннектора 
-	 * @param nReflSize хар. размер неотраж. события (в точках)
+	 * @param nReflSize хар. размер неотраж. события (в точках),
+     *   фактически нач. ширина вейвлета
+     * @param rSACrit критическая амплитуда (дБ), выше которой возможно
+     *    сильное увеличение протяженности отражательного события
+     * @param rSSmall макс. длина (в точках) отражательного события
+     *    с амплитудой менее rSACrit
+     * @param rSBig макс. длина (в точках) отражательного события
+     *    с амплитудой более rSACrit (должно быть больше rSSmall)
 	 * @param traceLength длина рефлектограммы до конца волокна,
 	 * может быть 0, тогда будет найдена автоматически
 	 * @param noiseDB уровень шума по 3 сигма, в абс. дБ;
 	 * может быть null - тогда будет найден автоматически
 	 * @return массив событий
 	 */
-	private static native ReliabilitySimpleReflectogramEventImpl[] analyse5(
+	private static native ReliabilitySimpleReflectogramEventImpl[] analyse6(
 			double[] y,
 			double dX,
 			double minLevel,
@@ -70,8 +75,10 @@ public class CoreAnalysisManager
 			double minConnector,
 			double minEnd,
 			double noiseFactor,
-			int reflSize,
 			int nReflSize,
+            double rSACrit,
+            int rSSmall,
+            int rSBig,
 			int traceLength,
 			double[] noiseDB);
 
@@ -203,18 +210,9 @@ public class CoreAnalysisManager
 			int traceLength,
 			double[] noiseArray)
 	{
-		// FIXME: debug output of IA params
-//		System.out.println("cSE: "
-//			+ minLevel
-//			+ "/" + minWeld
-//			+ "/" + minConnector
-//			+ "/" + minEnd
-//			+ "; nf " + noiseFactor
-//			+ "; rs/nrs " + reflSize
-//			+ "/" + nReflSize);
-		return analyse5(y, deltaX,
+		return analyse6(y, deltaX,
 			minLevel, minWeld, minConnector, minEnd, noiseFactor,
-			reflSize, nReflSize,
+			nReflSize, 0.5, (int)(nReflSize * 1.5), reflSize, 
 			traceLength, noiseArray);
 	}
 
@@ -410,7 +408,7 @@ public class CoreAnalysisManager
 
 		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
 				av.avY, av.deltaX,
-				ap.getMinThreshold(),
+				ap.getMinThreshold(),// + 2e-4 * av.deltaX * nReflSize * 0.010, // XXX: 0.010
 				ap.getMinSplice(),
 				ap.getMinConnector(),
 				ap.getMinEnd(),
