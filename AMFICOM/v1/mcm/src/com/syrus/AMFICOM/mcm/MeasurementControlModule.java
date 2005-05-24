@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.92 2005/05/23 08:28:54 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.93 2005/05/24 14:44:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/05/23 08:28:54 $
+ * @version $Revision: 1.93 $, $Date: 2005/05/24 14:44:26 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -472,12 +473,37 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	protected static void abortTest(Test test) {
+	protected static void abortTests(Set testIds) {
+		for (final Iterator it = testIds.iterator(); it.hasNext();) {
+			final Identifier id = (Identifier) it.next();
+			try {
+				final Test test = (Test) StorableObjectPool.getStorableObject(id, true);
+				if (test != null)
+					abortTest(test);
+				else
+					Log.errorMessage("MeasurementControlModule.abortTests | Test '" + id + "' not found");
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+			
+		}
+	}
+
+	private static void abortTest(Test test) {
 		Identifier id = test.getId();
 		if (testList.contains(test)) {
 			Log.debugMessage("Test '" + id + "' found in testList -- removing and aborting ", Log.DEBUGLEVEL07);
 			testList.remove(test);
-			test.setStatus(TestStatus.TEST_STATUS_ABORTED);
+			switch (test.getStatus().value()) {
+				case TestStatus._TEST_STATUS_NEW:
+				case TestStatus._TEST_STATUS_SCHEDULED:
+					StorableObjectPool.delete(id);
+					break;
+				default:
+					test.setStatus(TestStatus.TEST_STATUS_ABORTED);
+			}
+
 			try {
 				StorableObjectPool.putStorableObject(test);
 				StorableObjectPool.flush(test.getId(), true);
@@ -489,7 +515,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		else {
 			if (testProcessors.containsKey(id)) {
 				Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
-				TestProcessor testProcessor = (TestProcessor)testProcessors.get(id);
+				TestProcessor testProcessor = (TestProcessor) testProcessors.get(id);
 				testProcessor.abort();
 			}
 		}
