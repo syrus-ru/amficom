@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeCodenames.java,v 1.6 2005/05/24 16:04:20 bob Exp $
+ * $Id: CharacteristicTypeCodenames.java,v 1.7 2005/05/24 17:09:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/24 16:04:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/05/24 17:09:02 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general_v1
  */
@@ -26,8 +26,8 @@ public final class CharacteristicTypeCodenames {
 	public static final String TRACE_AVERAGE_COUNT_SUFFIX = "_ref_scans";
 	public static final String TRACE_INDEX_OF_REFRACTION_SUFFIX = "_ref_ior";
 	public static final String TRACE_LENGTH_SUFFIX = "_ref_trclen";
-	public static final String TRACE_PULSE_WIDTH_LOW_RES_SUFFIX = "_ref_pulswd_low_res";
-	public static final String TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX = "_ref_pulswd_high_res";
+	public static final String TRACE_PULSE_WIDTH_LOW_RES_SUFFIX = "_ref_pwd_low_res";
+	public static final String TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX = "_ref_pwd_high_res";
 
 	
 	public static final String UNITS_PREFIX = "units_";
