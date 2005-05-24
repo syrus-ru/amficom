@@ -76,7 +76,7 @@ public class SessionDomainCommand extends AbstractCommand {
 
 		/* TODO may be ObjComboBox for Collection as parameter */
 		WrapperedComboBox objComboBox = new WrapperedComboBox(DomainWrapper.getInstance(), new ArrayList(availableDomains),
-													StorableObjectWrapper.COLUMN_NAME);
+													StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 		{
 			Identifier domainId = Environment.getDomainId();
 			for (Iterator iterator = availableDomains.iterator(); iterator.hasNext();) {
