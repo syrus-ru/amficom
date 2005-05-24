@@ -13,8 +13,8 @@ SERVICE_NAME := mongol
 TRANSCEIVER_DIR := ./transceiver
 
 include ../tools/Makefile.inc
-
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
 
 JAVAH := javah
 JAVAH_FLAGS := \
@@ -22,8 +22,9 @@ JAVAH_FLAGS := \
 	-force
 
 
-$(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mcm/*.java) \
 	$(SRCDIR)/com/syrus/util/KISConnectionLRUMap.java
@@ -52,7 +53,7 @@ $(LIBNAME_INTERFACE):	.corba
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
