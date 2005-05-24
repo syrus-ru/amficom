@@ -65,7 +65,7 @@ clean:	cleanmach
 
 cleanmach:
 	$(RM) \
-		$(foreach dir,$(PACKAGES),$(wildcard $(CLASSDIR)/$(dir)/*.class))
+		$(foreach dir,$(PACKAGES),$(CLASSDIR)/$(dir)/*.class)
 	$(RM) .mach
 
 #### Install ####
