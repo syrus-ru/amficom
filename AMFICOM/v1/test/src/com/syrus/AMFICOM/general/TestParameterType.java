@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.6 2005/05/24 12:25:56 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.7 2005/05/24 17:25:31 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/24 12:25:56 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/24 17:25:31 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module test
  */
 public class TestParameterType extends CommonTest {
 
