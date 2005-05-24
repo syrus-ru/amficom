@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.93 2005/05/20 21:11:39 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.94 2005/05/24 12:33:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/05/20 21:11:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.94 $, $Date: 2005/05/24 12:33:06 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -508,11 +508,4 @@ public class TestDatabase extends StorableObjectDatabase {
 		return collection;
 	}
 
-	public void delete(Identifier id) {
-		throw new UnsupportedOperationException("Deleting tests is incorrect -- test '" + id + "'");
-	}
-	
-	public void delete(java.util.Set ids) {
-		throw new UnsupportedOperationException("Deleting tests is incorrect -- collection of " + ids.size() + "' tests");
-	}
 }
