@@ -19,6 +19,8 @@ APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/eve
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
@@ -42,7 +44,7 @@ $(LIBNAME_INTERFACE):	.corba
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
