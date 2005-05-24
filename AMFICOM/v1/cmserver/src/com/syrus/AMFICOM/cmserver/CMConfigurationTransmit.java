@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.25 2005/05/23 09:01:04 bass Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.26 2005/05/24 15:08:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,11 +45,13 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/23 09:01:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/05/24 15:08:15 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
+	private static final long serialVersionUID = 3378072469571119667L;
+
 	public EquipmentType_Transferable[] transmitEquipmentTypes(
 			final Identifier_Transferable ids[],
 			final SessionKey_Transferable sessionKey)

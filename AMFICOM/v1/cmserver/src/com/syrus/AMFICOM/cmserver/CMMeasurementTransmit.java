@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.30 2005/05/23 09:01:04 bass Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.31 2005/05/24 15:08:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,11 +44,13 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/23 09:01:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/05/24 15:08:15 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
+	private static final long serialVersionUID = 7239422140270778290L;
+
 	public MeasurementType_Transferable[] transmitMeasurementTypes(
 			final Identifier_Transferable ids[],
 			final SessionKey_Transferable sessionKey)
