@@ -27,8 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeChildrenFactory;
-import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -50,6 +48,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -385,11 +384,16 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 			Collection measurementTypeItems = new ArrayList(measurementTypes.size());
 
+			
+			MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
 			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
 				MeasurementType measurementType1 = (MeasurementType) iter.next();
-				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType1.getId());
+				IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
+				measurementTypeItem.setChildrenFactory(childrenFactory);
+				measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
+				measurementTypeItem.setName(measurementType1.getName());
+				measurementTypeItem.setObject(measurementType1.getId());
 				measurementTypeItems.add(measurementTypeItem);
-				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(LoginManager.getDomainId()));
 			}
 
 //			this.elementsViewer.setElements(measurementTypeItems);
@@ -733,12 +737,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (this.measurementType != null) {
 			identifier = this.measurementType.getId();
 			measurementTypeCondition = new LinkedIdsCondition(identifier,
-																ObjectEntities.MS_ENTITY_CODE);
+																ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 		}
 
 		if (this.monitoredElement != null) {
 			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(this.monitoredElement.getId(),
-																			ObjectEntities.MS_ENTITY_CODE);
+																			ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 			try {
 				if (measurementTypeCondition != null) {
 					idSet = new HashSet(2);
@@ -1165,107 +1169,5 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 		return color;
 	}
-
-//	public void addTestsEditor(TestsEditor testsEditor) {
-//		TestsEditor[] testEditors1 = new TestsEditor[this.testsEditors.length + 1];
-//		System.arraycopy(this.testsEditors, 0, testEditors1, 1, this.testsEditors.length);
-//		testEditors1[0] = testsEditor;
-//		this.testsEditors = testEditors1;
-//	}
-//
-//	public void removeTestsEditor(TestsEditor testsEditor) {
-//		int index = -1;
-//		for (int i = 0; i < this.testsEditors.length; i++) {
-//			if (this.testsEditors[i].equals(testsEditor)) {
-//				index = i;
-//				break;
-//			}
-//		}
-//
-//		if (index >= 0) {
-//			TestsEditor[] testEditors1 = new TestsEditor[this.testsEditors.length - 1];
-//			System.arraycopy(this.testsEditors, 0, testEditors1, 0, index + 1);
-//			System.arraycopy(this.testsEditors, index + 1, testEditors1, index, this.testsEditors.length - index - 1);
-//			this.testsEditors = testEditors1;
-//		}
-//	}
-//
-//	public void addTestEditor(TestEditor testEditor) {
-//		TestEditor[] testEditors = new TestEditor[this.testEditors.length + 1];
-//		System.arraycopy(this.testEditors, 0, testEditors, 1, this.testEditors.length);
-//		testEditors[0] = testEditor;
-//		this.testEditors = testEditors;
-//	}
-//
-//	public void removeTestEditor(TestEditor testEditor) {
-//		int index = -1;
-//		for (int i = 0; i < this.testEditors.length; i++) {
-//			if (this.testEditors[i].equals(testEditor)) {
-//				index = i;
-//				break;
-//			}
-//		}
-//
-//		if (index >= 0) {
-//			TestEditor[] testEditors1 = new TestEditor[this.testEditors.length - 1];
-//			System.arraycopy(this.testEditors, 0, testEditors1, 0, index + 1);
-//			System.arraycopy(this.testEditors, index + 1, testEditors1, index, this.testEditors.length - index - 1);
-//			this.testEditors = testEditors1;
-//		}
-//	}
-//
-//	public void setAnalysisTypeEditor(AnalysisTypeEditor analysisTypeEditor) {
-//		this.analysisTypeEditor = analysisTypeEditor;
-//	}
-//
-//	public void setEvaluationTypeEditor(EvaluationTypeEditor evaluationTypeEditor) {
-//		this.evaluationTypeEditor = evaluationTypeEditor;
-//	}
-//
-//	public void setKisEditor(KISEditor kisEditor) {
-//		this.kisEditor = kisEditor;
-//	}
-//
-//	public void setMeasurementSetupEditor(MeasurementSetupEditor measurementSetupEditor) {
-//		this.measurementSetupEditor = measurementSetupEditor;
-//	}
-//
-//	public void setMeasurementTypeEditor(MeasurementTypeEditor measurementTypeEditor) {
-//		this.measurementTypeEditor = measurementTypeEditor;
-//	}
-//
-//	public void setMonitoredElementEditor(MonitoredElementEditor monitoredElementEditor) {
-//		this.monitoredElementEditor = monitoredElementEditor;
-//	}
-//
-//	public void setReturnTypeEditor(ReturnTypeEditor returnTypeEditor) {
-//		this.returnTypeEditor = returnTypeEditor;
-//	}
-//
-//	public void setElementsViewer(ElementsViewer elementsViewer) {
-//		this.elementsViewer = elementsViewer;
-//	}
-//
-//	public void setSetEditor(SetEditor setEditor) {
-//		this.setEditor = setEditor;
-//	}
-//
-//	public void setTestTemporalStampsEditor(TestTemporalStampsEditor testTemporalStampsEditor) {
-//		this.testTemporalStampsEditor = testTemporalStampsEditor;
-//	}
-//
-//	
-//	public void setIntervalsEditor(IntervalsEditor intervalsEditor) {
-//		this.intervalsEditor = intervalsEditor;
-//	}
-//
-//	public void refreshTestTemporalStamps() {
-//		if (this.intervalsEditor != null) {
-//			TestTemporalStamps testTemporalStamps = this.testTemporalStampsEditor.getTestTemporalStamps();
-//			this.intervalsEditor.setIntervalsTemporalPattern(testTemporalStamps);
-//		}
-//	}
-//	
-//	
 
 }
