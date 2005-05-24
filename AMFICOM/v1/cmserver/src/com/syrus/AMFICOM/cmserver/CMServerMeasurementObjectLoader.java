@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.43 2005/05/23 18:45:13 bass Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.44 2005/05/24 12:39:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -42,8 +44,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/05/23 18:45:13 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/05/24 12:39:30 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -367,6 +369,46 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			throw new DatabaseException("CMServerMeasurementObjectLoader.refresh | DatabaseException: " + e.getMessage());
 		}
 
+	}
+	
+	public void delete(Set identifiables) {
+		if (identifiables == null || identifiables.isEmpty()) {
+			return;
+		}
+		
+		Set nonTestIdentifiers = null;
+		Set testIdentifiers = null;
+		for (Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			if (id.getMajor() == ObjectEntities.TEST_ENTITY_CODE) {
+				if (testIdentifiers == null) {
+					testIdentifiers = new HashSet();
+				}
+				testIdentifiers.add(id);
+			} else {
+				if (nonTestIdentifiers == null) {
+					nonTestIdentifiers = new HashSet();
+				}
+				nonTestIdentifiers.add(id);
+			}			
+		}
+		
+		if (nonTestIdentifiers != null) {
+			super.delete(nonTestIdentifiers);
+		}
+		
+		if (testIdentifiers != null) {
+			try {
+				MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
+				mServerRef.deleteTests(Identifier.createTransferables(testIdentifiers));				
+			} catch (CommunicationException ce) {
+				Log.errorException(ce);
+			} catch (AMFICOMRemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 
 }
