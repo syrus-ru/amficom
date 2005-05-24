@@ -49,7 +49,9 @@ $(LIBNAME):	.mach .native
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/*.java) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java)
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/events/*.java)
+
 	touch $@
 
 .native:
