@@ -27,8 +27,12 @@ public class HistogrammPanel extends ScaledGraphPanel
 	// seem to produce results of the same as TYPE_SINX.
 	// So I prefer to use SINX //saa
 
-	//private static int WLET_TYP = Wavelet.TYPE_ABSXSINX;
-	private static int WLET_TYP = Wavelet.TYPE_SINX;
+	//private static int waveletType = Wavelet.TYPE_ABSXSINX;
+	private static int waveletType = Wavelet.TYPE_SINX;
+
+    private static final float GAUSS_W = 1.6f; // width of gaussian in pixels
+    private static final Stroke GAUSS_STROKE = new BasicStroke(GAUSS_W);
+    private static final Stroke THRESHOLD_STROKE = new BasicStroke(1);
 
 	private int nBins = 400;
 	private double downLimit = -0.4;
@@ -38,10 +42,6 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private double[] derivative;
 	private double[] gauss;
 	private double[] threshold;
-
-	private static float GAUSS_W = 1.6f; // width of gaussian in pixels
-	private static Stroke GAUSS_STROKE = new BasicStroke(GAUSS_W);
-	private static Stroke THRESHOLD_STROKE = new BasicStroke(1);
 
 	private Color gaussColor;
 	private Color thresholdColor;
@@ -69,7 +69,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	public void init()
 	{
 		int event_size = ReflectogramMath.getReflectiveEventSize(y, 0.1);
-		derivative = ReflectogramMath.getDerivative(y, event_size, WLET_TYP);
+		derivative = ReflectogramMath.getDerivative(y, event_size, waveletType);
 
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = -derivative[i];
@@ -199,11 +199,11 @@ public class HistogrammPanel extends ScaledGraphPanel
 	{
 		Histogramm histo = new Histogramm(downLimit, upLimit, nBins);
 		y = histo.init(derivative, start1, end1);
-		int max_index = histo.getMaximumIndex();
+		int maxIndex = histo.getMaximumIndex();
 
 		init(y, deltaX);
-		gauss = CoreAnalysisManager.calcGaussian(y, max_index); // XXX: takes about 98% of updateHistogrammData execution time
-		threshold = CoreAnalysisManager.calcThresholdCurve(y, max_index);
+		gauss = CoreAnalysisManager.calcGaussian(y, maxIndex); // XXX: takes about 98% of updateHistogrammData execution time
+		threshold = CoreAnalysisManager.calcThresholdCurve(y, maxIndex);
 
 		for (int i = 0; i < y.length; i++)
 		{

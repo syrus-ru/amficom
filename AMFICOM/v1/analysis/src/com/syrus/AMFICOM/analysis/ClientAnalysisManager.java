@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.10 2005/05/19 12:05:29 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.11 2005/05/24 10:27:41 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,14 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/05/19 12:05:29 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/24 10:27:41 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
 	private static final String PROPERTIES_FILE_NAME = "analysis.properties";
 
-	private static AnalysisParameters DEFAULT_AP = new AnalysisParameters (
+	private static AnalysisParameters defaultAP = new AnalysisParameters (
 			0.05, //минимальный уровень события
 			0.07, //минимальный уровень сварки
 			0.21, //минимальный уровень коннектора
@@ -34,7 +34,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 	);
 
     public static AnalysisParameters getDefaultAPClone() {
-        return (AnalysisParameters)DEFAULT_AP.clone();
+        return (AnalysisParameters)defaultAP.clone();
     }
 
 	public ClientAnalysisManager() {
@@ -45,9 +45,9 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		try {
 			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
 			String temp = properties.getProperty("parameters");
-			minuitParams = new AnalysisParameters(temp, DEFAULT_AP);
+			minuitParams = new AnalysisParameters(temp, defaultAP);
 		} catch (IOException ex) {
-			minuitParams = (AnalysisParameters)DEFAULT_AP.clone();
+			minuitParams = (AnalysisParameters)defaultAP.clone();
 		}
 
 		// сохраняем в Pool

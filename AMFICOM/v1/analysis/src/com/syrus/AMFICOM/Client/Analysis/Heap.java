@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.60 2005/05/20 18:03:39 saa Exp $
+ * $Id: Heap.java,v 1.61 2005/05/24 10:27:41 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.60 $, $Date: 2005/05/20 18:03:39 $
+ * @version $Revision: 1.61 $, $Date: 2005/05/24 10:27:41 $
  * @module
  */
 public class Heap
@@ -114,7 +114,12 @@ public class Heap
     private static LinkedList etalonMTMListeners = new LinkedList();
     private static LinkedList currentTraceChangeListeners = new LinkedList();
     private static LinkedList currentEventChangeListeners = new LinkedList();
-    
+
+    // constructor is not available
+    private Heap() {
+        // not instantiable 
+    }
+
     // methods
 
     public static ReflectogrammLoadDialog getRLDialogByKey(String key) {

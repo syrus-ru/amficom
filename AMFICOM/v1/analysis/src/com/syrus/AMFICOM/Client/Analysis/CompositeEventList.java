@@ -1,5 +1,5 @@
 /*-
- * $Id: CompositeEventList.java,v 1.2 2005/05/03 12:41:11 saa Exp $
+ * $Id: CompositeEventList.java,v 1.3 2005/05/24 10:27:41 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/05/03 12:41:11 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/24 10:27:41 $
  * @module
  */
 public class CompositeEventList {
