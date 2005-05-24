@@ -393,7 +393,7 @@ public class ScheduleMainFrame extends JFrame implements PropertyChangeListener 
 		treeFrame.init();
 
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_ENTITY_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MS_ENTITY_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SET_ENTITY_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
 

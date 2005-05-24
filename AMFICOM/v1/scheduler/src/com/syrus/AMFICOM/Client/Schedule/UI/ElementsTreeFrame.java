@@ -20,7 +20,6 @@ import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Schedule.item.ElementItem;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -117,7 +116,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public MonitoredElement getMonitoredElement() {
 		try {
-			Identifier meId = this.getObject(ObjectEntities.ME_ENTITY_CODE);
+			Identifier meId = this.getObject(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
 
 			MonitoredElement me = null;
 			if (meId != null)
@@ -143,7 +142,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
 		Log.debugMessage("ElementsTreeFrame.setMonitoredElement | monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Log.FINEST);
-		this.paramMap.put(ObjectEntities.ME_ENTITY, monitoredElement);
+		this.paramMap.put(ObjectEntities.MONITORED_ELEMENT_ENTITY, monitoredElement);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 
@@ -222,7 +221,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		if (this.treePanel == null) {
 			final Dispatcher dispatcher = this.aContext.getDispatcher();
 			this.treePanel = new LogicalTreeUI(this.rootItem, false);
-			this.treePanel.setRenderer(ElementItem.class, new ItemTreeIconLabelCellRenderer());
+			this.treePanel.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
 			this.selectionListener = new SelectionListener() {
 
 				public void selectedItems(Collection items) {
@@ -233,7 +232,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 							final Identifier identifier = (Identifier) object;
 							short major = identifier.getMajor();
 							switch (major) {
-								case ObjectEntities.ME_ENTITY_CODE: {
+								case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE: {
 									Item parent1 = item;
 									while (true) {
 										if (!parent1.canHaveParent())

@@ -218,8 +218,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 							}
 						}
 					} catch (ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						SchedulerModel.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 					}
 				}
 			}
@@ -242,8 +241,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 							}
 						}
 					} catch (ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						SchedulerModel.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 					}
 				}
 			}
@@ -303,8 +301,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 								}
 							}
 						} catch (ApplicationException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							SchedulerModel.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 						}
 					}
 
@@ -630,8 +627,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 			try {
 				storableObject = StorableObjectPool.getStorableObject(identifier, true);
 			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				SchedulerModel.showErrorMessage(this.parametersTestPanel, e);
 			}
 		}
 		cb.setSelectedItem(storableObject);
