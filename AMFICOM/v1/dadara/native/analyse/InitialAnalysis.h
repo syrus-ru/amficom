@@ -95,6 +95,7 @@ private:
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
 
 	// анализ
+	void shiftThresholds();// изменить границы порогов в соответствии со средним значением вейвлета 
     void findAllWletSplashes(double* f_wlet, ArrList& splashes);
     void findEventsBySplashes(ArrList&  splashes);
 	int	 processDeadZone(ArrList& splashes);
