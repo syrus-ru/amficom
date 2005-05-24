@@ -15,74 +15,67 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/24 10:01:56 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class WrapperedTableModel extends AbstractTableModel {
 
-	private static final long			serialVersionUID	= 4007513055820570639L;
+	private static final long	serialVersionUID	= 4007513055820570639L;
 
 	/**
 	 * ObjectResourceController of Model (StorableObject) will be used for
 	 * sorting. see {@link Wrapper}
 	 */
-	protected Wrapper	wrapper;
-
-//	/**
-//	 * ask Kruppen
-//	 */
-//	private String						domainId			= "";
-//
-//	/**
-//	 * ask Kruppen
-//	 */
-//	private boolean						doRestrict			= false;
+	protected Wrapper			wrapper;
 
 	/**
 	 * list of Model (ObjectResouce) elements. see {@link StorableObject}
 	 */
-	private List						orList;
+	private List				list;
+
+	protected String[]			keys;
 
 	/**
 	 * saved direction of column sorting. Used when change direction to negative
 	 * to current. see {@link WrapperComparator#ascend}
 	 */
-	private boolean[]					ascendings;
+	private boolean[]			ascendings;
 
 	/**
 	 * @param wrapper
 	 *            see {@link #wrapper}
 	 */
-	public WrapperedTableModel(Wrapper wrapper) {
-		this(wrapper, new ArrayList());
+	public WrapperedTableModel(final Wrapper wrapper, final String[] keys) {
+		this(wrapper, new ArrayList(), keys);
 	}
 
 	/**
 	 * @param controller
 	 *            see {@link #wrapper}
 	 * @param objectResourceList
-	 *            see {@link #orList}
+	 *            see {@link #list}
 	 */
-	public WrapperedTableModel(Wrapper controller, List objectResourceList) {
+	public WrapperedTableModel(final Wrapper controller, final List objectResourceList, final String[] keys) {
 		this.wrapper = controller;
-		this.ascendings = new boolean[this.wrapper.getKeys().size()];
-		setContents(objectResourceList);
+		this.ascendings = new boolean[keys.length];
+		this.keys = keys;
+		this.setValues(objectResourceList);
 	}
 
 	/**
 	 * clear model
 	 */
 	public void clear() {
-		this.orList.clear();
+		this.list.clear();
 		super.fireTableDataChanged();
 	}
 
 	/**
 	 * override {@link AbstractTableModel#getColumnClass(int)}method
 	 */
-	public Class getColumnClass(int columnIndex) {
-		String key = this.wrapper.getKey(columnIndex);
+	public Class getColumnClass(final int columnIndex) {
+		final String key = this.keys[columnIndex];
 		return this.wrapper.getPropertyClass(key);
 	}
 
@@ -90,44 +83,41 @@ public class WrapperedTableModel extends AbstractTableModel {
 	 * override {@link javax.swing.table.TableModel#getColumnCount()}method
 	 */
 	public int getColumnCount() {
-		return this.wrapper.getKeys().size();
+		return this.keys.length;
 	}
 
-	public String getColumnName(int columnIndex) {
-		String key = this.wrapper.getKey(columnIndex);
+	public String getColumnName(final int columnIndex) {
+		final String key = this.keys[columnIndex];
 		return this.wrapper.getName(key);
 	}
 
-	public List getContents() {
-		return this.orList;
+	public List getValues() {
+		return this.list;
 	}
 
-//	public String getDomainId() {
-//		return this.domainId;
-//	}
-
-	public int getIndexOfObject(Object object) {		
-		return this.orList.indexOf(object);
+	public int getIndexOfObject(final Object object) {
+		return this.list.indexOf(object);
 	}
 
-	public Object getObject(int index) {
-		return this.orList.get(index);
+	public Object getObject(final int index) {
+		return this.list.get(index);
 	}
 
 	public int getRowCount() {
-		return this.orList.size();
+		return this.list.size();
 	}
 
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		String key = this.wrapper.getKey(columnIndex);
-		Object object =  this.orList.get(rowIndex);
+	public Object getValueAt(	final int rowIndex,
+	                         	final int columnIndex) {
+		final String key = this.keys[columnIndex];
+		final Object object = this.list.get(rowIndex);
 		Object obj = this.wrapper.getValue(object, key);
 
-		Object propertyValue = this.wrapper.getPropertyValue(key);
+		final Object propertyValue = this.wrapper.getPropertyValue(key);
 		if (propertyValue instanceof Map) {
-			Map map = (Map) propertyValue;
+			final Map map = (Map) propertyValue;
 			Object keyObject = null;
-			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
 				Object keyObj = it.next();
 				if (map.get(keyObj).equals(obj)) {
 					keyObject = keyObj;
@@ -140,62 +130,43 @@ public class WrapperedTableModel extends AbstractTableModel {
 		return obj;
 	}
 
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		String key = this.wrapper.getKey(columnIndex);
+	public boolean isCellEditable(	final int rowIndex,
+	                              	final int columnIndex) {
+		final String key = this.keys[columnIndex];
 		return this.wrapper.isEditable(key);
 	}
 
-//	public void restrictContents() {
-//		List removeItemList = new ArrayList();
-//		for (Iterator it = this.orList.iterator(); it.hasNext();) {
-//			StorableObject or = (StorableObject) it.next();
-//			if (!or.getDomainId().equals(this.domainId))
-//				removeItemList.add(or);
-//		}
-//		this.orList.removeAll(removeItemList);
-//		removeItemList.clear();
-//		removeItemList = null;
-//	}
-//
-//	public void restrictToDomain(boolean value) {
-//		this.doRestrict = value;
-//		if (this.doRestrict)
-//			restrictContents();
-//		super.fireTableDataChanged();
-//	}
-
-	public void setContents(List list) {
-		if (list == null)
-			list = new ArrayList();
-		this.orList = list;
-//		if (this.doRestrict)
-//			restrictContents();
+	public void setValues(final List list) {
+		List list1 = list;
+		if (list == null) {
+			list1 = new ArrayList();
+		}
+		this.list = list1;
 		super.fireTableDataChanged();
 	}
 
-	public void setContents(Collection collection) {
-		if (this.orList == null)
-			this.orList = new ArrayList();
-		this.orList.clear();
-		if(collection != null)
-			this.orList.addAll(collection);
-//		if (this.doRestrict)
-//			restrictContents();
+	public void setValues(final Collection collection) {
+		if (this.list == null) {
+			this.list = new ArrayList();
+		}
+		this.list.clear();
+		if (collection != null) {
+			this.list.addAll(collection);
+		}
 		super.fireTableDataChanged();
 	}
 
-//	public void setDomainId(String domainId) {
-//		this.domainId = domainId;
-//	}
-//
-	public void setValueAt(Object obj, int rowIndex, int columnIndex) {
-		String key = this.wrapper.getKey(columnIndex);
-		Object object = this.orList.get(rowIndex);
+	public void setValueAt(	final Object obj,
+	                       	final int rowIndex,
+	                       	final int columnIndex) {
+		final String key = this.keys[columnIndex];
+		final Object object = this.list.get(rowIndex);
 		if (this.wrapper.getPropertyValue(key) instanceof Map) {
-			Map map = (Map) this.wrapper.getPropertyValue(key);
+			final Map map = (Map) this.wrapper.getPropertyValue(key);
 			this.wrapper.setValue(object, key, map.get(obj));
-		} else
+		} else {
 			this.wrapper.setValue(object, key, obj);
+		}
 		this.fireTableDataChanged();
 	}
 
@@ -204,14 +175,15 @@ public class WrapperedTableModel extends AbstractTableModel {
 	}
 
 	public void sortRows(int columnIndex) {
-		sortRows(columnIndex, this.ascendings[columnIndex]);
+		this.sortRows(columnIndex, this.ascendings[columnIndex]);
 		this.ascendings[columnIndex] = !this.ascendings[columnIndex];
 	}
 
-	public void sortRows(int columnIndex, boolean ascending) {
-		if (this.orList != null) {
-			String key = this.wrapper.getKey(columnIndex);
-			Collections.sort(this.orList, new WrapperComparator(this.wrapper, key, ascending));
+	public void sortRows(	final int columnIndex,
+	                     	final boolean ascending) {
+		if (this.list != null) {
+			final String key = this.keys[columnIndex];
+			Collections.sort(this.list, new WrapperComparator(this.wrapper, key, ascending));
 		}
 	}
 }

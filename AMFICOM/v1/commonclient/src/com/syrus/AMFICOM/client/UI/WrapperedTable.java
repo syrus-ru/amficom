@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/24 10:01:56 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -32,26 +31,25 @@ public class WrapperedTable extends JTable {
 
 	private static final long	serialVersionUID	= -437251205606073016L;
 
-	public WrapperedTable(Wrapper controller, List objectResourceList) {
-		this(new WrapperedTableModel(controller, objectResourceList));
+	public WrapperedTable(final Wrapper controller, final List objectResourceList, final String[] keys) {
+		this(new WrapperedTableModel(controller, objectResourceList, keys));
 	}
 	
-	public WrapperedTable(Wrapper controller) {
-		this(new WrapperedTableModel(controller, new LinkedList()));
+	public WrapperedTable(final Wrapper controller, final String[] keys) {
+		this(new WrapperedTableModel(controller, keys));
 	}
 
-	public WrapperedTable(WrapperedTableModel dm) {
+	public WrapperedTable(final WrapperedTableModel dm) {
 		super(dm);
-		initialization();
+		this.initialization();
 	}
 
 	public void setDefaultTableCellRenderer() {
-		WrapperedTableModel model = (WrapperedTableModel) getModel();
-
+		final WrapperedTableModel model = (WrapperedTableModel) getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
 			TableCellRenderer renderer = StubLabelCellRenderer.getInstance();
 			TableColumn col = this.getColumnModel().getColumn(mColIndex);
-			Class clazz = model.wrapper.getPropertyClass(model.wrapper.getKey(mColIndex));
+			Class clazz = model.wrapper.getPropertyClass(model.keys[mColIndex]);
 			if (clazz.equals(Boolean.class))
 				renderer = null;
 			else if (clazz.equals(Color.class)) {
@@ -65,7 +63,7 @@ public class WrapperedTable extends JTable {
 	public void setEditor(TableCellEditor editor, String key) {
 		WrapperedTableModel model = (WrapperedTableModel) getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
-			if (model.wrapper.getKey(mColIndex).equals(key)) {
+			if (model.keys[mColIndex].equals(key)) {
 				TableColumn col = this.getColumnModel().getColumn(mColIndex);
 				col.setCellEditor(editor);
 			}
@@ -80,7 +78,7 @@ public class WrapperedTable extends JTable {
 	public void setRenderer(TableCellRenderer renderer, String key) {
 		WrapperedTableModel model = (WrapperedTableModel) getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
-			if (model.wrapper.getKey(mColIndex).equals(key)) {
+			if (model.keys[mColIndex].equals(key)) {
 				TableColumn col = this.getColumnModel().getColumn(mColIndex);
 				col.setCellRenderer(renderer);
 			}
@@ -90,7 +88,7 @@ public class WrapperedTable extends JTable {
 	private void updateModel() {
 		WrapperedTableModel model = (WrapperedTableModel) getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
-			Object obj = model.wrapper.getPropertyValue(model.wrapper.getKey(mColIndex));
+			Object obj = model.wrapper.getPropertyValue(model.keys[mColIndex]);
 			if (obj instanceof Map) {
 				final Map map = (Map) obj;
 				AComboBox comboBox = new AComboBox();
@@ -110,13 +108,13 @@ public class WrapperedTable extends JTable {
 						AComboBox cb = (AComboBox) e.getSource();
 						if (cb.getItemCount() != map.keySet().size()) {
 							cb.removeAllItems();
-							List keys = new ArrayList(map.keySet());
-							Collections.sort(keys);
-							for (Iterator it = keys.iterator(); it.hasNext();) {
+							List keys1 = new ArrayList(map.keySet());
+							Collections.sort(keys1);
+							for (Iterator it = keys1.iterator(); it.hasNext();) {
 								cb.addItem(it.next());
 							}
-							keys.clear();
-							keys = null;
+							keys1.clear();
+							keys1 = null;
 						}
 
 					}
