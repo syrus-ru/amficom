@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.3 2005/04/28 15:27:05 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.4 2005/05/24 15:43:43 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/04/28 15:27:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/24 15:43:43 $
  * @module
  */
 public class AnalysisParameters
@@ -84,17 +84,41 @@ implements DataStreamable, Cloneable
 		param[4] = dis.readDouble();
 	}
 
+    // returns true if all fields were initialized,
+    // false otherwise.
+    private boolean setParamsFromString(String val) {
+        int i = 0;
+        int bind = -1;
+        int ind = val.indexOf(";");
+        while ((ind != -1) && (i < param.length)) {
+            param[i++] = Double.parseDouble(val.substring(bind + 1, ind));
+            bind = ind;
+            ind = val.indexOf(";", bind + 1);
+        }
+        return i == param.length;
+    }
+
+    /**
+     * creates via string of parameters using the default values
+     * @param val text representation of parameters
+     * @param defaults default values
+     */
 	public AnalysisParameters(String val, AnalysisParameters defaults) {
 		param = (double[])defaults.param.clone();
-		int i = 0;
-		int bind = -1;
-		int ind = val.indexOf(";");
-		while ((ind != -1) && (i < param.length)) {
-			param[i++] = Double.parseDouble(val.substring(bind + 1, ind));
-			bind = ind;
-			ind = val.indexOf(";", bind + 1);
-		}
+        setParamsFromString(val);
 	}
+
+    /**
+     * creates via string of parameters
+     * @param val text representation of parameters
+     * @throws IllegalArgumentException if input string is malformed
+     */
+    public AnalysisParameters(String val) {
+        param = new double[5];
+        if (!setParamsFromString(val))
+            throw new IllegalArgumentException(
+                    "couldn't parse analysis parameters string");
+    }
 
 	public String toString() {
 		String str = "";
