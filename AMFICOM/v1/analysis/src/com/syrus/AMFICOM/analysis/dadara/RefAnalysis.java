@@ -40,6 +40,7 @@ public class RefAnalysis
         { // FIXME: just a debug code
             SimpleReflectogramEvent []se = mtae.getSimpleEvents();
             System.out.println("NEvents=" + se.length);
+            System.out.println("EVENTS");
             for (int i = 0; i < se.length; i++) {
                 ReliabilitySimpleReflectogramEvent re = 
                     (ReliabilitySimpleReflectogramEventImpl) se[i];
