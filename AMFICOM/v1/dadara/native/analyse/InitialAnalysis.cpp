@@ -120,6 +120,7 @@ void InitialAnalysis::performAnalysis()
     performTransformationOnly(data, 0, lastPoint, f_wlet, wlet_width, wn);
 	calcAverageFactor(f_wlet, wlet_width, wn);
 	centerWletImageOnly(f_wlet, wlet_width, 0, lastPoint, wn);// вычитаем из коэффициентов преобразовани€( ѕ) посто€нную составл€ющую
+    shiftThresholds();// сдвинуть пороги 
 #if 0
 	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
 		int i;
@@ -196,7 +197,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
     { begin = 0;
       end  = sp1->end_thr;
     }
-    else // иначе на рассто€нии rSBig от начала ищЄм максимальный всплеск вверх и поле него минимальный всплеск вниз
+    else // иначе на рассто€нии rSBig от начала ищЄм максимальный всплеск вверх и поcле него минимальный всплеск вниз
     { for(i = 0; sp2->begin_thr<rSBig && i+1<splashes.getLength(); i++)
       { sp1 = (Splash*)splashes[i];
         sp2 = (Splash*)splashes[i+1];
@@ -534,20 +535,30 @@ void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, 
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
-{
-	//int len = end - begin;
+{	//int len = end - begin;
 	SineWavelet wavelet;
 	wavelet.transform(freq, f, lastPoint, begin, end - 1, f_wlet + begin, norma);
 }
 //------------------------------------------------------------------------------------------------------------
-// вычислить среднее значение вейвлет-образа 
+// вычислить среднее значение вейвлет-образа
 double InitialAnalysis::calcWletMeanValue(double *fw, double from, double to, int columns)
-{   //возможное затухание находитс€ в пределах [0; -0.5] дЅ
+{   // возможное затухание находитс€ в пределах [0; -0.5] дЅ
 	Histogramm* histo = new Histogramm(from, to, columns);
 	histo->init(fw, 0, lastPoint-1);
 	double mean_att = histo->getMaximumValue();
 	delete histo;
 	return mean_att;
+}
+//------------------------------------------------------------------------------------------------------------
+// изменить границы порогов в соответствии со средним значением вейвлета
+void InitialAnalysis::shiftThresholds()
+{   double f_wlet_avrg = average_factor * getWLetNorma2(wlet_width) / getWLetNorma(wlet_width); // средний наклон
+	double thres_factor = 0.2;// степень вли€ни€ общего наклона на сдвиг порогов
+    minimalThreshold += fabs(f_wlet_avrg)*thres_factor;
+    if(minimalThreshold > 0.9*minimalWeld)
+    {  minimalThreshold = 0.9*minimalWeld;
+    }
+	//minimalWeld += fabs(f_wlet_avrg)*thres_factor;
 }
 //------------------------------------------------------------------------------------------------------------
 // поскольку убрали срезание коннекторов то теперь делаем так : если найдена сварка там,
