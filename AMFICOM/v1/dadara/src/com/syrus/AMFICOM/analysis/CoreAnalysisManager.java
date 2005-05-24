@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.67 2005/05/06 15:48:37 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.68 2005/05/24 08:00:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.67 $, $Date: 2005/05/06 15:48:37 $
+ * @version $Revision: 1.68 $, $Date: 2005/05/24 08:00:34 $
  * @module
  */
 
@@ -204,14 +204,14 @@ public class CoreAnalysisManager
 			double[] noiseArray)
 	{
 		// FIXME: debug output of IA params
-		System.out.println("cSE: "
-			+ minLevel
-			+ "/" + minWeld
-			+ "/" + minConnector
-			+ "/" + minEnd
-			+ "; nf " + noiseFactor
-			+ "; rs/nrs " + reflSize
-			+ "/" + nReflSize);
+//		System.out.println("cSE: "
+//			+ minLevel
+//			+ "/" + minWeld
+//			+ "/" + minConnector
+//			+ "/" + minEnd
+//			+ "; nf " + noiseFactor
+//			+ "; rs/nrs " + reflSize
+//			+ "/" + nReflSize);
 		return analyse5(y, deltaX,
 			minLevel, minWeld, minConnector, minEnd, noiseFactor,
 			reflSize, nReflSize,
@@ -282,12 +282,12 @@ public class CoreAnalysisManager
 		TracesAverages res = new TracesAverages();
 		res.nTraces = N_TRACES;
 
-        System.err.println("N_TRACES: " + N_TRACES);
+        //System.err.println("N_TRACES: " + N_TRACES);
 		for (Iterator it = bsColl.iterator(); it.hasNext(); isFirst = false)
 		{
 			BellcoreStructure bs = (BellcoreStructure)it.next();
 
-            System.err.println("  bs = " + bs);
+            //System.err.println("  bs = " + bs);
 			// general info
 		    double[] yCur = bs.getTraceData(); // is rather slow, typ. 25% of loop time
 		    int curLength = calcTraceLength(yCur);
@@ -421,12 +421,7 @@ public class CoreAnalysisManager
 		// FIX//ME: debug output of IA results
 //		for (int i = 0; i < rse.length; i++)
 //			System.out.println("rse[" + i + "]:"
-//				+ " begin=" + rse[i].getBegin()
-//				+ " end=" + rse[i].getEnd()
-//				+ " type=" + rse[i].getEventType()
-//				+ " r=" + (rse[i].hasReliability() ?
-//					String.valueOf(rse[i].getReliability()) : "<undefined>")
-//				);
+//			    + " " + rse[i].toString());
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
 		// (длина может уменьшиться)
@@ -451,11 +446,11 @@ public class CoreAnalysisManager
 		long t4 = System.currentTimeMillis();
 
         // FIXME: debug output of analysis timing
-		System.out.println("makeAnalysis: "
-			+ "getDataAndLengthAndNoise: " + (t1-t0)
-			+ "; IA: " + (t2-t1) + "; fit: " + (t3-t2)
-			+ "; makeMTM: " + (t4-t3)
-			);
+//		System.out.println("makeAnalysis: "
+//			+ "getDataAndLengthAndNoise: " + (t1-t0)
+//			+ "; IA: " + (t2-t1) + "; fit: " + (t3-t2)
+//			+ "; makeMTM: " + (t4-t3)
+//			);
 
 		return mtae;
 	}
@@ -489,7 +484,7 @@ public class CoreAnalysisManager
             long t0 = System.currentTimeMillis();
 			TracesAverages av = findTracesAverages(bsSet, true, false, true);
             long t1 = System.currentTimeMillis();
-            System.out.println("makeAnalysis: findTracesAverages: dt " + (t1-t0)); // FIXME: debug: analysis timing
+            //System.out.println("makeAnalysis: findTracesAverages: dt " + (t1-t0)); // FIXME: debug: analysis timing
 			return makeAnalysis(av, ap);
 		} catch (IncompatibleTracesException e) {
 			// одна рефлектограмма всегда совместима с самой собой
