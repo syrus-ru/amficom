@@ -78,7 +78,8 @@ void EPold2RE(EventParams* epo, ReliabilityEvent &epn)
 		break;
 
 	case EventParams_CONNECTOR:
-		R = fmin(epo->R1, epo->R2, epo->R3);
+		R = epo->R;
+		//fmin(epo->R1, epo->R2, epo->R3);
 		break;
 
 	default:
