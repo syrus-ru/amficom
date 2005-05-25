@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.36 2005/05/18 14:59:46 bass Exp $
+ * $Id: MapEditorMainFrame.java,v 1.37 2005/05/25 16:27:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -88,17 +88,21 @@ import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
  * 
  * 
- * @version $Revision: 1.36 $, $Date: 2005/05/18 14:59:46 $
+ * @version $Revision: 1.37 $, $Date: 2005/05/25 16:27:27 $
  * @module mapviewclient_v1
- * @author $Author: bass $
+ * @author $Author: krupenn $
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module
@@ -806,6 +810,8 @@ public class MapEditorMainFrame extends JFrame
 //		} catch(DatabaseException e) {
 //			e.printStackTrace();
 //		} catch(IllegalObjectEntityException e) {
+//			e.printStackTrace();
+//		} catch(IdentifierGenerationException e) {
 //			e.printStackTrace();
 //		}
 	}
