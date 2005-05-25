@@ -379,7 +379,7 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& 
 // -------------------------------------------------------------------------------------------------
 // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
 double InitialAnalysis::calcThresh(double thres, double noise)
-{   return thres>noise ? thres : noise;// = max(thres, noise)
+{	return thres>noise ? thres : noise;// = max(thres, noise)
 	//return thres+noise;
 }
 // -------------------------------------------------------------------------------------------------
@@ -400,7 +400,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
         for(  ; i<lastPoint; i++)
         {   sign_cur = xsign(f_wlet[i]);
         	// минимальные на рост
-        	if( fabs(f_wlet[i])>= calcThresh(minimalThreshold,noise[i]) && spl.begin_thr_n == -1)
+        	if( fabs(f_wlet[i])>= calcThresh(minimalThreshold,noise[i]*noise_factor) && spl.begin_thr_n == -1)
             {	spl.begin_thr_n = i-1;
             }
             if( spl.begin_thr_n != -1 && spl.end_thr_n == -1
@@ -630,7 +630,8 @@ void InitialAnalysis::correctAllSpliceCoords()
 // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 // Уточнение может только сужать сварки, но никак не расширять
 void InitialAnalysis::correctSpliceCoords(int n)
-{	EventParams* ev_lp = (EventParams*)(*events)[n];
+{
+	EventParams* ev_lp = (EventParams*)(*events)[n];
     EventParams& ev = *ev_lp;
 	// если это не сварка, то выход
     if( !(ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
