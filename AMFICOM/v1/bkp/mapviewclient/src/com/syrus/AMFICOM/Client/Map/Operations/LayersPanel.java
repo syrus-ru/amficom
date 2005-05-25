@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.4 2005/05/05 09:40:53 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.5 2005/05/25 16:30:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,12 +42,11 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.4 $, $Date: 2005/05/05 09:40:53 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/25 16:30:59 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class LayersPanel extends JPanel
-	implements OperationListener
 {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -103,8 +102,6 @@ public class LayersPanel extends JPanel
 		{
 			e.printStackTrace();
 		}
-		
-		this.aContext.getDispatcher().register(this,MapEvent.MAP_VIEW_SCALE_CHANGED);
 	}
 
 	private void jbInit()
@@ -345,11 +342,6 @@ public class LayersPanel extends JPanel
 		{
 			this.nameLabel = nameLabel;
 		}
-	}
-
-	public void operationPerformed(OperationEvent e)
-	{
-		this.setVisibility();
 	}
 }
 
