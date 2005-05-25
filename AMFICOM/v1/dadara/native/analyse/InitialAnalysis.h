@@ -120,43 +120,31 @@ private:
 class Splash
 { public:
 	int begin_thr;		// первое пересечение минимального порога
- 	int begin_thr_n;	// первое пересечение порога "минимум + шум"
- 	int end_thr_n;
     int end_thr;
 
 	int begin_weld;		// первое пересечение сварочного порога
- 	int begin_weld_n;	// первое пересечение порога "сварка + шум"
- 	int end_weld_n;
     int end_weld;
 
 
 	int begin_conn;		// пересечение коннекторного порога
- 	int begin_conn_n;	// пересечение порога "коннектор + шум"
- 	int end_conn_n;
     int end_conn;
 
-	double f_extr;		// экстремальное значение всплеска 
+	double f_extr;		// экстремальное значение всплеска
     int sign;  // знак всплеска
 
 	// инициализируем неопределёнными значениями ()
     Splash()
     {	begin_thr 		= -1;
- 		begin_thr_n		= -1;
     	end_thr 		= -1;
- 		end_thr_n 		= -1;
-
 		begin_weld		= -1;
- 		begin_weld_n	= -1;
     	end_weld 		= -1;
- 		end_weld_n 		= -1;
-
 		begin_conn 		= -1;
- 		begin_conn_n 	= -1;
     	end_conn 		= -1;
- 		end_conn_n 		= -1;
         f_extr 			= 0;
     	sign 			= 0;
     }
 };
 //====================================================================================================
+
+
 #endif // !defined(AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_)
