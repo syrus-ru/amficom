@@ -6,13 +6,12 @@ import java.util.Properties;
 import javax.swing.JFileChooser;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.io.*;
 
-public class TraceOpenReferenceCommand extends VoidCommand
+public class TraceOpenReferenceCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
 	private String propertiesFileName = "analysis.properties";
@@ -29,20 +28,6 @@ public class TraceOpenReferenceCommand extends VoidCommand
 
 	public void execute()
 	{
-		try
-		{
-			Checker checker = new Checker();
-			if(!checker.checkCommand(Checker.loadReferenceTrace))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
-		}
-
 		Properties properties = new Properties();
 		String lastDir = "";
 		try

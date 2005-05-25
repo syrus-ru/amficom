@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThresholdHandle;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 
 /**
  * Отображает пороги
@@ -168,7 +169,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 			parent.repaint();
 
-			dispatcher.notify(new RefUpdateEvent(this,
+			dispatcher.firePropertyChange(new RefUpdateEvent(this,
 					RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 		}
 		else
@@ -188,7 +189,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			{
 				c_TH.release();
 				parent.repaint();
-				dispatcher.notify(new RefUpdateEvent(this,
+				dispatcher.firePropertyChange(new RefUpdateEvent(this,
 					RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 				c_TH = null;
 			}

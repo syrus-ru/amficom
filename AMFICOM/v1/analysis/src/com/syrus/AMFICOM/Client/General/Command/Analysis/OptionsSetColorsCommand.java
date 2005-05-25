@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-public class OptionsSetColorsCommand extends VoidCommand
+
+public class OptionsSetColorsCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
 
@@ -20,16 +20,6 @@ public class OptionsSetColorsCommand extends VoidCommand
 
 	public void execute()
 	{
-		try
-		{
-			new Checker();
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
-		}
-
 
 	}
 }

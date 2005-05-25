@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,8 +23,6 @@ import javax.swing.JViewport;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
@@ -44,40 +44,30 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.OpenSessionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.StatusBarModel;
+import com.syrus.AMFICOM.client.event.*;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.*;
+import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
-implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
+implements PropertyChangeListener, BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	public ApplicationContext aContext;
 	private Dispatcher internal_dispatcher = new Dispatcher();
@@ -228,14 +218,14 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		statusBar.organize();
 
 		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, "contextchange");
+		internal_dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
-		Environment.getDispatcher().register(this, "contextchange");
+		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
-		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment.getDispatcher(), aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment.getDispatcher()));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher()));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
 		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
@@ -278,16 +268,16 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		aModel.setCommand("menuReportCreate", rc);
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new ThresholdsWindowArranger(this)));
-		aModel.setCommand("menuWindowTraceSelector", new ShowFrameCommand(desktopPane, selectFrame));
-		aModel.setCommand("menuWindowPrimaryParameters", new ShowFrameCommand(desktopPane, paramFrame));
-		aModel.setCommand("menuWindowOverallStats", new ShowFrameCommand(desktopPane, statsFrame));
-		aModel.setCommand("menuWindowEvents", new ShowFrameCommand(desktopPane, eventsFrame));
-		aModel.setCommand("menuWindowDetailedEvents", new ShowFrameCommand(desktopPane, detailedEvFrame));
-		aModel.setCommand("menuWindowAnalysis", new ShowFrameCommand(desktopPane, analysisFrame));
-		aModel.setCommand("menuWindowMarkersInfo", new ShowFrameCommand(desktopPane, mInfoFrame));
-		aModel.setCommand("menuWindowAnalysisSelection", new ShowFrameCommand(desktopPane, anaSelectFrame));
-		aModel.setCommand("menuWindowThresholds", new ShowFrameCommand(desktopPane, thresholdsFrame));
-		aModel.setCommand("menuWindowThresholdsSelection", new ShowFrameCommand(desktopPane, thresholdsSelectionFrame));
+		aModel.setCommand("menuWindowTraceSelector", new ShowWindowCommand(selectFrame));
+		aModel.setCommand("menuWindowPrimaryParameters", new ShowWindowCommand(paramFrame));
+		aModel.setCommand("menuWindowOverallStats", new ShowWindowCommand(statsFrame));
+		aModel.setCommand("menuWindowEvents", new ShowWindowCommand(eventsFrame));
+		aModel.setCommand("menuWindowDetailedEvents", new ShowWindowCommand(detailedEvFrame));
+		aModel.setCommand("menuWindowAnalysis", new ShowWindowCommand(analysisFrame));
+		aModel.setCommand("menuWindowMarkersInfo", new ShowWindowCommand(mInfoFrame));
+		aModel.setCommand("menuWindowAnalysisSelection", new ShowWindowCommand(anaSelectFrame));
+		aModel.setCommand("menuWindowThresholds", new ShowWindowCommand(thresholdsFrame));
+		aModel.setCommand("menuWindowThresholdsSelection", new ShowWindowCommand(thresholdsSelectionFrame));
 
 
 		setDefaultModel(aModel);
@@ -374,75 +364,36 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		return internal_dispatcher;
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals("contextchange"))
+		if(ae.getPropertyName().equals(ContextChangeEvent.TYPE))
 		{
 			ContextChangeEvent cce = (ContextChangeEvent)ae;
-			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
-			if(cce.SESSION_OPENED)
+			System.out.println("perform context change \"" + "\" at " + this.getTitle());
+			if(cce.isSessionOpened())
 			{
-//				SessionInterface ssi = (SessionInterface)cce.getSource();
-//				if(aContext.getSessionInterface().equals(ssi))
-				{
-					setSessionOpened();
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-//					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
-					Identifier userId = LoginManager.getUserId();
-					if (userId != null && !userId.isVoid()) {
-						try {
-							User  user = (User)AdministrationStorableObjectPool.getStorableObject(userId, true);
-							this.statusBar.setText("user", user.getName());
-						} catch (ApplicationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+				setSessionOpened();
+				statusBar.setText("status", LangModel.getString("statusReady"));
+				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				statusBar.setText("session", sdf.format(ClientSessionEnvironment.getInstance().getSessionEstablishDate()));
+				Identifier userId = LoginManager.getUserId();
+				if (userId != null && !userId.isVoid()) {
+					try {
+						User user = (User) StorableObjectPool.getStorableObject(userId, true);
+						this.statusBar.setText("user", user.getName());
+					} catch (ApplicationException e) {
+						e.printStackTrace();
 					}
 				}
 			}
-			if(cce.SESSION_CLOSED)
+			if(cce.isSessionClosed())
 			{
-//				SessionInterface ssi = (SessionInterface)cce.getSource();
-//				if(aContext.getSessionInterface().equals(ssi))
-				{
-					setSessionClosed();
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", LangModel.getString("statusNoSession"));
-					statusBar.setText("user", LangModel.getString("statusNoUser"));
-				}
+				setSessionClosed();
+				statusBar.setText("status", LangModel.getString("statusReady"));
+				statusBar.setText("session", LangModel.getString("statusNoSession"));
+				statusBar.setText("user", LangModel.getString("statusNoUser"));
 			}
-			if(cce.CONNECTION_OPENED)
-			{
-//				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-//				if(ConnectionInterface.getInstance().equals(cci))
-				{
-					setConnectionOpened();
-					statusBar.setText("status", LangModel.getString("statusReady"));
-//					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
-				}
-			}
-			if(cce.CONNECTION_CLOSED)
-			{
-//				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-//				if(ConnectionInterface.getInstance().equals(cci))
-				{
-					statusBar.setText("status", LangModel.getString("statusDisconnected"));
-					statusBar.setText("server", LangModel.getString("statusNoConnection"));
-					setConnectionClosed();
-				}
-			}
-			if(cce.CONNECTION_FAILED)
-			{
-//				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-//				if(ConnectionInterface.getInstance().equals(cci))
-				{
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel.getString("statusConnectionError"));
-					setConnectionFailed();
-				}
-			}
-			if(cce.DOMAIN_SELECTED)
+			if(cce.isDomainSelected())
 			{
 				setDomainSelected();
 			}
@@ -481,23 +432,6 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 
 	public void setSessionOpened()
 	{
-		Checker checker = new Checker();
-		if(!checker.checkCommand(Checker.enterThresholdModul))
-		{
-			JOptionPane.showMessageDialog(
-					this,
-		 LangModelAnalyse.getString("noAccessToThresholds"),
-		 LangModelAnalyse.getString("error"),
-		 JOptionPane.OK_OPTION);
-			return;
-		}
-//		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
-
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
@@ -582,8 +516,8 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 
 	void this_windowClosing(WindowEvent e)
 	{
-		internal_dispatcher.unregister(this, "contextchange");
-		Environment.getDispatcher().unregister(this, "contextchange");
+		internal_dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
@@ -599,8 +533,8 @@ implements OperationListener, BsHashChangeListener, EtalonMTMListener, CurrentTr
 		{
 //			ColorManager.saveIni();
 			aManager.saveIni();
-			internal_dispatcher.unregister(this, "contextchange");
-			Environment.getDispatcher().unregister(this, "contextchange");
+			internal_dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
 		}

@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-public class SaveTestSetupAsCommand extends VoidCommand
+public class SaveTestSetupAsCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
 	private long type;

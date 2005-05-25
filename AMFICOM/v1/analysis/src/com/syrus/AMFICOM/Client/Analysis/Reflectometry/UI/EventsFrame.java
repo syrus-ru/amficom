@@ -34,10 +34,6 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -49,6 +45,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
+import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
@@ -573,7 +571,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
         {
             setTableModel();
             updateTableModel();
-            UIGeneralStorage.arrangeTableColumns(this.jTable);
+            // FIXME add UIGeneralStorage to comminclient
+//            UIGeneralStorage.arrangeTableColumns(this.jTable);
             updateCompDebug();
         }
         setVisible(true);

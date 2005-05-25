@@ -1,18 +1,16 @@
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
-import java.util.List;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.measurement.*;
-
-//import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
 public class TestSetupLoadDialog extends JDialog implements OperationListener
 {
@@ -20,17 +18,16 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 	public MeasurementSetup resource;
 
 	private Dispatcher dispatcher = new Dispatcher();
-	private ApplicationContext aContext;
+	private ApplicationContext aContext = new ApplicationContext();
 
 	JButton okButton;
 	JButton cancelButton;
 	List data;
 	JScrollPane scrollPane = new JScrollPane();
 
-	public TestSetupLoadDialog(ApplicationContext aContext)
+	public TestSetupLoadDialog()
 	{
 		super(Environment.getActiveWindow());
-		this.aContext = aContext;
 		try
 		{
 			jbInit();
@@ -40,6 +37,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 			e.printStackTrace();
 		}
 
+		aContext.setDispatcher(dispatcher);
 		dispatcher.register(this, "treedataselectionevent");
 	}
 
@@ -60,7 +58,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 
 		setResizable(true);
 
-		TestSetupTreeModel lrtm = new TestSetupTreeModel(aContext);
+		TestSetupTreeModel lrtm = new TestSetupTreeModel();
 
 		UniTreePanel utp = new UniTreePanel(dispatcher, aContext, lrtm);
 

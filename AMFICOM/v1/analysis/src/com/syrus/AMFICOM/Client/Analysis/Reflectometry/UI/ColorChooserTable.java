@@ -6,9 +6,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.*;
 
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-
-public class ColorChooserTable extends ATable
+public class ColorChooserTable extends JTable
 {
 
 	public ColorChooserTable()

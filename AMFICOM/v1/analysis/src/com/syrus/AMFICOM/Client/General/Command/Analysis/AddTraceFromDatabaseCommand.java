@@ -1,19 +1,16 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.*;
 
-public class AddTraceFromDatabaseCommand extends VoidCommand
+public class AddTraceFromDatabaseCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
 
@@ -40,21 +37,6 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 
 	public void execute()
 	{
-
-		try
-		{
-			Checker checker = new Checker();
-			if(!checker.checkCommand(Checker.loadReflectogrammFromDB))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
-		}
-
 		ReflectogrammLoadDialog dialog;
 		JFrame parent = Environment.getActiveWindow();
 		if(Heap.getRLDialogByKey(parent.getName()) != null)

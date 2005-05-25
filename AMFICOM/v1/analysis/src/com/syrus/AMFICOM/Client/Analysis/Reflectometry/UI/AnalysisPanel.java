@@ -2,14 +2,15 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import javax.swing.*;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class AnalysisPanel extends MapMarkersPanel
 {
@@ -494,7 +495,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		mInfo.lsa_attenuation = -1000d * lsa[0] / deltaX;
 		mInfo.a_b_orl = MathRef.calcORL(y[l], y[r]);
 		moved_here = true;
-		dispatcher.notify(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
+		dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
 		moved_here = false;
 	}
 

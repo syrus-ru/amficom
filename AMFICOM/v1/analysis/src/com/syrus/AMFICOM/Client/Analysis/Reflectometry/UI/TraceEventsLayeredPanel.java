@@ -1,13 +1,14 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.beans.*;
+import java.beans.PropertyChangeListener;
+
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 
 public class TraceEventsLayeredPanel extends ScalableLayeredPanel
-implements OperationListener
+implements PropertyChangeListener
 {
 	public TraceEventsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -26,7 +27,7 @@ implements OperationListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		dispatcher.register(this, RefUpdateEvent.typ);
+		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 	}
 
 	private void jbInit() throws Exception
@@ -38,9 +39,9 @@ implements OperationListener
 		return new TraceEventsToolBar(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 

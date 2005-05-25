@@ -9,8 +9,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.model.Environment;
+
 
 public class WeightsDialog extends JDialog
 {

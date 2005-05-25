@@ -5,12 +5,10 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -21,7 +19,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
 
-public class SaveTestSetupCommand extends VoidCommand
+public class SaveTestSetupCommand extends AbstractCommand
 {
 	public static final long CRITERIA = 0x00000001;
 	public static final long ETALON = 0x00000002;
@@ -58,8 +56,6 @@ public class SaveTestSetupCommand extends VoidCommand
 					Environment.getActiveWindow(),
 					LangModelAnalyse.getString("testsetup"),
 					LangModelAnalyse.getString("newname"), JOptionPane.OK_CANCEL_OPTION);
-			if (!MiscUtil.validName(s))
-				return false;
 			msTest.setDescription(s); // FIXME: этак делать не велено(?)
 		}
 

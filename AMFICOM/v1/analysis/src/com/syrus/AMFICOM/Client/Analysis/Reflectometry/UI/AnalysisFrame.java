@@ -4,13 +4,13 @@ import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 
@@ -84,7 +84,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 		{
 			try
 			{
-				MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
+				MonitoredElement me = (MonitoredElement)StorableObjectPool.getStorableObject(
 								new Identifier(bs.monitoredElementId), true);
 				setTitle(me.getName());
 			}

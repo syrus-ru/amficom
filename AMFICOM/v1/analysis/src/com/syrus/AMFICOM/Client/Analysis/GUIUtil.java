@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.5 2005/04/30 13:02:06 saa Exp $
+ * $Id: GUIUtil.java,v 1.6 2005/05/25 15:15:08 stas Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/04/30 13:02:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/05/25 15:15:08 $
  * @module
  */
 public class GUIUtil

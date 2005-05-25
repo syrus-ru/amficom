@@ -1,90 +1,31 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
-import java.awt.SystemColor;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
 import java.text.SimpleDateFormat;
-import javax.swing.BorderFactory;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
+
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.NetStudyCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.ShowFrameCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.OpenSessionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.resource.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
-		PrimaryTraceListener, PrimaryRefAnalysisListener, OperationListener,
+		PrimaryTraceListener, PrimaryRefAnalysisListener, PropertyChangeListener,
 		EtalonMTMListener, CurrentTraceChangeListener
 {
 	public ApplicationContext aContext;
@@ -158,8 +99,8 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		this.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
-				internalDispatcher.unregister(AnalyseMainFrame.this, "contextchange");
-				Environment.getDispatcher().unregister(AnalyseMainFrame.this, "contextchange");
+				internalDispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, AnalyseMainFrame.this);
+				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, AnalyseMainFrame.this);
 				aContext.getApplicationModel().getCommand("menuExit").execute();
 			}
 		});
@@ -422,18 +363,18 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		statusBar.organize();
 
 		aContext.setDispatcher(internalDispatcher);
-		internalDispatcher.register(this, "contextchange");
+		internalDispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryRefAnalysisListener(this);
 		Heap.addPrimaryTraceListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
-		Environment.getDispatcher().register(this, "contextchange");
+		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
 		aModel.setCommand("menuSessionNew", new OpenSessionCommand(
-				Environment.getDispatcher(), aContext));
+				Environment.getDispatcher()));
 		aModel.setCommand("menuSessionClose", new SessionCloseCommand(
-				Environment.getDispatcher(), aContext));
+				Environment.getDispatcher()));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(
 				aContext));
 		aModel.setCommand("menuSessionConnection",
@@ -546,23 +487,18 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 //		}
 	}
 
-	private VoidCommand getLazyCommand(final Object key) {
-		return new VoidCommand() {
+	private AbstractCommand getLazyCommand(final Object key) {
+		return new AbstractCommand() {
 			private Command command;
 			private Command getLazyCommand() {
 				if (this.command == null) {
 				Object object = frames.get(key);
 				if (object instanceof JInternalFrame) {
 					System.out.println("init getLazyCommand for " + key);
-					this.command = new ShowFrameCommand(
-						desktopPane, (JInternalFrame)object);
+					this.command = new ShowWindowCommand(object);
 				}
 				}
 				return command;
-			}
-			
-			public Object clone() {
-				return this.getLazyCommand().clone();
 			}
 			
 			public void execute() {
@@ -639,88 +575,41 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 	 * toolBar.setVisible(aModel.isVisible("toolBar"));
 	 * statusBar.setVisible(aModel.isVisible("statusBar")); }
 	 */
-	public void operationPerformed(OperationEvent ae)	{
-		String actionCommand = ae.getActionCommand();
-		if (actionCommand.equals("contextchange")) {
-			ContextChangeEvent cce = (ContextChangeEvent) ae;
-			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at "
-					+ this.getTitle());
-			if (cce.SESSION_OPENED) {
-//				SessionInterface ssi = (SessionInterface) cce.getSource();
-//				if (aContext.getSessionInterface().equals(ssi)) 
-				{
-					// aContext.setSessionInterface(ssi);
-					// aContext.setDataSourceInterface(Environment.getDefaultDataSourceInterface(aContext.getSessionInterface()));
-
-					setSessionOpened();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					/* TODO */
-//					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
-					
-					Identifier userId = LoginManager.getUserId();
-					if (userId != null && !userId.isVoid()) {
-						try {
-							User  user = (User)AdministrationStorableObjectPool.getStorableObject(userId, true);
-							this.statusBar.setText("user", user.getName());
-						} catch (ApplicationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+	public void propertyChange(PropertyChangeEvent ae)
+	{
+		if(ae.getPropertyName().equals(ContextChangeEvent.TYPE))
+		{
+			ContextChangeEvent cce = (ContextChangeEvent)ae;
+			System.out.println("perform context change \"" + "\" at " + this.getTitle());
+			if(cce.isSessionOpened())
+			{
+				setSessionOpened();
+				statusBar.setText("status", LangModel.getString("statusReady"));
+				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				statusBar.setText("session", sdf.format(ClientSessionEnvironment.getInstance().getSessionEstablishDate()));
+				Identifier userId = LoginManager.getUserId();
+				if (userId != null && !userId.isVoid()) {
+					try {
+						User user = (User) StorableObjectPool.getStorableObject(userId, true);
+						this.statusBar.setText("user", user.getName());
+					} catch (ApplicationException e) {
+						e.printStackTrace();
 					}
 				}
 			}
-			if (cce.SESSION_CLOSED) {
-//				SessionInterface ssi = (SessionInterface) cce.getSource();
-//				if (aContext.getSessionInterface().equals(ssi))
-				{
-					setSessionClosed();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", LangModel.getString("statusNoSession"));
-					statusBar.setText("user", LangModel.getString("statusNoUser"));
-				}
+			if(cce.isSessionClosed())
+			{
+				setSessionClosed();
+				statusBar.setText("status", LangModel.getString("statusReady"));
+				statusBar.setText("session", LangModel.getString("statusNoSession"));
+				statusBar.setText("user", LangModel.getString("statusNoUser"));
 			}
-			if (cce.CONNECTION_OPENED) {
-//				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-//				if (ConnectionInterface.getInstance().equals(cci)) 
-				{
-					setConnectionOpened();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					/* TODO */
-//					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
-				}
-			}
-			if (cce.CONNECTION_CLOSED) {
-//				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-//				if (ConnectionInterface.getInstance().equals(cci)) 
-				{
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel.getString("statusConnectionError"));
-
-					statusBar.setText("status", LangModel.getString("statusDisconnected"));
-					statusBar.setText("server", LangModel.getString("statusNoConnection"));
-
-					setConnectionClosed();
-				}
-			}
-			if (cce.CONNECTION_FAILED) {
-//				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-//				if (ConnectionInterface.getInstance().equals(cci)) 
-				{
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel.getString("statusConnectionError"));
-
-					setConnectionFailed();
-				}
-			}
-			if (cce.DOMAIN_SELECTED) {
+			if(cce.isDomainSelected())
+			{
 				setDomainSelected();
 			}
 		}
-    }
+	}
 
 	public void setConnectionOpened()
 	{
@@ -806,11 +695,11 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-        Identifier domainId = LoginManager.getDomainId();
-        if (domainId != null && !domainId.isVoid()) {
-            internalDispatcher.notify(new ContextChangeEvent(LoginManager
-                    .getDomainId(), ContextChangeEvent.DOMAIN_SELECTED_EVENT));
-        }
+    Identifier domainId = LoginManager.getDomainId();
+		if (domainId != null && !domainId.isVoid()) {
+			internalDispatcher.firePropertyChange(new ContextChangeEvent(this,
+					ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		}
 	}
 
 	public void setSessionClosed()
@@ -889,8 +778,8 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 		{
 //			ColorManager.saveIni();
 			aManager.saveIni();
-			internalDispatcher.unregister(this, "contextchange");
-			Environment.getDispatcher().unregister(this, "contextchange");
+			internalDispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
 		}

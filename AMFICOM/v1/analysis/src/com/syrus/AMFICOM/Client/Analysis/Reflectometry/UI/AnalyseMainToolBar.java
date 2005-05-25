@@ -7,13 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.resource.*;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class AnalyseMainToolBar extends JToolBar implements ApplicationModelListener
 {
@@ -114,6 +113,10 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 		return this.aModel;
 	}
 
+	public void modelChanged(String e) {
+		modelChanged(new String[] {e});
+	}
+	
 	public void modelChanged(String e[])
 	{
 		this.buttonFileOpen.setVisible(this.aModel.isVisible("menuFileOpen"));
@@ -146,7 +149,6 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = this.aModel.getCommand(s);
-		command = (Command )command.clone();
 		command.execute();
 	}
 }

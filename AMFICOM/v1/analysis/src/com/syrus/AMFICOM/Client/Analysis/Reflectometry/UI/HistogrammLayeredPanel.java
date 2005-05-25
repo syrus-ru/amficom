@@ -2,21 +2,21 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class HistogrammLayeredPanel extends ScalableLayeredPanel implements OperationListener
+public class HistogrammLayeredPanel extends ScalableLayeredPanel implements PropertyChangeListener
 {
 	Dispatcher dispatcher;
 	private boolean useMarkers = false;
@@ -40,7 +40,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 	void init_module(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefUpdateEvent.typ);
+		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 	}
 
 	private void jbInit() throws Exception
@@ -52,9 +52,9 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 		return new HistogrammToolBar(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 

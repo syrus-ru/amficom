@@ -1,5 +1,5 @@
 /*-
-* $Id: ScalableToolBar.java,v 1.3 2005/04/08 06:13:35 bob Exp $
+* $Id: ScalableToolBar.java,v 1.4 2005/05/25 15:15:08 stas Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,12 +17,12 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/08 06:13:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/25 15:15:08 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */

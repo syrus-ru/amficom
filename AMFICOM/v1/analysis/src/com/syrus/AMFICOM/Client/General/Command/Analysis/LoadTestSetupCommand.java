@@ -6,16 +6,15 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
-public class LoadTestSetupCommand extends VoidCommand
+public class LoadTestSetupCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
 
@@ -41,7 +40,7 @@ public class LoadTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		TestSetupLoadDialog dialog = new TestSetupLoadDialog (aContext);
+		TestSetupLoadDialog dialog = new TestSetupLoadDialog ();
 		dialog.show();
 
 		if(dialog.ret_code == 0)

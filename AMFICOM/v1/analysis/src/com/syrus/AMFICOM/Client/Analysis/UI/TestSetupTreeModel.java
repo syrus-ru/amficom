@@ -10,7 +10,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
@@ -20,6 +19,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -31,11 +31,8 @@ import com.syrus.io.BellcoreStructure;
 
 class TestSetupTreeModel extends ObjectResourceTreeModel
 {
-	ApplicationContext aContext;
-
-	public TestSetupTreeModel(ApplicationContext aContext)
+	public TestSetupTreeModel()
 	{
-		this.aContext = aContext;
 	}
 
 	public ObjectResourceTreeNode getRoot()
@@ -110,7 +107,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 					Identifier domainId = LoginManager.getDomainId();
 					try
 					{
-						Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(domainId, true);
+						Domain domain = (Domain)StorableObjectPool.getStorableObject(domainId, true);
 						LinkedIdsCondition condition = new LinkedIdsCondition(domain.getId(), ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
 						Collection mSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 

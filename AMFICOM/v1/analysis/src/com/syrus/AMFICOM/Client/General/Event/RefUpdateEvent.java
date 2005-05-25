@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
-public class RefUpdateEvent extends OperationEvent
+import java.beans.PropertyChangeEvent;
+
+public class RefUpdateEvent extends PropertyChangeEvent
 {
 	private long flags = 0;
 	
@@ -24,7 +26,7 @@ public class RefUpdateEvent extends OperationEvent
 
 	public RefUpdateEvent(Object source, long type)
 	{
-		super(source, 0, typ);
+		super(source, typ, null, null);
 		flags = type;
 	}
 }

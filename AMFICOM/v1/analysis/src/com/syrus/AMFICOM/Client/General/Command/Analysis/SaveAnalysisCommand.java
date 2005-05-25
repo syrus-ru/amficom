@@ -5,13 +5,13 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,7 +28,7 @@ import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
 import com.syrus.io.ByteArrayCollector;
 
-public class SaveAnalysisCommand extends VoidCommand
+public class SaveAnalysisCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
 
@@ -70,7 +70,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		Measurement m = null;
 		try
 		{
-			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+			m = (Measurement)StorableObjectPool.getStorableObject(
 						 new Identifier(bs.measurementId), true);
 		}
 		catch(ApplicationException ex)

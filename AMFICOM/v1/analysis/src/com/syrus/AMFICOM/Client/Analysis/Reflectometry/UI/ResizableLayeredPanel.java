@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class ResizableLayeredPanel extends JPanel
 {

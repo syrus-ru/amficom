@@ -17,13 +17,9 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
@@ -32,6 +28,8 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends ATableFrame
@@ -46,7 +44,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
 	private WholeCompareTableModel wctModel;
-	private ATable jTableWholeComp;
+	private JTable jTableWholeComp;
 
 	private JPanel mainPanelWholeComp = new JPanel();
 	private JScrollPane scrollPaneWholeComp = new JScrollPane();
@@ -107,7 +105,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 						LangModelAnalyse.getString("totalEvents")
 					},
 					null);
-		this.jTable = new ATable(tModel);
+		this.jTable = new JTable(tModel);
 //		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -136,7 +134,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 
 		tabbedPane.add(LangModelAnalyse.getString("Title.comparative"), mainPanelWholeComp);
 		wctModel = new WholeCompareTableModel();
-		jTableWholeComp = new ATable (wctModel);
+		jTableWholeComp = new JTable (wctModel);
 		jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(150);
 		jTableWholeComp.getColumnModel().getColumn(1).setPreferredWidth(70);
 

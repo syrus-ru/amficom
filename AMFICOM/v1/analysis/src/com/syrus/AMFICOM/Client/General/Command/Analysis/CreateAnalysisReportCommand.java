@@ -4,10 +4,10 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Report.AMTReport;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-public class CreateAnalysisReportCommand extends VoidCommand
+public class CreateAnalysisReportCommand extends AbstractCommand
 {
 	public static final String TABLE = "table";
 	public static final String PANEL = "panel";
@@ -60,7 +60,7 @@ public class CreateAnalysisReportCommand extends VoidCommand
 
 	public void execute()
 	{
-		AMTReport report = new AMTReport();
+		/*AMTReport report = new AMTReport();
 		for (Iterator it = tableFrames.iterator(); it.hasNext();)
 		{
 			ATableFrame tf = (ATableFrame)it.next();
@@ -74,7 +74,7 @@ public class CreateAnalysisReportCommand extends VoidCommand
 		}
 
 		new OpenTypedTemplateCommand(aContext, type,
-																 report).execute();
+																 report).execute();*/
 	}
 }
 

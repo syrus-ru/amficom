@@ -7,15 +7,14 @@ import java.awt.Cursor;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.io.*;
 
-public class FileOpenAsBellcoreCommand extends VoidCommand
+public class FileOpenAsBellcoreCommand extends AbstractCommand
 {
 	private Dispatcher dispatcher;
 	private ApplicationContext aContext;
@@ -34,20 +33,6 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 
 	public void execute()
 	{
-		try
-		{
-			Checker checker = new Checker();
-			if(!checker.checkCommand(Checker.openReflectogrammFile))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
-		}
-
 		Properties properties = new Properties();
 		String lastDir = "";
 		try

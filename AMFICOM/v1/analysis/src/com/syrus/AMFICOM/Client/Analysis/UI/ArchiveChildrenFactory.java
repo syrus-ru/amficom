@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.8 2005/05/23 18:45:20 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.9 2005/05/25 15:15:09 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.Set;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/23 18:45:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/25 15:15:09 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */

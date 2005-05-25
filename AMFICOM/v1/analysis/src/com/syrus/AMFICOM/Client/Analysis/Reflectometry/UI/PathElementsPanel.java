@@ -5,7 +5,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 

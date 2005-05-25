@@ -7,13 +7,12 @@ import javax.swing.JFileChooser;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.io.*;
 
-public class FileSaveAsTextCommand extends VoidCommand
+public class FileSaveAsTextCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
 	private String propertiesFileName = "analysis.properties";
@@ -30,23 +29,6 @@ public class FileSaveAsTextCommand extends VoidCommand
 
 	public void execute()
 	{
-		if (!AnalyseMainFrameSimplified.DEBUG)
-		{
-			try
-			{
-				Checker checker = new Checker();
-				if(!checker.checkCommand(Checker.saveReflectogrammFile))
-				{
-					return;
-				}
-			}
-			catch (NullPointerException ex)
-			{
-				System.out.println("Application context and/or user are not defined");
-				return;
-			}
-		}
-
 		Properties properties = new Properties();
 		String lastDir = "";
 		try

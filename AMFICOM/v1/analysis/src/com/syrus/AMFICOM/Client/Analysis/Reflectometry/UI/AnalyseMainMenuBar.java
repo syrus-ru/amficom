@@ -1,11 +1,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ActionEvent;
+
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.resource.LangModel;
 
 public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelListener
 {
@@ -322,6 +323,10 @@ public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelList
 		//this.add(menuOptions);
 	}
 
+	public void modelChanged(String e){
+		modelChanged(new String[] {e});
+	}
+	
 	public void modelChanged(String e[])
 	{
 		menuSession.setVisible(aModel.isVisible("menuSession"));
@@ -441,7 +446,6 @@ public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelList
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
 		command.execute();
 	}
 }

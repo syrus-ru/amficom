@@ -8,9 +8,9 @@ import java.util.Map;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 {

@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.7 2005/04/18 13:17:41 saa Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.8 2005/05/25 15:15:08 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,12 @@ import java.util.Map;
 
 import javax.swing.JToggleButton;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/18 13:17:41 $
- * @author $Author: saa $
+ * @version $Revision: 1.8 $, $Date: 2005/05/25 15:15:08 $
+ * @author $Author: stas $
  * @module analysis_v1
  */
 

@@ -29,16 +29,15 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
-import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
@@ -52,7 +51,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 
 	private ParamTableModel tModelMinuit;
 
-	private JTable table;
+	private ATable table;
 
 	private JPanel mainPanel;
 
@@ -122,7 +121,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle"));
 
 		tModelMinuit = new ParamTableModel();
-		table = new JTable(tModelMinuit);
+		table = new ATable(tModelMinuit);
 		table.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(
 				tModelMinuit));
 		table.setDefaultEditor(Object.class, new ModelParamsTableEditor(

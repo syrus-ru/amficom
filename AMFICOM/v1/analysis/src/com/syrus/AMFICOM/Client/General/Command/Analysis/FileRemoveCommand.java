@@ -2,11 +2,10 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-public class FileRemoveCommand extends VoidCommand
+public class FileRemoveCommand extends AbstractCommand
 {
 	private String activeRefId;
 	private ApplicationContext aContext;
@@ -32,18 +31,6 @@ public class FileRemoveCommand extends VoidCommand
 
 	public void execute()
 	{
-		if (!AnalyseMainFrameSimplified.DEBUG)
-		{
-			try
-			{
-				new Checker();
-			}
-			catch (NullPointerException ex)
-			{
-				System.out.println("Application context and/or user are not defined");
-				return;
-			}
-		}
         // FIXME: activerefId can be null?
 
         Heap.removeAnyBSByName(activeRefId);

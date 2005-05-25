@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.*;
 
 // XXX: from analysis_v1's point of view, superclass for MapMarkersPanel need not extend ThresholdsPanel and can extend ReflectogramEventsPanel instead
@@ -84,8 +85,8 @@ public class MapMarkersPanel extends ThresholdsPanel
 //				double d = WorkWithReflectoArray.getDistanceTillLastSplash(y, deltaX, 1);
 //				mne.spd.setMeasurement (new LengthParameters (ep, deltaX, "", d));
 			}
-			dispatcher.notify(mne);
-			dispatcher.notify(new MapNavigateEvent (this,
+			dispatcher.firePropertyChange(mne);
+			dispatcher.firePropertyChange(new MapNavigateEvent (this,
 											MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
 													m.getId(), m.pos * deltaX, scheme_path_id, monitored_element_id));
 
@@ -106,7 +107,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 						setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 					}
 					active_marker = m;
-					dispatcher.notify (new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
+					dispatcher.firePropertyChange(new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
 														 m.getId(), m.pos * deltaX, scheme_path_id, monitored_element_id));
 				}
 			}
@@ -142,7 +143,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 
 	void move_notify()
 	{
-		dispatcher.notify (new MapNavigateEvent (this,
+		dispatcher.firePropertyChange(new MapNavigateEvent (this,
 			MapNavigateEvent.DATA_MARKER_MOVED_EVENT,
 			active_marker.getId(),
 			active_marker.pos * deltaX,
@@ -298,7 +299,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 						monitored_element_id);
 				}
 //				mne.setDescriptor("refevent");
-				dispatcher.notify(mne);
+				dispatcher.firePropertyChange(mne);
 				deleteMarker(m);
 			}
 		}
@@ -414,7 +415,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 				scheme_path_id,
 				monitored_element_id);
 		}
-		dispatcher.notify(mne);
+		dispatcher.firePropertyChange(mne);
 		return m;
 	}
 

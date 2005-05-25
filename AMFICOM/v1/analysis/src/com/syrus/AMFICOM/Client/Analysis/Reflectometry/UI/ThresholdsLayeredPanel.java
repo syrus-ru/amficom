@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -10,19 +12,17 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
-implements OperationListener,
+implements PropertyChangeListener,
     CurrentEventChangeListener, EtalonMTMListener, PrimaryMTAEListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
@@ -58,9 +58,9 @@ implements OperationListener,
         Heap.addPrimaryMTMListener(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
@@ -76,7 +76,7 @@ implements OperationListener,
 				}
 			}
 		}
-		super.operationPerformed(ae);
+		super.propertyChange(ae);
 	}
 
 	public void updScale2fitCurrentEv (double indent_x, double iy)

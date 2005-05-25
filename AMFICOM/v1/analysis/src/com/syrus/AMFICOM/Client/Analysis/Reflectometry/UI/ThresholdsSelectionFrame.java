@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -27,20 +29,18 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 /**
@@ -52,7 +52,7 @@ import com.syrus.io.BellcoreStructure;
  * </ol>
  */
 public class ThresholdsSelectionFrame extends ATableFrame
-implements OperationListener, BsHashChangeListener,
+implements PropertyChangeListener, BsHashChangeListener,
 	CurrentEventChangeListener, EtalonMTMListener
 {
 	protected Dispatcher dispatcher;
@@ -173,7 +173,7 @@ implements OperationListener, BsHashChangeListener,
 				{
 					ted.increaseValues();
 					int selectedColumn = jTable.getSelectedColumn();
-					dispatcher.notify(new RefUpdateEvent(this,
+					dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 					jTable.setColumnSelectionInterval(selectedColumn,
 						selectedColumn);
@@ -194,7 +194,7 @@ implements OperationListener, BsHashChangeListener,
 				{
 					int selectedColumn = jTable.getSelectedColumn();
 					ted.decreaseValues();
-					dispatcher.notify(new RefUpdateEvent(this,
+					dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 					jTable.setColumnSelectionInterval(selectedColumn,
 						selectedColumn);
@@ -329,14 +329,14 @@ implements OperationListener, BsHashChangeListener,
 	void init_module(Dispatcher dispatcher1)
 	{
 		this.dispatcher = dispatcher1;
-		dispatcher1.register(this, RefUpdateEvent.typ);
+		dispatcher1.addPropertyChangeListener(RefUpdateEvent.typ, this);
 		Heap.addBsHashListener(this);
 		Heap.addCurrentEventChangeListener(this);
 		Heap.addEtalonMTMListener(this);
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals(RefUpdateEvent.typ)) {
+	public void propertyChange(PropertyChangeEvent ae) {
+		if (ae.getPropertyName().equals(RefUpdateEvent.typ)) {
 			RefUpdateEvent rue = (RefUpdateEvent) ae;
 			if (rue.thresholdChanged()) {
 				updateThresholds();
@@ -425,7 +425,7 @@ implements OperationListener, BsHashChangeListener,
 				te[col - 1].setValue(
 						row,
 						Double.valueOf(value.toString()).doubleValue());
-				dispatcher.notify(new RefUpdateEvent(this,
+				dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 			}
 			catch(NumberFormatException e)

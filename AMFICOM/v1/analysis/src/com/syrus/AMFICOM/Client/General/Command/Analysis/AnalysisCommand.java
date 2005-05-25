@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.io.BellcoreStructure;
 
-public class AnalysisCommand extends VoidCommand {
+public class AnalysisCommand extends AbstractCommand {
 
 	public void execute()
 	{

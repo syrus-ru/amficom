@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 
 public class ReflectogramEventsPanel extends TraceEventsPanel
 {
@@ -112,7 +113,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			double pos = getMinTraceLevel() + (currpos.y - tmppos.y)/scaleY;
             updateMinTraceLevel(pos);
 			parent.repaint();
-			dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
+			dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
 			return;
 		}
 		super.this_mouseDragged(e);

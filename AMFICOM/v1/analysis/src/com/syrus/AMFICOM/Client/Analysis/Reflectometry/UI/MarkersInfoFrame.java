@@ -1,18 +1,21 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class MarkersInfoFrame extends JInternalFrame
-implements OperationListener, BsHashChangeListener
+implements PropertyChangeListener, BsHashChangeListener
 {
 //	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
 	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
@@ -22,7 +25,7 @@ implements OperationListener, BsHashChangeListener
 	private static String dash = "-----";
 
 	private FixedSizeEditableTableModel tModel;
-	private ATable jTable;
+	private JTable jTable;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -57,13 +60,13 @@ implements OperationListener, BsHashChangeListener
 	void init_module(Dispatcher dispatcher)
 	{
 		//dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
+		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 		Heap.addBsHashListener(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
@@ -98,7 +101,7 @@ implements OperationListener, BsHashChangeListener
 				},
 				null);
 
-		jTable = new ATable(tModel);
+		jTable = new JTable(tModel);
 
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
 		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);

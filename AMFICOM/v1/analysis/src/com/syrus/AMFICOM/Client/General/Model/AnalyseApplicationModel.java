@@ -9,6 +9,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 public class AnalyseApplicationModel extends ApplicationModel {
 

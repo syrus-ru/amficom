@@ -5,29 +5,24 @@ import java.util.Collection;
 
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
 /**
  * Команда создания эталона.
  * Раньше называлась MinuitAnalysisCommand.
  * Создает Heap.MTMEtalon
  */
-public class CreateEtalonCommand extends VoidCommand
+public class CreateEtalonCommand extends AbstractCommand
 {
 	public CreateEtalonCommand()
 	{
 		// empty
-	}
-
-	public Object clone()
-	{
-		return super.clone();
 	}
 
 	public void execute()

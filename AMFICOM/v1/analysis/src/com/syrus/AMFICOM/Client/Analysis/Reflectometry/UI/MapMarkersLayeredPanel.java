@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,16 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
+public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements PropertyChangeListener
 {
 	Dispatcher dispatcher;
 
@@ -48,12 +48,12 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 	void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
-		dispatcher.register(this, MapEvent.MAP_NAVIGATE);
+		dispatcher.addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
+		if(ae.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
 			for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
@@ -117,7 +117,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 				}
 			}
 		}
-		super.operationPerformed(ae);
+		super.propertyChange(ae);
 	}
 
 	public void removeAllGraphPanels()
