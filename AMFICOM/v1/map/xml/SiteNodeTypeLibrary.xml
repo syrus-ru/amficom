@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SiteNodeTypes>
-	<SiteNodeType>
-		<sort>well</sort>
-		<image>images/well.gif</image>
-		<name>Колодец</name>
-		<topological>true</topological>
-	</SiteNodeType>
-	<SiteNodeType>
-		<sort>building</sort>
-		<image>images/building.gif</image>
-		<name>Здание</name>
-		<topological>true</topological>
-	</SiteNodeType>
-	<SiteNodeType>
-		<sort>piquet</sort>
-		<image>images/piquet.gif</image>
-		<name>Пикет</name>
-		<topological>true</topological>
-	</SiteNodeType>
-	<SiteNodeType>
-		<sort>cableinlet</sort>
-		<image>images/cableinlet.gif</image>
-		<name>Кабельный ввод</name>
-		<topological>true</topological>
-	</SiteNodeType>
-	<SiteNodeType>
-		<sort>ats</sort>
-		<image>images/ats.gif</image>
-		<name>Телефонный узел</name>
-		<topological>true</topological>
-	</SiteNodeType>
-	<SiteNodeType>
-		<sort>tower</sort>
-		<image>images/tower.gif</image>
-		<name></name>
-		<topological>true</topological>
-	</SiteNodeType>
-</SiteNodeTypes>
+<!--DOCTYPE sitenodetypes SYSTEM "SiteNodeType.xsd"-->
+<map:sitenodetypes 
+	xmlns:map="http://syrus.com/AMFICOM/map/xml">
+	<map:sitenodetype>
+		<map:uid>1</map:uid>
+		<map:sort>well</map:sort>
+		<map:image>images/well.gif</map:image>
+		<map:name>Колодец</map:name>
+		<map:topological>true</map:topological>
+	</map:sitenodetype>
+	<map:sitenodetype>
+		<map:uid>2</map:uid>
+		<map:sort>building</map:sort>
+		<map:image>images/building.gif</map:image>
+		<map:name>Здание</map:name>
+		<map:topological>true</map:topological>
+	</map:sitenodetype>
+	<map:sitenodetype>
+		<map:uid>3</map:uid>
+		<map:sort>piquet</map:sort>
+		<map:image>images/piquet.gif</map:image>
+		<map:name>Пикет</map:name>
+		<map:topological>true</map:topological>
+	</map:sitenodetype>
+	<map:sitenodetype>
+		<map:uid>4</map:uid>
+		<map:sort>cableinlet</map:sort>
+		<map:image>images/cableinlet.gif</map:image>
+		<map:name>Кабельный ввод</map:name>
+		<map:topological>true</map:topological>
+	</map:sitenodetype>
+	<map:sitenodetype>
+		<map:uid>5</map:uid>
+		<map:sort>ats</map:sort>
+		<map:image>images/ats.gif</map:image>
+		<map:name>Телефонный узел</map:name>
+		<map:topological>true</map:topological>
+	</map:sitenodetype>
+	<map:sitenodetype>
+		<map:uid>6</map:uid>
+		<map:sort>tower</map:sort>
+		<map:image>images/tower.gif</map:image>
+		<map:name></map:name>
+		<map:topological>true</map:topological>
+	</map:sitenodetype>
+</map:sitenodetypes>

@@ -1,27 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/map/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
   <xsd:include schemaLocation="PhysicalLinkType.xsd"/>
 
-  <xsd:element name="physicallinks" type="PhysicalLinks"/>
+  <xsd:element name="physicallinks" type="map:PhysicalLinks">
+
+    <xsd:key name="physicallinkuid">
+      <xsd:selector xpath="map:physicallink"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+<!--
+    <xsd:keyref name="dummy" refer="map:physicallinktypeuid">
+      <xsd:selector xpath="map:physicallink"/>
+      <xsd:field xpath="@physicallinktypeuid"/>
+    </xsd:keyref>
+-->
+    <xsd:keyref name="dummyplsnu" refer="map:nodeuid">
+      <xsd:selector xpath="map:physicallink"/>
+      <xsd:field xpath="@startnodeuid"/>
+    </xsd:keyref>
+
+    <xsd:keyref name="dummyplenu" refer="map:nodeuid">
+      <xsd:selector xpath="map:physicallink"/>
+      <xsd:field xpath="@endnodeuid"/>
+    </xsd:keyref>
+
+  </xsd:element>
 
   <xsd:complexType name="PhysicalLinks">
     <xsd:sequence>
-      <xsd:element name="physicallink" type="PhysicalLink" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="physicallink" type="map:PhysicalLink" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="PhysicalLink">
     <xsd:all>
-      <xsd:element name="uid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="type" type="PhysicalLinkType" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="startnodeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="endnodeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="physicallinktypeuid" type="map:PhysicalLinkTypeSort" minOccurs="1" maxOccurs="1"/>
+<!--      <xsd:element name="physicallinktypeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/> -->
+      <xsd:element name="startnodeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="endnodeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="city" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="street" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="building" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="characteristics" type="Characteristics" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="characteristics" type="map:Characteristics" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
 

@@ -1,20 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:element name="nodelinks" type="NodeLinks"/>
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/map/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
+  <xsd:element name="nodelinks" type="map:NodeLinks">
+
+    <xsd:key name="nodelinkuid">
+      <xsd:selector xpath="map:nodelink"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+
+    <xsd:keyref name="dummynlplu" refer="map:physicallinkuid">
+      <xsd:selector xpath="map:nodelink"/>
+      <xsd:field xpath="@physicallinkuid"/>
+    </xsd:keyref>
+
+    <xsd:keyref name="dummynlsnu" refer="map:nodeuid">
+      <xsd:selector xpath="map:nodelink"/>
+      <xsd:field xpath="@startnodeuid"/>
+    </xsd:keyref>
+
+    <xsd:keyref name="dummynlenu" refer="map:nodeuid">
+      <xsd:selector xpath="map:nodelink"/>
+      <xsd:field xpath="@endnodeuid"/>
+    </xsd:keyref>
+
+  </xsd:element>
 
   <xsd:complexType name="NodeLinks">
     <xsd:sequence>
-      <xsd:element name="nodelink" type="NodeLink" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="nodelink" type="map:NodeLink" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="NodeLink">
     <xsd:all>
-      <xsd:element name="uid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="physicallinkuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="startnodeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="endnodeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="length" type="xsd:double" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="physicallinkuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="startnodeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="endnodeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
 

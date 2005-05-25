@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/map/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
 
-  <xsd:element name="topologicalnodes" type="TopologicalNodes"/>
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
+  <xsd:element name="topologicalnodes" type="map:TopologicalNodes">
+
+    <xsd:key name="topologicalnodeuid">
+      <xsd:selector xpath="map:topologicalnode"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+
+    <xsd:key name="nodeuid">
+      <xsd:selector xpath="map:topologicalnode"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+
+  </xsd:element>
 
   <xsd:complexType name="TopologicalNodes">
     <xsd:sequence>
-      <xsd:element name="topologicalnode" type="TopologicalNode" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="topologicalnode" type="map:TopologicalNode" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="TopologicalNode">
     <xsd:all>
-      <xsd:element name="uid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="active" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="x" type="xsd:double" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="y" type="xsd:double" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="active" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
 

@@ -1,23 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/map/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
   <xsd:include schemaLocation="Characteristic.xsd"/>
 
-  <xsd:element name="sitenodetypes" type="SiteNodeTypes"/>
+  <xsd:element name="sitenodetypes" type="map:SiteNodeTypes">
+<!--
+    <xsd:key name="sitenodetypeuid">
+      <xsd:selector xpath="map:sitenodetype"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+-->
+  </xsd:element>
 
   <xsd:complexType name="SiteNodeTypes">
     <xsd:sequence>
-      <xsd:element name="sitenodetype" type="SiteNodeType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="sitenodetype" type="map:SiteNodeType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="SiteNodeType">
     <xsd:all>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="sort" type="SiteNodeTypeSort" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="sort" type="map:SiteNodeTypeSort" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="topological" type="xsd:boolean" minOccurs="1" maxOccurs="1" fixed="true"/>
       <xsd:element name="image" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="characteristics" type="Characteristics" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="characteristics" type="map:Characteristics" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
 

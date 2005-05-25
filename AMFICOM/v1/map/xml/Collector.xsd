@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/map/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
 
-  <xsd:element name="collectors" type="Collectors"/>
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
+  <xsd:element name="collectors" type="map:Collectors">
+
+    <xsd:key name="collectoruid">
+      <xsd:selector xpath="map:collector"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+
+    <xsd:keyref name="dummycplus" refer="map:physicallinkuid">
+      <xsd:selector xpath="map:collector/map:physicallinkuids"/>
+      <xsd:field xpath="@physicallinkuid"/>
+    </xsd:keyref>
+
+  </xsd:element>
 
   <xsd:complexType name="Collectors">
     <xsd:sequence>
-      <xsd:element name="collector" type="Collector" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="collector" type="map:Collector" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="Collector">
-    <xsd:all>
-      <xsd:element name="uid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+    <xsd:sequence>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="physicallinkuids" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:all>
+      <xsd:element name="physicallinkuids" type="map:PhysicalLinkUIds" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="PhysicalLinkUIds">
+    <xsd:sequence>
+      <xsd:element name="physicallinkuid" type="gen:UID" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
   </xsd:complexType>
 
 </xsd:schema>

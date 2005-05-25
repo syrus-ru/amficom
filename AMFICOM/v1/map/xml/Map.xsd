@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/map/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
   <xsd:include schemaLocation="TopologicalNode.xsd"/>
   <xsd:include schemaLocation="SiteNode.xsd"/>
   <xsd:include schemaLocation="PhysicalLink.xsd"/>
   <xsd:include schemaLocation="NodeLink.xsd"/>
   <xsd:include schemaLocation="Collector.xsd"/>
 
-  <xsd:element name="maps" type="Maps"/>
+  <xsd:element name="maps" type="map:Maps">
+
+    <xsd:unique name="mapuid">
+      <xsd:selector xpath="map:map"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:unique>
+
+  </xsd:element>
 
   <xsd:complexType name="Maps">
     <xsd:sequence>
-      <xsd:element name="map" type="Map" minOccurs="1" maxOccurs="unbounded"/>
+      <xsd:element name="map" type="map:Map" minOccurs="1" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="Map">
     <xsd:all>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="uid" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="topologicalnodes" type="TopologicalNodes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="sitenodes" type="SiteNodes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="physicallinks" type="PhysicalLinks" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="nodelinks" type="NodeLinks" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="collectors" type="Collectors" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="topologicalnodes" type="map:TopologicalNodes" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="sitenodes" type="map:SiteNodes" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="physicallinks" type="map:PhysicalLinks" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="nodelinks" type="map:NodeLinks" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="collectors" type="map:Collectors" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
 
