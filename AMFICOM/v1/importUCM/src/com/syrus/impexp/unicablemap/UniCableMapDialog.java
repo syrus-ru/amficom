@@ -28,7 +28,7 @@ import com.syrus.impexp.ImportExportException;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 09:42:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/25 16:06:51 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JDialog 
@@ -188,7 +188,10 @@ public class UniCableMapDialog extends JDialog
 		this.passwordField.setText("masterkey");
 		this.hostField.setText("localhost");
 		this.databaseField.setText("d:/My Documents/ISM/doc/Resident/tel.gdb");
-		this.exportFileField.setText("d:/My Documents/ISM/prog/java/AMFICOm/run/Data/ucm/testucm.esf");
+		this.exportFileField.setText("d:/My Documents/ISM/prog/java/AMFICOm/run/Data/ucm/testucm.xml");
+
+		this.importButton.setEnabled(false);
+		this.disconnectButton.setEnabled(false);
 	}
 
 	void connectButton_actionPerformed(ActionEvent e)
@@ -200,18 +203,24 @@ public class UniCableMapDialog extends JDialog
 					this.passwordField.getText(),
 					this.hostField.getText(),
 					this.databaseField.getText());
+			this.statusLabel.setText("Connected!");
+			this.importButton.setEnabled(true);
+			this.disconnectButton.setEnabled(true);
 		}
 		catch (ImportExportException ex)
 		{
 			this.statusLabel.setText(ex.getMessage());
+			this.importButton.setEnabled(false);
+			this.disconnectButton.setEnabled(false);
 		}
-		this.statusLabel.setText("Connected!");
 	}
 
 	void disconnectButton_actionPerformed(ActionEvent e)
 	{
 		this.ucmDatabase.close();
 		this.statusLabel.setText("Disconnected!");
+		this.importButton.setEnabled(false);
+		this.disconnectButton.setEnabled(false);
 	}
 
 	void importButton_actionPerformed(ActionEvent e)
@@ -256,6 +265,12 @@ public class UniCableMapDialog extends JDialog
 			"esf Export Save File");
 		fileChooser.addChoosableFileFilter(esfFilter);
 
+		ChoosableFileFilter xmlFilter =
+			new ChoosableFileFilter(
+			"xml",
+			"Export Save File");
+		fileChooser.addChoosableFileFilter(xmlFilter);
+
 		fileChooser.setDialogTitle("Выберите файл для записи");
 		fileChooser.setMultiSelectionEnabled(false);
 
@@ -263,9 +278,9 @@ public class UniCableMapDialog extends JDialog
 		if (option == JFileChooser.APPROVE_OPTION)
 		{
 			String fileName = fileChooser.getSelectedFile().getPath();
-			if (!fileName.endsWith(".gdb"))
-				fileName = fileName + ".gdb";
-			this.databaseField.setText(fileName);
+			if (!(fileName.endsWith(".esf") || fileName.endsWith(".xml")))
+				fileName = fileName + ".xml";
+			this.exportFileField.setText(fileName);
 		}
 	}
 
