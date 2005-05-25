@@ -21,13 +21,13 @@ public final class MapPropsManager
 		propsMap.put(com.syrus.AMFICOM.mapview.CablePath.class,
 			MapCablePathPane.getInstance());
 		propsMap.put(com.syrus.AMFICOM.map.SiteNodeType.class,
-			MapProtoPane.getInstance());
-		propsMap.put(com.syrus.AMFICOM.mapview.VoidElement.class,
-			MapViewPanel.getInstance());
-		propsMap.put(com.syrus.AMFICOM.mapview.MapView.class,
-			MapViewPanel.getInstance());
-		propsMap.put(com.syrus.AMFICOM.map.Map.class,
-			MapPanel.getInstance());
+			SiteNodeTypePanel.getInstance());
+//		propsMap.put(com.syrus.AMFICOM.mapview.VoidElement.class,
+//			MapViewPanel.getInstance());
+//		propsMap.put(com.syrus.AMFICOM.mapview.MapView.class,
+//			MapViewPanel.getInstance());
+//		propsMap.put(com.syrus.AMFICOM.map.Map.class,
+//			MapPanel.getInstance());
 
 //		propsCtlMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
 //			MapPhysicalNodePropertiesController.getInstance());
