@@ -14,17 +14,18 @@ SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDLJ)
+
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar
-
-
-$(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
-$(call checkenve,IDLJ)
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
@@ -43,7 +44,7 @@ $(LIBNAME_INTERFACE):	.corba
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -65,9 +66,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mshserver/*.class
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/*.class
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/scheme/*.class
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	rm -f .mach
 
 .PHONY:	cleancorba
@@ -87,7 +86,7 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/mshserver.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java
+		$(SOURCES)
 
 
 lib: $(LIBNAME)
