@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 
 public class MapViewPanel
 		extends JPanel 
-		implements ObjectResourcePropertiesPane, MapPropertiesPane
+		implements ObjectResourcePropertiesPane
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
