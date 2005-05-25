@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.12 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.13 2005/05/25 16:21:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/04/28 12:55:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/25 16:21:54 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController
@@ -203,7 +203,7 @@ public class PhysicalLinkController extends AbstractLinkController
 		updateLengthLt(link);
 
 		boolean showName = false;
-		if(MapPropertiesManager.isShowLinkNames())
+		if(MapPropertiesManager.isLayerLabelVisible(link.getType()))
 		{
 			showName = true;
 		}
