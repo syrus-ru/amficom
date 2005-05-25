@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.2 2005/04/18 09:23:26 peskovsky Exp $
+ * $Id: MapStatusBar.java,v 1.3 2005/05/25 16:46:23 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:23:26 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2005/05/25 16:46:23 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel 
@@ -45,7 +45,7 @@ public final class MapStatusBar extends JPanel
 	private JLabel scaleLabel = new JLabel();
 	JTextField scaleField = new JTextField();
 
-	private static Dimension fieldSize = new Dimension(60, 24);
+	private static Dimension fieldSize = new Dimension(120, 24);
 
 	public MapStatusBar(LogicalNetLayer logicalNetLayer)
 	{
