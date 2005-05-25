@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.3 2005/04/28 12:59:18 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.4 2005/05/25 16:29:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.JTabbedPane;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -102,6 +102,7 @@ import javax.swing.JTabbedPane;
 				disp.unregister(this, MapEvent.MAP_FRAME_SHOWN);
 				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
 				disp.unregister(this, MapEvent.MAP_VIEW_DESELECTED);
+				disp.unregister(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
 			}
 		}
 		this.aContext = aContext;
@@ -113,6 +114,7 @@ import javax.swing.JTabbedPane;
 			disp.register(this, MapEvent.MAP_FRAME_SHOWN);
 			disp.register(this, MapEvent.MAP_VIEW_SELECTED);
 			disp.register(this, MapEvent.MAP_VIEW_DESELECTED);
+			disp.register(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
 		}
 	}
 
@@ -133,6 +135,8 @@ import javax.swing.JTabbedPane;
 				ex.printStackTrace();
 			} 
 		}
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
+			this.layersPanel.setVisibility();
 	}
 
 	public void setMapFrame(MapFrame mapFrame)
