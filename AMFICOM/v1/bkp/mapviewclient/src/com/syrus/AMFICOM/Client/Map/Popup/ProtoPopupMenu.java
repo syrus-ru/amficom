@@ -10,11 +10,9 @@ import javax.swing.JMenuItem;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.Props.MapPropertiesPane;
-import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.Client.Map.Props.SiteNodeTypePanel;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementLabel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 public final class ProtoPopupMenu extends MapPopupMenu 
@@ -81,10 +79,10 @@ public final class ProtoPopupMenu extends MapPopupMenu
 
 	void showProperties()
 	{
-		ObjectResourcePropertiesPane prop = MapPropsManager.getPropsPane(this.proto);
+		SiteNodeTypePanel prop = SiteNodeTypePanel.getInstance();
 		if(prop == null)
 			return;
-		((MapPropertiesPane )prop).setLogicalNetLayer(this.logicalNetLayer);
+		prop.setLogicalNetLayer(this.logicalNetLayer);
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModel.getString("Properties"), 
