@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.9 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.10 2005/05/25 16:24:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/04/28 12:55:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/25 16:24:16 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController
@@ -37,7 +37,7 @@ public class SiteNodeController extends AbstractNodeController
 	static final int IMG_SIZE = 16;
 
 	public static Image externalNodeImage = Toolkit.getDefaultToolkit()
-			.getImage("images/extlink.gif").getScaledInstance(
+			.getImage("images/extlink2.gif").getScaledInstance(
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH);
@@ -75,6 +75,9 @@ public class SiteNodeController extends AbstractNodeController
 			return;
 		SiteNode site = (SiteNode)mapElement;
 
+		if(!MapPropertiesManager.isLayerVisible(site.getType()))
+			return;
+		
 		if(!isElementVisible(site, visibleBounds))
 			return;
 		
@@ -94,19 +97,12 @@ public class SiteNodeController extends AbstractNodeController
 			
 			pg.drawImage(
 					SiteNodeController.externalNodeImage,
-	                p.x + width / 2 - IMG_SIZE / 2,
-	                p.y - height / 2 - IMG_SIZE / 2,
+	                p.x - IMG_SIZE / 2,
+	                p.y - height / 2 - IMG_SIZE,
 	                null);
-
-			g.setColor(Color.BLUE);
-			g.drawRect( 
-					p.x - width / 2,
-					p.y - height / 2,
-					width,
-					height);
 		}
 
-		if(MapPropertiesManager.isShowNodesNames())
+		if(MapPropertiesManager.isLayerLabelVisible(site.getType()))
 		{
 			MapCoordinatesConverter converter = getLogicalNetLayer();
 			
