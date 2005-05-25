@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.6 2005/05/18 14:59:45 bass Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.7 2005/05/25 16:42:52 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.Selection;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/18 14:59:45 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/05/25 16:42:52 $
  * @module schemeclient_v1
  */
 
@@ -92,21 +92,21 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 			super.showNoSelection();
 	}
 
-	void setCharacteristicValue(Collection characteristics, String name,
-			String value) {
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			Characteristic ch = (Characteristic) it.next();
-			if (ch.getName().equals(name)) {
-				if(ch.getCharacterizableId().equals(this.mapElement.getId()))
-					ch.setValue(value);
-				else {
-					PhysicalLinkController controller = (PhysicalLinkController )PhysicalLinkController.getInstance();
-					if(ch.getType().getCodename().equals(AbstractLinkController.ATTRIBUTE_COLOR))
-						controller.setColor(this.mapElement, null);
-				}
-				break;
-			}
-		}
-	}
+//	void setCharacteristicValue(Collection characteristics, String name,
+//			String value) {
+//		for (Iterator it = characteristics.iterator(); it.hasNext();) {
+//			Characteristic ch = (Characteristic) it.next();
+//			if (ch.getName().equals(name)) {
+//				if(ch.getCharacterizableId().equals(this.mapElement.getId()))
+//					ch.setValue(value);
+//				else {
+//					PhysicalLinkController controller = (PhysicalLinkController )PhysicalLinkController.getInstance();
+//					if(ch.getType().getCodename().equals(controller.ATTRIBUTE_COLOR))
+//						controller.setColor(this.mapElement, null);
+//				}
+//				break;
+//			}
+//		}
+//	}
 
 }
