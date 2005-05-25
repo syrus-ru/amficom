@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.2 2005/05/25 10:06:07 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/25 10:06:07 $
  * @module commonclient_v1
  */
 
@@ -68,7 +69,7 @@ public class CharacteristicAddDialog extends JDialog {
 	JRadioButton newRadioButton = new JRadioButton(LangModelGeneral
 			.getString(ResourceKeys.I18N_NEW_CHARACTERISTICTYPE));
 	ButtonGroup buttonGroup = new ButtonGroup();
-	JPanel panel = new JPanel();
+	JPanel panel;
 	JPanel buttonPanel = new JPanel();
 	JTextField nameField = new JTextField();
 	JTextArea descrArea = new JTextArea();
@@ -90,16 +91,18 @@ public class CharacteristicAddDialog extends JDialog {
 	private void jbInit() throws Exception {
 		this.buttonGroup.add(this.existingRadioButton);
 		this.buttonGroup.add(this.newRadioButton);
-		this.existingRadioButton.addActionListener(new ActionListener() {
+		
+		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				radioButtonStateChanged();
+				boolean b = CharacteristicAddDialog.this.existingRadioButton.isSelected();
+				CharacteristicAddDialog.this.characteristicTypeComboBox.setEnabled(b);
+				CharacteristicAddDialog.this.nameField.setEnabled(!b);
+				CharacteristicAddDialog.this.descrArea.setEnabled(!b);
+			
 			}
-		});
-		this.newRadioButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				radioButtonStateChanged();
-			}
-		});
+		};
+		this.existingRadioButton.addActionListener(actionListener);
+		this.newRadioButton.addActionListener(actionListener);
 
 		this.characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper
 				.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
@@ -119,31 +122,31 @@ public class CharacteristicAddDialog extends JDialog {
 		this.descrArea.setAutoscrolls(true);
 		scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 
-		GridBagLayout gridbag = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		this.panel.setLayout(gridbag);
+		
+		this.panel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
 
-		c.fill = GridBagConstraints.BOTH;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(this.existingRadioButton, gridbag, c);
-		addToPanel(this.characteristicTypeComboBox, gridbag, c);
-		addToPanel(this.newRadioButton, gridbag, c);
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		addToPanel(this.name, gridbag, c);
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(this.nameField, gridbag, c);
-		c.weightx = 0.0;
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		addToPanel(this.descr, gridbag, c);
-		c.weighty = 1.0;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(scrollPane, gridbag, c);
-		c.weighty = 0.0;
-		c.weightx = 0.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(this.buttonPanel, gridbag, c);
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.panel.add(this.existingRadioButton, gbc);
+		this.panel.add(this.characteristicTypeComboBox, gbc);
+		this.panel.add(this.newRadioButton, gbc);
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		this.panel.add(this.name, gbc);
+		gbc.weightx = 1.0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.panel.add(this.nameField, gbc);
+		gbc.weightx = 0.0;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		this.panel.add(this.descr, gbc);
+		gbc.weighty = 1.0;
+		gbc.weightx = 1.0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.panel.add(scrollPane, gbc);
+		gbc.weighty = 0.0;
+		gbc.weightx = 0.0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.panel.add(this.buttonPanel, gbc);
 
 		this.buttonPanel.setLayout(new FlowLayout());
 		this.buttonPanel.add(this.okButton);
@@ -156,9 +159,9 @@ public class CharacteristicAddDialog extends JDialog {
 					if (CharacteristicAddDialog.this.characteristicTypeComboBox.getSelectedItem() != null) {
 						CharacteristicAddDialog.this.selectedType = (CharacteristicType) CharacteristicAddDialog.this.characteristicTypeComboBox
 								.getSelectedItem();
-					}
-					else
+					} else {
 						return;
+					}
 				} 
 				else {
 					String text = CharacteristicAddDialog.this.nameField.getText();
@@ -172,9 +175,9 @@ public class CharacteristicAddDialog extends JDialog {
 							ex.printStackTrace();
 							return;
 						}
-					}
-					else
+					} else {
 						return;
+					}
 				}
 				CharacteristicAddDialog.this.res = OK;
 				CharacteristicAddDialog.this.dispose();
@@ -187,21 +190,9 @@ public class CharacteristicAddDialog extends JDialog {
 			}
 		});
 
-		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(this.panel, BorderLayout.CENTER);
-	}
-
-	private void addToPanel(Component comp, GridBagLayout gridbag,
-			GridBagConstraints c) {
-		gridbag.setConstraints(comp, c);
-		this.panel.add(comp);
-	}
-
-	void radioButtonStateChanged() {
-		boolean b = this.existingRadioButton.isSelected();
-		this.characteristicTypeComboBox.setEnabled(b);
-		this.nameField.setEnabled(!b);
-		this.descrArea.setEnabled(!b);
+		Container contentPane = this.getContentPane();
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(this.panel, BorderLayout.CENTER);
 	}
 
 	public int showDialog(CharacteristicTypeSort sort1, Collection chars) {
@@ -214,8 +205,9 @@ public class CharacteristicAddDialog extends JDialog {
 					.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
 				CharacteristicType ctype = (CharacteristicType) it.next();
-				if (ctype.getSort().equals(sort1) && !chars.contains(ctype))
+				if (ctype.getSort().equals(sort1) && !chars.contains(ctype)) {
 					this.characteristicTypeComboBox.addItem(ctype);
+				}
 			}
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
@@ -224,9 +216,9 @@ public class CharacteristicAddDialog extends JDialog {
 		if (this.characteristicTypeComboBox.getModel().getSize() == 0) {
 			this.existingRadioButton.setEnabled(false);
 			this.newRadioButton.doClick();
-		}
-		else
+		} else {
 			this.existingRadioButton.doClick();
+		}
 		
 		setModal(true);
 		setVisible(true);
