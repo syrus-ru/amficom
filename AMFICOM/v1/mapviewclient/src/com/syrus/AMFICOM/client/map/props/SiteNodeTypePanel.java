@@ -31,9 +31,9 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
-public final class MapProtoPane
+public final class SiteNodeTypePanel
 		extends JPanel 
-		implements ObjectResourcePropertiesPane, MapPropertiesPane
+		implements ObjectResourcePropertiesPane
 {
 	private JLabel nameLabel = new JLabel();
 
@@ -42,7 +42,7 @@ public final class MapProtoPane
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
-	SiteNodeType proto;
+	SiteNodeType type;
 
 	private LogicalNetLayer lnl;
 
@@ -54,9 +54,9 @@ public final class MapProtoPane
 
 	private ApplicationContext aContext;
 
-	private static MapProtoPane instance = new MapProtoPane();
+	private static SiteNodeTypePanel instance = new SiteNodeTypePanel();
 
-	private MapProtoPane()
+	private SiteNodeTypePanel()
 	{
 		try
 		{
@@ -69,7 +69,7 @@ public final class MapProtoPane
 
 	}
 
-	public static ObjectResourcePropertiesPane getInstance()
+	public static SiteNodeTypePanel getInstance()
 	{
 		return instance;
 	}
@@ -124,10 +124,10 @@ public final class MapProtoPane
 		return null;
 	}
 
-	public void setObject(Object objectResource)
+	public void setObject(Object object)
 	{
-		this.proto = (SiteNodeType)objectResource;
-		if(this.proto == null)
+		this.type = (SiteNodeType)object;
+		if(this.type == null)
 		{
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
@@ -141,11 +141,11 @@ public final class MapProtoPane
 		else
 		{
 			this.nameTextField.setEnabled(true);
-			this.nameTextField.setText(this.proto.getName());
+			this.nameTextField.setText(this.type.getName());
 			this.descTextArea.setEnabled(true);
-			this.descTextArea.setText(this.proto.getDescription());
+			this.descTextArea.setText(this.type.getDescription());
 
-			this.imageId = this.proto.getImageId();
+			this.imageId = this.type.getImageId();
 			this.imagePanel.removeAll();
 
 			Image im;
@@ -234,9 +234,9 @@ public final class MapProtoPane
 	{
 		try 
 		{
-			this.proto.setName(this.nameTextField.getText());
-			this.proto.setDescription(this.descTextArea.getText());
-			this.proto.setImageId(this.imageId);
+			this.type.setName(this.nameTextField.getText());
+			this.type.setDescription(this.descTextArea.getText());
+			this.type.setImageId(this.imageId);
 			return true;
 		} 
 		catch (Exception ex) 
