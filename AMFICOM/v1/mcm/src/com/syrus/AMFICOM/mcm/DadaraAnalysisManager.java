@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.37 2005/05/25 09:50:47 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.38 2005/05/25 12:58:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,13 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/25 09:50:47 $
- * @author $Author: saa $
+ * @version $Revision: 1.38 $, $Date: 2005/05/25 12:58:19 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
 //*
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,11 +25,6 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
-import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceImplMF;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.general.ApplicationException;
