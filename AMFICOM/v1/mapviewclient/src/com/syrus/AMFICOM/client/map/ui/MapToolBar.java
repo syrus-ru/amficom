@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.18 2005/04/08 14:19:21 peskovsky Exp $
+ * $Id: MapToolBar.java,v 1.19 2005/05/25 16:47:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.18 $, $Date: 2005/04/08 14:19:21 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.19 $, $Date: 2005/05/25 16:47:11 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapToolBar extends JPanel 
@@ -66,10 +67,8 @@ public final class MapToolBar extends JPanel
 	private JToggleButton showCablePathToggleButton = new JToggleButton();
 	private JToggleButton showTransPathToggleButton = new JToggleButton();
 
-	private LogicalNetLayer logicalNetLayer;
-
 	private JButton optionsButton = new JButton();
-
+	private JButton layersButton = new JButton();
 	private JButton shotButton = new JButton();
 
 	private static Dimension buttonSize = new Dimension(24, 24);
@@ -77,6 +76,8 @@ public final class MapToolBar extends JPanel
 	public NodeSizePanel nodeSizePanel;
 	
 //	private MapPenBarPanel penp;
+
+	private LogicalNetLayer logicalNetLayer;
 
 	public MapToolBar(LogicalNetLayer logicalNetLayer)
 	{
@@ -228,7 +229,9 @@ public final class MapToolBar extends JPanel
 			{
 				public void actionPerformed(ActionEvent e)
 				{
+					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 					MapOptionsDialog mod = new MapOptionsDialog();
+					mod.setLocation(((int)screen.getWidth() - mod.getWidth()) / 2, (int)(screen.getHeight() - mod.getHeight()) / 2);
 					mod.setModal(true);
 					mod.setVisible(true);
 					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
@@ -241,6 +244,26 @@ public final class MapToolBar extends JPanel
 		this.optionsButton.setMinimumSize(buttonSize);
 		this.optionsButton.setName("mapViewOptions");
 
+		this.layersButton.setIcon(new ImageIcon("images/layers.gif"));
+		this.layersButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+					LayersDialog mod = new LayersDialog();
+					mod.setLocation(((int)screen.getWidth() - mod.getWidth()) / 2, (int)(screen.getHeight() - mod.getHeight()) / 2);
+					mod.setModal(true);
+					mod.setVisible(true);
+					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
+						getLogicalNetLayer().getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+				}
+			}); 
+		this.layersButton.setToolTipText(LangModelMap.getString("Layers"));
+		this.layersButton.setPreferredSize(buttonSize);
+		this.layersButton.setMaximumSize(buttonSize);
+		this.layersButton.setMinimumSize(buttonSize);
+		this.layersButton.setName("mapViewLayers");
+
 		this.shotButton.setToolTipText("Снимок");
 		this.shotButton.setText("Снимок");
 		this.shotButton.setPreferredSize(buttonSize);
@@ -250,6 +273,7 @@ public final class MapToolBar extends JPanel
 			{
 				public void actionPerformed(ActionEvent e)
 				{
+					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 					JDialog dialog = new JDialog(
 							Environment.getActiveWindow(),
 							true);
@@ -260,6 +284,7 @@ public final class MapToolBar extends JPanel
 					dialog.getContentPane().setLayout(new BorderLayout());
 					dialog.getContentPane().add(label, BorderLayout.CENTER);
 					dialog.pack();
+					dialog.setLocation(((int)screen.getWidth() - dialog.getWidth()) / 2, (int)(screen.getHeight() - dialog.getHeight()) / 2);
 
 					dialog.setVisible(true);
 				}
@@ -298,7 +323,9 @@ public final class MapToolBar extends JPanel
 
 		innerPanel.add(this.optionsButton,new GridBagConstraints(14,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
 
-		innerPanel.add(this.shotButton,new GridBagConstraints(15,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		innerPanel.add(this.layersButton,new GridBagConstraints(15,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+
+		innerPanel.add(this.shotButton,new GridBagConstraints(16,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
 		
 		this.setLayout(new BorderLayout());
 		this.add(innerPanel,BorderLayout.WEST);
