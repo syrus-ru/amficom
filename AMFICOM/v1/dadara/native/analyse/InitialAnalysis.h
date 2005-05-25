@@ -121,11 +121,8 @@ class Splash
 { public:
 	int begin_thr;		// первое пересечение минимального порога
     int end_thr;
-
 	int begin_weld;		// первое пересечение сварочного порога
     int end_weld;
-
-
 	int begin_conn;		// пересечение коннекторного порога
     int end_conn;
 
@@ -145,6 +142,4 @@ class Splash
     }
 };
 //====================================================================================================
-
-
 #endif // !defined(AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_)
