@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.6 2005/04/14 14:10:01 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.7 2005/05/25 16:28:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,9 +17,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -41,12 +44,14 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.6 $, $Date: 2005/04/14 14:10:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/25 16:28:44 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -217,6 +222,41 @@ import com.syrus.AMFICOM.mapview.MapView;
 		t.start();
 	}
 
+	static class NodeTypeComparator implements Comparator {
+
+		static NodeTypeComparator instance = new NodeTypeComparator();
+		
+		private NodeTypeComparator() {
+		}
+		
+		public int compare(Object o1, Object o2) {
+			SiteNode site1 = (SiteNode )o1;
+			SiteNode site2 = (SiteNode )o2;
+			SiteNodeType type1 = (SiteNodeType )site1.getType();
+			SiteNodeType type2 = (SiteNodeType )site2.getType();
+			if(type1.equals(type2))
+				return site1.getName().compareTo(site2.getName());
+			return type1.getName().compareTo(type2.getName());
+		}
+	}
+	
+	static class LinkTypeComparator implements Comparator {
+
+		static LinkTypeComparator instance = new LinkTypeComparator();
+		
+		private LinkTypeComparator() {
+		}
+		
+		public int compare(Object o1, Object o2) {
+			PhysicalLink link1 = (PhysicalLink )o1;
+			PhysicalLink link2 = (PhysicalLink )o2;
+			PhysicalLinkType type1 = (PhysicalLinkType )link1.getType();
+			PhysicalLinkType type2 = (PhysicalLinkType )link2.getType();
+			if(type1.equals(type2))
+				return link1.getName().compareTo(link2.getName());
+			return type1.getName().compareTo(type2.getName());
+		}
+	}
 	/**
 	 * просмотр всех элементов карты и поиск среди них объектов,
 	 * имя которых сооветствует заданному шаблону поиска
@@ -226,6 +266,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 		String loweredSearchText = this.searchText.toLowerCase();
 		this.searchButton.setEnabled(false);
 		List foundElements = new LinkedList();
+		SortedSet foundSites = new TreeSet(NodeTypeComparator.instance);
+		SortedSet foundLinks = new TreeSet(LinkTypeComparator.instance);
 		
 		Map map = this.mapView.getMap();
 		try
@@ -235,15 +277,19 @@ import com.syrus.AMFICOM.mapview.MapView;
 			{
 				MapElement me = (MapElement )it.next();
 				
-				if(me.getName().toLowerCase().indexOf(loweredSearchText) != -1)
-					foundElements.add(me);
+				if(me.getName().toLowerCase().indexOf(loweredSearchText) != -1) {
+					if(me instanceof SiteNode)
+						foundSites.add(me);
+					else
+						foundElements.add(me);
+				}
 				else if(me instanceof SiteNode)
 				{
 					SiteNode site = (SiteNode )me;
 					if(site.getCity().toLowerCase().indexOf(loweredSearchText) != -1
 						|| site.getStreet().toLowerCase().indexOf(loweredSearchText) != -1
 						|| site.getBuilding().toLowerCase().indexOf(loweredSearchText) != -1)
-							foundElements.add(me);
+							foundSites.add(me);
 				}
 			}
 			
@@ -254,8 +300,11 @@ import com.syrus.AMFICOM.mapview.MapView;
 					|| link.getCity().toLowerCase().indexOf(loweredSearchText) != -1
 					|| link.getStreet().toLowerCase().indexOf(loweredSearchText) != -1
 					|| link.getBuilding().toLowerCase().indexOf(loweredSearchText) != -1)
-						foundElements.add(link);
+						foundLinks.add(link);
 			}
+			
+			foundElements.addAll(foundSites);
+			foundElements.addAll(foundLinks);
 		}
 		catch(Exception ex)
 		{
