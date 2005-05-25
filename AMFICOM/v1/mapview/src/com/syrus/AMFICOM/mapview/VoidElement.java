@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.9 2005/05/18 12:37:39 bass Exp $
+ * $Id: VoidElement.java,v 1.10 2005/05/25 17:13:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,16 +15,14 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Пустой элемент.
  *
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/05/18 12:37:39 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/05/25 17:13:38 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement {
@@ -132,13 +130,6 @@ public final class VoidElement implements MapElement {
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
 	public DoublePoint getLocation() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	public void setMap(Map map) {
 		throw new UnsupportedOperationException();
 	}
 
