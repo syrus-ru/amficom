@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.2 2005/05/25 10:06:07 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.3 2005/05/25 10:28:17 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -39,18 +38,19 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/05/25 10:06:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/25 10:28:17 $
  * @module commonclient_v1
  */
 
@@ -195,18 +195,18 @@ public class CharacteristicAddDialog extends JDialog {
 		contentPane.add(this.panel, BorderLayout.CENTER);
 	}
 
-	public int showDialog(CharacteristicTypeSort sort1, Collection chars) {
+	public int showDialog(CharacteristicTypeSort sort1, Collection characaterisctics) {
 		this.sort = sort1;
 
 		try {
-			EquivalentCondition condition = new EquivalentCondition(
-					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+			TypicalCondition condition = new TypicalCondition(sort1.value(), sort1.value(), OperationSort.OPERATION_EQUALS,				
+					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CharacteristicTypeWrapper.COLUMN_SORT);
 			Collection characteristicTypes = StorableObjectPool
 					.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
-				CharacteristicType ctype = (CharacteristicType) it.next();
-				if (ctype.getSort().equals(sort1) && !chars.contains(ctype)) {
-					this.characteristicTypeComboBox.addItem(ctype);
+				CharacteristicType characteristicType = (CharacteristicType) it.next();
+				if (!characaterisctics.contains(characteristicType)) {
+					this.characteristicTypeComboBox.addItem(characteristicType);
 				}
 			}
 		} catch (ApplicationException ex) {
