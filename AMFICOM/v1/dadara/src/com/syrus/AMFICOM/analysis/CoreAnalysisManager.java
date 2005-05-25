@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.71 2005/05/24 16:36:50 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.72 2005/05/25 09:50:29 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,21 +9,27 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.71 $, $Date: 2005/05/24 16:36:50 $
+ * @version $Revision: 1.72 $, $Date: 2005/05/25 09:50:29 $
  * @module
  */
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.syrus.io.BellcoreStructure;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
+import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceImplMF;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
@@ -632,4 +638,82 @@ public class CoreAnalysisManager
 			hardKeyToUpdate,
 			dyFactor);
 	}
+
+    /**
+     * Проводит анализ рефлектограммы, сравнивает ее с порогом обнаружения
+     * обрыва и эталонным MTM, формирует список алармов.
+     * Текущая версия возвращает 0 или 1 алармов.
+     * @param bs Анализируемая (текущая; пробная) рефлектограмма
+     * @param ap Параметры анализа (null, если сравнение событий не нужно)
+     * @param breakThresh Уровень обнаружения обрыва р/г
+     * @param etMTM Эталонная р/г и события
+     */
+    public static List analyseCompareAndMakeAlarms(BellcoreStructure bs,
+            AnalysisParameters ap,
+            double breakThresh,
+            ModelTraceManager etMTM) {
+        // формируем выходной список
+        List alarmList = new ArrayList();
+
+        // получаем рефлектограмму
+        double[] y = bs.getTraceData();
+
+        // Определяем длину до ухода р/г в шум
+        int traceLength = CoreAnalysisManager.calcTraceLength(y);
+
+        int etMinLength = etMTM.getMTAE().getSimpleEvent(etMTM.getMTAE().getNEvents() - 1).getBegin(); // начало конца волокна
+
+        // в любом случае - определение шума и фитировка
+        double[] noise = CoreAnalysisManager.calcNoiseArray(y, traceLength);
+        ModelFunction mf = CoreAnalysisManager.fitTrace(y, traceLength, noise);
+        ModelTrace mt = new ModelTraceImplMF(mf, traceLength);
+
+        // НЕ добавляем к результатам анализа найденную длину р/г и фитированную кривую - это пока не нужно
+//      outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
+//      outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
+
+        // пытаемся обнаружить обрыв волокна:
+        // (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh
+        // XXX - надо ли было предварительно смещать р/г по вертикали?
+        int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
+        // (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала последнего коннектора?
+        if (breakPos < 0 && traceLength < etMinLength)
+            breakPos = traceLength;
+
+        if (breakPos >= 0) // если был обнаружен обрыв
+        {
+            ReflectogramAlarm alarm = new ReflectogramAlarm();
+            alarm.level = ReflectogramAlarm.LEVEL_HARD;
+            alarm.alarmType = ReflectogramAlarm.TYPE_LINEBREAK;
+            alarm.pointCoord = breakPos;
+            // конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
+            alarm.endPointCoord = Math.min(y.length, etMinLength);
+            
+            // XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
+            // мб, в таком случае не надо игнорировать HARD алармы?
+
+            alarmList.add(alarm);
+        }
+        else // обрыв не обнаружен
+        {
+            // проверяем, есть ли параметры для анализа.
+            // если есть, проводим анализ и сравниваем MTAE полностью.
+            // если нет - сравниваем только MT
+            // @todo: проверять, запрошен ли анализ и такой тип сравнения
+            ReflectogramAlarm alarm = null;
+            if (ap != null) {
+                // XXX: в этом случае шум вычисляется дважды
+                ModelTraceAndEventsImpl mtae =
+                    CoreAnalysisManager.makeAnalysis(bs, ap);
+                alarm = ModelTraceComparer.compareMTAEToMTM(mtae, etMTM);
+            } else {
+                alarm = ModelTraceComparer.compareTraceToMTM(mt, etMTM);
+            }
+
+            if (alarm != null) {
+                alarmList.add(alarm);
+            }
+        }
+        return alarmList;
+    }
 }
