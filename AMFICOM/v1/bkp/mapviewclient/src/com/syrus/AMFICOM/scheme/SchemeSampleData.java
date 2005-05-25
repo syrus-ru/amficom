@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.7 2005/05/18 14:59:46 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.8 2005/05/25 16:48:41 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,14 @@ import java.util.TreeSet;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -30,8 +34,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: bass $
- * @version $Revision: 1.7 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -42,7 +46,7 @@ public final class SchemeSampleData {
 		// empty
 	}
 
-	public static void populate(Identifier userId, Identifier domainId) throws DatabaseException, IllegalObjectEntityException {
+	public static void populate(Identifier userId, Identifier domainId) throws DatabaseException, IllegalObjectEntityException, IdentifierGenerationException {
 		if(!loaded)
 		{
 			scheme1(userId, domainId);
@@ -51,7 +55,7 @@ public final class SchemeSampleData {
 		}
 	}
 
-	private static void scheme1(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException
+	private static void scheme1(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException, IdentifierGenerationException
 	{
 		Set el = new HashSet();
 		Set link = new HashSet();
@@ -181,8 +185,8 @@ public final class SchemeSampleData {
 
 		link.add(link0);
 
-		LinkType lt = new LinkType(userId);
-		CableLinkType clt = new CableLinkType(userId);
+		LinkType lt = LinkType.createInstance(userId, "", "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
+		CableLinkType clt = CableLinkType.createInstance(userId, "", "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "", "CTT", 0, lt, clt); 
 		
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк1", scheme);
@@ -295,7 +299,7 @@ public final class SchemeSampleData {
 		StorableObjectPool.putStorableObject(scheme);
 	}
 
-	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException
+	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException, IdentifierGenerationException
 	{
 		Set el = new HashSet();
 		Set link = new HashSet();
@@ -358,8 +362,8 @@ public final class SchemeSampleData {
 		link0.setSourceSchemePort(port10);
 		link0.setTargetSchemePort(port00);
 
-		LinkType lt = new LinkType(userId);
-		CableLinkType clt = new CableLinkType(userId);
+		LinkType lt = LinkType.createInstance(userId, "", "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
+		CableLinkType clt = CableLinkType.createInstance(userId, "", "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt); 
 
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк", scheme);
