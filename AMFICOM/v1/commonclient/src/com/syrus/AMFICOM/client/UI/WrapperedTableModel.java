@@ -10,12 +10,11 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/24 10:01:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/25 07:53:35 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -29,9 +28,6 @@ public class WrapperedTableModel extends AbstractTableModel {
 	 */
 	protected Wrapper			wrapper;
 
-	/**
-	 * list of Model (ObjectResouce) elements. see {@link StorableObject}
-	 */
 	private List				list;
 
 	protected String[]			keys;
@@ -185,5 +181,21 @@ public class WrapperedTableModel extends AbstractTableModel {
 			final String key = this.keys[columnIndex];
 			Collections.sort(this.list, new WrapperComparator(this.wrapper, key, ascending));
 		}
+	}
+
+	public int addObject(Object object) {
+		this.list.add(object);
+		this.fireTableDataChanged();
+		return this.list.indexOf(object);
+	}
+
+	public void removeObject(Object object) {
+		this.list.remove(object);
+		this.fireTableDataChanged();
+	}
+	
+	public void removeObject(int index) {
+		this.list.remove(index);
+		this.fireTableDataChanged();
 	}
 }
