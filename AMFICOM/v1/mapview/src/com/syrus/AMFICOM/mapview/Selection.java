@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.9 2005/05/18 12:37:39 bass Exp $
+ * $Id: Selection.java,v 1.10 2005/05/25 17:13:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,26 +9,25 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/05/18 12:37:39 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/05/25 17:13:22 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -80,10 +79,8 @@ public final class Selection implements MapElement {
 
 	/**
 	 * Конструктор
-	 *
-	 * @param map топологическая схема
 	 */
-	public Selection(Map map) {
+	public Selection() {
 		// empty
 	}
 
