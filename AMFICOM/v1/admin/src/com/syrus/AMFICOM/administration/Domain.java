@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.29 2005/05/24 13:24:57 bass Exp $
+ * $Id: Domain.java,v 1.30 2005/05/25 13:01:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/24 13:24:57 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/25 13:01:02 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -50,7 +50,7 @@ public class Domain extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Domain(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	Domain(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);	
 
 		this.characteristics = new HashSet();
@@ -81,7 +81,7 @@ public class Domain extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Domain(Identifier id,
+	Domain(Identifier id,
 					 Identifier creatorId,
 					 long version,
 					 Identifier domainId,

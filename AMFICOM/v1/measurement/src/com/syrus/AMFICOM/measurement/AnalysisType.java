@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.70 2005/05/24 13:25:00 bass Exp $
+ * $Id: AnalysisType.java,v 1.71 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/05/24 13:25:00 $
+ * @version $Revision: 1.71 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -54,7 +54,7 @@ public class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	AnalysisType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.inParameterTypeIds = new HashSet();
@@ -90,7 +90,7 @@ public class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected AnalysisType(Identifier id,
+	AnalysisType(Identifier id,
 						   Identifier creatorId,
 						   long version,
 						   String codename,

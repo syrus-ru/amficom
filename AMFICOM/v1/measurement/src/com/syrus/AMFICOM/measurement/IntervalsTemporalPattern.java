@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.16 2005/05/20 21:11:38 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.17 2005/05/25 13:01:05 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/05/25 13:01:05 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -62,7 +62,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	private SortedMap undoIntervalsAbstractTemporalPatternMap;
 	private SortedMap undoIntervalsDuration;
 
-	protected IntervalsTemporalPattern(final Identifier id,
+	IntervalsTemporalPattern(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final SortedMap intervalsAbstractTemporalPatternMap,

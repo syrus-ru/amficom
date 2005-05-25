@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.51 2005/05/24 13:25:05 bass Exp $
+ * $Id: MonitoredElement.java,v 1.52 2005/05/25 13:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/05/24 13:25:05 $
+ * @version $Revision: 1.52 $, $Date: 2005/05/25 13:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -46,7 +46,7 @@ public class MonitoredElement extends DomainMember {
 
 	private Set monitoredDomainMemberIds;
 
-	public MonitoredElement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	MonitoredElement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredDomainMemberIds = new HashSet();
@@ -64,7 +64,7 @@ public class MonitoredElement extends DomainMember {
 		this.fromTransferable(met);
 	}
 	
-	protected MonitoredElement(Identifier id,
+	MonitoredElement(Identifier id,
 								 Identifier creatorId,
 								 long version,
 								 Identifier domainId,

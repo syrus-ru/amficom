@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.68 2005/05/24 13:25:00 bass Exp $
+ * $Id: Set.java,v 1.69 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/05/24 13:25:00 $
+ * @version $Revision: 1.69 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -58,7 +58,7 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredElementIds = new HashSet();
@@ -89,7 +89,7 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Set(Identifier id,
+	Set(Identifier id,
 				  Identifier creatorId,
 				  long version,
 				  int sort,

@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.40 2005/05/24 13:25:01 bass Exp $
+ * $Id: Modeling.java,v 1.41 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/05/24 13:25:01 $
+ * @version $Revision: 1.41 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
@@ -48,7 +48,7 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Modeling(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Modeling(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		ModelingDatabase database = (ModelingDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_ENTITY_CODE);
@@ -65,7 +65,7 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
+	Modeling(Modeling_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		}
@@ -77,7 +77,7 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Modeling(Identifier id,
+	Modeling(Identifier id,
 					   Identifier creatorId,
 					   long version,
 					   ModelingType type,

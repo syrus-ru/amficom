@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.29 2005/05/20 21:11:25 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.30 2005/05/25 13:01:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/20 21:11:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/05/25 13:01:02 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -47,6 +47,13 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
+
+		registerFactory(ObjectEntities.USER_ENTITY_CODE, new UserFactory());
+		registerFactory(ObjectEntities.DOMAIN_ENTITY_CODE, new DomainFactory());
+		registerFactory(ObjectEntities.SERVER_ENTITY_CODE, new ServerFactory());
+		registerFactory(ObjectEntities.MCM_ENTITY_CODE, new McmFactory());
+		registerFactory(ObjectEntities.SERVERPROCESS_ENTITY_CODE, new ServerProcessFactory());
+//		registerFactory(ObjectEntities.PERMATTR_ENTITY_CODE, new PermissionAttributesFactory());
 	}
 
 	public static void init(AdministrationObjectLoader aObjectLoader1, final int size) {

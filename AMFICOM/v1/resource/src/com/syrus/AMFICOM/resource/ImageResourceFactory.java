@@ -1,5 +1,5 @@
 /*-
- * $Id: ImageResourceFactory.java,v 1.1 2005/05/24 16:40:06 bass Exp $
+ * $Id: ImageResourceFactory.java,v 1.2 2005/05/25 13:01:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/24 16:40:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/25 13:01:02 $
  * @module resource_v1
  */
 final class ImageResourceFactory extends StorableObjectFactory {
@@ -41,5 +42,13 @@ final class ImageResourceFactory extends StorableObjectFactory {
 			default:
 				throw new CreateObjectException("ImageResourceFactory.newInstance() | " + ErrorMessages.NATURE_INVALID);
 		}
+	}
+
+	/**
+	 * @param transferable
+	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
+	 */
+	protected Identifier getId(final IDLEntity transferable) {
+		return new Identifier(((ImageResource_Transferable) transferable).header.id);
 	}
 }

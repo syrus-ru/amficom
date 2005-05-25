@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.68 2005/05/24 13:25:01 bass Exp $
+ * $Id: Measurement.java,v 1.69 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/05/24 13:25:01 $
+ * @version $Revision: 1.69 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -88,7 +88,7 @@ public class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Measurement(Identifier id,
+	Measurement(Identifier id,
 							Identifier creatorId,
 							long version,
 							MeasurementType type,

@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.23 2005/05/24 13:24:55 bass Exp $
+ * $Id: Event.java,v 1.24 2005/05/25 13:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/24 13:24:55 $
+ * @version $Revision: 1.24 $, $Date: 2005/05/25 13:01:01 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -52,7 +52,7 @@ public final class Event extends StorableObject implements TypedObject {
 	private Set eventParameters;	//Set <EventParameter>
 	private Set eventSourceIds; //Set <Identifier>
 
-	public Event(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Event(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.eventParameters = new HashSet();
 		this.eventSourceIds = new HashSet();
@@ -77,7 +77,7 @@ public final class Event extends StorableObject implements TypedObject {
 		}
 	}
 
-	protected Event(Identifier id,
+	Event(Identifier id,
 					   Identifier creatorId,
 					   long version,
 					   EventType type,

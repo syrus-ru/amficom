@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.69 2005/05/24 13:25:01 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.70 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/05/24 13:25:01 $
+ * @version $Revision: 1.70 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -56,7 +56,7 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredElementIds = new HashSet();
@@ -88,7 +88,7 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected MeasurementSetup(Identifier id,
+	MeasurementSetup(Identifier id,
 							   Identifier creatorId,
 							   long version,
 							   Set parameterSet,

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.88 2005/05/24 13:25:05 bass Exp $
+ * $Id: Equipment.java,v 1.89 2005/05/25 13:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/05/24 13:25:05 $
+ * @version $Revision: 1.89 $, $Date: 2005/05/25 13:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -64,7 +64,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 	private Set characteristics;
 
-	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -78,7 +78,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 	}
 
-	public Equipment(Equipment_Transferable et) throws CreateObjectException {
+	Equipment(Equipment_Transferable et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
 		}
@@ -87,7 +87,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 	}
 
-	protected Equipment(Identifier id,
+	Equipment(Identifier id,
 			Identifier creatorId,
 			long version,
 			Identifier domainId,

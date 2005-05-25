@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.85 2005/05/23 18:45:19 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.86 2005/05/25 13:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/05/23 18:45:19 $
+ * @version $Revision: 1.86 $, $Date: 2005/05/25 13:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -57,6 +57,22 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	private ConfigurationStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE, cacheMapClass);
+
+		registerFactory(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, new CableThreadTypeFactory());
+		registerFactory(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, new CableLinkTypeFactory());
+		registerFactory(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, new EquipmentTypeFactory());
+		registerFactory(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, new TransmissionPathTypeFactory());
+//		registerFactory(ObjectEntities.KISTYPE_ENTITY_CODE, new KisTypeFactory());
+		registerFactory(ObjectEntities.LINKTYPE_ENTITY_CODE, new LinkTypeFactory());
+		registerFactory(ObjectEntities.PORTTYPE_ENTITY_CODE, new PortTypeFactory());
+		registerFactory(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, new MeasurementPortTypeFactory());
+		registerFactory(ObjectEntities.LINK_ENTITY_CODE, new LinkFactory());
+		registerFactory(ObjectEntities.EQUIPMENT_ENTITY_CODE, new EquipmentFactory());
+		registerFactory(ObjectEntities.PORT_ENTITY_CODE, new PortFactory());
+		registerFactory(ObjectEntities.TRANSPATH_ENTITY_CODE, new TransmissionPathFactory());
+		registerFactory(ObjectEntities.KIS_ENTITY_CODE, new KisFactory());
+		registerFactory(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, new MeasurementPortFactory());
+		registerFactory(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new MonitoredElementFactory());
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {

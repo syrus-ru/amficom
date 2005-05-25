@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.77 2005/05/24 13:25:05 bass Exp $
+ * $Id: KIS.java,v 1.78 2005/05/25 13:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/05/24 13:25:05 $
+ * @version $Revision: 1.78 $, $Date: 2005/05/25 13:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -58,7 +58,7 @@ public final class KIS extends DomainMember implements Characterizable {
 
 	private Set characteristics;
 
-	public KIS(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	KIS(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -81,7 +81,7 @@ public final class KIS extends DomainMember implements Characterizable {
 		}
 	}
 
-	protected KIS(Identifier id,
+	KIS(Identifier id,
 					Identifier creatorId,
 					long version,
 					Identifier domainId,

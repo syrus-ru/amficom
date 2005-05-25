@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.5 2005/05/24 13:24:57 bass Exp $
+ * $Id: ServerProcess.java,v 1.6 2005/05/25 13:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/24 13:24:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/25 13:01:03 $
  * @author $Author: bass $
  * @module admin_v1
  */
@@ -47,7 +47,7 @@ public class ServerProcess extends StorableObject {
 	 * @throws RetrieveObjectException
 	 * @throws ObjectNotFoundException
 	 */
-	public ServerProcess(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	ServerProcess(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
@@ -64,7 +64,7 @@ public class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ServerProcess(ServerProcess_Transferable spt) {
+	ServerProcess(ServerProcess_Transferable spt) {
 		this.fromTransferable(spt);
 	}
 
@@ -78,7 +78,7 @@ public class ServerProcess extends StorableObject {
 	 * @param userId
 	 * @param description
 	 */
-	public ServerProcess(Identifier id,
+	ServerProcess(Identifier id,
 			Identifier creatorId,
 			long version,
 			String codename,

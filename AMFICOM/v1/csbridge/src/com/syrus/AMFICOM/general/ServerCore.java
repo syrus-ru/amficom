@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.4 2005/05/23 08:55:32 bass Exp $
+ * $Id: ServerCore.java,v 1.5 2005/05/25 13:01:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
@@ -27,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/23 08:55:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/25 13:01:02 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -185,6 +187,36 @@ public abstract class ServerCore implements IdentifierGeneratorServer, Verifiabl
 			return transferables;
 		} catch (final ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
+		} catch (final Throwable t) {
+			throw this.processDefaultThrowable(t);
+		}
+	}
+
+	protected final StorableObject_Transferable[] receiveStorableObjects(
+			final short entityCode,
+			final IDLEntity transferables[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		try {
+			final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
+			final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
+			this.validateAccess(sessionKey, userId, domainId);
+
+			final Set storableObjects = new HashSet(transferables.length);
+			for (int i = 0; i < transferables.length; i++)
+				try {
+					storableObjects.add(StorableObjectPool.fromTransferable(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, transferables[i]));
+				} catch (final ApplicationException ae) {
+					Log.debugException(ae, Log.SEVERE);
+				}
+
+			DatabaseContext.getDatabase(entityCode).update(storableObjects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			return StorableObject.createHeadersTransferable(storableObjects);
+		} catch (final VersionCollisionException vce) {
+			throw this.processDefaultApplicationException(vce, ErrorCode.ERROR_VERSION_COLLISION);
+		} catch (final UpdateObjectException uoe) {
+			throw this.processDefaultApplicationException(uoe, ErrorCode.ERROR_UPDATE);
 		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}

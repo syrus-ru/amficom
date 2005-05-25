@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.21 2005/05/24 13:24:57 bass Exp $
+ * $Id: User.java,v 1.22 2005/05/25 13:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/24 13:24:57 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/25 13:01:03 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -64,14 +64,14 @@ public final class User extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public User(User_Transferable ut) {
+	User(User_Transferable ut) {
 		this.fromTransferable(ut);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected User(Identifier id,
+	User(Identifier id,
 					 Identifier creatorId,
 					 long version,
 					 String login,

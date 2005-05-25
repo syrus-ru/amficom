@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.37 2005/05/24 13:25:05 bass Exp $
+ * $Id: CableLinkType.java,v 1.38 2005/05/25 13:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/24 13:25:05 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/25 13:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -52,7 +52,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 	private Set characteristics;
 
-	public CableLinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	CableLinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -66,7 +66,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	public CableLinkType(CableLinkType_Transferable cltt) throws CreateObjectException {
+	CableLinkType(CableLinkType_Transferable cltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cltt);
 		}
@@ -75,7 +75,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	protected CableLinkType(Identifier id,
+	CableLinkType(Identifier id,
 							Identifier creatorId,
 							long version,
 							String codename,

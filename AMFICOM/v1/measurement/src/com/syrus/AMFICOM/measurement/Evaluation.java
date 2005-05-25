@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.56 2005/05/24 13:25:01 bass Exp $
+ * $Id: Evaluation.java,v 1.57 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/05/24 13:25:01 $
+ * @version $Revision: 1.57 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -75,7 +75,7 @@ public class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Evaluation(Identifier id,
+	Evaluation(Identifier id,
 						 Identifier creatorId,
 						 long version,
 						 EvaluationType type,

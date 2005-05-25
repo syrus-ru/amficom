@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.87 2005/05/24 13:24:59 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.88 2005/05/25 13:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/05/24 13:24:59 $
+ * @version $Revision: 1.88 $, $Date: 2005/05/25 13:01:03 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -948,45 +948,71 @@ public abstract class StorableObjectPool {
 
 	/*	From transferable*/
 
-	public static StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws ApplicationException {
-		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert !id.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-
-		final short groupCode = ObjectGroupEntities.getGroupCode(id.getMajor());
-
+	public static StorableObject fromTransferable(final short entityCode, final IDLEntity transferable) throws ApplicationException {
+		assert ObjectEntities.isEntityCodeValid(entityCode);
+		final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
 
 		final StorableObjectPool pool = (StorableObjectPool) GROUP_CODE_POOL_MAP.get(groupCode);
-		if (pool != null)
-			return pool.fromTransferableImpl(id, transferable);
-
-		throw new ApplicationException("The pool for group: " + ObjectGroupEntities.codeToString(groupCode) + " is not initialized");
+		if (pool == null)
+			throw new ApplicationException("The pool for group: "
+					+ ObjectGroupEntities.codeToString(groupCode)
+					+ '(' + groupCode
+					+ ") is not initialized");
+		return pool.fromTransferableImpl(entityCode, transferable);
 	}
 
 	/**
-	 * Get Storable Object from pool for id,
-	 * update it's fields from transferable
-	 * and return it.
-	 * If not found in pool -- return null
-	 * @param id
+	 * Gets a <code>StorableObject</code> from pool by its <code>id</code>,
+	 * update its fields from <code>transferable</code> and return it. If
+	 * the object is not found in pool, then a newly created from
+	 * <code>transferable</code> instance is returned. <em>Never</em>
+	 * returns <code>null</code>.
+	 * 
+	 * @param entityCode to be removed as soon as migration to valuetypes is
+	 *        complete.
 	 * @param transferable
 	 * @throws ApplicationException
 	 */
-	private final StorableObject fromTransferableImpl(Identifier id, IDLEntity transferable) throws ApplicationException {
+	private final StorableObject fromTransferableImpl(final short entityCode, final IDLEntity transferable) throws ApplicationException {
+		assert ObjectEntities.isEntityCodeValid(entityCode);
+
+		final StorableObjectFactory factory = (StorableObjectFactory) ENTITY_CODE_FACTORY_MAP.get(entityCode);
+		if (factory == null) {
+			/*
+			 * Водитель -- для Веры.
+			 * Фигурные скобки -- для Вовы.
+			 */
+			throw new ApplicationException(
+					"StorableObjectPool.fromTransferableImpl() | Don't know how to create an identifier/instance of type: "
+					+ ObjectEntities.codeToString(entityCode)
+					+ '(' + entityCode
+					+ ") since the corresponding factory is not registered");
+		}
+		
 		StorableObject storableObject = null;
 		try {
-			storableObject = this.getStorableObjectImpl(id, false);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
+			storableObject = this.getStorableObjectImpl(factory.getId(transferable), false);
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */		
+			assert false;
 		}
 
-		if (storableObject != null)
+		if (storableObject == null) {
+			/*
+			 * Арсений, береги скобки!
+			 */
+			storableObject = factory.newInstance(transferable);
+		} else {
+			/*
+			 * Сохраним скобки для будущих поколений!
+			 */
 			storableObject.fromTransferable(transferable);
-		
+		}
 		return storableObject;
 	}
-
 
 	/*	Refresh */
 
@@ -1001,7 +1027,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.87 $, $Date: 2005/05/24 13:24:59 $
+	 * @version $Revision: 1.88 $, $Date: 2005/05/25 13:01:03 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

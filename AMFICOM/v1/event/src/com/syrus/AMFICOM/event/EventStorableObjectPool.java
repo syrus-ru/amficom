@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.27 2005/05/20 21:11:44 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.28 2005/05/25 13:01:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/20 21:11:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/05/25 13:01:02 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -43,6 +43,10 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 	private EventStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
+
+		registerFactory(ObjectEntities.EVENTTYPE_ENTITY_CODE, new EventTypeFactory());
+		registerFactory(ObjectEntities.EVENT_ENTITY_CODE, new EventFactory());
+		registerFactory(ObjectEntities.EVENTSOURCE_ENTITY_CODE, new EventSourceFactory());
 	}
 
 	public static void init(EventObjectLoader eObjectLoader1, final int size) {

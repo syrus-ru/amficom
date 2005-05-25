@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.25 2005/05/24 13:24:59 bass Exp $
+ * $Id: CharacteristicType.java,v 1.26 2005/05/25 13:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/24 13:24:59 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/25 13:01:03 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -34,7 +34,7 @@ public final class CharacteristicType extends StorableObjectType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public CharacteristicType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	CharacteristicType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
@@ -56,7 +56,7 @@ public final class CharacteristicType extends StorableObjectType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected CharacteristicType(Identifier id,
+	CharacteristicType(Identifier id,
 							Identifier creatorId,
 							long version,
 							String codename,

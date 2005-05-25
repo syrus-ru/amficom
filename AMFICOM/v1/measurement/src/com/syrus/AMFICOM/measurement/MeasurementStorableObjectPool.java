@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.93 2005/05/23 18:45:15 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.94 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/05/23 18:45:15 $
+ * @version $Revision: 1.94 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -56,6 +56,22 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 	private MeasurementStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE, cacheMapClass);
+
+		registerFactory(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, new MeasurementTypeFactory());
+		registerFactory(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, new AnalysisTypeFactory());
+		registerFactory(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new EvaluationTypeFactory());
+		registerFactory(ObjectEntities.MODELINGTYPE_ENTITY_CODE, new ModelingTypeFactory());
+		registerFactory(ObjectEntities.SET_ENTITY_CODE, new SetFactory());
+		registerFactory(ObjectEntities.MODELING_ENTITY_CODE, new ModelingFactory());
+		registerFactory(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, new MeasurementSetupFactory());
+		registerFactory(ObjectEntities.MEASUREMENT_ENTITY_CODE, new MeasurementFactory());
+		registerFactory(ObjectEntities.ANALYSIS_ENTITY_CODE, new AnalysisFactory());
+		registerFactory(ObjectEntities.EVALUATION_ENTITY_CODE, new EvaluationFactory());
+		registerFactory(ObjectEntities.TEST_ENTITY_CODE, new TestFactory());
+		registerFactory(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, new CronTemporalPatternFactory());
+		registerFactory(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, new IntervalsTemporalPatternFactory());
+		registerFactory(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, new PeriodicalTemporalPatternFactory());
+		registerFactory(ObjectEntities.RESULT_ENTITY_CODE, new ResultFactory());
 	}
 
 	public static void init(final MeasurementObjectLoader mObjectLoader1, final int size) {

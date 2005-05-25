@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.8 2005/05/24 13:24:56 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.9 2005/05/25 13:01:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
@@ -39,7 +38,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/24 13:24:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/25 13:01:02 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -93,19 +92,12 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 
 		java.util.Set objects = new HashSet(testsT.length);
 		for (int i = 0; i < testsT.length; i++) {
-			Test object = null;
 			try {
-				final Identifier id = new Identifier(testsT[i].header.id);
-				object = (Test) StorableObjectPool.fromTransferable(id, testsT[i]);
-				if (object == null)
-					object = new Test(testsT[i]);
+				objects.add(StorableObjectPool.fromTransferable(ObjectEntities.TEST_ENTITY_CODE, testsT[i]));
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
-
-			if (object != null)
-				objects.add(object);
 		}
 
 		TestDatabase testDatabase = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);

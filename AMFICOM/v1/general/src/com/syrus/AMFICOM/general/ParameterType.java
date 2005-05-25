@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.28 2005/05/24 13:24:59 bass Exp $
+ * $Id: ParameterType.java,v 1.29 2005/05/25 13:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/24 13:24:59 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/25 13:01:03 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -39,7 +39,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
 		this.characteristics = new HashSet();
@@ -70,7 +70,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected ParameterType(Identifier id,
+	ParameterType(Identifier id,
 							Identifier creatorId,
 							long version,
 							String codename,

@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeReceive.java,v 1.6 2005/05/23 09:02:09 bass Exp $
+ * $Id: MSHServerSchemeReceive.java,v 1.7 2005/05/25 13:01:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,32 +8,9 @@
 
 package com.syrus.AMFICOM.mshserver;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.mshserver.corba.MSHServerOperations;
-import com.syrus.AMFICOM.scheme.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.PathElement;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeCablePort;
-import com.syrus.AMFICOM.scheme.SchemeCableThread;
-import com.syrus.AMFICOM.scheme.SchemeDevice;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
-import com.syrus.AMFICOM.scheme.SchemeOptimizeInfo;
-import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
@@ -52,523 +29,147 @@ import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup_Transferable;
 import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
-import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/23 09:02:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/25 13:01:10 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
-	/*-********************************************************************
-	 * Scheme -- receive multiple objects.                                *
-	 **********************************************************************/
-
-	/**
-	 * @param schemeProtoGroups
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoGroups(SchemeProtoGroup_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeProtoGroups(
-			final SchemeProtoGroup_Transferable schemeProtoGroups[],
+			final SchemeProtoGroup_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeProtoGroups.length;
-			final Set schemeProtoGroups1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeProtoGroup schemeProtoGroup = newSchemeProtoGroup(schemeProtoGroups[i]);
-				StorableObjectPool.putStorableObject(schemeProtoGroup);
-				schemeProtoGroups1.add(schemeProtoGroup);
-			}
-			return receiveStorableObjects(schemeProtoGroups1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeProtoElements
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeProtoElements(SchemeProtoElement_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeProtoElements(
-			final SchemeProtoElement_Transferable schemeProtoElements[],
+			final SchemeProtoElement_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeProtoElements.length;
-			final Set schemeProtoElements1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeProtoElement schemeProtoElement = newSchemeProtoElement(schemeProtoElements[i]);
-				StorableObjectPool.putStorableObject(schemeProtoElement);
-				schemeProtoElements1.add(schemeProtoElement);
-			}
-			return receiveStorableObjects(schemeProtoElements1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemes
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemes(Scheme_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemes(
-			final Scheme_Transferable schemes[],
+			final Scheme_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemes.length;
-			final Set schemes1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final Scheme scheme = newScheme(schemes[i]);
-				StorableObjectPool.putStorableObject(scheme);
-				schemes1.add(scheme);
-			}
-			return receiveStorableObjects(schemes1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeElements
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeElements(SchemeElement_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeElements(
-			final SchemeElement_Transferable schemeElements[],
+			final SchemeElement_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeElements.length;
-			final Set schemeElements1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeElement schemeElement = newSchemeElement(schemeElements[i]);
-				StorableObjectPool.putStorableObject(schemeElement);
-				schemeElements1.add(schemeElement);
-			}
-			return receiveStorableObjects(schemeElements1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeOptimizeInfos
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeOptimizeInfos(SchemeOptimizeInfo_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeOptimizeInfos(
-			final SchemeOptimizeInfo_Transferable schemeOptimizeInfos[],
+			final SchemeOptimizeInfo_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeOptimizeInfos.length;
-			final Set schemeOptimizeInfos1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeOptimizeInfo schemeOptimizeInfo = newSchemeOptimizeInfo(schemeOptimizeInfos[i]);
-				StorableObjectPool.putStorableObject(schemeOptimizeInfo);
-				schemeOptimizeInfos1.add(schemeOptimizeInfo);
-			}
-			return receiveStorableObjects(schemeOptimizeInfos1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeOptimizeInfoSwitches
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.mshserver.corba.MSHServerOperations#receiveSchemeOptimizeInfoSwitches(com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoSwitch_Transferable[], boolean, com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeOptimizeInfoSwitches(
-			final SchemeOptimizeInfoSwitch_Transferable schemeOptimizeInfoSwitches[],
+			final SchemeOptimizeInfoSwitch_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, transferables, force, sessionKey);
 	}
 			
-	/**
-	 * @param schemeOptimizeInfoRtus
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.mshserver.corba.MSHServerOperations#receiveSchemeOptimizeInfoRtus(com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoRtu_Transferable[], boolean, com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeOptimizeInfoRtus(
-			final SchemeOptimizeInfoRtu_Transferable schemeOptimizeInfoRtus[],
+			final SchemeOptimizeInfoRtu_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeMonitoringSolutions
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeMonitoringSolutions(SchemeMonitoringSolution_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeMonitoringSolutions(
-			final SchemeMonitoringSolution_Transferable schemeMonitoringSolutions[],
+			final SchemeMonitoringSolution_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeMonitoringSolutions.length;
-			final Set schemeMonitoringSolutions1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeMonitoringSolution schemeMonitoringSolution = newSchemeMonitoringSolution(schemeMonitoringSolutions[i]);
-				StorableObjectPool.putStorableObject(schemeMonitoringSolution);
-				schemeMonitoringSolutions1.add(schemeMonitoringSolution);
-			}
-			return receiveStorableObjects(schemeMonitoringSolutions1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeDevices
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeDevices(SchemeDevice_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeDevices(
-			final SchemeDevice_Transferable schemeDevices[],
+			final SchemeDevice_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeDevices.length;
-			final Set schemeDevices1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeDevice schemeDevice = newSchemeDevice(schemeDevices[i]);
-				StorableObjectPool.putStorableObject(schemeDevice);
-				schemeDevices1.add(schemeDevice);
-			}
-			return receiveStorableObjects(schemeDevices1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemePorts
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePorts(SchemePort_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemePorts(
-			final SchemePort_Transferable schemePorts[],
+			final SchemePort_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemePorts.length;
-			final Set schemePorts1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemePort schemePort = newSchemePort(schemePorts[i]);
-				StorableObjectPool.putStorableObject(schemePort);
-				schemePorts1.add(schemePort);
-			}
-			return receiveStorableObjects(schemePorts1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_PORT_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeCablePorts
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCablePorts(SchemeCablePort_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeCablePorts(
-			final SchemeCablePort_Transferable schemeCablePorts[],
+			final SchemeCablePort_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeCablePorts.length;
-			final Set schemeCablePorts1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeCablePort schemeCablePort = newSchemeCablePort(schemeCablePorts[i]);
-				StorableObjectPool.putStorableObject(schemeCablePort);
-				schemeCablePorts1.add(schemeCablePort);
-			}
-			return receiveStorableObjects(schemeCablePorts1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeLinks
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeLinks(SchemeLink_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeLinks(
-			final SchemeLink_Transferable schemeLinks[],
+			final SchemeLink_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeLinks.length;
-			final Set schemeLinks1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeLink schemeLink = newSchemeLink(schemeLinks[i]);
-				StorableObjectPool.putStorableObject(schemeLink);
-				schemeLinks1.add(schemeLink);
-			}
-			return receiveStorableObjects(schemeLinks1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_LINK_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeCableLinks
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableLinks(SchemeCableLink_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeCableLinks(
-			final SchemeCableLink_Transferable schemeCableLinks[],
+			final SchemeCableLink_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeCableLinks.length;
-			final Set schemeCableLinks1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeCableLink schemeCableLink = newSchemeCableLink(schemeCableLinks[i]);
-				StorableObjectPool.putStorableObject(schemeCableLink);
-				schemeCableLinks1.add(schemeCableLink);
-			}
-			return receiveStorableObjects(schemeCableLinks1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemeCableThreads
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemeCableThreads(SchemeCableThread_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemeCableThreads(
-			final SchemeCableThread_Transferable schemeCableThreads[],
+			final SchemeCableThread_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemeCableThreads.length;
-			final Set schemeCableThreads1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemeCableThread schemeCableThread = newSchemeCableThread(schemeCableThreads[i]);
-				StorableObjectPool.putStorableObject(schemeCableThread);
-				schemeCableThreads1.add(schemeCableThread);
-			}
-			return receiveStorableObjects(schemeCableThreads1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param cableChannelingItems
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveCableChannelingItems(CableChannelingItem_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveCableChannelingItems(
-			final CableChannelingItem_Transferable cableChannelingItems[],
+			final CableChannelingItem_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = cableChannelingItems.length;
-			final Set cableChannelingItems1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final CableChannelingItem cableChannelingItem = newCableChannelingItem(cableChannelingItems[i]);
-				StorableObjectPool.putStorableObject(cableChannelingItem);
-				cableChannelingItems1.add(cableChannelingItem);
-			}
-			return receiveStorableObjects(cableChannelingItems1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param schemePaths
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receiveSchemePaths(SchemePath_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receiveSchemePaths(
-			final SchemePath_Transferable schemePaths[],
+			final SchemePath_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = schemePaths.length;
-			final Set schemePaths1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final SchemePath schemePath = newSchemePath(schemePaths[i]);
-				StorableObjectPool.putStorableObject(schemePath);
-				schemePaths1.add(schemePath);
-			}
-			return receiveStorableObjects(schemePaths1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_PATH_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	/**
-	 * @param pathElements
-	 * @param force
-	 * @param sessionKey
-	 * @throws AMFICOMRemoteException
-	 * @see MSHServerOperations#receivePathElements(PathElement_Transferable[], boolean, SessionKey_Transferable)
-	 */
 	public final StorableObject_Transferable[] receivePathElements(
-			final PathElement_Transferable pathElements[],
+			final PathElement_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		try {
-			final int length = pathElements.length;
-			final Set pathElements1 = new HashSet(length);
-			for (int i = 0; i < length; i++) {
-				final PathElement pathElement = newPathElement(pathElements[i]);
-				StorableObjectPool.putStorableObject(pathElement);
-				pathElements1.add(pathElement);
-			}
-			return receiveStorableObjects(pathElements1, sessionKey, force);
-		} catch (final IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
+		return super.receiveStorableObjects(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, transferables, force, sessionKey);
 	}
 }

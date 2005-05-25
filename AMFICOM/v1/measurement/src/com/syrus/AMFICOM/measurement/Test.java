@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.119 2005/05/24 13:25:00 bass Exp $
+ * $Id: Test.java,v 1.120 2005/05/25 13:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/05/24 13:25:00 $
+ * @version $Revision: 1.120 $, $Date: 2005/05/25 13:01:05 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -87,7 +87,7 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.measurementSetupIds = new HashSet();
 
@@ -137,7 +137,7 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Test(Identifier id,
+	Test(Identifier id,
 					 Identifier creatorId,
 					 long version,
 					 Date startTime,

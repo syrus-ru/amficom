@@ -1,271 +1,68 @@
-/*
- * $Id: CMAdministrationReceive.java,v 1.13 2005/05/24 13:25:00 bass Exp $
+/*-
+ * $Id: CMAdministrationReceive.java,v 1.14 2005/05/25 13:01:03 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.cmserver;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainDatabase;
-import com.syrus.AMFICOM.administration.MCM;
-import com.syrus.AMFICOM.administration.MCMDatabase;
-import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.administration.ServerDatabase;
-import com.syrus.AMFICOM.administration.ServerProcess;
-import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.ServerProcess_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
-import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/24 13:25:00 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/25 13:01:03 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
-
 public abstract class CMAdministrationReceive extends CMGeneralReceive {
+	private static final long serialVersionUID = 1181253000011968750L;
 
-	private static final long serialVersionUID = 1181253000011968750L;	
-
-
-
-	public StorableObject_Transferable[] receiveUsers(User_Transferable[] transferables,
-			boolean force,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-		this.validateAccess(sessionKeyT, userId, domainId);
-
-		Set objects = new HashSet(transferables.length);
-		for (int i = 0; i < transferables.length; i++) {
-			User object = null;
-			try {
-				final Identifier id = new Identifier(transferables[i].header.id);
-				object = (User) StorableObjectPool.fromTransferable(id, transferables[i]);
-				if (object == null)
-					object = new User(transferables[i]);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-
-			if (object != null)
-				objects.add(object);
-		}
-
-		UserDatabase database = (UserDatabase) DatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
-		try {
-			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-			return StorableObject.createHeadersTransferable(objects);
-		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
-		}
-		catch (VersionCollisionException vce) {
-			Log.errorException(vce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
+	public final StorableObject_Transferable[] receiveUsers(
+			final User_Transferable transferables[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		return super.receiveStorableObjects(ObjectEntities.USER_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	public StorableObject_Transferable[] receiveDomains(Domain_Transferable[] transferables,
-			boolean force,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-		this.validateAccess(sessionKeyT, userId, domainId);
-
-		Set objects = new HashSet(transferables.length);
-		for (int i = 0; i < transferables.length; i++) {
-			Domain object = null;
-			try {
-				final Identifier id = new Identifier(transferables[i].header.id);
-				object = (Domain) StorableObjectPool.fromTransferable(id, transferables[i]);
-				if (object == null)
-					object = new Domain(transferables[i]);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-
-			if (object != null)
-				objects.add(object);
-		}
-
-		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
-		try {
-			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-			return StorableObject.createHeadersTransferable(objects);
-		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
-		}
-		catch (VersionCollisionException vce) {
-			Log.errorException(vce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
+	public final StorableObject_Transferable[] receiveDomains(
+			final Domain_Transferable transferables[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		return super.receiveStorableObjects(ObjectEntities.DOMAIN_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	public StorableObject_Transferable[] receiveServers(Server_Transferable[] transferables,
-			boolean force,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-		this.validateAccess(sessionKeyT, userId, domainId);
-
-		Set objects = new HashSet(transferables.length);
-		for (int i = 0; i < transferables.length; i++) {
-			Server object = null;
-			try {
-				final Identifier id = new Identifier(transferables[i].header.id);
-				object = (Server) StorableObjectPool.fromTransferable(id, transferables[i]);
-				if (object == null)
-					object = new Server(transferables[i]);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-
-			if (object != null)
-				objects.add(object);
-		}
-
-		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
-		try {
-			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-			return StorableObject.createHeadersTransferable(objects);
-		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
-		}
-		catch (VersionCollisionException vce) {
-			Log.errorException(vce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
+	public final StorableObject_Transferable[] receiveServers(
+			final Server_Transferable transferables[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		return super.receiveStorableObjects(ObjectEntities.SERVER_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	public StorableObject_Transferable[] receiveMCMs(MCM_Transferable[] transferables,
-			boolean force,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-		this.validateAccess(sessionKeyT, userId, domainId);
-
-		Set objects = new HashSet(transferables.length);
-		for (int i = 0; i < transferables.length; i++) {
-			MCM object = null;
-			try {
-				final Identifier id = new Identifier(transferables[i].header.id);
-				object = (MCM) StorableObjectPool.fromTransferable(id, transferables[i]);
-				if (object == null)
-					object = new MCM(transferables[i]);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-
-			if (object != null)
-				objects.add(object);
-		}
-
-		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
-		try {
-			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-			return StorableObject.createHeadersTransferable(objects);
-		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
-		}
-		catch (VersionCollisionException vce) {
-			Log.errorException(vce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
+	public final StorableObject_Transferable[] receiveMCMs(
+			final MCM_Transferable transferables[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		return super.receiveStorableObjects(ObjectEntities.MCM_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	public StorableObject_Transferable[] receiveServerProcesses(ServerProcess_Transferable[] transferables,
-			boolean force,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-		this.validateAccess(sessionKeyT, userId, domainId);
-
-		Set objects = new HashSet(transferables.length);
-		for (int i = 0; i < transferables.length; i++) {
-			ServerProcess object = null;
-			try {
-				final Identifier id = new Identifier(transferables[i].header.id);
-				object = (ServerProcess) StorableObjectPool.fromTransferable(id, transferables[i]);
-				if (object == null)
-					object = new ServerProcess(transferables[i]);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-
-			if (object != null)
-				objects.add(object);
-		}
-
-		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
-		try {
-			database.update(objects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-			return StorableObject.createHeadersTransferable(objects);
-		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
-		}
-		catch (VersionCollisionException vce) {
-			Log.errorException(vce);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, vce.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
+	public final StorableObject_Transferable[] receiveServerProcesses(
+			final ServerProcess_Transferable transferables[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		return super.receiveStorableObjects(ObjectEntities.SERVERPROCESS_ENTITY_CODE, transferables, force, sessionKey);
 	}
-
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.22 2005/05/24 13:24:55 bass Exp $
+ * $Id: EventType.java,v 1.23 2005/05/25 13:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/24 13:24:55 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/25 13:01:01 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -46,7 +46,7 @@ public final class EventType extends StorableObjectType {
 	private Set parameterTypes;
 	private Set userIds;
 
-	public EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.parameterTypes = new HashSet();
@@ -63,7 +63,7 @@ public final class EventType extends StorableObjectType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public EventType(EventType_Transferable ett) throws CreateObjectException {
+	EventType(EventType_Transferable ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		}
@@ -72,7 +72,7 @@ public final class EventType extends StorableObjectType {
 		}
 	}
 
-	protected EventType(Identifier id,
+	EventType(Identifier id,
 								Identifier creatorId,
 								long version,
 								String codename,

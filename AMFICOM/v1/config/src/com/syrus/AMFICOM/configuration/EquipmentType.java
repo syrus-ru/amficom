@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.60 2005/05/24 13:25:05 bass Exp $
+ * $Id: EquipmentType.java,v 1.61 2005/05/25 13:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/05/24 13:25:05 $
+ * @version $Revision: 1.61 $, $Date: 2005/05/25 13:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -50,7 +50,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 
 	private Set characteristics;
 
-	public EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -64,7 +64,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		}
 	}
 
-	public EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
+	EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		}
@@ -73,7 +73,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		}
 	}
 
-	protected EquipmentType(Identifier id,
+	EquipmentType(Identifier id,
 							Identifier creatorId,
 							long version,
 							String codename,
