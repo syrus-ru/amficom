@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.14 2005/05/05 09:52:10 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.15 2005/05/25 16:18:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/05/05 09:52:10 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/25 16:18:01 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -103,7 +103,7 @@ public final class MapPropertiesManager
 	protected static String descreteNavigation = "false";
 
 	/* display constants. */
-	public static final Color DEFAULT_TEXT_BACKGROUND = SystemColor.window;
+	public static final Color DEFAULT_TEXT_BACKGROUND = SystemColor.YELLOW;
 	public static final Color DEFAULT_TEXT_COLOR = SystemColor.controlText;
 	public static final Color DEFAULT_BORDER_COLOR = SystemColor.activeCaptionBorder;
 	public static final String DEFAULT_METRIC = LangModelMap.getString("metric");
@@ -211,6 +211,37 @@ public final class MapPropertiesManager
 	private static DecimalFormat distanceFormat;
 	private static DecimalFormat coordinatesFormat;
 	
+	private static Map layerVisibilityMap = new HashMap();
+	private static Map layerLabelVisibilityMap = new HashMap();
+	
+	public static boolean isLayerVisible(Object layer) {
+		Boolean value = (Boolean )layerVisibilityMap.get(layer);
+		if(value == null) {
+			value = new Boolean(true);
+			layerVisibilityMap.put(layer, value);
+		}
+		return value.booleanValue();
+	}
+	
+	public static void setLayerVisible(Object layer, boolean visible) {
+		Boolean value = new Boolean(visible);
+		layerVisibilityMap.put(layer, value);
+	}
+	
+	public static boolean isLayerLabelVisible(Object layer) {
+		Boolean value = (Boolean )layerLabelVisibilityMap.get(layer);
+		if(value == null) {
+			value = new Boolean(false);
+			layerLabelVisibilityMap.put(layer, value);
+		}
+		return value.booleanValue();
+	}
+	
+	public static void setLayerLabelVisible(Object layer, boolean visible) {
+		Boolean value = new Boolean(visible);
+		layerLabelVisibilityMap.put(layer, value);
+	}
+	
 	/**
 	 * Для вывода времени в отладочных сообщениях
 	 */
@@ -234,8 +265,8 @@ public final class MapPropertiesManager
 		DecimalFormatSymbols dfs;
 
 		coordinatesFormat = (DecimalFormat )NumberFormat.getNumberInstance();
-		coordinatesFormat.setMaximumFractionDigits(4);
-		coordinatesFormat.setMinimumFractionDigits(4);
+		coordinatesFormat.setMaximumFractionDigits(8);
+		coordinatesFormat.setMinimumFractionDigits(8);
 		coordinatesFormat.setMinimumIntegerDigits(1);
 		dfs = coordinatesFormat.getDecimalFormatSymbols();
 		dfs.setDecimalSeparator('.');
