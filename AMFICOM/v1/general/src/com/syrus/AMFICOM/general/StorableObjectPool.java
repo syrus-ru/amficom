@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.88 2005/05/25 13:01:03 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.89 2005/05/25 13:13:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/05/25 13:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.89 $, $Date: 2005/05/25 13:13:21 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -974,29 +974,30 @@ public abstract class StorableObjectPool {
 	 * @param transferable
 	 * @throws ApplicationException
 	 */
-	private final StorableObject fromTransferableImpl(final short entityCode, final IDLEntity transferable) throws ApplicationException {
+	private final StorableObject fromTransferableImpl(final short entityCode, final IDLEntity transferable)
+			throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode);
 
 		final StorableObjectFactory factory = (StorableObjectFactory) ENTITY_CODE_FACTORY_MAP.get(entityCode);
 		if (factory == null) {
-			/*
+			/*-
 			 * Водитель -- для Веры.
 			 * Фигурные скобки -- для Вовы.
 			 */
-			throw new ApplicationException(
-					"StorableObjectPool.fromTransferableImpl() | Don't know how to create an identifier/instance of type: "
+			throw new ApplicationException("StorableObjectPool.fromTransferableImpl() | Don't know how to create an identifier/instance of type: "
 					+ ObjectEntities.codeToString(entityCode)
 					+ '(' + entityCode
 					+ ") since the corresponding factory is not registered");
 		}
-		
+
 		StorableObject storableObject = null;
 		try {
 			storableObject = this.getStorableObjectImpl(factory.getId(transferable), false);
-		} catch (final ApplicationException ae) {
+		}
+		catch (final ApplicationException ae) {
 			/*
 			 * Never.
-			 */		
+			 */
 			assert false;
 		}
 
@@ -1005,7 +1006,8 @@ public abstract class StorableObjectPool {
 			 * Арсений, береги скобки!
 			 */
 			storableObject = factory.newInstance(transferable);
-		} else {
+		}
+		else {
 			/*
 			 * Сохраним скобки для будущих поколений!
 			 */
@@ -1026,8 +1028,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.88 $, $Date: 2005/05/25 13:01:03 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.89 $, $Date: 2005/05/25 13:13:21 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
