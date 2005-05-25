@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.82 2005/05/24 12:32:43 bob Exp $
+ * $Id: general.idl,v 1.83 2005/05/25 14:51:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -97,6 +97,7 @@ module corba {
 */
 
 ////////////////////// ParameterType //////////////////////
+
 	struct ParameterType_Transferable {
 		StorableObject header;
 
