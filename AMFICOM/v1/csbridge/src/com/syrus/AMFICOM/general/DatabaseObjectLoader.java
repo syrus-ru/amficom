@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.4 2005/05/18 12:52:58 bass Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.5 2005/05/26 19:13:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:52:58 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 19:13:24 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -71,4 +74,68 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		return Identifier.createTransferables(loadButIds);
 	}
 
+	public final void delete(final Set identifiables) {
+		if (identifiables == null || identifiables.isEmpty())
+			return;
+		/**
+		 * @todo: use Trove collection instead java.util.Map
+		 */
+		final Map map = new HashMap();
+
+		/**
+		 * Separate objects by entityCode
+		 */
+		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
+			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
+			final Short entityCode = new Short(identifiable.getId().getMajor());
+			Set entityObjects = (Set) map.get(entityCode);
+			if (entityObjects == null) {
+				entityObjects = new HashSet();
+				map.put(entityCode, entityObjects);
+			}
+			entityObjects.add(identifiable);
+		}
+
+		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
+			final Short entityCode = (Short) entityCodeIterator.next();
+			final Set entityObjects = (Set) map.get(entityCode);
+			final StorableObjectDatabase storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
+			if (storableObjectDatabase != null)
+				storableObjectDatabase.delete(entityObjects);
+		}
+	}
+
+	public final Set refresh(final Set storableObjects) throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return Collections.EMPTY_SET;
+
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+
+		return DatabaseContext.getDatabase(entityCode).refresh(storableObjects);
+	}
+
+	public final Set loadStorableObjects(final Set ids) throws ApplicationException {
+		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (ids.isEmpty())
+			return Collections.EMPTY_SET;
+		assert StorableObject.hasSingleTypeEntities(ids);
+		return this.retrieveFromDatabase(DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(ids)), ids);
+	}
+
+	public final Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
+		return this.retrieveFromDatabaseButIdsByCondition(DatabaseContext.getDatabase(entityCode), ids, condition);
+	}
+
+	public final void saveStorableObjects(final Set storableObjects, boolean force) throws ApplicationException {
+		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(storableObjects)).update(storableObjects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+	}
 }

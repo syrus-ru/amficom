@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.6 2005/05/24 13:24:58 bass Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.7 2005/05/26 19:13:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,10 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/24 13:24:58 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/26 19:13:24 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -26,110 +21,42 @@ public class DatabaseGeneralObjectLoader extends DatabaseObjectLoader implements
 	/* Load multiple objects*/
 
 	public Set loadParameterTypes(Set ids) throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-		return super.retrieveFromDatabase(database, ids);
+		return super.loadStorableObjects(ids);
 	}
 
 	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-		return super.retrieveFromDatabase(database, ids);
+		return super.loadStorableObjects(ids);
 	}
 
 	public Set loadCharacteristics(Set ids) throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-		return super.retrieveFromDatabase(database, ids);
+		return super.loadStorableObjects(ids);
 	}
-
-
 
 	/* Load multiple objects but ids*/
 
 	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+		return super.loadStorableObjectsButIds(condition, ids);
 	}
 
 	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+		return super.loadStorableObjectsButIds(condition, ids);
 	}
 
 	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-		return super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+		return super.loadStorableObjectsButIds(condition, ids);
 	}
-
-
 
 	/* Save multiple objects*/
 
 	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-		database.update(objects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+		super.saveStorableObjects(objects, force);
 	}
 
 	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-		database.update(objects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+		super.saveStorableObjects(objects, force);
 	}
 
 	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-		database.update(objects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+		super.saveStorableObjects(objects, force);
 	}
-
-
-
-	/*	Refresh*/
-
-	public Set refresh(Set storableObjects) throws ApplicationException {
-		if (storableObjects.isEmpty())
-			return Collections.EMPTY_SET;
-
-		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
-
-		StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
-
-		if (database != null)
-			return database.refresh(storableObjects);
-
-		return Collections.EMPTY_SET;
-	}
-
-
-
-	/*	Delete*/
-
-	public void delete(final Set identifiables) {
-		if (identifiables == null || identifiables.isEmpty())
-			return;
-		/**
-		 * @todo: use Trove collection instead of java.util.Map
-		 */
-		final Map map = new HashMap();
-
-		/**
-		 * separate objects by kind of entity
-		 */
-		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
-			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
-
-			final Short entityCode = new Short(identifiable.getId().getMajor());
-			Set entityObjects = (Set) map.get(entityCode);
-			if (entityObjects == null) {
-				entityObjects = new HashSet();
-				map.put(entityCode, entityObjects);
-			}
-			entityObjects.add(identifiable);
-		}
-
-		for (final Iterator entityCodeIterator = map.keySet().iterator(); entityCodeIterator.hasNext();) {
-			final Short entityCode = (Short) entityCodeIterator.next();
-			final Set entityObjects = (Set) map.get(entityCode);
-			final StorableObjectDatabase storableObjectDatabase = DatabaseContext.getDatabase(entityCode);
-			if (storableObjectDatabase != null)
-				storableObjectDatabase.delete(entityObjects);
-		}
-	}
-
 }

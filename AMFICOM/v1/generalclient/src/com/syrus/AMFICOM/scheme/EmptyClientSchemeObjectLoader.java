@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyClientSchemeObjectLoader.java,v 1.3 2005/05/23 12:52:54 bass Exp $
+ * $Id: EmptyClientSchemeObjectLoader.java,v 1.4 2005/05/26 19:13:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/23 12:52:54 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 19:13:23 $
  * @module generalclient_v1
  */
 public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
@@ -456,15 +456,6 @@ public final class EmptyClientSchemeObjectLoader implements SchemeObjectLoader {
 	 * @see SchemeObjectLoader#saveSchemePorts(Set, boolean)
 	 */
 	public void saveSchemePorts(final Set schemePorts, final boolean force) {
-		// empty
-	}
-
-	/**
-	 * @param schemeProtoElement
-	 * @param force
-	 * @see SchemeObjectLoader#saveSchemeProtoElement(SchemeProtoElement, boolean)
-	 */
-	public void saveSchemeProtoElement(final SchemeProtoElement schemeProtoElement, final boolean force) {
 		// empty
 	}
 

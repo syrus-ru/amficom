@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectLoader.java,v 1.5 2005/05/23 12:57:34 bass Exp $
+ * $Id: SchemeObjectLoader.java,v 1.6 2005/05/26 19:13:23 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/23 12:57:34 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 19:13:23 $
  * @module scheme_v1
  */
 public interface SchemeObjectLoader {
@@ -119,8 +119,6 @@ public interface SchemeObjectLoader {
 	void saveSchemePaths(final Set schemePaths, final boolean force) throws ApplicationException;
 
 	void saveSchemePorts(final Set schemePorts, final boolean force) throws ApplicationException;
-
-	void saveSchemeProtoElement(final SchemeProtoElement schemeProtoElement, final boolean force) throws ApplicationException;
 
 	void saveSchemeProtoElements(final Set schemeProtoElements, final boolean force) throws ApplicationException;
 

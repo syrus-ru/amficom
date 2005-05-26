@@ -1,5 +1,5 @@
 /*-
- * $Id: XMLSchemeObjectLoader.java,v 1.4 2005/05/23 12:56:45 bass Exp $
+ * $Id: XMLSchemeObjectLoader.java,v 1.5 2005/05/26 19:13:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.XMLObjectLoader;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 19:13:24 $
  * @module csbridge_v1
  */
 public final class XMLSchemeObjectLoader extends XMLObjectLoader implements SchemeObjectLoader {
@@ -567,18 +567,6 @@ public final class XMLSchemeObjectLoader extends XMLObjectLoader implements Sche
 	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemePorts(java.util.Set, boolean)
 	 */
 	public void saveSchemePorts(Set schemePorts, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeProtoElement
-	 * @param force
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.scheme.SchemeObjectLoader#saveSchemeProtoElement(com.syrus.AMFICOM.scheme.SchemeProtoElement, boolean)
-	 */
-	public void saveSchemeProtoElement(
-			SchemeProtoElement schemeProtoElement, boolean force)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
