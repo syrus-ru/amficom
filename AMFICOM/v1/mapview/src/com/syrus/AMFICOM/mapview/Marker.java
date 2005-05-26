@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.16 2005/05/18 12:37:39 bass Exp $
+ * $Id: Marker.java,v 1.17 2005/05/26 06:24:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.16 $, $Date: 2005/05/18 12:37:39 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/26 06:24:20 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -457,7 +457,6 @@ public class Marker extends AbstractNode
 ////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * {@inheritDoc}
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */

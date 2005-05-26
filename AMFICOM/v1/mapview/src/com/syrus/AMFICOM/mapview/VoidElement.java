@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.10 2005/05/25 17:13:38 krupenn Exp $
+ * $Id: VoidElement.java,v 1.11 2005/05/26 06:24:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.map.MapElementState;
 /**
  * Пустой элемент.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/05/25 17:13:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/05/26 06:24:20 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement {
@@ -63,9 +63,6 @@ public final class VoidElement implements MapElement {
 		return this.mapView;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public String getToolTipText() {
 		return getMapView().getName();
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.13 2005/05/18 12:37:39 bass Exp $
+ * $Id: UnboundLink.java,v 1.14 2005/05/26 06:24:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/05/18 12:37:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/26 06:24:20 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -123,7 +123,6 @@ public class UnboundLink extends PhysicalLink
 ////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * {@inheritDoc}
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */

@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.11 2005/05/26 06:13:55 bass Exp $
+ * $Id: Selection.java,v 1.12 2005/05/26 06:24:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * Набор выбранных элементов.
  *
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/05/26 06:13:55 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/26 06:24:20 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -203,9 +203,6 @@ public final class Selection implements MapElement {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public void setLocation(DoublePoint aLocation) {
 		throw new UnsupportedOperationException(
 				"Cannot set location to selection");
@@ -274,9 +271,6 @@ public final class Selection implements MapElement {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	public String getToolTipText() {
 		return this.getName();
 	}
