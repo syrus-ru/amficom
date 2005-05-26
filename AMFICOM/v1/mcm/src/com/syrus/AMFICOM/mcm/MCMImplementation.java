@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.34 2005/05/24 14:43:44 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.35 2005/05/26 13:03:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/24 14:43:44 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/26 13:03:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -50,28 +50,20 @@ public class MCMImplementation extends MCMPOA {
 
 
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
-		try {
-			Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
-			List tests = new LinkedList();
-			for (int i = 0; i < testsT.length; i++) {
-				try {
-					Test test = new Test(testsT[i]);
-					tests.add(test);
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-				}
+		Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
+		List tests = new LinkedList();
+		for (int i = 0; i < testsT.length; i++) {
+			try {
+				Test test = new Test(testsT[i]);
+				tests.add(test);
 			}
+			catch (CreateObjectException coe) {
+				Log.errorException(coe);
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
+			}
+		}
 
-			MeasurementControlModule.addTests(tests);
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE,
-					CompletionStatus.COMPLETED_PARTIALLY,
-					"Receive tests -- " + throwable.getMessage());
-		}
+		MeasurementControlModule.addTests(tests);
 	}
 
 	public void abortTests(Identifier_Transferable[] testIdsT) throws AMFICOMRemoteException {
