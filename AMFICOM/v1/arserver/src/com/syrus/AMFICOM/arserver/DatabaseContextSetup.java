@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.8 2005/05/26 08:33:29 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.9 2005/05/26 11:20:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.arserver;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DomainDatabase;
+import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/26 08:33:29 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/26 11:20:48 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -32,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 class DatabaseContextSetup {
 	public static final String 	KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	public static final String 	KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
-	public static final String 	KEY_RESOURCE_POOL_SIZE = "ImageResourcePoolSize";
+	public static final String 	KEY_RESOURCE_POOL_SIZE = "ResourcePoolSize";
 	public static final String 	KEY_REFRESH_TIMEOUT = "RefreshTimeout";
 	public static final String 	KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
@@ -52,6 +53,7 @@ class DatabaseContextSetup {
 
 		DatabaseContext.registerDatabase(new UserDatabase());
 		DatabaseContext.registerDatabase(new DomainDatabase());
+		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		
 		DatabaseContext.registerDatabase(new ImageResourceDatabase());

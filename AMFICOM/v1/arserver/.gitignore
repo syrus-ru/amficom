@@ -2,6 +2,7 @@
 gc
 logs
 .mach
+pid
 rc
 cache
 orb.db
