@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.5 2005/05/25 13:01:02 bass Exp $
+ * $Id: ServerCore.java,v 1.6 2005/05/26 11:49:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/25 13:01:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 11:49:51 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -149,6 +149,8 @@ public abstract class ServerCore implements IdentifierGeneratorServer, Verifiabl
 			return transferables;
 		} catch (final ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
 		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
@@ -187,6 +189,8 @@ public abstract class ServerCore implements IdentifierGeneratorServer, Verifiabl
 			return transferables;
 		} catch (final ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
 		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
@@ -217,6 +221,8 @@ public abstract class ServerCore implements IdentifierGeneratorServer, Verifiabl
 			throw this.processDefaultApplicationException(vce, ErrorCode.ERROR_VERSION_COLLISION);
 		} catch (final UpdateObjectException uoe) {
 			throw this.processDefaultApplicationException(uoe, ErrorCode.ERROR_UPDATE);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
 		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
