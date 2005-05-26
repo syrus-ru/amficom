@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.3 2005/05/25 07:54:03 bob Exp $
+ * $Id: Environment.java,v 1.4 2005/05/26 10:35:41 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/05/25 07:54:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 10:35:41 $
  * @module commonclient_v1
  */
 public final class Environment {
@@ -275,11 +275,15 @@ public final class Environment {
 		defaults.put("Table.gridColor", Color.BLACK);
 		defaults.put("Viewport.background", Color.WHITE);
 
-		Font font = new Font("Dialog", Font.PLAIN, 10);
+//		Font font = new Font("Dialog", Font.PLAIN, 10);
 
-		defaults.put("TextField.font", font);
+		{
+			Font font = defaults.getFont("TextField.font");
+			font = new Font(font.getFamily(), font.getStyle(), 12);
+			defaults.put("TextField.font", font);
+		}
 
-		defaults.put("ComboBox.font", font);
+//		defaults.put("ComboBox.font", font);
 		defaults.put("ComboBox.background", defaults.get("window"));
 		defaults.put("ComboBox.disabledBackground", defaults.get("window"));
 
