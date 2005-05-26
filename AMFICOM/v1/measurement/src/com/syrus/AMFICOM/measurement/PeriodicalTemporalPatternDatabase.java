@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.4 2005/05/26 08:33:32 bass Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.5 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 14:15:57 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -107,11 +107,11 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
-		this.insertEntity(periodicalTemporalPattern);
+		super.insertEntity(periodicalTemporalPattern);
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 	}
 
 }

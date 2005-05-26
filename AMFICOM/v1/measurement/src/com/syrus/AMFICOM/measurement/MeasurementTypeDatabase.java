@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.95 2005/05/26 13:44:42 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.96 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/05/26 13:44:42 $
+ * @version $Revision: 1.96 $, $Date: 2005/05/26 14:15:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -148,7 +148,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
-		this.insertEntity(measurementType);
+		super.insertEntity(measurementType);
 		try {
 			super.updateParameterTypes(Collections.singleton(storableObject));
 			this.updateMeasurementPortTypeIds(Collections.singleton(storableObject));
@@ -159,7 +159,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypes(storableObjects);
 			this.updateMeasurementPortTypeIds(storableObjects);

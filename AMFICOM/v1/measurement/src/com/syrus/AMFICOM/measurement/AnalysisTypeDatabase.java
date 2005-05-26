@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.88 2005/05/26 13:44:42 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.89 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/05/26 13:44:42 $
+ * @version $Revision: 1.89 $, $Date: 2005/05/26 14:15:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -140,7 +140,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
-		this.insertEntity(analysisType);
+		super.insertEntity(analysisType);
 		try {
 			super.updateParameterTypes(Collections.singleton(storableObject));
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
@@ -151,7 +151,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypes(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.5 2005/05/26 08:33:30 bass Exp $
+ * $Id: ServerProcessDatabase.java,v 1.6 2005/05/26 14:15:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/26 08:33:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 14:15:39 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public final class ServerProcessDatabase extends StorableObjectDatabase {
@@ -130,11 +130,11 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		ServerProcess serverProcess = this.fromStorableObject(storableObject);
-		this.insertEntity(serverProcess);
+		super.insertEntity(serverProcess);
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 	}
 
 }

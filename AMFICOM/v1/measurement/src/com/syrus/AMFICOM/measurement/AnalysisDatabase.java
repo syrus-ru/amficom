@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.57 2005/05/26 08:33:32 bass Exp $
+ * $Id: AnalysisDatabase.java,v 1.58 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/05/26 14:15:57 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -149,11 +149,11 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Analysis analysis = this.fromStorableObject(storableObject);
-		this.insertEntity(analysis);
+		super.insertEntity(analysis);
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 	}
 
 }

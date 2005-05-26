@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.29 2005/05/26 13:45:06 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.30 2005/05/26 14:16:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/26 13:45:06 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/26 14:16:27 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -237,7 +237,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Event event = this.fromStorableObject(storableObject);
 		try {
-			this.insertEntity(event);
+			super.insertEntity(event);
 			this.insertEventParameters(event);
 			this.updateEventSources(Collections.singleton(event));
 		}
@@ -251,7 +251,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Event event = this.fromStorableObject((StorableObject) it.next());

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.88 2005/05/26 13:44:42 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.89 2005/05/26 14:15:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/05/26 13:44:42 $
+ * @version $Revision: 1.89 $, $Date: 2005/05/26 14:15:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -239,7 +239,7 @@ public final class SetDatabase extends StorableObjectDatabase {
 		Set set = this.fromStorableObject(storableObject);
 		try {
 			Log.debugMessage("SetDatabase.insert | before insertEntity ", Log.DEBUGLEVEL01);
-			this.insertEntity(set);
+			super.insertEntity(set);
 			Log.debugMessage("SetDatabase.insert | before insertSetParameters ", Log.DEBUGLEVEL01);
 			this.insertSetParameters(set);
 			Log.debugMessage("SetDatabase.insert | after insertSetParameters ", Log.DEBUGLEVEL01);
@@ -257,7 +257,7 @@ public final class SetDatabase extends StorableObjectDatabase {
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		Log.debugMessage("SetDatabase.insert | many ", Log.DEBUGLEVEL01);
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Set set = this.fromStorableObject((StorableObject) it.next());
 			this.insertSetParameters(set);

@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.13 2005/05/26 14:04:28 bass Exp $
+ * $Id: CharacterizableDatabase.java,v 1.14 2005/05/26 14:13:33 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/26 14:04:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/05/26 14:13:33 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -102,7 +102,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		this.insertEntity(storableObject);
+		super.insertEntity(storableObject);
 
 		Characterizable characterizable = this.fromStorableObject(storableObject);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
@@ -110,7 +110,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 
 		Set characteristics = new HashSet();
 		Characterizable characterizable;

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.88 2005/05/26 08:33:32 bass Exp $
+ * $Id: ResultDatabase.java,v 1.89 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.89 $, $Date: 2005/05/26 14:15:57 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -398,7 +398,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		try {
-			this.insertEntity(result);
+			super.insertEntity(result);
 			this.insertResultParameters(result);
 		}
 		catch (CreateObjectException e) {
@@ -408,7 +408,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Result result = this.fromStorableObject((StorableObject) it.next());

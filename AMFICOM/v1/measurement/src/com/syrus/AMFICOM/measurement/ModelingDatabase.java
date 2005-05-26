@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.40 2005/05/26 08:33:32 bass Exp $
+ * $Id: ModelingDatabase.java,v 1.41 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/05/26 14:15:57 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -133,11 +133,11 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 
   public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Modeling modeling = this.fromStorableObject(storableObject);
-		this.insertEntity(modeling);
+		super.insertEntity(modeling);
 	}
 
   public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+  	super.insertEntities(storableObjects);
 	}
 
 }

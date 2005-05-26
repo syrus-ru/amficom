@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.37 2005/05/26 08:33:32 bass Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.38 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/05/26 14:15:57 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -130,7 +130,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
-		this.insertEntity(modelingType);
+		super.insertEntity(modelingType);
 		try {
 			super.updateParameterTypes(Collections.singleton(storableObject));
 		}
@@ -140,7 +140,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypes(storableObjects);
 		}

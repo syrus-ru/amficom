@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.96 2005/05/26 13:44:42 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.97 2005/05/26 14:15:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/05/26 13:44:42 $
+ * @version $Revision: 1.97 $, $Date: 2005/05/26 14:15:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -432,7 +432,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Test test = this.fromStorableObject(storableObject);
-		this.insertEntity(test);
+		super.insertEntity(test);
 		try {
 			this.updateMeasurementSetupIds(Collections.singleton(test));
 		}
@@ -451,7 +451,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 			return;
 		}
 
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 		try {
 			this.updateMeasurementSetupIds(storableObjects);
 		}

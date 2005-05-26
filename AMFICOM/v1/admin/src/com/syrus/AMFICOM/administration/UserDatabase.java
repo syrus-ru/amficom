@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.25 2005/05/26 08:33:30 bass Exp $
+ * $Id: UserDatabase.java,v 1.26 2005/05/26 14:15:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/05/26 14:15:39 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -139,7 +139,7 @@ public final class UserDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		User user = this.fromStorableObject(storableObject);
-		this.insertEntity(user);
+		super.insertEntity(user);
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {

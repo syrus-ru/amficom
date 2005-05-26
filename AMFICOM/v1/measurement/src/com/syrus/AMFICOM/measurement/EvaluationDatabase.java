@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.52 2005/05/26 08:33:32 bass Exp $
+ * $Id: EvaluationDatabase.java,v 1.53 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/05/26 14:15:57 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -141,12 +141,12 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
-		this.insertEntity(evaluation);
+		super.insertEntity(evaluation);
 	}
 	
 	
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 	}
 
 }
