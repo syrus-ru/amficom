@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.97 2005/05/26 14:15:58 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.98 2005/05/26 14:34:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/05/26 14:15:58 $
+ * @version $Revision: 1.98 $, $Date: 2005/05/26 14:34:20 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -445,11 +445,6 @@ public final class TestDatabase extends StorableObjectDatabase {
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
-
-		if (storableObjects.size() == 1) {
-			this.insert((StorableObject) storableObjects.iterator().next());
-			return;
-		}
 
 		super.insertEntities(storableObjects);
 		try {
