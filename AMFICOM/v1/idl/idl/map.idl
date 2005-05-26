@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.17 2005/05/20 11:45:18 bass Exp $
+ * $Id: map.idl,v 1.18 2005/05/26 11:25:11 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@
 
 #include "configuration.idl"
 #include "resource.idl"
+#include "streams.idl"
 
 module com {
 	module syrus {
@@ -239,6 +240,24 @@ module com {
 
 					typedef MapView_Transferable MapView;
 					typedef sequence<MapView> MapViewSeq;
+					
+					struct TopologicalImageQuery_Transferable {
+						long mapImageWidth;
+						long mapImageHeight;
+		
+						double topoCenterX;
+						double topoCenterY;
+						double topoScale;
+		
+						CORBA::BooleanSeq layerVisibilities;
+						CORBA::BooleanSeq labelVisibilities;
+		
+						long long userId;		
+					};
+					
+					struct RenderedImage_Transferable {
+						CORBA::OctetSeq image;
+					};
 				};
 			};
 		};

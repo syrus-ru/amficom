@@ -1,5 +1,5 @@
 /*-
- * $Id: mshserver.idl,v 1.10 2005/05/20 11:45:18 bass Exp $
+ * $Id: mshserver.idl,v 1.11 2005/05/26 11:25:11 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -323,6 +323,18 @@ module com {
 
 						scheme::corba::PathElementSeq transmitPathElements(
 								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+/*-************************************************************
+ * Map -- transmit image and cancel rendering.            *
+ **************************************************************/
+ 						map::corba::RenderedImage_Transferable transmitTopologicalImage(
+								in map::corba::TopologicalImageQuery_Transferable topologicalImageQuery_Transferable,
+								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+		
+						void stopRenderTopologicalImage(
+								in long long userId,
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 					};
