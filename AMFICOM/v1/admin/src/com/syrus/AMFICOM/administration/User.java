@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.22 2005/05/25 13:01:03 bass Exp $
+ * $Id: User.java,v 1.23 2005/05/26 13:19:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/25 13:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/05/26 13:19:12 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -165,8 +165,9 @@ public final class User extends StorableObject {
 	public static User createInstance(Identifier creatorId, String login, UserSort sort, String name, String description)
 			throws CreateObjectException {
 		try {
-			User user = new User(IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE),
-					creatorId,
+			Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE);
+			User user = new User(generatedIdentifier,
+					creatorId != null ? creatorId : generatedIdentifier,
 					0L,
 					login,
 					sort.value(),
