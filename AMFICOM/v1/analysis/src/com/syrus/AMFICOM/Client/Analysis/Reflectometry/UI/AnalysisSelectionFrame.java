@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
@@ -172,7 +173,9 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		jToolBar1.setFloatable(false);
 		jToolBar1.add(analysisDefaultsButton);
 		jToolBar1.add(analysisInitialButton);
-		jToolBar1.add(new JToolBar.Separator());
+		JToolBar.Separator s = new JToolBar.Separator();
+		s.setOrientation(jToolBar1.getOrientation() == SwingConstants.VERTICAL ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
+		jToolBar1.add(s);
 		jToolBar1.add(analysisStartButton);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

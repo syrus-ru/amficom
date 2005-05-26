@@ -7,6 +7,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Map;
 
+import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -58,8 +59,11 @@ public class ResizableLayeredPanel extends JPanel
 		String[] buttons = toolbar.getButtons();
 		for (int i = 0; i < buttons.length; i++)
 		{
-			if (buttons[i].equals(ToolBarPanel.SEPARATOR))
-				toolbar.add(new JToolBar.Separator());
+			if (buttons[i].equals(ToolBarPanel.SEPARATOR)) {
+				JToolBar.Separator s = new JToolBar.Separator();
+				s.setOrientation(toolbar.getOrientation() == SwingConstants.VERTICAL ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
+				toolbar.add(s);
+			}
 			else
 				toolbar.add((Component)commands.get(buttons[i]));
 		}

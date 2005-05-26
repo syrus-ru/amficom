@@ -119,8 +119,8 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 	
 	public void modelChanged(String e[])
 	{
-		this.buttonFileOpen.setVisible(this.aModel.isVisible("menuFileOpen"));
-		this.buttonFileOpen.setEnabled(this.aModel.isEnabled("menuFileOpen"));
+		this.buttonFileOpen.setVisible(true);//this.aModel.isVisible("menuFileOpen"));
+		this.buttonFileOpen.setEnabled(true);//this.aModel.isEnabled("menuFileOpen"));
 
 		this.sessionOpen.setVisible(this.aModel.isVisible("menuSessionNew"));
 		this.sessionOpen.setEnabled(this.aModel.isEnabled("menuSessionNew"));
