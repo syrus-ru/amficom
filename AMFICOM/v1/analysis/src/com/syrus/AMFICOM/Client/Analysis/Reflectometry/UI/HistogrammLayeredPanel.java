@@ -20,6 +20,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 {
 	Dispatcher dispatcher;
 	private boolean useMarkers = false;
+	MarkersInfo mInfo;
 
 	public HistogrammLayeredPanel(Dispatcher dispatcher)
 	{
@@ -58,22 +59,28 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
-			if (useMarkers)
+			if(rue.markerMoved()) {
+				mInfo = (MarkersInfo)rue.getSource();
+			}
+
+			if(rue.markerLocated())
 			{
-				for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+				if (useMarkers)
 				{
-					SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-					if (panel instanceof HistogrammPanel)
-					{
-						if(rue.markerMoved())
-						{
-							MarkersInfo mInfo = (MarkersInfo)rue.getSource();
-							((HistogrammPanel)panel).updateHistogrammData(
-									Math.min(mInfo.a_pos, mInfo.b_pos),
-									Math.max(mInfo.a_pos, mInfo.b_pos));
-							jLayeredPane.repaint();
-						}
-					}
+					updateHistogrammData();
+				}
+			}
+		}
+	}
+	
+	protected void updateHistogrammData() {
+		if (mInfo != null) {
+			for (int i = 0; i < jLayeredPane.getComponentCount(); i++) {
+				SimpleGraphPanel panel = (SimpleGraphPanel) jLayeredPane.getComponent(i);
+				if (panel instanceof HistogrammPanel) {
+					((HistogrammPanel) panel).updateHistogrammData(Math.min(mInfo.a_pos,
+							mInfo.b_pos), Math.max(mInfo.a_pos, mInfo.b_pos));
+					jLayeredPane.repaint();
 				}
 			}
 		}
@@ -137,5 +144,7 @@ class HistogrammToolBar extends ScalableToolBar
 		HistogrammLayeredPanel panel = (HistogrammLayeredPanel)super.panel;
 		boolean b = markersTButton.isSelected();
 		panel.useMarkers(b);
+		if (b)
+			panel.updateHistogrammData();
 	}
 }

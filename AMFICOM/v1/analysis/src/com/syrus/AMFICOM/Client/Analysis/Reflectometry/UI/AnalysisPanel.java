@@ -332,8 +332,10 @@ public class AnalysisPanel extends MapMarkersPanel
 				moved_here = true;
 				Heap.setCurrentEvent(activeEvent);
 				moved_here = false;
-				return;
 			}
+			moved_here = true;
+			dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_LOCATED_EVENT));
+			moved_here = false;
 			return;
 		}
 
