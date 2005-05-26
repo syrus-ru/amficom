@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.29 2005/05/26 08:33:35 bass Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.30 2005/05/26 14:49:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/26 08:33:35 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/05/26 14:49:10 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class CableLinkTypeDatabase extends CharacterizableDatabase {
@@ -35,7 +35,7 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.LINKTYPE_ENTITY_CODE;
+		return ObjectEntities.CABLELINKTYPE_ENTITY_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
