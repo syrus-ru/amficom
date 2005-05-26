@@ -33,8 +33,10 @@ public class ReflectogramAlarm {
 		return pointCoord;
 	}
 */
-	public int getAlarmType()
-	{
+    public int getSeverity() {
+        return level;
+    }
+	public int getSpecificType() {
 		return alarmType;
 	}
     public double getDistance() {
