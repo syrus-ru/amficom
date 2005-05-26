@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/05/25 08:35:35 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/26 10:29:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -146,7 +146,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	SchedulerModel			schedulerModel;
 
-	boolean					skip							= false;
+	boolean					skip;
 
 	private Identifier		measurementPortId;
 	private Identifier		meId;
@@ -1193,6 +1193,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	private void createGUI() {
+		this.skip = true;
 		this.createUIItems();
 		this.setLayout(new GridBagLayout());
 		
@@ -1266,7 +1267,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		gbc.weighty = 1.0;
 		gbc.anchor = GridBagConstraints.SOUTH;
 		this.add(new JLabel(), gbc);
-
+		this.skip = false;
 	}
 
 	private void selectCBValue(	JComboBox cb,

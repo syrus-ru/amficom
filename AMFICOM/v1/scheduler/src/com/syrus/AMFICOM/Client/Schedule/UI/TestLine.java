@@ -162,7 +162,7 @@ public class TestLine extends TimeLine {
 		
 		this.acquireTests();
 		
-//		this.dispatcher = aContext.getDispatcher();		
+		this.dispatcher = aContext.getDispatcher();		
 //		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
 //		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		this.setToolTipText("");		
