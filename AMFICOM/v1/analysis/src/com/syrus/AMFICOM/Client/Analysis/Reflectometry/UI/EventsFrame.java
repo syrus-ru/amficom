@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
@@ -571,8 +572,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
         {
             setTableModel();
             updateTableModel();
-            // FIXME add UIGeneralStorage to comminclient
-//            UIGeneralStorage.arrangeTableColumns(this.jTable);
+            CommonUIUtilities.arrangeTableColumns(this.jTable);
             updateCompDebug();
         }
         setVisible(true);
