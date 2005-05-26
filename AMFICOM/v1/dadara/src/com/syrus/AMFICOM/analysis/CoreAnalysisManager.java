@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.72 2005/05/25 09:50:29 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.73 2005/05/26 06:58:56 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.72 $, $Date: 2005/05/25 09:50:29 $
+ * @version $Revision: 1.73 $, $Date: 2005/05/26 06:58:56 $
  * @module
  */
 
@@ -686,9 +686,10 @@ public class CoreAnalysisManager
             alarm.level = ReflectogramAlarm.LEVEL_HARD;
             alarm.alarmType = ReflectogramAlarm.TYPE_LINEBREAK;
             alarm.pointCoord = breakPos;
+            alarm.deltaX = etMTM.getMTAE().getDeltaX();
             // конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
             alarm.endPointCoord = Math.min(y.length, etMinLength);
-            
+
             // XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
             // мб, в таком случае не надо игнорировать HARD алармы?
 

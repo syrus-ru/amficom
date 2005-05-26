@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.13 2005/05/05 15:20:58 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.14 2005/05/26 06:58:56 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <li> ReliabilityModelTraceAndEvents to MTM
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/05/05 15:20:58 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/26 06:58:56 $
  * @module
  */
 public class ModelTraceComparer
@@ -71,6 +71,7 @@ public class ModelTraceComparer
         ReflectogramAlarm cur = new ReflectogramAlarm();
         cur.alarmType = ReflectogramAlarm.TYPE_EVENTLISTCHANGED;
         cur.level = ALARM_LEVEL_FOR_EVENT_CHANGE;
+        cur.deltaX = mtm.getMTAE().getDeltaX();
         int i;
         for (i = 0; i < etEvents.length; i++)
         {
@@ -138,6 +139,7 @@ public class ModelTraceComparer
 					alarm.pointCoord = alarmBegin;
 					alarm.endPointCoord = alarmEnd;
 					alarm.alarmType = ReflectogramAlarm.TYPE_OUTOFMASK;
+                    alarm.deltaX = mtm.getMTAE().getDeltaX();
 				}
 			}
 		}

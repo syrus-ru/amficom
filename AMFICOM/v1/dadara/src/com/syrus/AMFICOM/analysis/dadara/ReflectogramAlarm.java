@@ -21,7 +21,9 @@ public class ReflectogramAlarm {
 	public int pointCoord = 0;
 	public int endPointCoord = 0; // ?
 	public int alarmType = TYPE_UNDEFINED;
-	/*
+    public double deltaX = 0.0;
+
+    /*
 	public int getLevel()
 	{
 		return level;
@@ -30,11 +32,14 @@ public class ReflectogramAlarm {
 	{
 		return pointCoord;
 	}
+*/
 	public int getAlarmType()
 	{
 		return alarmType;
 	}
-*/
+    public double getDistance() {
+        return deltaX * pointCoord;
+    }
 	/**
 	 * Creates an empty 'no alarm' alarm
 	 * with level = LEVEL_NONE and type = TYPE_UNDEFINED.
@@ -51,6 +56,7 @@ public class ReflectogramAlarm {
 		ret.pointCoord = dis.readInt();
 		ret.endPointCoord = dis.readInt();
 		ret.alarmType = dis.readInt();
+        ret.deltaX = dis.readDouble();
 		return ret;
 	}
  
@@ -61,6 +67,7 @@ public class ReflectogramAlarm {
 		dos.writeInt(this.pointCoord);
 		dos.writeInt(this.endPointCoord);
 		dos.writeInt(this.alarmType);
+        dos.writeDouble(this.deltaX);
 	}
 
 	public static ReflectogramAlarm createFromByteArray(byte[] bar) throws DataFormatException
@@ -148,11 +155,12 @@ public class ReflectogramAlarm {
             this.pointCoord = that.pointCoord;
             this.endPointCoord = that.endPointCoord;
             this.alarmType = that.alarmType;
+            this.deltaX = that.deltaX;
         }
     }
     
     public String toString()
     {
-        return "ReflectogramAlarm(level=" + level + ",type=" + alarmType + ",begin=" + pointCoord + ",end=" + endPointCoord + ")";
+        return "ReflectogramAlarm(level=" + level + ",type=" + alarmType + ",begin=" + pointCoord + ",end=" + endPointCoord + ",distance=" + getDistance() + ")";
     }
 }
