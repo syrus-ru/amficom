@@ -9,6 +9,9 @@ IDLDIR=../idl_v1/idl
 HOST=mongol
 SERVICE_NAME=mongol
 
+LIBDIR=$(AMFICOM_HOME)/lib
+EXTLIBDIR=$(AMFICOM_HOME)/lib/external
+
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
@@ -19,7 +22,8 @@ $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDLJ)
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/jdom.jar:$(EXTLIBDIR)/micsys.jar:$(EXTLIBDIR)/miutil.jar:$(EXTLIBDIR)/mxj.jar
+
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java) \
