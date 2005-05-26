@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.2 2005/05/26 07:16:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -66,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:16:05 $
  * @module commonclient_v1
  */
 
@@ -424,7 +425,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 					}
 
 					CharacteristicAddDialog frame = new CharacteristicAddDialog(Environment.getActiveWindow(), "Add characteristic");
-					if (frame.showDialog(CharacteristicsPanel.this.selectedTypeSort, CharacteristicsPanel.this.wtModel.getValues()) == CharacteristicAddDialog.OK) {
+					if (frame.showDialog(CharacteristicsPanel.this.selectedTypeSort, CharacteristicsPanel.this.wtModel.getValues()) == JOptionPane.OK_OPTION) {
 						CharacteristicType type = frame.getCharacteristicType();
 						Identifier userId = LoginManager.getUserId();
 
