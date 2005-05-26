@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContext.java,v 1.2 2005/05/26 08:33:31 bass Exp $
+ * $Id: DatabaseContext.java,v 1.3 2005/05/26 11:00:39 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,12 @@
 
 package com.syrus.AMFICOM.general;
 
+import com.syrus.util.Log;
+
 import gnu.trove.TShortObjectHashMap;
-import gnu.trove.TShortObjectIterator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/26 08:33:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 11:00:39 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -27,6 +28,10 @@ public final class DatabaseContext {
 		assert database != null: ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = database.getEntityCode();
 		assert !ENTITY_CODE_DATABASE_MAP.containsKey(entityCode);
+		Log.debugMessage("DatabaseContext.registerDatabase() | Database for type: "
+				+ ObjectEntities.codeToString(entityCode)
+				+ '(' + entityCode + ") registered",
+				Log.FINEST);
 		ENTITY_CODE_DATABASE_MAP.put(entityCode, database);
 	}
 
