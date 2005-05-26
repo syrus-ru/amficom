@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.25 2005/05/26 08:33:29 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.26 2005/05/26 14:37:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -40,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/05/26 14:37:10 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -175,9 +174,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		EventType eventType = this.fromStorableObject(storableObject);
-		this.insertEntity(eventType);
-		this.insertParameterTypes(eventType);
+		super.insertEntity(eventType);
 		try {
+			this.updateParameterTypeIds(Collections.singleton(eventType));
 			this.updateUserIds(Collections.singleton(eventType));
 		}
 		catch (UpdateObjectException uoe) {
@@ -186,73 +185,13 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		this.insertEntities(storableObjects);
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			EventType eventType = this.fromStorableObject((StorableObject)it.next());
-			this.insertParameterTypes(eventType);
-		}
+		super.insertEntities(storableObjects);
 		try {
+			this.updateParameterTypeIds(storableObjects);
 			this.updateUserIds(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
-		}
-	}
-
-	private PreparedStatement insertParameterTypesPreparedStatement() throws SQLException{
-		PreparedStatement preparedStatement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			String sql = SQL_INSERT_INTO
-			+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
-			+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + COMMA
-			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
-			preparedStatement = connection.prepareStatement(sql);
-		}
-		finally {
-			DatabaseConnection.releaseConnection(connection);
-		}
-		return preparedStatement;
-	}
-
-	private void updatePrepareStatementValues(PreparedStatement preparedStatement, EventType eventType) throws SQLException {
-		Set parTyps = eventType.getParameterTypes();
-		Identifier eventTypeId = eventType.getId();
-		Identifier parameterTypeId = null;
-
-		for (Iterator iterator = parTyps.iterator(); iterator.hasNext();) {
-			parameterTypeId = ((ParameterType) iterator.next()).getId();
-			DatabaseIdentifier.setIdentifier(preparedStatement, 1, eventTypeId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-			Log.debugMessage("EventTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeId + "' for event type '" + eventTypeId + "'", Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
-		}
-	}
-
-	private void insertParameterTypes(EventType eventType) throws CreateObjectException {
-		PreparedStatement preparedStatement = null;
-		Identifier eventTypeId = eventType.getId();
-		try {
-			preparedStatement = this.insertParameterTypesPreparedStatement();
-			this.updatePrepareStatementValues(preparedStatement, eventType);
-		}
-		catch (SQLException sqle) {
-			String mesg = "EventTypeDatabase.insertParameterTypes | Cannot insert parameter type for event type '" + eventTypeId + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
 		}
 	}
 
@@ -264,6 +203,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
+			this.updateParameterTypeIds(Collections.singleton(storableObject));
 			this.updateUserIds(Collections.singleton(storableObject));
 		}
 		catch (IllegalDataException ide) {
@@ -279,11 +219,29 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
+			this.updateParameterTypeIds(storableObjects);
 			this.updateUserIds(storableObjects);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
+	}
+
+	private void updateParameterTypeIds(final Set eventTypes) throws UpdateObjectException, IllegalDataException {
+		if ((eventTypes == null) || (eventTypes.isEmpty()))
+			return;
+
+		Map parameterTypeIdsMap = new HashMap();
+		for (final Iterator it = eventTypes.iterator(); it.hasNext();) {
+			final EventType eventType = this.fromStorableObject((StorableObject) it.next());
+			final Set parameterTypeIds = Identifier.getIdentifiers(eventType.getParameterTypes());
+			parameterTypeIdsMap.put(eventType.getId(), parameterTypeIds);
+		}
+
+		super.updateLinkedEntityIds(parameterTypeIdsMap,
+				ObjectEntities.EVENTTYPPARTYPLINK_ENTITY,
+				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 	}
 
 	private void updateUserIds(Set eventTypes) throws UpdateObjectException, IllegalDataException {
