@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.39 2005/05/20 21:11:34 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.40 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,12 +27,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/05/20 21:11:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/05/26 08:33:35 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class LinkDatabase extends CharacterizableDatabase {
+public final class LinkDatabase extends CharacterizableDatabase {
 	private static final int SIZE_INVENTORY_NO_COLUMN  = 64;
 
 	private static final int SIZE_SUPPLIER_COLUMN  = 128;
@@ -50,8 +50,8 @@ public class LinkDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("LinkDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.LINK_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.LINK_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -175,7 +175,7 @@ public class LinkDatabase extends CharacterizableDatabase {
 		Link link = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  link.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  link.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

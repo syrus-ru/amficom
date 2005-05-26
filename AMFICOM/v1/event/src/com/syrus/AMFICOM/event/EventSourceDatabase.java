@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.15 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventSourceDatabase.java,v 1.16 2005/05/26 08:33:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,18 +26,18 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/18 11:16:58 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/26 08:33:29 $
  * @author $Author: bass $
  * @module event_v1
  */
-public class EventSourceDatabase extends StorableObjectDatabase {
+public final class EventSourceDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
 
-	protected String getEnityName() {		
-		return ObjectEntities.EVENTSOURCE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.EVENTSOURCE_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -247,7 +247,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 		EventSource eventSource = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  eventSource.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  eventSource.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

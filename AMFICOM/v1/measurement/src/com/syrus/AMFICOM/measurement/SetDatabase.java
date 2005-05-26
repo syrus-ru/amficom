@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.86 2005/05/20 21:11:39 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.87 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,20 +41,24 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/05/20 21:11:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.87 $, $Date: 2005/05/26 08:33:32 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class SetDatabase extends StorableObjectDatabase {
+public final class SetDatabase extends StorableObjectDatabase {
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	protected String getEnityName() {
-		return '"' + ObjectEntities.SET_ENTITY + '"';
+	protected short getEntityCode() {
+		return ObjectEntities.SET_ENTITY_CODE;
+	}
+
+	protected String getEntityName() {
+		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getColumnsTmpl() {
@@ -225,7 +229,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  set.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  set.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -386,7 +390,7 @@ public class SetDatabase extends StorableObjectDatabase {
 					+ ObjectEntities.SETPARAMETER_ENTITY
 					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);									
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ this.getEnityName()
+					+ this.getEntityName()
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + setIdStr);
 			connection.commit();
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.50 2005/05/20 21:11:34 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.51 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,11 +28,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/05/20 21:11:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/05/26 08:33:35 $
+ * @author $Author: bass $
  * @module config_v1
  */
-public class MeasurementPortDatabase extends CharacterizableDatabase {
+public final class MeasurementPortDatabase extends CharacterizableDatabase {
 	// table :: MeasurementPort
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
@@ -40,8 +40,8 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	protected String getEnityName() {
-		return ObjectEntities.MEASUREMENTPORT_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MEASUREMENTPORT_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -142,7 +142,7 @@ public class MeasurementPortDatabase extends CharacterizableDatabase {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  measurementPort.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurementPort.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

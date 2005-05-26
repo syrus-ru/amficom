@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.81 2005/05/18 11:34:42 bass Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.82 2005/05/26 08:33:33 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,12 +35,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/05/18 11:34:42 $
+ * @version $Revision: 1.82 $, $Date: 2005/05/26 08:33:33 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class EvaluationTypeDatabase extends ActionTypeDatabase {
+public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -60,8 +60,8 @@ public class EvaluationTypeDatabase extends ActionTypeDatabase {
 				+ storableObject.getClass().getName());
 	}	
 
-	protected String getEnityName() {
-		return ObjectEntities.EVALUATIONTYPE_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.EVALUATIONTYPE_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -141,7 +141,7 @@ public class EvaluationTypeDatabase extends ActionTypeDatabase {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 						+ " '" + evaluationType.getId() + "'; argument: " + arg);
 				return null;
 		}

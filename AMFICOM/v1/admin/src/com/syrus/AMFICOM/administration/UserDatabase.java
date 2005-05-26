@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.24 2005/05/18 11:18:39 bass Exp $
+ * $Id: UserDatabase.java,v 1.25 2005/05/26 08:33:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,12 +27,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:30 $
  * @author $Author: bass $
  * @module administration_v1
  */
 
-public class UserDatabase extends StorableObjectDatabase {
+public final class UserDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	private static final int SIZE_LOGIN_COLUMN = 32;
@@ -44,8 +44,12 @@ public class UserDatabase extends StorableObjectDatabase {
 				+ storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {		
-		return '"' + ObjectEntities.USER_ENTITY + '"';
+	protected short getEntityCode() {
+		return ObjectEntities.USER_ENTITY_CODE;
+	}
+
+	protected String getEntityName() {
+		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getColumnsTmpl() {
@@ -118,7 +122,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		User user = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  user.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  user.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

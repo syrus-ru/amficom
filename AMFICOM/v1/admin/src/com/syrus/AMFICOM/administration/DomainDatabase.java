@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.24 2005/05/18 11:18:39 bass Exp $
+ * $Id: DomainDatabase.java,v 1.25 2005/05/26 08:33:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,12 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:30 $
  * @author $Author: bass $
  * @module administration_v1
  */
 
-public class DomainDatabase extends CharacterizableDatabase {
+public final class DomainDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	
@@ -40,8 +40,8 @@ public class DomainDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("DomainDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 	
-	protected String getEnityName() {
-		return ObjectEntities.DOMAIN_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.DOMAIN_ENTITY_CODE;
 	}
 	
 	protected String getColumnsTmpl() {
@@ -109,7 +109,7 @@ public class DomainDatabase extends CharacterizableDatabase {
 		Domain domain = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  domain.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  domain.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

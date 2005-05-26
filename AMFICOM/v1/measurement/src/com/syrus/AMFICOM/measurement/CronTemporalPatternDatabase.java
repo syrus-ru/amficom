@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.2 2005/05/18 11:34:42 bass Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.3 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,12 +32,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/18 11:34:42 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 08:33:32 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class CronTemporalPatternDatabase extends StorableObjectDatabase {
+public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	private static final String CRONSTRINGARRAY_TYPE_NAME = "CronStringArray";
 
 	private CronTemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -49,8 +49,8 @@ public class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;	
 
-	protected String getEnityName() {		
-		return ObjectEntities.CRONTEMPORALPATTERN_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE;
 	}
 	
 	protected String getColumnsTmpl() {
@@ -117,7 +117,7 @@ public class CronTemporalPatternDatabase extends StorableObjectDatabase {
 		CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  temporalPattern.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  temporalPattern.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

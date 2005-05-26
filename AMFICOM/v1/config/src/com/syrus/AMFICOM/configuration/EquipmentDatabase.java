@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.84 2005/05/20 21:11:33 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.85 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,12 +27,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/05/20 21:11:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.85 $, $Date: 2005/05/26 08:33:34 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class EquipmentDatabase extends CharacterizableDatabase {
+public final class EquipmentDatabase extends CharacterizableDatabase {
 	private static final int SIZE_SUPPLIER_COLUMN   = 128;
 
 	private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;
@@ -65,8 +65,8 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("EquipmentDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.EQUIPMENT_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.EQUIPMENT_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -210,7 +210,7 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 		Equipment equipment = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  equipment.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  equipment.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.27 2005/05/20 21:11:56 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.28 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,11 +39,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/20 21:11:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/05/26 08:33:34 $
+ * @author $Author: bass $
  * @module map_v1
  */
-public class MapDatabase extends CharacterizableDatabase {
+public final class MapDatabase extends CharacterizableDatabase {
 	 // linked tables ::
     private static final String MAP_COLLECTOR 			= "MapCollector";
     private static final String MAP_MARK 				= "MapMark";
@@ -99,7 +99,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				tableName = MAP_TOPOLOGICAL_NODE;
 				break;
 			default:
-				throw new IllegalDataException(this.getEnityName() + "Database.retrieveLinkedObjects | unknown linked table code:" + linkedTable);
+				throw new IllegalDataException(this.getEntityName() + "Database.retrieveLinkedObjects | unknown linked table code:" + linkedTable);
 		}
 		return tableName;
 	}
@@ -107,7 +107,7 @@ public class MapDatabase extends CharacterizableDatabase {
 	private Map fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Map)
 			return (Map) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	
@@ -217,8 +217,8 @@ public class MapDatabase extends CharacterizableDatabase {
 		return super.retrieveLinkedEntityIds(maps, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
 	
-	protected String getEnityName() {		
-		return ObjectEntities.MAP_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MAP_ENTITY_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {
@@ -279,7 +279,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		Map map = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 						+ " '" + map.getId() + "'; argument: " + arg);
 				return null;
 		}
@@ -401,7 +401,7 @@ public class MapDatabase extends CharacterizableDatabase {
 					linkedObjectList = map.getTopologicalNodes();
 					break;
 				default:
-					throw new UpdateObjectException(this.getEnityName()
+					throw new UpdateObjectException(this.getEntityName()
 							+ "Database.updateLinkedObjectIds | unknown linked table code:" + linkedTable);
 			}
 
@@ -434,7 +434,7 @@ public class MapDatabase extends CharacterizableDatabase {
 				mapIds.put(mapId, map);
 			}
 			catch (ApplicationException ae) {
-				Log.errorMessage(this.getEnityName() + "Database.delete | Couldn't found map for " + mapId);
+				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
 			}
 		}
 
@@ -494,7 +494,7 @@ public class MapDatabase extends CharacterizableDatabase {
 			tableName = this.getLinkedTableName(linkedTable);
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage(getEnityName() + "Database.deleteLinkedObjectIds | illegal linked database table id "
+			Log.errorMessage(getEntityName() + "Database.deleteLinkedObjectIds | illegal linked database table id "
 					+ linkedTable + " -- " + e.getMessage());
 			return;
 		}

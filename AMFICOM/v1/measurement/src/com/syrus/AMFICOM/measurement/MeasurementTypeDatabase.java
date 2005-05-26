@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.93 2005/05/18 11:34:42 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.94 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,12 +35,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/05/18 11:34:42 $
+ * @version $Revision: 1.94 $, $Date: 2005/05/26 08:33:32 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class MeasurementTypeDatabase extends ActionTypeDatabase  {
+public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -60,8 +60,8 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 				+ storableObject.getClass().getName());
 	}	
 
-	protected String getEnityName() {
-		return ObjectEntities.MEASUREMENTTYPE_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -140,7 +140,7 @@ public class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 						+ " '" + measurementType.getId() + "'; argument: " + arg);
 				return null;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.60 2005/05/20 21:11:34 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.61 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,12 +27,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/05/20 21:11:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/05/26 08:33:35 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class TransmissionPathDatabase extends CharacterizableDatabase {
+public final class TransmissionPathDatabase extends CharacterizableDatabase {
 
 	// table :: TransmissionPathMELink
 	// monitored_element_id Identifier,
@@ -50,8 +50,8 @@ public class TransmissionPathDatabase extends CharacterizableDatabase {
 				+ storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.TRANSPATH_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.TRANSPATH_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -137,7 +137,7 @@ public class TransmissionPathDatabase extends CharacterizableDatabase {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  transmissionPath.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  transmissionPath.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

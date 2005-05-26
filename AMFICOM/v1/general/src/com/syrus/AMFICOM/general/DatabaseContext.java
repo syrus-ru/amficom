@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContext.java,v 1.1 2005/05/24 13:24:59 bass Exp $
+ * $Id: DatabaseContext.java,v 1.2 2005/05/26 08:33:31 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/24 13:24:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 08:33:31 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -23,14 +23,11 @@ public final class DatabaseContext {
 		assert false;
 	}
 
-	public static void init(final TShortObjectHashMap entityCodeDatabaseMap) {
-		assert entityCodeDatabaseMap != null: ErrorMessages.NON_NULL_EXPECTED;
-		for (final TShortObjectIterator entityCodeDatabaseIterator = entityCodeDatabaseMap.iterator(); entityCodeDatabaseIterator.hasNext();) {
-			entityCodeDatabaseIterator.advance();
-			final short key = entityCodeDatabaseIterator.key();
-			assert !ENTITY_CODE_DATABASE_MAP.containsKey(key);
-			ENTITY_CODE_DATABASE_MAP.put(key, entityCodeDatabaseIterator.value());
-		}
+	public static void registerDatabase(final StorableObjectDatabase database) {
+		assert database != null: ErrorMessages.NON_NULL_EXPECTED;
+		final short entityCode = database.getEntityCode();
+		assert !ENTITY_CODE_DATABASE_MAP.containsKey(entityCode);
+		ENTITY_CODE_DATABASE_MAP.put(entityCode, database);
 	}
 
 	public static StorableObjectDatabase getDatabase(final Short entityCode) {

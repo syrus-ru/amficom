@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.87 2005/05/20 21:11:39 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.88 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,18 +39,18 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/05/20 21:11:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.88 $, $Date: 2005/05/26 08:33:32 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class ResultDatabase extends StorableObjectDatabase {
+public final class ResultDatabase extends StorableObjectDatabase {
 
 	private static String			columns;
 	private static String			updateMultipleSQLValues;
 
-	protected String getEnityName() {
-		return ObjectEntities.RESULT_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.RESULT_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -390,7 +390,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  result.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  result.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

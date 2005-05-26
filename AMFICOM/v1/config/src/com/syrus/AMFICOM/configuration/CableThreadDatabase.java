@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.26 2005/05/20 21:11:33 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.27 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,11 +29,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/20 21:11:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/05/26 08:33:35 $
+ * @author $Author: bass $
  * @module config_v1
  */
-public class CableThreadDatabase extends StorableObjectDatabase  {
+public final class CableThreadDatabase extends StorableObjectDatabase  {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -45,8 +45,8 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 				+ storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.CABLETHREAD_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.CABLETHREAD_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -140,7 +140,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 		CableThread cableThread = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  cableThread.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  cableThread.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

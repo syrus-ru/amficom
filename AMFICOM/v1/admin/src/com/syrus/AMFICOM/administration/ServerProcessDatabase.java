@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.4 2005/05/18 11:18:39 bass Exp $
+ * $Id: ServerProcessDatabase.java,v 1.5 2005/05/26 08:33:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 08:33:30 $
  * @author $Author: bass $
  * @module admin_v1
  */
-public class ServerProcessDatabase extends StorableObjectDatabase {
+public final class ServerProcessDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -42,8 +42,8 @@ public class ServerProcessDatabase extends StorableObjectDatabase {
 				+ storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {		
-		return ObjectEntities.SERVERPROCESS_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.SERVERPROCESS_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -101,7 +101,7 @@ public class ServerProcessDatabase extends StorableObjectDatabase {
 		ServerProcess serverProcess = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  serverProcess.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  serverProcess.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

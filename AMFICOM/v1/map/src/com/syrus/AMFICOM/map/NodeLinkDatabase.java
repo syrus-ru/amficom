@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.22 2005/05/20 21:11:57 arseniy Exp $
+ * $Id: NodeLinkDatabase.java,v 1.23 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/20 21:11:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/05/26 08:33:34 $
+ * @author $Author: bass $
  * @module map_v1
  */
-public class NodeLinkDatabase extends CharacterizableDatabase {
+public final class NodeLinkDatabase extends CharacterizableDatabase {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
@@ -44,7 +44,7 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 	private NodeLink fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TopologicalNode)
 			return (NodeLink) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	
@@ -53,8 +53,8 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 		this.retrieveEntity(nodeLink);
 	}	
 	
-	protected String getEnityName() {		
-		return ObjectEntities.NODE_LINK_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.NODE_LINK_ENTITY_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {
@@ -120,11 +120,11 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 					NodeLinkWrapper.COLUMN_END_NODE_ID), true);
 		}
 		catch (ApplicationException ae) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
 		}
 		catch (SQLException sqle) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
 
@@ -146,7 +146,7 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 		NodeLink nodeLink = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {			
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  nodeLink.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  nodeLink.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}	

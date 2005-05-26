@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.22 2005/05/20 21:12:23 arseniy Exp $
+* $Id: MapViewDatabase.java,v 1.23 2005/05/26 08:33:33 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,11 +41,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/20 21:12:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/05/26 08:33:33 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
-public class MapViewDatabase extends CharacterizableDatabase {
+public final class MapViewDatabase extends CharacterizableDatabase {
     // domain_id VARCHAR2(32),
     public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(128),
@@ -79,7 +79,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 	private MapView fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MapView)
 			return (MapView) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	
@@ -96,14 +96,14 @@ public class MapViewDatabase extends CharacterizableDatabase {
 				try{
 				mapView.setSchemes0(StorableObjectPool.getStorableObjects(schemeIds, true));
 				}catch(ApplicationException ae){
-					throw new RetrieveObjectException(this.getEnityName() + "Database.retrieve | cannot retrieve schemes" ,  ae);
+					throw new RetrieveObjectException(this.getEntityName() + "Database.retrieve | cannot retrieve schemes" ,  ae);
 				}
 			}
 		}		
 	}	
 	
-	protected String getEnityName() {		
-		return ObjectEntities.MAPVIEW_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MAPVIEW_ENTITY_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {
@@ -185,7 +185,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 							COLUMN_MAP_ID), true));
 		}
 		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map", ae);
+			throw new RetrieveObjectException(this.getEntityName() + "Database.updateEntityFromResultSet | cannot retrieve map", ae);
 		}
 		return map;
 	}
@@ -195,7 +195,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 		MapView mapView = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  mapView.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mapView.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -287,7 +287,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 				mapIds.put(mapId, map);
 			}
 			catch (ApplicationException ae) {
-				Log.errorMessage(this.getEnityName() + "Database.delete | Couldn't found map for " + mapId);
+				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
 			}
 		}
 
@@ -376,7 +376,7 @@ public class MapViewDatabase extends CharacterizableDatabase {
 				try {
 					map.setSchemes0(StorableObjectPool.getStorableObjects(schemeIds, true));
 				} catch (ApplicationException ae) {
-					throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  ae);
+					throw new RetrieveObjectException(this.getEntityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  ae);
 				}
 			}
 		}

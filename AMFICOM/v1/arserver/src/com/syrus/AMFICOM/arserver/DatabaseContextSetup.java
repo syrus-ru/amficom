@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.7 2005/05/24 13:24:56 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.8 2005/05/26 08:33:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.arserver;
 
-import gnu.trove.TShortObjectHashMap;
-
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DomainDatabase;
@@ -17,17 +15,16 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.resource.DatabaseResourceObjectLoader;
 import com.syrus.AMFICOM.resource.ImageResourceDatabase;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/24 13:24:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/26 08:33:29 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -50,18 +47,14 @@ class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
-		final TShortObjectHashMap entityCodeDatabaseMap = new TShortObjectHashMap();
+		DatabaseContext.registerDatabase(new CharacteristicDatabase());
+		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 
-		entityCodeDatabaseMap.put(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new CharacteristicDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, new CharacteristicTypeDatabase());
-
-		entityCodeDatabaseMap.put(ObjectEntities.USER_ENTITY_CODE, new UserDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.DOMAIN_ENTITY_CODE, new DomainDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SERVERPROCESS_ENTITY_CODE, new ServerProcessDatabase());
+		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new DomainDatabase());
+		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		
-		entityCodeDatabaseMap.put(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, new ImageResourceDatabase());
-
-		DatabaseContext.init(entityCodeDatabaseMap);
+		DatabaseContext.registerDatabase(new ImageResourceDatabase());
 	}
 
 	public static void initObjectPools() {

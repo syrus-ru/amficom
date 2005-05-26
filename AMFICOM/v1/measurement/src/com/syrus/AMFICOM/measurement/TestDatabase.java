@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.94 2005/05/24 12:33:06 bob Exp $
+ * $Id: TestDatabase.java,v 1.95 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,19 +45,19 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/05/24 12:33:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.95 $, $Date: 2005/05/26 08:33:32 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class TestDatabase extends StorableObjectDatabase {
+public final class TestDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLMN_TEST_ID = "test_id";
 
 	private static String columns;
 	private static String updateMultipleSQLValues;	
 
-	protected String getEnityName() {
-		return ObjectEntities.TEST_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.TEST_ENTITY_CODE;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -280,7 +280,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			case Test.RETRIEVE_NUMBER_OF_RESULTS:
 				return this.retrieveNumberOfResults(test, (ResultSort)arg);
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  test.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  test.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

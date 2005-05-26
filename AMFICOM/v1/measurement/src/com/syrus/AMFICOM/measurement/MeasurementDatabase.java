@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.76 2005/05/20 21:11:38 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.77 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,12 +33,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.77 $, $Date: 2005/05/26 08:33:32 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class MeasurementDatabase extends StorableObjectDatabase {
+public final class MeasurementDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLUMN_MEASUREMENT_ID = "measurement_id";
 	public static final String LINK_SORT = "sort";
 
@@ -47,8 +47,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 
 	private static final int SIZE_LOCAL_ADDRESS_COLUMN = 64;
 
-	protected String getEnityName() {		
-		return ObjectEntities.MEASUREMENT_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MEASUREMENT_ENTITY_CODE;
 	}	
 
 	private Measurement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -176,7 +176,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			case Measurement.RETRIEVE_RESULT:
 				return this.retrieveResult(measurement, (ResultSort)arg);
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  measurement.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurement.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

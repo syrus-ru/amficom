@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.34 2005/05/18 11:27:14 bass Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.35 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,12 +22,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/18 11:27:14 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/26 08:33:35 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class TransmissionPathTypeDatabase extends CharacterizableDatabase {
+public final class TransmissionPathTypeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -37,8 +37,8 @@ public class TransmissionPathTypeDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("TransmissionPathTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.TRANSPATHTYPE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.TRANSPATHTYPE_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -99,7 +99,7 @@ public class TransmissionPathTypeDatabase extends CharacterizableDatabase {
 		TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  transmissionPathType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  transmissionPathType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.56 2005/05/20 21:11:38 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.57 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/05/26 08:33:32 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class AnalysisDatabase extends StorableObjectDatabase {
+public final class AnalysisDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 
@@ -51,8 +51,8 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		this.retrieveEntity(analysis);
 	}	
 
-	protected String getEnityName() {		
-		return ObjectEntities.ANALYSIS_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.ANALYSIS_ENTITY_CODE;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -142,7 +142,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  analysis.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  analysis.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

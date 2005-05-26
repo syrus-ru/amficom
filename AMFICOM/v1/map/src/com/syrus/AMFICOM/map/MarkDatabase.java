@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.22 2005/05/20 21:11:56 arseniy Exp $
+ * $Id: MarkDatabase.java,v 1.23 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/20 21:11:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/05/26 08:33:34 $
+ * @author $Author: bass $
  * @module map_v1
  */
-public class MarkDatabase extends CharacterizableDatabase {
+public final class MarkDatabase extends CharacterizableDatabase {
 	 public static final int SIZE_CITY_COLUMN = 128;
     public static final int SIZE_STREET_COLUMN = 128;
     public static final int SIZE_BUILDING_COLUMN = 128;
@@ -48,7 +48,7 @@ public class MarkDatabase extends CharacterizableDatabase {
 	private Mark fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Mark)
 			return (Mark) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	
@@ -57,8 +57,8 @@ public class MarkDatabase extends CharacterizableDatabase {
 		this.retrieveEntity(mark);
 	}	
 	
-	protected String getEnityName() {		
-		return ObjectEntities.MARK_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MARK_ENTITY_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {
@@ -131,10 +131,10 @@ public class MarkDatabase extends CharacterizableDatabase {
 		try {
 			physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MarkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
 		} catch (ApplicationException ae) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
 		} catch (SQLException sqle) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
 		mark.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -159,7 +159,7 @@ public class MarkDatabase extends CharacterizableDatabase {
 		Mark mark = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  mark.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mark.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.66 2005/05/23 18:45:19 bass Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.67 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,12 +40,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/05/23 18:45:19 $
+ * @version $Revision: 1.67 $, $Date: 2005/05/26 08:33:35 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class MonitoredElementDatabase extends StorableObjectDatabase {
+public final class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	public static final int		CHARACTER_NUMBER_OF_RECORDS	= 1;
 
@@ -61,8 +61,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				+ storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.MONITORED_ELEMENT_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -276,7 +276,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  monitoredElement.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  monitoredElement.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

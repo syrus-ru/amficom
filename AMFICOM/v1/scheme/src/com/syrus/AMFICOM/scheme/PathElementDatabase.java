@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.3 2005/05/18 12:03:15 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.4 2005/05/26 08:33:33 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:03:15 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:33 $
  * @module scheme_v1
  */
 public final class PathElementDatabase extends StorableObjectDatabase {
@@ -80,7 +80,7 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 		PathElement pe = fromStorableObject(storableObject);
 		switch (retrieveKind) {
 		default:
-			Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+			Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 					+ " '" + pe.getId() + "'; argument: " + arg);
 			return null;
 		}
@@ -99,8 +99,12 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.PATH_ELEMENT_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.PATH_ELEMENT_ENTITY_CODE;
+	}
+
+	protected String getEntityName() {
+		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

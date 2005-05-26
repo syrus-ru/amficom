@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.4 2005/05/18 12:03:15 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.5 2005/05/26 08:33:33 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 08:33:33 $
  * @module scheme_v1
  */
 public final class SchemePathDatabase extends CharacterizableDatabase {
@@ -46,7 +46,7 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		SchemePath schemePath = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 						+ " '" + schemePath.getId() + "'; argument: " + arg);
 				return null;
 		}
@@ -62,8 +62,12 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.SCHEME_PATH_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.SCHEME_PATH_ENTITY_CODE;
+	}
+
+	protected String getEntityName() {
+		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

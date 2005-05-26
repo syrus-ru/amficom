@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.24 2005/05/20 21:11:57 arseniy Exp $
+ * $Id: SiteNodeDatabase.java,v 1.25 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/20 21:11:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:34 $
+ * @author $Author: bass $
  * @module map_v1
  */
-public class SiteNodeDatabase extends CharacterizableDatabase {
+public final class SiteNodeDatabase extends CharacterizableDatabase {
 	 private static String columns;
 	
 	private static String updateMultipleSQLValues;
@@ -53,8 +53,8 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 		super.retrieveEntity(siteNode);
 	}	
 	
-	protected String getEnityName() {		
-		return ObjectEntities.SITE_NODE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.SITE_NODE_ENTITY_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {
@@ -127,10 +127,10 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 		try {
 			type = (SiteNodeType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID), true);
 		} catch (ApplicationException ae) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
 		} catch (SQLException sqle) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
 		siteNode.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -155,7 +155,7 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 		SiteNode siteNode = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  siteNode.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  siteNode.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

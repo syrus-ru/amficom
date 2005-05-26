@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.3 2005/05/18 11:34:42 bass Exp $
+ * $Id: ActionTypeDatabase.java,v 1.4 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:32 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -39,7 +39,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 
 	abstract String getActionTypeColumnName();
 
-	void retrieveParameterTypesByOneQuery(java.util.Set actionTypes)
+	final void retrieveParameterTypesByOneQuery(java.util.Set actionTypes)
 			throws RetrieveObjectException {
 
 		String tableName = this.getParameterTypeLinkTableName();
@@ -61,7 +61,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEntityName() + "Database.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final String parameterMode = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE));
@@ -111,7 +111,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	void updateParameterTypes(java.util.Set actionTypes) throws UpdateObjectException {
+	final void updateParameterTypes(java.util.Set actionTypes) throws UpdateObjectException {
 		if (actionTypes == null || actionTypes.isEmpty())
 			return;
 
@@ -254,7 +254,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 						DatabaseIdentifier.setIdentifier(preparedStatement, 1, actionTypeId);
 						DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 						DatabaseString.setString(preparedStatement, 3, parameterMode, 3);
-						Log.debugMessage(this.getEnityName() + "Database.insertParameterTypes | Inserting parameter type '"
+						Log.debugMessage(this.getEntityName() + "Database.insertParameterTypes | Inserting parameter type '"
 								+ parameterTypeId + "' of mode '" + parameterMode + "' for action type '" + actionTypeId
 								+ "'", Log.DEBUGLEVEL09);
 						preparedStatement.executeUpdate();
@@ -303,7 +303,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrieveDBParameterTypeIdsMap | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEntityName() + "Database.retrieveDBParameterTypeIdsMap | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
@@ -350,5 +350,4 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-
 }

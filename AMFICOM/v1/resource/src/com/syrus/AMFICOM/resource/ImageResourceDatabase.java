@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.21 2005/05/18 11:37:17 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.22 2005/05/26 08:33:30 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/05/18 11:37:17 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/26 08:33:30 $
  * @module resource_v1
  */
 
@@ -66,14 +66,14 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 
 	private byte[] retrieveImage(AbstractImageResource abstractImageResource) throws RetrieveObjectException {
 		String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
-		String sql = SQL_SELECT + COLUMN_IMAGE + SQL_FROM + getEnityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
+		String sql = SQL_SELECT + COLUMN_IMAGE + SQL_FROM + getEntityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
 		Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;
 		ResultSet resultSet = null;
 		byte[] image = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(getEnityName() + "Database.retrieveImage | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(getEntityName() + "Database.retrieveImage | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				Blob blob = resultSet.getBlob(COLUMN_IMAGE);
@@ -87,7 +87,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				}				
 			}			
 		} catch (SQLException sqle) {
-			String mesg = getEnityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
+			String mesg = getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
@@ -98,13 +98,13 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 
 	private void updateImage(AbstractImageResource abstractImageResource) throws UpdateObjectException {
 		String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
-		String sql = SQL_UPDATE + getEnityName() + SQL_SET + COLUMN_IMAGE + EQUALS + SQL_FUNCTION_EMPTY_BLOB + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
+		String sql = SQL_UPDATE + getEntityName() + SQL_SET + COLUMN_IMAGE + EQUALS + SQL_FUNCTION_EMPTY_BLOB + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
 		Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;		
 		byte[] image = abstractImageResource.getImage();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(getEnityName()
+			Log.debugMessage(getEntityName()
 				+ "Database.updateImage | Trying: " + sql,
 				Log.DEBUGLEVEL09);
 			statement.executeQuery(sql);
@@ -112,7 +112,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			ByteArrayDatabase.saveAsBlob(image, connection, ObjectEntities.IMAGE_RESOURCE_ENTITY, COLUMN_IMAGE, StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr);
 			connection.commit();			
 		} catch (SQLException sqle) {
-			String mesg = getEnityName() + "Database.insertImage | Cannot update blob " + sqle.getMessage();
+			String mesg = getEntityName() + "Database.insertImage | Cannot update blob " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
@@ -125,8 +125,12 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("ImageResourceDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.IMAGE_RESOURCE_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE;
+	}
+
+	protected String getEntityName() {
+		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getColumnsTmpl() {
@@ -167,21 +171,21 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 
 	public int getSort(Identifier id) throws RetrieveObjectException {
 		String absIdStr = DatabaseIdentifier.toSQLString(id);
-		String sql = SQL_SELECT + COLUMN_SORT + SQL_FROM + getEnityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
+		String sql = SQL_SELECT + COLUMN_SORT + SQL_FROM + getEntityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
 		Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(getEnityName() + "Database.getSort | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(getEntityName() + "Database.getSort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return resultSet.getInt(COLUMN_SORT);
 			
-			String msg = getEnityName() + "Database.getSort couldn't find entity with id: " + id;
+			String msg = getEntityName() + "Database.getSort couldn't find entity with id: " + id;
 			throw new RetrieveObjectException(msg);			
 		} catch (SQLException sqle) {
-			String mesg = getEnityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
+			String mesg = getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
@@ -195,7 +199,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			try {
 				this.updateImage(abstractImageResource);
 			} catch (UpdateObjectException e) {
-				throw new CreateObjectException(getEnityName() + "Database.insert ", e);
+				throw new CreateObjectException(getEntityName() + "Database.insert ", e);
 			}
 		}
 	}
@@ -208,7 +212,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				try {
 					this.updateImage(abstractImageResource);
 				} catch (UpdateObjectException e) {
-					throw new CreateObjectException(getEnityName() + "Database.insert ", e);
+					throw new CreateObjectException(getEntityName() + "Database.insert ", e);
 				}
 			}
 		}
@@ -322,7 +326,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 					image);			
 			return schemeImageResource;
 		}
-		throw new RetrieveObjectException(getEnityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);				
+		throw new RetrieveObjectException(getEntityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);				
 	} catch (SQLException e) {
 		Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage() );
 		throw new RetrieveObjectException("ImageResourceDatabase.updateEntityFromResultSet ", e);
@@ -350,7 +354,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				throw new IllegalDataException("Unsupported ImageResourse sort =" + sort);
 			}			
 		} catch (SQLException sqle) {
-			throw new IllegalDataException(getEnityName()
+			throw new IllegalDataException(getEntityName()
 					+ "Database.setEntityForPreparedStatement | Error "
 					+ sqle.getMessage(), sqle);
 		}

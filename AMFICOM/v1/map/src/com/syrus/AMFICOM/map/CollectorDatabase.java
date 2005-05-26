@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.28 2005/05/18 11:48:20 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.29 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,11 +39,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/26 08:33:34 $
  * @author $Author: bass $
  * @module map_v1
  */
-public class CollectorDatabase extends CharacterizableDatabase {
+public final class CollectorDatabase extends CharacterizableDatabase {
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
@@ -53,7 +53,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	 private Collector fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Collector)
 			return (Collector) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: "
+		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: "
 				+ storableObject.getClass().getName());
 	}
 
@@ -83,8 +83,8 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.COLLECTOR_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.COLLECTOR_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -138,7 +138,7 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		Collector collector = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 						+ " '" + collector.getId() + "'; argument: " + arg);
 				return null;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.26 2005/05/18 11:18:39 bass Exp $
+ * $Id: MCMDatabase.java,v 1.27 2005/05/26 08:33:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/18 11:18:39 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/26 08:33:30 $
  * @author $Author: bass $
  * @module administration_v1
  */
 
-public class MCMDatabase extends CharacterizableDatabase {
+public final class MCMDatabase extends CharacterizableDatabase {
 
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
@@ -44,8 +44,8 @@ public class MCMDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("MCMDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.MCM_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MCM_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -176,7 +176,7 @@ public class MCMDatabase extends CharacterizableDatabase {
 		MCM mcm = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  mcm.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mcm.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

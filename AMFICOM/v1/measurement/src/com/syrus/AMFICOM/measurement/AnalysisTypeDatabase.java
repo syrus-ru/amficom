@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.86 2005/05/18 11:34:41 bass Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.87 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,12 +35,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/05/18 11:34:41 $
+ * @version $Revision: 1.87 $, $Date: 2005/05/26 08:33:32 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class AnalysisTypeDatabase extends ActionTypeDatabase {	
+public final class AnalysisTypeDatabase extends ActionTypeDatabase {	
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -60,8 +60,8 @@ public class AnalysisTypeDatabase extends ActionTypeDatabase {
 				+ storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.ANALYSISTYPE_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.ANALYSISTYPE_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -132,7 +132,7 @@ public class AnalysisTypeDatabase extends ActionTypeDatabase {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 						+ " '" + analysisType.getId() + "'; argument: " + arg);
 				return null;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.48 2005/05/18 11:27:15 bass Exp $
+ * $Id: PortTypeDatabase.java,v 1.49 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/05/18 11:27:15 $
+ * @version $Revision: 1.49 $, $Date: 2005/05/26 08:33:35 $
  * @author $Author: bass $
  * @module config_v1
  */
-
-public class PortTypeDatabase extends CharacterizableDatabase {
+public final class PortTypeDatabase extends CharacterizableDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
@@ -40,8 +39,8 @@ public class PortTypeDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("PortTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {		
-		return ObjectEntities.PORTTYPE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.PORTTYPE_ENTITY_CODE;
 	}	
 
 	protected String getColumnsTmpl() {		
@@ -98,7 +97,7 @@ public class PortTypeDatabase extends CharacterizableDatabase {
 		PortType portType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  portType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  portType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

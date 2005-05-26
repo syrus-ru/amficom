@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.72 2005/05/23 18:45:19 bass Exp $
+ * $Id: KISDatabase.java,v 1.73 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,12 +37,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/05/23 18:45:19 $
+ * @version $Revision: 1.73 $, $Date: 2005/05/26 08:33:35 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class KISDatabase extends CharacterizableDatabase {
+public final class KISDatabase extends CharacterizableDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
@@ -57,8 +57,8 @@ public class KISDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("KISDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.KIS_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.KIS_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -152,7 +152,7 @@ public class KISDatabase extends CharacterizableDatabase {
 			case RETRIEVE_MONITORED_ELEMENTS:
 				return this.retrieveMonitoredElements(kis);
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  kis.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  kis.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

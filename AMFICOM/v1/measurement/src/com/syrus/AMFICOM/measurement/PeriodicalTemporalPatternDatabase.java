@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.3 2005/05/18 11:34:42 bass Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.4 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:32 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
+public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 
@@ -48,8 +48,8 @@ public class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
 		this.retrieveEntity(periodicalTemporalPattern);
 	}	
 
-	protected String getEnityName() {		
-		return ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -100,7 +100,7 @@ public class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
 		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  periodicalTemporalPattern.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  periodicalTemporalPattern.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.24 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.25 2005/05/26 08:33:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,12 +40,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/18 11:16:58 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:29 $
  * @author $Author: bass $
  * @module event_v1
  */
 
-public class EventTypeDatabase extends StorableObjectDatabase {
+public final class EventTypeDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -56,8 +56,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("EventTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.EVENTTYPE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.EVENTTYPE_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -168,7 +168,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		EventType eventType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  eventType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  eventType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

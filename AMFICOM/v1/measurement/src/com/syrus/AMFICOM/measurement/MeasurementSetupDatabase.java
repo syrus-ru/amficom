@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.86 2005/05/23 18:45:14 bass Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.87 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,12 +35,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/05/23 18:45:14 $
+ * @version $Revision: 1.87 $, $Date: 2005/05/26 08:33:32 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class MeasurementSetupDatabase extends StorableObjectDatabase {
+public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	public static final String  PARAMETER_TYPE_ID                   = "parameter_type_id";
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;	
@@ -48,8 +48,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	private static String columns;	
 	private static String updateMultipleSQLValues;	
 
-	protected String getEnityName() {
-		return ObjectEntities.MEASUREMENT_SETUP_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -213,7 +213,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  measurementSetup.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurementSetup.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

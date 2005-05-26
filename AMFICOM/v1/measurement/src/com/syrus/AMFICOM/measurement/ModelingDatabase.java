@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.39 2005/05/20 21:11:38 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.40 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/05/20 21:11:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/05/26 08:33:32 $
+ * @author $Author: bass $
  * @module module_name
  */
 
-public class ModelingDatabase extends StorableObjectDatabase {
+public final class ModelingDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 
@@ -50,8 +50,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		this.retrieveEntity(modeling);
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.MODELING_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MODELING_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -126,7 +126,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
   	Modeling modeling = this.fromStorableObject(storableObject);
     switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  modeling.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  modeling.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

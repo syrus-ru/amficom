@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.33 2005/05/18 11:27:14 bass Exp $
+ * $Id: LinkTypeDatabase.java,v 1.34 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/05/18 11:27:14 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/26 08:33:34 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class LinkTypeDatabase extends CharacterizableDatabase {
+public final class LinkTypeDatabase extends CharacterizableDatabase {
 	private static final int SIZE_MANUFACTURER_COLUMN = 64;
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
@@ -36,8 +36,8 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	protected String getEnityName() {
-		return ObjectEntities.LINKTYPE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.LINKTYPE_ENTITY_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
@@ -133,7 +133,7 @@ public class LinkTypeDatabase extends CharacterizableDatabase {
 		LinkType linkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  linkType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  linkType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

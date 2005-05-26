@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.4 2005/05/18 12:03:15 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.5 2005/05/26 08:33:33 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 08:33:33 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -89,7 +89,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		CableChannelingItem cableChannelingItem = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
 						+ " '" + cableChannelingItem.getId() + "'; argument: " + arg);
 				return null;
 		}
@@ -110,8 +110,12 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY;
+	protected short getEntityCode() {
+		return ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE;
+	}
+
+	protected String getEntityName() {
+		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

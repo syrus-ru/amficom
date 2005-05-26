@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.42 2005/05/18 11:27:15 bass Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.43 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/05/18 11:27:15 $
+ * @version $Revision: 1.43 $, $Date: 2005/05/26 08:33:35 $
  * @author $Author: bass $
  * @module config_v1
  */
-
-public class MeasurementPortTypeDatabase extends CharacterizableDatabase {
+public final class MeasurementPortTypeDatabase extends CharacterizableDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
@@ -40,8 +39,8 @@ public class MeasurementPortTypeDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("MeasurementPortTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected String getEnityName() {
-		return ObjectEntities.MEASUREMENTPORTTYPE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -105,7 +104,7 @@ public class MeasurementPortTypeDatabase extends CharacterizableDatabase {
 		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  measurementPortType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurementPortType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

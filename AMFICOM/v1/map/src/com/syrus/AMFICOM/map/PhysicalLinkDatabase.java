@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.23 2005/05/20 21:11:57 arseniy Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.24 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/20 21:11:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/05/26 08:33:34 $
+ * @author $Author: bass $
  * @module map_v1
  */
-public class PhysicalLinkDatabase extends CharacterizableDatabase {
+public final class PhysicalLinkDatabase extends CharacterizableDatabase {
 	private static final int LEFT_RIGHT = 0x01;
     private static final int TOP_BOTTOM = 0x02;
 
@@ -46,7 +46,7 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 	private PhysicalLink fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof PhysicalLink)
 			return (PhysicalLink) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	
@@ -55,8 +55,8 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 		this.retrieveEntity(physicalLink);
 	}	
 	
-	protected String getEnityName() {		
-		return ObjectEntities.PHYSICAL_LINK_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.PHYSICAL_LINK_ENTITY_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {
@@ -147,11 +147,11 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 					PhysicalLinkWrapper.COLUMN_END_NODE_ID), true);
 		}
 		catch (ApplicationException ae) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
 		}
 		catch (SQLException sqle) {
-			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
+			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
 		int topLeft = resultSet.getInt(PhysicalLinkWrapper.COLUMN_TOPLEFT);
@@ -180,7 +180,7 @@ public class PhysicalLinkDatabase extends CharacterizableDatabase {
 		PhysicalLink physicalLink = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  physicalLink.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  physicalLink.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

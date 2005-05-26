@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.24 2005/05/20 21:11:57 arseniy Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.25 2005/05/26 08:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,11 +38,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/20 21:11:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:34 $
+ * @author $Author: bass $
  * @module map_v1
  */
-public class TopologicalNodeDatabase extends CharacterizableDatabase {
+public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
@@ -50,7 +50,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 	private TopologicalNode fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TopologicalNode)
 			return (TopologicalNode) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -70,7 +70,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrievePhysicalLink | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEntityName() + "Database.retrievePhysicalLink | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()){				
 				try {
@@ -84,7 +84,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 			throw new ObjectNotFoundException("No physical link for node " + nodeIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retrievePhysicalLink | Cannot retrieve physical link for node " + nodeIdStr + " -- " + sqle.getMessage();
+			String mesg = this.getEntityName() + "Database.retrievePhysicalLink | Cannot retrieve physical link for node " + nodeIdStr + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -129,7 +129,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 					if (object instanceof Identifiable)
 						id = ((Identifiable) object).getId();
 					else
-						throw new IllegalDataException(this.getEnityName()
+						throw new IllegalDataException(this.getEntityName()
 								+ "Database.retrievePhysicalLinks | Object "
 								+ object.getClass().getName()
 								+ " isn't Identifier or Identifiable");
@@ -175,7 +175,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrievePhysicalLinks | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEntityName() + "Database.retrievePhysicalLinks | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			Map nodePhysicalLinkMap = new HashMap();
 			while (resultSet.next()) {
@@ -191,7 +191,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 				}
 
 				if (node == null) {
-					String mesg = this.getEnityName() + "Database.retrievePhysicalLinks | Cannot found correspond node ";
+					String mesg = this.getEntityName() + "Database.retrievePhysicalLinks | Cannot found correspond node ";
 					throw new RetrieveObjectException(mesg);
 				}
 
@@ -220,7 +220,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName()
+			String mesg = this.getEntityName()
 					+ "Database.retrievePhysicalLinks | Cannot retrieve parameters for result -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
@@ -243,8 +243,8 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	protected String getEnityName() {		
-		return ObjectEntities.TOPOLOGICAL_NODE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -313,7 +313,7 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  topologicalNode.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  topologicalNode.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

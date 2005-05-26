@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.3 2005/05/18 11:34:42 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.4 2005/05/26 08:33:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,11 +39,11 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:32 $
  * @author $Author: bass $
  * @module measurement_v1
  */
-public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
+public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 	
 	private static String columns;
 
@@ -64,8 +64,8 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 		super.retrieveEntity(intervalsTemporalPattern);
 	}
 	
-	protected String getEnityName() {		
-		return ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE;
 	}
 	
 	protected String getColumnsTmpl() {
@@ -154,7 +154,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 		return tableMap;
 		}
 		catch (SQLException sqle) {
-			String mesg = "IntervalsTemporalPatternDatabase.getMapsFromDB | Cannot retrieve " + getEnityName()
+			String mesg = "IntervalsTemporalPatternDatabase.getMapsFromDB | Cannot retrieve " + getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
@@ -185,7 +185,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  intervalsTemporalPattern.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  intervalsTemporalPattern.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -219,7 +219,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "IntervalsTemporalPatternDatabase.remove | Cannot remove " + this.getEnityName()
+			String mesg = "IntervalsTemporalPatternDatabase.remove | Cannot remove " + this.getEntityName()
 					+ " '" + id + "' -- " + sqle.getMessage();
 			Log.errorMessage(mesg);
 		}
@@ -350,7 +350,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "IntervalsTemporalPatternDatabase.updateDB | Cannot update " + this.getEnityName()
+			String mesg = "IntervalsTemporalPatternDatabase.updateDB | Cannot update " + this.getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
@@ -403,7 +403,7 @@ public class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "IntervalsTemporalPatternDatabase.removeFromDB | Cannot remove " + this.getEnityName()
+			String mesg = "IntervalsTemporalPatternDatabase.removeFromDB | Cannot remove " + this.getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}

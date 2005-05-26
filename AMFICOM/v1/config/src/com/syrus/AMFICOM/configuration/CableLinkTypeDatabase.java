@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.28 2005/05/18 11:27:16 bass Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.29 2005/05/26 08:33:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,11 +22,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/18 11:27:16 $
+ * @version $Revision: 1.29 $, $Date: 2005/05/26 08:33:35 $
  * @author $Author: bass $
  * @module config_v1
  */
-public class CableLinkTypeDatabase extends CharacterizableDatabase {
+public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 	private static final int SIZE_MANUFACTURER_COLUMN = 64;
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
@@ -34,8 +34,8 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	protected String getEnityName() {
-		return ObjectEntities.LINKTYPE_ENTITY;
+	protected short getEntityCode() {		
+		return ObjectEntities.LINKTYPE_ENTITY_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
@@ -135,7 +135,7 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
       CableLinkType cableLinkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  cableLinkType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  cableLinkType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

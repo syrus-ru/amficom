@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.12 2005/05/24 13:25:05 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.13 2005/05/26 08:33:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.mshserver;
 
-import gnu.trove.TShortObjectHashMap;
-
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DomainDatabase;
@@ -17,10 +15,9 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.CollectorDatabase;
 import com.syrus.AMFICOM.map.DatabaseMapObjectLoader;
 import com.syrus.AMFICOM.map.MapDatabase;
@@ -55,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/05/24 13:25:05 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/26 08:33:36 $
  * @module msherver_v1
  */
 final class DatabaseContextSetup {
@@ -78,44 +75,40 @@ final class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
-		final TShortObjectHashMap entityCodeDatabaseMap = new TShortObjectHashMap();
+		DatabaseContext.registerDatabase(new CharacteristicDatabase());
+		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 
-		entityCodeDatabaseMap.put(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new CharacteristicDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, new CharacteristicTypeDatabase());
-
-		entityCodeDatabaseMap.put(ObjectEntities.USER_ENTITY_CODE, new UserDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.DOMAIN_ENTITY_CODE, new DomainDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SERVERPROCESS_ENTITY_CODE, new ServerProcessDatabase());
+		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new DomainDatabase());
+		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		
-		entityCodeDatabaseMap.put(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, new SiteNodeTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, new PhysicalLinkTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.COLLECTOR_ENTITY_CODE, new CollectorDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MAP_ENTITY_CODE, new MapDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MARK_ENTITY_CODE, new MarkDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.NODE_LINK_ENTITY_CODE, new NodeLinkDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, new PhysicalLinkDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SITE_NODE_ENTITY_CODE, new SiteNodeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, new TopologicalNodeDatabase());
+		DatabaseContext.registerDatabase(new SiteNodeTypeDatabase());
+		DatabaseContext.registerDatabase(new PhysicalLinkTypeDatabase());
+		DatabaseContext.registerDatabase(new CollectorDatabase());
+		DatabaseContext.registerDatabase(new MapDatabase());
+		DatabaseContext.registerDatabase(new MarkDatabase());
+		DatabaseContext.registerDatabase(new NodeLinkDatabase());
+		DatabaseContext.registerDatabase(new PhysicalLinkDatabase());
+		DatabaseContext.registerDatabase(new SiteNodeDatabase());
+		DatabaseContext.registerDatabase(new TopologicalNodeDatabase());
 
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new SchemeProtoGroupDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new SchemeProtoElementDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_ENTITY_CODE, new SchemeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new SchemeElementDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new SchemeOptimizeInfoDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new SchemeOptimizeInfoSwitchDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new SchemeOptimizeInfoRtuDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new SchemeMonitoringSolutionDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new SchemeDeviceDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_PORT_ENTITY_CODE, new SchemePortDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new SchemeCablePortDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_LINK_ENTITY_CODE, new SchemeLinkDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new SchemeCableLinkDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new SchemeCableThreadDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new CableChannelingItemDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SCHEME_PATH_ENTITY_CODE, new SchemePathDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new PathElementDatabase());
-
-		DatabaseContext.init(entityCodeDatabaseMap);
+		DatabaseContext.registerDatabase(new SchemeProtoGroupDatabase());
+		DatabaseContext.registerDatabase(new SchemeProtoElementDatabase());
+		DatabaseContext.registerDatabase(new SchemeDatabase());
+		DatabaseContext.registerDatabase(new SchemeElementDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoSwitchDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoRtuDatabase());
+		DatabaseContext.registerDatabase(new SchemeMonitoringSolutionDatabase());
+		DatabaseContext.registerDatabase(new SchemeDeviceDatabase());
+		DatabaseContext.registerDatabase(new SchemePortDatabase());
+		DatabaseContext.registerDatabase(new SchemeCablePortDatabase());
+		DatabaseContext.registerDatabase(new SchemeLinkDatabase());
+		DatabaseContext.registerDatabase(new SchemeCableLinkDatabase());
+		DatabaseContext.registerDatabase(new SchemeCableThreadDatabase());
+		DatabaseContext.registerDatabase(new CableChannelingItemDatabase());
+		DatabaseContext.registerDatabase(new SchemePathDatabase());
+		DatabaseContext.registerDatabase(new PathElementDatabase());
 	}
 
 	public static void initObjectPools() {
