@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.2 2005/05/26 07:16:05 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.3 2005/05/26 14:04:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:16:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 14:04:50 $
  * @module commonclient_v1
  */
 
@@ -430,12 +430,11 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 						Identifier userId = LoginManager.getUserId();
 
 						if (object instanceof CharacterizableObject) {
-							CharacteristicSort sort = ((CharacterizableObject) object).sort;
-							Identifier characterizedId = ((CharacterizableObject) object).characterizableId;
+							final Characterizable characterizable = ((CharacterizableObject) object).characterizable;
 
 							try {
 								Characteristic ch = Characteristic.createInstance(userId, type,
-										type.getDescription(), "", sort, "", characterizedId, true,
+										type.getDescription(), "", "", characterizable, true,
 										true);
 								List added = (List) CharacteristicsPanel.this.addedCharacteristics.get(object);
 								if (added == null) {

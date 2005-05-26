@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.32 2005/05/25 13:01:03 bass Exp $
+ * $Id: Characteristic.java,v 1.33 2005/05/26 14:04:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/05/25 13:01:03 $
+ * @version $Revision: 1.33 $, $Date: 2005/05/26 14:04:28 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -30,7 +30,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 	private CharacteristicType type;
 	private String name;
 	private String description;
-	private int sort;
 	private String value;
 	private Identifier characterizableId;
 	private boolean editable;
@@ -72,31 +71,29 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	Characteristic(Identifier id,
-						Identifier creatorId,
-						long version,
-						CharacteristicType type,
-						String name,
-						String description,
-						int sort,
-						String value,
-						Identifier characterizableId,
-						boolean editable,
-						boolean visible) {
-				super(id,
-						new Date(System.currentTimeMillis()),
-						new Date(System.currentTimeMillis()),
-						creatorId,
-						creatorId,
-						version);
-				this.type = type;
-				this.name = name;
-				this.description = description;
-				this.sort = sort;
-				this.value = value;
-				this.characterizableId = characterizableId;
+			Identifier creatorId,
+			long version,
+			CharacteristicType type,
+			String name,
+			String description,
+			String value,
+			Identifier characterizableId,
+			boolean editable,
+			boolean visible) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
+		this.type = type;
+		this.name = name;
+		this.description = description;
+		this.value = value;
+		this.characterizableId = characterizableId;
 
-				this.editable = editable;
-				this.visible = visible;
+		this.editable = editable;
+		this.visible = visible;
 	}
 	
 	/* (non-Javadoc)
@@ -116,41 +113,38 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * @param type see {@link CharacteristicType}
 	 * @param name
 	 * @param description
-	 * @param sort
 	 * @param value
-	 * @param characterizableId
+	 * @param characterizable
 	 * @throws CreateObjectException
 	 */
-	public static Characteristic createInstance(Identifier creatorId,
-												 CharacteristicType type,
-												 String name,
-												 String description,
-												 CharacteristicSort sort,
-												 String value,
-												 Identifier characterizableId,
-												 boolean editable,
-												 boolean visible) throws CreateObjectException {		
-
+	public static Characteristic createInstance(final Identifier creatorId,
+			final CharacteristicType type,
+			final String name,
+			final String description,
+			final String value,
+			final Characterizable characterizable,
+			final boolean editable,
+			final boolean visible) throws CreateObjectException {
+		assert characterizable != null : ErrorMessages.NON_NULL_EXPECTED;
 		try {
 			Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
-										creatorId,
-										0L,
-										type,
-										name,
-										description,
-										sort.value(),
-										value,
-										characterizableId,
-										editable,
-										visible);
-			
+					creatorId,
+					0L,
+					type,
+					name,
+					description,
+					value,
+					characterizable.getId(),
+					editable,
+					visible);
+
 			assert characteristic.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			
 			characteristic.changed = true;
 			return characteristic;
 		}
-		catch (IdentifierGenerationException e) {
-			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", e);
+		catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", ige);
 		}
 	}	
 
@@ -165,7 +159,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.type = (CharacteristicType)StorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
 		this.name = ct.name;
 		this.description = ct.description;
-		this.sort = ct.sort.value();
 		this.value = ct.value;
 		this.characterizableId = new Identifier(ct.characterizable_id);
 		this.editable = ct.is_editable;
@@ -181,14 +174,13 @@ public class Characteristic extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Characteristic_Transferable(super.getHeaderTransferable(),
-												 (Identifier_Transferable)this.type.getId().getTransferable(),
-												 this.name,
-												 this.description,
-												 CharacteristicSort.from_int(this.sort),
-												 (this.value != null) ? this.value : "",
-												 (Identifier_Transferable)this.characterizableId.getTransferable(),
-												 this.editable,
-												 this.visible);
+				(Identifier_Transferable)this.type.getId().getTransferable(),
+				this.name,
+				this.description,
+				(this.value != null) ? this.value : "",
+				(Identifier_Transferable)this.characterizableId.getTransferable(),
+				this.editable,
+				this.visible);
 	}
 
 	public boolean isEditable() {
@@ -272,24 +264,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 		super.changed = true;
 	}
 
-	public CharacteristicSort getSort() {
-		return CharacteristicSort.from_int(this.sort);
-	}
-	
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	protected void setSort0(CharacteristicSort sort) {
-		this.sort = sort.value();
-	}
-	
-	
-	public void setSort(CharacteristicSort sort){
-		this.setSort0(sort);
-		super.changed = true;
-	}
-	
-
 	public String getValue() {
 		return this.value;
 	}
@@ -314,27 +288,25 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												CharacteristicType type,
-												String name,
-												String description,
-												int sort,
-												String value,
-												Identifier characterizableId,
-												boolean editable,
-												boolean visible) {
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			CharacteristicType type,
+			String name,
+			String description,
+			String value,
+			Identifier characterizableId,
+			boolean editable,
+			boolean visible) {
 		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version);
+				modified,
+				creatorId,
+				modifierId,
+				version);
 		this.type = type;
 		this.name = name;
 		this.description = description;
-		this.sort = sort;
 		this.value = value;
 		this.characterizableId = characterizableId;
 		this.editable = editable;

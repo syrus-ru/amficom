@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.20 2005/05/18 14:59:46 bass Exp $
+ * $Id: LinkTypeController.java,v 1.21 2005/05/26 14:04:50 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,26 +31,24 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/05/18 14:59:46 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/26 14:04:50 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -236,14 +234,13 @@ public final class LinkTypeController extends AbstractLinkController
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -301,14 +298,13 @@ public final class LinkTypeController extends AbstractLinkController
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -386,14 +382,13 @@ public final class LinkTypeController extends AbstractLinkController
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -463,14 +458,13 @@ public final class LinkTypeController extends AbstractLinkController
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -541,14 +535,13 @@ public final class LinkTypeController extends AbstractLinkController
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -649,7 +642,7 @@ public final class LinkTypeController extends AbstractLinkController
 			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));
 
 			StorableObjectPool.putStorableObject(type);
-			MapStorableObjectPool.flush(true);
+			StorableObjectPool.flushGroup(ObjectGroupEntities.MAP_GROUP_CODE, true);
 		}
 		catch (Exception e)
 		{

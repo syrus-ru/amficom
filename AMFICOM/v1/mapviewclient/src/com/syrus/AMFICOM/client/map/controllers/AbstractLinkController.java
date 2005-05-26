@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.15 2005/05/18 14:59:46 bass Exp $
+ * $Id: AbstractLinkController.java,v 1.16 2005/05/26 14:04:50 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,15 +22,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -39,7 +38,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/05/18 14:59:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/26 14:04:50 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -107,7 +106,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 					dataType,
 					sort);
 			StorableObjectPool.putStorableObject(type);
-			GeneralStorableObjectPool.flush(true);
+			StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			return type;
 		}
 		catch (ApplicationException e)
@@ -160,14 +159,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
-						mapElement.getId(),
+						mapElement,
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -227,14 +225,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
-						mapElement.getId(),
+						mapElement,
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -315,14 +312,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
-						mapElement.getId(),
+						mapElement,
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -382,14 +378,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
-						mapElement.getId(),
+						mapElement,
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -449,14 +444,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINK,
 						"",
-						mapElement.getId(),
+						mapElement,
 						true,
 						true);
 				mapElement.addCharacteristic(ea);
 				StorableObjectPool.putStorableObject(ea);
-				GeneralStorableObjectPool.flush(true);
+				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
 			}
 			catch (CreateObjectException e)
 			{

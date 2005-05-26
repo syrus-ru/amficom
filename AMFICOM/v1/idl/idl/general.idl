@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.83 2005/05/25 14:51:32 arseniy Exp $
+ * $Id: general.idl,v 1.84 2005/05/26 14:07:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -180,7 +180,6 @@ module corba {
 		Identifier type_id;
 		WString128 name;
 		WString256 description;
-		CharacteristicSort sort;
 		WString256 value;
 		Identifier characterizable_id;
 		boolean is_editable;

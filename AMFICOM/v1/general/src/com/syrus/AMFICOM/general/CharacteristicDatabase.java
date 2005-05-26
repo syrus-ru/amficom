@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.34 2005/05/26 08:33:31 bass Exp $
+ * $Id: CharacteristicDatabase.java,v 1.35 2005/05/26 14:04:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/26 08:33:31 $
+ * @version $Revision: 1.35 $, $Date: 2005/05/26 14:04:28 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -41,7 +41,6 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 			+ CharacteristicWrapper.COLUMN_VALUE + COMMA
 			+ CharacteristicWrapper.COLUMN_EDITABLE + COMMA
 			+ CharacteristicWrapper.COLUMN_VISIBLE + COMMA
-			+ CharacteristicWrapper.COLUMN_SORT +	COMMA
 			+ CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID;
 		}
 		return columns;
@@ -55,7 +54,6 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -63,14 +61,12 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
-		int sort = characteristic.getSort().value();
 		String sql = DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE  + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue(), SIZE_VALUE_COLUMN) + APOSTOPHE + COMMA
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
-			+ sort + COMMA
 			+ DatabaseIdentifier.toSQLString(characteristic.getCharacterizableId());
 			/**
 			 * check sort support
@@ -81,14 +77,12 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
 			PreparedStatement preparedStatement, int startParameterNumber) throws IllegalDataException, SQLException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
-		int sort = characteristic.getSort().value();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, characteristic.getType().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getValue(), SIZE_VALUE_COLUMN);
 		preparedStatement.setInt( ++startParameterNumber, characteristic.isEditable()? 1:0);
 		preparedStatement.setInt( ++startParameterNumber, characteristic.isVisible()? 1:0);
-		preparedStatement.setInt( ++startParameterNumber, sort);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, characteristic.getCharacterizableId());
 		return startParameterNumber;
 	}	
@@ -108,19 +102,17 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 		Characteristic characteristic = (storableObject == null) ? null : this.fromStorableObject(storableObject);
 		if (characteristic == null) {
 			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-																null,
-																0L,
-																null,
-																null,
-																null,
-																0,
-																null,
-																null,
-																false,
-																false);			
+					null,
+					0L,
+					null,
+					null,
+					null,
+					null,
+					null,
+					false,
+					false);			
 		}
 
-		int sort = resultSet.getInt(CharacteristicWrapper.COLUMN_SORT);
 		Identifier characterizableId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID);
 
 		CharacteristicType characteristicType;
@@ -143,7 +135,6 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 									 characteristicType,
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-									 sort,
 									 value != null ? value : "",
 									 characterizableId,
 									 (resultSet.getInt(CharacteristicWrapper.COLUMN_EDITABLE) == 0) ? false : true,
