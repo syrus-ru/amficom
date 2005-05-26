@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.9 2005/05/25 13:01:02 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.10 2005/05/26 12:01:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/25 13:01:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/05/26 12:01:59 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends MServerPOA {
@@ -135,6 +135,9 @@ abstract class MServerMeasurementReceive extends MServerPOA {
 		}
 		catch (CommunicationException ce) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
+		}
+		catch (AMFICOMRemoteException are) {
+			throw are;
 		}
 		catch (Throwable throwable) {
 			Log.errorException(throwable);
