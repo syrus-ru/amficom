@@ -203,16 +203,9 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
         int n1 = sre == null ? 0 : sre.getBegin();
         int n2 = sre == null ? mt.getLength() - 1
             : sre.getEnd() - (avoidLastPoint ? 1 : 0);
-        if ((n1 <= end) && (n2 >= start))
-        {
-            int iFrom = Math.max(0, n1 - start);
-            int iTo = Math.min(end, n2) - start;
-            if (iTo - iFrom >= 0)
-            {
-                double[] vArr = mt.getYArrayZeroPad(iFrom + start, iTo - iFrom + 1);
-                draw_y_curve(g, vArr, 0, iFrom, iTo - iFrom);
-            }
-        }
+        ModelTraceRange subrange =
+            new ModelTraceRangeImplMTRSubrange(mt, n1, n2, true); 
+        drawModelCurve(g, subrange, false);
 	}
 
     protected void drawModelCurve(Graphics g, ModelTraceRange mtr,
