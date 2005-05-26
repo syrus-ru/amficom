@@ -15,7 +15,7 @@ $(call checkenve,ORACLE_HOME)
 
 
 APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)

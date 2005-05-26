@@ -19,7 +19,7 @@ APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/eve
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
-EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)

@@ -15,7 +15,7 @@ $(call checkenve,IDLJ)
 $(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java)

@@ -14,7 +14,7 @@ $(call checkenve,JAVA_HOME)
 
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java)

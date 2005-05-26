@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.21 2005/05/20 21:13:01 arseniy Exp $
+# $Id: Makefile,v 1.22 2005/05/26 12:31:41 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -27,7 +27,7 @@ DIRS_TO_SCRUB = \
 SRCDIRS_TO_SCRUB = $(foreach dir,$(DIRS_TO_SCRUB),$(SRCDIR)/$(dir))
 
 APPCLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove-1.1b4/lib/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
