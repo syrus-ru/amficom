@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.75 2005/05/02 09:28:28 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.76 2005/05/26 13:35:52 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.75 $, $Date: 2005/05/02 09:28:28 $
+ * @version $Revision: 1.76 $, $Date: 2005/05/26 13:35:52 $
  * @module
  */
 public class ModelTraceManager
@@ -686,7 +686,7 @@ implements DataStreamable, Cloneable
                         getEventRangeOnThresholdCurve(nEvent, key);
                     mtrs[key] =
                         new ModelTraceRangeImplMTRSubrange(getThresholdMT(key),
-                            range.getBegin(), range.getEnd());
+                            range.getBegin(), range.getEnd(), false);
                 }
             }
         }
