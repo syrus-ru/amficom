@@ -1,5 +1,5 @@
-/**
- * $Id: Selection.java,v 1.10 2005/05/25 17:13:22 krupenn Exp $
+/*-
+ * $Id: Selection.java,v 1.11 2005/05/26 06:13:55 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/05/25 17:13:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/05/26 06:13:55 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -76,13 +76,6 @@ public final class Selection implements MapElement {
 	 * Выбраны только линии. Используется для работы с колодцами.
 	 */
 	private boolean physicalLinkSelection = true;
-
-	/**
-	 * Конструктор
-	 */
-	public Selection() {
-		// empty
-	}
 
 	/**
 	 * {@inheritDoc}
