@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditor.java,v 1.2 2005/04/28 16:02:36 stas Exp $
+ * $Id: SchemeEditor.java,v 1.3 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.client_.scheme;
 
 import java.awt.Toolkit;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.client_.general.ui_.SplashScreen;
+import com.syrus.AMFICOM.client.UI.SplashScreen;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/28 16:02:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 

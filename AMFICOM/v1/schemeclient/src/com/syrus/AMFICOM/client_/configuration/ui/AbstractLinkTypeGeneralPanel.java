@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.8 2005/04/22 07:32:50 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.9 2005/05/26 07:40:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,16 +13,16 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.Constants;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/26 07:40:50 $
  * @module schemeclient_v1
  */
 
@@ -223,7 +223,7 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 			this.linkType.setManufacturer(this.tfManufacturerText.getText());
 			this.linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
 			
-			this.aContext.getDispatcher().notify(new SchemeEvent(this, this.linkType, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

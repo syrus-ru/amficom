@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeGeneralPanel.java,v 1.3 2005/05/18 14:59:43 bass Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/18 14:59:43 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -36,7 +36,7 @@ public class CableLinkTypeGeneralPanel extends AbstractLinkTypeGeneralPanel {
 			if (linkType == null) {
 				try {
 					linkType = SchemeObjectsFactory.createCableLinkType(tfNameText.getText());
-					aContext.getDispatcher().notify(new SchemeEvent(this, linkType, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, linkType, SchemeEvent.CREATE_OBJECT));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);

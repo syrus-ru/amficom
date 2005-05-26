@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.4 2005/04/28 16:02:36 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.5 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,9 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.client_.general.ui_.AbstractPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -25,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/04/28 16:02:36 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -35,7 +36,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 	ApplicationContext aContext;
 
 	public CreateTopLevelSchemeAction(UgoTabbedPane sourcePane, AbstractPropertiesFrame targetFrame, ApplicationContext aContext) {
-		super(Constants.createTopLevelElementKey);
+		super(Constants.CREATE_UGO);
 		this.sourcePane = sourcePane;
 		this.targetFrame = targetFrame;
 		this.aContext = aContext;

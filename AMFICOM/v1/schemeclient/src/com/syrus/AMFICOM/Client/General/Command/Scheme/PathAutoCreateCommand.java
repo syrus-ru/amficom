@@ -2,18 +2,12 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-public class PathAutoCreateCommand extends VoidCommand
+
+public class PathAutoCreateCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+/*	ApplicationContext aContext;
 	UgoPanel panel;
 
 	public PathAutoCreateCommand(ApplicationContext aContext, UgoPanel panel)
@@ -34,8 +28,8 @@ public class PathAutoCreateCommand extends VoidCommand
 
 	public void execute()
 	{
-		Scheme scheme = panel.getGraph().getScheme();
-		SchemePath path = panel.getGraph().getCurrentPath();
+		Scheme scheme = panel.getSchemeResource().getScheme();
+		SchemePath path = panel.getSchemeResource().getSchemePath();
 		if (path.getStartSchemeElement() == null ||
 				path.getEndSchemeElement() == null)
 		{
@@ -48,6 +42,6 @@ public class PathAutoCreateCommand extends VoidCommand
 		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 		PathBuilder.getInstance(user_id).explore(scheme, path);
 		aContext.getDispatcher().notify(new SchemeNavigateEvent(new SchemePath[] {path}, SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT, true));
-	}
+	}*/
 }
 

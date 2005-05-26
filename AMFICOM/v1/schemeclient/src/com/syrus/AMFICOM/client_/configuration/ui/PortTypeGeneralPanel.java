@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.6 2005/04/18 10:53:40 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.7 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,21 +13,19 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/04/18 10:53:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -167,7 +165,6 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 //		pnGeneralPanel.setBackground(Color.WHITE);
 //		pnPanel0.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
-		cmbSortCombo.setFont(UIGeneralStorage.DIALOG_FONT);
 		
 		addToUndoableListener(tfNameText);
 		addToUndoableListener(cmbSortCombo);
@@ -210,7 +207,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 			if (portType == null) {
 				try {
 					portType = SchemeObjectsFactory.createPortType(tfNameText.getText());
-					aContext.getDispatcher().notify(new SchemeEvent(this, portType, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.CREATE_OBJECT));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
@@ -227,7 +224,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 			else if (cmbSortCombo.getSelectedItem().equals(sorts[2]))
 				portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
 			
-			aContext.getDispatcher().notify(new SchemeEvent(this, portType, SchemeEvent.UPDATE_OBJECT));
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

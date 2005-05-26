@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyStorableObjectEditor.java,v 1.3 2005/04/27 08:47:29 stas Exp $
+ * $Id: EmptyStorableObjectEditor.java,v 1.4 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,12 @@ import java.awt.Color;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/27 08:47:29 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 

@@ -4,9 +4,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SaveComponentDialog;
+import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
@@ -16,7 +15,7 @@ import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
-public class ComponentSaveCommand extends VoidCommand {
+public class ComponentSaveCommand extends AbstractCommand {
 	ApplicationContext aContext;
 	UgoTabbedPane cellPane;
 	UgoTabbedPane ugoPane;

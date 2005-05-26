@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.4 2005/05/18 14:59:44 bass Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.5 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -27,7 +27,7 @@ public class SchemeCableLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel 
 	protected SchemeCableLinkGeneralPanel(SchemeCableLink schemeLink) {
 		super(schemeLink);
 	}
-	
+
 	protected SchemeCableLinkGeneralPanel () {
 		super();
 	}
@@ -60,7 +60,7 @@ public class SchemeCableLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel 
 					}
 				}
 			} else if (link != null) {
-				ConfigurationStorableObjectPool.delete(link.getId());
+				StorableObjectPool.delete(link.getId());
 				schemeLink.setLink(null);
 			}
 			super.commitChanges();

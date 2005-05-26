@@ -4,8 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;

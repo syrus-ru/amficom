@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: UgoPanel.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.*;
 import java.awt.print.*;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import javax.swing.event.UndoableEditEvent;
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
@@ -29,11 +31,11 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
-public class UgoPanel implements Printable, OperationListener {
+public class UgoPanel implements Printable, PropertyChangeListener {
 	protected ApplicationContext aContext;
 	protected SchemeGraph graph;
 	protected SchemeResource schemeResource;
@@ -42,8 +44,8 @@ public class UgoPanel implements Printable, OperationListener {
 		public void undoableEditHappened(UndoableEditEvent e) {
 			super.undoableEditHappened(e);
 			((SchemeMarqueeHandler)graph.getMarqueeHandler()).updateHistoryButtons(this);
-			aContext.getDispatcher().notify(new SchemeEvent(this, graph, 
-					SchemeEvent.SCHEME_CHANGED));
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, graph, 
+					SchemeEvent.SCHEME_CHANGED), false);
 		}
 	};
 	
@@ -59,11 +61,11 @@ public class UgoPanel implements Printable, OperationListener {
 	
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
-			this.aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
+			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
 		}
 		if (aContext != null) {
 			this.aContext = aContext;
-			this.aContext.getDispatcher().register(this, SchemeEvent.TYPE);
+			this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
 			this.graph.setContext(aContext);
 		}
 	}
@@ -119,9 +121,9 @@ public class UgoPanel implements Printable, OperationListener {
 		}
 	}
 	
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals(SchemeEvent.TYPE)) {
-			SchemeEvent see = (SchemeEvent) ae;
+	public void propertyChange(PropertyChangeEvent ev) {
+		if (ev.getPropertyName().equals(SchemeEvent.TYPE)) {
+			SchemeEvent see = (SchemeEvent)ev;
 			if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
 				Object obj = see.getObject();
 				if (obj instanceof SchemeElement) {

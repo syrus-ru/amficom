@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.3 2005/05/18 14:59:44 bass Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.4 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,21 +9,15 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -58,10 +52,8 @@ public class SchemeLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel {
 			if (linkBox.isSelected()) {
 				if (link == null) {
 					try {
-						Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-								getAccessIdentifier().user_id);
-						Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-								getAccessIdentifier().domain_id);
+						Identifier userId = LoginManager.getUserId();
+						Identifier domainId = LoginManager.getDomainId();
 						link = Link.createInstance(userId, domainId, schemeLink.getName(), schemeLink.getDescription(), schemeLink.getAbstractLinkType(), "", "", "", LinkSort.LINKSORT_LINK, 0, "");
 						schemeLink.setLink(link);
 					} catch (CreateObjectException e) {
@@ -69,7 +61,7 @@ public class SchemeLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel {
 					}
 				}
 			} else if (link != null) {
-				ConfigurationStorableObjectPool.delete(link.getId());
+				StorableObjectPool.delete(link.getId());
 				schemeLink.setLink(null);
 			}
 			super.commitChanges();

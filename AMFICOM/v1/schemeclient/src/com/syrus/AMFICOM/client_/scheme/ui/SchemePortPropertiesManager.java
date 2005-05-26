@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortPropertiesManager.java,v 1.2 2005/04/27 08:47:29 stas Exp $
+ * $Id: SchemePortPropertiesManager.java,v 1.3 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.SchemePortController;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.SchemePortWrapper;
+
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/27 08:47:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -67,8 +69,8 @@ public class SchemePortPropertiesManager implements VisualManager {
 	 * @return SchemeCablePortController
 	 * @see VisualManager#getController()
 	 */
-	public ObjectResourceController getController() {
-		return SchemePortController.getInstance();
+	public StorableObjectWrapper getController() {
+		return SchemePortWrapper.getInstance();
 	}
 	
 	/**

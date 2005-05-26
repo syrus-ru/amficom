@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.3 2005/04/28 16:02:36 stas Exp $
+ * $Id: Constants.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,12 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.*;
-import java.awt.Dimension;
 
 import javax.swing.*;
-import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -35,99 +33,81 @@ public interface Constants {
 	public static final int VERTICAL = 1;
 
 	// list of tools
-	public static final String marqueeTool = "marqueeTool";
-	public static final String rectangleTool = "rectangleTool";
-	public static final String deviceTool = "deviceTool";
-	public static final String linkTool = "edgeTool";
-	public static final String cableTool = "cableTool";
-	public static final String lineTool = "lineTool";
-	public static final String textTool = "textTool";
-	public static final String ellipseTool = "ellipseTool";
-	public static final String iconTool = "iconTool";
-	public static final String zoomTool = "zoomTool";
-	public static final String portTool = "portTool";
+	public static final String MARQUEE = "marqueeTool"; //$NON-NLS-1$
+//	public static final String rectangleTool = "rectangleTool"; //$NON-NLS-1$
+//	public static final String deviceTool = "deviceTool"; //$NON-NLS-1$
+//	public static final String linkTool = "edgeTool"; //$NON-NLS-1$
+//	public static final String cableTool = "cableTool"; //$NON-NLS-1$
+//	public static final String lineTool = "lineTool"; //$NON-NLS-1$
+//	public static final String textTool = "textTool"; //$NON-NLS-1$
+//	public static final String ellipseTool = "ellipseTool"; //$NON-NLS-1$
+//	public static final String iconTool = "iconTool"; //$NON-NLS-1$
+//	public static final String zoomTool = "zoomTool"; //$NON-NLS-1$
+//	public static final String portTool = "portTool"; //$NON-NLS-1$
 	
-	public static final Icon ICON_MARQUEE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pointer.gif"));
-	public static final Icon ICON_DEVICE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif"));
-	public static final Icon ICON_RECTANGLE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rectangle.gif"));
-	public static final Icon ICON_ELLIPSE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/ellipse.gif"));
-	public static final Icon ICON_TEXT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/text.gif"));
-	public static final Icon ICON_LINE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/line.gif"));
-	public static final Icon ICON_CABLE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/thick_edge.gif"));
-	public static final Icon ICON_LINK = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/edge.gif"));
-	public static final Icon ICON_ZOOM_IN = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_in.gif"));
-	public static final Icon ICON_ZOOM_OUT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_out.gif"));
-	public static final Icon ICON_ZOOM_NORMAL = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_actual.gif"));
-	public static final Icon ICON_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/port.gif"));
-	public static final Icon ICON_CABLE_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cableport.gif"));
-	public static final Icon ICON_GROUP = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif"));
-	public static final Icon ICON_UNGROUP = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/ungroup.gif"));
-	public static final Icon ICON_UNDO = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/undo.gif"));
-	public static final Icon ICON_REDO = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/redo.gif"));
-	public static final Icon ICON_DELETE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif"));
-	public static final Icon ICON_CREATE_UGO = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/component_ugo.gif"));
-	public static final Icon ICON_HIERARCHY_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hierarchy_port.gif"));
+	public static final Icon ICON_MARQUEE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pointer.gif")); //$NON-NLS-1$
+	public static final Icon ICON_DEVICE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")); //$NON-NLS-1$
+	public static final Icon ICON_RECTANGLE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rectangle.gif")); //$NON-NLS-1$
+	public static final Icon ICON_ELLIPSE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/ellipse.gif")); //$NON-NLS-1$
+	public static final Icon ICON_TEXT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/text.gif")); //$NON-NLS-1$
+	public static final Icon ICON_LINE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/line.gif")); //$NON-NLS-1$
+	public static final Icon ICON_CABLE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/thick_edge.gif")); //$NON-NLS-1$
+	public static final Icon ICON_LINK = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/edge.gif")); //$NON-NLS-1$
+	public static final Icon ICON_ZOOM_IN = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_in.gif")); //$NON-NLS-1$
+	public static final Icon ICON_ZOOM_OUT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_out.gif")); //$NON-NLS-1$
+	public static final Icon ICON_ZOOM_NORMAL = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_actual.gif")); //$NON-NLS-1$
+	public static final Icon ICON_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/port.gif")); //$NON-NLS-1$
+	public static final Icon ICON_CABLE_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cableport.gif")); //$NON-NLS-1$
+	public static final Icon ICON_GROUP = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif")); //$NON-NLS-1$
+	public static final Icon ICON_UNGROUP = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/ungroup.gif")); //$NON-NLS-1$
+	public static final Icon ICON_UNDO = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/undo.gif")); //$NON-NLS-1$
+	public static final Icon ICON_REDO = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/redo.gif")); //$NON-NLS-1$
+	public static final Icon ICON_DELETE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif")); //$NON-NLS-1$
+	public static final Icon ICON_CREATE_UGO = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/component_ugo.gif")); //$NON-NLS-1$
+	public static final Icon ICON_HIERARCHY_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hierarchy_port.gif")); //$NON-NLS-1$
+	public static final Icon ICON_SCHEME_SIZE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_size.gif")); //$NON-NLS-1$
+	public static final Icon ICON_LINK_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")); //$NON-NLS-1$
+	public static final Icon ICON_PATH_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")); //$NON-NLS-1$
+	public static final Icon ICON_TOP_LEVEL_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")); //$NON-NLS-1$
 	
-	public static final String TEXT_DEVICE = "Device";
-	public static final String TEXT_RECTANGLE = "Rectangle";
-	public static final String TEXT_ELLIPSE = "Ellipse";
-	public static final String TEXT_TEXT = "Text";
-	public static final String TEXT_ICON = "Icon";
-	public static final String TEXT_LINE = "Line";
-	public static final String TEXT_CABLE = "Cable";
-	public static final String TEXT_LINK = "Link";
-	public static final String TEXT_ZOOM = "Zoom";
-	public static final String TEXT_ZOOM_IN = "Zoom In";
-	public static final String TEXT_ZOOM_OUT = "Zoom Out";
-	public static final String TEXT_ZOOM_NORMAL = "Zoom Normal";
-	public static final String TEXT_PORT = "Port";
-	public static final String TEXT_CABLE_PORT = "Cable port";
-	public static final String TEXT_GROUP = "Create component";
-	public static final String TEXT_UNGROUP = "Strip component";
-	public static final String TEXT_UNDO = "Undo";
-	public static final String TEXT_REDO = "Redo";
-	public static final String TEXT_DELETE = "Delete";
-	public static final String TEXT_CREATE_UGO = "Create symbolic notation";
-	public static final String TEXT_HIERARCHY_PORT = "Hierarchy port";
-		
-	public static final String COMPONENT = "Component";
-	public static final String DEVICE = "device";
-	public static final String ERROR = "Error";
-	public static final String ERROR_COMPONENT_NOT_FOUND = "Не найдено ни одного компонента";
-	public static final String ERROR_HIERARCHY_PORT_NOT_FOUND = "Не найдено ни одного иерархического порта";
-	public static final String ERROR_PORTTYPE_NOT_FOUND = "Пожалуйста создайте сначала тип порта";
+	public static final String RECTANGLE = "rectangle"; //$NON-NLS-1$
+	public static final String ELLIPSE = "ellipse"; //$NON-NLS-1$
+	public static final String TEXT = "text"; //$NON-NLS-1$
+	public static final String ICON = "icon"; //$NON-NLS-1$
+	public static final String LINE = "line"; //$NON-NLS-1$
+	public static final String CABLE = "cable"; //$NON-NLS-1$
+	public static final String LINK = "link";  //$NON-NLS-1$
+	
+	public static final String DEVICE = "device"; //$NON-NLS-1$
+	
+	public static final String ERROR = "error"; //$NON-NLS-1$
+	public static final String ERROR_COMPONENT_NOT_FOUND = "error_component_not_found"; //$NON-NLS-1$
+	public static final String ERROR_HIERARCHY_PORT_NOT_FOUND = "error_hierarchy_port_not_found"; //$NON-NLS-1$
+	public static final String ERROR_PORTTYPE_NOT_FOUND = "error_porttype_not_found";//$NON-NLS-1$
+	public static final String ERROR_GROUPED_DEVICE = "error_grouped_device";//$NON-NLS-1$
 	
 	// list of button keys
-	public static final String deleteKey = "deleteKey";
-	public static final String groupKey = "groupKey";
-	public static final String groupSEKey = "groupSEKey";
-	public static final String ungroupKey = "ungroupKey";
-	public static final String hierarchyUpKey = "hierarchyUpKey";
+	public static final String DELETE = "delete"; //$NON-NLS-1$
+	public static final String GROUP = "group"; //$NON-NLS-1$
+	public static final String UNGROUP = "ungroup"; //$NON-NLS-1$
 
-	public static final String createTopLevelElementKey = "createTopLevelElementKey";
-	public static final String createTopLevelSchemeKey = "createTopLevelSchemeKey";
-	public static final String openLibraryKey = "openLibraryKey";
-	public static final String saveLibraryKey = "saveLibraryKey";
-	public static final String renameLibraryKey = "renameLibraryKey";
-	public static final String closeLibraryKey = "closeLibraryKey";
-	public static final String saveKey = "saveKey";
-	public static final String saveAsKey = "saveAsKey";
+	public static final String CREATE_UGO = "create_ugo"; //$NON-NLS-1$
 
-	public static final String portOutKey = "portTool1";
-	public static final String portInKey = "portTool2";
-	public static final String blockPortKey = "blockPortKey";
-	public static final String undoKey = "undo";
-	public static final String redoKey = "redo";
-	public static final String zoomInKey = "zoomin";
-	public static final String zoomOutKey = "zoomout";
-	public static final String zoomActualKey = "zoomactual";
-	public static final String separator = "separator";
-	public static final String backgroundSize = "backgroundSize";
+	public static final String PORT = "port"; //$NON-NLS-1$
+	public static final String CABLE_PORT = "cable_port"; //$NON-NLS-1$
+	public static final String BLOCK_PORT = "block_port"; //$NON-NLS-1$
+	public static final String UNDO = "undo"; //$NON-NLS-1$
+	public static final String REDO = "redo"; //$NON-NLS-1$
+	public static final String ZOOM_IN = "zoom_in"; //$NON-NLS-1$
+	public static final String ZOOM_OUT = "zoom_out"; //$NON-NLS-1$
+	public static final String ZOOM_ACTUAL = "zoom_actual"; //$NON-NLS-1$
+	public static final String SEPARATOR = "separator";  //$NON-NLS-1$
+	public static final String BACKGROUND_SIZE = "background";  //$NON-NLS-1$
 
 	public static final int CREATING_PATH_MODE = 3;
 	public static final int NORMAL = 0;
 
-	public static final String PATH_MODE = "pathmode";
-	public static final String LINK_MODE = "linkmode";
-	public static final String TOP_LEVEL_SCHEME_MODE = "toplevelmode";
+	public static final String PATH_MODE = "path_mode"; //$NON-NLS-1$
+	public static final String LINK_MODE = "link_mode"; //$NON-NLS-1$
+	public static final String TOP_LEVEL_MODE = "top_level_mode"; //$NON-NLS-1$
 }

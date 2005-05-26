@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: ElementsPanel.java,v 1.3 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,17 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
+import java.beans.PropertyChangeEvent;
+
 import com.jgraph.graph.GraphModel;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -33,11 +35,11 @@ public class ElementsPanel extends UgoPanel {
 
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
-			this.aContext.getDispatcher().unregister(this, ObjectSelectedEvent.TYPE);
+			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 		super.setContext(aContext);
 		if (aContext != null) {
-			this.aContext.getDispatcher().register(this, ObjectSelectedEvent.TYPE);
+			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 	}
 
@@ -56,8 +58,8 @@ public class ElementsPanel extends UgoPanel {
 		graph.setEnabled(true);
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals(ObjectSelectedEvent.TYPE)) {
+	public void propertyChange(PropertyChangeEvent ae) {
+		if (ae.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) ae;
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				SchemePath path = (SchemePath)ev.getSelectedObject();
@@ -116,6 +118,6 @@ public class ElementsPanel extends UgoPanel {
 			if (see.SCHEME_UGO_CREATE)
 				return;
 		}*/
-		super.operationPerformed(ae);
+		super.propertyChange(ae);
 	}
 }

@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.*;
 
-public class PathSetStartCommand extends VoidCommand
+public class PathSetStartCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeTabbedPane pane;
 
 	public PathSetStartCommand(ApplicationContext aContext, SchemeTabbedPane pane)
@@ -23,12 +22,12 @@ public class PathSetStartCommand extends VoidCommand
 
 	public void execute()
 	{
-		SchemeGraph graph = pane.getPanel().getGraph();
+		SchemeGraph graph = pane.getCurrentPanel().getGraph();
 		aContext.getDispatcher().notify(new CreatePathEvent(
 				graph,
 				graph.getSelectionCells(),
 				CreatePathEvent.SET_START_EVENT));
-	}
+	}*/
 }
 
 

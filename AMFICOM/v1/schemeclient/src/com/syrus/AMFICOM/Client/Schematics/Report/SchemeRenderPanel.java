@@ -1,5 +1,5 @@
 package com.syrus.AMFICOM.Client.Schematics.Report;
-
+/*
 import java.awt.*;
 import java.awt.event.*;
 
@@ -30,7 +30,7 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 //			double scaleValue = this.getScale(bounds);
 
 /*			double formKoeff = ((double)((bounds.width + 2 * bounds.x + 10)) / ((double)(bounds.height + 2 * bounds.y + 20)));
-			this.setPreferredSize(new Dimension(reportsRO.width,(int)(reportsRO.width / formKoeff)));*/
+			this.setPreferredSize(new Dimension(reportsRO.width,(int)(reportsRO.width / formKoeff)));*
 
 			srpResized();
 		}
@@ -69,7 +69,7 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 		int newHeight = (int) ((bounds.height + 2 * bounds.y) * scaleValue);
 
 		/*		reportsRO.rendererPanel.setPreferredSize(new Dimension(curWidth, newHeight));
-		 reportsRO.rendererPanel.setSize(new Dimension(curWidth, newHeight));*/
+		 reportsRO.rendererPanel.setSize(new Dimension(curWidth, newHeight));*
 		this.setSize(new Dimension(curWidth, newHeight));
 		this.setPreferredSize(this.getSize());
 		sGraph.setActualSize(new Dimension(curWidth - 15, newHeight - 15));
@@ -91,7 +91,7 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 		return (curWidth / (bounds.width + 2 * bounds.x));
 	}
 
-/*	public void paint (Graphics g)
+*	public void paint (Graphics g)
 	{
 		g.setColor(Color.white);
 //		Dimension prefSize = reportsRO.rendererPanel.getPreferredSize();
@@ -113,6 +113,6 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 
 		g.setClip(0,0,bounds.x + bounds.width,bounds.y + bounds.height);
 		schemeGraph.getUI().paint(g,schemeGraph);
-	}*/
-}
+	}
+}*/
 

@@ -2,12 +2,12 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
-public class ComponentNewCommand extends VoidCommand {
+public class ComponentNewCommand extends AbstractCommand {
 	ApplicationContext aContext;
 	UgoTabbedPane cellPane;
 	UgoTabbedPane ugoPane;

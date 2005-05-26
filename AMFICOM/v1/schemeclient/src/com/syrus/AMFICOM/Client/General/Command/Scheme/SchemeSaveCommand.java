@@ -4,17 +4,14 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
-public class SchemeSaveCommand extends VoidCommand {
+public class SchemeSaveCommand extends AbstractCommand {
 	public static final int CANCEL = 0;
 	public static final int OK = 1;
 	public int ret_code = CANCEL;
@@ -86,6 +83,7 @@ public class SchemeSaveCommand extends VoidCommand {
 				return;
 		}
 
+		/*
 		SaveDialog sd;
 		while (true) {
 			sd = new SaveDialog(aContext, aContext.getDispatcher(),
@@ -126,6 +124,6 @@ public class SchemeSaveCommand extends VoidCommand {
 			ret_code = OK;
 		} catch (ApplicationException ex) {
 			Log.errorException(ex);
-		}
+		}*/
 	}
 }

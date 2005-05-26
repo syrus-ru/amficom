@@ -5,7 +5,7 @@ import java.util.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.AMTReport;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 
 public class CreateSchemeReportCommand extends VoidCommand
 {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.3 2005/04/18 10:57:46 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.4 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -27,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/18 10:57:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -45,7 +46,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	JButton symbolBut = new JButton();
 	JCheckBox typeBox = new JCheckBox(LangModelScheme.getString(Constants.EQUIPMENT_TYPE));
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
-	ObjComboBox typeCombo = new ObjComboBox(EquipmentTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
+	WrapperedComboBox typeCombo = new WrapperedComboBox(EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER));
 	JTextField manufacturerText = new JTextField();
 	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER_CODE));
@@ -71,7 +72,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField latText = new JTextField();
 	JCheckBox kisBox = new JCheckBox(LangModelScheme.getString(Constants.KIS));
 	JLabel kisLabel = new JLabel(LangModelScheme.getString(Constants.KIS));
-	ObjComboBox kisCombo = new ObjComboBox(KISController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
+	WrapperedComboBox kisCombo = new WrapperedComboBox(KISWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel kisAddrLabel = new JLabel(LangModelScheme.getString(Constants.ADDRESS));
 	JTextField kisAddrText = new JTextField();
 	JLabel kisPortLabel = new JLabel(LangModelScheme.getString(Constants.PORT));
@@ -696,13 +697,13 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
 			try {
-				typeCombo.addElements(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			condition = new EquivalentCondition(ObjectEntities.KIS_ENTITY_CODE);
 			try {
-				kisCombo.addElements(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+				kisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
@@ -770,7 +771,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			}
 			else {
 				try {
-					schemeElement.setSymbol((BitmapImageResource)ResourceStorableObjectPool.getStorableObject(imageId, true));
+					schemeElement.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(imageId, true));
 				} catch (ApplicationException e) {
 					Log.errorException(e);
 				}
@@ -818,7 +819,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			}
 			else if (eq != null) {
-				ConfigurationStorableObjectPool.delete(eq.getId());
+				StorableObjectPool.delete(eq.getId());
 				schemeElement.setEquipment(null);
 			}
 
@@ -835,7 +836,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			else {
 				schemeElement.setKis(null);
 			}
-			aContext.getDispatcher().notify(new SchemeEvent(this, schemeElement, SchemeEvent.UPDATE_OBJECT));
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeElement, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

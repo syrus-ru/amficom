@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevicePropertiesManager.java,v 1.3 2005/04/27 08:47:29 stas Exp $
+ * $Id: SchemeDevicePropertiesManager.java,v 1.4 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,21 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.SchemeDeviceWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/27 08:47:29 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
 public class SchemeDevicePropertiesManager implements VisualManager {
 	private static SchemeDevicePropertiesManager instance;
-	private EmptyStorableObjectEditor generalPane;
+	private SchemeDeviceGeneralPanel generalPane;
 	private EmptyStorableObjectEditor charPane;
 	private EmptyStorableObjectEditor emptyPanel;
 	
@@ -36,6 +38,9 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	}
 
 	public void setContext(ApplicationContext aContext) {
+		if (generalPane == null)
+			generalPane = new SchemeDeviceGeneralPanel();
+		generalPane.setContext(aContext);
 	}
 	
 	/**
@@ -43,8 +48,6 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		if (generalPane == null)
-			generalPane = new EmptyStorableObjectEditor();
 		return generalPane;
 	}
 
@@ -59,11 +62,11 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	}
 
 	/**
-	 * @return null
+	 * @return SchemeDeviceController
 	 * @see VisualManager#getController()
 	 */
-	public ObjectResourceController getController() {
-		return null;
+	public StorableObjectWrapper getController() {
+		return SchemeDeviceWrapper.getInstance();
 	}
 	
 	/**

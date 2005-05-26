@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.1 2005/04/22 07:31:59 stas Exp $
+ * $Id: Constants.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import javax.swing.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/22 07:31:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -26,6 +26,31 @@ public interface Constants {
 			Color.ORANGE, Color.PINK, Color.YELLOW, Color.BLACK };
 	public static final Dimension DIMENSION_BUTTON = new Dimension(24, 24);
 	public static final Dimension DIMENSION_TEXTAREA = new Dimension(100, 30);
+	
+	// in pixels (coarse)
+//	public static final Dimension A0 = new Dimension (3360, 4752);
+//	public static final Dimension A1 = new Dimension (3360, 2376);
+//	public static final Dimension A2 = new Dimension (1680, 2376);
+//	public static final Dimension A3 = new Dimension (1680, 1188);
+//	public static final Dimension A4 = new Dimension (840, 1188);
+	
+	// in millimeters
+	public static final Integer[] WIDTHS = new Integer[] {
+		new Integer(210), // A4
+		new Integer(420), // A3
+		new Integer(420), // A2
+		new Integer(840), // A1
+		new Integer(840)  // A0 
+	};
+	public static final Integer[] HEIGHTS = new Integer[] {
+		new Integer(297), // A4
+		new Integer(297), // A3
+		new Integer(594), // A2
+		new Integer(594), // A1
+		new Integer(1188) // A0 
+	};
+	public static final String[] SIZES = new String[] { "size_a4", "size_a3", //$NON-NLS-1$//$NON-NLS-2$
+			"size_a2", "size_a1", "size_a0", "size_custom" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 	
 	public static final int _OK = 1;
 	public static final int _CANCEL = 0;
@@ -57,7 +82,12 @@ public interface Constants {
 	public static final String SCHEME_PROTO_ELEMENT = "scheme_proto_element"; //$NON-NLS-1$
 	public static final String SCHEME_PROTO_GROUP = "scheme_proto_group"; //$NON-NLS-1$
 	public static final String SCHEME_TYPE = "scheme_type"; //$NON-NLS-1$
-		
+	public static final String SCHEME_KIND = "scheme_kind"; //$NON-NLS-1$
+	public static final String SCHEME_DIMENSION = "scheme_dimension"; //$NON-NLS-1$
+	public static final String SCHEME_SHORT_WIDTH = "scheme_short_width"; //$NON-NLS-1$
+	public static final String SCHEME_SHORT_HEIGHT = "scheme_short_height"; //$NON-NLS-1$
+	public static final String SCHEME_SIZE = "scheme_size"; //$NON-NLS-1$
+	
 	public static final String NAME = "name"; //$NON-NLS-1$
 	public static final String CODENAME = "class"; //$NON-NLS-1$
 	public static final String LABEL = "label"; //$NON-NLS-1$

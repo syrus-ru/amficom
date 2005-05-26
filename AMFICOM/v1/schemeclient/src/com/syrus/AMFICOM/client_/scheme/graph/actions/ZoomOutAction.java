@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomOutAction.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: ZoomOutAction.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import javax.swing.AbstractAction;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -24,7 +24,7 @@ public class ZoomOutAction extends AbstractAction {
 	UgoTabbedPane pane;
 
 	public ZoomOutAction(UgoTabbedPane pane) {
-		super(Constants.zoomOutKey);
+		super(Constants.ZOOM_OUT);
 		this.pane = pane;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SaveComponentDialog.java,v 1.2 2005/05/18 14:59:44 bass Exp $
+ * $Id: SaveComponentDialog.java,v 1.3 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,26 +13,26 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Schematics.Elements.ProtoElementPropsPanel;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementGeneralPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
 public class SaveComponentDialog extends JDialog {
 	SchemeProtoElement proto;
-	ProtoElementPropsPanel componentPanel;
+	SchemeProtoElementGeneralPanel componentPanel;
 	ApplicationContext aContext;
-
+/*
 	public SaveComponentDialog(ApplicationContext aContext) {
 		super(Environment.getActiveWindow());
 		this.aContext = aContext;
@@ -61,7 +61,7 @@ public class SaveComponentDialog extends JDialog {
 
 		getContentPane().setLayout(new BorderLayout());
 		// COMPONENT
-		componentPanel = new ProtoElementPropsPanel(aContext);
+		componentPanel = new SchemeProtoElementGeneralPanel();
 		this.getContentPane().add(componentPanel, BorderLayout.CENTER);
 
 		// BUTTONS
@@ -89,7 +89,7 @@ public class SaveComponentDialog extends JDialog {
 
 	public void init(SchemeProtoElement proto1) {
 		this.proto = proto1;
-		componentPanel.init(proto1, true);
+		componentPanel.setObject(proto1);
 		setVisible(true);
 	}
 
@@ -128,5 +128,5 @@ public class SaveComponentDialog extends JDialog {
 		} catch (IllegalObjectEntityException ex) {
 			ex.printStackTrace();
 		}
-	}
+	}*/
 }

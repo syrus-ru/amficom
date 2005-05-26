@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.5 2005/05/18 14:59:43 bass Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.6 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,62 +8,26 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.ColorListCellRenderer;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeController;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.PortTypeController;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.resource.Constants;
-import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/18 14:59:43 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -78,16 +42,15 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel nameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
 	JTextField nameText = new JTextField();
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
-	ObjComboBox typeCombo = new ObjComboBox(PortTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
+	WrapperedComboBox typeCombo = new WrapperedComboBox(PortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JCheckBox portBox = new JCheckBox(LangModelScheme.getString(Constants.INSTANCE));
 	JLabel markLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
 	JTextField markText = new JTextField();
 	JLabel colorLabel = new JLabel(LangModelScheme.getString(Constants.COLOR));
-	JComboBox colorCombo = new JComboBox();
-	JButton colorBut = new JButton();
+	JComboBox colorCombo = new ColorChooserComboBox();
 	JCheckBox mpBox = new JCheckBox(LangModelScheme.getString(Constants.MEASUREMENTPORT_TYPE));
 	JLabel mpTypeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
-	ObjComboBox mpTypeCombo = new ObjComboBox(MeasurementPortTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
+	WrapperedComboBox mpTypeCombo = new WrapperedComboBox(MeasurementPortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel descrLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
 	JTextArea descrArea = new JTextArea(2,10);
 	
@@ -229,17 +192,6 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbgeneralPanel.setConstraints(colorCombo, gbcgeneralPanel);
 		generalPanel.add(colorCombo);
 
-		gbcgeneralPanel.gridx = 7;
-		gbcgeneralPanel.gridy = 4;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(colorBut, gbcgeneralPanel);
-		generalPanel.add(colorBut);
-
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 5;
 		gbcgeneralPanel.gridwidth = 3;
@@ -314,11 +266,6 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		for (int i = 0; i < Constants.DEFAULT_COLOR_SET.length; i++)
 			colorCombo.addItem(Constants.DEFAULT_COLOR_SET[i]);
 		
-		colorBut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				colorButton_actionPerformed(e);
-			}
-		});
 		portBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				setPortEnabled(portBox.isSelected());
@@ -337,7 +284,6 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		addToUndoableListener(portBox);
 		addToUndoableListener(markText);
 		addToUndoableListener(colorCombo);
-		addToUndoableListener(colorBut);
 		addToUndoableListener(mpBox);
 		addToUndoableListener(mpTypeCombo);
 		addToUndoableListener(descrArea);
@@ -348,7 +294,6 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		markText.setEnabled(b);
 		colorLabel.setEnabled(b);
 		colorCombo.setEnabled(b);
-		colorBut.setEnabled(b);
 		if (b && parent != null && parent.getKis() != null)
 			mpBox.setEnabled(true);
 		else
@@ -436,8 +381,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			if (portBox.isSelected()) {
 				if (port == null) {
 					try {
-						Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-								getAccessIdentifier().user_id);
+						Identifier userId = LoginManager.getUserId();
 						port = Port.createInstance(userId, schemePort.getPortType(), schemePort.getDescription(), parent.getEquipment().getId(), PortSort.PORT_SORT_PORT);
 						schemePort.setPort(port);
 					} catch (CreateObjectException e) {
@@ -452,7 +396,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			}
 			else if (port != null) {
-				ConfigurationStorableObjectPool.delete(port.getId());
+				StorableObjectPool.delete(port.getId());
 				schemePort.setPort(null);
 				mpBox.setSelected(false);
 			}
@@ -465,8 +409,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				if (mp == null) {
 					if (parent != null && parent.getKis() != null) {
 						try {
-							Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-									getAccessIdentifier().user_id); 
+							Identifier userId = LoginManager.getUserId();
 							MeasurementPortType mpType = (MeasurementPortType) mpTypeCombo.getSelectedItem();
 							mp = MeasurementPort.createInstance(userId, mpType, schemePort.getName(), schemePort.getDescription(), parent.getKis().getId(), schemePort.getPort().getId());
 							schemePort.setMeasurementPort(mp);
@@ -485,31 +428,10 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			}
 			else if (mp != null) {
-				ConfigurationStorableObjectPool.delete(mp.getId());
+				StorableObjectPool.delete(mp.getId());
 				schemePort.setMeasurementPort(null);
 			} 
-			aContext.getDispatcher().notify(new SchemeEvent(this, schemePort, SchemeEvent.UPDATE_OBJECT));
-		}
-	}
-	
-	void colorButton_actionPerformed(ActionEvent e) {
-		if (tcc == null)
-			tcc = new JColorChooser((Color) colorCombo.getSelectedItem());
-		else
-			tcc.setColor((Color) colorCombo.getSelectedItem());
-
-		int res = JOptionPane.showOptionDialog(Environment.getActiveWindow(), tcc,
-				LangModelConfig.getString("label_chooseColor"), //$NON-NLS-1$
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null,
-				null);
-		if (res == JOptionPane.OK_OPTION) {
-			Color newColor = tcc.getColor();
-			if (isConatainsColor(newColor)) {
-				colorCombo.setSelectedItem(newColor);
-				return;
-			}
-			colorCombo.addItem(newColor);
-			colorCombo.setSelectedItem(newColor);
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemePort, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	

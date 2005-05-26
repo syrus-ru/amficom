@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.3 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,13 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 

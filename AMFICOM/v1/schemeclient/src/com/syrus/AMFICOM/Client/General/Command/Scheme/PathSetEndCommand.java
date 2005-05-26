@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.*;
 
-public class PathSetEndCommand extends VoidCommand
+public class PathSetEndCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeTabbedPane pane;
 
 	public PathSetEndCommand(ApplicationContext aContext, SchemeTabbedPane pane)
@@ -23,12 +22,12 @@ public class PathSetEndCommand extends VoidCommand
 
 	public void execute()
 	{
-		SchemeGraph graph = pane.getPanel().getGraph();
+		SchemeGraph graph = pane.getCurrentPanel().getGraph();
 		aContext.getDispatcher().notify(new CreatePathEvent(
 				graph,
 				graph.getSelectionCells(),
 				CreatePathEvent.SET_END_EVENT));
-	}
+	}*/
 }
 
 

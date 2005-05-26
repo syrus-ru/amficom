@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,14 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.client_.general.ui_.CharacteristicsPanel;
+import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 

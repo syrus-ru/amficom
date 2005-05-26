@@ -1,25 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.util.Log;
 
-public class PathNewCommand extends VoidCommand
+public class PathNewCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeTabbedPane pane;
 
 	public PathNewCommand(ApplicationContext aContext, SchemeTabbedPane pane)
@@ -35,22 +21,22 @@ public class PathNewCommand extends VoidCommand
 
 	public void execute()
 	{
-		SchemeGraph graph = pane.getPanel().getGraph();
-		if (graph.getScheme() == null)
+		SchemeGraph graph = pane.getGraph();
+		if (pane.getCurrentPanel().getSchemeResource().getSchemePath() == null)
 			return;
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 
 		SchemePath path;
 		try {
-			path = SchemePath.createInstance(userId);
+			path = SchemePath.createInstance(userId, "");
 		} 
 		catch (CreateObjectException e) {
 			Log.errorException(e);
 			return;
 		}
 		
-		path.setScheme(graph.getScheme());
-		graph.setCurrentPath(path);
+		path.setScheme(pane.getCurrentPanel().getSchemeResource().getScheme());
+//		graph.setCurrentPath(path);
 
 		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 																				getAccessIdentifier().user_id);
@@ -67,7 +53,7 @@ public class PathNewCommand extends VoidCommand
 		catch (CreateObjectException ex) {
 			ex.printStackTrace();
 		}
-		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(), null,
+		aContext.getDispatcher().notify(new CreatePathEvent(pane, null,
 				CreatePathEvent.CREATE_PATH_EVENT));
-}
+}*/
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.5 2005/05/18 14:59:44 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.6 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,47 +10,24 @@ package com.syrus.AMFICOM.client_.scheme;
 
 import java.util.Collections;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.Link;
-import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.corba.LinkSort;
-import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
-import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.resource.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
 public class SchemeObjectsFactory {
-	private static ApplicationContext aContext;
 //	private static int counter = 0;
-
-	public static void setContext(ApplicationContext aContext1) {
-		aContext = aContext1;
-	}
 	
 	public static EquipmentType createEquipmentType() throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		EquipmentType eqt = EquipmentType.createInstance(userId, "", "", "", "", "");
 		try {
 			StorableObjectPool.putStorableObject(eqt);
@@ -61,8 +38,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static MeasurementType createMeasurementType(String codename) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		MeasurementType type = MeasurementType.createInstance(userId, codename, "", Collections.EMPTY_SET, Collections.EMPTY_SET, Collections.EMPTY_SET);
 		try {
 			StorableObjectPool.putStorableObject(type);
@@ -73,8 +49,7 @@ public class SchemeObjectsFactory {
 	}
 
 	public static MeasurementPortType createMeasurementPortType(String codename) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		MeasurementPortType type = MeasurementPortType.createInstance(userId, codename, "", "");
 		try {
 			StorableObjectPool.putStorableObject(type);
@@ -85,8 +60,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static PortType createPortType(String codename) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		PortType type = PortType.createInstance(userId, codename, "", "", PortTypeSort.PORTTYPESORT_OPTICAL);
 		try {
 			StorableObjectPool.putStorableObject(type);
@@ -97,8 +71,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static LinkType createLinkType(String codename) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		LinkType type = LinkType.createInstance(userId, codename, "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", null);
 		try {
 			StorableObjectPool.putStorableObject(type);
@@ -109,8 +82,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static CableLinkType createCableLinkType(String codename) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		CableLinkType type = CableLinkType.createInstance(userId, codename, "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", null);
 		try {
 			StorableObjectPool.putStorableObject(type);
@@ -121,10 +93,8 @@ public class SchemeObjectsFactory {
 	}
 		
 	public static Equipment createEquipment() throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
-		Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().domain_id);
+		Identifier userId = LoginManager.getUserId();
+		Identifier domainId = LoginManager.getDomainId();
 		Equipment eq = Equipment.createInstance(userId, domainId, null, "", "", null, "", "", 0, 0, "", "", "", "", "");
 		try {
 			StorableObjectPool.putStorableObject(eq);
@@ -135,10 +105,8 @@ public class SchemeObjectsFactory {
 	}
 
 	public static KIS createKis() throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
-		Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().domain_id);
+		Identifier userId = LoginManager.getUserId();
+		Identifier domainId = LoginManager.getDomainId();
 		KIS kis = KIS.createInstance(userId, domainId, "", "", "", (short)0, null, null);
 		try {
 			StorableObjectPool.putStorableObject(kis);
@@ -149,10 +117,8 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static Link createLink(LinkSort sort) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
-		Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().domain_id);
+		Identifier userId = LoginManager.getUserId();
+		Identifier domainId = LoginManager.getDomainId();
 		Link link = Link.createInstance(userId, domainId, "", "", null, "", "", "", sort, 0, "");
 		try {
 			StorableObjectPool.putStorableObject(link);
@@ -163,8 +129,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static Port createPort(PortSort sort) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		Port port = Port.createInstance(userId, null, "", null, sort);
 		try {
 			StorableObjectPool.putStorableObject(port);
@@ -175,8 +140,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static SchemeImageResource createImageResource() throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		SchemeImageResource ir = SchemeImageResource.createInstance(userId);
 		try {
 			StorableObjectPool.putStorableObject(ir);
@@ -190,8 +154,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static BitmapImageResource createBitmap(String codename, byte[] image) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		BitmapImageResource ir = BitmapImageResource.createInstance(userId, codename, image);
 		try {
 			StorableObjectPool.putStorableObject(ir);
@@ -237,8 +200,7 @@ public class SchemeObjectsFactory {
 	}*/
 	
 	public static MeasurementPort createMeasurementPort(MeasurementPortType type) throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 		MeasurementPort measurementPort = MeasurementPort.createInstance(
 				userId, type, "", "", null, null);
 		try {

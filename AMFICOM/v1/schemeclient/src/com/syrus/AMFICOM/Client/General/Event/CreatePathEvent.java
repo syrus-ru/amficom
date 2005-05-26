@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
-public class CreatePathEvent extends OperationEvent
+import java.beans.PropertyChangeEvent;
+
+public class CreatePathEvent extends PropertyChangeEvent
 {
 	public boolean CREATE_PATH = false;
 	public boolean EDIT_PATH = false;
@@ -27,11 +29,11 @@ public class CreatePathEvent extends OperationEvent
 	public long change_type;
 	public Object[] cells;
 
-	public static final String typ = "createpath";
+	public static final String TYPE = CreatePathEvent.class.getName();
 
 	public CreatePathEvent(Object source, Object[] cells, long type)
 	{
-		super(source, 0, CreatePathEvent.typ);
+		super(source, CreatePathEvent.TYPE, null, cells);
 		change_type = type;
 		this.cells = cells;
 

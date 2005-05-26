@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkTypeGeneralPanel.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.2 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -35,7 +35,7 @@ public class LinkTypeGeneralPanel extends AbstractLinkTypeGeneralPanel {
 			if (linkType == null) {
 				try {
 					linkType = SchemeObjectsFactory.createLinkType(tfNameText.getText());
-					aContext.getDispatcher().notify(new SchemeEvent(this, linkType, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, linkType, SchemeEvent.CREATE_OBJECT));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);

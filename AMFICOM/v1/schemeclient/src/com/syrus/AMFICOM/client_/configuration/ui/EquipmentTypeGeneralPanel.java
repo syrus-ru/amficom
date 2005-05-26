@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.3 2005/04/18 10:57:46 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,21 +13,20 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/18 10:57:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -269,7 +268,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 			if (eqt == null) {
 				try {
 					eqt = SchemeObjectsFactory.createEquipmentType();
-					aContext.getDispatcher().notify(new SchemeEvent(this, eqt, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, eqt, SchemeEvent.CREATE_OBJECT));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
@@ -282,7 +281,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 			eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
 			eqt.setCodename(eqtCodenames[tfCodenameCombo.getSelectedIndex()]);
 			
-			aContext.getDispatcher().notify(new SchemeEvent(this, eqt, SchemeEvent.UPDATE_OBJECT));
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, eqt, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

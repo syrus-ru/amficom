@@ -1,5 +1,5 @@
 /*
- * $Id: SetBackgroundSizeAction.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: SetBackgroundSizeAction.java,v 1.3 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,14 @@ import javax.swing.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -31,7 +31,7 @@ public class SetBackgroundSizeAction extends AbstractAction {
 	UgoTabbedPane pane;
 
 	public SetBackgroundSizeAction(UgoTabbedPane pane) {
-		super(Constants.backgroundSize);
+		super(Constants.BACKGROUND_SIZE);
 		this.pane = pane;
 	}
 
@@ -43,7 +43,7 @@ public class SetBackgroundSizeAction extends AbstractAction {
 				scheme.setWidth(f.newsize.width);
 				scheme.setHeight(f.newsize.height);
 				SchemeGraph graph = pane.getGraph();
-				pane.getContext().getDispatcher().notify(
+				pane.getContext().getDispatcher().firePropertyChange(
 						new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
 				graph.setActualSize(f.newsize);
 				graph.updateUI();

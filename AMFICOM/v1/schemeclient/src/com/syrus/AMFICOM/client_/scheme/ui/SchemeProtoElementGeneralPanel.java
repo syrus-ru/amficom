@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.4 2005/05/18 14:59:44 bass Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.5 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,10 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.*;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -44,7 +45,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	JButton symbolBut = new JButton();
 	JCheckBox typeBox = new JCheckBox(LangModelScheme.getString(Constants.EQUIPMENT_TYPE));
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
-	ObjComboBox typeCombo = new ObjComboBox(EquipmentTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
+	WrapperedComboBox typeCombo = new WrapperedComboBox(EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER));
 	JTextField manufacturerText = new JTextField();
 	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER_CODE));
@@ -344,7 +345,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			}
 			else {
 				try {
-					schemeProtoElement.setSymbol((BitmapImageResource)ResourceStorableObjectPool.getStorableObject(imageId, true));
+					schemeProtoElement.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(imageId, true));
 				} catch (ApplicationException e) {
 					Log.errorException(e);
 				}
@@ -360,7 +361,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			else {
 				schemeProtoElement.setEquipmentType(null);
 			}
-			aContext.getDispatcher().notify(new SchemeEvent(this, schemeProtoElement, SchemeEvent.UPDATE_OBJECT));
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeProtoElement, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

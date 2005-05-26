@@ -1,48 +1,29 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Iterator;
-import java.util.Set;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.UI.tree.*;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedTreeUI;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulatableIconedNode;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.*;
 
-public class ElementsNavigatorPanel extends JPanel implements OperationListener
-{
+public class ElementsNavigatorPanel extends JPanel implements PropertyChangeListener {
 	JButton delMapGroupButton;
 	JButton loadButton;
 	JButton refreshButton;
@@ -50,232 +31,212 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 	Dispatcher dispatcher;
 	ChildrenFactory factory;
 	IconedTreeUI utp;
-
 	Object selectedObject;
-
-	public ElementsNavigatorPanel(ApplicationContext aContext, Dispatcher dispatcher, ChildrenFactory factory)
-	{
+	
+	public ElementsNavigatorPanel(ApplicationContext aContext,
+			Dispatcher dispatcher, ChildrenFactory factory) {
 		this.aContext = aContext;
 		this.dispatcher = dispatcher;
 		this.factory = factory;
-
-		try
-		{
+		
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		init_module(dispatcher);
 	}
-
-	private void jbInit() throws Exception
-	{
+	
+	private void jbInit() throws Exception {
 		setLayout(new BorderLayout());
-
-		//Toolbar
+		
+		// Toolbar
 		loadButton = new JButton();
-		loadButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif")));
+		loadButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		"images/openfile.gif")));
 		loadButton.setToolTipText("Открыть");
 		loadButton.setPreferredSize(new Dimension(24, 24));
-		loadButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		loadButton
+		.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		loadButton.setFocusPainted(false);
 		loadButton.setEnabled(false);
-		loadButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed (ActionEvent ev)
-			{
+		loadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
 				loadButton_actionPerformed();
 			}
 		});
-
+		
 		delMapGroupButton = new JButton();
-		delMapGroupButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif")));
+		delMapGroupButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/delete.gif")));
 		delMapGroupButton.setToolTipText("Удалить");
 		delMapGroupButton.setPreferredSize(new Dimension(24, 24));
-		delMapGroupButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		delMapGroupButton.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
 		delMapGroupButton.setFocusPainted(false);
 		delMapGroupButton.setEnabled(false);
-		delMapGroupButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed (ActionEvent ev)
-			{
+		delMapGroupButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
 				delMapGroupButton_actionPerformed();
 			}
 		});
-
+		
 		refreshButton = new JButton();
-		refreshButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/refresh.gif")));
+		refreshButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		"images/refresh.gif")));
 		refreshButton.setToolTipText("Обновить");
 		refreshButton.setPreferredSize(new Dimension(24, 24));
-		refreshButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		refreshButton.setBorder(BorderFactory
+				.createEtchedBorder(EtchedBorder.LOWERED));
 		refreshButton.setFocusPainted(false);
-		refreshButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent ev)
-			{
+		refreshButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
 				refreshButton_actionPerformed();
 			}
 		});
-
+		
 		JPanel toolBar = new JPanel();
 		toolBar.setLayout(new XYLayout());
 		toolBar.add(loadButton, new XYConstraints(0, 0, 24, 24));
 		toolBar.add(delMapGroupButton, new XYConstraints(25, 0, 24, 24));
 		toolBar.add(refreshButton, new XYConstraints(50, 0, 24, 24));
 		add(toolBar, BorderLayout.NORTH);
-
+		
 		// TREE
-		utp = new SchemeTreeUI(new PopulatableIconedNode(factory, "root", "Сеть"), aContext);
-
-//		JScrollPane scroll_pane = new JScrollPane();
-//		scroll_pane.getViewport().add(utp.getPanel());
+		utp = new SchemeTreeUI(new PopulatableIconedNode(factory, "root", "Сеть"),
+				aContext);
+		
+		// JScrollPane scroll_pane = new JScrollPane();
+		// scroll_pane.getViewport().add(utp.getPanel());
 		add(utp.getPanel(), BorderLayout.CENTER);
 	}
-
-	void init_module(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, TreeDataSelectionEvent.type);
+	
+	void init_module(Dispatcher disp) {
+		this.dispatcher = disp;
+		this.dispatcher.addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 	}
+	
+	// public JTree getTree()
+	// {
+	// return utp.getPanel();
+	// }
+	
+	public void propertyChange(PropertyChangeEvent ev) {
+		if (ev.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent dse = (ObjectSelectedEvent) ev;
 
-//	public JTree getTree()
-//	{
-//		return utp.getPanel();
-//	}
-
-	public void operationPerformed(OperationEvent oe)
-	{
-		if (oe.getActionCommand().equals(TreeDataSelectionEvent.type))
-		{
-			TreeDataSelectionEvent dse = (TreeDataSelectionEvent)oe;
-			if (dse.getDataClass() == null)
-				return;
 			selectedObject = dse.getSelectedObject();
-			Class creating_class = dse.getDataClass();
+			Class creating_class = selectedObject.getClass();
+			
+			if (dse.getSelectedObject() != null) {
+				if (creating_class.equals(SchemeProtoElement.class))
+					loadButton.setEnabled(true);
+				else
+					loadButton.setEnabled(false);
+			
+				delMapGroupButton.setEnabled(false);
+				if (selectedObject instanceof SchemeProtoGroup
+						&& ((SchemeProtoGroup) selectedObject).getSchemeProtoGroups()
+								.isEmpty()
+						&& ((SchemeProtoGroup) selectedObject).getSchemeProtoElements()
+								.isEmpty())
+					delMapGroupButton.setEnabled(true);
+				else if (selectedObject instanceof SchemeProtoGroup
+						&& ((SchemeProtoGroup) selectedObject).getSchemeProtoElements()
+								.isEmpty())
+					delMapGroupButton.setEnabled(true);
+				else if (selectedObject instanceof SchemeProtoElement)
+					delMapGroupButton.setEnabled(true);
 
-			if (creating_class.equals(SchemeProtoElement.class))
-				loadButton.setEnabled(true);
-			else
-				loadButton.setEnabled(false);
-
-			delMapGroupButton.setEnabled(false);
-			if (selectedObject instanceof SchemeProtoGroup &&
-					((SchemeProtoGroup)selectedObject).getSchemeProtoGroups().isEmpty() &&
-					((SchemeProtoGroup)selectedObject).getSchemeProtoElements().isEmpty())
-				delMapGroupButton.setEnabled(true);
-			else if (selectedObject instanceof SchemeProtoGroup &&
-							 ((SchemeProtoGroup)selectedObject).getSchemeProtoElements().isEmpty())
-				delMapGroupButton.setEnabled(true);
-			else if (selectedObject instanceof SchemeProtoElement)
-				delMapGroupButton.setEnabled(true);
-
-			if (creating_class.equals(Scheme.class))
-			{
-				if (dse.getSelectionNumber() != -1)
-				{
+				if (creating_class.equals(Scheme.class)) {
 					loadButton.setEnabled(true);
 					delMapGroupButton.setEnabled(true);
-				}
-				else
-				{
-					loadButton.setEnabled(false);
-					delMapGroupButton.setEnabled(false);
-				}
+				} 
+			}
+			else {
+				loadButton.setEnabled(false);
+				delMapGroupButton.setEnabled(false);
 			}
 		}
 	}
-
-	void loadButton_actionPerformed()
-	{
-		if (selectedObject instanceof SchemeProtoElement)
-		{
-			SchemeProtoElement proto = (SchemeProtoElement)selectedObject;
-			dispatcher.notify(new SchemeElementsEvent(this, proto, SchemeElementsEvent.OPEN_ELEMENT_EVENT));
+	
+	void loadButton_actionPerformed() {
+		if (selectedObject instanceof SchemeProtoElement) {
+			SchemeProtoElement proto = (SchemeProtoElement) selectedObject;
+			dispatcher.firePropertyChange(new SchemeEvent(this, proto,
+					SchemeEvent.OPEN_SCHEMEELEMENT));
 			Pool.removeMap("clonedids");
 		}
-		if (selectedObject instanceof Scheme)
-		{
-			Scheme scheme = (Scheme)selectedObject;
-			dispatcher.notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_SCHEME_EVENT));
+		if (selectedObject instanceof Scheme) {
+			Scheme scheme = (Scheme) selectedObject;
+			dispatcher.firePropertyChange(new SchemeEvent(this, scheme,
+					SchemeEvent.OPEN_SCHEME));
 		}
 	}
-
-	void refreshButton_actionPerformed()
-	{
+	
+	void refreshButton_actionPerformed() {
 		dispatcher.notify(new TreeListSelectionEvent(
-					selectedObject instanceof String ? selectedObject : "", TreeListSelectionEvent.REFRESH_EVENT));
+				selectedObject instanceof String ? selectedObject : "",
+						TreeListSelectionEvent.REFRESH_EVENT));
 	}
-
-	void delMapGroupButton_actionPerformed()
-	{
-		if (selectedObject instanceof SchemeProtoGroup)
-		{
-			SchemeProtoGroup group = (SchemeProtoGroup)selectedObject;
+	
+	void delMapGroupButton_actionPerformed() {
+		if (selectedObject instanceof SchemeProtoGroup) {
+			SchemeProtoGroup group = (SchemeProtoGroup) selectedObject;
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-					"Вы действительно хотите удалить выбранную папку?",
-					"Удаление папки",
+					"Вы действительно хотите удалить выбранную папку?", "Удаление папки",
 					JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.YES_OPTION)
-			{
-				SchemeStorableObjectPool.delete(group.getId());
-				final SchemeProtoGroup parentSchemeProtoGroup = group.getParentSchemeProtoGroup();
+			if (ret == JOptionPane.YES_OPTION) {
+				StorableObjectPool.delete(group.getId());
+				final SchemeProtoGroup parentSchemeProtoGroup = group
+				.getParentSchemeProtoGroup();
 				if (parentSchemeProtoGroup != null)
 					parentSchemeProtoGroup.removeSchemeProtoGroup(group);
-				dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
-			}
-			else
+				dispatcher.notify(new TreeListSelectionEvent("",
+						TreeListSelectionEvent.REFRESH_EVENT));
+			} else
 				return;
-		}
-		else if (selectedObject instanceof SchemeProtoElement)
-		{
+		} else if (selectedObject instanceof SchemeProtoElement) {
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 					"Вы действительно хотите удалить выбранный элемент?",
-					"Удаление группы",
-					JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.YES_OPTION)
-			{
-				SchemeProtoElement proto = (SchemeProtoElement)selectedObject;
+					"Удаление группы", JOptionPane.YES_NO_OPTION);
+			if (ret == JOptionPane.YES_OPTION) {
+				SchemeProtoElement proto = (SchemeProtoElement) selectedObject;
 				SchemeStorableObjectPool.delete(proto.getId());
-
+				
 				try {
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
+					Identifier domain_id = LoginManager.getDomainId();
 					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-					Set groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-					for (Iterator it = groups.iterator(); it.hasNext(); ) {
-						SchemeProtoGroup map_proto = (SchemeProtoGroup)it.next();
+					Set groups = StorableObjectPool.getStorableObjectsByCondition(
+							condition, true);
+					
+					for (Iterator it = groups.iterator(); it.hasNext();) {
+						SchemeProtoGroup map_proto = (SchemeProtoGroup) it.next();
 						if (map_proto.getSchemeProtoElements().contains(proto)) {
 							map_proto.removeSchemeProtoElement(proto);
 							dispatcher.notify(new TreeListSelectionEvent(map_proto,
 									TreeListSelectionEvent.REFRESH_EVENT));
 						}
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
 			}
-		}
-		else if (selectedObject instanceof Scheme)
-		{
+		} else if (selectedObject instanceof Scheme) {
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-					"Вы действительно хотите удалить выбранную схему?",
-					"Удаление схемы",
+					"Вы действительно хотите удалить выбранную схему?", "Удаление схемы",
 					JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.YES_OPTION)
-			{
-				Scheme scheme = (Scheme)selectedObject;
-
-				SchemeStorableObjectPool.delete(scheme.getId());
-				dispatcher.notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.CLOSE_SCHEME_EVENT));
-				dispatcher.notify(new TreeListSelectionEvent(scheme, TreeListSelectionEvent.REFRESH_EVENT));
+			if (ret == JOptionPane.YES_OPTION) {
+				Scheme scheme = (Scheme) selectedObject;
+				
+				StorableObjectPool.delete(scheme.getId());
+				dispatcher.firePropertyChange(new SchemeEvent(this, scheme,
+						SchemeEvent.CLOSE_SCHEME_EVENT));
+				dispatcher.notify(new TreeListSelectionEvent(scheme,
+						TreeListSelectionEvent.REFRESH_EVENT));
 			}
 		}
 	}
-
+	
 }
-

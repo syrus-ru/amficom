@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeCharacteristicsPanel.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: EquipmentTypeCharacteristicsPanel.java,v 1.2 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import com.syrus.AMFICOM.client_.general.ui_.CharacteristicsPanel;
+import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 

@@ -4,23 +4,13 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-public class SchemeCopyCommand extends VoidCommand
+
+
+public class SchemeCopyCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemePanel schemePanel;
 	UgoPanel ugoPanel;
 
@@ -48,7 +38,7 @@ public class SchemeCopyCommand extends VoidCommand
 		}
 
 		SaveDialog sd;
-		Scheme scheme = schemePanel.getGraph().getScheme();
+		Scheme scheme = schemePanel.getSchemeResource().getScheme();
 		while (true)
 		{
 
@@ -104,6 +94,6 @@ public class SchemeCopyCommand extends VoidCommand
 		}
 
 		Pool.removeMap("clonedids");
-	}
+	}*/
 }
 

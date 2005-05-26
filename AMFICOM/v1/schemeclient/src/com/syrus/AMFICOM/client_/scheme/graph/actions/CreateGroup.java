@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: CreateGroup.java,v 1.2 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,14 @@ import java.util.*;
 import javax.swing.*;
 
 import com.jgraph.graph.*;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -37,7 +37,7 @@ public class CreateGroup extends AbstractAction {
 	private Set childSchemeDevices = new HashSet();
 
 	public CreateGroup(UgoTabbedPane pane) {
-		super(Constants.groupKey);
+		super(Constants.GROUP);
 		this.pane = pane;
 	}
 

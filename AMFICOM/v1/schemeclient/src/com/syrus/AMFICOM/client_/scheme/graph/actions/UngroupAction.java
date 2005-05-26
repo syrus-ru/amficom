@@ -1,5 +1,5 @@
 /*
- * $Id: UngroupAction.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: UngroupAction.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -27,7 +27,7 @@ public class UngroupAction extends AbstractAction {
 	UgoTabbedPane pane;
 
 	public UngroupAction(UgoTabbedPane pane) {
-		super(Constants.ungroupKey);
+		super(Constants.UNGROUP);
 		this.pane = pane;
 	}
 

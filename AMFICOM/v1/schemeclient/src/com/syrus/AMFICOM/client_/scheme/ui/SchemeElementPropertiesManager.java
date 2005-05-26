@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementPropertiesManager.java,v 1.1 2005/04/18 10:45:18 stas Exp $
+ * $Id: SchemeElementPropertiesManager.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.SchemeElementController;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.SchemeElementWrapper;
+
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -23,6 +25,7 @@ public class SchemeElementPropertiesManager implements VisualManager {
 	private static SchemeElementPropertiesManager instance;
 	private SchemeElementGeneralPanel generalPanel;
 	private SchemeElementCharacteristicsPanel charPanel;
+	private SchemeElementUgoPanel ugoPanel;
 	
 	private SchemeElementPropertiesManager() {
 		// empty
@@ -42,6 +45,9 @@ public class SchemeElementPropertiesManager implements VisualManager {
 		if (charPanel == null)
 			charPanel = new SchemeElementCharacteristicsPanel();
 		charPanel.setContext(aContext);
+		if (ugoPanel == null)
+			ugoPanel = new SchemeElementUgoPanel();
+		ugoPanel.setContext(aContext);
 	}
 	
 	/**
@@ -64,7 +70,15 @@ public class SchemeElementPropertiesManager implements VisualManager {
 	 * @return SchemeElementController
 	 * @see VisualManager#getController()
 	 */
-	public ObjectResourceController getController() {
-		return SchemeElementController.getInstance();
+	public StorableObjectWrapper getController() {
+		return SchemeElementWrapper.getInstance();
+	}
+
+	/**
+	 * @return SchemeElementUgoPanel
+	 * @see VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		return ugoPanel;
 	}
 }

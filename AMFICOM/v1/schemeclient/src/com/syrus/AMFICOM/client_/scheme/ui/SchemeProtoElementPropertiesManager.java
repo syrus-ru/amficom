@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementPropertiesManager.java,v 1.1 2005/04/18 10:45:18 stas Exp $
+ * $Id: SchemeProtoElementPropertiesManager.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,23 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper;
+
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
 public class SchemeProtoElementPropertiesManager implements VisualManager {
 	private static SchemeProtoElementPropertiesManager instance;
-	private static SchemeProtoElementGeneralPanel generalPanel;
-	private static SchemeProtoElementCharacteristicsPanel charPanel;
+	private SchemeProtoElementGeneralPanel generalPanel;
+	private SchemeProtoElementCharacteristicsPanel charPanel;
+	private SchemeProtoElementUgoPanel ugoPanel;
 	
 	private SchemeProtoElementPropertiesManager() {
 		// empty
@@ -41,6 +44,9 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 		if (charPanel == null)
 			charPanel = new SchemeProtoElementCharacteristicsPanel();
 		charPanel.setContext(aContext);
+		if (ugoPanel == null)
+			ugoPanel = new SchemeProtoElementUgoPanel();
+		ugoPanel.setContext(aContext);
 	}
 	
 	/**
@@ -63,10 +69,16 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 	 * @return SchemeProtoElementController
 	 * @see VisualManager#getController()
 	 */
-	public ObjectResourceController getController() {
-		return null;
-		// TODO write SchemeProtoElementController
-		//return SchemeProtoElementController.getInstance();
+	public StorableObjectWrapper getController() {
+		return SchemeProtoElementWrapper.getInstance();
+	}
+
+	/**
+	 * @return SchemeProtoElementUgoPanel
+	 * @see VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		return ugoPanel;
 	}
 }
 

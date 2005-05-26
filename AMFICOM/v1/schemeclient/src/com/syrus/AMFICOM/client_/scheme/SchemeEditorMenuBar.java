@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.1 2005/04/05 14:10:45 stas Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.2 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,14 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.resource.LangModel;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:10:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -264,6 +265,10 @@ public class SchemeEditorMenuBar extends JMenuBar implements
 		add(menuWindow);
 	}
 
+	public void modelChanged(String e) {
+		modelChanged(new String[] {e});
+	}
+	
 	public void modelChanged(String e[]) {
 		menuSession.setVisible(aModel.isVisible("menuSession"));
 		menuSession.setEnabled(aModel.isEnabled("menuSession"));
@@ -359,7 +364,6 @@ public class SchemeEditorMenuBar extends JMenuBar implements
 		AbstractButton jb = (AbstractButton) e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-		command = (Command) command.clone();
 		command.execute();
 	}
 }

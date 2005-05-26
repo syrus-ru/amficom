@@ -2,14 +2,12 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.io.*;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 //import com.syrus.io.DirectoryToFile;
 
-public class SchemeToFileCommand extends VoidCommand
+public class SchemeToFileCommand extends AbstractCommand
 {
-	private Dispatcher dispatcher;
+/*	private Dispatcher dispatcher;
 	ApplicationContext aContext;
 
 	FileOutputStream fos;
@@ -44,6 +42,6 @@ public class SchemeToFileCommand extends VoidCommand
 
 
 //		DirectoryToFile.readAll();
-	}
+	}*/
 }
 

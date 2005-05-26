@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.General.Scheme;
+/*package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -30,7 +30,7 @@ public class SchemePanelNoEdition extends SchemePanel
 	public void init_module()
 	{
 		super.init_module();
-		dispatcher.register(this, MapEvent.MAP_NAVIGATE);
+//		dispatcher.register(this, MapEvent.MAP_NAVIGATE);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -135,3 +135,4 @@ public class SchemePanelNoEdition extends SchemePanel
 	}
 }
 
+*/

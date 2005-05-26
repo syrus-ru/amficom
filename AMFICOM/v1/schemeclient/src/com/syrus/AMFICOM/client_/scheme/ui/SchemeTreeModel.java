@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.19 2005/05/18 14:59:44 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.20 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,17 +9,17 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.UI.tree.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.configuration.ui.*;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.logic.*;
@@ -32,8 +32,10 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 
 	private static Kind[] schemeTypes = new Kind[] { Kind.NETWORK, Kind.BUILDING,
 			Kind.CABLE_SUBNETWORK };
+
 	private static String[] schemeTypeNames = new String[] {
-			LangModelScheme.getString(Constants.SCHEME_TYPE_NETWORK), LangModelScheme.getString(Constants.SCHEME_TYPE_BUILDING),
+			LangModelScheme.getString(Constants.SCHEME_TYPE_NETWORK),
+			LangModelScheme.getString(Constants.SCHEME_TYPE_BUILDING),
 			LangModelScheme.getString(Constants.SCHEME_TYPE_CABLE) };
 
 	public SchemeTreeModel(ApplicationContext aContext) {
@@ -111,7 +113,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 //			return SchemeController.getInstance();
 //		if (object instanceof SchemeElement)
 //			return SchemeElementController.getInstance();
-		throw new UnsupportedOperationException("Unknown object " + object);
+		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$
 	}
 	
 	Collection getChildObjects(Item node) {

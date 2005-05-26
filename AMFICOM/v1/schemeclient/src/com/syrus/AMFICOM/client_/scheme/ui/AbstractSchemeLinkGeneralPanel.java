@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.3 2005/04/18 10:57:46 stas Exp $
+ * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.4 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,25 +9,21 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.*;
-import java.awt.event.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/18 10:57:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -35,13 +31,12 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 	ApplicationContext aContext;
 	protected AbstractSchemeLink schemeLink;
 	
-	static JColorChooser tcc;
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
 	JLabel nameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
 	JTextField nameText = new JTextField();
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
-	ObjComboBox typeCombo = new ObjComboBox(LinkTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
+	WrapperedComboBox typeCombo = new WrapperedComboBox(LinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel opticalLabel = new JLabel(LangModelScheme.getString(Constants.OPTICAL_LENGTH));
 	JTextField opticalText = new JTextField();
 	JLabel physicalLabel = new JLabel(LangModelScheme.getString(Constants.PHYSICAL_LENGTH));
@@ -56,8 +51,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 	JLabel markLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
 	JTextField markText = new JTextField();
 	JLabel colorLabel = new JLabel(LangModelScheme.getString(Constants.COLOR));
-	JComboBox colorCombo = new JComboBox();
-	JButton colorBut = new JButton();
+	JComboBox colorCombo = new ColorChooserComboBox();
 	JLabel descrLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
 	JTextArea descrArea = new JTextArea(2,10);
 	
@@ -299,18 +293,6 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		gbgeneralPanel.setConstraints(colorCombo, gbcgeneralPanel);
 		generalPanel.add(colorCombo);
 
-		gbcgeneralPanel.gridx = 7;
-		gbcgeneralPanel.gridy = 8;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(colorBut, gbcgeneralPanel);
-		generalPanel.add(colorBut);
-
 		typeLabel.setFocusable(false);
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 1;
@@ -374,11 +356,6 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		for (int i = 0; i < Constants.DEFAULT_COLOR_SET.length; i++)
 			colorCombo.addItem(Constants.DEFAULT_COLOR_SET[i]);
 		
-		colorBut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				colorButton_actionPerformed(e);
-			}
-		});
 		linkBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				setLinkEnabled(linkBox.isSelected());
@@ -398,9 +375,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		addToUndoableListener(supplierCodeText);
 		addToUndoableListener(markText);
 		addToUndoableListener(colorCombo);
-		addToUndoableListener(colorBut);
 		addToUndoableListener(descrArea);
-		
 	}
 	
 	public JComponent getGUI() {
@@ -480,7 +455,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 				link.setMark(markText.getText());
 				link.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 			}
-			aContext.getDispatcher().notify(new SchemeEvent(this, schemeLink, SchemeEvent.UPDATE_OBJECT));
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeLink, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	
@@ -495,28 +470,6 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		markText.setEnabled(b);
 		colorLabel.setEnabled(b);
 		colorCombo.setEnabled(b);
-		colorBut.setEnabled(b);
-	}
-	
-	void colorButton_actionPerformed(ActionEvent e) {
-		if (tcc == null)
-			tcc = new JColorChooser((Color) colorCombo.getSelectedItem());
-		else
-			tcc.setColor((Color) colorCombo.getSelectedItem());
-
-		int res = JOptionPane.showOptionDialog(Environment.getActiveWindow(), tcc,
-				LangModelConfig.getString("label_chooseColor"),
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null,
-				null);
-		if (res == JOptionPane.OK_OPTION) {
-			Color newColor = tcc.getColor();
-			if (isConatainsColor(newColor)) {
-				colorCombo.setSelectedItem(newColor);
-				return;
-			}
-			colorCombo.addItem(newColor);
-			colorCombo.setSelectedItem(newColor);
-		}
 	}
 	
 	boolean isConatainsColor(Color color) {

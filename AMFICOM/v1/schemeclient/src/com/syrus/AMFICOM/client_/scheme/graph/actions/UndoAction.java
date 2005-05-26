@@ -1,5 +1,5 @@
 /*
- * $Id: UndoAction.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: UndoAction.java,v 1.3 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -26,7 +26,7 @@ public class UndoAction extends AbstractAction {
 	UgoTabbedPane pane;
 	
 	public UndoAction(UgoTabbedPane pane) {
-		super(Constants.undoKey);
+		super(Constants.UNDO);
 		this.pane = pane;
 	}
 

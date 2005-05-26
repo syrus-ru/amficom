@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.2 2005/04/19 09:01:49 bass Exp $
+ * $Id: CreateBlockPortAction.java,v 1.3 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/04/19 09:01:49 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -30,7 +30,7 @@ public class CreateBlockPortAction extends AbstractAction {
 	protected UgoTabbedPane pane;
 
 	public CreateBlockPortAction(UgoTabbedPane pane) {
-		super(Constants.blockPortKey);
+		super(Constants.BLOCK_PORT);
 		this.pane = pane;
 	}
 

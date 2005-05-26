@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeViewerFrame.java,v 1.2 2005/04/18 10:45:17 stas Exp $
+ * $Id: SchemeViewerFrame.java,v 1.3 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 

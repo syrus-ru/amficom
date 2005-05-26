@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.11 2005/05/18 14:59:43 bass Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.12 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,10 @@ import java.util.Set;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.tree.*;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.*;
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/05/18 14:59:43 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -233,7 +233,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 			if (type == null) {
 				try {
 					type = SchemeObjectsFactory.createMeasurementPortType(tfNameText.getText());
-					aContext.getDispatcher().notify(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -248,23 +248,23 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 				CheckableNode node = (CheckableNode)it.next();
 				MeasurementType mtype = (MeasurementType) node.getObject();
 				if (node.isChecked()) {
-					Collection pTypes = mtype.getMeasurementPortTypes();
-					if (!pTypes.contains(type)) {
+					Collection pTypes = mtype.getMeasurementPortTypeIds();
+					if (!pTypes.contains(type.getId())) {
 						Set newPTypes = new HashSet(pTypes);
-						newPTypes.add(type);
-						mtype.setMeasurementPortTypes(newPTypes);
+						newPTypes.add(type.getId());
+						mtype.setMeasurementPortTypeIds(newPTypes);
 					}
 				} else {
-					Collection pTypes = mtype.getMeasurementPortTypes();
+					Collection pTypes = mtype.getMeasurementPortTypeIds();
 					// TODO add/remove MeasurementPortType to/from MeasurementType
-					if (pTypes.contains(type)) {
+					if (pTypes.contains(type.getId())) {
 						Set newPTypes = new HashSet(pTypes);
-						newPTypes.remove(type);
-						mtype.setMeasurementPortTypes(newPTypes);
+						newPTypes.remove(type.getId());
+						mtype.setMeasurementPortTypeIds(newPTypes);
 					}
 				}
 			}
-			aContext.getDispatcher().notify(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	

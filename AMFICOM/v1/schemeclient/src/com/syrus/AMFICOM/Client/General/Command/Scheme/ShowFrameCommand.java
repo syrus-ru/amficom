@@ -4,10 +4,9 @@ import java.beans.PropertyVetoException;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-
-public class ShowFrameCommand extends VoidCommand
+public class ShowFrameCommand extends AbstractCommand
 {
 	JDesktopPane desktop;
 	JInternalFrame frame;
@@ -36,6 +35,7 @@ public class ShowFrameCommand extends VoidCommand
 				}
 				catch (PropertyVetoException ex)
 				{
+					ex.printStackTrace();
 				}
 			}
 			frame.moveToFront();

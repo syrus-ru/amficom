@@ -4,7 +4,7 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;

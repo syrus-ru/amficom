@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
-public class SchemeCloseCommand extends VoidCommand
+public class SchemeCloseCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeGraph graph;
 
 	public SchemeCloseCommand(ApplicationContext aContext, SchemeGraph graph)
@@ -27,6 +26,6 @@ public class SchemeCloseCommand extends VoidCommand
 			GraphActions.clearGraph(graph);
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, null, SchemeElementsEvent.CLOSE_SCHEME_EVENT));
-	}
+	}*/
 }
 

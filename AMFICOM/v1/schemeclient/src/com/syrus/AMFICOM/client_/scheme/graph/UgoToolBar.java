@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.3 2005/04/28 16:02:36 stas Exp $
+ * $Id: UgoToolBar.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -32,7 +32,7 @@ public class UgoToolBar extends JToolBar {
 	private static LayoutManager vertical = new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, false, false);
 	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
 	private static String[] buttons = new String[] { 
-		Constants.marqueeTool 
+		Constants.MARQUEE 
 	};
 
 	protected UgoToolBar(UgoTabbedPane pane) {
@@ -55,7 +55,7 @@ public class UgoToolBar extends JToolBar {
 		String[] butt = getButtons();
 		
 		for (int i = 0; i < butt.length; i++) {
-			if (butt[i].equals(Constants.separator))
+			if (butt[i].equals(Constants.SEPARATOR))
 				insert(new JToolBar.Separator());
 			else
 				insert((JComponent)commands.get(butt[i]));
@@ -69,7 +69,7 @@ public class UgoToolBar extends JToolBar {
 	protected Map createGraphButtons() {
 		Map bttns = new HashMap();
 		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
-		bttns.put(Constants.marqueeTool, createToolButton(mh.s, btn_size, null,
+		bttns.put(Constants.MARQUEE, createToolButton(mh.s, btn_size, null,
 				null, Constants.ICON_MARQUEE, new MarqeeAction(pane), true));
 		mh.s.doClick();
 		return bttns;

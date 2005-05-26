@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.4 2005/05/18 14:59:44 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.5 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,70 +8,29 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import com.jgraph.graph.BasicMarqueeHandler;
-import com.jgraph.graph.CellView;
-import com.jgraph.graph.ConnectionSet;
-import com.jgraph.graph.DefaultEdge;
-import com.jgraph.graph.DefaultGraphCell;
-import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.GraphUndoManager;
-import com.jgraph.graph.PortView;
+import com.jgraph.graph.*;
 import com.jgraph.plaf.GraphUI;
-
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.PortTypeWrapper;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.scheme.AbstractSchemePort;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeCablePort;
-import com.syrus.AMFICOM.scheme.SchemeDevice;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -290,11 +249,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 		return portView;
 	}
-	
-	private Identifier getUserId() {
-		return new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
-	}
-	
+		
 	private DeviceCell getOnlySelectedDevice(SchemeGraph graph) {
 		DeviceCell deviceCell = null;
 		Object[] cells = graph.getSelectionCells();
@@ -330,10 +285,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 
 		if (deviceCell != null) {
 			/**
-			 * @todo Message "device must be ungrouped"
-			 * and next possibility to add ports to grouped element
+			 * @todo possibility to add ports to grouped element
 			 */
 			if (GraphActions.hasGroupedParent(deviceCell)) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_GROUPED_DEVICE, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
 				Log.errorMessage("can't create PortCell as DeviceCell has parent group"); //$NON-NLS-1$
 				return;
 			}
@@ -374,11 +329,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			try {
 				AbstractSchemePort schemePort;
 				if (!isCable) { //port
-					schemePort = SchemePort.createInstance(getUserId(), name, directionType, deviceCell.getSchemeDevice());
+					schemePort = SchemePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
 					((PortCell)cell).setSchemePortId(schemePort.getId());
 				}
 				else {
-					schemePort = SchemeCablePort.createInstance(getUserId(), name, directionType, deviceCell.getSchemeDevice());
+					schemePort = SchemeCablePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
 					((CablePortCell)cell).setSchemeCablePortId(schemePort.getId());
 				}
 				schemePort.setPortType(type);
@@ -402,7 +357,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 //					bounds.height += 2;
 //					bounds.width ++;
 //					bounds.height ++;
-					Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+					Identifier userId = LoginManager.getUserId();
 					
 					try {
 						SchemeDevice device = SchemeDevice.createInstance(userId, Constants.DEVICE + System.currentTimeMillis());
@@ -424,7 +379,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					else {
 						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
 						if (scheme != null) {
-							Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+							Identifier userId = LoginManager.getUserId();
 							
 							DefaultCableLink cell = SchemeActions.createCableLink(graph,
 									firstPort, port, graph.fromScreen(new Point(start)), 
@@ -447,7 +402,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					else {
 						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
 						if (scheme != null) {
-							Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+							Identifier userId = LoginManager.getUserId();
 							
 							DefaultLink cell = SchemeActions.createLink(graph,
 									firstPort, port, graph.fromScreen(new Point(start)), 
@@ -465,14 +420,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						else {
 							SchemeElement schemeElement = pane.getCurrentPanel().getSchemeResource().getSchemeElement();
 							if (schemeElement != null) {
-								Identifier userId = new Identifier(((RISDSessionInfo)pane.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+								Identifier userId = LoginManager.getUserId();
 								DefaultLink cell = SchemeActions.createLink(graph,
 										firstPort, port, graph.fromScreen(new Point(start)), 
 										graph.fromScreen(new Point(current)));
 
 								try {
 									SchemeLink link = SchemeLink.createInstance(userId, (String)cell.getUserObject(), schemeElement);
-									SchemeStorableObjectPool.putStorableObject(link);
+									StorableObjectPool.putStorableObject(link);
 									cell.setSchemeLinkId(link.getId());
 									Notifier.notify(graph, pane.aContext, link);
 								} catch (ApplicationException e1) {
@@ -505,7 +460,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					graph.getModel().insert(insert, viewMap, cs, null, null);
 				} 
 				else if (t.isSelected()) {
-					DefaultGraphCell cell = GraphActions.addVertex(graph, Constants.TEXT_TEXT, bounds, true, false, false, null);
+					DefaultGraphCell cell = GraphActions.addVertex(graph, LangModelGraph.getString(Constants.TEXT), bounds, true, false, false, null);
 					graph.startEditingAtCell(cell);
 				}
 				event.consume();

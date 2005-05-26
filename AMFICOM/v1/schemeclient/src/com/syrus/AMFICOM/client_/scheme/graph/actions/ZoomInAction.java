@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomInAction.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: ZoomInAction.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -25,7 +25,7 @@ public class ZoomInAction extends AbstractAction {
 	UgoTabbedPane pane;
 
 	public ZoomInAction(UgoTabbedPane pane) {
-		super(Constants.zoomInKey);
+		super(Constants.ZOOM_IN);
 		this.pane = pane;
 	}
 

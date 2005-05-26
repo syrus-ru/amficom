@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.3 2005/04/28 16:02:36 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,39 +8,37 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.Toolkit;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.Constants;
-import com.syrus.AMFICOM.client_.general.ui_.AbstractPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
 public class SchemeToolBar extends ElementsToolBar {
 
-	private static String[] buttons = new String[] { Constants.marqueeTool,
-			Constants.separator, Constants.rectangleTool,//
-			Constants.ellipseTool,//
-			Constants.lineTool, Constants.textTool, Constants.separator,
-			Constants.deviceTool,
-			Constants.portOutKey, Constants.portInKey, Constants.linkTool,
-			Constants.cableTool, Constants.separator, Constants.blockPortKey,
-			Constants.createTopLevelElementKey, Constants.groupKey,
-			Constants.ungroupKey, Constants.separator, Constants.deleteKey,
+	private static String[] buttons = new String[] { Constants.MARQUEE,
+			Constants.SEPARATOR, Constants.RECTANGLE,//
+			Constants.ELLIPSE,//
+			Constants.LINE, Constants.TEXT, Constants.SEPARATOR,
+			Constants.DEVICE,
+			Constants.PORT, Constants.CABLE_PORT, Constants.LINK,
+			Constants.CABLE, Constants.SEPARATOR, Constants.BLOCK_PORT,
+			Constants.CREATE_UGO, Constants.GROUP,
+			Constants.UNGROUP, Constants.SEPARATOR, Constants.DELETE,
 			// Constants.undoKey,
 			// Constants.redoKey,
-			Constants.separator, Constants.zoomInKey, Constants.zoomOutKey,
-			Constants.zoomActualKey, Constants.separator, Constants.backgroundSize,
-			Constants.separator, Constants.LINK_MODE, Constants.PATH_MODE,
-			Constants.separator, Constants.TOP_LEVEL_SCHEME_MODE 
+			Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
+			Constants.ZOOM_ACTUAL, Constants.SEPARATOR, Constants.BACKGROUND_SIZE,
+			Constants.SEPARATOR, Constants.LINK_MODE, Constants.PATH_MODE,
+			Constants.SEPARATOR, Constants.TOP_LEVEL_MODE 
 	};
 	
 	public SchemeToolBar(UgoTabbedPane sourcePane, AbstractPropertiesFrame additionalFrame,
@@ -68,31 +66,24 @@ public class SchemeToolBar extends ElementsToolBar {
 
 		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
 
-		bttns.put(Constants.groupKey, createToolButton(mh.gr2, btn_size, null,
-				"создать компонент", new ImageIcon(Toolkit.getDefaultToolkit()
-						.getImage("images/group.gif")), new CreateGroup(pane), false));
-
-		bttns.put(Constants.createTopLevelSchemeKey, createToolButton(
-				mh.scheme_ugo, btn_size, null, "УГО схемы", new ImageIcon(Toolkit
-						.getDefaultToolkit().getImage("images/sheme_ugo.gif")),
+		bttns.put(Constants.GROUP, createToolButton(mh.gr2, btn_size, null,
+				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(pane), false));
+		bttns.put(Constants.CREATE_UGO, createToolButton(
+				mh.scheme_ugo, btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), 
+				Constants.ICON_CREATE_UGO,
 				new CreateTopLevelSchemeAction(pane, additionalFrame, aContext), true));
-		bttns.put(Constants.backgroundSize, createToolButton(mh.bSize, btn_size,
-				null, "размер схемы", new ImageIcon(Toolkit.getDefaultToolkit()
-						.getImage("images/sheme_size.gif")), new SetBackgroundSizeAction(
+		bttns.put(Constants.BACKGROUND_SIZE, createToolButton(mh.bSize, btn_size,
+				null, LangModelGraph.getString(Constants.BACKGROUND_SIZE), Constants.ICON_SCHEME_SIZE, new SetBackgroundSizeAction(
 						pane), true));
-
 		bttns.put(Constants.LINK_MODE, createToolButton(mh.linkButt, btn_size,
-				null, "режим линий", new ImageIcon(Toolkit.getDefaultToolkit()
-						.getImage("images/linkmode.gif")), new SetLinkModeAction(pane),
+				null, LangModelGraph.getString(Constants.LINK_MODE), Constants.ICON_LINK_MODE, new SetLinkModeAction(pane),
 				true));
 		bttns.put(Constants.PATH_MODE, createToolButton(mh.pathButt, btn_size,
-				null, "режим путей", new ImageIcon(Toolkit.getDefaultToolkit()
-						.getImage("images/pathmode.gif")), new SetPathModeAction(pane),
+				null, LangModelGraph.getString(Constants.PATH_MODE), Constants.ICON_PATH_MODE, new SetPathModeAction(pane),
 				true));
 
-		bttns.put(Constants.TOP_LEVEL_SCHEME_MODE, createToolButton(mh.topModeButt,
-				btn_size, null, "режим схематичного изображения", new ImageIcon(Toolkit
-						.getDefaultToolkit().getImage("images/scheme.gif")),
+		bttns.put(Constants.TOP_LEVEL_MODE, createToolButton(mh.topModeButt,
+				btn_size, null, LangModelGraph.getString(Constants.TOP_LEVEL_MODE), Constants.ICON_TOP_LEVEL_MODE,
 				new SetTopLevelModeAction(pane), true));
 
 		ButtonGroup group = new ButtonGroup();

@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.3 2005/05/18 14:59:44 bass Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,31 +10,30 @@ package com.syrus.AMFICOM.client_.scheme;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Session.*;
-import com.syrus.AMFICOM.Client.General.Command.Window.ArrangeWindowCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.event.*;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
-public class ElementsEditorMainFrame extends JFrame implements OperationListener {
+public class ElementsEditorMainFrame extends JFrame implements PropertyChangeListener {
 	public ApplicationContext aContext;
 
 	static SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -174,16 +173,16 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 		statusBar.organize();
 
 		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, "contextchange");
-		Environment.getDispatcher().register(this, "contextchange");
+		internal_dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
+		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
 		setContext(aContext);
 		setDefaultModel(aModel);
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment
-				.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment
+				.getDispatcher()));
 		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment
-				.getDispatcher(), aContext));
+				.getDispatcher()));
 		aModel
 				.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
 		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(
@@ -218,20 +217,8 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 
 		aModel.fireModelChanged("");
 
-		if (ConnectionInterface.getInstance() != null) {
-			if (ConnectionInterface.getInstance().isConnected())
-				internal_dispatcher.notify(new ContextChangeEvent(ConnectionInterface
-						.getInstance(), ContextChangeEvent.CONNECTION_OPENED_EVENT));
-		}
-		if (SessionInterface.getActiveSession() != null) {
-			aContext.setSessionInterface(SessionInterface.getActiveSession());
-			if (aContext.getSessionInterface().isOpened())
-				internal_dispatcher.notify(new ContextChangeEvent(aContext
-						.getSessionInterface(), ContextChangeEvent.SESSION_OPENED_EVENT));
-		} else {
-			aContext.setSessionInterface(Environment
-					.getDefaultSessionInterface(ConnectionInterface.getInstance()));
-			SessionInterface.setActiveSession(aContext.getSessionInterface());
+		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
+			internal_dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
 		}
 	}
 
@@ -275,68 +262,32 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 		aModel.setVisible("menuSchemeImport", false);
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals("contextchange")) {
+	public void propertyChange(PropertyChangeEvent ae) {
+		//TODO обработка установления сессии
+		
+		if (ae.getPropertyName().equals(ContextChangeEvent.TYPE)) {
 			ContextChangeEvent cce = (ContextChangeEvent) ae;
 			System.out.println("perform context change \""
-					+ Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
-			if (cce.SESSION_OPENED) {
-				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi)) {
+					+ "\" at " + this.getTitle());
+			if (cce.isSessionOpened()) {
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", sdf.format(new Date(aContext
-							.getSessionInterface().getLogonTime())));
-					statusBar.setText("user", aContext.getSessionInterface().getUser());
+				statusBar.setText("status", LangModel.getString("statusReady"));
+				statusBar.setText("session", sdf.format(ClientSessionEnvironment.getInstance().getSessionEstablishDate()));
+				try {
+					User user = (User)StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
+					statusBar.setText("user", user.getName());
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 			}
-			if (cce.SESSION_CLOSED) {
-				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi)) {
-					setSessionClosed();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", LangModel.getString("statusNoSession"));
-					statusBar.setText("user", LangModel.getString("statusNoUser"));
-				}
+			if (cce.isSessionClosed()) {
+				setSessionClosed();
+				statusBar.setText("status", LangModel.getString("statusReady"));
+				statusBar.setText("session", LangModel.getString("statusNoSession"));
+				statusBar.setText("user", LangModel.getString("statusNoUser"));
 			}
-			if (cce.CONNECTION_OPENED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci)) {
-					setConnectionOpened();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", ConnectionInterface.getInstance()
-							.getServerName());
-				}
-			}
-			if (cce.CONNECTION_CLOSED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci)) {
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel
-							.getString("statusConnectionError"));
-
-					statusBar
-							.setText("status", LangModel.getString("statusDisconnected"));
-					statusBar
-							.setText("server", LangModel.getString("statusNoConnection"));
-
-					setConnectionClosed();
-				}
-			}
-			if (cce.CONNECTION_FAILED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci)) {
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel
-							.getString("statusConnectionError"));
-
-					setConnectionFailed();
-				}
-			}
-			if (cce.DOMAIN_SELECTED) {
+			if (cce.isDomainSelected()) {
 				setDomainSelected();
 			}
 		}
@@ -370,15 +321,6 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 	}
 
 	public void setSessionOpened() {
-		// DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		// new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
-		// new SchemeDataSourceImage(dataSource).LoadNetDirectory();
-		// new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-		// new SchemeDataSourceImage(dataSource).LoadSchemeProto();
-		// new MapDataSourceImage(dataSource).loadProtoElements();
-		// new SchemeDataSourceImage(dataSource).LoadSchemes();
-		// new ConfigDataSourceImage(dataSource).LoadNet();
-		// new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
@@ -392,10 +334,8 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 		aModel.setEnabled("menuWindowList", true);
 
 		aModel.fireModelChanged("");
-		Identifier domain_id = new Identifier(((RISDSessionInfo) aContext
-				.getSessionInterface()).getAccessIdentifier().domain_id);
-		internal_dispatcher.notify(new ContextChangeEvent(domain_id,
-				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		internal_dispatcher.firePropertyChange(new ContextChangeEvent(this,
+				ContextChangeEvent.DOMAIN_SELECTED_EVENT), true);
 
 		editorFrame.setVisible(true);
 		ugoFrame.setVisible(true);
@@ -427,13 +367,11 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 		aModel.fireModelChanged("");
 
 		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo) aContext
-					.getSessionInterface()).getAccessIdentifier().domain_id);
-			Domain domain = (Domain) AdministrationStorableObjectPool
-					.getStorableObject(domain_id, true);
+			Identifier domain_id = LoginManager.getDomainId();
+			Domain domain = (Domain)StorableObjectPool.getStorableObject(domain_id, true);
 			statusBar.setText("domain", domain.getName());
 		} catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorException(ex);
 		}
 	}
 
@@ -473,8 +411,8 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 	}
 
 	void this_windowClosing(WindowEvent e) {
-		internal_dispatcher.unregister(this, "contextchange");
-		Environment.getDispatcher().unregister(this, "contextchange");
+		internal_dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
@@ -486,7 +424,6 @@ public class ElementsEditorMainFrame extends JFrame implements OperationListener
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this_windowClosing(e);
-
 			return;
 		}
 		super.processWindowEvent(e);

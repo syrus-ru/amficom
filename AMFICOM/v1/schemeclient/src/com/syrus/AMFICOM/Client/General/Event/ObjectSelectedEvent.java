@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.2 2005/04/18 10:48:09 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.3 2005/05/26 07:40:48 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,17 @@
 
 package com.syrus.AMFICOM.Client.General.Event;
 
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import java.beans.PropertyChangeEvent;
+
+import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:48:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:48 $
  * @module schemeclient_v1
  */
 
-public class ObjectSelectedEvent extends OperationEvent {
+public class ObjectSelectedEvent extends PropertyChangeEvent {
 	public static final long PORT_TYPE = 						0x00000001;
 	public static final long MEASUREMENTPORT_TYPE = 0x00000002;
 	public static final long MEASUREMENT_TYPE = 		0x00000004;
@@ -38,16 +40,14 @@ public class ObjectSelectedEvent extends OperationEvent {
 	public static final long OTHER_OBJECT =					0x00100000;
 	public static final long ALL_DESELECTED =				0x10000000;
 	
-	public static final String TYPE = "objectselected";
+	public static final String TYPE = ObjectSelectedEvent.class.getName();
 	private long type;
 	private VisualManager manager;
-	private Object selectedObject;
 	
 	public ObjectSelectedEvent(Object source,	Object selectedObject, VisualManager manager, long type) {
-		super(source, 0, TYPE);
+		super(source, TYPE, null, selectedObject);
 		this.type = type;
 		this.manager = manager;
-		this.selectedObject = selectedObject;
 	}
 
 	public boolean isSelected(long value) {
@@ -59,6 +59,6 @@ public class ObjectSelectedEvent extends OperationEvent {
 	}
 	
 	public Object getSelectedObject() {
-		return selectedObject;
+		return getNewValue();
 	}
 }

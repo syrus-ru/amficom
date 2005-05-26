@@ -1,21 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.Set;
+import com.syrus.AMFICOM.client.model.*;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.Scheme;
-
-public class SchemeOpenCommand extends VoidCommand
+public class SchemeOpenCommand extends AbstractCommand
 {
 	ApplicationContext aContext;
 
@@ -31,6 +18,7 @@ public class SchemeOpenCommand extends VoidCommand
 
 	public void execute()
 	{
+		/*
 		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(LangModelSchematics.getString("scheme"), SchemeController.getInstance());
 
 		try {
@@ -54,6 +42,6 @@ public class SchemeOpenCommand extends VoidCommand
 			Scheme scheme = (Scheme)mcd.getReturnObject();
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 					SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
-		}
+		}*/
 	}
 }

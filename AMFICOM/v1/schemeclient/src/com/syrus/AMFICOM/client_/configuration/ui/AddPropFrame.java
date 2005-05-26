@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.5 2005/05/18 14:59:43 bass Exp $
+ * $Id: AddPropFrame.java,v 1.6 2005/05/26 07:40:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,11 +32,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeController;
+import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -49,8 +50,8 @@ import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/18 14:59:43 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 07:40:50 $
  * @module schemeclient_v1
  */
 
@@ -61,8 +62,8 @@ public class AddPropFrame extends JDialog {
 	protected CharacteristicTypeSort sort;
 	
 	private CharacteristicType selectedType;
-	ObjComboBox characteristicTypeComboBox = new ObjComboBox(CharacteristicTypeController
-			.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION);
+	WrapperedComboBox characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper
+			.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
 	JRadioButton existingRadioButton = new JRadioButton(LangModelScheme.getString(Constants.EXISTING_TYPE));
 	JRadioButton newRadioButton = new JRadioButton(LangModelScheme.getString(Constants.NEW_TYPE));
 	ButtonGroup buttonGroup = new ButtonGroup();
@@ -182,8 +183,7 @@ public class AddPropFrame extends JDialog {
 		else {
 			if (!nameField.getText().equals(Constants.EMPTY)) {
 				try {
-					Identifier userId = new Identifier(((RISDSessionInfo) aContext
-							.getSessionInterface()).getAccessIdentifier().user_id);
+					Identifier userId = LoginManager.getUserId();
 					selectedType = CharacteristicType
 							.createInstance(userId, nameField.getText(), nameField.getText(),
 									DataType.DATA_TYPE_STRING, sort);

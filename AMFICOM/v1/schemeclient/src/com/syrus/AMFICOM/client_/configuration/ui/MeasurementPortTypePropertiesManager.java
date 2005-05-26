@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypePropertiesManager.java,v 1.5 2005/04/28 16:02:36 stas Exp $
+ * $Id: MeasurementPortTypePropertiesManager.java,v 1.6 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,15 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.ui.EmptyStorableObjectEditor;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeController;
+import com.syrus.AMFICOM.configuration.MeasurementPortTypeWrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/04/28 16:02:36 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -66,10 +66,10 @@ public class MeasurementPortTypePropertiesManager implements VisualManager {
 
 	/**
 	 * @return MeasurementPortTypeController
-	 * @see com.syrus.AMFICOM.client_.general.ui_.VisualManager#getController()
+	 * @see VisualManager#getController()
 	 */
-	public ObjectResourceController getController() {
-		return MeasurementPortTypeController.getInstance();
+	public StorableObjectWrapper getController() {
+		return MeasurementPortTypeWrapper.getInstance();
 	}
 
 	/**

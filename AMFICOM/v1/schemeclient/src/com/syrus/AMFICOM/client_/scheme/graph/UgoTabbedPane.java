@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.3 2005/04/22 07:32:50 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.4 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,46 +9,49 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.*;
+import java.beans.*;
 import java.util.*;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/22 07:32:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
-public class UgoTabbedPane extends JPanel implements OperationListener {
+public class UgoTabbedPane extends JPanel implements PropertyChangeListener {
 	protected ApplicationContext aContext;
 	protected SchemeMarqueeHandler marqueeHandler;
 	protected UgoPanel panel;
 	
-	public UgoTabbedPane(ApplicationContext aContext) {
+	public UgoTabbedPane() {
 		try {
 			jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
+	}
+	
+	public UgoTabbedPane(ApplicationContext aContext) {
+		this();
 		setContext(aContext);
 	}
 
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
-			this.aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
+			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
 		}
 		if (aContext != null) {
 			this.aContext = aContext;
-			this.aContext.getDispatcher().register(this, SchemeEvent.TYPE);
+			this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
 			for (Iterator it = getAllPanels().iterator(); it.hasNext();)
 				((UgoPanel)it.next()).setContext(aContext);
-			SchemeObjectsFactory.setContext(aContext);
 		}
 	}
 	
@@ -128,8 +131,8 @@ public class UgoTabbedPane extends JPanel implements OperationListener {
 		removePanel(panel);
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals(SchemeEvent.TYPE)) {
+	public void propertyChange(PropertyChangeEvent ae) {
+		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent) ae;
 			if (see.isType(SchemeEvent.OPEN_SCHEME)) {
 				Scheme scheme = (Scheme) see.getObject();

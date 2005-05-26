@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.2 2005/04/18 10:45:18 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.3 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,27 +8,29 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 
 import javax.swing.event.*;
 import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.UI.tree.*;
+import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:45:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
-public class SchemeTreeUI extends IconedTreeUI implements OperationListener {
+public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener {
 	ApplicationContext aContext;
 	
 	public SchemeTreeUI(Item rootItem, ApplicationContext aContext) {
@@ -43,16 +45,16 @@ public class SchemeTreeUI extends IconedTreeUI implements OperationListener {
 	
 	void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
-			this.aContext.getDispatcher().unregister(this, ObjectSelectedEvent.TYPE);
-			this.aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
+			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
+			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
 		}
 		this.aContext = aContext;
-		this.aContext.getDispatcher().register(this, ObjectSelectedEvent.TYPE);
-		this.aContext.getDispatcher().register(this, SchemeEvent.TYPE);
+		this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
+		this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
 	}
 	
-	public void operationPerformed(OperationEvent e) {
-		if (e.getActionCommand().equals(ObjectSelectedEvent.TYPE)) {
+	public void propertyChange(PropertyChangeEvent e) {
+		if (e.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)e;
 			Object selected = ev.getSelectedObject();
 			if (selected != null) {
@@ -62,7 +64,7 @@ public class SchemeTreeUI extends IconedTreeUI implements OperationListener {
 					this.treeUI.getTree().setSelectionPath(new TreePath(model.getPathToRoot(node)));
 			}
 		}
-		else if (e.getActionCommand().equals(SchemeEvent.TYPE)) {
+		else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent ev = (SchemeEvent)e;
 			if (ev.isType(SchemeEvent.CREATE_OBJECT) || ev.isType(SchemeEvent.DELETE_OBJECT)) {
 				ItemTreeModel model = this.treeUI.getTreeModel();
@@ -119,11 +121,9 @@ public class SchemeTreeUI extends IconedTreeUI implements OperationListener {
 				object = null; 
 		}
 		else {
-			Log.debugMessage("Unsupported tree object type " + object, Log.FINEST);
-			System.err.println("Unsupported tree object type " + object);
-			return;
+			throw new UnsupportedOperationException("Unsupported tree object type " + object); //$NON-NLS-1$
 		}
 		ObjectSelectedEvent ev = new ObjectSelectedEvent(e.getSource(), object, manager, type);
-		aContext.getDispatcher().notify(ev);
+		aContext.getDispatcher().firePropertyChange(ev);
 	}
 }

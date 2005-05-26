@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkPropertiesManager.java,v 1.1 2005/04/18 10:45:17 stas Exp $
+ * $Id: SchemeCableLinkPropertiesManager.java,v 1.2 2005/05/26 07:40:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,15 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.SchemeCableLinkController;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/18 10:45:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
  * @module schemeclient_v1
  */
 
@@ -23,6 +24,7 @@ public class SchemeCableLinkPropertiesManager implements VisualManager {
 	private static SchemeCableLinkPropertiesManager instance;
 	private SchemeCableLinkGeneralPanel generalPanel;
 	private SchemeCableLinkCharacteristicsPanel charPanel;
+	private SchemeCableLinkLayout layout;
 	
 	private SchemeCableLinkPropertiesManager() {
 		// empty
@@ -40,8 +42,11 @@ public class SchemeCableLinkPropertiesManager implements VisualManager {
 			generalPanel = new SchemeCableLinkGeneralPanel();
 		generalPanel.setContext(aContext);
 		if (charPanel == null)
-			charPanel = new SchemeCableLinkCharacteristicsPanel(); 
+			charPanel = new SchemeCableLinkCharacteristicsPanel();
 		charPanel.setContext(aContext);
+		if (layout == null)
+			layout = new SchemeCableLinkLayout();
+		layout.setContext(aContext);
 	}
 	
 	/**
@@ -64,7 +69,15 @@ public class SchemeCableLinkPropertiesManager implements VisualManager {
 	 * @return SchemeCableLinkController
 	 * @see VisualManager#getController()
 	 */
-	public ObjectResourceController getController() {
-		return SchemeCableLinkController.getInstance();
+	public StorableObjectWrapper getController() {
+		return SchemeCableLinkWrapper.getInstance();
+	}
+
+	/**
+	 * @return SchemeCableLinkLayout
+	 * @see VisualManager#getAdditionalPropertiesPanel()
+	 */
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		return layout;
 	}
 }

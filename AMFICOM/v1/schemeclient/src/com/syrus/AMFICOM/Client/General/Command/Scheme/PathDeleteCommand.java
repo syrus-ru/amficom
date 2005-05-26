@@ -1,14 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
-public class PathDeleteCommand extends VoidCommand
+public class PathDeleteCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeTabbedPane pane;
 
 	public PathDeleteCommand(ApplicationContext aContext, SchemeTabbedPane pane)
@@ -24,8 +23,8 @@ public class PathDeleteCommand extends VoidCommand
 
 	public void execute()
 	{
-		SchemePath path = pane.getPanel().getGraph().getCurrentPath();
-		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(),
+		SchemePath path = pane.getCurrentPanel().getSchemeResource().getSchemePath();
+		aContext.getDispatcher().notify(new CreatePathEvent(pane,
 				new SchemePath[] {path},
 				CreatePathEvent.DELETE_PATH_EVENT));
 
@@ -34,6 +33,6 @@ public class PathDeleteCommand extends VoidCommand
 
 
 //		Pool.put(SchemePath.typ, path.getId(), path);
-		((SchemePanel)pane.getPanel()).removeCurrentPathFromScheme();
-	}
+//		(pane.getCurrentPanel()).removeCurrentPathFromScheme();
+	}*/
 }

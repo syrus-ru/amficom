@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 
-public class PathCancelCommand extends VoidCommand
+public class PathCancelCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeTabbedPane pane;
 
 	public PathCancelCommand(ApplicationContext aContext, SchemeTabbedPane pane)
@@ -23,8 +22,8 @@ public class PathCancelCommand extends VoidCommand
 
 	public void execute()
 	{
-		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(), null, CreatePathEvent.CANCEL_PATH_CREATION_EVENT));
-	}
+		aContext.getDispatcher().notify(new CreatePathEvent(pane, null, CreatePathEvent.CANCEL_PATH_CREATION_EVENT));
+	}*/
 }
 
 

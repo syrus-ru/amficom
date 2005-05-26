@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 
-public class PathSaveCommand extends VoidCommand
+public class PathSaveCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeTabbedPane pane;
 
 	public PathSaveCommand(ApplicationContext aContext, SchemeTabbedPane pane)
@@ -23,10 +22,10 @@ public class PathSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(),
+		aContext.getDispatcher().notify(new CreatePathEvent(pane,
 				null,
 				CreatePathEvent.SAVE_PATH_EVENT));
-	}
+	}*/
 }
 
 

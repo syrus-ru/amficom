@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.6 2005/05/18 14:59:44 bass Exp $
+ * $Id: SchemeActions.java,v 1.7 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import javax.swing.*;
 
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/18 14:59:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -249,11 +249,11 @@ public class SchemeActions {
 
 			JMenuItem menu1 = new JMenuItem(new AbstractAction() {
 				public void actionPerformed(ActionEvent ev) {
-					aContext.getDispatcher().notify(
-							new OperationEvent(sc.getId(), 0, "addschemeevent"));
+					aContext.getDispatcher().firePropertyChange(
+							new SchemeEvent(this, sc, SchemeEvent.OPEN_SCHEME));
 
 					if (se != null && se.isAlarmed())
-						aContext.getDispatcher().notify(
+						aContext.getDispatcher().firePropertyChange(
 								new SchemeEvent(this, se,
 										SchemeEvent.CREATE_ALARMED_LINK));
 				}
@@ -269,11 +269,11 @@ public class SchemeActions {
 					|| (v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0)) {
 				JMenuItem menu1 = new JMenuItem(new AbstractAction() {
 					public void actionPerformed(ActionEvent ev) {
-						aContext.getDispatcher().notify(
-								new OperationEvent(se.getId(), 0, "addschemeelementevent"));
+						aContext.getDispatcher().firePropertyChange(
+								new SchemeEvent(this, se, SchemeEvent.OPEN_SCHEMEELEMENT));
 
 						if (se.isAlarmed())
-							aContext.getDispatcher().notify(
+							aContext.getDispatcher().firePropertyChange(
 									new SchemeEvent(this, se,
 											SchemeEvent.CREATE_ALARMED_LINK));
 					}
@@ -283,6 +283,20 @@ public class SchemeActions {
 			}
 		}
 		return pop;
+	}
+	
+	public static Object search(SchemeGraph graph, String str) {
+		Object[] cells = graph.getAll();
+		for (int i = 0; i < cells.length; i++)
+			if (cells[i] instanceof DefaultGraphCell) {
+				Object obj = ((DefaultGraphCell)cells[i]).getUserObject();
+				if (obj instanceof String) {
+					String objstr = (String)obj;
+					if (objstr.startsWith(str))
+						return cells[i];
+				}
+			}
+		return null;
 	}
 
 	public static DeviceGroup findGroupById(SchemeGraph graph,

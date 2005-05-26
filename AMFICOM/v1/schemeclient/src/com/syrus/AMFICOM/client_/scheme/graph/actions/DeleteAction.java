@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.2 2005/04/18 09:55:03 stas Exp $
+ * $Id: DeleteAction.java,v 1.3 2005/05/26 07:40:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,15 +15,17 @@ import javax.swing.*;
 
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 09:55:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
  * @module schemeclient_v1
  */
 
@@ -32,7 +34,7 @@ public class DeleteAction extends AbstractAction {
 	UgoTabbedPane pane;
 	
 	public DeleteAction(UgoTabbedPane pane, ApplicationContext aContext) {
-		super(Constants.deleteKey);
+		super(Constants.DELETE);
 		this.aContext = aContext;
 		this.pane = pane; 
 	}
@@ -129,7 +131,7 @@ public class DeleteAction extends AbstractAction {
 					new_cells.toArray(new Object[new_cells.size()])).toArray();
 			graph.getModel().remove(cells);
 			graph.selectionNotify();
-			aContext.getDispatcher().notify(
+			aContext.getDispatcher().firePropertyChange(
 					new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
 		}
 	}
@@ -140,8 +142,8 @@ public class DeleteAction extends AbstractAction {
 			if (resource.getScheme() != null) {
 				resource.getScheme().removeSchemeElement(element);
 				if (element.getEquipment() != null)
-					ConfigurationStorableObjectPool.delete(element.getEquipment().getId());
-				SchemeStorableObjectPool.delete(element.getId());
+					StorableObjectPool.delete(element.getEquipment().getId());
+				StorableObjectPool.delete(element.getId());
 			}
 		}
 		return Arrays.asList(new DeviceGroup[] {group});

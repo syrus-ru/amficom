@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeEvent.java,v 1.2 2005/04/18 10:48:09 stas Exp $
+ * $Id: SchemeEvent.java,v 1.3 2005/05/26 07:40:48 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.Client.General.Event;
 
+import java.beans.PropertyChangeEvent;
+
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/04/18 10:48:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:48 $
  * @module schemeclient_v1
  */
 
-public class SchemeEvent extends OperationEvent {
-	static final public String TYPE = "schemeEvent";
+public class SchemeEvent extends PropertyChangeEvent {
+	static final public String TYPE = SchemeEvent.class.getName();
 	
 	public static final long OPEN_SCHEME = 						0x00000001;
 	public static final long OPEN_SCHEMEELEMENT = 		0x00000002;
@@ -39,14 +41,11 @@ public class SchemeEvent extends OperationEvent {
 	public static final long CREATE_ALARMED_LINK = 		0x00100000;
 //	public static final long OBJECT_TYPE_UPDATE = 		0x10000000;
 	
-	private Object object;
 //	private Object value;
 	private long type;
 	
 	public SchemeEvent(Object source, Object object, long type) {
-		super(source, 0, TYPE);
-		this.object = object;
-//		this.value = value;
+		super(source, TYPE, null, object);
 		this.type = type;
 	}
 	
@@ -55,7 +54,7 @@ public class SchemeEvent extends OperationEvent {
 	}
 
 	public Object getObject() {
-		return object;
+		return super.getNewValue();
 	}
 	
 //	public Object getValue() {
