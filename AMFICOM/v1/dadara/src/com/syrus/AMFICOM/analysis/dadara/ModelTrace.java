@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTrace.java,v 1.7 2005/05/24 10:00:05 saa Exp $
+ * $Id: ModelTrace.java,v 1.8 2005/05/26 13:32:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.7 $, $Date: 2005/05/24 10:00:05 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/26 13:32:51 $
  * @module
  */
 public abstract class ModelTrace extends ModelTraceRange
@@ -50,8 +50,10 @@ public abstract class ModelTrace extends ModelTraceRange
      * @return значения игреков на запрошенном диапазоне иксов x0 .. x0+N-1,
      * полагая нулевыми значения за пределами области определения.
      * (в принципе, обнулять не обязательно, но так почему-то принято)
+     * 
+     * @todo remove as outdated (see {@link ModelTraceRange})
      */
-    public double[] getYArrayZeroPad(int x0, int N)
+    private double[] getYArrayZeroPad1(int x0, int N)
     {
         if (N <= 0) // на случай отрицательного N, возвращаем пустой массив
             return new double[0];
