@@ -1,33 +1,26 @@
 /*
- * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.1 2005/04/08 15:40:50 cvsadmin Exp $
+ * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.2 2005/05/26 13:02:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package test.com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.general;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/08 15:40:50 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 13:02:51 $
+ * @author $Author: bob $
  * @module tools
  */
-public class UnitsOfQP1643ACharacteristrics extends GeneralTestCase {
+public class UnitsOfQP1643ACharacteristrics extends CommonTest {
 
 	public UnitsOfQP1643ACharacteristrics(String name) {
 		super(name);
@@ -47,76 +40,76 @@ public class UnitsOfQP1643ACharacteristrics extends GeneralTestCase {
 
 	public void testCreateCharacteristics() throws ApplicationException {
 
-		MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
+		MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(
 			new Identifier("MeasurementPort_19"), true);
 		Identifier measurementPortTypeId = measurementPort.getType().getId();
 		if (true){
 		{
-			CharacteristicType resolutionType = CharacteristicType.createInstance(creatorId,
-				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType._DATA_TYPE_STRING,
+			CharacteristicType resolutionType = CharacteristicType.createInstance(creatorUser.getId(),
+				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType.DATA_TYPE_STRING,
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			GeneralStorableObjectPool.putStorableObject(resolutionType);
+			StorableObjectPool.putStorableObject(resolutionType);
 
-			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorId, resolutionType,
-				"resolution unit", "resolution unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorUser.getId(), resolutionType,
+				"resolution unit", "resolution unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
 				"м", measurementPortTypeId, false, true);
-			GeneralStorableObjectPool.putStorableObject(resolutionCharacteristic);
+			StorableObjectPool.putStorableObject(resolutionCharacteristic);
 		}
 
 		{
-			CharacteristicType waveLengthType = CharacteristicType.createInstance(creatorId,
-				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType._DATA_TYPE_STRING,
+			CharacteristicType waveLengthType = CharacteristicType.createInstance(creatorUser.getId(),
+				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType.DATA_TYPE_STRING,
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			GeneralStorableObjectPool.putStorableObject(waveLengthType);
+			StorableObjectPool.putStorableObject(waveLengthType);
 
-			Characteristic characteristic = Characteristic.createInstance(creatorId, waveLengthType,
-				"wavelength unit", "wavelength unit", CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
+			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), waveLengthType,
+				"wavelength unit", "wavelength unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
 				"нм", measurementPortTypeId, false, true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
+			StorableObjectPool.putStorableObject(characteristic);
 		}
 
 		{
-			CharacteristicType averageCountType = CharacteristicType.createInstance(creatorId,
+			CharacteristicType averageCountType = CharacteristicType.createInstance(creatorUser.getId(),
 				CharacteristicTypeCodenames.UNITS_AVERAGE_COUNT, "average count unit type",
-				DataType._DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+				DataType.DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			GeneralStorableObjectPool.putStorableObject(averageCountType);
-			Characteristic characteristic = Characteristic.createInstance(creatorId, averageCountType,
+			StorableObjectPool.putStorableObject(averageCountType);
+			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), averageCountType,
 				"average count unit", "average count unit",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "точек", measurementPortTypeId, false,
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "точек", measurementPortTypeId, false,
 				true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
+			StorableObjectPool.putStorableObject(characteristic);
 		}
 
 		{
-			CharacteristicType traceLengthType = CharacteristicType.createInstance(creatorId,
+			CharacteristicType traceLengthType = CharacteristicType.createInstance(creatorUser.getId(),
 				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type",
-				DataType._DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+				DataType.DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			GeneralStorableObjectPool.putStorableObject(traceLengthType);
-			Characteristic characteristic = Characteristic.createInstance(creatorId, traceLengthType,
+			StorableObjectPool.putStorableObject(traceLengthType);
+			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), traceLengthType,
 				"trace length unit", "trace length unit",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "км", measurementPortTypeId, false,
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "км", measurementPortTypeId, false,
 				true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
+			StorableObjectPool.putStorableObject(characteristic);
 		}
 
 		{
-			CharacteristicType pulseWidthType = CharacteristicType.createInstance(creatorId,
+			CharacteristicType pulseWidthType = CharacteristicType.createInstance(creatorUser.getId(),
 				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "average count unit type",
-				DataType._DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+				DataType.DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			GeneralStorableObjectPool.putStorableObject(pulseWidthType);
-			Characteristic characteristic = Characteristic.createInstance(creatorId, pulseWidthType,
+			StorableObjectPool.putStorableObject(pulseWidthType);
+			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), pulseWidthType,
 				"pulse width unit", "pulse width unit",
-				CharacteristicSort._CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "нс", measurementPortTypeId, false,
+				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "нс", measurementPortTypeId, false,
 				true);
-			GeneralStorableObjectPool.putStorableObject(characteristic);
+			StorableObjectPool.putStorableObject(characteristic);
 		}
 		
-		GeneralStorableObjectPool.flush(true);
+		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, true);
 		}
 
 	}

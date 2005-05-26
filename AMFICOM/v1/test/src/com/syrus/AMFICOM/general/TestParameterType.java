@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.7 2005/05/24 17:25:31 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.8 2005/05/26 13:02:51 bob Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/24 17:25:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/05/26 13:02:51 $
+ * @author $Author: bob $
  * @module test
  */
 public class TestParameterType extends CommonTest {
@@ -29,8 +29,8 @@ public class TestParameterType extends CommonTest {
 
 	public void t1estCreateInstance() throws ApplicationException {
 		String codename = ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON;
-		String name = "Gain splice flag";
-		String description = "Gain splice on/off";
+		String name = "Gain splice";
+		String description = "Gain splice flag";
 		DataType dataType = DataType.DATA_TYPE_BOOLEAN;
 		ParameterType parameterType = ParameterType.createInstance(creatorUser.getId(), codename, description, name, dataType);
 
@@ -50,8 +50,8 @@ public class TestParameterType extends CommonTest {
 
 
 		codename = ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT;
-		name = "Live fiber detect flag";
-		description = "Live fiber detect on/off";
+		name = "Live fiber detect";
+		description = "Live fiber detect flag";
 		dataType = DataType.DATA_TYPE_BOOLEAN;
 		parameterType = ParameterType.createInstance(creatorUser.getId(), codename, description, name, dataType);
 
