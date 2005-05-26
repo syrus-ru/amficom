@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.3 2005/05/25 10:28:17 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.4 2005/05/26 06:10:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,7 @@
 
 package com.syrus.AMFICOM.client.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -23,9 +20,9 @@ import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -50,156 +47,109 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/05/25 10:28:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 06:10:51 $
  * @module commonclient_v1
  */
 
-public class CharacteristicAddDialog extends JDialog {
-	
+public class CharacteristicAddDialog {	
 
-	public static final int OK = 1;
-	public static final int CANCEL = 0;
-	protected int res = CANCEL;
+	protected int result = JOptionPane.CANCEL_OPTION;
 
 	protected CharacteristicTypeSort sort;
-	CharacteristicType selectedType;
+	private CharacteristicType selectedType;
+	
 	WrapperedComboBox characteristicTypeComboBox;
-	JRadioButton existingRadioButton = new JRadioButton(LangModelGeneral
-			.getString(ResourceKeys.I18N_EXISTING_CHARACTERISTICTYPE));
-	JRadioButton newRadioButton = new JRadioButton(LangModelGeneral
-			.getString(ResourceKeys.I18N_NEW_CHARACTERISTICTYPE));
-	ButtonGroup buttonGroup = new ButtonGroup();
-	JPanel panel;
-	JPanel buttonPanel = new JPanel();
-	JTextField nameField = new JTextField();
-	JTextArea descrArea = new JTextArea();
-	JLabel name = new JLabel();
-	JLabel descr = new JLabel();
-	JButton okButton = new JButton();
-	JButton cancelButton = new JButton();
+	JRadioButton existingRadioButton;	
+	private JRadioButton newRadioButton;
+	
+	private ButtonGroup buttonGroup;
+	
+	private JPanel panel;
+	JTextField nameField;
+	JTextArea descriptionArea;
+	private JLabel name;
+	private JLabel description;
+	private final Frame	parent;
+	private final String title;
 
-	public CharacteristicAddDialog(Frame parent, String title) {
-		super(parent, title);
-
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public CharacteristicAddDialog(final Frame parent, final String title) {
+		this.parent = parent;
+		this.title = title;		
 	}
 
-	private void jbInit() throws Exception {
+	private void createUIItems() {
+		this.existingRadioButton = new JRadioButton(LangModelGeneral.getString(ResourceKeys.I18N_EXISTING_CHARACTERISTICTYPE));
+		this.newRadioButton = new JRadioButton(LangModelGeneral.getString(ResourceKeys.I18N_NEW_CHARACTERISTICTYPE));
+		this.buttonGroup = new ButtonGroup();
+		
 		this.buttonGroup.add(this.existingRadioButton);
 		this.buttonGroup.add(this.newRadioButton);
-		
+
 		ActionListener actionListener = new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				boolean b = CharacteristicAddDialog.this.existingRadioButton.isSelected();
 				CharacteristicAddDialog.this.characteristicTypeComboBox.setEnabled(b);
 				CharacteristicAddDialog.this.nameField.setEnabled(!b);
-				CharacteristicAddDialog.this.descrArea.setEnabled(!b);
-			
+				CharacteristicAddDialog.this.descriptionArea.setEnabled(!b);
+
 			}
 		};
 		this.existingRadioButton.addActionListener(actionListener);
 		this.newRadioButton.addActionListener(actionListener);
-
-		this.characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper
-				.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(350, 250);
-
-		setLocation((screenSize.width - frameSize.width) / 2,
-				(screenSize.height - frameSize.height) / 2);
-		setSize(frameSize);
-		setTitle(LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTIC));
-
-		this.name.setText(LangModelGeneral.getString(ResourceKeys.I18N_NAME));
-		this.descr.setText(LangModelGeneral.getString(ResourceKeys.I18N_DESCRIPTION));
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.getViewport().add(this.descrArea);
-		this.descrArea.setAutoscrolls(true);
-		scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
-
 		
-		this.panel = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
+		this.nameField = new JTextField();
+		this.descriptionArea = new JTextArea();
+		this.name = new JLabel(LangModelGeneral.getString(ResourceKeys.I18N_NAME));
+		this.description = new JLabel(LangModelGeneral.getString(ResourceKeys.I18N_DESCRIPTION));
+		
+		this.characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_DESCRIPTION,
+			StorableObjectWrapper.COLUMN_ID);
 
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.panel.add(this.existingRadioButton, gbc);
-		this.panel.add(this.characteristicTypeComboBox, gbc);
-		this.panel.add(this.newRadioButton, gbc);
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		this.panel.add(this.name, gbc);
-		gbc.weightx = 1.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.panel.add(this.nameField, gbc);
-		gbc.weightx = 0.0;
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		this.panel.add(this.descr, gbc);
-		gbc.weighty = 1.0;
-		gbc.weightx = 1.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.panel.add(scrollPane, gbc);
-		gbc.weighty = 0.0;
-		gbc.weightx = 0.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		this.panel.add(this.buttonPanel, gbc);
+	}
+	
+	private JPanel getPanel() {
+		if (this.panel == null) {
+			this.createUIItems();
 
-		this.buttonPanel.setLayout(new FlowLayout());
-		this.buttonPanel.add(this.okButton);
-		this.buttonPanel.add(this.cancelButton);
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.getViewport().add(this.descriptionArea);
+			this.descriptionArea.setAutoscrolls(true);
+			scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 
-		this.okButton.setText(LangModelGeneral.getString(ResourceKeys.I18N_ADD));
-		this.okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (CharacteristicAddDialog.this.existingRadioButton.isSelected()) {
-					if (CharacteristicAddDialog.this.characteristicTypeComboBox.getSelectedItem() != null) {
-						CharacteristicAddDialog.this.selectedType = (CharacteristicType) CharacteristicAddDialog.this.characteristicTypeComboBox
-								.getSelectedItem();
-					} else {
-						return;
-					}
-				} 
-				else {
-					String text = CharacteristicAddDialog.this.nameField.getText();
-					if (text != null && text.trim().length() > 0) {
-						try {
-							Identifier userId = LoginManager.getUserId();
-							CharacteristicAddDialog.this.selectedType = CharacteristicType
-									.createInstance(userId, CharacteristicAddDialog.this.nameField.getText(), CharacteristicAddDialog.this.nameField.getText(),
-											DataType.DATA_TYPE_STRING, CharacteristicAddDialog.this.sort);
-						} catch (CreateObjectException ex) {
-							ex.printStackTrace();
-							return;
-						}
-					} else {
-						return;
-					}
-				}
-				CharacteristicAddDialog.this.res = OK;
-				CharacteristicAddDialog.this.dispose();
-			}
-		});
-		this.cancelButton.setText(LangModelGeneral.getString(ResourceKeys.I18N_CANCEL));
-		this.cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				CharacteristicAddDialog.this.dispose();
-			}
-		});
+			this.panel = new JPanel(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
 
-		Container contentPane = this.getContentPane();
-		contentPane.setLayout(new BorderLayout());
-		contentPane.add(this.panel, BorderLayout.CENTER);
+			gbc.fill = GridBagConstraints.BOTH;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			this.panel.add(this.existingRadioButton, gbc);
+			this.panel.add(this.characteristicTypeComboBox, gbc);
+			this.panel.add(this.newRadioButton, gbc);
+			gbc.gridwidth = GridBagConstraints.RELATIVE;
+			this.panel.add(this.name, gbc);
+			gbc.weightx = 1.0;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			this.panel.add(this.nameField, gbc);
+			gbc.weightx = 0.0;
+			gbc.gridwidth = GridBagConstraints.RELATIVE;
+			this.panel.add(this.description, gbc);
+			gbc.weighty = 1.0;
+			gbc.weightx = 1.0;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			this.panel.add(scrollPane, gbc);
+			gbc.weighty = 0.0;
+			gbc.weightx = 0.0;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;			
+		}
+		return this.panel;
 	}
 
-	public int showDialog(CharacteristicTypeSort sort1, Collection characaterisctics) {
-		this.sort = sort1;
+	public int showDialog(CharacteristicTypeSort sort, Collection characaterisctics) {
+		this.sort = sort;
 
 		try {
-			TypicalCondition condition = new TypicalCondition(sort1.value(), sort1.value(), OperationSort.OPERATION_EQUALS,				
+			TypicalCondition condition = new TypicalCondition(sort.value(), sort.value(), OperationSort.OPERATION_EQUALS,				
 					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CharacteristicTypeWrapper.COLUMN_SORT);
 			Collection characteristicTypes = StorableObjectPool
 					.getStorableObjectsByCondition(condition, true);
@@ -220,10 +170,58 @@ public class CharacteristicAddDialog extends JDialog {
 			this.existingRadioButton.doClick();
 		}
 		
-		setModal(true);
-		setVisible(true);
-		return this.res;
+		
+		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);
+		final String cancelButton = LangModelGeneral.getString(ResourceKeys.I18N_CANCEL);
+		final JOptionPane optionPane = new JOptionPane(this.getPanel(), JOptionPane.PLAIN_MESSAGE,
+														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
+																cancelButton}, null);
+
+		final JDialog dialog = optionPane.createDialog(this.parent, this.title);
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		// TODO fix absolute size to relative , maybe using pack ?
+		Dimension frameSize = new Dimension(350, 250);
+		dialog.setLocation((screenSize.width - frameSize.width) / 2,
+			(screenSize.height - frameSize.height) / 2);
+		dialog.setSize(frameSize);
+		dialog.setTitle(LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTIC));
+		
+		dialog.setModal(true);
+		dialog.show();
+		dialog.dispose();
+
+		final Object selectedValue = optionPane.getValue();
+
+		if (selectedValue == okButton) {
+
+			if (this.existingRadioButton.isSelected()) {
+				if (this.characteristicTypeComboBox.getSelectedItem() != null) {
+					this.selectedType = (CharacteristicType) this.characteristicTypeComboBox
+							.getSelectedItem();
+				}
+			} else {
+				String text = this.nameField.getText();
+				if (text != null && text.trim().length() > 0) {
+					try {
+						Identifier userId = LoginManager.getUserId();
+						this.selectedType = CharacteristicType.createInstance(userId,
+							this.nameField.getText(), this.nameField
+									.getText(), DataType.DATA_TYPE_STRING, this.sort);
+					} catch (CreateObjectException ex) {
+						ex.printStackTrace();
+					}
+				}
+			}
+			this.result = JOptionPane.OK_OPTION;
+		} else {
+			this.result = JOptionPane.CANCEL_OPTION;
+		}
+		
+		return this.result;
 	}
+	
+	
 
 	public CharacteristicType getCharacteristicType() {
 		return this.selectedType;
