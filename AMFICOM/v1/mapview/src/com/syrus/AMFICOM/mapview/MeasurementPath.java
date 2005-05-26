@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.24 2005/05/18 12:37:39 bass Exp $
+ * $Id: MeasurementPath.java,v 1.25 2005/05/26 15:31:15 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -40,7 +39,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * Элемент пути.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/05/18 12:37:39 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/26 15:31:15 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -568,13 +567,6 @@ public class MeasurementPath implements MapElement
 	 */
 	public void setCharacteristics(Set characteristics) {
 		this.schemePath.setCharacteristics(characteristics);
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return this.schemePath.getCharacteristicSort();
 	}
 
 	/**

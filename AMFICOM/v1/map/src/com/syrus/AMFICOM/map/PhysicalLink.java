@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.56 2005/05/24 13:25:03 bass Exp $
+ * $Id: PhysicalLink.java,v 1.57 2005/05/26 15:31:16 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
@@ -54,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/05/24 13:25:03 $
+ * @version $Revision: 1.57 $, $Date: 2005/05/26 15:31:16 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -967,13 +966,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_PHYSICAL_LINK;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.12 2005/05/26 06:24:20 bass Exp $
+ * $Id: Selection.java,v 1.13 2005/05/26 15:31:15 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -27,7 +26,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * Набор выбранных элементов.
  *
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/05/26 06:24:20 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/26 15:31:15 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -350,13 +349,6 @@ public final class Selection implements MapElement {
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Set)
 	 */
 	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
 		throw new UnsupportedOperationException();
 	}
 

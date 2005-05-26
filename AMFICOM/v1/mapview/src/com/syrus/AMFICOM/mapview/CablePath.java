@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.18 2005/05/26 06:24:20 bass Exp $
+ * $Id: CablePath.java,v 1.19 2005/05/26 15:31:15 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,7 +21,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.IntPoint;
@@ -35,7 +34,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/05/26 06:24:20 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/26 15:31:15 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -830,13 +829,6 @@ public class CablePath implements MapElement
 	 */
 	public void setCharacteristics(Set characteristics) {
 		this.schemeCableLink.setCharacteristics(characteristics);
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return this.schemeCableLink.getCharacteristicSort();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.37 2005/05/24 13:25:03 bass Exp $
+ * $Id: SiteNode.java,v 1.38 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
@@ -53,7 +52,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/05/24 13:25:03 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/26 15:31:15 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -436,13 +435,6 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortCharacteristicsPanel.java,v 1.2 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemePortCharacteristicsPanel.java,v 1.3 2005/05/26 15:31:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.SchemePort;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 15:31:13 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +41,7 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 
 		if (schemePort != null) {
 			super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT, schemePort,
+					schemePort,
 					schemePort.getId(), true);
 			super.addCharacteristics(schemePort.getCharacteristics(), schemePort.getId());
 			
@@ -49,7 +49,7 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 			if (port != null) {
 				for (int i = 0; i < sorts.length; i++)
 					super.setTypeSortMapping(sorts[i],
-							CharacteristicSort.CHARACTERISTIC_SORT_PORT, port,
+							port,
 							port.getId(), true);
 				super.addCharacteristics(port.getCharacteristics(), port.getId());
 			}
@@ -58,7 +58,7 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 				if (portType != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
-								CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE, portType,
+								portType,
 								portType.getId(), false);
 					super.addCharacteristics(portType.getCharacteristics(), portType.getId());
 				}

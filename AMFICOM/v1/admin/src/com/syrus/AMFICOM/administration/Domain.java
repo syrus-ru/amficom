@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.30 2005/05/25 13:01:02 bass Exp $
+ * $Id: Domain.java,v 1.31 2005/05/26 15:31:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/25 13:01:02 $
+ * @version $Revision: 1.31 $, $Date: 2005/05/26 15:31:17 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 public class Domain extends DomainMember implements Characterizable {
@@ -253,9 +252,5 @@ public class Domain extends DomainMember implements Characterizable {
 	 */
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
-	}
-
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN;
 	}
 }

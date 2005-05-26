@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.17 2005/05/26 06:24:20 bass Exp $
+ * $Id: Marker.java,v 1.18 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -50,7 +49,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.17 $, $Date: 2005/05/26 06:24:20 $
+ * @version $Revision: 1.18 $, $Date: 2005/05/26 15:31:15 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -500,13 +499,6 @@ public class Marker extends AbstractNode
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
 	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
 		throw new UnsupportedOperationException();
 	}
 

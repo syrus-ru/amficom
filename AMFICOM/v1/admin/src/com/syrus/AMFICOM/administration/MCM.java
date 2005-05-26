@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.25 2005/05/25 13:01:02 bass Exp $
+ * $Id: MCM.java,v 1.26 2005/05/26 15:31:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/25 13:01:02 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/26 15:31:17 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -303,9 +302,5 @@ public class MCM extends DomainMember implements Characterizable {
 	public void setUserId(Identifier userId) {
 		this.userId = userId;
 		super.changed = true;
-	}
-
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_MCM;
 	}
 }

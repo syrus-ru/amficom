@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.31 2005/05/24 13:25:02 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.32 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
 import com.syrus.util.Log;
@@ -42,7 +41,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/24 13:25:02 $
+ * @version $Revision: 1.32 $, $Date: 2005/05/26 15:31:15 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -218,13 +217,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public Set getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLETHREAD;
 	}
 
 	/**

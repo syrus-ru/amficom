@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.33 2005/05/26 14:04:28 bass Exp $
+ * $Id: Characteristic.java,v 1.34 2005/05/26 15:31:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,11 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/05/26 14:04:28 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/26 15:31:13 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -316,61 +315,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public void setValue(String value){
 		super.changed = true;
 		this.value = value;
-	}
-
-	protected static CharacteristicSort getSortForId(Identifier id) throws IllegalDataException{
-		CharacteristicSort csort;
-		switch(id.getMajor()){
-			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN;
-				break;
-			case ObjectEntities.SERVER_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_SERVER;
-				break;
-			case ObjectEntities.MCM_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_MCM;
-				break;
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH;
-				break;
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT;
-				break;
-			case ObjectEntities.PORT_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_PORT;
-				break;
-			case ObjectEntities.LINK_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_LINK;
-				break;
-			case ObjectEntities.KIS_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_KIS;
-				break;
-			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT;
-				break;
-			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE;
-				break;
-			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE;
-				break;
-			case ObjectEntities.PORTTYPE_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE;
-				break;
-			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE;
-				break;
-			case ObjectEntities.LINKTYPE_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE;
-				break;
-			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
-				csort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE;
-				break;
-			default:
-				throw new IllegalDataException("Unknown characterizable entity, id: '" + id.getIdentifierString() + '\'');
-		}
-
-		return csort;
 	}
 
 	/**

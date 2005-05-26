@@ -1,5 +1,5 @@
 /*
- * $Id: Characterizable.java,v 1.4 2005/04/01 06:40:20 bob Exp $
+ * $Id: Characterizable.java,v 1.5 2005/05/26 15:31:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,11 +10,9 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/01 06:40:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/05/26 15:31:14 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -27,8 +25,6 @@ public interface Characterizable extends Identifiable {
 	void addCharacteristic(final Characteristic characteristic);
 	
 	void removeCharacteristic(final Characteristic characteristic);
-
-	CharacteristicSort getCharacteristicSort();
 
 	/**
 	 * NEVER call this method directly. Use setCharacteristics

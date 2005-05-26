@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.47 2005/05/25 13:01:09 bass Exp $
+ * $Id: LinkType.java,v 1.48 2005/05/26 15:31:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/05/25 13:01:09 $
+ * @version $Revision: 1.48 $, $Date: 2005/05/26 15:31:16 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -258,10 +257,6 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
-	}
-
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE;
 	}
 
 	/**

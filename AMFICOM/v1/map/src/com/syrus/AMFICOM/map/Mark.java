@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.37 2005/05/24 13:25:03 bass Exp $
+ * $Id: Mark.java,v 1.38 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
@@ -43,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/05/24 13:25:03 $
+ * @version $Revision: 1.38 $, $Date: 2005/05/26 15:31:15 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -535,13 +534,6 @@ public class Mark extends AbstractNode {
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_MARK;
 	}
 
 	/**

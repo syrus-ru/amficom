@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.32 2005/05/24 13:25:02 bass Exp $
+ * $Id: SchemeElement.java,v 1.33 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -44,7 +43,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/05/24 13:25:02 $
+ * @version $Revision: 1.33 $, $Date: 2005/05/26 15:31:15 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -326,13 +325,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		 * @todo Update the newly created object.
 		 */
 		return schemeElement;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT;
 	}
 
 	/**

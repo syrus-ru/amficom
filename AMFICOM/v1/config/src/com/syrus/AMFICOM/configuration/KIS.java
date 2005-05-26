@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.78 2005/05/25 13:01:09 bass Exp $
+ * $Id: KIS.java,v 1.79 2005/05/26 15:31:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,12 +32,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/05/25 13:01:09 $
+ * @version $Revision: 1.79 $, $Date: 2005/05/26 15:31:16 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -276,10 +275,6 @@ public final class KIS extends DomainMember implements Characterizable {
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
-	}
-
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_KIS;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.33 2005/05/24 13:25:04 bass Exp $
+ * $Id: SiteNodeType.java,v 1.34 2005/05/26 15:31:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
@@ -41,7 +40,7 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/05/24 13:25:04 $
+ * @version $Revision: 1.34 $, $Date: 2005/05/26 15:31:16 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -255,13 +254,6 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE_TYPE;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.42 2005/05/24 13:25:03 bass Exp $
+ * $Id: Collector.java,v 1.43 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
@@ -40,7 +39,7 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/05/24 13:25:03 $
+ * @version $Revision: 1.43 $, $Date: 2005/05/26 15:31:15 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -399,12 +398,5 @@ public class Collector extends StorableObject implements MapElement {
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR;
 	}
 }

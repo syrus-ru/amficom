@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.54 2005/05/25 13:01:09 bass Exp $
+ * $Id: MeasurementPort.java,v 1.55 2005/05/26 15:31:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,11 +33,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/05/25 13:01:09 $
+ * @version $Revision: 1.55 $, $Date: 2005/05/26 15:31:16 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -260,10 +259,6 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
-	}
-
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT;
 	}
 
 	/**

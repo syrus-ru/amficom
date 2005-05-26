@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.26 2005/05/24 13:25:02 bass Exp $
+ * $Id: SchemePort.java,v 1.27 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
@@ -40,7 +39,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/24 13:25:02 $
+ * @version $Revision: 1.27 $, $Date: 2005/05/26 15:31:15 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -181,13 +180,6 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public AbstractSchemeLink getAbstractSchemeLink() {
 		return getSchemeLink();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT;
 	}
 
 	/**

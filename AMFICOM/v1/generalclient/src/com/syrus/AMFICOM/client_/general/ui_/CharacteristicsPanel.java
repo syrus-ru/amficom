@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.5 2005/05/18 14:01:19 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.6 2005/05/26 15:31:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.Constants;
@@ -65,7 +64,7 @@ import com.syrus.AMFICOM.resource.LangModelGeneral;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/18 14:01:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 15:31:14 $
  * @module generalclient_v1
  */
 
@@ -91,17 +90,14 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	PropsTableModel tModel;
 
 	private class CharacterizableObject {
-		CharacteristicSort sort;
-
 		Identifier characterizableId;
 
 		Characterizable characterizable;
 
-		CharacterizableObject(CharacteristicSort sort,
+		CharacterizableObject(
 				Characterizable characterizable, Identifier characterizedId) {
 			this.characterizable = characterizable;
 			this.characterizableId = characterizedId;
-			this.sort = sort;
 		}
 	}
 
@@ -278,9 +274,9 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
-			CharacteristicSort sort, Characterizable characterizable,
+			Characterizable characterizable,
 			Identifier characterizableId, boolean isEditable) {
-		typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(sort,
+		typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(
 				characterizable, characterizableId));
 		if (isEditable)
 			editableSorts.add(typeSort);
@@ -502,14 +498,11 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 						.getSessionInterface()).getAccessIdentifier().user_id);
 
 				if (obj instanceof CharacterizableObject) {
-					CharacteristicSort sort = ((CharacterizableObject) obj).sort;
-					Identifier characterizedId = ((CharacterizableObject) obj).characterizableId;
-					// Characterizable characterizable =
-					// ((CharacterizableObject)obj).characterizable;
+					final Characterizable characterizable = ((CharacterizableObject) obj).characterizable;
 
 					try {
 						Characteristic ch = Characteristic.createInstance(userId, type,
-								type.getDescription(), "", sort, "", characterizedId, true,
+								type.getDescription(), "", "", characterizable, true,
 								true);
 						List added = (List) addedCharacteristics.get(obj);
 						if (added == null) {

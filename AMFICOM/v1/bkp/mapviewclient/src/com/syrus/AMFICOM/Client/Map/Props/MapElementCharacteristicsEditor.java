@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.7 2005/05/25 16:42:52 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.8 2005/05/26 15:31:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,27 +8,14 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
 import com.syrus.AMFICOM.client_.general.ui_.CharacteristicsPanel;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.Selection;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/05/25 16:42:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/26 15:31:14 $
  * @module schemeclient_v1
  */
 
@@ -47,32 +34,6 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 	public Object getObject() {
 		return this.mapElement;
 	}
-
-	CharacteristicSort getCharacteristicSort(MapElement mapElement) {
-		if(mapElement instanceof TopologicalNode)
-			return CharacteristicSort.CHARACTERISTIC_SORT_TOPOLOGICAL_NODE; 
-		if(mapElement instanceof SiteNode)
-			return CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE; 
-		if(mapElement instanceof NodeLink)
-			return CharacteristicSort.CHARACTERISTIC_SORT_NODE_LINK; 
-		if(mapElement instanceof PhysicalLink)
-			return CharacteristicSort.CHARACTERISTIC_SORT_PHYSICAL_LINK; 
-		if(mapElement instanceof Mark)
-			return CharacteristicSort.CHARACTERISTIC_SORT_MARK; 
-		if(mapElement instanceof Collector)
-			return CharacteristicSort.CHARACTERISTIC_SORT_TOPOLOGICAL_NODE; 
-//		if(mapElement instanceof CablePath)
-//			return CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK; 
-//		if(mapElement instanceof MeasurementPath)
-//			return CharacteristicSort.CHARACTERISTIC_SORT_TOPOLOGICAL_NODE; 
-//		if(mapElement instanceof Marker)
-//			return CharacteristicSort.CHARACTERISTIC_SORT_TOPOLOGICAL_NODE; 
-//		if(mapElement instanceof UnboundLink)
-//			return CharacteristicSort.CHARACTERISTIC_SORT_TOPOLOGICAL_NODE; 
-//		if(mapElement instanceof Selection)
-//			return CharacteristicSort.CHARACTERISTIC_SORT_TOPOLOGICAL_NODE;
-		return null;
-	}
 	
 	public void setObject(Object or) {
 		this.mapElement = (MapElement) or;
@@ -82,7 +43,6 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 				&& !(this.mapElement instanceof Selection)) {
 				super.setTypeSortMapping(
 						CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-						getCharacteristicSort(this.mapElement),
 						this.mapElement,
 						this.mapElement.getId(), 
 						true);

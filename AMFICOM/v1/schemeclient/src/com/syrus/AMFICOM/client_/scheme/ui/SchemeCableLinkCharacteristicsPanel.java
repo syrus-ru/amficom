@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.2 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.3 2005/05/26 15:31:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 15:31:13 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +41,7 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 
 		if (schemeCableLink != null) {
 			super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK, schemeCableLink,
+					schemeCableLink,
 					schemeCableLink.getId(), true);
 			super.addCharacteristics(schemeCableLink.getCharacteristics(), schemeCableLink.getId());
 			
@@ -49,7 +49,7 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 			if (link != null) {
 				for (int i = 0; i < sorts.length; i++)
 					super.setTypeSortMapping(sorts[i],
-							CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK, link,
+							link,
 							link.getId(), true);
 				super.addCharacteristics(link.getCharacteristics(), link.getId());
 			}
@@ -58,7 +58,7 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 				if (linkType != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
-								CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE, linkType,
+								linkType,
 								linkType.getId(), false);
 					super.addCharacteristics(linkType.getCharacteristics(), linkType.getId());
 				}

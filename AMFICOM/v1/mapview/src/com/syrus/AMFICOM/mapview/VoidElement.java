@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.11 2005/05/26 06:24:20 bass Exp $
+ * $Id: VoidElement.java,v 1.12 2005/05/26 15:31:15 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -22,7 +21,7 @@ import com.syrus.AMFICOM.map.MapElementState;
  * Пустой элемент.
  *
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/05/26 06:24:20 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/26 15:31:15 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement {
@@ -184,13 +183,6 @@ public final class VoidElement implements MapElement {
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
 	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
 		throw new UnsupportedOperationException();
 	}
 

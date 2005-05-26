@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.2 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.3 2005/05/26 15:31:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/05/26 15:31:13 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +41,7 @@ public class SchemeProtoElementCharacteristicsPanel extends CharacteristicsPanel
 
 		if (schemeProtoElement != null) {
 			super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPROTOELEMENT, schemeProtoElement,
+					schemeProtoElement,
 					schemeProtoElement.getId(), true);
 			super.addCharacteristics(schemeProtoElement.getCharacteristics(), schemeProtoElement.getId());
 
@@ -49,7 +49,7 @@ public class SchemeProtoElementCharacteristicsPanel extends CharacteristicsPanel
 			if (eqt != null) {
 				for (int i = 0; i < sorts.length; i++)
 					super.setTypeSortMapping(sorts[i],
-							CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE, eqt, eqt.getId(), false);
+							eqt, eqt.getId(), false);
 				super.addCharacteristics(eqt.getCharacteristics(), eqt.getId());
 			}
 		} 

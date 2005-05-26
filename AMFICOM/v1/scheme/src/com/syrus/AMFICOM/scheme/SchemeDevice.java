@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.29 2005/05/24 13:25:02 bass Exp $
+ * $Id: SchemeDevice.java,v 1.30 2005/05/26 15:31:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
 import com.syrus.util.Log;
@@ -42,7 +41,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/05/24 13:25:02 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/26 15:31:15 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -303,13 +302,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public Set getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	/**
-	 * @see Characterizable#getCharacteristicSort()
-	 */
-	public CharacteristicSort getCharacteristicSort() {
-		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEDEVICE;
 	}
 
 	/**

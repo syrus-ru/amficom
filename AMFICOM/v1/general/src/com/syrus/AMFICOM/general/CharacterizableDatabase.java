@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.14 2005/05/26 14:13:33 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.15 2005/05/26 15:31:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-
 /**
- * @version $Revision: 1.14 $, $Date: 2005/05/26 14:13:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/05/26 15:31:14 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -55,9 +53,9 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 	private void retrieveCharacteristicsByOneQuery(final Set storableObjects)
 			throws RetrieveObjectException, IllegalDataException {
-		// TODO assert characterizable and of the same kind
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
 		final Set characteristics = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE)
 				.retrieveByCondition(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true)
@@ -85,20 +83,6 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 			characterizable.setCharacteristics0(orderedCharacteristics);
 		}
-	}
-
-	// TODO transform into an assertion
-	private CharacteristicSort getOnlyOneCharacteristicSort(Set storableObjects) throws IllegalDataException {
-		Characterizable characterizable = this.fromStorableObject((StorableObject) storableObjects.iterator().next());
-		CharacteristicSort sort0 = characterizable.getCharacteristicSort();
-		CharacteristicSort sort;
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			characterizable = this.fromStorableObject((StorableObject) it.next());
-			sort = characterizable.getCharacteristicSort();
-			if (sort.value() != sort0.value())
-				throw new IllegalDataException("Objects have not the same sort of characteristics");
-		}
-		return sort0;
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
@@ -204,7 +188,8 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	private void updateCharacteristics(final Set storableObjects) throws UpdateObjectException {
-		// TODO assert storableObjects are characterizable and have the same sort.
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		Set characteristics;
 		Characteristic characteristic;
 

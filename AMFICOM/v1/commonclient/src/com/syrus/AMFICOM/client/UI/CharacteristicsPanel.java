@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.3 2005/05/26 14:04:50 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.4 2005/05/26 15:31:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,14 +60,13 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 14:04:50 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/26 15:31:13 $
  * @module commonclient_v1
  */
 
@@ -93,17 +92,14 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	WrapperedTableModel wtModel;
 
 	private class CharacterizableObject {
-		CharacteristicSort sort;
-
 		Identifier characterizableId;
 
 		Characterizable characterizable;
 
-		CharacterizableObject(CharacteristicSort sort,
+		CharacterizableObject(
 				Characterizable characterizable, Identifier characterizedId) {
 			this.characterizable = characterizable;
 			this.characterizableId = characterizedId;
-			this.sort = sort;
 		}
 	}
 
@@ -279,9 +275,9 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
-			CharacteristicSort sort, Characterizable characterizable,
+			Characterizable characterizable,
 			Identifier characterizableId, boolean isEditable) {
-		this.typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(sort,
+		this.typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(
 				characterizable, characterizableId));
 		if (isEditable)
 			this.editableSorts.add(typeSort);
