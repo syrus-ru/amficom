@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.87 2005/05/26 08:33:32 bass Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.88 2005/05/26 13:44:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2005/05/26 13:44:42 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -278,7 +278,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 			meIdsMap.put(measurementSetup.getId(), meIds);
 		}
 
-		this.updateLinkedEntityIds(meIdsMap,
+		super.updateLinkedEntityIds(meIdsMap,
 				ObjectEntities.MSMELINK_ENTITY,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
@@ -297,7 +297,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 			mtIdsMap.put(measurementSetup.getId(), mtIds);
 		}
 
-		this.updateLinkedEntityIds(mtIdsMap,
+		super.updateLinkedEntityIds(mtIdsMap,
 				ObjectEntities.MSMTLINK_ENTITY,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);

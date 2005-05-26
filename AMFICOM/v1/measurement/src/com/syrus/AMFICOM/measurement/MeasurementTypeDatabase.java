@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.94 2005/05/26 08:33:32 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.95 2005/05/26 13:44:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.95 $, $Date: 2005/05/26 13:44:42 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -206,7 +206,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 			mpIdsMap.put(measurementType.getId(), mpIds);
 		}
 
-		this.updateLinkedEntityIds(mpIdsMap,
+		super.updateLinkedEntityIds(mpIdsMap,
 				ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);

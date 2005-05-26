@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.95 2005/05/26 08:33:32 bass Exp $
+ * $Id: TestDatabase.java,v 1.96 2005/05/26 13:44:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/05/26 08:33:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.96 $, $Date: 2005/05/26 13:44:42 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -488,15 +488,13 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 
 		Map measurementSetupIdsMap = new HashMap();
-		Test test;
-		java.util.Set measurementSetupIds;
 		for (Iterator it = tests.iterator(); it.hasNext();) {
-			test = this.fromStorableObject((StorableObject) it.next());
-			measurementSetupIds = test.getMeasurementSetupIds();
+			final Test test = this.fromStorableObject((StorableObject) it.next());
+			final java.util.Set measurementSetupIds = test.getMeasurementSetupIds();
 			measurementSetupIdsMap.put(test.getId(), measurementSetupIds);
 		}
 
-		this.updateLinkedEntityIds(measurementSetupIdsMap,
+		super.updateLinkedEntityIds(measurementSetupIdsMap,
 				ObjectEntities.MSTESTLINK_ENTITY,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);

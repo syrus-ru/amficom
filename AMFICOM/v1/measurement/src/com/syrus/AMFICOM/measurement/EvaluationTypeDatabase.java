@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.82 2005/05/26 08:33:33 bass Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.83 2005/05/26 13:44:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/05/26 08:33:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/05/26 13:44:42 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -207,7 +207,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 			mtIdsMap.put(evaluationType.getId(), mtIds);
 		}
 
-		this.updateLinkedEntityIds(mtIdsMap,
+		super.updateLinkedEntityIds(mtIdsMap,
 				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
 				EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
