@@ -1,0 +1,64 @@
+HOME=.
+
+include ..\make.inc
+
+TARGET=$(LIB)\map.jar
+TARGET_SRC=$(LIBSRC)\mapsource.zip
+TARGET_DOC=$(LIBDOC)\mapdoc.zip
+TARGET_MAP_XML=$(LIB)\mapxml.jar
+TARGET_GENERAL_XML=$(LIB)\generalxml.jar
+TARGET_XML_SRC=$(LIBSRC)\mapxmlsource.zip
+
+SERVERCP=$(LIB)\corba.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\resource.jar;$(LIB)\admin.jar;$(LIB)\mapxml.jar
+
+CLASSPATH=$(SERVERCP);$(CLIENTCP);$(XMLBEANSCP)
+
+.PHONY:	$(TARGET)
+
+$(TARGET):	clean xml impl javadoc jar
+
+jar:
+	$(ARCHIVER) -cf $(TARGET) -C $(CLASSES) com
+	$(ARCHIVER) -cf $(TARGET_SRC) -C $(SRC) com
+	$(ARCHIVER) -cf $(TARGET_DOC) -C $(DOCS) .
+	$(ARCHIVER) -cf $(TARGET_XML_SRC) -C $(XMLSRC) com
+
+impl:
+	$(COMPILER) \
+		-d $(CLASSES) \
+		-classpath $(CLASSPATH) \
+		-sourcepath $(SRC) \
+		$(SRC)\com\syrus\AMFICOM\general\*.java \
+		$(SRC)\com\syrus\AMFICOM\map\*.java
+
+xml: $(TARGET_GENERAL_XML) $(TARGET_MAP_XML)
+
+$(TARGET_GENERAL_XML):
+	$(XMLGENERATOR) \
+		-src $(XMLSRC) \
+		-d $(XMLCLASSES) \
+		-out $(TARGET_GENERAL_XML) \
+			$(XML)\General.xsd
+
+$(TARGET_MAP_XML):
+	$(XMLGENERATOR) \
+		-src $(XMLSRC) \
+		-d $(XMLCLASSES) \
+		-cp $(XMLBEANSCP);$(TARGET_GENERAL_XML) \
+		-out $(TARGET_MAP_XML) \
+			$(XML)\Map.xsd \
+			$(XML)\Collector.xsd \
+			$(XML)\NodeLink.xsd \
+			$(XML)\PhysicalLink.xsd \
+			$(XML)\PhysicalLinkType.xsd \
+			$(XML)\SiteNode.xsd \
+			$(XML)\SiteNodeType.xsd \
+			$(XML)\TopologicalNode.xsd
+
+javadoc:
+	$(JAVADOCGENERATOR) com
+
+clean:
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)
