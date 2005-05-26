@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConnection.java,v 1.12 2005/05/18 10:49:17 bass Exp $
+ * $Id: DatabaseConnection.java,v 1.13 2005/05/26 11:00:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ public class DatabaseConnection {
 			long deadtime = System.currentTimeMillis() + db_conn_timeout;
 			boolean connected;
 			for (connected = false; System.currentTimeMillis() < deadtime && !connected;) {
-				Log.debugMessage("Attemting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL07);
+				Log.debugMessage("DatabaseConnection.establishConnection() | Attempting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL07);
 				try {
 					connection = DriverManager.getConnection(url, db_login_name, PASSWORD);
 					connection.setAutoCommit(autocommit);
