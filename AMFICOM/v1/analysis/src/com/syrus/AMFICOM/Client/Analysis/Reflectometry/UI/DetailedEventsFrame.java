@@ -292,7 +292,7 @@ implements EtalonMTMListener,
 
 		// сравнение по модельной кривой
 		ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
-        if (ev.getBegin() < Heap.getMTAEPrimary().getModelTrace().getLength()
+        if (ev.getBegin() < Heap.getMTAEPrimary().getModelTrace().getLength() // FIXME: null pointed exception possible (currentEventChanged) when RMB clicked beyond the end of EOT
             && ev.getBegin() < etalonMT.getLength())
         {
     		double difference    = ReflectogramComparer.getMaxDeviation(Heap.getMTAEPrimary(), etalonMT, ev);
