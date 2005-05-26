@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.13 2005/05/26 08:33:36 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.14 2005/05/26 11:19:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.mshserver;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DomainDatabase;
+import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
@@ -51,8 +52,8 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/05/26 08:33:36 $
+ * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2005/05/26 11:19:25 $
  * @module msherver_v1
  */
 final class DatabaseContextSetup {
@@ -80,6 +81,7 @@ final class DatabaseContextSetup {
 
 		DatabaseContext.registerDatabase(new UserDatabase());
 		DatabaseContext.registerDatabase(new DomainDatabase());
+		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		
 		DatabaseContext.registerDatabase(new SiteNodeTypeDatabase());
