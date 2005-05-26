@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.1 2005/05/26 19:13:24 bass Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.2 2005/05/26 19:20:09 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 public final class CORBAMapObjectLoader extends CORBAObjectLoader implements MapObjectLoader {
 	public CORBAMapObjectLoader(MSHServerConnectionManager serverConnectionManager) {
-		super()
+		// FIXME, бля!
+		super(null);
 	}
 
 	public Set loadCollectors(Set ids) throws ApplicationException {

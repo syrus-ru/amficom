@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.1 2005/05/26 19:13:24 bass Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.2 2005/05/26 19:20:09 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,14 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.MSHServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
-public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements
-		SchemeObjectLoader {
+public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements SchemeObjectLoader {
+	public CORBASchemeObjectLoader(MSHServerConnectionManager serverConnectionManager) {
+		// FIXME, бля!
+		super(null);
+	}
 
 	public Set loadCableChannelingItems(Set ids)
 			throws ApplicationException {
