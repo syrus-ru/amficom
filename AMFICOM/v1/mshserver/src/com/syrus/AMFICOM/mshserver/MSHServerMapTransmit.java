@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerMapTransmit.java,v 1.5 2005/05/21 19:43:37 bass Exp $
+ * $Id: MSHServerMapTransmit.java,v 1.6 2005/05/26 17:52:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,24 @@
 
 package com.syrus.AMFICOM.mshserver;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
@@ -23,12 +36,13 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.util.Log;
 
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/21 19:43:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/26 17:52:55 $
  * @module mshserver_v1
  */
 abstract class MSHServerMapTransmit extends MSHServerSchemeReceive {
@@ -237,5 +251,45 @@ abstract class MSHServerMapTransmit extends MSHServerSchemeReceive {
 		final PhysicalLinkType_Transferable physicalLinkTypes[] = new PhysicalLinkType_Transferable[length];
 		System.arraycopy(storableObjects, 0, physicalLinkTypes, 0, length);
 		return physicalLinkTypes;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public final Identifier_Transferable[] transmitRefreshedMapObjects(
+			final StorableObject_Transferable headers[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		this.validateAccess(sessionKey,
+				new Identifier_TransferableHolder(),
+				new Identifier_TransferableHolder());
+
+		final Map headerMap = new HashMap();
+		for (int i = 0; i < headers.length; i++)
+			headerMap.put(new Identifier(headers[i].id), headers[i]);
+
+		try {
+			StorableObjectPool.refresh();
+
+			final Set storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
+			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
+				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
+				final StorableObject_Transferable header = (StorableObject_Transferable) headerMap.get(storableObject.getId());
+				/*
+				 * Remove objects with older versions as well as objects with the same versions.
+				 * Not only with older ones!
+				 */
+				if (!storableObject.hasNewerVersion(header.version))
+					storableObjectIterator.remove();
+			}
+
+			return Identifier.createTransferables(storableObjects);
+		} catch (final ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_PARTIALLY, ae.getMessage());
+		} catch (final Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
+		}
 	}
 }

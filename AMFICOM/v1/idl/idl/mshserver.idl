@@ -1,5 +1,5 @@
 /*-
- * $Id: mshserver.idl,v 1.12 2005/05/26 11:31:09 bass Exp $
+ * $Id: mshserver.idl,v 1.13 2005/05/26 17:52:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,9 +91,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						map::corba::SiteNodeSeq transmitSiteNodesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						map::corba::TopologicalNodeSeq transmitTopologicalNodes(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						map::corba::TopologicalNodeSeq transmitTopologicalNodesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						map::corba::NodeLinkSeq transmitNodeLinks(
@@ -101,9 +113,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);	
 
+						map::corba::NodeLinkSeq transmitNodeLinksButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);	
+
 						map::corba::MarkSeq transmitMarks(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);	
+
+						map::corba::MarkSeq transmitMarksButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);	
 
 						map::corba::PhysicalLinkSeq transmitPhysicalLinks(
@@ -111,9 +135,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);	
 
+						map::corba::PhysicalLinkSeq transmitPhysicalLinksButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);	
+
 						map::corba::CollectorSeq transmitCollectors(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);	
+
+						map::corba::CollectorSeq transmitCollectorsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);	
 
 						map::corba::MapSeq transmitMaps(
@@ -121,14 +157,32 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);	
 
+						map::corba::MapSeq transmitMapsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);	
+
 						map::corba::SiteNodeTypeSeq transmitSiteNodeTypes(
 								in general::corba::IdentifierSeq ids,	
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						map::corba::SiteNodeTypeSeq transmitSiteNodeTypesButIdsCondition(
+								in general::corba::IdentifierSeq ids,	
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						map::corba::PhysicalLinkTypeSeq transmitPhysicalLinkTypes(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						map::corba::PhysicalLinkTypeSeq transmitPhysicalLinkTypesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 /*-************************************************************
@@ -246,9 +300,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::SchemeProtoGroupSeq transmitSchemeProtoGroupsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemeProtoElementSeq transmitSchemeProtoElements(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemeProtoElementSeq transmitSchemeProtoElementsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::SchemeSeq transmitSchemes(
@@ -256,9 +322,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::SchemeSeq transmitSchemesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemeElementSeq transmitSchemeElements(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemeElementSeq transmitSchemeElementsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::SchemeOptimizeInfoSeq transmitSchemeOptimizeInfos(
@@ -266,9 +344,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::SchemeOptimizeInfoSeq transmitSchemeOptimizeInfosButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemeOptimizeInfoSwitchSeq transmitSchemeOptimizeInfoSwitches(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemeOptimizeInfoSwitchSeq transmitSchemeOptimizeInfoSwitchesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::SchemeOptimizeInfoRtuSeq transmitSchemeOptimizeInfoRtus(
@@ -276,9 +366,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::SchemeOptimizeInfoRtuSeq transmitSchemeOptimizeInfoRtusButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemeMonitoringSolutionSeq transmitSchemeMonitoringSolutions(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemeMonitoringSolutionSeq transmitSchemeMonitoringSolutionsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::SchemeDeviceSeq transmitSchemeDevices(
@@ -286,9 +388,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::SchemeDeviceSeq transmitSchemeDevicesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemePortSeq transmitSchemePorts(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemePortSeq transmitSchemePortsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::SchemeCablePortSeq transmitSchemeCablePorts(
@@ -296,9 +410,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::SchemeCablePortSeq transmitSchemeCablePortsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemeLinkSeq transmitSchemeLinks(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemeLinkSeq transmitSchemeLinksButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::SchemeCableLinkSeq transmitSchemeCableLinks(
@@ -306,9 +432,21 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::SchemeCableLinkSeq transmitSchemeCableLinksButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemeCableThreadSeq transmitSchemeCableThreads(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemeCableThreadSeq transmitSchemeCableThreadsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::CableChannelingItemSeq transmitCableChannelingItems(
@@ -316,18 +454,52 @@ module com {
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
+						scheme::corba::CableChannelingItemSeq transmitCableChannelingItemsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 						scheme::corba::SchemePathSeq transmitSchemePaths(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::SchemePathSeq transmitSchemePathsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
 								raises (general::corba::AMFICOMRemoteException);
 
 						scheme::corba::PathElementSeq transmitPathElements(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
+
+						scheme::corba::PathElementSeq transmitPathElementsButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
 /*-************************************************************
- * Map -- transmit image and cancel rendering.            *
+ * Refresh.                                                   *
  **************************************************************/
+
+						general::corba::IdentifierSeq transmitRefreshedMapObjects(
+								in general::corba::StorableObjectSeq storableObjects,
+								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						general::corba::IdentifierSeq transmitRefreshedSchemeObjects(
+								in general::corba::StorableObjectSeq storableObjects,
+								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+/*-************************************************************
+ * Map -- transmit image and cancel rendering.                *
+ **************************************************************/
+
  						map::corba::RenderedImage transmitTopologicalImage(
 								in map::corba::TopologicalImageQuery topologicalImageQuery,
 								in security::corba::SessionKey sessionKey)
