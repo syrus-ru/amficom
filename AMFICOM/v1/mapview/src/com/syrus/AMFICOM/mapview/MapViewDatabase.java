@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.23 2005/05/26 08:33:33 bass Exp $
+* $Id: MapViewDatabase.java,v 1.24 2005/05/26 14:33:52 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/26 08:33:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/05/26 14:33:52 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
 public final class MapViewDatabase extends CharacterizableDatabase {
@@ -201,13 +201,16 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 	}
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		MapView mapView = this.fromStorableObject(storableObject);
-		super.insertEntity(mapView);
+		super.insert(storableObject);
+		try {
+			this.updateSchemeIds(Collections.singleton(storableObject));
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
-	
-	
+
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+		super.insert(storableObjects);
 		try {
 			this.updateSchemeIds(storableObjects);
 		} catch (UpdateObjectException e) {
@@ -216,33 +219,15 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				return;
-		}
-		Set maps = Collections.singleton(storableObject);
-		this.updateSchemeIds(maps);
+		super.update(storableObject, modifierId, updateKind);
+		this.updateSchemeIds(Collections.singleton(storableObject));
 	}
-	
-	
+
 	public void update(Set storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
-		}
+		super.update(storableObjects, modifierId, updateKind);
 		this.updateSchemeIds(storableObjects);
 	}	
-	
+
 	private void updateSchemeIds(Set mapViews) throws UpdateObjectException {
 		if (mapViews == null || mapViews.isEmpty())
 			return;

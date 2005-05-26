@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.22 2005/05/26 08:33:34 bass Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.23 2005/05/26 14:33:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,27 +10,22 @@ package com.syrus.AMFICOM.map;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/05/26 08:33:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/05/26 14:33:34 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class SiteNodeTypeDatabase extends CharacterizableDatabase {
@@ -125,39 +120,4 @@ public final class SiteNodeTypeDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		SiteNodeType siteNodeType = this.fromStorableObject(storableObject);
-		super.insertEntity(siteNodeType);
-	}
-	
-	
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				return;
-		}
-	}
-	
-	
-	public void update(Set storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
-		}
-
-	}
 }

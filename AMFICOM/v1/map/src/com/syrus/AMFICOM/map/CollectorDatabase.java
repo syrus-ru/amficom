@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.29 2005/05/26 08:33:34 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.30 2005/05/26 14:33:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/26 08:33:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/05/26 14:33:34 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class CollectorDatabase extends CharacterizableDatabase {
@@ -145,8 +145,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 	}
 
 	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
-		Collector collector = this.fromStorableObject(storableObject);
-		super.insertEntity(collector);
+		super.insert(storableObject);
 		try {
 			this.updatePhysicalLinks(Collections.singleton(storableObject));
 		}
@@ -157,7 +156,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
+		super.insert(storableObjects);
 		try {
 			this.updatePhysicalLinks(storableObjects);
 		}
@@ -169,30 +168,14 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException,
 				UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				return;
-		}
+		super.update(storableObject, modifierId, updateKind);
 		this.updatePhysicalLinks(Collections.singleton(storableObject));
 	}
 
 	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException,
 				UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				return;
-		}
+		super.update(storableObjects, modifierId, updateKind);
 		this.updatePhysicalLinks(storableObjects);
 	}	
 
