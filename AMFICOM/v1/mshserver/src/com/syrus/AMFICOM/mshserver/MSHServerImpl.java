@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.15 2005/05/25 13:01:10 bass Exp $
+ * $Id: MSHServerImpl.java,v 1.16 2005/05/26 11:20:31 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,16 +9,20 @@
 package com.syrus.AMFICOM.mshserver;
 
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.AMFICOM.map.corba.RenderedImage_Transferable;
+import com.syrus.AMFICOM.map.corba.TopologicalImageQuery_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/25 13:01:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/26 11:20:31 $
+ * @author $Author: max $
  * @module mshserver_1
  */
 public final class MSHServerImpl extends MSHServerSchemeTransmit {
@@ -45,6 +49,36 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 		} catch (final Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
+		}
+	}
+
+	public RenderedImage_Transferable transmitTopologicalImage(
+			final TopologicalImageQuery_Transferable topologicalImageQuery_Transferable,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerTopologicalImageTransmit.transmitTopologicalImage | Trying to transmit "
+				+ '\'', Log.INFO);
+		TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQuery_Transferable);
+		byte[] image;
+		try {
+			image = MapInfoPool.getImage(topologicalImageQuery);
+		} catch (IllegalDataException e) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		RenderedImage_Transferable renderedImage_Transferable = new RenderedImage_Transferable(image);
+		return renderedImage_Transferable;
+	}
+	
+	public void stopRenderTopologicalImage(
+			final long userId,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerTopologicalImageTransmit.stopRenderTopologicalImage | Trying to stop rendering image"
+				+ '\'', Log.INFO);
+		try {
+			MapInfoPool.cancelRendering(userId);
+		} catch (IllegalDataException e) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
 }
