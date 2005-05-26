@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementUgoPanel.java,v 1.1 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeProtoElementUgoPanel.java,v 1.2 2005/05/26 08:42:42 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 08:42:42 $
  * @module schemeclient_v1
  */
 
@@ -84,9 +84,8 @@ public class SchemeProtoElementUgoPanel extends DefaultStorableObjectEditor {
 	public void commitChanges() {
 		SchemeImageResource image = schemeProtoElement.getUgoCell();
 		if (image == null) {
-			Identifier user_id = LoginManager.getUserId();
 			try {
-				image = new SchemeImageResource(user_id);
+				image = SchemeImageResource.createInstance(LoginManager.getUserId());
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 				return;

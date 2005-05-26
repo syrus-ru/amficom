@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.1 2005/04/05 14:07:53 stas Exp $
+ * $Id: SchemeResource.java,v 1.2 2005/05/26 08:42:42 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/26 08:42:42 $
  * @module schemeclient_v1
  */
 
@@ -84,7 +84,7 @@ public class SchemeResource {
 	private SchemeImageResource updateElement(SchemeImageResource ir) {
 		if (ir == null) {
 			try {
-				ir = new SchemeImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
+				ir = SchemeImageResource.createInstance(LoginManager.getUserId());
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 				return null;
