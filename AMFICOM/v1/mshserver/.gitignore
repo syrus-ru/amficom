@@ -16,3 +16,6 @@ test
 logs
 orb.db
 SerializedLRUMaps
+gc
+pid
+cache
