@@ -105,7 +105,8 @@ private:
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
     void processEndOfTrace();  // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
     void addLinearPartsBetweenEvents();
-    void correctAllConnectorsFronts(double *arr);
+	void correctConnectorFront(EventParams* connector);
+    void correctAllConnectorsFronts();
     void correctAllSpliceCoords(); // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
     void correctSpliceCoords(int n);
     void excludeShortLinesBetweenConnectors(double* data, int evSizeC);

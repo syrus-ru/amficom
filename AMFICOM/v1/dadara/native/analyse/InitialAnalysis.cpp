@@ -139,7 +139,6 @@ return;}
       splashes.disposeAll(); // очищаем массив ArrList
     } // удаляем пустой массив splashes
 
-    correctAllConnectorsFronts(data);// и только потом переименовываем послдений коннектор в конец_волокна 
     processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
     excludeShortLinesBetweenConnectors(data, wlet_width);
     correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
@@ -235,10 +234,10 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
 }
 // -------------------------------------------------------------------------------------------------
 // Посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и
-// добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0.
+// добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен -1.
 // В данный момент обрабатывается так:
 // Если на указанной на входе позиции находится коннекторный всплеск вверх и в пределах reflSize находится
-// коннекторный, то он и берётся. Если коннекторного нет, но есть хотя бы сварочный вниз, то в качестве
+// коннекторный вниз, то он и берётся. Если коннекторного нет, но есть хотя бы сварочный вниз, то в качестве
 // граничного берётся самый дальний ( в пределах reflSize ) сварочный.
 int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
 {   int shift = -1;
@@ -294,13 +293,12 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
       if(shift!=-1 )
       { EventParams *ep = new EventParams;
         setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
+        correctConnectorFront(ep); // уточняем фронт коннекора
         events->add(ep);
-
 #ifdef debug_lines
 		double begin = ep->begin, end = ep->end;
         xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
 #endif
-
       }
     }
     return shift;//если коннектора не нашли, то shift = -1
@@ -311,7 +309,7 @@ void InitialAnalysis::setSpliceParamsBySplash( EventParams& ep, Splash& sp)
 {   if(sp.sign>0) { ep.type = EventParams::GAIN; }
     else 		  { ep.type = EventParams::LOSS; }
     ep.begin = sp.begin_thr; // sp.begin_weld; - thr - в расчёте на то, что потом уточним
-    ep.end = sp.end_thr + 1; // sp.end_weld+1;
+    ep.end = sp.end_thr; // sp.end_weld+1;
     if(ep.end>lastPoint){ep.end = lastPoint;}
     if(ep.begin<0){ep.begin=0;}
     double max = -1;
@@ -531,60 +529,46 @@ void InitialAnalysis::shiftThresholds()
 	//minimalWeld += fabs(f_wlet_avrg)*thres_factor;
 }
 //------------------------------------------------------------------------------------------------------------
-// поскольку убрали срезание коннекторов то теперь делаем так : если найдена сварка там,
-// где раньше был коннектор, то не считаем это сваркой, а оставляем коннектором
-// Предполагается, что все события идут ПО ПОРЯДКУ ОДИН ЗА ДРУГИМ !
-void InitialAnalysis::correctAllConnectorsFronts(double *arr)
-{	if( events->getLength() < 2 )
+void InitialAnalysis::correctConnectorFront(EventParams* ev)
+{	if( ev->type != EventParams::CONNECTOR )// пока не дойдём до коннектора
 return;
-	// у первого коннектора ( мёртвой зоны) корректировать нечего (считаем, что перед мёртвой зоной ничего нет )
-	for(int n=1; n<events->getLength(); n++)
-    {   EventParams* ev1 = (EventParams*)(*events)[n];
-        if( ev1->type != EventParams::CONNECTOR )// пока не дойдём до коннектора
-    continue;
-    	// ищем точку на фронте коннектора такую, что всё слква от неё - меьше, а справа - не меньше
-        int i_begin = ev1->begin, i_end = ev1->end;
-        int i_max = i_begin;// номер макс точки
-        double f_max = data[i_max];
-		int i;
-        for( i=i_begin; i<i_end; i++ ) // ищем максимум
-        {	if(data[i]>f_max) {i_max = i; f_max = data[i];}
-        }
-		int i_x = -1; // x - искомая точка;
-        double f_lmax = data[i_begin];
-        for( i=i_begin; i<i_max; i++ )
-        { 	if(f_lmax <= data[i])
-        	{	f_lmax = data[i];
-            	if(i_x == -1)
-                {	i_x = i;
-                }
-            }
-        	if(	i_x!=-1 && data[i]<data[i_x] )
-            {	i_x = -1;
-            }
-        }
-        if( i_x==-1 )
-        {	i_x = i_begin;
-        }
-		else
-        { // поднимаем уровень на 0.02 (прививка от плавных подъёмов перед коннектором)
-          double f_min = data[i_begin];
-          double f_x = f_min + (f_max-f_min)*0.02;
-          for( int i=i_x; i<i_max; i++ )
-          {	if(data[i]>f_x)
-          	{ i_x = i;
-          break;
-            }
-          }
-        }
-        double ev1_beg_old = ev1->begin;
-        ev1->begin = i_x - 1;
-		// правую границу события слева (если оно есть)тоже сдвигаем
-        EventParams* ev2 = (EventParams*)(*events)[n-1];  // мы помим, что "for(int n=1...."
-        // двигаем только если границы "цепляются"
-        if(fabs(ev2->end - ev1_beg_old)<2){ ev2->end = ev1->begin; }// вместо <2, можно было просто проверить на равенство, но я почему-то так не сделал ...  
-
+    // ищем точку на фронте коннектора такую, что всё слква от неё - меьше, а справа - не меньше
+    int i_begin = ev->begin, i_end = ev->end;
+    int i_max = i_begin;// номер макс точки
+    double f_max = data[i_max];
+    int i;
+    for( i=i_begin; i<i_end; i++ ) // ищем максимум
+    {	if(data[i]>f_max) {i_max = i; f_max = data[i];}
     }
+    int i_x = -1; // x - искомая точка;
+    double f_lmax = data[i_begin];
+    for( i=i_begin; i<i_max; i++ )
+    { 	if(f_lmax <= data[i])
+        {	f_lmax = data[i];
+            if(i_x == -1)
+            {	i_x = i;
+            }
+        }
+        if(	i_x!=-1 && data[i]<data[i_x] )
+        {	i_x = -1;
+        }
+    }
+    if( i_x==-1 )
+    {	i_x = i_begin;
+    }
+    else
+    { // поднимаем уровень на 0.02 (прививка от плавных подъёмов перед коннектором)
+      double f_min = data[i_begin];
+      double f_x = f_min + (f_max-f_min)*0.02;
+      for( int i=i_x; i<i_max; i++ )
+      {	if(data[i]>f_x)
+        { i_x = i;
+      break;
+        }
+      }
+    }
+    double ev_beg_old = ev->begin;
+    ev->begin = i_x - 1;
 }
 //------------------------------------------------------------------------------------------------------------
 // проводим разномасштабный авейвлет-анализ для уточнения положения сварок
