@@ -99,7 +99,7 @@ InitialAnalysis::InitialAnalysis(
 #endif
 }
 //------------------------------------------------------------------------------------------------------------
-\InitialAnalysis::~InitialAnalysis()
+InitialAnalysis::~InitialAnalysis()
 {	delete[] type;
 	delete[] noise;
     delete[] f_wlet;
