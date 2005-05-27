@@ -43,7 +43,7 @@ public class SimpleGraphPanel extends JPanel
             return xMin > xMax || yMin > yMax;
         }
         public void coverX(int x) {
-            if (xMin < xMax) {
+            if (xMin > xMax) {
                 xMin = x;
                 xMax = x;
             } else if (x < xMin) {
@@ -53,7 +53,7 @@ public class SimpleGraphPanel extends JPanel
             }
         }
         public void coverY(double y) {
-            if (yMin < yMax) {
+            if (yMin > yMax) {
                 yMin = y;
                 yMax = y;
             } else if (y < yMin) {
