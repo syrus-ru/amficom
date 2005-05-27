@@ -306,7 +306,7 @@ implements PropertyChangeListener, BsHashChangeListener,
 	}
 
     // gets all thresholds editors relevant to current event
-    protected ThreshEditor[] getTeds()
+    protected ModelTraceManager.ThreshEditorWithDefaultMark[] getTeds()
     {
         ModelTraceManager mtm = Heap.getMTMEtalon();
         if (mtm == null)
@@ -318,12 +318,26 @@ implements PropertyChangeListener, BsHashChangeListener,
     }
 	protected ThreshEditor getCurrentTED()
 	{
-		// XXX - getThreshEditor will generate few unnecessary objects
-		ModelTraceManager.ThreshEditor[] teds = getTeds();
+        // XXX - getThreshEditor will generate few unnecessary objects
+        ModelTraceManager.ThreshEditorWithDefaultMark[] teds = getTeds();
+
+        if (teds == null)
+            return null;
+
+        // сначала пытаемся выбрать редактор для текущего столбца
 		int current_th = this.jTable.getSelectedColumn() - 1;
-		if (current_th >= 0 && current_th < teds.length)
-			return teds[current_th];
-		return null;
+        if (current_th >= 0 && current_th < teds.length)
+                return teds[current_th];
+
+        // если текущего столбца нет, выбираем порог по умолчанию
+        current_th = ModelTraceManager.getDefaultThreshEditorIndex(teds);
+        if (current_th >= 0) {
+            // и делаем его текущим
+            this.jTable.changeSelection(0, current_th + 1, false, false);
+            return teds[current_th];
+        }
+
+        return null;
 	}
 
 	void init_module(Dispatcher dispatcher1)
