@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.9 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventTypeWrapper.java,v 1.10 2005/05/27 18:38:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/18 11:16:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 18:38:15 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class EventTypeWrapper extends StorableObjectWrapper {
@@ -24,7 +24,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 	public static final String LINK_COLUMN_EVENT_TYPE_ID = "event_type_id";
 	public static final String LINK_FIELD_PARAMETER_TYPES = "parameter_types";
 	public static final String LINK_COLUMN_USER_ID = "user_id";
-	public static final String LINK_FIELD_USER_IDS = "user_ids";
+	public static final String LINK_COLUMN_ALERT_KIND = "alert_kind";
 
 	private static EventTypeWrapper instance;
 
@@ -32,7 +32,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 
 	private EventTypeWrapper() {
 		//	private constructor
-		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_FIELD_PARAMETER_TYPES, LINK_FIELD_USER_IDS};
+		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_FIELD_PARAMETER_TYPES};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -60,9 +60,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return eventType.getDescription();
 			if (key.equals(LINK_FIELD_PARAMETER_TYPES))
-				return eventType.getParameterTypes();
-			if (key.equals(LINK_FIELD_USER_IDS))
-				return eventType.getUserIds();
+				return eventType.getParameterTypeIds();
 		}
 		return null;
 	}
@@ -81,10 +79,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 					eventType.setDescription((String) value);
 				else
 					if (key.equals(LINK_FIELD_PARAMETER_TYPES))
-						eventType.setParameterTypes((Set) value);
-					else
-						if (key.equals(LINK_FIELD_USER_IDS))
-							eventType.setUserIds((Set) value);
+						eventType.setParameterTypeIds((Set) value);
 		}
 	}
 
