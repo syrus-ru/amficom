@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.66 2005/05/23 18:44:04 bass Exp $
+ * $Id: ObjectEntities.java,v 1.67 2005/05/27 15:31:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/05/23 18:44:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/05/27 15:31:38 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -28,7 +28,7 @@ public final class ObjectEntities {
 
 	public static final String EVENTTYPE_ENTITY = "EventType";
 	public static final String EVENTTYPPARTYPLINK_ENTITY = "EventTypParTypLink";
-	public static final String EVENTTYPUSERLINK_ENTITY = "EventTypeUserLink";
+	public static final String EVENTTYPEUSERALERT_ENTITY = "EventTypeUserAlert";
 //	public static final String ALARMTYPE_ENTITY = "AlarmType";
 
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
