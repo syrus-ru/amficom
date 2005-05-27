@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.96 2005/05/26 14:15:57 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.97 2005/05/27 18:36:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/05/26 14:15:57 $
+ * @version $Revision: 1.97 $, $Date: 2005/05/27 18:36:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -113,11 +113,11 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(measurementType);
-		super.retrieveParameterTypesByOneQuery(Collections.singleton(measurementType));
-		this.retrieveMeasurementPortTypesByOneQuery(Collections.singleton(measurementType));
+		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(measurementType));
+		this.retrieveMeasurementPortTypeIdsByOneQuery(Collections.singleton(measurementType));
 	}
 
-	private void retrieveMeasurementPortTypesByOneQuery(java.util.Set measurementTypes) throws RetrieveObjectException {
+	private void retrieveMeasurementPortTypeIdsByOneQuery(java.util.Set measurementTypes) throws RetrieveObjectException {
 		if ((measurementTypes == null) || (measurementTypes.isEmpty()))
 			return;
 
@@ -150,7 +150,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		super.insertEntity(measurementType);
 		try {
-			super.updateParameterTypes(Collections.singleton(storableObject));
+			super.updateParameterTypeIds(Collections.singleton(storableObject));
 			this.updateMeasurementPortTypeIds(Collections.singleton(storableObject));
 		}
 		catch (UpdateObjectException uoe) {
@@ -161,7 +161,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			super.updateParameterTypes(storableObjects);
+			super.updateParameterTypeIds(storableObjects);
 			this.updateMeasurementPortTypeIds(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
@@ -172,7 +172,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		super.updateParameterTypes(Collections.singleton(storableObject));
+		super.updateParameterTypeIds(Collections.singleton(storableObject));
 		try {
 			this.updateMeasurementPortTypeIds(Collections.singleton(storableObject));
 		}
@@ -184,7 +184,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		super.updateParameterTypes(storableObjects);
+		super.updateParameterTypeIds(storableObjects);
 		try {
 			this.updateMeasurementPortTypeIds(storableObjects);
 		}
@@ -253,8 +253,8 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		java.util.Set objects = super.retrieveByCondition(conditionQuery);
-		this.retrieveParameterTypesByOneQuery(objects);
-		this.retrieveMeasurementPortTypesByOneQuery(objects);
+		this.retrieveParameterTypeIdsByOneQuery(objects);
+		this.retrieveMeasurementPortTypeIdsByOneQuery(objects);
 		return objects;
 	}
 

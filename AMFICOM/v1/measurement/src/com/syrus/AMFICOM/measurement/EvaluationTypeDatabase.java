@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.84 2005/05/26 14:15:57 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.85 2005/05/27 18:36:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/05/26 14:15:57 $
+ * @version $Revision: 1.85 $, $Date: 2005/05/27 18:36:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -115,7 +115,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(evaluationType);
-		super.retrieveParameterTypesByOneQuery(Collections.singleton(evaluationType));
+		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(evaluationType));
 		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(evaluationType));
 	}
 
@@ -151,7 +151,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		super.insertEntity(evaluationType);
 		try {
-			super.updateParameterTypes(Collections.singleton(storableObject));
+			super.updateParameterTypeIds(Collections.singleton(storableObject));
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
 		}
 		catch (UpdateObjectException uoe) {
@@ -162,7 +162,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			super.updateParameterTypes(storableObjects);
+			super.updateParameterTypeIds(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
@@ -173,7 +173,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		super.updateParameterTypes(Collections.singleton(storableObject));
+		super.updateParameterTypeIds(Collections.singleton(storableObject));
 		try {
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
 		}
@@ -185,7 +185,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		super.updateParameterTypes(storableObjects);
+		super.updateParameterTypeIds(storableObjects);
 		try {
 			this.updateMeasurementTypeIds(storableObjects);
 		}
@@ -250,7 +250,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		java.util.Set objects = super.retrieveByCondition(conditionQuery);
-		super.retrieveParameterTypesByOneQuery(objects);
+		super.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveMeasurementTypeIdsByOneQuery(objects);
 		return objects;
 	}

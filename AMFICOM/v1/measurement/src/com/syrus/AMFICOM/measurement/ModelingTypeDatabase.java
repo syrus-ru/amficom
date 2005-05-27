@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.38 2005/05/26 14:15:57 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.39 2005/05/27 18:36:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/26 14:15:57 $
+ * @version $Revision: 1.39 $, $Date: 2005/05/27 18:36:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -116,7 +116,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(modelingType);
-		super.retrieveParameterTypesByOneQuery(Collections.singleton(modelingType));
+		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(modelingType));
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
@@ -132,7 +132,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
 		super.insertEntity(modelingType);
 		try {
-			super.updateParameterTypes(Collections.singleton(storableObject));
+			super.updateParameterTypeIds(Collections.singleton(storableObject));
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -142,7 +142,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			super.updateParameterTypes(storableObjects);
+			super.updateParameterTypeIds(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -152,13 +152,13 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		super.updateParameterTypes(Collections.singleton(storableObject));
+		super.updateParameterTypeIds(Collections.singleton(storableObject));
 	}
 
 	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		super.updateParameterTypes(storableObjects);
+		super.updateParameterTypeIds(storableObjects);
 	}
 
 	public void delete(Identifier id) {
@@ -198,7 +198,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 
 	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		java.util.Set objects = super.retrieveByCondition(conditionQuery);
-		super.retrieveParameterTypesByOneQuery(objects);
+		super.retrieveParameterTypeIdsByOneQuery(objects);
 		return objects;
 	}
 
