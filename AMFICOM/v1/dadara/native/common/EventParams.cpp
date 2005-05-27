@@ -19,12 +19,7 @@ EventParams::EventParams() {
 	this->type = 0;
 	this->begin = 0;
 	this->end = 0;
-	//
     this->R  = -1;
-    this->R1 = -1;
-    this->R2 = -1;
-    this->R3 = -1;
-    //
     this->can_be_endoftrace = false;
 }
 //---------------------------------------------------------------------------------------------------------------
@@ -35,12 +30,7 @@ void EventParams::operator = (const EventParams& ep) {
 	this->type = ep.type;
 	this->begin = ep.begin;
 	this->end = ep.end;
-    //
     this->R = ep.R;
-    this->R1 = ep.R1;
-    this->R2 = ep.R2;
-    this->R3 = ep.R3;
-    //
     this->can_be_endoftrace = ep.can_be_endoftrace;
 }
 //---------------------------------------------------------------------------------------------------------------

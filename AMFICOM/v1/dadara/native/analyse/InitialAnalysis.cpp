@@ -352,13 +352,6 @@ void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1
     if(sp1.sign>0 && sp1.f_extr>= minimalEnd)
     { ep.can_be_endoftrace = true;
     }
-	if(r3s>r1b){
-    	ep.R1 = r1s; ep.R3=r3s;
-    }
-    else{
-    	ep.R1 = r1b; ep.R3 = r3b;
-    }
-    ep.R2 = r2;
 	double t1 = r1s<r3b ? r1s:r3b, t2 = r3s>r1b ? r3s:r1b;
     double t3 = r2<t2 ? r2:t2;
 	rmin = t1<t3 ? t1:t3;

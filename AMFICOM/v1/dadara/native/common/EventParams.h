@@ -39,10 +39,8 @@ public:
 	int begin;
 	int end;
 
-    // SPLICE params
+    // reliability parameter
     double R; // см листочек с пояснениями или алгоритм вычисления этой величины
-    // CONNECTOR params
-    double R1, R2, R3; // @todo: remove
     // flags
     bool can_be_endoftrace; // если splash достиг некоторого порогового уровня, то мы признаём, что всплеск достаточно велик и может быть в принципе концом волокна
 };
