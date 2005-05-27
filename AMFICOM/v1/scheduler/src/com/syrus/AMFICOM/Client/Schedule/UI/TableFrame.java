@@ -102,8 +102,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						identifier = groupTestId;
 					}
 				} catch (ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					SchedulerModel.showErrorMessage(this, e);
 				}
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					Test test = (Test) tableModel.getObject(i);
@@ -162,8 +161,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				}
 			}
 		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SchedulerModel.showErrorMessage(this, e);
 		}
 		this.listTable.revalidate();
 		this.listTable.repaint();

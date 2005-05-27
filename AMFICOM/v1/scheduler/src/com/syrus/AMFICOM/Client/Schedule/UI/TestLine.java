@@ -99,17 +99,7 @@ public class TestLine extends TimeLine {
 			return this.width;
 		}
 
-		public void setWidth(int width) {
-			// if (width < 20) {
-			// try {
-			// throw new Exception();
-			// } catch (Exception e) {
-			// // TODO Auto-generated catch block
-			// Log.debugMessage("TestTimeItem.setWidth | width " + width,
-			// Log.FINEST);
-			// e.printStackTrace();
-			// }
-			// }
+		public void setWidth(int width) {			
 			this.width = width;
 		}
 
@@ -451,8 +441,7 @@ public class TestLine extends TimeLine {
 																				SchedulerModel.COMMAND_REFRESH_TIME_STAMPS,
 																				null, null));
 						} catch (ApplicationException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							SchedulerModel.showErrorMessage(TestLine.this, e1);
 						}
 
 					}
@@ -496,8 +485,7 @@ public class TestLine extends TimeLine {
 								continue;
 							}
 						} catch (ApplicationException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							SchedulerModel.showErrorMessage(TestLine.this, e1);
 						}
 						testTimeItem.x += dx;
 						// Log.debugMessage(".mouseDragged | dx is " + dx,
@@ -658,8 +646,7 @@ public class TestLine extends TimeLine {
 				}
 			}
 		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SchedulerModel.showErrorMessage(this, e);
 		}
 
 		this.updateScale();
@@ -804,8 +791,7 @@ public class TestLine extends TimeLine {
 									+ ", " + testController.getName(TestController.KEY_START_TIME) + ':'
 									+ testController.getValue(test, TestController.KEY_START_TIME);
 						} catch (ApplicationException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							SchedulerModel.showErrorMessage(this, e);
 						}
 
 					}

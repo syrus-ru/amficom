@@ -403,20 +403,24 @@ class PlanToolBar {
 					public void run() {
 						try {
 							schedulerModel.commitChanges();
+							
+							Calendar date = Calendar.getInstance();
+							date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());
+							Calendar time = Calendar.getInstance();
+							time.setTime((Date) PlanToolBar.this.timeSpinner.getValue());
+
+							date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+							date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
+
+							panel.setDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
+							PlanToolBar.this.dispatcher
+									.firePropertyChange(new PropertyChangeEvent(PlanToolBar.this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE,  Boolean.TRUE, Boolean.FALSE));
+
 						} catch (ApplicationException e1) {
 							SchedulerModel.showErrorMessage(PlanToolBar.this.toolBar, e1);
+						} catch (Exception e1) {
+							SchedulerModel.showErrorMessage(PlanToolBar.this.toolBar, e1);
 						}
-						Calendar date = Calendar.getInstance();
-						date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());
-						Calendar time = Calendar.getInstance();
-						time.setTime((Date) PlanToolBar.this.timeSpinner.getValue());
-
-						date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
-						date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
-
-						panel.setDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
-						PlanToolBar.this.dispatcher
-								.firePropertyChange(new PropertyChangeEvent(PlanToolBar.this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE,  Boolean.TRUE, Boolean.FALSE));
 					}
 				}, LangModelSchedule.getString("Updating_tests_from_DB"));
 			}
