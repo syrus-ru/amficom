@@ -1,26 +1,27 @@
-/*
- * $Id: MSHClientServantManager.java,v 1.2 2005/05/23 08:19:13 max Exp $
+/*-
+ * $Id: MSHClientServantManager.java,v 1.3 2005/05/27 16:24:46 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
-import com.syrus.AMFICOM.mshserver.corba.MSHServer;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/23 08:19:13 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/05/27 16:24:46 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
-public final class MSHClientServantManager extends VerifiedConnectionManager implements ClientServantManager, MSHServerConnectionManager {
+public final class MSHClientServantManager extends VerifiedConnectionManager implements ClientServantManager, ServerConnectionManager {
 	private String loginServerServantName;
 	private String eventServerServantName;
 	private String mshServerServantName;
@@ -69,17 +70,16 @@ public final class MSHClientServantManager extends VerifiedConnectionManager imp
 		}
 	}
 	
-	public MSHServer getMSHServerReference() throws CommunicationException {
+	public CommonServer getServerReference() throws CommunicationException {
 		try {
-			return (MSHServer) super.getVerifiableReference(this.mshServerServantName);
-		}
-		catch (IllegalDataException ide) {
+			return (CommonServer) super.getVerifiableReference(this.mshServerServantName);
+		} catch (final IllegalDataException ide) {
 			// Never
 			assert false;
 			return null;
 		}
 	}
-	
+
 	protected void onLoseConnection(String servantName) {
 		Log.debugMessage("MSHServerConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		// @todo Maybe, GUI-specific actions

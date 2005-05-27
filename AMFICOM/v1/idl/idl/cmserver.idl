@@ -12,17 +12,7 @@ module AMFICOM {
 module cmserver {
 module corba {
 
-	interface CMServer :
-		general::corba::Verifiable,
-		general::corba::IdentifierGeneratorServer {
-
-		void delete(in general::corba::IdentifierSeq id_Transferables,
-						in security::corba::SessionKey sessionKeyT)
-				raises (general::corba::AMFICOMRemoteException);
-
-
-
-
+	interface CMServer: general::corba::CommonServer {
 /////////////////////////////////////////// General Recieve ////////////////////////////////////////////
 
 		general::corba::StorableObjectSeq receiveParameterTypes(in general::corba::ParameterTypeSeq sets,
@@ -277,17 +267,6 @@ module corba {
 						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-
-
-		/*	Refresh*/
-		general::corba::IdentifierSeq transmitRefreshedGeneralObjects(
-						in general::corba::StorableObjectSeq StorableObjects_Transferable,
-						in security::corba::SessionKey sessionKeyT)
-			raises (general::corba::AMFICOMRemoteException);
-
-
-
-
 ///////////////////////////////////////// Administration Transmit //////////////////////////////////////////////
 
 		/* Transmit multiple objects*/
@@ -349,17 +328,6 @@ module corba {
 						in security::corba::SessionKey sessionKeyT,
 						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
-
-
-
-		/*	Refresh*/
-		general::corba::IdentifierSeq transmitRefreshedAdministrationObjects(
-						in general::corba::StorableObjectSeq StorableObjects_Transferable,
-						in security::corba::SessionKey sessionKeyT)
-			raises (general::corba::AMFICOMRemoteException);
-
-
-
 
 ///////////////////////////////////////// Configuration Transmit ///////////////////////////////////////////////
 
@@ -536,17 +504,6 @@ module corba {
 						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-
-
-		/*	Refresh*/
-		general::corba::IdentifierSeq transmitRefreshedConfigurationObjects(
-						in general::corba::StorableObjectSeq StorableObjects_Transferable,
-						in security::corba::SessionKey sessionKeyT)
-			raises (general::corba::AMFICOMRemoteException);
-
-
-
-
 ///////////////////////////////////////// Measurement Transmit ///////////////////////////////////////////////
 
 		/* Transmit multiple objects*/
@@ -722,15 +679,6 @@ module corba {
 						in security::corba::SessionKey sessionKeyT,
 						in general::corba::StorableObjectCondition condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);						
-
-
-
-		/*	Refresh*/
-		general::corba::IdentifierSeq transmitRefreshedMeasurementObjects(
-						in general::corba::StorableObjectSeq StorableObjects_Transferable,
-						in security::corba::SessionKey sessionKeyT)
-			raises (general::corba::AMFICOMRemoteException); 
-
 	};
 };
 };

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.2 2005/05/26 19:20:09 bass Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.3 2005/05/27 16:24:44 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
-	public CORBAResourceObjectLoader(/*FIXME*/) {
-		// FIXME, бля!
-		super(null);
+	public CORBAResourceObjectLoader(final ServerConnectionManager serverConnectionManager) {
+		super(serverConnectionManager);
 	}
 
 	public Set loadImageResources(Set ids) throws ApplicationException {
@@ -29,13 +29,8 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 		throw new UnsupportedOperationException();
 	}
 
-	public Set refresh(Set storableObjects) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
 	public void saveImageResources(Set objects, boolean force)
 			throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
-
 }

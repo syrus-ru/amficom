@@ -1,48 +1,58 @@
 /*
- * $Id: CORBAObjectLoader.java,v 1.9 2005/05/18 12:52:58 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.10 2005/05/27 16:24:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.general;
 
 import java.util.Set;
 
-import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/18 12:52:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 16:24:44 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
-	protected CMServerConnectionManager cmServerConnectionManager;
+	protected ServerConnectionManager serverConnectionManager;
 
-	protected CORBAObjectLoader (CMServerConnectionManager cmServerConnectionManager) {
-		this.cmServerConnectionManager = cmServerConnectionManager;
+	protected CORBAObjectLoader (final ServerConnectionManager serverConnectionManager) {
+		this.serverConnectionManager = serverConnectionManager;
 	}
 
 	/*	Delete*/
 
-	public void delete(Set identifiables) {
+	public final void delete(final Set identifiables) {
 		try {
-			CMServer cmServer = this.cmServerConnectionManager.getCMServerReference();
-			SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-			Identifier_Transferable[] idsT = Identifier.createTransferables(identifiables);
-			cmServer.delete(idsT, sessionKeyT);
+			this.serverConnectionManager.getServerReference().delete(
+					Identifier.createTransferables(identifiables),
+					LoginManager.getSessionKeyTransferable());
 		}
-		catch (CommunicationException ce) {
+		catch (final CommunicationException ce) {
 			Log.errorException(ce);
 		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("CORBAGeneralObjectLoader.delete | Cannot delete objects '" + identifiables + "'" + are.message);
+		catch (final AMFICOMRemoteException are) {
+			Log.errorMessage("CORBAObjectLoader.delete | Cannot delete objects '" + identifiables + "'" + are.message);
 		}
 	}
 
+	public final Set refresh(final Set storableObjects) throws ApplicationException {
+		try {
+			return Identifier.fromTransferables(
+					this.serverConnectionManager.getServerReference().transmitRefreshedStorableObjects(
+							StorableObject.createHeadersTransferable(storableObjects),
+							LoginManager.getSessionKeyTransferable()));
+		}
+		catch (final AMFICOMRemoteException are) {
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
+			throw new ApplicationException(are);
+		}
+	}
 }

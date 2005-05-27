@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.7 2005/05/27 09:41:22 arseniy Exp $
+ * $Id: ServerCore.java,v 1.8 2005/05/27 16:24:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,33 +8,34 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
-import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/05/27 09:41:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/27 16:24:44 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
-public abstract class ServerCore implements IdentifierGeneratorServer, Verifiable {
+public abstract class ServerCore implements CommonServer {
 	private static final long serialVersionUID = 2873567194611284256L;
 
 	/**
@@ -223,6 +224,49 @@ public abstract class ServerCore implements IdentifierGeneratorServer, Verifiabl
 			throw this.processDefaultApplicationException(uoe, ErrorCode.ERROR_UPDATE);
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
+		} catch (final Throwable t) {
+			throw this.processDefaultThrowable(t);
+		}
+	}
+
+	/**
+	 * Accepts headers of a <em>single</em> <em>solitary</em> group.
+	 *
+	 * @param headers
+	 * @param sessionKey
+	 * @throws AMFICOMRemoteException
+	 * @see com.syrus.AMFICOM.general.corba.CommonServer#transmitRefreshedStorableObjects(com.syrus.AMFICOM.general.corba.StorableObject_Transferable[], com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
+	 */
+	public final Identifier_Transferable[] transmitRefreshedStorableObjects(
+			final StorableObject_Transferable headers[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		this.validateAccess(sessionKey,
+				new Identifier_TransferableHolder(),
+				new Identifier_TransferableHolder());
+
+		final Map headerMap = new HashMap();
+		for (int i = 0; i < headers.length; i++)
+			headerMap.put(new Identifier(headers[i].id), headers[i]);
+
+		try {
+			StorableObjectPool.refresh();
+
+			final Set storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
+			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
+				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
+				final StorableObject_Transferable header = (StorableObject_Transferable) headerMap.get(storableObject.getId());
+				/*
+				 * Remove objects with older versions as well as objects with the same versions.
+				 * Not only with older ones!
+				 */
+				if (!storableObject.hasNewerVersion(header.version))
+					storableObjectIterator.remove();
+			}
+
+			return Identifier.createTransferables(storableObjects);
+		} catch (final ApplicationException ae) {
+			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
 		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}

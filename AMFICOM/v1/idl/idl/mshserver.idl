@@ -1,5 +1,5 @@
 /*-
- * $Id: mshserver.idl,v 1.13 2005/05/26 17:52:55 bass Exp $
+ * $Id: mshserver.idl,v 1.14 2005/05/27 16:24:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,7 @@ module com {
 		module AMFICOM {
 			module mshserver {
 				module corba {
-					interface MSHServer:
-							general::corba::IdentifierGeneratorServer,
-							general::corba::Verifiable {
-						void delete(in general::corba::IdentifierSeq ids,
-								in security::corba::SessionKey sessionKey)
-								raises (general::corba::AMFICOMRemoteException);		
-
+					interface MSHServer: general::corba::CommonServer {
 /*-************************************************************
  * Map -- receive multiple objects.                           *
  **************************************************************/
@@ -480,20 +474,6 @@ module com {
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey,
 								in general::corba::StorableObjectCondition condition)
-								raises (general::corba::AMFICOMRemoteException);
-
-/*-************************************************************
- * Refresh.                                                   *
- **************************************************************/
-
-						general::corba::IdentifierSeq transmitRefreshedMapObjects(
-								in general::corba::StorableObjectSeq storableObjects,
-								in security::corba::SessionKey sessionKey)
-								raises (general::corba::AMFICOMRemoteException);
-
-						general::corba::IdentifierSeq transmitRefreshedSchemeObjects(
-								in general::corba::StorableObjectSeq storableObjects,
-								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
 
 /*-************************************************************

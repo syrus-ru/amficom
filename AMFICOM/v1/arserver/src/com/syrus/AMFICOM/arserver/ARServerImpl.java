@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.18 2005/05/25 13:01:02 bass Exp $
+ * $Id: ARServerImpl.java,v 1.19 2005/05/27 16:24:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,12 @@
 
 package com.syrus.AMFICOM.arserver;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.arserver.corba.ARServerOperations;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerCore;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -35,7 +26,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/25 13:01:02 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/27 16:24:43 $
  * @author $Author: bass $
  * @module arserver_v1
  */
@@ -94,46 +85,6 @@ public final class ARServerImpl extends ServerCore implements ARServerOperations
 		} catch (final Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Identifier_Transferable[] transmitRefreshedResourceObjects(
-			final StorableObject_Transferable headers[],
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
-		this.validateAccess(sessionKey,
-				new Identifier_TransferableHolder(),
-				new Identifier_TransferableHolder());
-
-		final Map headerMap = new HashMap();
-		for (int i = 0; i < headers.length; i++)
-			headerMap.put(new Identifier(headers[i].id), headers[i]);
-
-		try {
-			StorableObjectPool.refresh();
-
-			final Set storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
-			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
-				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-				final StorableObject_Transferable header = (StorableObject_Transferable) headerMap.get(storableObject.getId());
-				/*
-				 * Remove objects with older versions as well as objects with the same versions.
-				 * Not only with older ones!
-				 */
-				if (!storableObject.hasNewerVersion(header.version))
-					storableObjectIterator.remove();
-			}
-
-			return Identifier.createTransferables(storableObjects);
-		} catch (final ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_PARTIALLY, ae.getMessage());
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
 		}
 	}
 }

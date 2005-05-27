@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.26 2005/05/24 15:08:15 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.27 2005/05/27 16:24:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,11 +7,6 @@
  */
 
 package com.syrus.AMFICOM.cmserver;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -30,23 +25,14 @@ import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/24 15:08:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/05/27 16:24:45 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
@@ -395,45 +381,5 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		final CableThread_Transferable cableThreads[] = new CableThread_Transferable[length];
 		System.arraycopy(storableObjects, 0, cableThreads, 0, length);
 		return cableThreads;
-	}
-
-	/*	Refresh*/
-
-	/**
-	 * @deprecated
-	 */
-	public Identifier_Transferable[] transmitRefreshedConfigurationObjects(StorableObject_Transferable[] storableObjectsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-		this.validateAccess(sessionKeyT, userId, domainId);
-
-		Map storableObjectsTMap = new HashMap();
-		for (int i = 0; i < storableObjectsT.length; i++)
-			storableObjectsTMap.put(new Identifier(storableObjectsT[i].id), storableObjectsT[i]);
-
-		try {
-			StorableObjectPool.refresh();
-
-			Set storableObjects = StorableObjectPool.getStorableObjects(storableObjectsTMap.keySet(), true);
-			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-				final StorableObject so = (StorableObject) it.next();
-				final StorableObject_Transferable soT = (StorableObject_Transferable) storableObjectsTMap.get(so.getId());
-				// Remove objects with older versions as well as objects with the same versions.
-				// Not only with older ones!
-				if (!so.hasNewerVersion(soT.version))
-					it.remove();
-			}
-
-			return Identifier.createTransferables(storableObjects);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_PARTIALLY, ae.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
-		}
 	}
 }

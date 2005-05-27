@@ -1,5 +1,5 @@
 /*-
- * $Id: arserver.idl,v 1.18 2005/05/25 13:01:10 bass Exp $
+ * $Id: arserver.idl,v 1.19 2005/05/27 16:24:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,7 @@ module com {
 		module AMFICOM {
 			module arserver {
 				module corba {
-					interface ARServer:
-							general::corba::IdentifierGeneratorServer,
-							general::corba::Verifiable {
-						void delete(in general::corba::IdentifierSeq ids,
-								in security::corba::SessionKey sessionKey)
-							raises (general::corba::AMFICOMRemoteException);
-
+					interface ARServer: general::corba::CommonServer {
 						general::corba::StorableObjectSeq receiveImageResources(
 								in resource::corba::ImageResourceSeq imageResources,
 								in boolean force,
@@ -39,11 +33,6 @@ module com {
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey,
 								in general::corba::StorableObjectCondition condition)
-							raises (general::corba::AMFICOMRemoteException);
-	
-						general::corba::IdentifierSeq transmitRefreshedResourceObjects(
-								in general::corba::StorableObjectSeq storableObjects,
-								in security::corba::SessionKey sessionKey)
 							raises (general::corba::AMFICOMRemoteException);
 					};
 				};

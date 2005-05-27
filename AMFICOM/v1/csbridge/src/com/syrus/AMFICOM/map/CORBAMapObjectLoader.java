@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.2 2005/05/26 19:20:09 bass Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.3 2005/05/27 16:24:44 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,12 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
-import com.syrus.AMFICOM.general.MSHServerConnectionManager;
+import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 public final class CORBAMapObjectLoader extends CORBAObjectLoader implements MapObjectLoader {
-	public CORBAMapObjectLoader(MSHServerConnectionManager serverConnectionManager) {
-		// FIXME, бля!
-		super(null);
+	public CORBAMapObjectLoader(final ServerConnectionManager serverConnectionManager) {
+		super(serverConnectionManager);
 	}
 
 	public Set loadCollectors(Set ids) throws ApplicationException {
@@ -101,10 +100,6 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 	public Set loadTopologicalNodesButIds(
 			StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public Set refresh(Set storableObjects) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

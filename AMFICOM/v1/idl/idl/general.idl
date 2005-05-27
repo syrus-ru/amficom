@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.85 2005/05/26 15:31:13 bass Exp $
+ * $Id: general.idl,v 1.86 2005/05/27 16:24:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,19 @@
 module com {
 module syrus {
 module AMFICOM {
+
+module security {
+module corba {
+	typedef wstring<128> WString128;
+
+//////////////////// SecurityKey ///////////////////
+	struct SessionKey_Transferable {
+		WString128 session_code;
+	};
+
+	typedef SessionKey_Transferable SessionKey;
+};
+};
 
 module general {
 module corba {
@@ -162,6 +175,19 @@ module corba {
 		IdentifierSeq getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 	};
 
+	abstract interface CommonServer:
+			Verifiable,
+			IdentifierGeneratorServer {
+		void delete(in general::corba::IdentifierSeq ids,
+				in security::corba::SessionKey sessionKey)
+				raises (general::corba::AMFICOMRemoteException);
+
+		general::corba::IdentifierSeq transmitRefreshedStorableObjects(
+				in general::corba::StorableObjectSeq storableObjects,
+				in security::corba::SessionKey sessionKey)
+				raises (general::corba::AMFICOMRemoteException);
+	};
+
 ///////////////////////////// Condition ////////////////////////
 
 	struct LinkedIdsCondition_Transferable {
@@ -240,18 +266,6 @@ module corba {
 	};
 
 	typedef StorableObjectCondition_Transferable StorableObjectCondition;
-
-};
-};
-
-module security {
-module corba {
-//////////////////// SecurityKey ///////////////////
-	struct SessionKey_Transferable {
-		general::corba::WString128 session_code;
-	};
-
-	typedef SessionKey_Transferable SessionKey;
 
 };
 };
