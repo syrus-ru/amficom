@@ -31,6 +31,7 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -46,7 +47,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisSelectionFrame extends ATableFrame implements
-		BsHashChangeListener, PrimaryMTAEListener
+		BsHashChangeListener, PrimaryMTAEListener, AnalysisParametersListener
 {
 	static final Double[] nf = { new Double(0.7), new Double(1.0),
 			new Double(1.5), new Double(2.0), new Double(2.5), new Double(3) };
@@ -86,6 +87,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);
+        Heap.addAnalysisParametersListener(this);
 	}
 
 	public String getReportTitle()
@@ -98,7 +100,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		return tModelMinuit;
 	}
 
-	void setDefaults(AnalysisParameters ap)
+	void setValues(AnalysisParameters ap)
 	{
 		tModelMinuit.updateData(new Object[] {
 				new Double(ap.getMinThreshold()),
@@ -222,13 +224,13 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 	void analysisInitialButton_actionPerformed(ActionEvent e)
 	{
 		AnalysisParameters ap = Heap.getMinuitInitialParams();
-		setDefaults(ap);
+		setValues(ap);
 	}
 
 	void analysisDefaultsButton_actionPerformed(ActionEvent e)
 	{
 		AnalysisParameters ap = Heap.getMinuitDefaultParams();
-		setDefaults(ap);
+		setValues(ap);
 	}
 
 	private class ParamTableModel extends AbstractTableModel
@@ -260,18 +262,16 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 				}
 			});
 		}
-
-		void updateData(Object[] d)
-		{
-			for (int i = 0; i < d.length; i++)
-			{
-				if (data[i][1] instanceof Double)
-					data[i][1] = d[i];
-				else if (data[i][1] instanceof JComboBox)
-					((JComboBox )data[i][1]).setSelectedItem(d[i]);
-			}
-			super.fireTableDataChanged();
-		}
+        void updateData(Object[] d)
+        {
+            for (int i = 0; i < d.length; i++) {
+                if (data[i][1] instanceof Double)
+                    data[i][1] = d[i];
+                else if (data[i][1] instanceof JComboBox)
+                    ((JComboBox )data[i][1]).setSelectedItem(d[i]);
+            }
+            super.fireTableDataChanged();
+        }
 
 		public void clearTable()
 		{
@@ -424,7 +424,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 			}
 
 			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-			setDefaults(ap);
+			setValues(ap);
 			setVisible(true);
 		}
 	}
@@ -461,7 +461,7 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 			if (ms.getCriteriaSet() != null)
 			{
 				AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-				setDefaults(ap);
+				setValues(ap);
 			}
 		}
 	}
@@ -476,4 +476,8 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 		// @todo Auto-generated method stub
 
 	}
+
+    public void analysisParametersUpdated() {
+        setValues(Heap.getMinuitAnalysisParams());
+    }
 }

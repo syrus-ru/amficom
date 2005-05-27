@@ -14,6 +14,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
@@ -38,8 +39,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private double downLimit = -0.4;
 	private double upLimit = 0.8;
 	private double level = 0.2;
-	// transfer coefficient dB/km to dB 
-	// private double alpha = 0.013;
+
+    // transfer coefficient dB/km to dB 
+	private double alpha = 0.0;
 
 	private double[] derivative;
 	private double[] gauss;
@@ -71,7 +73,10 @@ public class HistogrammPanel extends ScaledGraphPanel
 	public void init()
 	{
 		int event_size = ReflectogramMath.getReflectiveEventSize(y, 0.1);
-		derivative = ReflectogramMath.getDerivative(y, event_size, waveletType);
+        double normMx = Wavelet.getNormMx(waveletType, event_size);
+        double normS = Wavelet.getNormStep(waveletType, event_size);
+        derivative = Wavelet.makeTransform(
+                waveletType, event_size, y, 0, y.length - 1, normMx);
 
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = -derivative[i];
@@ -80,7 +85,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 		double tmp = 1000./deltaX;
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = derivative[i]*tmp;
-	}
+
+        this.alpha = normMx / normS / tmp;
+    }
 
 	protected void updColorModel()
 	{
@@ -156,7 +163,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	
 
 	// use this method to paint scale digits for krivulka in dB  
-/*protected void paint_scale_digits(Graphics g)
+	protected void paint_scale_digits(Graphics g)
 	{
 		super.paint_scale_digits(g);
 				
@@ -171,7 +178,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		for (int i = 0; i < jw / delta + 1; i++)
 			g.drawString(String.valueOf(MathRef.round_2 ((i + (int)(start * Kx / m) ) * m   * alpha * 1000d)), (int)(i * delta + x - 12), 10);
-	}*/
+	}
 
 	protected void this_mousePressed(MouseEvent e)
 	{
@@ -183,7 +190,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		{
 			moveLevel = true;
 			level = coord2value(currpos.y);
-			setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+            levelUpdated();
+            setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 			parent.repaint();
 			return;
 		}
@@ -198,6 +206,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 			upd_currpos(e);
 
 			level = coord2value(currpos.y);
+            levelUpdated();
 			parent.repaint();
 			return;
 		}
@@ -215,6 +224,26 @@ public class HistogrammPanel extends ScaledGraphPanel
 		}
 		super.this_mouseReleased(e);
 	}
+
+    protected void levelUpdated() {
+        System.err.println("level = " + this.level);
+        double vThresh = 0.0;
+        for (int i = 0; i < threshold.length; i++) {
+            if (threshold[i] < this.level) {
+                vThresh = i * Kx * alpha;
+                break;
+            }
+        }
+        // округляем
+        // XXX: скорее всего, округление должно проводиться в AnalysisParameters, а не здесь
+        vThresh = MathRef.round_4(vThresh);
+        if (vThresh > 0) {
+            AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+            ap.setMinSplice(vThresh); // FIXME: проверять, чтобы оно не оказывалось за пределами minThresh/minConn (это специфично для AnalysisParameters)
+            Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
+            // XXX: maybe we should be a subscribe too
+        }
+    }
 
 	public void updateHistogrammData(int start1, int end1)
 	{

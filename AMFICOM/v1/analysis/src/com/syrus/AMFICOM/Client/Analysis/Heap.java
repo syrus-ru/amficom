@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.61 2005/05/24 10:27:41 saa Exp $
+ * $Id: Heap.java,v 1.62 2005/05/27 16:06:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
@@ -41,7 +42,7 @@ import com.syrus.io.BellcoreStructure;
  * Обозначение: {} = хеш.
  * 
  * Обладает свойствами, по которым не обеспечивает уведомлений:
- * minuitAnalysisParams, minuitDefaultParams, minuitInitialParams;
+ * minuitDefaultParams, minuitInitialParams;
  * contextMeasurementSetup;
  * minTraceLevelt;
  * rLDialog{};
@@ -51,6 +52,7 @@ import com.syrus.io.BellcoreStructure;
  * 
  * Свойства, по которым уведомления предусмотрены, но не систематизированы
  * (и не гарантированы):
+ * minuitAnalysisParams
  * bsHash{}
  * 
  * Свойства с полным отслеживанием и уведомлениями:
@@ -68,7 +70,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.61 $, $Date: 2005/05/24 10:27:41 $
+ * @version $Revision: 1.62 $, $Date: 2005/05/27 16:06:51 $
  * @module
  */
 public class Heap
@@ -114,6 +116,7 @@ public class Heap
     private static LinkedList etalonMTMListeners = new LinkedList();
     private static LinkedList currentTraceChangeListeners = new LinkedList();
     private static LinkedList currentEventChangeListeners = new LinkedList();
+    private static LinkedList analysisParametersListeners = new LinkedList();
 
     // constructor is not available
     private Heap() {
@@ -287,6 +290,7 @@ public class Heap
         return currentAP;
     }
 
+    // the caller should remember to invoke notifyAnalysisParametersUpdated()
     public static void setMinuitAnalysisParams(AnalysisParameters minuitAnalysisParams) {
         Heap.currentAP = minuitAnalysisParams;
     }
@@ -411,6 +415,11 @@ public class Heap
             ((PrimaryTraceListener) it.next()).primaryTraceRemoved();
     }
 
+    public static void notifyAnalysisParametersUpdated() {
+        for (Iterator it = analysisParametersListeners.iterator(); it.hasNext(); )
+            ((AnalysisParametersListener) it.next()).analysisParametersUpdated();
+    }
+
     private static void notifyPrimaryMTAECUpdated() {
         for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
             ((PrimaryMTAEListener) it.next()).primaryMTMCUpdated();
@@ -521,6 +530,16 @@ public class Heap
     public static void removeCurrentEventChangeListener(
             CurrentEventChangeListener listener) {
         removeListener(currentEventChangeListeners, listener);
+    }
+
+    public static void addAnalysisParametersListener(
+            AnalysisParametersListener listener) {
+        addListener(analysisParametersListeners, listener);
+    }
+
+    public static void removeAnalysisParametersListener(
+            AnalysisParametersListener listener) {
+        removeListener(analysisParametersListeners, listener);
     }
 
     public static void primaryTraceOpened(BellcoreStructure bs) {
