@@ -284,26 +284,9 @@ implements PropertyChangeListener, BsHashChangeListener, EtalonMTMListener, Curr
 
 		aModel.fireModelChanged("");
 
-//		if(ConnectionInterface.getInstance() != null)
-//		{
-//			if(ConnectionInterface.getInstance().isConnected())
-//		 internal_dispatcher.notify(new ContextChangeEvent(
-//				 ConnectionInterface.getInstance(),
-//				 ContextChangeEvent.CONNECTION_OPENED_EVENT));
-//		}
-//		if(SessionInterface.getActiveSession() != null)
-//		{
-//			aContext.setSessionInterface(SessionInterface.getActiveSession());
-//			if(aContext.getSessionInterface().isOpened())
-//		 internal_dispatcher.notify(new ContextChangeEvent(
-//				 aContext.getSessionInterface(),
-//				 ContextChangeEvent.SESSION_OPENED_EVENT));
-//		}
-//		else
-//		{
-//			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
-//			SessionInterface.setActiveSession(aContext.getSessionInterface());
-//		}
+		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
+			internal_dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
+		}
 	}
 
 	void setDefaultModel (ApplicationModel aModel)
