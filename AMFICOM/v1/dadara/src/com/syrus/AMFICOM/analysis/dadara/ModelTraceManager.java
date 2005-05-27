@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.77 2005/05/27 16:53:57 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.78 2005/05/27 17:27:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import org.apache.xalan.transformer.MsgMgr;
+
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.77 $, $Date: 2005/05/27 16:53:57 $
+ * @version $Revision: 1.78 $, $Date: 2005/05/27 17:27:17 $
  * @module
  */
 public class ModelTraceManager
@@ -309,53 +311,60 @@ implements DataStreamable, Cloneable
 		}
 	}
 
+    public class ThreshEditorWithDefaultMark
+    extends ThreshEditor {
+        public boolean isMarked;
+        protected ThreshEditorWithDefaultMark(int type, Thresh th,
+                boolean isMarked) {
+            super(type, th);
+            this.isMarked = isMarked;
+        }
+    }
+
     /**
      * @param nEvent номер события
      * @return массив редакторов всех порогов для данного события
      */
-	public ThreshEditor[] getThreshEditors(int nEvent)
+	public ThreshEditorWithDefaultMark[] getThreshEditors(int nEvent)
 	{
 		//return re[nEvents].getThreshold();
 
 		Thresh[] tlist = getAllThreshByNEvent(nEvent);
 		ArrayList ret = new ArrayList();
+        Thresh defaultTh = getDefaultThreshByNEvent(nEvent);
 
 		for (int i = 0; i < tlist.length; i++)
 		{
 			Thresh th = tlist[i];
 			if (th instanceof ThreshDX)
 			{
-				ret.add(new ThreshEditor(
+				ret.add(new ThreshEditorWithDefaultMark(
 					((ThreshDX )th).isRise()
 						? ThreshEditor.TYPE_DXF
 						: ThreshEditor.TYPE_DXF,
-					th));
+					th,
+                    th == defaultTh)); // mark if thesh object is same
 			}
 			if (th instanceof ThreshDY)
 			{
-				if (((ThreshDY )th).getTypeL())
-					ret.add(new ThreshEditor(ThreshEditor.TYPE_L, th));
-				else
-					ret.add(new ThreshEditor(ThreshEditor.TYPE_A, th));
+                ret.add(new ThreshEditorWithDefaultMark(
+				    ((ThreshDY )th).getTypeL()
+                        ? ThreshEditor.TYPE_L
+                        : ThreshEditor.TYPE_A,
+                    th,
+                    th == defaultTh)); // mark if thesh object is same
 			}
 		}
-		return (ThreshEditor[] )ret.toArray(new ThreshEditor[ret.size()]);
+        return (ThreshEditorWithDefaultMark[])ret.toArray(
+                new ThreshEditorWithDefaultMark[ret.size()]);
 	}
 
-    /**
-     * @param nEvent номер события
-     * @return редактор для "порога по умолчанию" для данного события
-     *   либо null, если такого порога нет
-     */
-    public ThreshEditor getDefaultThreshEditor(int nEvent)
-    {
-        ThreshDY th = getDefaultThreshByNEvent(nEvent);
-        if (th == null)
-            return null;
-        if (th.getTypeL())
-            return new ThreshEditor(ThreshEditor.TYPE_L, th);
-        else
-            return new ThreshEditor(ThreshEditor.TYPE_A, th);
+    // may return -1
+    public static int getDefaultThreshEditorIndex(ThreshEditorWithDefaultMark[] teds) {
+        for (int i = 0; i < teds.length; i++)
+            if (teds[i].isMarked)
+                return i;
+        return -1;
     }
 
 	/**
@@ -643,9 +652,9 @@ implements DataStreamable, Cloneable
         }
         return (Thresh[] )al.toArray(new Thresh[al.size()]);
     }
-    // определяет 'пороог по умолчанию' для данного события
-    // may return null, but not in the current version
-    private ThreshDY getDefaultThreshByNEvent(int nEvent)
+    // определяет 'порог по умолчанию' для данного события
+    // may return null
+    private Thresh getDefaultThreshByNEvent(int nEvent)
     {
         // пытаемся вернуть DL-порог -- для коннекторов
         for (int i = 0; i < this.tDY.length; i++) {
