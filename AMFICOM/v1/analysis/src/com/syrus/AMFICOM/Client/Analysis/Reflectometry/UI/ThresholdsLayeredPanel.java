@@ -98,6 +98,33 @@ implements PropertyChangeListener,
 			}
 		}
 	}
+	
+	protected void updScale2fit(int start, int end, double indent_x, double iy)
+	{
+		SimpleGraphPanel activePanel = (SimpleGraphPanel)jLayeredPane.getComponent(0);
+		if (activePanel instanceof ThresholdsPanel) {
+			ThresholdsPanel p = (ThresholdsPanel)activePanel;
+			SimpleGraphPanel.GraphRange range = new SimpleGraphPanel.GraphRange();
+			p.updateGraphRangeByThresholds(range);
+			if (!range.isEmpty()) {
+				int ix = (int)((range.getXMax() - range.getXMin()) * indent_x);
+
+				double _scale_x = activePanel.scaleX;
+				double _scale_y = activePanel.scaleY;
+				double sc_x = ((double)(jLayeredPane.getWidth()) / (double)(range.getXMax() - range.getXMin() + 2*ix));
+				double sc_y = (jLayeredPane.getHeight() / (range.getYMax() - range.getYMin() + 2*iy));
+
+				updScale (sc_x/_scale_x, sc_y/_scale_y, 0.5, 0.5);
+			
+				horizontalBar.setMinimum(-5);
+				horizontalBar.setValue((int)(horizontalMax * ((range.getXMin() - ix)  * activePanel.deltaX) / (maxLength*maxDeltaX/scale_x)));
+				verticalBar.setMinimum(-5);
+				verticalBar.setValue((int)(verticalMax * ((activePanel.maxY - range.getYMax() - iy) / (maxY/scale_y))));
+				return;
+			}
+		}
+		super.updScale2fit(start, end, indent_x, iy);
+	}
 
 	boolean hasShowThresholdButtonSelected()
 	{

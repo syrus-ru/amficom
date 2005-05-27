@@ -262,7 +262,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		paint_scale_digits(g);
 
 		if (paint_thresholds) {
-            updateGraphRangeByThresholds(new GraphRange()); // FIXME
 			if(isToPaintAllThresholds())
 				paintAllThresholds(g, null);
 			else
@@ -277,10 +276,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
      */
     public void updateGraphRangeByThresholds(GraphRange r) {
         if (paint_thresholds) {
-            if(isToPaintAllThresholds())
-                paintAllThresholds(null, r);
-            else
-                paintOneThreshold(null, r);
+          paintOneThreshold(null, r);
         }
     }
 
