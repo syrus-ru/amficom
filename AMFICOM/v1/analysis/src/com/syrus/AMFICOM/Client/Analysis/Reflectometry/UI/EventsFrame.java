@@ -551,6 +551,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	public void etalonMTMCUpdated()
 	{
         setTableModel();
+        updateTableModel();
         updateColors();
         updateCompDebug();
 	}
@@ -558,6 +559,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	public void etalonMTMRemoved()
 	{
         setTableModel();
+        updateTableModel();
         updateColors();
 	}
 
@@ -571,8 +573,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
         if (Heap.getRefAnalysisPrimary() != null)
         {
             setTableModel();
-            updateTableModel();
             CommonUIUtilities.arrangeTableColumns(this.jTable);
+            updateTableModel();
             updateCompDebug();
         }
         setVisible(true);
