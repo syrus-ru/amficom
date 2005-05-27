@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.4 2005/05/24 17:25:23 arseniy Exp $
+ * $Id: CommonTest.java,v 1.5 2005/05/27 18:30:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.general;
 
-import gnu.trove.TShortObjectHashMap;
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -39,6 +38,11 @@ import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
+import com.syrus.AMFICOM.event.DatabaseEventObjectLoader;
+import com.syrus.AMFICOM.event.EventDatabase;
+import com.syrus.AMFICOM.event.EventSourceDatabase;
+import com.syrus.AMFICOM.event.EventStorableObjectPool;
+import com.syrus.AMFICOM.event.EventTypeDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
@@ -50,6 +54,7 @@ import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
@@ -61,7 +66,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/24 17:25:23 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/27 18:30:39 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -124,52 +129,53 @@ public abstract class CommonTest extends TestCase {
 	}
 
 	private static void initDatabaseContext() {
-		final TShortObjectHashMap entityCodeDatabaseMap = new TShortObjectHashMap();
+		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
+		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
+		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
-		entityCodeDatabaseMap.put(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, new ParameterTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, new CharacteristicTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new CharacteristicDatabase());
+		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new DomainDatabase());
+		DatabaseContext.registerDatabase(new ServerDatabase());
+		DatabaseContext.registerDatabase(new MCMDatabase());
+		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 
-		entityCodeDatabaseMap.put(ObjectEntities.USER_ENTITY_CODE, new UserDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.DOMAIN_ENTITY_CODE, new DomainDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SERVER_ENTITY_CODE, new ServerDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MCM_ENTITY_CODE, new MCMDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SERVERPROCESS_ENTITY_CODE, new ServerProcessDatabase());
+		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
+		DatabaseContext.registerDatabase(new PortTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
+		DatabaseContext.registerDatabase(new LinkTypeDatabase());
+		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
+		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
+		DatabaseContext.registerDatabase(new EquipmentDatabase());
+		DatabaseContext.registerDatabase(new PortDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new LinkDatabase());
+		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
-		entityCodeDatabaseMap.put(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, new EquipmentTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.PORTTYPE_ENTITY_CODE, new PortTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, new MeasurementPortTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, new TransmissionPathTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.LINKTYPE_ENTITY_CODE, new LinkTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, new CableLinkTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, new CableThreadTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.EQUIPMENT_ENTITY_CODE, new EquipmentDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.PORT_ENTITY_CODE, new PortDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, new MeasurementPortDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.TRANSPATH_ENTITY_CODE, new TransmissionPathDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.KIS_ENTITY_CODE, new KISDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new MonitoredElementDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.LINK_ENTITY_CODE, new LinkDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CABLETHREAD_ENTITY_CODE, new CableThreadDatabase());
+		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
+		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
+		DatabaseContext.registerDatabase(new EvaluationTypeDatabase());
+		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementDatabase());
+		DatabaseContext.registerDatabase(new AnalysisDatabase());
+		DatabaseContext.registerDatabase(new EvaluationDatabase());
+		DatabaseContext.registerDatabase(new ModelingDatabase());
+		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
+		DatabaseContext.registerDatabase(new ResultDatabase());
+		DatabaseContext.registerDatabase(new SetDatabase());
+		DatabaseContext.registerDatabase(new TestDatabase());
+		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
 
-		entityCodeDatabaseMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, new MeasurementTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, new AnalysisTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new EvaluationTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MODELINGTYPE_ENTITY_CODE, new ModelingTypeDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MEASUREMENT_ENTITY_CODE, new MeasurementDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.ANALYSIS_ENTITY_CODE, new AnalysisDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.EVALUATION_ENTITY_CODE, new EvaluationDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MODELING_ENTITY_CODE, new EvaluationDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, new MeasurementSetupDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.RESULT_ENTITY_CODE, new ResultDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.SET_ENTITY_CODE, new SetDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.TEST_ENTITY_CODE, new TestDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, new CronTemporalPatternDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, new IntervalsTemporalPatternDatabase());
-		entityCodeDatabaseMap.put(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new EventTypeDatabase());
+		DatabaseContext.registerDatabase(new EventSourceDatabase());
+		DatabaseContext.registerDatabase(new EventDatabase());
+
 		//More database drivers...
-
-		DatabaseContext.init(entityCodeDatabaseMap);
 	}
 
 	private static void initStorableObjectPools() {
@@ -187,6 +193,7 @@ public abstract class CommonTest extends TestCase {
 		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), StorableObjectResizableLRUMap.class);
 		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), StorableObjectResizableLRUMap.class);
 		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), StorableObjectResizableLRUMap.class);
+		EventStorableObjectPool.init(new DatabaseEventObjectLoader(), StorableObjectResizableLRUMap.class);
 		//More pools...
 	}
 
