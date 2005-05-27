@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTrace.java,v 1.8 2005/05/26 13:32:51 saa Exp $
+ * $Id: ModelTrace.java,v 1.9 2005/05/27 06:15:25 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.8 $, $Date: 2005/05/26 13:32:51 $
+ * @version $Revision: 1.9 $, $Date: 2005/05/27 06:15:25 $
  * @module
  */
 public abstract class ModelTrace extends ModelTraceRange
@@ -24,11 +24,11 @@ public abstract class ModelTrace extends ModelTraceRange
 	 */
 	public abstract int getLength();
 
-    public int getBegin() {
+    final public int getBegin() {
         return 0;
     }
 
-    public int getEnd() {
+    final public int getEnd() {
         return getLength() - 1;
     }
 
