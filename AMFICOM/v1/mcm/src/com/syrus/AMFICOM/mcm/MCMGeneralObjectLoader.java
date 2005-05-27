@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.20 2005/05/24 13:24:57 bass Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.21 2005/05/27 09:55:32 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/24 13:24:57 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/27 09:55:32 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -217,19 +217,5 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 	public void saveCharacteristics(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
-	}
-
-
-
-
-	public Set refresh(Set storableObjects) {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
-	}
-
-
-
-
-	public void delete(final Set identifiables) {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
 	}
 }

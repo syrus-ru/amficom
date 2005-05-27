@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.50 2005/05/24 13:24:57 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.51 2005/05/27 09:55:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/05/24 13:24:57 $
+ * @version $Revision: 1.51 $, $Date: 2005/05/27 09:55:32 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -547,16 +547,4 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public void savePeriodicalTemporalPatterns(java.util.Set storableObjects,boolean force){
 		throw new UnsupportedOperationException("May be not need this? " + storableObjects + ", " + force);
 	}
-
-	public java.util.Set refresh(java.util.Set storableObjects) {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
-	}
-
-
-
-
-	public void delete(final java.util.Set identifiables) {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
-	}
-
 }

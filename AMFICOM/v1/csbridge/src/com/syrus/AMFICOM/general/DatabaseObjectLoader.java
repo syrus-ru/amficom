@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.5 2005/05/26 19:13:24 bass Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.6 2005/05/27 09:55:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/26 19:13:24 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/27 09:55:32 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -74,7 +74,13 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		return Identifier.createTransferables(loadButIds);
 	}
 
-	public final void delete(final Set identifiables) {
+	/**
+	 * Should be <code>final</code>, but overridden in
+	 * <code>MServerMeasurementObjectLoader</code>.
+	 *
+	 * @param identifiables
+	 */
+	public void delete(final Set identifiables) {
 		if (identifiables == null || identifiables.isEmpty())
 			return;
 		/**

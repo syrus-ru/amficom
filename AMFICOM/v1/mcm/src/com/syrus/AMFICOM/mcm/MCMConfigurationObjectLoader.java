@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.38 2005/05/24 13:24:57 bass Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.39 2005/05/27 09:55:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/24 13:24:57 $
+ * @version $Revision: 1.39 $, $Date: 2005/05/27 09:55:32 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -447,21 +447,4 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public void saveTransmissionPathTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-
-
-
-
-	public Set refresh(Set storableObjects) {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
-	}
-
-
-
-
-
-	public void delete(final Set identifiables) {
-		throw new UnsupportedOperationException("Method not implemented, objects: " + identifiables);
-	}
-
 }
