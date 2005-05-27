@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.15 2005/05/25 16:18:01 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.16 2005/05/27 15:14:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,13 +33,13 @@ import java.util.Properties;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
 /**
  * Класс управляет инициализацией картографического отображения.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/05/25 16:18:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/05/27 15:14:54 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -103,7 +103,7 @@ public final class MapPropertiesManager
 	protected static String descreteNavigation = "false";
 
 	/* display constants. */
-	public static final Color DEFAULT_TEXT_BACKGROUND = SystemColor.YELLOW;
+	public static final Color DEFAULT_TEXT_BACKGROUND = Color.YELLOW;
 	public static final Color DEFAULT_TEXT_COLOR = SystemColor.controlText;
 	public static final Color DEFAULT_BORDER_COLOR = SystemColor.activeCaptionBorder;
 	public static final String DEFAULT_METRIC = LangModelMap.getString("metric");
@@ -514,7 +514,7 @@ public final class MapPropertiesManager
 		{
 			try
 			{
-				AbstractImageResource ir = (AbstractImageResource )ResourceStorableObjectPool.getStorableObject(imageId, true);
+				AbstractImageResource ir = (AbstractImageResource )StorableObjectPool.getStorableObject(imageId, true);
 				if(ir instanceof FileImageResource)
 				{
 					img = Toolkit.getDefaultToolkit().createImage(((FileImageResource )ir).getFileName());

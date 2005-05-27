@@ -1,12 +1,10 @@
 /**
- * $Id: MapElementController.java,v 1.4 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: MapElementController.java,v 1.5 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -24,7 +22,7 @@ import java.awt.geom.Rectangle2D;
  * Интерфейс контроллера элемента карты. Позволяет управлять отображением
  * элементов карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
 public interface MapElementController 

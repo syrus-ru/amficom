@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseViewCommand.java,v 1.13 2005/04/13 11:11:28 krupenn Exp $
+ * $Id: MapEditorCloseViewCommand.java,v 1.14 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -23,6 +20,9 @@ import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -32,24 +32,22 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.13 $, $Date: 2005/04/13 11:11:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.Client.Map.Command.Map.MapCloseCommand
  */
-public class MapEditorCloseViewCommand extends VoidCommand
-{
+public class MapEditorCloseViewCommand extends AbstractCommand {
 	JDesktopPane desktop;
+
 	Dispatcher dispatcher;
 
-	public MapEditorCloseViewCommand(JDesktopPane desktop, Dispatcher dispatcher)
-	{
+	public MapEditorCloseViewCommand(JDesktopPane desktop, Dispatcher dispatcher) {
 		this.desktop = desktop;
 		this.dispatcher = dispatcher;
 	}
 
-	public void execute()
-	{
+	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null)
@@ -64,7 +62,7 @@ public class MapEditorCloseViewCommand extends VoidCommand
 
 		MapNewCommand cmd = new MapNewCommand(mapFrame.getContext());
 		cmd.execute();
-		
+
 		Map map = cmd.getMap();
 
 		MapViewNewCommand cmd2 = new MapViewNewCommand(map, mapFrame.getContext());
@@ -72,11 +70,13 @@ public class MapEditorCloseViewCommand extends VoidCommand
 
 		MapView mapView = cmd2.getMapView();
 
-        try {
+		try {
 			mapView.setCenter(mapFrame.getMapViewer().getLogicalNetLayer().getCenter());
 			mapView.setScale(mapFrame.getMapViewer().getLogicalNetLayer().getScale());
 			mapFrame.setMapView(mapView);
-			this.dispatcher.notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+			this.dispatcher.firePropertyChange(new MapEvent(
+					this,
+					MapEvent.MAP_VIEW_CLOSED));
 			setResult(Command.RESULT_OK);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block

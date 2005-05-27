@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.4 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.5 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,14 +27,11 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер непривязанного узела (элемент схемы).
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
 public class UnboundNodeController extends SiteNodeController
 {
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"";
-
 	/**
 	 * Instace.
 	 */
@@ -43,36 +40,29 @@ public class UnboundNodeController extends SiteNodeController
 	/**
 	 * Private constructor.
 	 */
-	private UnboundNodeController()
-	{// empty
+	private UnboundNodeController() {
+		// empty
 	}
 	
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new UnboundNodeController();
 		return instance;
 	}
 
 	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		if(!(mapElement instanceof UnboundNode))
 			return;
 		UnboundNode unbound = (UnboundNode)mapElement;
@@ -92,12 +82,10 @@ public class UnboundNodeController extends SiteNodeController
 		int height = getBounds(unbound).height + 20;
 		
 		pg.setStroke(new BasicStroke(MapPropertiesManager.getUnboundThickness()));
-		if (unbound.getCanBind())
-		{
+		if(unbound.getCanBind()) {
 			pg.setColor(MapPropertiesManager.getCanBindColor());
 		}
-		else
-		{
+		else {
 			pg.setColor(MapPropertiesManager.getUnboundElementColor());
 		}
 		pg.drawRect( 

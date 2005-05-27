@@ -1,19 +1,17 @@
 /*
- * $Id: MapViewCloseCommand.java,v 1.10 2005/02/22 11:00:14 krupenn Exp $
+ * $Id: MapViewCloseCommand.java,v 1.11 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
 */
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * Класс $RCSfile: MapViewCloseCommand.java,v $ используется для закрытия 
@@ -22,28 +20,25 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/22 11:00:14 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class MapViewCloseCommand extends VoidCommand
-{
+public class MapViewCloseCommand extends AbstractCommand {
 	/**
 	 * окно карты
 	 */
 	MapView mapView;
 
-	public MapViewCloseCommand(MapView mapView)
-	{
+	public MapViewCloseCommand(MapView mapView) {
 		this.mapView = mapView;
 	}
 
-	public void execute()
-	{
-//		mapFrame.saveConfig();
+	public void execute() {
+		//		mapFrame.saveConfig();
 
 		if(this.mapView != null)
 			// TODO should be 'remove', not 'delete'
-			MapViewStorableObjectPool.delete(this.mapView.getId());
+			StorableObjectPool.delete(this.mapView.getId());
 
 		setResult(Command.RESULT_OK);
 	}

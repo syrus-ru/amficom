@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.1 2005/05/25 16:15:58 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.2 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -266,7 +266,7 @@ public class LayersDialog extends JDialog {
 					LangModelMap.getString("all") } );
 		this.cableTable.setModel(this.cableTableModel);
 		this.cableTable.setTableHeader(null);
-		this.cableTable.setDefaultRenderer(Object.class, LayersTableCellRenderer.getInstance());
+		this.cableTable.setDefaultRenderer(Boolean.class, LayersTableCellRenderer.getInstance());
 		this.cableTable.setDefaultEditor(Object.class, LayersTableCellEditor.getInstance());
 
 		LayersTableCellEditor.getInstance().addCellEditorListener( new CellEditorListener() {

@@ -9,16 +9,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
-public class UnboundLinkEditor extends DefaultStorableObjectEditor
-{
+public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 	UnboundLink link;
 
 	private JPanel jPanel = new JPanel();
@@ -27,41 +26,37 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel typeLabel = new JLabel();
-	private ObjComboBox typeComboBox = null;
+	private WrapperedComboBox typeComboBox = null;
 	private JLabel cableLabel = new JLabel();
-	private ObjComboBox cableComboBox = null;
+	private WrapperedComboBox cableComboBox = null;
 	private JLabel topologicalLengthLabel = new JLabel();
 	private JTextField topologicalLengthTextField = new JTextField();
 
 	private JLabel startLabel = new JLabel();
-	private ObjComboBox startComboBox = null;
+	private WrapperedComboBox startComboBox = null;
 	private JLabel endLabel = new JLabel();
-	private ObjComboBox endComboBox = null;
+	private WrapperedComboBox endComboBox = null;
 
-	public UnboundLinkEditor()
-	{
-		try
-		{
+	public UnboundLinkEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.typeComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
-		this.startComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
-		this.endComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.cableComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.typeComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.startComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.typeLabel.setText(LangModelMap.getString("Type"));
@@ -91,27 +86,23 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor
 		this.topologicalLengthTextField.setEnabled(false);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.link;
 	}
 
-	public void setObject(Object object)
-	{
-		this.link = (UnboundLink)object;
+	public void setObject(Object object) {
+		this.link = (UnboundLink )object;
 
 		this.cableComboBox.removeAllItems();
 		this.typeComboBox.removeAllItems();
 		this.startComboBox.removeAllItems();
 		this.endComboBox.removeAllItems();
 
-		if(this.link == null)
-		{
+		if(this.link == null) {
 			this.nameTextField.setText("");
 			this.topologicalLengthTextField.setText("");
 		}
-		else
-		{
+		else {
 			this.nameTextField.setText(this.link.getName());
 			this.topologicalLengthTextField.setText(String.valueOf(this.link.getLengthLt()));
 

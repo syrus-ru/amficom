@@ -1,12 +1,10 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.7 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.8 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -29,11 +27,10 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class AlarmMarkerController extends MarkerController
-{
+public final class AlarmMarkerController extends MarkerController {
 	/**
 	 * Имя первой пиктограммы. Пиктограммы маркера сигнала тревоги меняются с
 	 * заданным периодом для мигания на карте.
@@ -65,16 +62,16 @@ public final class AlarmMarkerController extends MarkerController
 	/**
 	 * Private constructor.
 	 */
-	private AlarmMarkerController()
-	{// empty
+	private AlarmMarkerController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new AlarmMarkerController();
 		return instance;
@@ -83,9 +80,8 @@ public final class AlarmMarkerController extends MarkerController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement)
-	{
-		if(! (mapElement instanceof AlarmMarker))
+	public String getToolTipText(MapElement mapElement) {
+		if(!(mapElement instanceof AlarmMarker))
 			return null;
 			
 		AlarmMarker marker = (AlarmMarker)mapElement;
@@ -103,8 +99,7 @@ public final class AlarmMarkerController extends MarkerController
 	/**
 	 * {@inheritDoc}
 	 */
-	public Image getAlarmedImage(AbstractNode node)
-	{
+	public Image getAlarmedImage(AbstractNode node) {
 		Identifier creatorId = getLogicalNetLayer().getUserId();
 
 		return MapPropertiesManager.getScaledImage(
@@ -117,11 +112,12 @@ public final class AlarmMarkerController extends MarkerController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(needInit)
-		{
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(needInit) {
 			Identifier creatorId = getLogicalNetLayer().getUserId();
 
 			MapPropertiesManager.setOriginalImage(

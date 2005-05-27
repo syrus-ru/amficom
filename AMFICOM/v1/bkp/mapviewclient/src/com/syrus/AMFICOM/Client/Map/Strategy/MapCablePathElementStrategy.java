@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElementStrategy.java,v 1.14 2005/04/13 11:28:11 krupenn Exp $
+ * $Id: MapCablePathElementStrategy.java,v 1.15 2005/05/27 15:14:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.Point;
  * Стратегия управления кабельным путем.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/04/13 11:28:11 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/27 15:14:58 $
  * @module mapviewclient_v1
  */
 public final class MapCablePathElementStrategy extends AbstractMapStrategy 
@@ -82,7 +82,7 @@ public final class MapCablePathElementStrategy extends AbstractMapStrategy
 			}
 			else
 			{
-				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				Selection sel = new Selection();
 				sel.addAll(super.logicalNetLayer.getSelectedElements());
 				super.logicalNetLayer.setCurrentMapElement(sel);
 			}

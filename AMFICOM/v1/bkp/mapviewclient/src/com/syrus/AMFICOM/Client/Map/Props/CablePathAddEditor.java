@@ -21,19 +21,17 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -44,6 +42,11 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
+/**
+ * @version $Revision: 1.2 $
+ * @author $Author: krupenn $
+ * @module mapviewclient_v1
+ */
 public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -58,8 +61,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	 * таблица
 	 */
 	private CableBindingController controller;
-	private ObjectResourceTableModel model;
-	ObjectResourceTable table;
+	private WrapperedTableModel model;
+	WrapperedTable table;
 
 	JPanel jPanel = new JPanel();
 	JLabel titleLabel = new JLabel();
@@ -79,8 +82,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	JLabel startLinkLabel = new JLabel();
 	JLabel startNodeToLabel = new JLabel();
 	JTextField startNodeTextField = new JTextField();
-	ObjComboBox startLinkComboBox = null;
-	ObjComboBox startNodeToComboBox = null;
+	WrapperedComboBox startLinkComboBox = null;
+	WrapperedComboBox startNodeToComboBox = null;
 
 	JPanel endPanel = new JPanel();
 	JLabel endNodeTitleLabel = new JLabel();
@@ -88,8 +91,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	JLabel endLinkLabel = new JLabel();
 	JLabel endNodeToLabel = new JLabel();
 	JTextField endNodeTextField = new JTextField();
-	ObjComboBox endLinkComboBox = null;
-	ObjComboBox endNodeToComboBox = null;
+	WrapperedComboBox endLinkComboBox = null;
+	WrapperedComboBox endNodeToComboBox = null;
 
 	AbstractNode startNode;
 	AbstractNode endNode;
@@ -107,8 +110,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	public CablePathAddEditor()
 	{
 		this.controller = CableBindingController.getInstance();
-		this.model = new ObjectResourceTableModel(this.controller);
-		this.table = new ObjectResourceTable(this.model);
+		this.model = new WrapperedTableModel(this.controller, this.controller.getKeysArray());
+		this.table = new WrapperedTable(this.model);
 
 		try
 		{
@@ -138,10 +141,10 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		SimpleMapElementController comboController = 
 				SimpleMapElementController.getInstance();
 
-		this.startLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
-		this.startNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
-		this.endLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
-		this.endNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.startLinkComboBox = new WrapperedComboBox(comboController, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.startNodeToComboBox = new WrapperedComboBox(comboController, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.endLinkComboBox = new WrapperedComboBox(comboController, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.endNodeToComboBox = new WrapperedComboBox(comboController, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 		this.jPanel.setName(LangModelMap.getString("LinkBinding"));
@@ -335,7 +338,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 
 			this.links.addAll(this.cablePath.getLinks());
 
-			this.model.setContents(this.cablePath.getLinks());
+			this.model.setValues(this.cablePath.getLinks());
 			
 			setBindingPanels();
 		}
@@ -501,7 +504,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
 			link.getBinding().remove(this.cablePath);
 		}
-		this.model.setContents(this.cablePath.getLinks());
+		this.model.setValues(this.cablePath.getLinks());
 		this.model.fireTableDataChanged();
 		setBindingPanels();
 	}
@@ -599,7 +602,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			}
 		}
 		
-		this.model.setContents(this.cablePath.getLinks());
+		this.model.setValues(this.cablePath.getLinks());
 		this.model.fireTableDataChanged();
 		
 		setBindingPanels();

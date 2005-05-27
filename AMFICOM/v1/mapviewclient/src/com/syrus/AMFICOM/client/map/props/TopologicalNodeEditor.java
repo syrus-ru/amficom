@@ -9,18 +9,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalNode;
 
-public class TopologicalNodeEditor extends DefaultStorableObjectEditor
-{
+public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -30,7 +29,7 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor
 	private JLabel latLabel = new JLabel();
 	private JTextField latTextField = new JTextField();
 	private JLabel linkLabel = new JLabel();
-	private ObjComboBox linkComboBox = null;
+	private WrapperedComboBox linkComboBox = null;
 
 	TopologicalNode node;
 
@@ -52,10 +51,13 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.linkComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.linkComboBox = new WrapperedComboBox(
+				controller, 
+				SimpleMapElementController.KEY_NAME,
+				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.linkLabel.setText(LangModelMap.getString("Physical_link_id"));
 		this.longLabel.setText(LangModelMap.getString("Longitude"));
@@ -72,28 +74,24 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor
 		super.addToUndoableListener(this.longTextField);
 		super.addToUndoableListener(this.latTextField);
 		this.linkComboBox.setEnabled(false);
-}
+	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.node;
 	}
 
-	public void setObject(Object objectResource)
-	{
-		this.node = (TopologicalNode)objectResource;
-		
+	public void setObject(Object objectResource) {
+		this.node = (TopologicalNode )objectResource;
+
 		this.linkComboBox.removeAllItems();
 
-		if(this.node == null)
-		{
+		if(this.node == null) {
 			this.longTextField.setEnabled(false);
 			this.longTextField.setText("");
 			this.latTextField.setEnabled(false);
 			this.latTextField.setText("");
 		}
-		else
-		{
+		else {
 			this.linkComboBox.addItem(this.node.getPhysicalLink());
 			this.linkComboBox.setSelectedItem(this.node.getPhysicalLink());
 
@@ -109,20 +107,15 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor
 	}
 
 	public void commitChanges() {
-		try 
-		{
+		try {
 			double x = Double.parseDouble(this.longTextField.getText());
 			double y = Double.parseDouble(this.latTextField.getText());
-			
+
 			this.node.setLocation(new DoublePoint(x, y));
-		} 
-		catch (NumberFormatException ex) 
-		{
+		} catch(NumberFormatException ex) {
 			System.out.println(ex.getMessage());
-		} 
-		catch (Exception ex) 
-		{
+		} catch(Exception ex) {
 			ex.printStackTrace();
-		} 
+		}
 	}
 }

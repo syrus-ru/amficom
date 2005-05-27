@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommand.java,v 1.5 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: MapActionCommand.java,v 1.6 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,19 +11,19 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 
 /**
  *  
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
-public class MapActionCommand extends VoidCommand
+public class MapActionCommand extends AbstractCommand
 {
 	protected static final int ACTION_NONE = 0;
 	protected static final int ACTION_DRAW_NODE = 1;

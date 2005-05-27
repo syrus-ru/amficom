@@ -1,12 +1,10 @@
 /**
- * $Id: EventMarkerController.java,v 1.7 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: EventMarkerController.java,v 1.8 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -27,11 +25,10 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера события.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class EventMarkerController extends MarkerController
-{
+public final class EventMarkerController extends MarkerController {
 	/** Имя пиктограммы. */
 	public static final String EVENT_IMAGE_NAME = "eventmarker";
 	/** Пиктограмма. */
@@ -52,16 +49,16 @@ public final class EventMarkerController extends MarkerController
 	/**
 	 * Private constructor.
 	 */
-	private EventMarkerController()
-	{// empty
+	private EventMarkerController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new EventMarkerController();
 		return instance;
@@ -70,12 +67,11 @@ public final class EventMarkerController extends MarkerController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement)
-	{
-		if(! (mapElement instanceof EventMarker))
+	public String getToolTipText(MapElement mapElement) {
+		if(!(mapElement instanceof EventMarker))
 			return null;
-			
-		EventMarker marker = (EventMarker)mapElement;
+
+		EventMarker marker = (EventMarker )mapElement;
 		
 		String s1 = LangModelMap.getString("Event") 
 			+ " " + marker.getName() 
@@ -88,11 +84,12 @@ public final class EventMarkerController extends MarkerController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(needInit)
-		{
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(needInit) {
 			Identifier creatorId = getLogicalNetLayer().getUserId();
 
 			MapPropertiesManager.setOriginalImage(

@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,15 +16,13 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.UI.tree.IconedNode;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
 public final class MapViewTreePanel extends JPanel 
-		implements OperationListener, TreeSelectionListener {
+		implements PropertyChangeListener, TreeSelectionListener {
 
 	LogicalTreeUI treeUI;
 	JTree tree;
@@ -74,7 +74,7 @@ public final class MapViewTreePanel extends JPanel
 		this.model = MapViewTreeModel.getInstance();
 		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
 
-		this.root = new IconedNode("root", LangModel.getString("root"));
+		this.root = new IconedNode("root", LangModelGeneral.getString("root"));
 		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();
@@ -90,12 +90,12 @@ public final class MapViewTreePanel extends JPanel
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null) {
 				Dispatcher disp = this.aContext.getDispatcher();
-				disp.unregister(this, MapEvent.MAP_NAVIGATE);
-				disp.unregister(this, MapEvent.MAP_SELECTED);
-				disp.unregister(this, MapEvent.MAP_CHANGED);
-				disp.unregister(this, MapEvent.MAP_VIEW_CHANGED);
-				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
-				disp.unregister(this, MapEvent.MAP_VIEW_CLOSED);
+				disp.removePropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_SELECTED, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_CHANGED, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_CHANGED, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_CLOSED, this);
 			}
 		this.aContext = aContext;
 		if(aContext == null)
@@ -104,41 +104,41 @@ public final class MapViewTreePanel extends JPanel
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)
 			return;
-		disp.register(this, MapEvent.MAP_NAVIGATE);
-		disp.register(this, MapEvent.MAP_SELECTED);
-		disp.register(this, MapEvent.MAP_CHANGED);
-		disp.register(this, MapEvent.MAP_VIEW_CHANGED);
-		disp.register(this, MapEvent.MAP_VIEW_SELECTED);
-		disp.register(this, MapEvent.MAP_VIEW_CLOSED);
+		disp.addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
+		disp.addPropertyChangeListener(MapEvent.MAP_SELECTED, this);
+		disp.addPropertyChangeListener(MapEvent.MAP_CHANGED, this);
+		disp.addPropertyChangeListener(MapEvent.MAP_VIEW_CHANGED, this);
+		disp.addPropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
+		disp.addPropertyChangeListener(MapEvent.MAP_VIEW_CLOSED, this);
 
 		updateTree(null);
 	}
 
-	public void operationPerformed(OperationEvent operationEvent) {
+	public void propertyChange(PropertyChangeEvent pce) {
 		if(this.performProcessing) {
-			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED)) {
+			if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_CLOSED)) {
 				updateTree(null);
 			}
-			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED)) {
-				MapView mapView = (MapView )operationEvent.getSource();
+			if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED)) {
+				MapView mapView = (MapView )pce.getSource();
 				if(this.model == null 
 						|| this.mapView == null 
 						|| !this.mapView.equals(mapView)) {
 					updateTree(mapView);
 				}
 			}
-			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_CHANGED)) {
+			if(	pce.getPropertyName().equals(MapEvent.MAP_CHANGED)) {
 				updateTree(this.mapView);
 			}
-			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_SELECTED)) {
+			if(	pce.getPropertyName().equals(MapEvent.MAP_SELECTED)) {
 				updateTree(this.mapView);
 			}
-			if(	operationEvent.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED)) {
-				MapView mapView = (MapView )operationEvent.getSource();
+			if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_CHANGED)) {
+				MapView mapView = (MapView )pce.getSource();
 				updateTree(mapView);
 			}
-			if(operationEvent.getActionCommand().equals(MapEvent.MAP_NAVIGATE)) {
-				MapNavigateEvent mne = (MapNavigateEvent )operationEvent;
+			if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE)) {
+				MapNavigateEvent mne = (MapNavigateEvent )pce;
 				if(mne.isMapElementSelected()) {
 					MapElement mapElement = (MapElement )mne.getSource();
 					Item node = this.model.findNode(this.root, mapElement);
@@ -219,27 +219,26 @@ public final class MapViewTreePanel extends JPanel
 				if(node.getObject() instanceof MapElement) {
 					MapElement mapElement = (MapElement )node.getObject();
 					if(e.isAddedPath(paths[i]))
-						dispatcher.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+						dispatcher.firePropertyChange(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 					else
-						dispatcher.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+						dispatcher.firePropertyChange(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
 				}
 				else if(node.getObject() instanceof Map) {
 					Map map = (Map )node.getObject();
 					if(e.isAddedPath(paths[i]))
-						dispatcher.notify(new MapEvent(map, MapEvent.MAP_SELECTED));
+						dispatcher.firePropertyChange(new MapEvent(map, MapEvent.MAP_SELECTED));
 				}
 				else if(node.getObject() instanceof MapView) {
 					MapView mapView = (MapView )node.getObject();
 					if(e.isAddedPath(paths[i]))
-						dispatcher.notify(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
+						dispatcher.firePropertyChange(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
 				}
 			}
-			dispatcher.notify(new MapEvent(this, MapEvent.SELECTION_CHANGED));
-			dispatcher.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
+			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.SELECTION_CHANGED));
+			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_CHANGED));
 			this.performProcessing = true;
 		}
 	}
-
 	
 }
 

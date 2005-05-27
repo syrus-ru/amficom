@@ -1,12 +1,10 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.3 2005/03/09 09:15:01 peskovsky Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.4 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ */
 
 package com.syrus.AMFICOM.Client.Map.Operations;
 
@@ -35,11 +33,12 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.3 $, $Date: 2005/03/09 09:15:01 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.4 $, $Date: 2005/05/27 15:14:57 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
  public class SpatialSearchPanel extends JPanel
@@ -124,10 +123,10 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 				public void keyTyped(KeyEvent e) {/*empty*/}
 			});
 
-		this.add(this.searchField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(this.searchButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(this.jScrollPane, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(this.centerButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.searchField, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.searchButton, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.jScrollPane, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.centerButton, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 		this.foundList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.foundList.setCellRenderer(new SpatialSearchPanel.SpatialObjectRenderer());

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.11 2005/02/18 12:19:47 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.12 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -31,7 +31,7 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:47 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/27 15:14:59 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -70,7 +70,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 			switch (mapState.getOperationMode())
 			{
 				case MapState.MEASURE_DISTANCE:
-					this.logicalNetLayer.getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+					this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 					break;
 				case MapState.MOVE_HAND:
 					try {
@@ -87,7 +87,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 				case MapState.MOVE_TO_CENTER:
 					break;
 				case MapState.ZOOM_TO_RECT:
-					this.logicalNetLayer.getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+					this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					break;
@@ -105,7 +105,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 						this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
 									mapElement, 
 									MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-						this.logicalNetLayer.getContext().getDispatcher().notify(
+						this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(
 								new MapEvent(this, MapEvent.NEED_REPAINT));
 					} catch(MapConnectionException e1) {
 						// TODO Auto-generated catch block

@@ -8,18 +8,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.Mark;
 
-public class MarkEditor extends DefaultStorableObjectEditor
-{
+public class MarkEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -31,32 +30,27 @@ public class MarkEditor extends DefaultStorableObjectEditor
 	private JLabel latLabel = new JLabel();
 	private JTextField latTextField = new JTextField();
 	private JLabel linkLabel = new JLabel();
-	private ObjComboBox linkComboBox = null;
+	private WrapperedComboBox linkComboBox = null;
 
 	Mark mark;
 
-	public MarkEditor()
-	{
-		try
-		{
+	public MarkEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.linkComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.linkComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.linkLabel.setText(LangModelMap.getString("PhysicalLink"));
@@ -76,29 +70,25 @@ public class MarkEditor extends DefaultStorableObjectEditor
 		this.longTextField.setEnabled(false);
 		this.latTextField.setEnabled(false);
 		this.linkComboBox.setEnabled(false);
-}
+	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.mark;
 	}
 
-	public void setObject(Object object)
-	{
-		this.mark = (Mark)object;
-		
+	public void setObject(Object object) {
+		this.mark = (Mark )object;
+
 		this.linkComboBox.removeAllItems();
 
-		if(this.mark == null)
-		{
+		if(this.mark == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
 
 			this.longTextField.setText("");
 			this.latTextField.setText("");
 		}
-		else
-		{
+		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.mark.getName());
 
@@ -119,17 +109,12 @@ public class MarkEditor extends DefaultStorableObjectEditor
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name))
-		try 
-		{
-			this.mark.setName(name);
-		} 
-		catch (NumberFormatException ex) 
-		{
-			System.out.println(ex.getMessage());
-		} 
-		catch (Exception ex) 
-		{
-			ex.printStackTrace();
-		} 
+			try {
+				this.mark.setName(name);
+			} catch(NumberFormatException ex) {
+				System.out.println(ex.getMessage());
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 	}
 }

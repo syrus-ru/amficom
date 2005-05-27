@@ -1,5 +1,5 @@
 /**
- * $Id: MapAlarmMarkerStrategy.java,v 1.14 2005/04/13 11:28:11 krupenn Exp $
+ * $Id: MapAlarmMarkerStrategy.java,v 1.15 2005/05/27 15:14:58 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,7 +23,7 @@ import java.awt.Point;
 /**
  * —тратеги€ управлени€ маркером сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/04/13 11:28:11 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/27 15:14:58 $
  * @module mapviewclient_v1
  */
 public final class MapAlarmMarkerStrategy extends AbstractMapStrategy 
@@ -80,7 +80,7 @@ public final class MapAlarmMarkerStrategy extends AbstractMapStrategy
 			}
 			else
 			{
-				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				Selection sel = new Selection();
 				sel.addAll(super.logicalNetLayer.getSelectedElements());
 				super.logicalNetLayer.setCurrentMapElement(sel);
 			}

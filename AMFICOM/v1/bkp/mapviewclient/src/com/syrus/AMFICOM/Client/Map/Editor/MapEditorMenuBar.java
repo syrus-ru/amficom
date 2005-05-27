@@ -1,23 +1,20 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.13 2005/04/28 12:57:53 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.14 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Editor;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,13 +26,11 @@ import javax.swing.JMenuItem;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.13 $, $Date: 2005/04/28 12:57:53 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:57 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
-public class MapEditorMenuBar extends JMenuBar
-		implements ApplicationModelListener
-{
+public class MapEditorMenuBar extends JMenuBar implements ApplicationModelListener {
 	private ApplicationModel aModel;
 
 	JMenu menuSession = new JMenu();
@@ -92,57 +87,48 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuHelpLicense = new JMenuItem();
 	JMenuItem menuHelpAbout = new JMenuItem();
 
-	public MapEditorMenuBar()
-	{
+	public MapEditorMenuBar() {
 		super();
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public MapEditorMenuBar(ApplicationModel aModel)
-	{
+	public MapEditorMenuBar(ApplicationModel aModel) {
 		this();
 		this.aModel = aModel;
 	}
 
-	private void jbInit()
-	{
-		ActionListener actionAdapter =
-			new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						MapEditorMenuBar.this.actionPerformed(e);
-					}
-				};
+	private void jbInit() {
+		ActionListener actionAdapter = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MapEditorMenuBar.this.actionPerformed(e);
+			}
+		};
 
-		this.menuSession.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION));
+		this.menuSession.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION));
 		this.menuSession.setName(MapEditorApplicationModel.ITEM_SESSION);
-		this.menuSessionNew.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_NEW));
+		this.menuSessionNew.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_NEW));
 		this.menuSessionNew.setName(MapEditorApplicationModel.ITEM_SESSION_NEW);
 		this.menuSessionNew.addActionListener(actionAdapter);
-		this.menuSessionClose.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
+		this.menuSessionClose.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
 		this.menuSessionClose.setName(MapEditorApplicationModel.ITEM_SESSION_CLOSE);
 		this.menuSessionClose.addActionListener(actionAdapter);
-//		this.menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
+//		this.menuSessionOptions.setText(LangModelGeneral.getString("menuSessionOptions"));
 //		this.menuSessionOptions.setName("menuSessionOptions");
 //		this.menuSessionOptions.addActionListener(actionAdapter);
-		this.menuSessionConnection.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CONNECTION));
+		this.menuSessionConnection.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_CONNECTION));
 		this.menuSessionConnection.setName(MapEditorApplicationModel.ITEM_SESSION_CONNECTION);
 		this.menuSessionConnection.addActionListener(actionAdapter);
-		this.menuSessionChangePassword.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD));
+		this.menuSessionChangePassword.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD));
 		this.menuSessionChangePassword.setName(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD);
 		this.menuSessionChangePassword.addActionListener(actionAdapter);
-		this.menuSessionDomain.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
+		this.menuSessionDomain.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
 		this.menuSessionDomain.setName(MapEditorApplicationModel.ITEM_SESSION_DOMAIN);
 		this.menuSessionDomain.addActionListener(actionAdapter);
-		this.menuExit.setText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_EXIT));
+		this.menuExit.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_EXIT));
 		this.menuExit.setName(MapEditorApplicationModel.ITEM_SESSION_EXIT);
 		this.menuExit.addActionListener(actionAdapter);
 
@@ -230,40 +216,40 @@ public class MapEditorMenuBar extends JMenuBar
 		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		this.menuMapViewRemoveScheme.addActionListener(actionAdapter);
 
-		this.menuReport.setText(LangModelReport.getString("label_report"));
+		this.menuReport.setText(LangModelGeneral.getString("label_report"));
 		this.menuReport.setName(MapEditorApplicationModel.ITEM_REPORT);
-		this.menuReportCreate.setText(LangModelReport.getString("label_reportForTemplate"));
+		this.menuReportCreate.setText(LangModelGeneral.getString("label_reportForTemplate"));
 		this.menuReportCreate.setName(MapEditorApplicationModel.ITEM_REPORT_CREATE);
 		this.menuReportCreate.addActionListener(actionAdapter);
 		this.menuReport.add(this.menuReportCreate);
 
-		this.menuHelp.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP));
+		this.menuHelp.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP));
 		this.menuHelp.setName(MapEditorApplicationModel.ITEM_HELP);
-		this.menuHelpContents.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_CONTENTS));
+		this.menuHelpContents.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_CONTENTS));
 		this.menuHelpContents.setName(MapEditorApplicationModel.ITEM_HELP_CONTENTS);
 		this.menuHelpContents.addActionListener(actionAdapter);
-		this.menuHelpFind.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
+		this.menuHelpFind.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
 		this.menuHelpFind.setName(MapEditorApplicationModel.ITEM_HELP_FIND);
 		this.menuHelpFind.addActionListener(actionAdapter);
-		this.menuHelpTips.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
+		this.menuHelpTips.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
 		this.menuHelpTips.setName(MapEditorApplicationModel.ITEM_HELP_FIND);
 		this.menuHelpTips.addActionListener(actionAdapter);
-		this.menuHelpStart.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_START));
+		this.menuHelpStart.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_START));
 		this.menuHelpStart.setName(MapEditorApplicationModel.ITEM_HELP_START);
 		this.menuHelpStart.addActionListener(actionAdapter);
-		this.menuHelpCourse.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_COURSE));
+		this.menuHelpCourse.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_COURSE));
 		this.menuHelpCourse.setName(MapEditorApplicationModel.ITEM_HELP_COURSE);
 		this.menuHelpCourse.addActionListener(actionAdapter);
-		this.menuHelpHelp.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_HELP));
+		this.menuHelpHelp.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_HELP));
 		this.menuHelpHelp.setName(MapEditorApplicationModel.ITEM_HELP_HELP);
 		this.menuHelpHelp.addActionListener(actionAdapter);
-		this.menuHelpSupport.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_SUPPORT));
+		this.menuHelpSupport.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_SUPPORT));
 		this.menuHelpSupport.setName(MapEditorApplicationModel.ITEM_HELP_SUPPORT);
 		this.menuHelpSupport.addActionListener(actionAdapter);
-		this.menuHelpLicense.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_LICENSE));
+		this.menuHelpLicense.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_LICENSE));
 		this.menuHelpLicense.setName(MapEditorApplicationModel.ITEM_HELP_LICENSE);
 		this.menuHelpLicense.addActionListener(actionAdapter);
-		this.menuHelpAbout.setText(LangModel.getString(MapEditorApplicationModel.ITEM_HELP_ABOUT));
+		this.menuHelpAbout.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_ABOUT));
 		this.menuHelpAbout.setName(MapEditorApplicationModel.ITEM_HELP_ABOUT);
 		this.menuHelpAbout.addActionListener(actionAdapter);
 
@@ -334,18 +320,20 @@ public class MapEditorMenuBar extends JMenuBar
 		this.add(this.menuHelp);
 	}
 
-	public void setModel(ApplicationModel a)
-	{
+	public void setModel(ApplicationModel a) {
 		this.aModel = a;
 	}
 
-	public ApplicationModel getModel()
-	{
+	public ApplicationModel getModel() {
 		return this.aModel;
 	}
 
-	public void modelChanged(String e[])
-	{
+	public void modelChanged(String e) {
+		modelChanged(new String[] { e
+		});
+	}
+
+	public void modelChanged(String[] elementNames) {
 		this.menuSession.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION));
 		this.menuSession.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION));
 
@@ -482,8 +470,7 @@ public class MapEditorMenuBar extends JMenuBar
 		this.menuHelpAbout.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_HELP_ABOUT));
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		if(this.aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
@@ -491,5 +478,5 @@ public class MapEditorMenuBar extends JMenuBar
 		Command command = this.aModel.getCommand(s);
 		command.execute();
 	}
-}
 
+}

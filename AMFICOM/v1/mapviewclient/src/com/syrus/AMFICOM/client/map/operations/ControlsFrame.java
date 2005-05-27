@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.4 2005/05/25 16:29:44 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.5 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,20 +8,20 @@
 
 package com.syrus.AMFICOM.Client.Map.Operations;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.mapview.MapView;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
@@ -33,13 +33,12 @@ import javax.swing.JTabbedPane;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
  public class ControlsFrame extends JInternalFrame 
-		implements OperationListener
-{
+		implements PropertyChangeListener {
 	BorderLayout borderLayout1 = new BorderLayout();
 
 	/**
@@ -60,7 +59,7 @@ import javax.swing.JTabbedPane;
 	/**
 	 * панель управления отображением слоев
 	 */
-	LayersPanel layersPanel = null;
+	LayersPanel layersPanel = new LayersPanel();
 	
 	/**
 	 * панель закладок
@@ -75,80 +74,65 @@ import javax.swing.JTabbedPane;
 	/**
 	 * По умолчанию
 	 */
-	public ControlsFrame(MapFrame mapFrame, ApplicationContext aContext)
-	{
+	public ControlsFrame(MapFrame mapFrame, ApplicationContext aContext) {
 		setContext(aContext);
-		
-		try
-		{
+
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 		setMapFrame(mapFrame);
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		Dispatcher disp;
-		if(this.aContext != null)
-		{
+		if(this.aContext != null) {
 			disp = this.aContext.getDispatcher();
-			if(disp != null)
-			{
-				disp.unregister(this, MapEvent.MAP_FRAME_SHOWN);
-				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
-				disp.unregister(this, MapEvent.MAP_VIEW_DESELECTED);
-				disp.unregister(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
+			if(disp != null) {
+				disp.removePropertyChangeListener(MapEvent.MAP_FRAME_SHOWN, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_DESELECTED, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);
 			}
 		}
 		this.aContext = aContext;
 		if(aContext == null)
 			return;
 		disp = this.aContext.getDispatcher();
-		if(disp != null)
-		{
-			disp.register(this, MapEvent.MAP_FRAME_SHOWN);
-			disp.register(this, MapEvent.MAP_VIEW_SELECTED);
-			disp.register(this, MapEvent.MAP_VIEW_DESELECTED);
-			disp.register(this, MapEvent.MAP_VIEW_SCALE_CHANGED);
+		if(disp != null) {
+			disp.addPropertyChangeListener(MapEvent.MAP_FRAME_SHOWN, this);
+			disp.addPropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
+			disp.addPropertyChangeListener(MapEvent.MAP_VIEW_DESELECTED, this);
+			disp.addPropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);
 		}
 	}
 
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
-			this.searchPanel.setMapView((MapView)ae.getSource());
-		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_DESELECTED))
+	public void propertyChange(PropertyChangeEvent pce) {
+		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED))
+			this.searchPanel.setMapView((MapView )pce.getSource());
+		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_DESELECTED))
 			this.searchPanel.setMapView(null);
-		if(	ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
-		{
-			try 
-			{
-				setMapFrame((MapFrame)ae.getSource());
-			} 
-			catch (Exception ex) 
-			{
+		if(pce.getPropertyName().equals(MapEvent.MAP_FRAME_SHOWN)) {
+			try {
+				setMapFrame((MapFrame )pce.getSource());
+			} catch(Exception ex) {
 				ex.printStackTrace();
-			} 
+			}
 		}
-		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
+		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
 			this.layersPanel.setVisibility();
 	}
 
-	public void setMapFrame(MapFrame mapFrame)
-	{
+	public void setMapFrame(MapFrame mapFrame) {
 		this.mapChooserPanel.setMapFrame(mapFrame);
 		this.searchPanel.setMapFrame(mapFrame);
 		this.mapSearchPanel.setMapFrame(mapFrame);
 		this.layersPanel.setMapFrame(mapFrame);
 	}
-	
-	private void jbInit()
-	{
+
+	private void jbInit() {
 		setClosable(true);
 		setResizable(true);
 		setMaximizable(false);
@@ -171,7 +155,6 @@ import javax.swing.JTabbedPane;
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
 					this.mapSearchPanel);
 		
-		this.layersPanel = new LayersPanel(this.aContext);
 		this.tabbedPane.addTab(
 				"", 
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_layers.gif")

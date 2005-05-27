@@ -1,5 +1,5 @@
 /**
- * $Id: MapApplicationModel.java,v 1.9 2005/01/30 15:34:56 krupenn Exp $
+ * $Id: MapApplicationModel.java,v 1.10 2005/05/27 15:14:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,13 +11,15 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+
 /**
  * Модель приложения определяет функциональные элементы, досступные при работе
  * с картой.
  *  
  * 
  * @author Andrei Kroupennikov
- * @version $Revision: 1.9 $, $Date: 2005/01/30 15:34:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 15:14:54 $
  * @module mapviewclient_v1
  */
 public class MapApplicationModel extends ApplicationModel

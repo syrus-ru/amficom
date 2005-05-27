@@ -1,45 +1,39 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.18 2005/04/15 11:12:33 peskovsky Exp $
+ * $Id: MapViewSaveCommand.java,v 1.19 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
 */
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.Client.Map.Props.MapViewVisualManager;
+import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
-import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
- * @author $Author: peskovsky $
- * @version $Revision: 1.18 $, $Date: 2005/04/15 11:12:33 $
- * @module mapviewclietn_v1
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/05/27 15:14:56 $
+ * @module mapviewclient_v1
  */
-public class MapViewSaveCommand extends VoidCommand
+public class MapViewSaveCommand extends AbstractCommand
 {
 	MapView mapView;
 	ApplicationContext aContext;
@@ -52,30 +46,20 @@ public class MapViewSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
-				Environment.getActiveWindow(), 
+		EditorDialog dialog = new EditorDialog(
 				LangModelMap.getString("MapViewProperties"), 
 				true, 
-				this.mapView,
-				MapViewPanel.getInstance());
+				this.mapView, 
+				MapViewVisualManager.getInstance().getGeneralPropertiesPanel());
 
-		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize =  dialog.getSize();
-
-		if (frameSize.height > screenSize.height)
-			frameSize.height = screenSize.height;
-		if (frameSize.width > screenSize.width)
-			frameSize.width = screenSize.width;
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
 		dialog.setVisible(true);
 
 		if ( dialog.ifAccept())
 		{
-			this.aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
+					this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelMap.getString("MapSaving")));
+					LangModelMap.getString("MapViewSaving")));
 
 			MapSaveCommand cmd = new MapSaveCommand(this.mapView.getMap(), this.aContext);
 			cmd.execute();
@@ -91,7 +75,8 @@ public class MapViewSaveCommand extends VoidCommand
 				scheme.setMap(this.mapView.getMap());
 				try
 				{
-					SchemeStorableObjectPool.flush(true);// save scheme
+//					 save scheme
+					StorableObjectPool.flush(scheme.getId(), true);
 				}
 				catch (VersionCollisionException e)
 				{
@@ -118,21 +103,24 @@ public class MapViewSaveCommand extends VoidCommand
 //			MapStorableObjectPool.putStorableObject(mapView);
 			try
 			{
-				MapViewStorableObjectPool.flush(true);// save mapview
+//				 save mapview
+				StorableObjectPool.flush(this.mapView.getId(), true);
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 			
-			this.aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
+					this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModel.getString("Finished")));
+					LangModelGeneral.getString("Finished")));
 			setResult(Command.RESULT_OK);
 		}
 		else
 		{
-			this.aContext.getDispatcher().notify(new StatusMessageEvent(
+			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
+					this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModel.getString("Aborted")));
+					LangModelGeneral.getString("Aborted")));
 			setResult(Command.RESULT_CANCEL);
 		}
 	}

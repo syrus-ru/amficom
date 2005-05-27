@@ -12,28 +12,27 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
-public class SiteNodeEditor extends DefaultStorableObjectEditor
-{
+public class SiteNodeEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel typeLabel = new JLabel();
-	private ObjComboBox typeComboBox = null;
+	private WrapperedComboBox typeComboBox = null;
 
 	private JLabel longLabel = new JLabel();
 	private JTextField longTextField = new JTextField();
@@ -55,28 +54,26 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor
 
 	SiteNode site;
 
-	public SiteNodeEditor()
-	{
-		try
-		{
+	public SiteNodeEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.typeComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.typeComboBox = new WrapperedComboBox(
+				controller, 
+				SimpleMapElementController.KEY_NAME,
+				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.typeLabel.setText(LangModelMap.getString("Type"));
@@ -120,22 +117,19 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor
 		super.addToUndoableListener(this.streetTextField);
 		super.addToUndoableListener(this.buildingTextField);
 		super.addToUndoableListener(this.descTextArea);
-		
-}
 
-	public Object getObject()
-	{
+	}
+
+	public Object getObject() {
 		return this.site;
 	}
 
-	public void setObject(Object objectResource)
-	{
-		this.site = (SiteNode)objectResource;
-		
+	public void setObject(Object objectResource) {
+		this.site = (SiteNode )objectResource;
+
 		this.typeComboBox.removeAllItems();
 
-		if(this.site == null)
-		{
+		if(this.site == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
 			this.typeComboBox.setEnabled(false);
@@ -151,8 +145,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor
 			this.streetTextField.setText("");
 			this.buildingTextField.setText("");
 		}
-		else
-		{
+		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.site.getName());
 
@@ -183,31 +176,26 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name))
-		try 
-		{
+		try {
 			this.site.setName(name);
-			this.site.setType((SiteNodeType )this.typeComboBox.getSelectedItem());
+			this.site.setType((SiteNodeType )this.typeComboBox
+					.getSelectedItem());
 			this.site.setDescription(this.descTextArea.getText());
-			
-			try 
-			{
+
+			try {
 				double x = Double.parseDouble(this.longTextField.getText());
 				double y = Double.parseDouble(this.latTextField.getText());
-				
+
 				this.site.setLocation(new DoublePoint(x, y));
-			} 
-			catch (NumberFormatException ex) 
-			{
+			} catch(NumberFormatException ex) {
 				System.out.println(ex.getMessage());
-			} 
+			}
 
 			this.site.setCity(this.cityTextField.getText());
 			this.site.setStreet(this.streetTextField.getText());
 			this.site.setBuilding(this.buildingTextField.getText());
-		} 
-		catch (Exception ex) 
-		{
+		} catch(Exception ex) {
 			ex.printStackTrace();
-		} 
+		}
 	}
 }

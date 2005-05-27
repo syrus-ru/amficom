@@ -1,10 +1,6 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ColorComboBox;
-import com.syrus.AMFICOM.Client.General.UI.LineThickComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
+import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 
 public class MapOptionsDialog extends JDialog 
 {
@@ -47,53 +48,53 @@ public class MapOptionsDialog extends JDialog
 	private JSeparator jSeparator6 = new JSeparator();
 
 	private JLabel thicknessLanel = new JLabel();
-	private LineThickComboBox thicknessComboBox = new LineThickComboBox();
+	private LineThicknessComboBox thicknessComboBox = new LineThicknessComboBox();
 	private JLabel colorLabel = new JLabel();
-	private ColorComboBox colorComboBox = new ColorComboBox();
+	private ColorChooserComboBox colorComboBox = new ColorChooserComboBox();
 	private JLabel styleLabel = new JLabel();
 	private JComboBox styleComboBox = new JComboBox();
 
 	private JLabel selectionThicknessLabel = new JLabel();
-	private LineThickComboBox selectionThicknessComboBox = new LineThickComboBox();
+	private LineThicknessComboBox selectionThicknessComboBox = new LineThicknessComboBox();
 	private JLabel selectionColorLabel = new JLabel();
-	private ColorComboBox selectionColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox selectionColorComboBox = new ColorChooserComboBox();
 	private JLabel selectionStyleLabel = new JLabel();
 	private JComboBox selectionStyleComboBox = new JComboBox();
 	private JLabel firstSelectionColorLabel = new JLabel();
-	private ColorComboBox firstSelectionColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox firstSelectionColorComboBox = new ColorChooserComboBox();
 	private JLabel secondSelectionColorLabel = new JLabel();
-	private ColorComboBox secondSelectionColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox secondSelectionColorComboBox = new ColorChooserComboBox();
 
 	private JLabel alarmedThicknessLabel = new JLabel();
-	private LineThickComboBox alarmedThicknessComboBox = new LineThickComboBox();
+	private LineThicknessComboBox alarmedThicknessComboBox = new LineThicknessComboBox();
 	private JLabel alarmedColorLabel = new JLabel();
-	private ColorComboBox alarmedColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox alarmedColorComboBox = new ColorChooserComboBox();
 	private JLabel alarmedStyleLabel = new JLabel();
 	private JComboBox alarmedStyleComboBox = new JComboBox();
 
 	private JLabel borderThicknessLanel = new JLabel();
-	private LineThickComboBox borderThicknessComboBox = new LineThickComboBox();
+	private LineThicknessComboBox borderThicknessComboBox = new LineThicknessComboBox();
 	private JLabel borderColorLabel = new JLabel();
-	private ColorComboBox borderColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox borderColorComboBox = new ColorChooserComboBox();
 	private JLabel textColorLabel = new JLabel();
-	private ColorComboBox textColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox textColorComboBox = new ColorChooserComboBox();
 	private JLabel backgroundColorLabel = new JLabel();
-	private ColorComboBox backgroundColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox backgroundColorComboBox = new ColorChooserComboBox();
 	private JLabel fontLabel = new JLabel();
 	private JComboBox fontComboBox = new JComboBox();
 	private JLabel metricLabel = new JLabel();
 	private JTextField metricTextField = new JTextField();
 
 	private JLabel unboundThicknessLanel = new JLabel();
-	private LineThickComboBox unboundThicknessComboBox = new LineThickComboBox();
+	private LineThicknessComboBox unboundThicknessComboBox = new LineThicknessComboBox();
 	private JLabel unboundLinkColorLabel = new JLabel();
-	private ColorComboBox unboundLinkColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox unboundLinkColorComboBox = new ColorChooserComboBox();
 	private JLabel unboundLinkPositionColorLabel = new JLabel();
-	private ColorComboBox unboundLinkPositionColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox unboundLinkPositionColorComboBox = new ColorChooserComboBox();
 	private JLabel unboundElementColorLabel = new JLabel();
-	private ColorComboBox unboundElementColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox unboundElementColorComboBox = new ColorChooserComboBox();
 	private JLabel canBindColorLabel = new JLabel();
-	private ColorComboBox canBindColorComboBox = new ColorComboBox();
+	private ColorChooserComboBox canBindColorComboBox = new ColorChooserComboBox();
 	private JLabel spareLabel = new JLabel();
 	private JTextField spareTextField = new JTextField();
 
@@ -312,31 +313,31 @@ public class MapOptionsDialog extends JDialog
 		this.metricTextField.setText(MapPropertiesManager.getMetric());
 		this.spareTextField.setText(String.valueOf(MapPropertiesManager.getSpareLength()));
 
-		this.thicknessComboBox.setSelected(new Integer(MapPropertiesManager.getThickness()));
-		this.colorComboBox.setSelected(MapPropertiesManager.getColor());
+		this.thicknessComboBox.setSelectedValue(MapPropertiesManager.getThickness());
+		this.colorComboBox.setSelectedItem(MapPropertiesManager.getColor());
 //		this.styleComboBox.setSelected(MapPropertiesManager);
 	
-		this.selectionThicknessComboBox.setSelected(new Integer(MapPropertiesManager.getSelectionThickness()));
-		this.selectionColorComboBox.setSelected(MapPropertiesManager.getSelectionColor());
+		this.selectionThicknessComboBox.setSelectedValue(MapPropertiesManager.getSelectionThickness());
+		this.selectionColorComboBox.setSelectedItem(MapPropertiesManager.getSelectionColor());
 //		this.selectionStyleComboBox.setSelected(MapPropertiesManager);
-		this.firstSelectionColorComboBox.setSelected(MapPropertiesManager.getFirstSelectionColor());
-		this.secondSelectionColorComboBox.setSelected(MapPropertiesManager.getSecondSelectionColor());
+		this.firstSelectionColorComboBox.setSelectedItem(MapPropertiesManager.getFirstSelectionColor());
+		this.secondSelectionColorComboBox.setSelectedItem(MapPropertiesManager.getSecondSelectionColor());
 	
-		this.alarmedThicknessComboBox.setSelected(new Integer(MapPropertiesManager.getAlarmedThickness()));
-		this.alarmedColorComboBox.setSelected(MapPropertiesManager.getAlarmedColor());
+		this.alarmedThicknessComboBox.setSelectedValue(MapPropertiesManager.getAlarmedThickness());
+		this.alarmedColorComboBox.setSelectedItem(MapPropertiesManager.getAlarmedColor());
 //		this.alarmedStyleComboBox.setSelected(MapPropertiesManager);
 	
-		this.borderThicknessComboBox.setSelected(new Integer(MapPropertiesManager.getBorderThickness()));
-		this.borderColorComboBox.setSelected(MapPropertiesManager.getBorderColor());
-		this.textColorComboBox.setSelected(MapPropertiesManager.getTextColor());
-		this.backgroundColorComboBox.setSelected(MapPropertiesManager.getTextBackground());
+		this.borderThicknessComboBox.setSelectedValue(MapPropertiesManager.getBorderThickness());
+		this.borderColorComboBox.setSelectedItem(MapPropertiesManager.getBorderColor());
+		this.textColorComboBox.setSelectedItem(MapPropertiesManager.getTextColor());
+		this.backgroundColorComboBox.setSelectedItem(MapPropertiesManager.getTextBackground());
 //		this.fontComboBox.setSelected(MapPropertiesManager);
 	
-		this.unboundThicknessComboBox.setSelected(new Integer(MapPropertiesManager.getUnboundThickness()));
-		this.unboundLinkColorComboBox.setSelected(MapPropertiesManager.getUnboundLinkColor());
-		this.unboundLinkPositionColorComboBox.setSelected(MapPropertiesManager.getUnboundLinkPositionColor());
-		this.unboundElementColorComboBox.setSelected(MapPropertiesManager.getUnboundElementColor());
-		this.canBindColorComboBox.setSelected(MapPropertiesManager.getCanBindColor());
+		this.unboundThicknessComboBox.setSelectedValue(MapPropertiesManager.getUnboundThickness());
+		this.unboundLinkColorComboBox.setSelectedItem(MapPropertiesManager.getUnboundLinkColor());
+		this.unboundLinkPositionColorComboBox.setSelectedItem(MapPropertiesManager.getUnboundLinkPositionColor());
+		this.unboundElementColorComboBox.setSelectedItem(MapPropertiesManager.getUnboundElementColor());
+		this.canBindColorComboBox.setSelectedItem(MapPropertiesManager.getCanBindColor());
 	}
 
 	private void commit()
@@ -358,31 +359,31 @@ public class MapOptionsDialog extends JDialog
 			// cannot parse
 		}
 
-		MapPropertiesManager.setThickness(((Integer )this.thicknessComboBox.getSelected()).intValue());
-		MapPropertiesManager.setColor(this.colorComboBox.getSelectedColor());
+		MapPropertiesManager.setThickness(this.thicknessComboBox.getSelectedValue());
+		MapPropertiesManager.setColor((Color )this.colorComboBox.getSelectedItem());
 //		this.styleComboBox.setSelected(MapPropertiesManager);
 	
-		MapPropertiesManager.setSelectionThickness(((Integer )this.selectionThicknessComboBox.getSelected()).intValue());
-		MapPropertiesManager.setSelectionColor(this.selectionColorComboBox.getSelectedColor());
+		MapPropertiesManager.setSelectionThickness(this.selectionThicknessComboBox.getSelectedValue());
+		MapPropertiesManager.setSelectionColor((Color )this.selectionColorComboBox.getSelectedItem());
 //		this.selectionStyleComboBox.setSelected(MapPropertiesManager);
-		MapPropertiesManager.setFirstSelectionColor(this.firstSelectionColorComboBox.getSelectedColor());
-		MapPropertiesManager.setSecondSelectionColor(this.secondSelectionColorComboBox.getSelectedColor());
+		MapPropertiesManager.setFirstSelectionColor((Color )this.firstSelectionColorComboBox.getSelectedItem());
+		MapPropertiesManager.setSecondSelectionColor((Color )this.secondSelectionColorComboBox.getSelectedItem());
 	
-		MapPropertiesManager.setAlarmedThickness(((Integer )this.alarmedThicknessComboBox.getSelected()).intValue());
-		MapPropertiesManager.setAlarmedColor(this.alarmedColorComboBox.getSelectedColor());
+		MapPropertiesManager.setAlarmedThickness(this.alarmedThicknessComboBox.getSelectedValue());
+		MapPropertiesManager.setAlarmedColor((Color )this.alarmedColorComboBox.getSelectedItem());
 //		this.alarmedStyleComboBox.setSelected(MapPropertiesManager);
 	
-		MapPropertiesManager.setBorderThickness(((Integer )this.borderThicknessComboBox.getSelected()).intValue());
-		MapPropertiesManager.setBorderColor(this.borderColorComboBox.getSelectedColor());
-		MapPropertiesManager.setTextColor(this.textColorComboBox.getSelectedColor());
-		MapPropertiesManager.setTextBackground(this.backgroundColorComboBox.getSelectedColor());
+		MapPropertiesManager.setBorderThickness(this.borderThicknessComboBox.getSelectedValue());
+		MapPropertiesManager.setBorderColor((Color )this.borderColorComboBox.getSelectedItem());
+		MapPropertiesManager.setTextColor((Color )this.textColorComboBox.getSelectedItem());
+		MapPropertiesManager.setTextBackground((Color )this.backgroundColorComboBox.getSelectedItem());
 //		this.fontComboBox.setSelected(MapPropertiesManager);
 	
-		MapPropertiesManager.setUnboundThickness(((Integer )this.unboundThicknessComboBox.getSelected()).intValue());
-		MapPropertiesManager.setUnboundLinkColor(this.unboundLinkColorComboBox.getSelectedColor());
-		MapPropertiesManager.setUnboundLinkPositionColor(this.unboundLinkPositionColorComboBox.getSelectedColor());
-		MapPropertiesManager.setUnboundElementColor(this.unboundElementColorComboBox.getSelectedColor());
-		MapPropertiesManager.setCanBindColor(this.canBindColorComboBox.getSelectedColor());
+		MapPropertiesManager.setUnboundThickness(this.unboundThicknessComboBox.getSelectedValue());
+		MapPropertiesManager.setUnboundLinkColor((Color )this.unboundLinkColorComboBox.getSelectedItem());
+		MapPropertiesManager.setUnboundLinkPositionColor((Color )this.unboundLinkPositionColorComboBox.getSelectedItem());
+		MapPropertiesManager.setUnboundElementColor((Color )this.unboundElementColorComboBox.getSelectedItem());
+		MapPropertiesManager.setCanBindColor((Color )this.canBindColorComboBox.getSelectedItem());
 	}
 
 	void ok()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.17 2005/04/13 11:28:11 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.18 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
@@ -28,7 +28,7 @@ import java.awt.Point;
 /**
  * Стратегия управления узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/04/13 11:28:11 $
+ * @version $Revision: 1.18 $, $Date: 2005/05/27 15:14:59 $
  * @module mapviewclient_v1
  */
 public final class MapSiteNodeElementStrategy extends AbstractMapStrategy 
@@ -89,7 +89,7 @@ public final class MapSiteNodeElementStrategy extends AbstractMapStrategy
 			}
 			else
 			{
-				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				Selection sel = new Selection();
 				sel.addAll(super.logicalNetLayer.getSelectedElements());
 				super.logicalNetLayer.setCurrentMapElement(sel);
 			}

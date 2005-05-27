@@ -1,5 +1,5 @@
 /**
- * $Id: MapVisualManager.java,v 1.2 2005/04/28 12:57:09 krupenn Exp $
+ * $Id: MapVisualManager.java,v 1.3 2005/05/27 15:14:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,13 +9,13 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import java.util.HashMap;
 
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/28 12:57:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/27 15:14:58 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -94,11 +94,12 @@ public class MapVisualManager implements VisualManager {
 		return null;
 	}
 
-	public ObjectResourceController getController() {
+	public StorableObjectEditor getAdditionalPropertiesPanel() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public StorableObjectEditor getAdditionalPropertiesPanel() {
+	public StorableObjectWrapper getController() {
 		// TODO Auto-generated method stub
 		return null;
 	}

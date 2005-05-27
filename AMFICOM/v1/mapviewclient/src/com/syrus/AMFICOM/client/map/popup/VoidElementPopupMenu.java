@@ -11,8 +11,7 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
-public class VoidElementPopupMenu extends MapPopupMenu 
-{
+public class VoidElementPopupMenu extends MapPopupMenu {
 
 	private JMenuItem mapPropertiesMenuItem = new JMenuItem();
 	private JMenuItem mapViewPropertiesMenuItem = new JMenuItem();
@@ -20,92 +19,72 @@ public class VoidElementPopupMenu extends MapPopupMenu
 
 	private static VoidElementPopupMenu instance = new VoidElementPopupMenu();
 
-	private VoidElementPopupMenu()
-	{
+	private VoidElementPopupMenu() {
 		super();
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static VoidElementPopupMenu getInstance()
-	{
+
+	public static VoidElementPopupMenu getInstance() {
 		return instance;
 	}
-	
-	public void setElement(Object me)
-	{//empty
+
+	public void setElement(Object me) {
+		// empty
 	}
-	
-	private void jbInit()
-	{
+
+	private void jbInit() {
 		this.mapPropertiesMenuItem.setText(LangModelMap.getString("MapProperties"));
-		this.mapPropertiesMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					showMapProperties();
-				}
-			});
+		this.mapPropertiesMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showMapProperties();
+			}
+		});
 		this.mapViewPropertiesMenuItem.setText(LangModelMap.getString("MapViewProperties"));
-		this.mapViewPropertiesMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					showMapViewProperties();
-				}
-			});
+		this.mapViewPropertiesMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showMapViewProperties();
+			}
+		});
 		this.addSiteMenuItem.setText(LangModelMap.getString("AddSite"));
-		this.addSiteMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					addSite();
-				}
-			});
+		this.addSiteMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addSite();
+			}
+		});
 		this.add(this.addSiteMenuItem);
 		this.addSeparator();
 		this.add(this.mapPropertiesMenuItem);
 		this.add(this.mapViewPropertiesMenuItem);
 	}
 
-	void showMapProperties()
-	{
+	void showMapProperties() {
 		super.showProperties(getLogicalNetLayer().getMapView().getMap());
 	}
 
-	void showMapViewProperties()
-	{
+	void showMapViewProperties() {
 		super.showProperties(getLogicalNetLayer().getMapView());
 	}
 
-	void addSite()
-	{
+	void addSite() {
 		SiteNodeType proto = super.selectNodeProto();
-		
-		if(proto != null)
-		{
-			CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, this.point);
+
+		if(proto != null) {
+			CreateSiteCommandAtomic command = 
+				new CreateSiteCommandAtomic(proto, this.point);
 			command.setLogicalNetLayer(this.logicalNetLayer);
 			getLogicalNetLayer().getCommandList().add(command);
 			getLogicalNetLayer().getCommandList().execute();
 
-			try
-			{
+			try {
 				getLogicalNetLayer().repaint(false);
-			}
-			catch(MapConnectionException e)
-			{
+			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			catch(MapDataException e)
-			{
+			} catch(MapDataException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

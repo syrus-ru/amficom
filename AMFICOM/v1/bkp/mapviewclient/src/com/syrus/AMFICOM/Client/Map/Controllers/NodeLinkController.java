@@ -1,12 +1,10 @@
 /**
- * $Id: NodeLinkController.java,v 1.6 2005/03/01 15:43:01 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.7 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -23,11 +21,11 @@ import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -36,11 +34,10 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/03/01 15:43:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class NodeLinkController extends AbstractLinkController
-{
+public final class NodeLinkController extends AbstractLinkController {
 	/** Границы объекта, отображающего длину фрагмента. */
 	protected java.util.Map labelBoxContainer = new HashMap();
 
@@ -61,30 +58,19 @@ public final class NodeLinkController extends AbstractLinkController
 	 */
 	private static NodeLinkController instance = null;
 	
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
-	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 	/**
 	 * Private constructor.
 	 */
-	private NodeLinkController()
-	{// empty
+	private NodeLinkController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new NodeLinkController();
 		return instance;
@@ -93,18 +79,16 @@ public final class NodeLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement)
-	{
-		if(! (mapElement instanceof NodeLink))
+	public String getToolTipText(MapElement mapElement) {
+		if(!(mapElement instanceof NodeLink))
 			return null;
 
 		NodeLink link = (NodeLink )mapElement;
-		
+
 		String s1 = link.getName();
 		String s2 = "";
 		String s3 = "";
-		try
-		{
+		try {
 			AbstractNode smne = link.getStartNode();
 			s2 =  ":\n" 
 				+ "   " 
@@ -139,9 +123,8 @@ public final class NodeLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement mapElement)
-	{
-		if(! (mapElement instanceof NodeLink))
+	public boolean isSelectionVisible(MapElement mapElement) {
+		if(!(mapElement instanceof NodeLink))
 			return false;
 
 		NodeLink nodeLink = (NodeLink )mapElement;
@@ -155,10 +138,11 @@ public final class NodeLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof NodeLink))
+	public boolean isElementVisible(
+			MapElement mapElement,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof NodeLink))
 			return false;
 
 		NodeLink nodeLink = (NodeLink )mapElement;
@@ -173,10 +157,12 @@ public final class NodeLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof NodeLink))
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof NodeLink))
 			return;
 
 		NodeLink nodeLink = (NodeLink )mapElement;
@@ -208,9 +194,8 @@ public final class NodeLinkController extends AbstractLinkController
 		Point from = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
 		Point to = converter.convertMapToScreen(nodeLink.getEndNode().getLocation());
 
-		//Рисовать табличку с длинной NodeLink
-		if ( MapPropertiesManager.isShowLength() )
-		{
+		// Рисовать табличку с длинной NodeLink
+		if(MapPropertiesManager.isShowLength()) {
 			int fontHeight = g.getFontMetrics().getHeight();
 			String text = 
 					MapPropertiesManager.getDistanceFormat().format(nodeLink.getLengthLt()) 
@@ -267,8 +252,7 @@ public final class NodeLinkController extends AbstractLinkController
 			Rectangle2D.Double visibleBounds, 
 			Stroke stroke, 
 			Color color)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
 
@@ -285,25 +269,21 @@ public final class NodeLinkController extends AbstractLinkController
 
 		//Если alarm есть то специальный thread будет менять showAlarmState и
 		// NodeLink будет мигать
-		if ( (nodeLink.getAlarmState()) && MapPropertiesManager.isShowAlarmState() )
-		{
+		if((nodeLink.getAlarmState()) && MapPropertiesManager.isShowAlarmState()) {
 			p.setColor(getAlarmedColor(nodeLink));
 		}
-		else
-		{
+		else {
 			p.setColor(color);
 		}
 
-		if (isSelectionVisible(nodeLink))
-		{
+		if(isSelectionVisible(nodeLink)) {
 			p.setColor(MapPropertiesManager.getSelectionColor());
 			p.setStroke(new BasicStroke(MapPropertiesManager.getSelectionThickness()));
 		}
 
 		p.drawLine(from.x, from.y, to.x, to.y);
 
-		if (isSelectionVisible(nodeLink))
-		{
+		if (isSelectionVisible(nodeLink)) {
 			p.setStroke(MapPropertiesManager.getSelectionStroke());
 			
 			double dx = (to.x - from.x);
@@ -360,10 +340,11 @@ public final class NodeLinkController extends AbstractLinkController
 	 * <br>Точка находится на фрагменте, если она находится в рамках линий 
 	 * выделения.
 	 */
-	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof NodeLink))
+	public boolean isMouseOnElement(
+			MapElement mapElement,
+			Point currentMousePoint)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof NodeLink))
 			return false;
 
 		NodeLink nodeLink = (NodeLink )mapElement;
@@ -384,8 +365,7 @@ public final class NodeLinkController extends AbstractLinkController
 		
 		int mouseTolerancy = MapPropertiesManager.getMouseTolerancy();
 
-		if (Math.abs(maxX - minX) < Math.abs(maxY - minY))
-		{
+		if (Math.abs(maxX - minX) < Math.abs(maxY - minY)) {
 			xx[0] = minX - mouseTolerancy; yy[0] = minY;
 			xx[1] = maxX - mouseTolerancy; yy[1] = maxY;
 			xx[2] = maxX; yy[2] = maxY + mouseTolerancy;
@@ -393,8 +373,7 @@ public final class NodeLinkController extends AbstractLinkController
 			xx[4] = minX + mouseTolerancy; yy[4] = minY;
 			xx[5] = minX; yy[5] = minY - mouseTolerancy;
 		}
-		else
-		{
+		else {
 			xx[0] = minX; yy[0] = minY + mouseTolerancy;
 			xx[1] = maxX; yy[1] = maxY + mouseTolerancy;
 			xx[2] = maxX + mouseTolerancy; yy[2] = maxY;
@@ -416,11 +395,9 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @param nodeLink фрагмент линии
 	 * @return границы
 	 */
-	public Rectangle getLabelBox(NodeLink nodeLink)
-	{
+	public Rectangle getLabelBox(NodeLink nodeLink) {
 		Rectangle rect = (Rectangle )this.labelBoxContainer.get(nodeLink);
-		if(rect == null)
-		{
+		if(rect == null) {
 			rect = new Rectangle();
 			this.labelBoxContainer.put(nodeLink, rect);
 		}
@@ -435,9 +412,8 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @return значение флага
 	 */
 	public boolean isMouseOnThisObjectsLabel(
-			NodeLink nodeLink, 
-			Point currentMousePoint)
-	{
+			NodeLink nodeLink,
+			Point currentMousePoint) {
 		return getLabelBox(nodeLink).contains(currentMousePoint);
 	}
 	
@@ -446,8 +422,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @param nodeLink фрагмент лниии
 	 */	
 	public void updateLengthLt(NodeLink nodeLink)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		if(converter != null)
@@ -465,8 +440,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @param dist топологическое расстояние
 	 */
 	public void setSizeFrom(NodeLink nodeLink, AbstractNode node, double dist)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		AbstractNode oppositeNode = 
 			(nodeLink.getStartNode().equals(node)) 
 					? nodeLink.getEndNode() 
@@ -492,8 +466,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @return длина
 	 */
 	public double getScreenLength(NodeLink nodeLink)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
 		Point start = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
@@ -512,8 +485,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @return массив из 2 элементов ({@link #slope})
 	 */
 	public double[] calcScreenSlope(NodeLink nodeLink)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
 		Point start = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());

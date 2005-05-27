@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.4 2005/04/22 15:11:13 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.5 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,10 +28,10 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.UI.tree.IconedNode;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -107,9 +107,9 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.getContentPane().setLayout(this.borderLayout2);
 		this.topPanel.setLayout(this.borderLayout3);
 		this.topPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		this.buttonHelp.setText(LangModel.getString("Help"));
+		this.buttonHelp.setText(LangModelGeneral.getString("Help"));
 		this.buttonHelp.setEnabled(false);
-		this.buttonCancel.setText(LangModel.getString("Cancel"));
+		this.buttonCancel.setText(LangModelGeneral.getString("Cancel"));
 		this.buttonCancel.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -117,7 +117,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 					buttonCancel_actionPerformed(e);
 				}
 			});
-		this.buttonOpen.setText(LangModel.getString("Ok"));
+		this.buttonOpen.setText(LangModelGeneral.getString("Ok"));
 		this.buttonOpen.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -140,7 +140,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 
 		this.model = MapTreeModel.getInstance();
 
-		this.root = new IconedNode("root", LangModel.getString("root"));
+		this.root = new IconedNode("root", LangModelGeneral.getString("root"));
 		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();

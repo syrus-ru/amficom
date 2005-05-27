@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapStrategy.java,v 1.1 2005/03/02 12:35:40 krupenn Exp $
+ * $Id: AbstractMapStrategy.java,v 1.2 2005/05/27 15:14:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,12 +10,12 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.Point;
@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
  * или изменением состояния мыши и клавиатуры.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/03/02 12:35:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/27 15:14:58 $
  * @module mapviewclient_v1
  */
 abstract class AbstractMapStrategy implements MapStrategy

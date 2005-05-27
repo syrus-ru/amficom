@@ -15,12 +15,13 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.Scheme;
 
-public final class SchemeController extends ObjectResourceController 
+public final class SchemeTableController extends StorableObjectWrapper 
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
@@ -28,33 +29,39 @@ public final class SchemeController extends ObjectResourceController
 	public static final String KEY_CREATED = "Created";
 	public static final String KEY_MODIFIED = "Modified";
 
-	private static SchemeController instance;
+	private static SchemeTableController instance;
 
 	private List keys;
+	private String[] keysArray;
 
-	private SchemeController() 
+	private SchemeTableController() 
 	{
 		// empty private constructor
-		String[] keysArray = new String[] { 
+		this.keysArray = new String[] { 
 				KEY_NAME, 
 				KEY_DOMAIN, 
 				KEY_USER, 
 				KEY_CREATED, 
 				KEY_MODIFIED };
 	
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(this.keysArray)));
 	}
 
-	public static SchemeController getInstance() 
+	public static SchemeTableController getInstance() 
 	{
 		if (instance == null)
-			instance = new SchemeController();
+			instance = new SchemeTableController();
 		return instance;
 	}
 	
 	public List getKeys() 
 	{
 		return this.keys;
+	}
+
+	public String[] getKeysArray() 
+	{
+		return this.keysArray;
 	}
 
 	public String getName(final String key)
@@ -76,7 +83,7 @@ public final class SchemeController extends ObjectResourceController
 		{
 			try
 			{
-				result = AdministrationStorableObjectPool
+				result = StorableObjectPool
 						.getStorableObject(sc
 								.getDomainId(),
 								true);
@@ -93,7 +100,7 @@ public final class SchemeController extends ObjectResourceController
 			try
 			{
 				Identifier id = sc.getCreatorId();
-				result = (User )AdministrationStorableObjectPool.getStorableObject(id, false);
+				result = (User )StorableObjectPool.getStorableObject(id, false);
 			}
 			catch (Exception e)
 			{

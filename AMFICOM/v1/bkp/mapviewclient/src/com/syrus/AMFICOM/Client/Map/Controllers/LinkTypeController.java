@@ -1,12 +1,10 @@
 /**
- * $Id: LinkTypeController.java,v 1.21 2005/05/26 14:04:50 bass Exp $
+ * $Id: LinkTypeController.java,v 1.22 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -22,10 +20,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.UI.LineComboBox;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -34,11 +32,11 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
@@ -47,12 +45,11 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/05/26 14:04:50 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class LinkTypeController extends AbstractLinkController
-{
+public final class LinkTypeController extends AbstractLinkController {
 	/**
 	 * Хэш-таблица цветов типов линий. Для того, чтобы объект {@link Color} 
 	 * не создавался каждый раз из атрибута при вызове 
@@ -80,8 +77,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	private static LinkTypeController instance = null;
 	
-	static
-	{
+	static {
 		lineColors.put(PhysicalLinkType.DEFAULT_COLLECTOR, Color.DARK_GRAY);
 		lineColors.put(PhysicalLinkType.DEFAULT_TUNNEL, Color.BLACK);
 		lineColors.put(PhysicalLinkType.DEFAULT_UNBOUND, Color.RED);
@@ -98,113 +94,109 @@ public final class LinkTypeController extends AbstractLinkController
 	/**
 	 * Private constructor.
 	 */
-	private LinkTypeController()
-	{// empty
+	private LinkTypeController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new LinkTypeController();
 		return instance;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since PhysicalLinkType is not really a Map Element
+	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public String getToolTipText(MapElement mapElement)
-	{
+	public String getToolTipText(MapElement mapElement) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since PhysicalLinkType is not really a Map Element
+	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public boolean isSelectionVisible(MapElement mapElement)
-	{
+	public boolean isSelectionVisible(MapElement mapElement) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since PhysicalLinkType is not really a Map Element
+	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public boolean isElementVisible(
+			MapElement mapElement,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since PhysicalLinkType is not really a Map Element
+	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public void paint(MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since PhysicalLinkType is not really a Map Element
+	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
-		throws MapConnectionException, MapDataException
-	{
+	public boolean isMouseOnElement(
+			MapElement mapElement,
+			Point currentMousePoint)
+			throws MapConnectionException, MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * Получить цвет по кодовому имени для предустановленного типа линии.
+	 * 
 	 * @param codename кодовое имя
 	 * @return цвет
 	 */
-	public static Color getLineColor(String codename)
-	{
+	public static Color getLineColor(String codename) {
 		return (Color )lineColors.get(codename);
 	}
 
 	/**
-	 * Получить толщину линии по кодовому имени для предустановленного 
-	 * типа линии.
+	 * Получить толщину линии по кодовому имени для предустановленного типа
+	 * линии.
+	 * 
 	 * @param codename кодовое имя
 	 * @return толщина
 	 */
-	public static int getLineThickness(String codename)
-	{
+	public static int getLineThickness(String codename) {
 		return ((Integer )lineThickness.get(codename)).intValue();
 	}
 
 	/**
-	 * Получить размерность привязки по кодовому имени для предустановленного 
+	 * Получить размерность привязки по кодовому имени для предустановленного
 	 * типа линии.
+	 * 
 	 * @param codename кодовое имя
 	 * @return размерность привязки
 	 */
-	public static IntDimension getBindDimension(String codename)
-	{
+	public static IntDimension getBindDimension(String codename) {
 		return (IntDimension )bindDimensions.get(codename);
 	}
-	
+
 	/**
 	 * Найти атрибут типа линии по типу.
+	 * 
 	 * @param linkType тип линии
 	 * @param cType тип атрибута
 	 * @return атрибут
 	 */
 	public static Characteristic getCharacteristic(
-			PhysicalLinkType linkType, 
-			CharacteristicType cType)
-	{
-		for(Iterator it = linkType.getCharacteristics().iterator(); it.hasNext();)
-		{
+			PhysicalLinkType linkType,
+			CharacteristicType cType) {
+		for(Iterator it = linkType.getCharacteristics().iterator(); it.hasNext();) {
 			Characteristic ch = (Characteristic )it.next();
 			if(ch.getType().equals(cType))
 				return ch;
@@ -224,23 +216,24 @@ public final class LinkTypeController extends AbstractLinkController
 		CharacteristicType cType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_THICKNESS);
-		Characteristic ea = getCharacteristic(linkType, cType);
-		if(ea == null)
+		Characteristic attribute = getCharacteristic(linkType, cType);
+		if(attribute == null)
 		{
 			try
 			{
-				ea = Characteristic.createInstance(
+				attribute = Characteristic.createInstance(
 						userId,
 						cType,
 						"",
 						"",
+						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType,
+						linkType.getId(),
 						true,
 						true);
-				linkType.addCharacteristic(ea);
-				StorableObjectPool.putStorableObject(ea);
-				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
+				linkType.addCharacteristic(attribute);
+				StorableObjectPool.putStorableObject(attribute);
+				StorableObjectPool.flush(attribute.getId(), true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -254,7 +247,7 @@ public final class LinkTypeController extends AbstractLinkController
 				return;
 			}
 		}
-		ea.setValue(String.valueOf(size));
+		attribute.setValue(String.valueOf(size));
 	}
 
 	/**
@@ -288,23 +281,24 @@ public final class LinkTypeController extends AbstractLinkController
 		CharacteristicType cType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_STYLE);
-		Characteristic ea = getCharacteristic(linkType, cType);
-		if(ea == null)
+		Characteristic attribute = getCharacteristic(linkType, cType);
+		if(attribute == null)
 		{
 			try
 			{
-				ea = Characteristic.createInstance(
+				attribute = Characteristic.createInstance(
 						userId,
 						cType,
 						"",
 						"",
+						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType,
+						linkType.getId(),
 						true,
 						true);
-				linkType.addCharacteristic(ea);
-				StorableObjectPool.putStorableObject(ea);
-				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
+				linkType.addCharacteristic(attribute);
+				StorableObjectPool.putStorableObject(attribute);
+				StorableObjectPool.flush(attribute.getId(), true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -318,7 +312,7 @@ public final class LinkTypeController extends AbstractLinkController
 				return;
 			}
 		}
-		ea.setValue(style);
+		attribute.setValue(style);
 	}
 
 	/**
@@ -372,23 +366,24 @@ public final class LinkTypeController extends AbstractLinkController
 		CharacteristicType cType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_COLOR);
-		Characteristic ea = getCharacteristic(linkType, cType);
-		if(ea == null)
+		Characteristic attribute = getCharacteristic(linkType, cType);
+		if(attribute == null)
 		{
 			try
 			{
-				ea = Characteristic.createInstance(
+				attribute = Characteristic.createInstance(
 						userId,
 						cType,
 						"",
 						"",
+						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType,
+						linkType.getId(),
 						true,
 						true);
-				linkType.addCharacteristic(ea);
-				StorableObjectPool.putStorableObject(ea);
-				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
+				linkType.addCharacteristic(attribute);
+				StorableObjectPool.putStorableObject(attribute);
+				StorableObjectPool.flush(attribute.getId(), true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -402,7 +397,7 @@ public final class LinkTypeController extends AbstractLinkController
 				return;
 			}
 		}
-		ea.setValue(String.valueOf(color.getRGB()));
+		attribute.setValue(String.valueOf(color.getRGB()));
 		colorsHolder.put(linkType, color);
 	}
 
@@ -448,23 +443,24 @@ public final class LinkTypeController extends AbstractLinkController
 		CharacteristicType cType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
-		Characteristic ea = getCharacteristic(linkType, cType);
-		if(ea == null)
+		Characteristic attribute = getCharacteristic(linkType, cType);
+		if(attribute == null)
 		{
 			try
 			{
-				ea = Characteristic.createInstance(
+				attribute = Characteristic.createInstance(
 						userId,
 						cType,
 						"",
 						"",
+						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType,
+						linkType.getId(),
 						true,
 						true);
-				linkType.addCharacteristic(ea);
-				StorableObjectPool.putStorableObject(ea);
-				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
+				linkType.addCharacteristic(attribute);
+				StorableObjectPool.putStorableObject(attribute);
+				StorableObjectPool.flush(attribute.getId(), true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -478,7 +474,7 @@ public final class LinkTypeController extends AbstractLinkController
 				return;
 			}
 		}
-		ea.setValue(String.valueOf(color.getRGB()));
+		attribute.setValue(String.valueOf(color.getRGB()));
 		alarmedColorsHolder.put(linkType, color);
 	}
 
@@ -525,23 +521,24 @@ public final class LinkTypeController extends AbstractLinkController
 		CharacteristicType cType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic ea = getCharacteristic(linkType, cType);
-		if(ea == null)
+		Characteristic attribute = getCharacteristic(linkType, cType);
+		if(attribute == null)
 		{
 			try
 			{
-				ea = Characteristic.createInstance(
+				attribute = Characteristic.createInstance(
 						userId,
 						cType,
 						"",
 						"",
+						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType,
+						linkType.getId(),
 						true,
 						true);
-				linkType.addCharacteristic(ea);
-				StorableObjectPool.putStorableObject(ea);
-				StorableObjectPool.flushGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, true);
+				linkType.addCharacteristic(attribute);
+				StorableObjectPool.putStorableObject(attribute);
+				StorableObjectPool.flush(attribute.getId(), true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -555,7 +552,7 @@ public final class LinkTypeController extends AbstractLinkController
 				return;
 			}
 		}
-		ea.setValue(String.valueOf(size));
+		attribute.setValue(String.valueOf(size));
 	}
 
 	/**
@@ -642,7 +639,7 @@ public final class LinkTypeController extends AbstractLinkController
 			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));
 
 			StorableObjectPool.putStorableObject(type);
-			StorableObjectPool.flushGroup(ObjectGroupEntities.MAP_GROUP_CODE, true);
+			StorableObjectPool.flush(type.getId(), true);
 		}
 		catch (Exception e)
 		{

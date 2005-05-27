@@ -24,8 +24,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
-public class SiteCrossingPanel extends JPanel 
-{
+public class SiteCrossingPanel extends JPanel {
 	SiteNode site;
 
 	private Map map;
@@ -58,26 +57,22 @@ public class SiteCrossingPanel extends JPanel
 	int index1 = -1;
 	int index2 = -1;
 
-	public SiteCrossingPanel()
-	{//empty
+	public SiteCrossingPanel() {
+		// empty
 	}
 
-	public void setMap(Map map)
-	{
+	public void setMap(Map map) {
 		this.map = map;
 	}
 
-	public void setSite(SiteNode site)
-	{
+	public void setSite(SiteNode site) {
 		this.site = site;
 		this.cpath = null;
 		this.index1 = -1;
 		this.index2 = -1;
 		this.tunnels.clear();
-		if(site != null)
-		{
-			for(Iterator it = this.map.getPhysicalLinksAt(site).iterator(); it.hasNext();)
-			{
+		if(site != null) {
+			for(Iterator it = this.map.getPhysicalLinksAt(site).iterator(); it.hasNext();) {
 				Object tunnel = it.next();
 				if(!(tunnel instanceof UnboundLink))
 					this.tunnels.add(tunnel);
@@ -86,20 +81,16 @@ public class SiteCrossingPanel extends JPanel
 		repaint();
 	}
 
-	public void setCable(CablePath cpath)
-	{
+	public void setCable(CablePath cpath) {
 		this.cpath = cpath;
 
 		this.index1 = -1;
 		this.index2 = -1;
-		
-		if(cpath != null)
-		{
-			for(Iterator it = cpath.getLinks().iterator(); it.hasNext();)
-			{
-				PhysicalLink link = (PhysicalLink)it.next();
-				if(this.tunnels.contains(link))
-				{
+
+		if(cpath != null) {
+			for(Iterator it = cpath.getLinks().iterator(); it.hasNext();) {
+				PhysicalLink link = (PhysicalLink )it.next();
+				if(this.tunnels.contains(link)) {
 					if(this.index1 == -1)
 						this.index1 = this.tunnels.indexOf(link);
 					else
@@ -111,8 +102,7 @@ public class SiteCrossingPanel extends JPanel
 		repaint();
 	}
 
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
 		Graphics2D g2 = (Graphics2D )g;
@@ -156,28 +146,23 @@ public class SiteCrossingPanel extends JPanel
 				WELL_RADIUS * 2);
 
 		int cnt = this.tunnels.size();
-		if(cnt > 0)
-		{
+		if(cnt > 0) {
 			double a = Math.PI;
 			Iterator it = this.tunnels.iterator();
 			double added = 2 * Math.PI / cnt;
-			for (int i = 0; i < cnt; i++) 
-			{
+			for (int i = 0; i < cnt; i++) {
 				drawTunnel(g2, centerx, centery, a, (PhysicalLink)it.next(), arc);
 				a += added;
 			}
 		}
-		
-		if(this.cpath != null && cnt > 0)
-		{
+
+		if(this.cpath != null && cnt > 0) {
 			double added = 2 * Math.PI / cnt;
-			if(this.index1 != -1)
-			{
+			if(this.index1 != -1) {
 				double a = Math.PI + this.index1 * added;
 				drawPath(g2, centerx, centery, a);
 			}
-			if(this.index2 != -1)
-			{
+			if(this.index2 != -1) {
 				double a = Math.PI + this.index2 * added;
 				drawPath(g2, centerx, centery, a);
 			}
@@ -187,12 +172,7 @@ public class SiteCrossingPanel extends JPanel
 		g2.setStroke(stroke);
 	}
 
-	private void drawPath(
-			Graphics2D g2,
-			int centerx, 
-			int centery, 
-			double a)
-	{
+	private void drawPath(Graphics2D g2, int centerx, int centery, double a) {
 		double sinA = Math.sin(a);
 
 		double cosA = Math.cos(a);
@@ -220,8 +200,7 @@ public class SiteCrossingPanel extends JPanel
 			int centery, 
 			double a, 
 			PhysicalLink link,
-			Arc2D arc)
-	{
+			Arc2D arc) {
 		double sinA = Math.sin(a);
 
 		double cosA = Math.cos(a);
@@ -308,8 +287,7 @@ public class SiteCrossingPanel extends JPanel
 		g2.drawString(text, endx - textwidth / 2, endy + ydelta);
 	}
 	
-	protected Point findIntersection(Line2D line, Arc2D arc)
-	{
+	protected Point findIntersection(Line2D line, Arc2D arc) {
 		int x1 = (int )line.getX1();
 		int x2 = (int )line.getX2();
 		int y1 = (int )line.getY1();
@@ -323,24 +301,21 @@ public class SiteCrossingPanel extends JPanel
 
 		Point2D.Double pt = (Point2D.Double )line.getP2();
 		
-		while(true)
-		{
+		while(true) {
 			if(arc.contains(pt))
 				break;
-			if(divx > divy)
-			{
+			if(divx > divy) {
 				pt.x += dx;
 				double coef = (pt.x - x1) / (x2 - x1);
 				pt.y = coef * (y2 - y1) + y1;
 			}
-			else
-			{
+			else {
 				pt.y += dy;
 				double coef = (pt.y - y1) / (y2 - y1);
 				pt.x = coef * (x2 - x1) + x1;
 			}
 		}
-		
+
 		return new Point((int )pt.getX(), (int )pt.getY());
 	}
 }

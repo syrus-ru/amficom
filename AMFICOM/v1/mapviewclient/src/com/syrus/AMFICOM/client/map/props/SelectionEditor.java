@@ -10,16 +10,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjList;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedList;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.mapview.Selection;
 
-public class SelectionEditor extends DefaultStorableObjectEditor
-{
+public class SelectionEditor extends DefaultStorableObjectEditor {
 	Selection selection;
 
 	private JPanel jPanel = new JPanel();
@@ -28,30 +27,25 @@ public class SelectionEditor extends DefaultStorableObjectEditor
 	private JLabel countLabel = new JLabel();
 	private JTextField countTextField = new JTextField();
 	private JLabel elementsLabel = new JLabel();
-	private ObjList elementsList = null;
+	private WrapperedList elementsList = null;
 
-	public SelectionEditor()
-	{
-		try
-		{
+	public SelectionEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.elementsList = new ObjList(controller, SimpleMapElementController.KEY_NAME);
+		this.elementsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.countLabel.setText(LangModelMap.getString("SelectionCount"));
 		this.elementsLabel.setText(LangModelMap.getString("Elements"));
@@ -67,26 +61,22 @@ public class SelectionEditor extends DefaultStorableObjectEditor
 		this.countTextField.setEnabled(false);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.selection;
 	}
 
-	public void setObject(Object object)
-	{
-		this.selection = (Selection)object;
+	public void setObject(Object object) {
+		this.selection = (Selection )object;
 
 		this.elementsList.removeAll();
 
-		if(this.selection == null)
-		{
+		if(this.selection == null) {
 			this.countTextField.setText("");
 		}
-		else
-		{
+		else {
 			Set elements = this.selection.getElements();
 			this.countTextField.setText(String.valueOf(elements.size()));
-			
+
 			this.elementsList.addElements(elements);
 		}
 	}

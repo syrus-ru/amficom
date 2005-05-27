@@ -10,65 +10,49 @@ import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.map.NodeLink;
 
-public final class NodeLinkPopupMenu extends MapPopupMenu 
-{
+public final class NodeLinkPopupMenu extends MapPopupMenu {
 	private JMenuItem removeMenuItem = new JMenuItem();
-	
+
 	private NodeLink link;
-	
+
 	private static NodeLinkPopupMenu instance = new NodeLinkPopupMenu();
 
-	private NodeLinkPopupMenu()
-	{
+	private NodeLinkPopupMenu() {
 		super();
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static NodeLinkPopupMenu getInstance()
-	{
+
+	public static NodeLinkPopupMenu getInstance() {
 		return instance;
 	}
-	
-	public void setElement(Object me)
-	{
+
+	public void setElement(Object me) {
 		this.link = (NodeLink )me;
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
-		this.removeMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					removeNodeLink();
-				}
-			});
+		this.removeMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				removeNodeLink();
+			}
+		});
 		this.add(this.removeMenuItem);
 	}
 
-	void removeNodeLink()
-	{
+	void removeNodeLink() {
 		super.removeMapElement(this.link);
 
-		try
-		{
+		try {
 			getLogicalNetLayer().repaint(false);
-		}
-		catch(MapConnectionException e)
-		{
+		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch(MapDataException e)
-		{
+		} catch(MapDataException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

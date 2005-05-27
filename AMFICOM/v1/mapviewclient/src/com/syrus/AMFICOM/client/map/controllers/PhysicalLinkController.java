@@ -1,12 +1,10 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.13 2005/05/25 16:21:54 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.14 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -20,12 +18,12 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.UI.LineComboBox;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -37,11 +35,10 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/05/25 16:21:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class PhysicalLinkController extends AbstractLinkController
-{
+public class PhysicalLinkController extends AbstractLinkController {
 
 	/**
 	 * Instance
@@ -51,16 +48,16 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * Private constructor.
 	 */
-	protected PhysicalLinkController()
-	{// empty
+	protected PhysicalLinkController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new PhysicalLinkController();
 		return instance;
@@ -69,18 +66,16 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement)
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public String getToolTipText(MapElement mapElement) {
+		if(!(mapElement instanceof PhysicalLink))
 			return null;
 
 		PhysicalLink link = (PhysicalLink )mapElement;
-		
+
 		String s1 = link.getName();
 		String s2 = "";
 		String s3 = "";
-		try
-		{
+		try {
 			AbstractNode smne = link.getStartNode();
 			s2 =  ":\n" 
 				+ "   " 
@@ -99,9 +94,7 @@ public class PhysicalLinkController extends AbstractLinkController
 				+ " [" 
 				+ MapViewController.getMapElementReadableType(emne)
 				+ "]";
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			Environment.log(
 				Environment.LOG_LEVEL_FINER, 
 				"method call", 
@@ -115,36 +108,33 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement mapElement)
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public boolean isSelectionVisible(MapElement mapElement) {
+		if(!(mapElement instanceof PhysicalLink))
 			return false;
 
 		PhysicalLink link = (PhysicalLink )mapElement;
 
-		return link.isSelected() 
-			|| link.isSelectionVisible();
+		return link.isSelected() || link.isSelectionVisible();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public boolean isElementVisible(
+			MapElement mapElement,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof PhysicalLink))
 			return false;
 
 		PhysicalLink link = (PhysicalLink )mapElement;
-		
+
 		boolean vis = false;
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
-		{
+		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodelink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
-				.getMapViewController().getController(nodelink);
-			if(nlc.isElementVisible(nodelink, visibleBounds))
-			{
+			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer()
+					.getMapViewController().getController(nodelink);
+			if(nlc.isElementVisible(nodelink, visibleBounds)) {
 				vis = true;
 				break;
 			}
@@ -155,10 +145,12 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof PhysicalLink))
 			return;
 
 		PhysicalLink link = (PhysicalLink )mapElement;
@@ -190,34 +182,30 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public void paint(
 			PhysicalLink link,
-			Graphics g, 
-			Rectangle2D.Double visibleBounds, 
-			Stroke stroke, 
-			Color color, 
+			Graphics g,
+			Rectangle2D.Double visibleBounds,
+			Stroke stroke,
+			Color color,
 			boolean selectionVisible)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		if(!isElementVisible(link, visibleBounds))
 			return;
 
 		updateLengthLt(link);
 
 		boolean showName = false;
-		if(MapPropertiesManager.isLayerLabelVisible(link.getType()))
-		{
+		if(MapPropertiesManager.isLayerLabelVisible(link.getType())) {
 			showName = true;
 		}
 
 		link.setSelectionVisible(selectionVisible);
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
-		{
+		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodelink = (NodeLink )it.next();
 			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
 				.getMapViewController().getController(nodelink);
 			nlc.paint(nodelink, g, visibleBounds, stroke, color);
 			
-			if(showName)
-			{
+			if(showName) {
 				MapCoordinatesConverter converter = getLogicalNetLayer();
 				Point from = converter.convertMapToScreen(nodelink.getStartNode().getLocation());
 				Point to = converter.convertMapToScreen(nodelink.getEndNode().getLocation());
@@ -258,16 +246,16 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public boolean isMouseOnElement(
+			MapElement mapElement,
+			Point currentMousePoint)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof PhysicalLink))
 			return false;
 
 		PhysicalLink link = (PhysicalLink )mapElement;
-		
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
-		{
+
+		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nl = (NodeLink )it.next();
 			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
 				.getMapViewController().getController(nl);
@@ -283,13 +271,11 @@ public class PhysicalLinkController extends AbstractLinkController
 	 * @param link линия
 	 */
 	public void updateLengthLt(PhysicalLink link)
-		throws MapConnectionException, MapDataException
-	{
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
-		{
+			throws MapConnectionException, MapDataException {
+		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodeLink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
-				.getMapViewController().getController(nodeLink);
+			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer()
+					.getMapViewController().getController(nodeLink);
 			nlc.updateLengthLt(nodeLink);
 		}
 	}
@@ -297,8 +283,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getLineSize (MapElement mapElement)
-	{
+	public int getLineSize(MapElement mapElement) {
 		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getThickness();
 
@@ -318,9 +303,8 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getStyle (MapElement mapElement)
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public String getStyle(MapElement mapElement) {
+		if(!(mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getStyle();
 
 		PhysicalLink plink = (PhysicalLink )mapElement;
@@ -339,9 +323,8 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public Stroke getStroke (MapElement mapElement)
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public Stroke getStroke(MapElement mapElement) {
+		if(!(mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getStroke();
 
 		PhysicalLink plink = (PhysicalLink )mapElement;
@@ -360,9 +343,8 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public Color getColor(MapElement mapElement)
-	{
-		if(! (mapElement instanceof PhysicalLink))
+	public Color getColor(MapElement mapElement) {
+		if(!(mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getColor();
 
 		PhysicalLink plink = (PhysicalLink )mapElement;
@@ -381,8 +363,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public Color getAlarmedColor(MapElement mapElement)
-	{
+	public Color getAlarmedColor(MapElement mapElement) {
 		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getAlarmedColor();
 
@@ -402,8 +383,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getAlarmedLineSize (MapElement mapElement)
-	{
+	public int getAlarmedLineSize(MapElement mapElement) {
 		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getAlarmedThickness();
 

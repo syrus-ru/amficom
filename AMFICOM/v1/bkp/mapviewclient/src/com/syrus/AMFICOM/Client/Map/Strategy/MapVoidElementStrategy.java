@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.24 2005/04/13 11:28:11 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.25 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Set;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/04/13 11:28:11 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/27 15:14:59 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -223,7 +223,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 		else
 		if(selection.size() > 1)
 		{
-			Selection sel = new Selection(this.map);
+			Selection sel = new Selection();
 			sel.addAll(selection);
 			super.logicalNetLayer.setCurrentMapElement(sel);
 		}

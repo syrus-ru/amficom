@@ -10,14 +10,19 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.mapview.CablePath;
 
+/**
+ * @version $Revision: 1.3 $
+ * @author $Author: krupenn $
+ * @module mapviewclient_v1
+ */
 public class CablePathEditor extends DefaultStorableObjectEditor {
 
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -26,7 +31,7 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel cableLabel = new JLabel();
-	private ObjComboBox cableComboBox = null;
+	private WrapperedComboBox cableComboBox = null;
 
 	private JLabel topologicalLengthLabel = new JLabel();
 	private JTextField topologicalLengthTextField = new JTextField();
@@ -35,9 +40,9 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 	private JLabel opticalLengthLabel = new JLabel();
 	private JTextField opticalLengthTextField = new JTextField();
 	private JLabel startLabel = new JLabel();
-	private ObjComboBox startComboBox = null;
+	private WrapperedComboBox startComboBox = null;
 	private JLabel endLabel = new JLabel();
-	private ObjComboBox endComboBox = null;
+	private WrapperedComboBox endComboBox = null;
 
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
@@ -56,12 +61,23 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		SimpleMapElementController controller = SimpleMapElementController
 				.getInstance();
 
-		this.cableComboBox = new ObjComboBox(
+		this.cableComboBox = new WrapperedComboBox(
 				controller,
+				SimpleMapElementController.KEY_NAME, 
+				SimpleMapElementController.KEY_NAME);
+
+		this.startComboBox = new WrapperedComboBox(
+				controller,
+				SimpleMapElementController.KEY_NAME, 
+				SimpleMapElementController.KEY_NAME);
+
+		this.endComboBox = new WrapperedComboBox(
+				controller,
+				SimpleMapElementController.KEY_NAME, 
 				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.cableLabel.setText(LangModelMap.getString("cable"));

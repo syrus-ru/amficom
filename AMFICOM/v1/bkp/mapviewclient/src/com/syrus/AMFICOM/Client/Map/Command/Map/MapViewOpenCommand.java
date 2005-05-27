@@ -1,34 +1,32 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.20 2005/05/18 14:59:46 bass Exp $
+ * $Id: MapViewOpenCommand.java,v 1.21 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import com.syrus.AMFICOM.Client.Map.UI.MapViewChooserDialog;
 import java.util.Collection;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTableController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
+import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -36,98 +34,94 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * открыть вид 
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/05/18 14:59:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class MapViewOpenCommand extends VoidCommand
-{
+public class MapViewOpenCommand extends AbstractCommand {
 	ApplicationContext aContext;
+
 	JDesktopPane desktop;
 
 	protected MapView mapView;
 
 	protected boolean canDelete = false;
 
-	public MapViewOpenCommand(JDesktopPane desktop, ApplicationContext aContext)
-	{
+	public MapViewOpenCommand(JDesktopPane desktop, ApplicationContext aContext) {
 		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 
-	public void setCanDelete(boolean flag)
-	{
+	public void setCanDelete(boolean flag) {
 		this.canDelete = flag;
 	}
-	
-	public MapView getMapView()
-	{
+
+	public MapView getMapView() {
 		return this.mapView;
 	}
 
-	public void execute()
-	{
-		this.aContext.getDispatcher().notify(new StatusMessageEvent(
-				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelMap.getString("MapOpening")));
+	public void execute() {
+		this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelMap.getString("MapOpening")));
 
 		Collection mapViews;
-		try
-		{
-			Identifier domainId = new Identifier(
-					this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
-//				Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-//						domainId,
-//						false);
-
-			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAPVIEW_ENTITY_CODE);
-			mapViews = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		}
-		catch (CommunicationException e)
-		{
+		try {
+			Identifier domainId = LoginManager.getDomainId();
+			StorableObjectCondition condition = new LinkedIdsCondition(
+					domainId,
+					ObjectEntities.MAPVIEW_ENTITY_CODE);
+			mapViews = StorableObjectPool.getStorableObjectsByCondition(
+					condition,
+					true);
+		} catch(CommunicationException e) {
 			e.printStackTrace();
 			return;
-		}
-		catch (DatabaseException e)
-		{
+		} catch(DatabaseException e) {
 			e.printStackTrace();
 			return;
-		}
-		catch (ApplicationException e)
-		{
+		} catch(ApplicationException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		ObjectResourceChooserDialog mcd = new MapViewChooserDialog(
+		MapViewTableController mapViewTableController = 
+			MapViewTableController.getInstance();
+
+		WrapperedTableChooserDialog mapViewChooserDialog = new WrapperedTableChooserDialog(
 				LangModelMap.getString("MapView"),
-				MapViewTableController.getInstance());
+				mapViewTableController,
+				mapViewTableController.getKeysArray());
 
-		mcd.setCanDelete(this.canDelete);
+		mapViewChooserDialog.setCanDelete(this.canDelete);
 
-		mcd.setContents(mapViews);
+		mapViewChooserDialog.setContents(mapViews);
 
-		mcd.setModal(true);
-		mcd.setVisible(true);
+		mapViewChooserDialog.setModal(true);
+		mapViewChooserDialog.setVisible(true);
 
-		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
-		{
-			this.aContext.getDispatcher().notify(new StatusMessageEvent(
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModel.getString("Aborted")));
+		if(mapViewChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_CANCEL) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							LangModelGeneral.getString("Aborted")));
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}
 
-		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_OK)
-		{
-			this.mapView = (MapView )mcd.getReturnObject();
+		if(mapViewChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_OK) {
+			this.mapView = (MapView )mapViewChooserDialog.getReturnObject();
 
 			setResult(Command.RESULT_OK);
 
-			this.aContext.getDispatcher().notify(new StatusMessageEvent(
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModel.getString("Finished")));
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							LangModelGeneral.getString("Finished")));
 		}
 	}
 

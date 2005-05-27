@@ -7,15 +7,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.util.Wrapper;
 
-public final class SimpleMapElementController extends ObjectResourceController 
+public final class SimpleMapElementController implements Wrapper 
 {
 
 	public static final String KEY_NAME = "name";
@@ -24,149 +24,125 @@ public final class SimpleMapElementController extends ObjectResourceController
 	private static SimpleMapElementController instance;
 
 	private List keys;
+	private String[] keysArray;
 
-	private SimpleMapElementController() 
-	{
+	private SimpleMapElementController() {
 		// empty private constructor
-		String[] keysArray = new String[] { KEY_NAME, KEY_TYPE};
+		this.keysArray = new String[] { KEY_NAME, KEY_TYPE};
 	
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(this.keysArray)));
 	}
 
-	public static SimpleMapElementController getInstance() 
-	{
-		if (instance == null)
+	public static SimpleMapElementController getInstance() {
+		if(instance == null)
 			instance = new SimpleMapElementController();
 		return instance;
 	}
 
-	public List getKeys() 
-	{
+	public List getKeys() {
 		return this.keys;
 	}
 
-	public String getName(final String key)
-	{
+	public String[] getKeysArray() {
+		return this.keysArray;
+	}
+
+	public String getName(final String key) {
 		String name = null;
 		if (key.equals(KEY_NAME))
-			name = LangModel.getString("Name");
+			name = LangModelGeneral.getString("Name");
 		else
 		if (key.equals(KEY_TYPE))
-			name = LangModel.getString("Type");
+			name = LangModelGeneral.getString("Type");
 		return name;
 	}
 
-	public Object getValue(final Object object, final String key)
-	{
+	public Object getValue(final Object object, final String key) {
 		Object result = null;
 
-		if(object == null)
-		{
+		if(object == null) {
 			result = null;
 		}
 		else
-		if (key.equals(KEY_NAME))
-		{
+		if(key.equals(KEY_NAME)) {
 			Class clazz = object.getClass();
 			String methodName = "getName";
 			String name = "";
-			try
-			{
+			try {
 				Method method = clazz.getMethod(methodName, new Class[0]);
 				name = (String )(method.invoke(object, new Object[0]));
 				result = name;
-			}
-			catch (InvocationTargetException iae)
-			{
+			} catch(InvocationTargetException iae) {
+				result = null;
+			} catch(IllegalAccessException iae) {
+				result = null;
+			} catch(NoSuchMethodException nsme) {
 				result = null;
 			}
-			catch (IllegalAccessException iae)
-			{
-				result = null;
-			}
-			catch (NoSuchMethodException nsme)
-			{
-				result = null;
-			}
-			
-			if(result == null)
-			{
+
+			if(result == null) {
 				methodName = "name";
-				try
-				{
-					Method method = clazz.getMethod(methodName, new Class[0]);
+				try {
+					Method method = clazz.getMethod(
+							methodName,
+							new Class[0]);
 					name = (String )(method.invoke(object, new Object[0]));
 					result = name;
-				}
-				catch (InvocationTargetException iae)
-				{
+				} catch(InvocationTargetException iae) {
 					result = null;
-				}
-				catch (IllegalAccessException iae)
-				{
+				} catch(IllegalAccessException iae) {
 					result = null;
-				}
-				catch (NoSuchMethodException nsme)
-				{
+				} catch(NoSuchMethodException nsme) {
 					result = null;
 				}
 			}
 		}
 		else
-		if (object instanceof MapElement) 
-		{
-			MapElement me = (MapElement)object;
-			if (key.equals(KEY_TYPE))
-			{
-				if(me instanceof SiteNode)
-				{
+		if(object instanceof MapElement) {
+			MapElement me = (MapElement )object;
+			if(key.equals(KEY_TYPE)) {
+				if(me instanceof SiteNode) {
 					SiteNodeType mnpe = (SiteNodeType )(((SiteNode)me).getType());
 					result = mnpe.getName();
 				}
 				else
-				if(me instanceof PhysicalLink)
-				{
+				if(me instanceof PhysicalLink) {
 					PhysicalLinkType mlpe = (PhysicalLinkType )(((PhysicalLink)me).getType());
 					result = mlpe.getName();
 				}
-//				else
-//					result = 
-//						LangModel.getString("node" + ((ObjectResource )object).getTyp());
 			}
 		}
-		else
-		{
+		else {
 			result = null;
 		}
 		return result;
 	}
 
-	public boolean isEditable(final String key)
-	{
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value)
-	{//empty
+	public void setValue(Object object, final String key, final Object value) {
+		//empty
 	}
 
-	public String getKey(final int index) 
-	{
+	public String getKey(final int index) {
 		return (String )this.keys.get(index);
 	}
 
-	public Object getPropertyValue(final String key) 
-	{
+	public Object getPropertyValue(final String key) {
 		Object result = "";
 		return result;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
-	{//empty
+	public void setPropertyValue(
+			String key,
+			Object objectKey,
+			Object objectValue) {
+		//empty
 	}
 
-	public Class getPropertyClass(String key) 
-	{
+	public Class getPropertyClass(String key) {
 		Class clazz = String.class;
 		return clazz;
 	}

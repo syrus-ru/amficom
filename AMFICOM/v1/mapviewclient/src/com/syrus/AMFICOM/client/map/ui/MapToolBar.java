@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.19 2005/05/25 16:47:11 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.20 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,18 +28,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.19 $, $Date: 2005/05/25 16:47:11 $
+ * @version $Revision: 1.20 $, $Date: 2005/05/27 15:14:59 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -235,7 +235,7 @@ public final class MapToolBar extends JPanel
 					mod.setModal(true);
 					mod.setVisible(true);
 					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
-						getLogicalNetLayer().getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+						getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 				}
 			}); 
 		this.optionsButton.setToolTipText(LangModelMap.getString("Options"));
@@ -255,7 +255,7 @@ public final class MapToolBar extends JPanel
 					mod.setModal(true);
 					mod.setVisible(true);
 					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
-						getLogicalNetLayer().getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+						getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 				}
 			}); 
 		this.layersButton.setToolTipText(LangModelMap.getString("Layers"));
@@ -402,6 +402,10 @@ public final class MapToolBar extends JPanel
 		return this.aModel;
 	}
 
+	public void modelChanged(String elementName) {
+		modelChanged(new String [] { elementName });
+	}
+
 	public void modelChanged(String e[])
 	{
 		this.zoomInButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_IN));
@@ -489,6 +493,7 @@ public final class MapToolBar extends JPanel
 			this.adaptee.buttonPressed(e);
 		}
 	}
+
 }
 
 

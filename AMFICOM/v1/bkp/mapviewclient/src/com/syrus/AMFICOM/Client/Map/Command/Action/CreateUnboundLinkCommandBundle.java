@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandBundle.java,v 1.7 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandBundle.java,v 1.8 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,8 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * создание неприв€занной линии, состо€щей из одного фрагмента, 
  * внесение ее в пул и на карту
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
 public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle

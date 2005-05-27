@@ -1,12 +1,10 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.14 2005/05/18 14:59:46 bass Exp $
+ * $Id: TopologicalNodeController.java,v 1.15 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -26,18 +24,18 @@ import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * Контроллер топологического узла.
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/05/18 14:59:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class TopologicalNodeController extends AbstractNodeController
-{
+public class TopologicalNodeController extends AbstractNodeController {
 	/** Размер пиктограммы поумолчанию. */
 	public static final Rectangle NODE_BOUNDS = new Rectangle(10, 10);
 	/** Минимальный размер элемента. */
@@ -75,16 +73,16 @@ public class TopologicalNodeController extends AbstractNodeController
 	/**
 	 * Private constructor.
 	 */
-	private TopologicalNodeController()
-	{// empty
+	private TopologicalNodeController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new TopologicalNodeController();
 		return instance;
@@ -93,35 +91,32 @@ public class TopologicalNodeController extends AbstractNodeController
 	/**
 	 * {@inheritDoc}
 	 */
-	public Rectangle getDefaultBounds()
-	{
+	public Rectangle getDefaultBounds() {
 		return TopologicalNodeController.NODE_BOUNDS;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public Rectangle getMinBounds()
-	{
+	public Rectangle getMinBounds() {
 		return TopologicalNodeController.MIN_NODE_BOUNDS;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public Rectangle getMaxBounds()
-	{
+	public Rectangle getMaxBounds() {
 		return TopologicalNodeController.MAX_NODE_BOUNDS;
 	}
 
 	/**
-	 * Eстановить активность топологического узла. Помимо изменения флага
-	 * меняет пиктограмму в соответствии с активностью узла.
+	 * Eстановить активность топологического узла. Помимо изменения флага меняет
+	 * пиктограмму в соответствии с активностью узла.
+	 * 
 	 * @param node топологического узла
 	 * @param active флаг активности
 	 */
-	public void setActive(TopologicalNode node, boolean active)
-	{
+	public void setActive(TopologicalNode node, boolean active) {
 		node.setActive(active);
 
 		Identifier creatorId = getLogicalNetLayer().getUserId();
@@ -133,10 +128,8 @@ public class TopologicalNodeController extends AbstractNodeController
 			node.setImageId(closedImageId);
 	}
 
-	public Identifier getImageId(AbstractNode node)
-	{
-		if(node.getImageId() == null)
-		{
+	public Identifier getImageId(AbstractNode node) {
+		if(node.getImageId() == null) {
 			Identifier creatorId = getLogicalNetLayer().getUserId();
 			init(creatorId);
 
@@ -149,11 +142,9 @@ public class TopologicalNodeController extends AbstractNodeController
 		}
 		return node.getImageId();
 	}
-	
-	private void init(Identifier creatorId)
-	{
-		if(needInit)
-		{
+
+	private void init(Identifier creatorId) {
+		if(needInit) {
 
 			openImageId = NodeTypeController.getImageId(
 					creatorId, 
@@ -177,10 +168,8 @@ public class TopologicalNodeController extends AbstractNodeController
 	/**
 	 * {@inheritDoc}
 	 */
-	public Image getImage(AbstractNode node)
-	{
-		Identifier creatorId = 
-			((RISDSessionInfo )(getLogicalNetLayer().getContext().getSessionInterface())).getUserIdentifier();
+	public Image getImage(AbstractNode node) {
+		Identifier creatorId = LoginManager.getUserId();
 		init(creatorId);
 
 		TopologicalNode topologicalNode = (TopologicalNode )node;
@@ -199,9 +188,11 @@ public class TopologicalNodeController extends AbstractNodeController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		if(!(mapElement instanceof TopologicalNode))
 			return;
 		TopologicalNode node = (TopologicalNode)mapElement;
@@ -211,8 +202,7 @@ public class TopologicalNodeController extends AbstractNodeController
 		
 		super.paint(node, g, visibleBounds);
 
-		if (node.isCanBind())
-		{
+		if(node.isCanBind()) {
 			MapCoordinatesConverter converter = getLogicalNetLayer();
 			
 			Point p = converter.convertMapToScreen(node.getLocation());

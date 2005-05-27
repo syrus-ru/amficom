@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.7 2005/05/25 16:28:44 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.8 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,16 +31,15 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -51,7 +50,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.7 $, $Date: 2005/05/25 16:28:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/27 15:14:57 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -65,17 +64,17 @@ import com.syrus.AMFICOM.mapview.MapView;
 	/**
 	 * модель отображения найденных элементов
 	 */
-	ObjectResourceController controller;
+	SimpleMapElementController controller;
 
 	/**
 	 * таблица с найденными элементами
 	 */
-	ObjectResourceTable table;
+	WrapperedTable table;
 
 	/**
 	 * модель для таблицы найденных элементов
 	 */
-	ObjectResourceTableModel model;
+	WrapperedTableModel model;
 
 	/**
 	 * строка поиска
@@ -98,8 +97,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 	public AMFICOMSearchPanel()
 	{
 		this.controller = SimpleMapElementController.getInstance();
-		this.model = new ObjectResourceTableModel(this.controller);
-		this.table = new ObjectResourceTable(this.model);
+		this.model = new WrapperedTableModel(this.controller, this.controller.getKeysArray());
+		this.table = new WrapperedTable(this.model);
 
 		try
 		{
@@ -227,6 +226,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 		static NodeTypeComparator instance = new NodeTypeComparator();
 		
 		private NodeTypeComparator() {
+			// empty
 		}
 		
 		public int compare(Object o1, Object o2) {
@@ -245,6 +245,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 		static LinkTypeComparator instance = new LinkTypeComparator();
 		
 		private LinkTypeComparator() {
+			// empty
 		}
 		
 		public int compare(Object o1, Object o2) {
@@ -311,7 +312,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 			ex.printStackTrace();
 		}
 
-		this.model.setContents(foundElements);
+		this.model.setValues(foundElements);
 
 		this.searchButton.setEnabled(true);
 		this.searching = false;
@@ -335,7 +336,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 			MapElement mapE = (MapElement)this.model.getObject(selection[(i)]);
 			map.setSelected(mapE, true);
 
-			this.mapFrame.getContext().getDispatcher().notify(
+			this.mapFrame.getContext().getDispatcher().firePropertyChange(
 					new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));		
 		}
 		

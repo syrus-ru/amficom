@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathVisualManager.java,v 1.3 2005/04/28 12:57:09 krupenn Exp $
+ * $Id: CablePathVisualManager.java,v 1.4 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,10 +7,15 @@
  */
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
+/**
+ * @version $Revision: 1.4 $
+ * @author $Author: krupenn $
+ * @module mapviewclient_v1
+ */
 public class CablePathVisualManager implements VisualManager {
 
 	private static CablePathVisualManager instance;
@@ -36,7 +41,7 @@ public class CablePathVisualManager implements VisualManager {
 		return charPanel;
 	}
 
-	public ObjectResourceController getController() {
+	public StorableObjectWrapper getController() {
 //		CableController cc = (CableController)com.syrus.AMFICOM.Client.Map.Controllers.CableController.getInstance();
 //		if (key.equals(PROPERTY_COLOR))
 //		{

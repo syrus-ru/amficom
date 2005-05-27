@@ -11,78 +11,62 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
 
-public abstract class MapDesktopCommand
-{
-	public static MapGeneralPropertiesFrame findMapGeneralPropertiesFrame(JDesktopPane desktop)
-	{
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
+public abstract class MapDesktopCommand {
+	public static MapGeneralPropertiesFrame findMapGeneralPropertiesFrame(
+			JDesktopPane desktop) {
+		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null
-				&& comp instanceof MapGeneralPropertiesFrame)
-					return (MapGeneralPropertiesFrame )comp;
+			if(comp != null && comp instanceof MapGeneralPropertiesFrame)
+				return (MapGeneralPropertiesFrame )comp;
 		}
 		return null;
 	}
-	
-	public static MapAdditionalPropertiesFrame findMapAdditionalPropertiesFrame(JDesktopPane desktop)
-	{
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
+
+	public static MapAdditionalPropertiesFrame findMapAdditionalPropertiesFrame(
+			JDesktopPane desktop) {
+		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null
-				&& comp instanceof MapAdditionalPropertiesFrame)
-					return (MapAdditionalPropertiesFrame )comp;
+			if(comp != null && comp instanceof MapAdditionalPropertiesFrame)
+				return (MapAdditionalPropertiesFrame )comp;
 		}
 		return null;
 	}
-	
-	public static MapCharacteristicPropertiesFrame findMapCharacteristicsFrame(JDesktopPane desktop)
-	{
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
+
+	public static MapCharacteristicPropertiesFrame findMapCharacteristicsFrame(
+			JDesktopPane desktop) {
+		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null
-				&& comp instanceof MapCharacteristicPropertiesFrame)
-					return (MapCharacteristicPropertiesFrame )comp;
+			if(comp != null && comp instanceof MapCharacteristicPropertiesFrame)
+				return (MapCharacteristicPropertiesFrame )comp;
 		}
 		return null;
 	}
-	
-	public static MapViewTreeFrame findMapViewTreeFrame(JDesktopPane desktop)
-	{
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
+
+	public static MapViewTreeFrame findMapViewTreeFrame(JDesktopPane desktop) {
+		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null
-				&& comp instanceof MapViewTreeFrame)
-					return (MapViewTreeFrame )comp;
+			if(comp != null && comp instanceof MapViewTreeFrame)
+				return (MapViewTreeFrame )comp;
 		}
 		return null;
 	}
-	
-	public static ControlsFrame findControlsFrame(JDesktopPane desktop)
-	{
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
+
+	public static ControlsFrame findControlsFrame(JDesktopPane desktop) {
+		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null
-				&& comp instanceof ControlsFrame)
-					return (ControlsFrame )comp;
+			if(comp != null && comp instanceof ControlsFrame)
+				return (ControlsFrame )comp;
 		}
 		return null;
 	}
-	
-	public static MapFrame findMapFrame(JDesktopPane desktop)
-	{
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
+
+	public static MapFrame findMapFrame(JDesktopPane desktop) {
+		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null
-				&& comp instanceof MapFrame)
-					return (MapFrame )comp;
+			if(comp != null && comp instanceof MapFrame)
+				return (MapFrame )comp;
 		}
 		return null;
 	}
-	
+
 }

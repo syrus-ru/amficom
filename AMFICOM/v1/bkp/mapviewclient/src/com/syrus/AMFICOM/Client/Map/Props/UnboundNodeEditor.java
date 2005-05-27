@@ -8,28 +8,27 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
-public class UnboundNodeEditor extends DefaultStorableObjectEditor
-{
+public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel typeLabel = new JLabel();
-	private ObjComboBox typeComboBox = null;
+	private WrapperedComboBox typeComboBox = null;
 
 	private JLabel elementLabel = new JLabel();
-	private ObjComboBox elementComboBox = null;
+	private WrapperedComboBox elementComboBox = null;
 
 	private JLabel longLabel = new JLabel();
 	private JTextField longTextField = new JTextField();
@@ -38,28 +37,24 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor
 
 	UnboundNode unbound;
 
-	public UnboundNodeEditor()
-	{
-		try
-		{
+	public UnboundNodeEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.typeComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.typeComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.elementComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.typeLabel.setText(LangModelMap.getString("Type"));
@@ -85,20 +80,17 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor
 		super.addToUndoableListener(this.latTextField);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.unbound;
 	}
 
-	public void setObject(Object object)
-	{
-		this.unbound = (UnboundNode)object;
-		
+	public void setObject(Object object) {
+		this.unbound = (UnboundNode )object;
+
 		this.typeComboBox.removeAllItems();
 		this.elementComboBox.removeAllItems();
 
-		if(this.unbound == null)
-		{
+		if(this.unbound == null) {
 			this.nameTextField.setText("");
 
 			this.longTextField.setEnabled(false);
@@ -106,8 +98,7 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor
 			this.latTextField.setEnabled(false);
 			this.latTextField.setText("");
 		}
-		else
-		{
+		else {
 			this.nameTextField.setText(this.unbound.getName());
 
 			this.elementComboBox.addItem(this.unbound.getSchemeElement());
@@ -128,20 +119,15 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor
 	}
 
 	public void commitChanges() {
-		try 
-		{
+		try {
 			double x = Double.parseDouble(this.longTextField.getText());
 			double y = Double.parseDouble(this.latTextField.getText());
-			
+
 			this.unbound.setLocation(new DoublePoint(x, y));
-		} 
-		catch (NumberFormatException ex) 
-		{
+		} catch(NumberFormatException ex) {
 			System.out.println(ex.getMessage());
-		} 
-		catch (Exception ex) 
-		{
+		} catch(Exception ex) {
 			ex.printStackTrace();
-		} 
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.13 2005/05/05 09:35:16 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.14 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * создание непривязанной линии, внесение ее в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/05/05 09:35:16 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
 public class CreateUnboundLinkCommandAtomic extends MapActionCommand

@@ -16,16 +16,14 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 
 import java.util.HashMap;
 
-public final class MapPopupMenuManager 
-{
-	private MapPopupMenuManager()
-	{//empty
+public final class MapPopupMenuManager {
+	private MapPopupMenuManager() {
+		// empty
 	}
 
 	private static java.util.Map popupMap = new HashMap();
 
-	static
-	{
+	static {
 		popupMap.put(CablePath.class,
 			CablePathPopupMenu.getInstance());
 		popupMap.put(PhysicalLink.class,
@@ -52,10 +50,9 @@ public final class MapPopupMenuManager
 			MeasurementPathPopupMenu.getInstance());
 	}
 	
-	public static MapPopupMenu getPopupMenu(MapElement me)
-	{
+	public static MapPopupMenu getPopupMenu(MapElement me) {
 		MapPopupMenu menu = (MapPopupMenu )popupMap.get(me.getClass());
 		return menu;
 	}
-	
+
 }

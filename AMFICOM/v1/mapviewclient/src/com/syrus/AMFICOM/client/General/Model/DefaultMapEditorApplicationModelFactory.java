@@ -1,5 +1,5 @@
 /**
- * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.6 2005/04/28 12:55:23 krupenn Exp $
+ * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.7 2005/05/27 15:14:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 /**
  * Модель приложения по умолчанию - описывает, какие функции по умолчанию
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/04/28 12:55:23 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/27 15:14:54 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */

@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveCablePathCommandAtomic.java,v 1.11 2005/03/01 15:37:25 krupenn Exp $
+ * $Id: RemoveCablePathCommandAtomic.java,v 1.12 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,14 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
  * удаление кабельного пути из карты - атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/03/01 15:37:25 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
 public class RemoveCablePathCommandAtomic extends MapActionCommand

@@ -13,17 +13,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.UI.WrapperedList;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -33,17 +32,21 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
-public class MapViewEditor extends DefaultStorableObjectEditor
-{
+/**
+ * @version $Revision: 1.5 $
+ * @author $Author: krupenn $
+ * @module mapviewclient_v1
+ */
+public class MapViewEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel mapLabel = new JLabel();
-	private ObjComboBox mapComboBox = null;
+	private WrapperedComboBox mapComboBox = null;
 	private JLabel domainLabel = new JLabel();
-	private ObjComboBox domainComboBox = null;
+	private WrapperedComboBox domainComboBox = null;
 
 	private JLabel longLabel = new JLabel();
 	private JTextField longTextField = new JTextField();
@@ -54,36 +57,30 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 
 	private JLabel schemesLabel = new JLabel();
 	private JScrollPane schemesScrollPane = new JScrollPane();
-	private ObjectResourceListBox schemesList = new ObjectResourceListBox();
+	private WrapperedList schemesList = null;
 
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
 	MapView mapView;
 
-	public MapViewEditor()
-	{
-		try
-		{
+	public MapViewEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	private void jbInit()
-	{
-		SimpleMapElementController controller = 
-				SimpleMapElementController.getInstance();
+	private void jbInit() {
+		SimpleMapElementController controller = SimpleMapElementController.getInstance();
 
-		this.domainComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
-		this.mapComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.domainComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.mapComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.schemesList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.mapLabel.setText(LangModelMap.getString("Map"));
@@ -127,25 +124,22 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 		super.addToUndoableListener(this.descTextArea);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.mapView;
 	}
 
-	public void setObject(Object objectResource)
-	{
-		if(objectResource instanceof VoidElement)
-		{
-			this.mapView = ((VoidElement)objectResource).getMapView();
+	public void setObject(Object objectResource) {
+		if(objectResource instanceof VoidElement) {
+			this.mapView = ((VoidElement )objectResource).getMapView();
 		}
 		else
 			this.mapView = (MapView )objectResource;
 
 		this.domainComboBox.removeAllItems();
 		this.mapComboBox.removeAllItems();
+		this.schemesList.removeAll();
 
-		if(this.mapView == null)
-		{
+		if(this.mapView == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
 			this.descTextArea.setEnabled(false);
@@ -158,33 +152,26 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 
 			this.scaleTextField.setEnabled(false);
 			this.scaleTextField.setText("");
-			
-			this.schemesList.removeAll();
 		}
-		else
-		{
+		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.mapView.getName());
 
 			Domain domain = null;
 			Collection domains = null;
 
-			StorableObjectCondition condition = 
-				new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
-			try
-			{
+			StorableObjectCondition condition = new EquivalentCondition(
+					ObjectEntities.DOMAIN_ENTITY_CODE);
+			try {
 				domains = StorableObjectPool.getStorableObjectsByCondition(
 						condition,
 						true);
-			}
-			catch (ApplicationException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 
-			try
-			{
-				domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
+			try {
+				domain = (Domain )StorableObjectPool.getStorableObject(
 						this.mapView.getDomainId(),
 						false);
 			} catch(ApplicationException e) {
@@ -194,21 +181,6 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 			this.domainComboBox.addElements(domains);
 			this.domainComboBox.setSelectedItem(domain);
 
-//			Collection maps = null;
-//
-//			StorableObjectCondition domainCondition = 
-//				new LinkedIdsCondition(domain.getId(), ObjectEntities.MAP_ENTITY_CODE);
-//			try
-//			{
-//				maps = MapStorableObjectPool.getStorableObjectsByCondition(
-//						domainCondition,
-//						true);
-//			}
-//			catch (ApplicationException e)
-//			{
-//				e.printStackTrace();
-//			}
-//			this.mapComboBox.addElements(maps);
 			this.mapComboBox.addItem(this.mapView.getMap());
 			this.mapComboBox.setSelectedItem(this.mapView.getMap());
 
@@ -216,14 +188,19 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 			this.descTextArea.setText(this.mapView.getDescription());
 
 			this.longTextField.setEnabled(true);
-			this.longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.mapView.getCenter().getX()));
+			this.longTextField.setText(MapPropertiesManager
+					.getCoordinatesFormat().format(
+							this.mapView.getCenter().getX()));
 			this.latTextField.setEnabled(true);
-			this.latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.mapView.getCenter().getY()));
+			this.latTextField.setText(MapPropertiesManager
+					.getCoordinatesFormat().format(
+							this.mapView.getCenter().getY()));
 
 			this.scaleTextField.setEnabled(true);
-			this.scaleTextField.setText(String.valueOf(this.mapView.getScale()));
-			
-			this.schemesList.setContents(this.mapView.getSchemes());
+			this.scaleTextField
+					.setText(String.valueOf(this.mapView.getScale()));
+
+			this.schemesList.addElements(this.mapView.getSchemes());
 		}
 	}
 
@@ -234,30 +211,25 @@ public class MapViewEditor extends DefaultStorableObjectEditor
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name))
-		try 
-		{
-			this.mapView.setName(name);
-			this.mapView.setDescription(this.descTextArea.getText());
+			try {
+				this.mapView.setName(name);
+				this.mapView.setDescription(this.descTextArea.getText());
 
-			try 
-			{
-				double x = Double.parseDouble(this.longTextField.getText());
-				double y = Double.parseDouble(this.longTextField.getText());
-				
-				this.mapView.setCenter(new DoublePoint(x, y));
+				try {
+					double x = Double.parseDouble(this.longTextField.getText());
+					double y = Double.parseDouble(this.longTextField.getText());
 
-				double s = Double.parseDouble(this.scaleTextField.getText());
-				
-				this.mapView.setScale(s);
-			} 
-			catch (NumberFormatException ex) 
-			{
-				System.out.println(ex.getMessage());
-			} 
-		} 
-		catch (Exception ex) 
-		{
-			ex.printStackTrace();
-		} 
+					this.mapView.setCenter(new DoublePoint(x, y));
+
+					double s = Double
+							.parseDouble(this.scaleTextField.getText());
+
+					this.mapView.setScale(s);
+				} catch(NumberFormatException ex) {
+					System.out.println(ex.getMessage());
+				}
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 	}
 }

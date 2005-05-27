@@ -1,11 +1,9 @@
 /**
- * $Id: MapViewController.java,v 1.24 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: MapViewController.java,v 1.25 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
 */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -35,6 +33,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -49,6 +48,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -60,11 +60,10 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/04/28 12:55:52 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class MapViewController
-{
+public final class MapViewController {
 	public static final String ELEMENT_SITENODE = "sitenode";
 	public static final String ELEMENT_WELL = "well";
 	public static final String ELEMENT_PIQUET = "piquet";
@@ -78,10 +77,8 @@ public final class MapViewController
 	public static final String ELEMENT_CABLEINLET = "cableinlet";
 	public static final String ELEMENT_NODELINK = "nodelink";
 
-	public static String getMapElementReadableType(MapElement mapElement)
-	{
-		if(mapElement instanceof SiteNode)
-		{
+	public static String getMapElementReadableType(MapElement mapElement) {
+		if(mapElement instanceof SiteNode) {
 			SiteNode site = (SiteNode )mapElement;
 			return ((SiteNodeType )site.getType()).getName();
 		}
@@ -128,8 +125,7 @@ public final class MapViewController
 	 * {@link MapViewController#getInstance(LogicalNetLayer)}.
 	 * @param logicalNetLayer логический слой
 	 */
-	private MapViewController(LogicalNetLayer logicalNetLayer)
-	{
+	private MapViewController(LogicalNetLayer logicalNetLayer) {
 		this.logicalNetLayer = logicalNetLayer;
 	}
 	
@@ -138,37 +134,35 @@ public final class MapViewController
 	 * @param logicalNetLayer логический слой
 	 * @return контроллер вида
 	 */
-	public static MapViewController getInstance(LogicalNetLayer logicalNetLayer)
-	{
+	public static MapViewController getInstance(LogicalNetLayer logicalNetLayer) {
 		if(instance == null)
 			instance = new MapViewController(logicalNetLayer);
 		return instance;
 	}
 
-	static
-	{
-		ctlMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
+	static {
+		ctlMap.put(TopologicalNode.class,
 			TopologicalNodeController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.map.SiteNode.class,
+		ctlMap.put(SiteNode.class,
 			SiteNodeController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.map.NodeLink.class,
+		ctlMap.put(NodeLink.class,
 			NodeLinkController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
+		ctlMap.put(PhysicalLink.class,
 			PhysicalLinkController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.map.Mark.class,
+		ctlMap.put(Mark.class,
 			MarkController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.map.Collector.class,
+		ctlMap.put(Collector.class,
 			CollectorController.getInstance());
 
-		ctlMap.put(com.syrus.AMFICOM.mapview.CablePath.class,
+		ctlMap.put(CablePath.class,
 			CableController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.mapview.MeasurementPath.class,
+		ctlMap.put(MeasurementPath.class,
 			MeasurementPathController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.mapview.UnboundNode.class,
+		ctlMap.put(UnboundNode.class,
 			UnboundNodeController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.mapview.UnboundLink.class,
+		ctlMap.put(UnboundLink.class,
 			UnboundLinkController.getInstance());
-		ctlMap.put(com.syrus.AMFICOM.mapview.Marker.class,
+		ctlMap.put(Marker.class,
 			MarkerController.getInstance());
 	}
 
@@ -177,8 +171,7 @@ public final class MapViewController
 	 * @param me элемент карты
 	 * @return контроллер
 	 */
-	public MapElementController getController(MapElement me)
-	{
+	public MapElementController getController(MapElement me) {
 		MapElementController controller = (MapElementController)ctlMap.get(me.getClass());
 		if(controller != null)
 			controller.setLogicalNetLayer(this.logicalNetLayer);
@@ -194,9 +187,11 @@ public final class MapViewController
 	 * @param g графический контекст
 	 * @param visibleBounds видимая облать
 	 */
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement me,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		getController(me).paint(me, g, visibleBounds);
 	}
 
@@ -211,8 +206,7 @@ public final class MapViewController
 	 * <code>false</code>
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		return getController(me).isMouseOnElement(me, currentMousePoint);
 	}
 
@@ -225,9 +219,10 @@ public final class MapViewController
 	 * @return <code>true</code>, если элемент попадает в область, иначе 
 	 * <code>false</code>
 	 */
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public boolean isElementVisible(
+			MapElement me,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		return getController(me).isElementVisible(me, visibleBounds);
 	}
 
@@ -236,22 +231,8 @@ public final class MapViewController
 	 * @param me элемент карты
 	 * @return строка для всплывающей подсказки
 	 */
-	String getToolTipText(MapElement me)
-	{
+	String getToolTipText(MapElement me) {
 		return getController(me).getToolTipText(me);
-	}
-
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapViewPanel";
-
-	/**
-	 * Получить имя класса, описывающего панель свойств вида.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
 	}
 
 	/**
@@ -259,8 +240,7 @@ public final class MapViewController
 	 * @param mapView вид
 	 */
 	public void setMapView(com.syrus.AMFICOM.mapview.MapView mapView)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		this.mapView = mapView;
 
 		this.mapView.setLongitude(this.logicalNetLayer.getCenter().getX());
@@ -275,8 +255,7 @@ public final class MapViewController
 	 * Установить топологическую схему.
 	 * @param map топологическая схема
 	 */
-	public void setMap(Map map)
-	{
+	public void setMap(Map map) {
 		this.mapView.setMap(map);
 		scanSchemes();
 	}
@@ -285,8 +264,7 @@ public final class MapViewController
 	 * Получить хранимый объект вида.
 	 * @return хранимый объект вида
 	 */
-	public com.syrus.AMFICOM.mapview.MapView getMapView()
-	{
+	public MapView getMapView() {
 		return this.mapView;
 	}
 
@@ -300,23 +278,18 @@ public final class MapViewController
 	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
 	 */
 	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
-		throws ApplicationException
-	{
+			throws ApplicationException {
 		MeasurementPath path = null;
 		MonitoredElement me = (MonitoredElement )
-			ConfigurationStorableObjectPool.getStorableObject(meId, true);
-		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
-		{
+			StorableObjectPool.getStorableObject(meId, true);
+		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
 			Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().iterator().next());
 			TransmissionPath tp = (TransmissionPath )
-				ConfigurationStorableObjectPool.getStorableObject(tpId, true);
-			if(tp != null)
-			{
-				for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();)
-				{
+				StorableObjectPool.getStorableObject(tpId, true);
+			if(tp != null) {
+				for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();) {
 					MeasurementPath mp = (MeasurementPath)it.next();
-					if(mp.getSchemePath().getTransmissionPath().equals(tp))
-					{
+					if(mp.getSchemePath().getTransmissionPath().equals(tp)) {
 						path = mp;
 						break;
 					}
@@ -330,10 +303,8 @@ public final class MapViewController
 	/**
 	 * Сканировать схемы, включенный в вид, на предмет визуализации элементов схем.
 	 */
-	public void scanSchemes()
-	{
-		for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();)
-		{
+	public void scanSchemes() {
+		for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();) {
 			scanElements((Scheme )it.next());
 		}
 	}
@@ -341,20 +312,20 @@ public final class MapViewController
 
 	/**
 	 * Добавить схему в вид.
+	 * 
 	 * @param sch схема
 	 */
-	public void addScheme(Scheme sch)
-	{
+	public void addScheme(Scheme sch) {
 		this.mapView.addScheme(sch);
 		scanElements(sch);
 	}
 
 	/**
 	 * Убрать схему из вида.
+	 * 
 	 * @param sch схема
 	 */
-	public void removeScheme(Scheme sch)
-	{
+	public void removeScheme(Scheme sch) {
 		this.mapView.removeScheme(sch);
 		removePaths(sch);
 		removeCables(sch);
@@ -362,15 +333,12 @@ public final class MapViewController
 	}
 
 	/**
-	 * Убрать все схемы из вида. Реализуется поэлементным удалением
-	 * всех схем из вида, поскольку удаление каждой отдельной
-	 * схемы включает в себя сканирование элементов схемы и их удаление
-	 * из вида.
+	 * Убрать все схемы из вида. Реализуется поэлементным удалением всех схем из
+	 * вида, поскольку удаление каждой отдельной схемы включает в себя
+	 * сканирование элементов схемы и их удаление из вида.
 	 */
-	public void removeSchemes()
-	{
-		while(! this.mapView.getSchemes().isEmpty())
-		{
+	public void removeSchemes() {
+		while(!this.mapView.getSchemes().isEmpty()) {
 			Scheme sch = (Scheme )this.mapView.getSchemes().iterator().next();
 			removeScheme(sch);
 		}
@@ -379,18 +347,16 @@ public final class MapViewController
 	/**
 	 * Сканировать элемент схемы на предмет его привязки к элементу карты или
 	 * нанесения нового непривязанного элемента.
+	 * 
 	 * @param schemeElement элемент схемы
 	 */
-	public void scanElement(SchemeElement schemeElement)
-	{
+	public void scanElement(SchemeElement schemeElement) {
 		SiteNode node = this.mapView.findElement(schemeElement);
-		if(node == null)
-		{
+		if(node == null) {
 			Equipment equipment = schemeElement.getEquipment();
 			if(equipment != null 
 				&& (equipment.getLongitude() != 0.0D
-					|| equipment.getLatitude() != 0.0D) )
-			{
+					|| equipment.getLatitude() != 0.0D) ) {
 				placeElement(
 					schemeElement, 
 					new DoublePoint(
@@ -404,11 +370,9 @@ public final class MapViewController
 	 * Сканировать все элементы схемы.
 	 * @param scheme схема
 	 */
-	public void scanElements(Scheme scheme)
-	{
-		
-		for(Iterator it = SchemeUtils.getTopologicalElements(scheme).iterator(); it.hasNext();)
-		{
+	public void scanElements(Scheme scheme) {
+
+		for(Iterator it = SchemeUtils.getTopologicalElements(scheme).iterator(); it.hasNext();) {
 			SchemeElement element = (SchemeElement )it.next();
 			scanElement(element);
 		}
@@ -420,26 +384,20 @@ public final class MapViewController
 	 * нового непривязанного кабеля ка топологическую схему.
 	 * @param schemeCableLink кабель
 	 */
-	public void scanCable(SchemeCableLink schemeCableLink)
-	{
+	public void scanCable(SchemeCableLink schemeCableLink) {
 		SiteNode cableStartNode = this.mapView.getStartNode(schemeCableLink);
 		SiteNode cableEndNode = this.mapView.getEndNode(schemeCableLink);
 		CablePath cp = this.mapView.findCablePath(schemeCableLink);
-		if(cp == null)
-		{
-			if(cableStartNode != null && cableEndNode != null)
-			{
+		if(cp == null) {
+			if(cableStartNode != null && cableEndNode != null) {
 				placeElement(schemeCableLink);
 			}
 		}
-		else
-		{
-			if(cableStartNode == null || cableEndNode == null)
-			{
+		else {
+			if(cableStartNode == null || cableEndNode == null) {
 				unplaceElement(cp);
 			}
-			else
-			{
+			else {
 				placeElement(schemeCableLink);
 			}
 		}
@@ -447,12 +405,11 @@ public final class MapViewController
 	
 	/**
 	 * Сканировать все кабели схемы.
+	 * 
 	 * @param scheme схема
 	 */
-	public void scanCables(Scheme scheme)
-	{
-		for(Iterator it = SchemeUtils.getTopologicalCableLinks(scheme).iterator(); it.hasNext();)
-		{
+	public void scanCables(Scheme scheme) {
+		for(Iterator it = SchemeUtils.getTopologicalCableLinks(scheme).iterator(); it.hasNext();) {
 			SchemeCableLink scl = (SchemeCableLink )it.next();
 			scanCable(scl);
 		}
@@ -463,39 +420,32 @@ public final class MapViewController
 	 * Сканировать схемный путь на предмет его привязки к тоннелям.
 	 * @param schemePath схемный путь
 	 */
-	public void scanPath(SchemePath schemePath)
-	{
+	public void scanPath(SchemePath schemePath) {
 		SiteNode pathStartNode = this.mapView.getStartNode(schemePath);
 		SiteNode pathEndNode = this.mapView.getEndNode(schemePath);
 		MeasurementPath mp = this.mapView.findMeasurementPath(schemePath);
-		if(mp == null)
-		{
-			if(pathStartNode != null && pathEndNode != null)
-			{
+		if(mp == null) {
+			if(pathStartNode != null && pathEndNode != null) {
 				placeElement(schemePath);
 			}
 		}
-		else
-		{
-			if(pathStartNode == null || pathEndNode == null)
-			{
-				unplaceElement(mp);
-			}
-			else
-			{
-				placeElement(schemePath);
-			}
+		else {
+		if(pathStartNode == null || pathEndNode == null) {
+			unplaceElement(mp);
+		}
+		else {
+			placeElement(schemePath);
+		}
 		}
 	}
 
 	/**
 	 * Сканировать все схемные пути на схеме.
+	 * 
 	 * @param scheme схема
 	 */
-	public void scanPaths(Scheme scheme)
-	{
-		for(Iterator it = SchemeUtils.getTopologicalPaths(scheme).iterator(); it.hasNext();)
-		{
+	public void scanPaths(Scheme scheme) {
+		for(Iterator it = SchemeUtils.getTopologicalPaths(scheme).iterator(); it.hasNext();) {
 			SchemePath path = (SchemePath )it.next();
 			scanPath(path);
 		}
@@ -505,15 +455,12 @@ public final class MapViewController
 	 * Убрать все схемные пути заданной схемы из вида.
 	 * @param scheme схема
 	 */
-	public void removePaths(Scheme scheme)
-	{
+	public void removePaths(Scheme scheme) {
 		Collection schemePaths = SchemeUtils.getTopologicalPaths(scheme);
-		for(Iterator it = schemePaths.iterator(); it.hasNext();)
-		{
+		for(Iterator it = schemePaths.iterator(); it.hasNext();) {
 			SchemePath path = (SchemePath )it.next();
 			MeasurementPath mp = this.mapView.findMeasurementPath(path);
-			if(mp != null)
-			{
+			if(mp != null) {
 				unplaceElement(mp);
 			}
 		}
@@ -521,17 +468,15 @@ public final class MapViewController
 
 	/**
 	 * Убрать все кабели заданной схемы из вида.
+	 * 
 	 * @param scheme схема
 	 */
-	public void removeCables(Scheme scheme)
-	{
+	public void removeCables(Scheme scheme) {
 		Collection schemeCables = SchemeUtils.getTopologicalCableLinks(scheme);
-		for(Iterator it = schemeCables.iterator(); it.hasNext();)
-		{
+		for(Iterator it = schemeCables.iterator(); it.hasNext();) {
 			SchemeCableLink scl = (SchemeCableLink )it.next();
 			CablePath cp = this.mapView.findCablePath(scl);
-			if(cp != null)
-			{
+			if(cp != null) {
 				unplaceElement(cp);
 			}
 		}
@@ -539,19 +484,16 @@ public final class MapViewController
 
 	/**
 	 * Убрать все элементы заданной схемы из вида.
+	 * 
 	 * @param scheme схема
 	 */
-	public void removeElements(Scheme scheme)
-	{
+	public void removeElements(Scheme scheme) {
 		Collection schemeElements = SchemeUtils.getTopologicalElements(scheme);
-		for(Iterator it = schemeElements.iterator(); it.hasNext();)
-		{
+		for(Iterator it = schemeElements.iterator(); it.hasNext();) {
 			SchemeElement se = (SchemeElement )it.next();
 			SiteNode site = this.mapView.findElement(se);
-			if(site != null)
-			{
-				if(site instanceof UnboundNode)
-				{
+			if(site != null) {
+				if(site instanceof UnboundNode) {
 					RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(site);
 					cmd.setLogicalNetLayer(this.logicalNetLayer);
 					cmd.execute();
@@ -565,8 +507,7 @@ public final class MapViewController
 	 * @param se элемент схемы
 	 * @param point географическая точка
 	 */
-	public void placeElement(SchemeElement se, DoublePoint point)
-	{
+	public void placeElement(SchemeElement se, DoublePoint point) {
 		PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(se, point);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
@@ -578,8 +519,7 @@ public final class MapViewController
 	 * @param node элемент карты
 	 * @param se элемент схемы
 	 */
-	public void unplaceElement(SiteNode node, SchemeElement se)
-	{
+	public void unplaceElement(SiteNode node, SchemeElement se) {
 		UnPlaceSchemeElementCommand cmd = new UnPlaceSchemeElementCommand(node, se);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
@@ -589,8 +529,7 @@ public final class MapViewController
 	 * Разместить кабель на топологической схеме.
 	 * @param scl кабель
 	 */
-	public void placeElement(SchemeCableLink scl)
-	{
+	public void placeElement(SchemeCableLink scl) {
 		PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(scl);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
@@ -601,8 +540,7 @@ public final class MapViewController
 	 * и удаление непривязанных фрагментов.
 	 * @param cablePath кабель
 	 */
-	public void unplaceElement(CablePath cablePath)
-	{
+	public void unplaceElement(CablePath cablePath) {
 		UnPlaceSchemeCableLinkCommand cmd = new UnPlaceSchemeCableLinkCommand(cablePath);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
@@ -613,8 +551,7 @@ public final class MapViewController
 	 * (drag/drop).
 	 * @param sp схемный путь
 	 */
-	public void placeElement(SchemePath sp)
-	{
+	public void placeElement(SchemePath sp) {
 		PlaceSchemePathCommand cmd = new PlaceSchemePathCommand(sp);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
@@ -624,8 +561,7 @@ public final class MapViewController
 	 * Убрать топологический путь из вида.
 	 * @param mp топологический путь
 	 */
-	public void unplaceElement(MeasurementPath mp)
-	{
+	public void unplaceElement(MeasurementPath mp) {
 		UnPlaceSchemePathCommand cmd = new UnPlaceSchemePathCommand(mp);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();

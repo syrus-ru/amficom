@@ -8,19 +8,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.mapview.Marker;
 
-public class MarkerEditor extends DefaultStorableObjectEditor
-{
+public class MarkerEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -34,34 +33,29 @@ public class MarkerEditor extends DefaultStorableObjectEditor
 	private JLabel latLabel = new JLabel();
 	private JTextField latTextField = new JTextField();
 	private JLabel pathLabel = new JLabel();
-	private ObjComboBox pathComboBox = null;
+	private WrapperedComboBox pathComboBox = null;
 	private JLabel distanceLabel = new JLabel();
 	private JTextField distanceTextField = new JTextField();
 
 	Marker marker;
 
-	public MarkerEditor()
-	{
-		try
-		{
+	public MarkerEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.pathComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.pathComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.typeLabel.setText(LangModelMap.getString("Type"));
@@ -88,21 +82,18 @@ public class MarkerEditor extends DefaultStorableObjectEditor
 		this.pathComboBox.setEnabled(false);
 		this.nameTextField.setEnabled(false);
 		this.typeTextField.setEnabled(false);
-}
+	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.marker;
 	}
 
-	public void setObject(Object object)
-	{
-		this.marker = (Marker)object;
-		
+	public void setObject(Object object) {
+		this.marker = (Marker )object;
+
 		this.pathComboBox.removeAllItems();
 
-		if(this.marker == null)
-		{
+		if(this.marker == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
 
@@ -115,15 +106,14 @@ public class MarkerEditor extends DefaultStorableObjectEditor
 			this.distanceTextField.setEnabled(false);
 			this.distanceTextField.setText("");
 		}
-		else
-		{
+		else {
 			MarkerController markerController = (MarkerController)com.syrus.AMFICOM.Client.Map.Controllers.MarkerController.getInstance();
 
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.marker.getName());
 
 			this.typeTextField.setEnabled(true);
-			this.typeTextField.setText(LangModel.getString("node" + MapViewController.getMapElementType(this.marker)));
+			this.typeTextField.setText(LangModelGeneral.getString("node" + MapViewController.getMapElementType(this.marker)));
 			this.distanceTextField.setEnabled(true);
 			this.distanceTextField.setText(MapPropertiesManager.getDistanceFormat().format(markerController.getFromStartLengthLf(this.marker)));
 
@@ -142,21 +132,14 @@ public class MarkerEditor extends DefaultStorableObjectEditor
 	}
 
 	public void commitChanges() {
-		try 
-		{
+		try {
 			double distance = Double.parseDouble(this.distanceTextField.getText());
-
-			MarkerController markerController = (MarkerController)com.syrus.AMFICOM.Client.Map.Controllers.MarkerController.getInstance();
-			
+			MarkerController markerController = (MarkerController )MarkerController.getInstance();
 			markerController.moveToFromStartLf(this.marker, distance);
-		} 
-		catch (NumberFormatException ex) 
-		{
+		} catch(NumberFormatException ex) {
 			System.out.println(ex.getMessage());
-		} 
-		catch (Exception ex) 
-		{
+		} catch(Exception ex) {
 			ex.printStackTrace();
-		} 
+		}
 	}
 }

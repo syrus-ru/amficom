@@ -1,11 +1,9 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.5 2005/05/25 16:30:59 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.6 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
 */
 
 package com.syrus.AMFICOM.Client.Map.Operations;
@@ -31,18 +29,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.5 $, $Date: 2005/05/25 16:30:59 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/27 15:14:57 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -66,11 +60,6 @@ public class LayersPanel extends JPanel
 	private MapFrame mapFrame;
 
 	/**
-	 * контекст приложения
-	 */
-	private ApplicationContext aContext;
-	
-	/**
 	 * список CheckBox'ов для слоёв
 	 */
 	private List checkBoxesList = new LinkedList();
@@ -91,21 +80,15 @@ public class LayersPanel extends JPanel
 	/**
 	 * По умолчанию
 	 */
-	public LayersPanel(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-		try
-		{
+	public LayersPanel() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		this.setToolTipText(LangModelMap.getString("ConfigureTopologicalLayers"));
 
 		this.setLayout(new BorderLayout());
@@ -176,15 +159,12 @@ public class LayersPanel extends JPanel
 	/**
 	 * установка окна карты -> перерисовка или обнуление списка слоев
 	 */
-	public void setMapFrame(MapFrame mapFrame)
-	{
+	public void setMapFrame(MapFrame mapFrame) {
 		this.mapFrame = mapFrame;
-		if(mapFrame != null)
-		{
+		if(mapFrame != null) {
 			updateList();
 		}
-		else
-		{
+		else {
 			clearList();
 		}
 	}
@@ -192,28 +172,24 @@ public class LayersPanel extends JPanel
 	/**
 	 * очистить панель со списком слоев
 	 */
-	public void clearList()
-	{
+	public void clearList() {
 		this.checkBoxesList.clear();
 		this.layersPanel.removeAll();
 	}
-	
+
 	/**
 	 * обновить окно со списком слоев
 	 */
-	public void updateList()
-	{
+	public void updateList() {
 		this.checkBoxesList.clear();
-		this.layersPanel.removeAll();		
-		
-		try
-		{
+		this.layersPanel.removeAll();
+
+		try {
 			GridBagConstraints gridbagconstraints = new GridBagConstraints();
 			Component imageLabel = null;
 		
 			int i = 0;
-			for(Iterator it = this.mapFrame.getMapViewer().getLayers().iterator(); it.hasNext();)
-			{
+			for(Iterator it = this.mapFrame.getMapViewer().getLayers().iterator(); it.hasNext();) {
 				SpatialLayer sl = (SpatialLayer )it.next();
 				
 				LayerVisibilityCheckBox lvCheckBox = new LayerVisibilityCheckBox(sl);
@@ -232,8 +208,7 @@ public class LayersPanel extends JPanel
 				this.layersPanel.add(lvCheckBox, gridbagconstraints);
 				this.checkBoxesList.add(lvCheckBox);				
 
-				if(imageLabel != null)
-				{
+				if(imageLabel != null) {
 					imageLabel.setBackground(this.layersPanel.getBackground());
 					gridbagconstraints.gridx = 1;
 					gridbagconstraints.gridy = i;
@@ -259,8 +234,7 @@ public class LayersPanel extends JPanel
 				i++;
 			}
 		}
-		catch(MapDataException e)
-		{
+		catch(MapDataException e) {
 			System.out.println("cannot get layers");
 			e.printStackTrace();
 		}
@@ -272,74 +246,72 @@ public class LayersPanel extends JPanel
 	 * разместить графические элемента управления отображением слоев на панели 
 	 * списка слоев
 	 */
-	public void setVisibility()
-	{
-		for(Iterator it = this.checkBoxesList.iterator(); it.hasNext();)
-		{
-			LayerVisibilityCheckBox curBox = (LayerVisibilityCheckBox)it.next();
+	public void setVisibility() {
+		for(Iterator it = this.checkBoxesList.iterator(); it.hasNext();) {
+			LayerVisibilityCheckBox curBox = (LayerVisibilityCheckBox )it
+					.next();
 			SpatialLayer boxSL = curBox.getSpatialLayer();
-			
+
 			curBox.setSelected(boxSL.isVisible());
-			
-			if (boxSL.isVisibleAtCurrentScale())
-				curBox.getNameLabel().setForeground(SystemColor.textText);				
+
+			if(boxSL.isVisibleAtCurrentScale())
+				curBox.getNameLabel().setForeground(SystemColor.textText);
 			else
-				curBox.getNameLabel().setForeground(SystemColor.textInactiveText);				
+				curBox.getNameLabel().setForeground(
+						SystemColor.textInactiveText);
 		}
-		
+
 		this.revalidate();
 	}
-	
-	public MapFrame getMapFrame() 
-	{
+
+	public MapFrame getMapFrame() {
 		return this.mapFrame;
 	}
 
 	/**
 	 * чекбокс отображения слоя
 	 */
-	private class LayerVisibilityCheckBox extends JCheckBox
-	{
+	private class LayerVisibilityCheckBox extends JCheckBox {
 		SpatialLayer sl;
+
 		private Component imageLabel = null;
-		private JLabel nameLabel = null;		
-		
-		public LayerVisibilityCheckBox(SpatialLayer sl)
-		{
+
+		private JLabel nameLabel = null;
+
+		public LayerVisibilityCheckBox(SpatialLayer sl) {
 			super();
 			this.sl = sl;
 		}
-		
-		public SpatialLayer getSpatialLayer()
-		{
+
+		public SpatialLayer getSpatialLayer() {
 			return this.sl;
 		}
+
 		/**
 		 * @return Returns the imageLabel.
 		 */
-		public Component getImageLabel()
-		{
+		public Component getImageLabel() {
 			return this.imageLabel;
 		}
+
 		/**
 		 * @param imageLabel The imageLabel to set.
 		 */
-		public void setImageLabel(Component imageLabel)
-		{
+		public void setImageLabel(Component imageLabel) {
 			this.imageLabel = imageLabel;
 		}
+
 		/**
 		 * @return Returns the nameLabel.
 		 */
-		public JLabel getNameLabel()
-		{
+		public JLabel getNameLabel() {
 			return this.nameLabel;
 		}
+
 		/**
 		 * @param nameLabel The nameLabel to set.
 		 */
-		public void setNameLabel(JLabel nameLabel)
-		{
+		public void setNameLabel(JLabel nameLabel) {
 			this.nameLabel = nameLabel;
 		}
 	}

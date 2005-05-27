@@ -1,27 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
-import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.*;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,8 +21,26 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
-{
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+
+public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	private JPanel jPanel = new JPanel();
@@ -65,30 +65,24 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 
 	private LogicalNetLayer logicalNetLayer;
 
-	public SiteNodeAddEditor()
-	{
+	public SiteNodeAddEditor() {
 		this.root.add(this.elementsBranch);
 		this.root.add(this.cablesBranch);
 
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
+	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
 		this.logicalNetLayer = logicalNetLayer;
 		this.crossingPanel.setMap(logicalNetLayer.getMapView().getMap());
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		this.jPanel.setLayout(this.gridBagLayout1);
 		this.jPanel.setName(LangModelMap.getString("SiteBinding"));
 
@@ -148,24 +142,19 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 		this.crossingScrollPane.setVisible(true);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.site;
 	}
 
-	private void unbindSchemeElement(SchemeElement se)
-	{
+	private void unbindSchemeElement(SchemeElement se) {
 		MapView mapView = this.logicalNetLayer.getMapView();
 
 		se.setSiteNode(null);
-		for (int i = 0; i < this.elementsBranch.getChildCount(); i++) 
-		{
+		for (int i = 0; i < this.elementsBranch.getChildCount(); i++) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode )this.elementsBranch.getChildAt(i);
-			if(node.getUserObject().equals(se))
-			{
+			if(node.getUserObject().equals(se)) {
 				this.elementsBranch.remove(node);
-				for (int j = 0; j < node.getChildCount(); j++) 
-				{
+				for (int j = 0; j < node.getChildCount(); j++) {
 					DefaultMutableTreeNode node2 = (DefaultMutableTreeNode )node.getChildAt(j);
 					SchemeCableLink scl = (SchemeCableLink )node2.getUserObject();
 					CablePath cablePath = mapView.findCablePath(scl);
@@ -183,12 +172,10 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 		this.elementsTree.updateUI();
 	}
 
-	private void unbindSchemeCableLink(SchemeCableLink scl)
-	{
+	private void unbindSchemeCableLink(SchemeCableLink scl) {
 		MapView mapView = this.logicalNetLayer.getMapView();
 
-		for (int i = 0; i < this.cablesBranch.getChildCount(); i++) 
-		{
+		for(int i = 0; i < this.cablesBranch.getChildCount(); i++) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode )this.cablesBranch.getChildAt(i);
 			if(node.getUserObject().equals(scl))
 			{
@@ -207,17 +194,13 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 		PhysicalLink linkRight = null;
 		PhysicalLink linkLeft = null;
 
-		for(Iterator it = cablePathLinks.iterator(); it.hasNext();)
-		{
-			PhysicalLink mple = (PhysicalLink)it.next();
-			if(siteLinks.contains(mple))
-			{
-				if(linkLeft == null)
-				{
+		for(Iterator it = cablePathLinks.iterator(); it.hasNext();) {
+			PhysicalLink mple = (PhysicalLink )it.next();
+			if(siteLinks.contains(mple)) {
+				if(linkLeft == null) {
 					linkLeft = mple;
 				}
-				else
-				{
+				else {
 					linkRight = mple;
 					break;
 				}
@@ -226,28 +209,23 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 
 		cablePath.removeLink(linkRight);
 
-		if(linkRight instanceof UnboundLink)
-		{
-			RemoveUnboundLinkCommandBundle command = 
-					new RemoveUnboundLinkCommandBundle(
-						(UnboundLink)linkRight);
+		if(linkRight instanceof UnboundLink) {
+			RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(
+					(UnboundLink )linkRight);
 			command.setLogicalNetLayer(this.logicalNetLayer);
 			command.execute();
 		}
-		else
-		{
+		else {
 			linkRight.getBinding().remove(cablePath);
 		}
 
-		if(linkLeft instanceof UnboundLink)
-		{
+		if(linkLeft instanceof UnboundLink) {
 			if(linkLeft.getStartNode().equals(this.site))
 				linkLeft.setStartNode(linkRight.getOtherNode(this.site));
 			else
 				linkLeft.setEndNode(linkRight.getOtherNode(this.site));
 		}
-		else
-		{
+		else {
 			cablePath.removeLink(linkLeft);
 			linkLeft.getBinding().remove(cablePath);
 
@@ -266,28 +244,22 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 		this.elementsTree.updateUI();
 	}
 
-	void unbindElement(Object or)
-	{
-		if(or instanceof SchemeElement)
-		{
+	void unbindElement(Object or) {
+		if(or instanceof SchemeElement) {
 			SchemeElement se = (SchemeElement )or;
 			unbindSchemeElement(se);
 		}
 		else
-		if(or instanceof SchemeCableLink)
-		{
-			SchemeCableLink scl = (SchemeCableLink )or;
-			unbindSchemeCableLink(scl);
-		}
+			if(or instanceof SchemeCableLink) {
+				SchemeCableLink scl = (SchemeCableLink )or;
+				unbindSchemeCableLink(scl);
+			}
 	}
 
-	void showElement(Object element)
-	{
+	void showElement(Object element) {
 		boolean sen = false;
-		if(element != null)
-		{
-			if(element instanceof SchemeElement)
-			{
+		if(element != null) {
+			if(element instanceof SchemeElement) {
 				SchemeElement schemeElement = (SchemeElement )element;
 				this.schemePanel.getSchemeResource().setSchemeElement(schemeElement);
 				this.crossingScrollPane.setVisible(false);
@@ -295,9 +267,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 				sen = true;
 			}
 			else
-			if(element instanceof SchemeCableLink)
-			{
-				this.schemePanel.getGraph().setVisible(false);
+				if(element instanceof SchemeCableLink) {
+					this.schemePanel.getGraph().setVisible(false);
 				this.crossingScrollPane.setVisible(true);
 				
 				SchemeCableLink scl = (SchemeCableLink )element;
@@ -308,17 +279,16 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 
 				AbstractNode startNode = mapView.getStartNode(scl);
 				AbstractNode endNode = mapView.getEndNode(scl);
-				sen = !(startNode.equals(this.site)) && !(endNode.equals(this.site));
-			}
-			else
-			{
-				this.schemePanel.getGraph().setVisible(false);
+				sen = !(startNode.equals(this.site))
+						&& !(endNode.equals(this.site));
+				}
+				else {
+					this.schemePanel.getGraph().setVisible(false);
 				this.crossingPanel.setCable(null);
 				this.crossingScrollPane.setVisible(true);
 			}
 		}
-		else
-		{
+		else {
 			this.schemePanel.getGraph().setVisible(false);
 			this.crossingPanel.setCable(null);
 			this.crossingScrollPane.setVisible(true);
@@ -326,9 +296,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 		this.unbindButton.setEnabled(sen);
 	}
 
-	public void setObject(Object objectResource)
-	{
-		this.site = (SiteNode)objectResource;
+	public void setObject(Object objectResource) {
+		this.site = (SiteNode )objectResource;
 		createTree(this.site);
 		this.schemePanel.getGraph().removeAll();
 		this.crossingPanel.setSite(this.site);
@@ -340,55 +309,44 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 		this.elementsTree.updateUI();
 	}
 
-	public List getUnboundElements()
-	{
+	public List getUnboundElements() {
 		return this.unboundElements;
 	}
 
-	private DefaultMutableTreeNode createTree(SiteNode siteNode)
-	{
+	private DefaultMutableTreeNode createTree(SiteNode siteNode) {
 		this.elementsBranch.removeAllChildren();
 		this.cablesBranch.removeAllChildren();
-		if(siteNode != null)
-		{
+		if(siteNode != null) {
 			DefaultMutableTreeNode elementNode;
 			DefaultMutableTreeNode cableNode;
 
 			MapView mapView = this.logicalNetLayer.getMapView();
 
 			List schemeElements = new LinkedList();
-			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
-			{
+			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();) {
 				Scheme scheme = (Scheme )it.next();
 				schemeElements.addAll(scheme.getSchemeElements());
 			}
 			List cableElementsTransit = mapView.getCablePaths(siteNode);
 			List cableElementsDropped = new LinkedList();
-			for(Iterator it = cableElementsTransit.iterator(); it.hasNext();)
-			{
-				CablePath cablePath = (CablePath)it.next();
+			for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
+				CablePath cablePath = (CablePath )it.next();
 				if(cablePath.getStartNode().equals(siteNode)
-					|| cablePath.getEndNode().equals(siteNode))
-				{
+						|| cablePath.getEndNode().equals(siteNode)) {
 					cableElementsDropped.add(cablePath);
 					it.remove();
 				}
 			}
 
-			if(schemeElements != null)
-			{
-				for(Iterator it = schemeElements.iterator(); it.hasNext();)
-				{
+			if(schemeElements != null) {
+				for(Iterator it = schemeElements.iterator(); it.hasNext();) {
 					SchemeElement se = (SchemeElement )it.next();
-					if(se.getSiteNode().equals(siteNode.getId()))
-					{
+					if(se.getSiteNode().equals(siteNode.getId())) {
 						elementNode = new DefaultMutableTreeNode(se);
 						this.elementsBranch.add(elementNode);
-						for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();)
-						{
+						for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();) {
 							CablePath cablePath = (CablePath)it2.next();
-							if(startsAt(cablePath.getSchemeCableLink(), se))
-							{
+							if(startsAt(cablePath.getSchemeCableLink(), se)) {
 								cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
 								elementNode.add(cableNode);
 							}
@@ -397,22 +355,22 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor
 				}
 			}
 			
-			if(cableElementsTransit != null)
-			{
-				for(Iterator it = cableElementsTransit.iterator(); it.hasNext();)
-				{
-					CablePath cablePath = (CablePath)it.next();
-					cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
+			if(cableElementsTransit != null) {
+				for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
+					CablePath cablePath = (CablePath )it.next();
+					cableNode = new DefaultMutableTreeNode(cablePath
+							.getSchemeCableLink());
 					this.cablesBranch.add(cableNode);
 				}
 			}
 		}
-	
+
 		return this.root;
 	}
 	
-	private boolean startsAt(final SchemeCableLink schemeCableLink, final SchemeElement schemeElement)
-	{
+	private boolean startsAt(
+			final SchemeCableLink schemeCableLink,
+			final SchemeElement schemeElement) {
 		final Set schemeCablePorts = schemeElement.getSchemeCablePorts();
 		return schemeCablePorts.contains(schemeCableLink.getSourceSchemeCablePort())
 			|| schemeCablePorts.contains(schemeCableLink.getTargetSchemeCablePort());

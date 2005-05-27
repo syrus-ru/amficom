@@ -1,12 +1,10 @@
 /**
- * $Id: MeasurementPathController.java,v 1.18 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.19 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -20,15 +18,15 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -45,30 +43,29 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/04/28 12:55:52 $
+ * @version $Revision: 1.19 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class MeasurementPathController extends AbstractLinkController
-{
+public final class MeasurementPathController extends AbstractLinkController {
 
 	/**
 	 * Instance.
 	 */
 	private static MeasurementPathController instance = null;
-	
+
 	/**
 	 * Private constructor.
 	 */
-	private MeasurementPathController()
-	{// empty
+	private MeasurementPathController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new MeasurementPathController();
 		return instance;
@@ -77,12 +74,11 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement mapElement)
-	{
-		if(! (mapElement instanceof MeasurementPath))
+	public boolean isSelectionVisible(MapElement mapElement) {
+		if(!(mapElement instanceof MeasurementPath))
 			return false;
 
-		MeasurementPath mpath = (MeasurementPath)mapElement;
+		MeasurementPath mpath = (MeasurementPath )mapElement;
 
 		return mpath.isSelected();
 	}
@@ -90,21 +86,20 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof MeasurementPath))
+	public boolean isElementVisible(
+			MapElement mapElement,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof MeasurementPath))
 			return false;
 
-		MeasurementPath mpath = (MeasurementPath)mapElement;
+		MeasurementPath mpath = (MeasurementPath )mapElement;
 
 		boolean vis = false;
-		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();)
-		{
-			CablePath cpath = (CablePath)it.next();
+		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
+			CablePath cpath = (CablePath )it.next();
 			CableController cc = (CableController)getLogicalNetLayer().getMapViewController().getController(cpath);
-			if(cc.isElementVisible(cpath, visibleBounds))
-			{
+			if(cc.isElementVisible(cpath, visibleBounds)) {
 				vis = true;
 				break;
 			}
@@ -115,18 +110,16 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement)
-	{
-		if(! (mapElement instanceof MeasurementPath))
+	public String getToolTipText(MapElement mapElement) {
+		if(!(mapElement instanceof MeasurementPath))
 			return null;
 
-		MeasurementPath mpath = (MeasurementPath)mapElement;
-		
+		MeasurementPath mpath = (MeasurementPath )mapElement;
+
 		String s1 = mpath.getName();
 		String s2 = "";
 		String s3 = "";
-		try
-		{
+		try {
 			AbstractNode smne = mpath.getStartNode();
 			s2 =  ":\n" 
 				+ "   " 
@@ -146,14 +139,13 @@ public final class MeasurementPathController extends AbstractLinkController
 				+ MapViewController.getMapElementReadableType(emne)
 				+ "]";
 		}
-		catch(Exception e)
-		{
+		catch(Exception e) {
 			Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"getToolTipText()", 
-				e);
+					Environment.LOG_LEVEL_FINER,
+					"method call",
+					getClass().getName(),
+					"getToolTipText()",
+					e);
 		}
 		return s1 + s2 + s3;
 	}
@@ -161,10 +153,12 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof MeasurementPath))
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof MeasurementPath))
 			return;
 
 		MeasurementPath mpath = (MeasurementPath)mapElement;
@@ -194,14 +188,18 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * @param color цвет линии
 	 * @param selectionVisible рисовать рамку выделения
 	 */
-	public void paint(MeasurementPath mpath, Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MeasurementPath mpath,
+			Graphics g,
+			Rectangle2D.Double visibleBounds,
+			Stroke stroke,
+			Color color,
+			boolean selectionVisible)
+			throws MapConnectionException, MapDataException {
 		if(!isElementVisible(mpath, visibleBounds))
 			return;
 
-		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();)
-		{
+		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
 			CablePath cpath = (CablePath)it.next();
 			CableController cc = (CableController)getLogicalNetLayer().getMapViewController().getController(cpath);
 			cc.paint(cpath, g, visibleBounds, stroke, color, selectionVisible);
@@ -213,16 +211,16 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * <br>Точка находится на пути, если она находится на любом кабеле,
 	 * котораый входит в путь.
 	 */
-	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
-		throws MapConnectionException, MapDataException
-	{
-		if(! (mapElement instanceof MeasurementPath))
+	public boolean isMouseOnElement(
+			MapElement mapElement,
+			Point currentMousePoint)
+			throws MapConnectionException, MapDataException {
+		if(!(mapElement instanceof MeasurementPath))
 			return false;
 
-		MeasurementPath mpath = (MeasurementPath)mapElement;
+		MeasurementPath mpath = (MeasurementPath )mapElement;
 
-		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();)
-		{
+		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
 			CablePath cpath = (CablePath)it.next();
 			CableController cc = (CableController)getLogicalNetLayer().getMapViewController().getController(cpath);
 			if(cc.isMouseOnElement(cpath, currentMousePoint))
@@ -237,17 +235,14 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * @param pe элемент пути
 	 * @return элемент карты
 	 */
-	public MapElement getMapElement(MeasurementPath path, PathElement pe)
-	{
+	public MapElement getMapElement(MeasurementPath path, PathElement pe) {
 		MapElement me = null;
 		MapView mapView = getLogicalNetLayer().getMapView();
-		switch(pe.getKind().value())
-		{
+		switch(pe.getKind().value()) {
 			case Kind._SCHEME_ELEMENT:
 				SchemeElement se = (SchemeElement )pe.getAbstractSchemeElement();
 				SiteNode site = mapView.findElement(se);
-				if(site != null)
-				{
+				if(site != null) {
 					me = site;
 				}
 				break;
@@ -257,8 +252,7 @@ public final class MeasurementPathController extends AbstractLinkController
 				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getScheme(), link.getTargetSchemePort().getParentSchemeDevice());
 				SiteNode ssite = mapView.findElement(sse);
 				SiteNode esite = mapView.findElement(ese);
-				if(ssite != null && ssite.equals(esite))
-				{
+				if(ssite != null && ssite.equals(esite)) {
 					me = ssite;
 				}
 				break;
@@ -283,8 +277,7 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * @return идентификатор или <code>null</code>, если исследуемый объект 
 	 * не найден
 	 */
-	public Identifier getMonitoredElementId(MeasurementPath path)
-	{
+	public Identifier getMonitoredElementId(MeasurementPath path) {
 		Identifier meid = null;
 		MonitoredElement me = getMonitoredElement(path);
 		if(me != null)
@@ -299,29 +292,20 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * @return исследуемый объект или <code>null</code>, если исследуемый объект 
 	 * не найден
 	 */
-	public MonitoredElement getMonitoredElement(MeasurementPath path)
-	{
+	public MonitoredElement getMonitoredElement(MeasurementPath path) {
 		MonitoredElement me = null;
-		try
-		{
+		try {
 			TransmissionPath tp = path.getSchemePath().getTransmissionPath();
 
 			me = (MonitoredElement )
-				ConfigurationStorableObjectPool.getStorableObject(
+				StorableObjectPool.getStorableObject(
 						(Identifier )(tp.getMonitoredElementIds().iterator().next()), 
 						true);
-
-		}
-		catch (CommunicationException e)
-		{
+		} catch(CommunicationException e) {
 			e.printStackTrace();
-		}
-		catch (DatabaseException e)
-		{
+		} catch(DatabaseException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 

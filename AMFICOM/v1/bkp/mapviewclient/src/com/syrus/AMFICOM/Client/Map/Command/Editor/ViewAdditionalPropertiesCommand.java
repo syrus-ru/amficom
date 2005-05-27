@@ -1,12 +1,10 @@
 /**
- * $Id: ViewAdditionalPropertiesCommand.java,v 1.1 2005/04/28 13:12:20 krupenn Exp $
+ * $Id: ViewAdditionalPropertiesCommand.java,v 1.2 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
@@ -15,36 +13,37 @@ import java.awt.Dimension;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapAdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
 
 /**
  * Команда отображает окно свойств элемента карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/04/28 13:12:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
-public class ViewAdditionalPropertiesCommand extends VoidCommand
-{
+public class ViewAdditionalPropertiesCommand extends AbstractCommand {
 	ApplicationContext aContext;
+
 	JDesktopPane desktop;
+
 	public MapAdditionalPropertiesFrame frame;
 
-	public ViewAdditionalPropertiesCommand(JDesktopPane desktop, ApplicationContext aContext)
-	{
+	public ViewAdditionalPropertiesCommand(
+			JDesktopPane desktop,
+			ApplicationContext aContext) {
 		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 
-	public void execute()
-	{
-		this.frame = MapDesktopCommand.findMapAdditionalPropertiesFrame(this.desktop);
+	public void execute() {
+		this.frame = MapDesktopCommand
+				.findMapAdditionalPropertiesFrame(this.desktop);
 
-		if(this.frame == null)
-		{
+		if(this.frame == null) {
 			this.frame = new MapAdditionalPropertiesFrame("", this.aContext);
 			this.frame.setClosable(true);
 			this.frame.setResizable(true);

@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.9 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.10 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 /**
  * Перемещение узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
 public class MoveNodeCommand extends MapActionCommand

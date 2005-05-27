@@ -1,5 +1,5 @@
 /**
- * $Id: MarkVisualManager.java,v 1.2 2005/04/28 12:57:09 krupenn Exp $
+ * $Id: MarkVisualManager.java,v 1.3 2005/05/27 15:14:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,9 +7,9 @@
  */
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 public class MarkVisualManager implements VisualManager {
 
@@ -36,7 +36,7 @@ public class MarkVisualManager implements VisualManager {
 		return charPanel;
 	}
 
-	public ObjectResourceController getController() {
+	public StorableObjectWrapper getController() {
 		return null;
 	}
 

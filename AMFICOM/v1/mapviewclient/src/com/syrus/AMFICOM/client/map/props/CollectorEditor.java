@@ -16,21 +16,25 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjList;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedList;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNodeTypeSort;
 
-public class CollectorEditor extends DefaultStorableObjectEditor
-{
+/**
+ * @version $Revision: 1.5 $
+ * @author $Author: krupenn $
+ * @module mapviewclient_v1
+ */
+public class CollectorEditor extends DefaultStorableObjectEditor {
 	Collector collector;
 
 	private JPanel jPanel = new JPanel();
@@ -41,7 +45,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 	private JLabel topologicalLengthLabel = new JLabel();
 	private JTextField topologicalLengthTextField = new JTextField();
 	private JLabel piquetsLabel = new JLabel();
-	private ObjList piquetsList = null;
+	private WrapperedList piquetsList = null;
 	private JScrollPane piquetsScrollPane = new JScrollPane();
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
@@ -64,10 +68,10 @@ public class CollectorEditor extends DefaultStorableObjectEditor
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.piquetsList = new ObjList(controller, SimpleMapElementController.KEY_NAME);
+		this.piquetsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));

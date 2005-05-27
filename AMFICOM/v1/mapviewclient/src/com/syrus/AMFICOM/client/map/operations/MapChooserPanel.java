@@ -1,12 +1,10 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.2 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ */
 
 package com.syrus.AMFICOM.Client.Map.Operations;
 
@@ -24,15 +22,16 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.1 $, $Date: 2005/03/02 12:30:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/27 15:14:57 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -73,7 +72,7 @@ public class MapChooserPanel extends JPanel
 		this.setToolTipText(LangModelMap.getString("ChooseMap"));
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-		this.selectButton.setText(LangModel.getString("Ok"));
+		this.selectButton.setText(LangModelGeneral.getString("Ok"));
 		this.selectButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -81,9 +80,9 @@ public class MapChooserPanel extends JPanel
 					mapSelected();
 				}
 			});
-		this.add(this.combo, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(this.selectButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(Box.createVerticalGlue(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.combo, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.selectButton, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(5, 5, 5, 5), 0, 0));
 	}
 
 	/**

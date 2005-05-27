@@ -1,12 +1,10 @@
 /**
- * $Id: UnboundLinkController.java,v 1.4 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: UnboundLinkController.java,v 1.5 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -25,52 +23,39 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер элемента непривязанной линии (участка непривязанного кабеля). 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class UnboundLinkController extends PhysicalLinkController
-{
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"";
+public final class UnboundLinkController extends PhysicalLinkController {
 
 	/**
 	 * Instace.
 	 */
 	private static UnboundLinkController instance = null;
-	
+
 	/**
 	 * Private constructor.
 	 */
-	private UnboundLinkController()
-	{// empty
+	private UnboundLinkController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new UnboundLinkController();
 		return instance;
 	}
 
 	/**
-	 * Получить имя класса панели, описывающей свойства кабельного пути.
-	 * @return имя класса
-	 */
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement me)
-	{
-		if(! (me instanceof UnboundLink))
+	public boolean isSelectionVisible(MapElement me) {
+		if(!(me instanceof UnboundLink))
 			return false;
 
 		UnboundLink link = (UnboundLink)me;
@@ -83,9 +68,11 @@ public final class UnboundLinkController extends PhysicalLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement me,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		if(! (me instanceof UnboundLink))
 			return;
 

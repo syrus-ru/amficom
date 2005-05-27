@@ -1,12 +1,10 @@
 /**
- * $Id: AbstractMapElementController.java,v 1.1 2005/03/02 12:31:39 krupenn Exp $
+ * $Id: AbstractMapElementController.java,v 1.2 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -14,13 +12,13 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
- * Контроллер узла.
+ * Контроллер элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/03/02 12:31:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public abstract class AbstractMapElementController implements MapElementController
-{
+public abstract class AbstractMapElementController implements
+		MapElementController {
 	/**
 	 * Логический слой.
 	 */
@@ -29,16 +27,14 @@ public abstract class AbstractMapElementController implements MapElementControll
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
+	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
 		this.logicalNetLayer = logicalNetLayer;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public LogicalNetLayer getLogicalNetLayer()
-	{
+	public LogicalNetLayer getLogicalNetLayer() {
 		return this.logicalNetLayer;
 	}
 }

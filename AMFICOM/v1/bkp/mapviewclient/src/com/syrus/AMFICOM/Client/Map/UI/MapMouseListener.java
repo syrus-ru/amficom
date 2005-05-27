@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.27 2005/05/18 14:59:45 bass Exp $
+ * $Id: MapMouseListener.java,v 1.28 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.27 $, $Date: 2005/05/18 14:59:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/05/27 15:14:59 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -402,7 +402,6 @@ public final class MapMouseListener implements MouseListener
 	}
 
 	/**
-	 * @param point
 	 * @throws MapConnectionException
 	 * @throws MapDataException
 	 */

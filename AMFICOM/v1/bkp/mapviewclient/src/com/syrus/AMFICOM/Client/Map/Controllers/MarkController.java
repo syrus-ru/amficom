@@ -1,12 +1,10 @@
 /**
- * $Id: MarkController.java,v 1.9 2005/04/28 12:55:52 krupenn Exp $
+ * $Id: MarkController.java,v 1.10 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -36,11 +34,10 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер метки.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/04/28 12:55:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public final class MarkController extends AbstractNodeController
-{
+public final class MarkController extends AbstractNodeController {
 	/** Имя пиктограммы. */
 	public static final String IMAGE_NAME = "mark";
 	/** Пиктограмма. */
@@ -54,16 +51,16 @@ public final class MarkController extends AbstractNodeController
 	/**
 	 * Private constructor.
 	 */
-	private MarkController()
-	{// empty
+	private MarkController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new MarkController();
 		return instance;
@@ -72,8 +69,7 @@ public final class MarkController extends AbstractNodeController
 	/**
 	 * {@inheritDoc}
 	 */
-	public Image getImage(AbstractNode node)
-	{
+	public Image getImage(AbstractNode node) {
 		Identifier creatorId = getLogicalNetLayer().getUserId();
 
 		Identifier imageId = NodeTypeController.getImageId(
@@ -91,9 +87,11 @@ public final class MarkController extends AbstractNodeController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		if(!(mapElement instanceof Mark))
 			return;
 		Mark mark = (Mark )mapElement;
@@ -144,8 +142,7 @@ public final class MarkController extends AbstractNodeController
 	 * @param mark метка
 	 */
 	public void updateSizeInDoubleLt(Mark mark)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
 		mark.getPhysicalLink().sortNodes();
@@ -170,16 +167,14 @@ public final class MarkController extends AbstractNodeController
 	 * @param topologicalDistance топологическая дистанция
 	 */
 	public void moveToFromStartLt(Mark mark, double topologicalDistance)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		mark.getPhysicalLink().sortNodeLinks();
 		
 		mark.setStartNode(mark.getPhysicalLink().getStartNode());
 
-		if ( topologicalDistance > mark.getPhysicalLink().getLengthLt())
-		{
+		if(topologicalDistance > mark.getPhysicalLink().getLengthLt()) {
 			topologicalDistance = mark.getPhysicalLink().getLengthLt();
 		}
 
@@ -187,13 +182,11 @@ public final class MarkController extends AbstractNodeController
 
 		double cumulativeDistance = 0;
 		
-		for(Iterator it = mark.getPhysicalLink().getNodeLinks().iterator(); it.hasNext();)
-		{
+		for(Iterator it = mark.getPhysicalLink().getNodeLinks().iterator(); it.hasNext();) {
 			mark.setNodeLink((NodeLink )it.next());
 			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mark.getNodeLink());
 			nlc.updateLengthLt(mark.getNodeLink());
-			if(cumulativeDistance + mark.getNodeLink().getLengthLt() > topologicalDistance)
-			{
+			if(cumulativeDistance + mark.getNodeLink().getLengthLt() > topologicalDistance) {
 				double distanceFromStart = topologicalDistance - cumulativeDistance;
 				DoublePoint newPoint = converter.pointAtDistance(
 						mark.getStartNode().getLocation(), 
@@ -217,8 +210,7 @@ public final class MarkController extends AbstractNodeController
 	 * @param screenDistance экранное расстояние
 	 */
 	public void adjustPosition(Mark mark, double screenDistance)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
 		Point sp = converter.convertMapToScreen(mark.getStartNode().getLocation());

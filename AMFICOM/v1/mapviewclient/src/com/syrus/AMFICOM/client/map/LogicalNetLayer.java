@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.66 2005/05/05 10:19:13 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.67 2005/05/27 15:14:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,25 +21,19 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.CommandList;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveNodeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
@@ -51,8 +45,14 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.CommandList;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -81,7 +81,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.66 $, $Date: 2005/05/05 10:19:13 $
+ * @version $Revision: 1.67 $, $Date: 2005/05/27 15:14:54 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -358,7 +358,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		this.aContext = aContext;
 
-		this.userId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id);
+		this.userId = LoginManager.getUserId();
 		
 		LinkTypeController.createDefaults(this.userId);
 		NodeTypeController.createDefaults(this.userId);
@@ -411,16 +411,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				if(mapView != null
 					&& mapView.getMap() != null)
 				{
-					this.aContext.getDispatcher().notify(
+					this.aContext.getDispatcher().firePropertyChange(
 						new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
-					this.aContext.getDispatcher().notify(
+					this.aContext.getDispatcher().firePropertyChange(
 						new MapEvent(mapView.getMap(), MapEvent.MAP_SELECTED));
 				}
 				else
 				{
-					this.aContext.getDispatcher().notify(
+					this.aContext.getDispatcher().firePropertyChange(
 							new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
-					this.aContext.getDispatcher().notify(
+					this.aContext.getDispatcher().firePropertyChange(
 						new MapEvent(this, MapEvent.MAP_DESELECTED));
 				}
 		}
@@ -566,8 +566,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Dispatcher disp = this.aContext.getDispatcher();
 		if(disp == null)
 			return;
-		DoublePoint p = this.convertScreenToMap(point);
-		disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_CENTER_CHANGED));
+		DoublePoint doublePoint = this.convertScreenToMap(point);
+		disp.firePropertyChange(new MapEvent(doublePoint, MapEvent.MAP_VIEW_CENTER_CHANGED));
 	}
 
 	/**
@@ -699,9 +699,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		this.elementsToDisplay.clear();
 
 		//Если режим показа nodeLink не разрешён, то включам режим показа physicalLink
-		if (! this.aContext.getApplicationModel().isEnabled("mapModeNodeLink"))
+		if (! this.aContext.getApplicationModel().isEnabled(MapApplicationModel.MODE_NODE_LINK))
 		{
-			Command com = getContext().getApplicationModel().getCommand("mapModeLink");
+			Command com = getContext().getApplicationModel().getCommand(MapApplicationModel.MODE_LINK);
 			com.setParameter("applicationModel", this.aContext.getApplicationModel());
 			com.setParameter("logicalNetLayer", this);
 			com.execute();
@@ -886,36 +886,36 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 	/**
 	 * Обработка событий.
-	 * @param ae событие
+	 * @param pce событие
 	 */
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent pce)
 	{
 		if(!this.performProcessing)
 			return;
 
 		try
 		{
-			if(ae.getActionCommand().equals(MapEvent.NEED_FULL_REPAINT))
+			if(pce.getPropertyName().equals(MapEvent.NEED_FULL_REPAINT))
 			{
 				repaint(true);
 			}
 			else
-			if(ae.getActionCommand().equals(MapEvent.NEED_REPAINT))
+			if(pce.getPropertyName().equals(MapEvent.NEED_REPAINT))
 			{
 				repaint(false);
 			}
 			else
-			if(ae.getActionCommand().equals(MapEvent.DESELECT_ALL))
+			if(pce.getPropertyName().equals(MapEvent.DESELECT_ALL))
 			{
 				this.deselectAll();
 			}
 			else
-			if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
+			if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CHANGED))
 			{
 //			getMapView().setChanged(true);
 			}
 			else
-			if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
+			if(pce.getPropertyName().equals(MapEvent.MAP_CHANGED))
 			{
 				Set selectedElements = getMapView().getMap().getSelectedElements();
 				if(selectedElements.size() > 1)
@@ -923,7 +923,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					Selection sel;
 					if(! (getCurrentMapElement() instanceof Selection))
 					{
-						sel = new Selection(this.getMapView().getMap());
+						sel = new Selection();
 						setCurrentMapElement(sel);
 					}
 					else
@@ -956,9 +956,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				repaint(false);
 			}
 			else
-			if(ae.getActionCommand().equals(MapEvent.MAP_ELEMENT_CHANGED))
+			if(pce.getPropertyName().equals(MapEvent.MAP_ELEMENT_CHANGED))
 			{
-				Object me = ae.getSource();
+				Object me = pce.getSource();
 				if(me instanceof SchemeElement)
 				{
 					getMapViewController().scanElement((SchemeElement )me);
@@ -987,9 +987,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				repaint(false);
 			}
 			else
-			if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
+			if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
 			{
-				MapNavigateEvent mne = (MapNavigateEvent )ae;
+				MapNavigateEvent mne = (MapNavigateEvent )pce;
 
 				//Здесь принимаюттся собитыя по создению и управлению маркером
 				if(mne.isDataMarkerCreated())
@@ -1205,44 +1205,45 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 				repaint(false);
 			}
-			else
-			if(ae.getActionCommand().equals(TreeDataSelectionEvent.type))
-			{
-				TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)ae;
+//			else
+//			if(pce.getPropertyName().equals(TreeDataSelectionEvent.type))
+//			{
+//				TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)pce;
+//
+//				List data = tdse.getList();
+//				int n = tdse.getSelectionNumber();
+//
+//				if (n != -1)
+//				{
+//					try 
+//					{
+//						MapElement me = (MapElement)data.get(n);
+//						this.mapView.getMap().setSelected(me, true);
+//						repaint(false);
+//					} 
+//					catch (Exception ex) 
+//					{
+//						ex.printStackTrace();
+//					} 
+//				}
+//			}
+//			else
+//			if(pce.getPropertyName().equals(TreeListSelectionEvent.typ))
+//			{
+//				if(pce.getSource() instanceof MapElement)
+//				{
+//					MapElement me = (MapElement)pce.getSource();
+//					this.mapView.getMap().setSelected(me, true);
+//					repaint(false);
+//				} 
+//			}
 
-				List data = tdse.getList();
-				int n = tdse.getSelectionNumber();
-
-				if (n != -1)
-				{
-					try 
-					{
-						MapElement me = (MapElement)data.get(n);
-						this.mapView.getMap().setSelected(me, true);
-						repaint(false);
-					} 
-					catch (Exception ex) 
-					{
-						ex.printStackTrace();
-					} 
-				}
-			}
 			else
-			if(ae.getActionCommand().equals(TreeListSelectionEvent.typ))
-			{
-				if(ae.getSource() instanceof MapElement)
-				{
-					MapElement me = (MapElement)ae.getSource();
-					this.mapView.getMap().setSelected(me, true);
-					repaint(false);
-				} 
-			}
-			else
-			if(ae.getActionCommand().equals(ObjectSelectedEvent.TYPE))
+			if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE))
 			{
 				if(this.performProcessing)
 				{
-					ObjectSelectedEvent selectEvent = (ObjectSelectedEvent )ae;
+					ObjectSelectedEvent selectEvent = (ObjectSelectedEvent )pce;
 					if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT))
 					{
 						SchemeElement schemeElement = (SchemeElement )selectEvent.getSelectedObject();
@@ -1332,7 +1333,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			if(getContext().getDispatcher() != null)
 		{
 			this.performProcessing = false;
-			getContext().getDispatcher().notify(me);
+			getContext().getDispatcher().firePropertyChange(me);
 			this.performProcessing = true;
 		}
 	}
@@ -1351,7 +1352,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			if(disp != null)
 			{
 				this.performProcessing = false;
-				disp.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+				disp.firePropertyChange(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 				this.performProcessing = true;
 			}
 		}

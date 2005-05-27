@@ -1,22 +1,20 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.16 2005/04/07 14:15:17 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.17 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -25,19 +23,16 @@ import com.syrus.AMFICOM.mapview.MapView;
  * Центрировать геометрическое место точек, являющих собой центры 
  * выделенных элементов карты
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/04/07 14:15:17 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class CenterSelectionCommand extends MapNavigateCommand
-{
-	public CenterSelectionCommand(LogicalNetLayer logicalNetLayer)
-	{
+public class CenterSelectionCommand extends MapNavigateCommand {
+	public CenterSelectionCommand(LogicalNetLayer logicalNetLayer) {
 		super(logicalNetLayer);
 	}
-	public void execute()
-	{
-		if(this.logicalNetLayer == null)
-		{
+
+	public void execute() {
+		if(this.logicalNetLayer == null) {
 			return;
 		}
 

@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 
-public class CreateMapReportCommand extends VoidCommand
+public class CreateMapReportCommand extends AbstractCommand
 {
 	ApplicationContext aContext;
 //	AMTReport aReport = new AMTReport();

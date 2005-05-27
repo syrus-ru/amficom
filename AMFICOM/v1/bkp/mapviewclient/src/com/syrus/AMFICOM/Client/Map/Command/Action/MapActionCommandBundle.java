@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.21 2005/04/28 13:09:53 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.22 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,10 +15,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.CommandBundle;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.CommandBundle;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/04/28 13:09:53 $
+ * @version $Revision: 1.22 $, $Date: 2005/05/27 15:14:55 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle

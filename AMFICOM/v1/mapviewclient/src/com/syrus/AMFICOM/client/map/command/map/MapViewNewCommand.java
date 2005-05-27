@@ -1,28 +1,26 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.19 2005/05/18 14:59:46 bass Exp $
+ * $Id: MapViewNewCommand.java,v 1.20 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-//import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -30,45 +28,45 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * создать новый вид 
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/05/18 14:59:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class MapViewNewCommand extends VoidCommand
-{
+public class MapViewNewCommand extends AbstractCommand {
 	ApplicationContext aContext;
 
 	MapView mapView;
+
 	Map map;
 
-	public MapViewNewCommand(Map map, ApplicationContext aContext)
-	{
+	public MapViewNewCommand(Map map, ApplicationContext aContext) {
 		this.map = map;
 		this.aContext = aContext;
 	}
 
-	public void execute()
-	{
-		Environment.log(Environment.LOG_LEVEL_CONFIG, "Creating new map view", getClass().getName(), "execute()");
-		
-		System.out.println("Creating new map view");
-		this.aContext.getDispatcher().notify(
-				new StatusMessageEvent(
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelMap.getString("MapNew")));
+	public void execute() {
+		Environment.log(
+				Environment.LOG_LEVEL_CONFIG,
+				"Creating new map view",
+				getClass().getName(),
+				"execute()");
 
-		AccessIdentity_Transferable ait = 
-			this.aContext.getSessionInterface().getAccessIdentifier();
-		Identifier creatorId = new Identifier(ait.user_id);
-		Identifier domainId = new Identifier(ait.domain_id);
-		
+		System.out.println("Creating new map view");
+		this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelMap.getString("MapNew")));
+
+		Identifier userId = LoginManager.getUserId();
+		Identifier domainId = LoginManager.getDomainId();
+
 		DoublePoint center = MapPropertiesManager.getCenter();
 		double zoom = MapPropertiesManager.getZoom();
-		
-		try
-		{
+
+		try {
 			this.mapView = MapView.createInstance(
-					creatorId,
+					userId,
 					domainId,
 					LangModelMap.getString("New"),
 					"",
@@ -79,15 +77,11 @@ public class MapViewNewCommand extends VoidCommand
 					this.map);
 
 			StorableObjectPool.putStorableObject(this.mapView);
-		}
-		catch (CreateObjectException e)
-		{
+		} catch(CreateObjectException e) {
 			e.printStackTrace();
 			setResult(RESULT_NO);
 			return;
-		}
-		catch (IllegalObjectEntityException e)
-		{
+		} catch(IllegalObjectEntityException e) {
 			e.printStackTrace();
 			setResult(RESULT_NO);
 			return;
@@ -107,15 +101,15 @@ public class MapViewNewCommand extends VoidCommand
 //			mapFrame.setMapView(mv);
 //			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
 //		}
-		this.aContext.getDispatcher().notify(new StatusMessageEvent(
-				StatusMessageEvent.STATUS_MESSAGE,
-				LangModel.getString("Finished")));
-			setResult(Command.RESULT_OK);
+		this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("Finished")));
+		setResult(Command.RESULT_OK);
 	}
 
-
-	public MapView getMapView()
-	{
+	public MapView getMapView() {
 		return this.mapView;
 	}
 

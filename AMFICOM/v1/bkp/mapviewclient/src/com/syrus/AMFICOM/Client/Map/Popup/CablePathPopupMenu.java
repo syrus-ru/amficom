@@ -1,20 +1,18 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.Client.Map.Props.MapVisualManager;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
@@ -130,31 +128,18 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 	void bind()
 	{
-		MapCablePathPane prop = (MapCablePathPane )MapCablePathPane.getInstance();
-		prop.setContext(this.logicalNetLayer.getContext());
-		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
-				Environment.getActiveWindow(), 
-				LangModel.getString("Properties"), 
+		StorableObjectEditor prop = MapVisualManager.getVisualManager(this.path).getAdditionalPropertiesPanel();
+		EditorDialog dialog = new EditorDialog(
+				LangModelGeneral.getString("Properties"), 
 				true, 
 				this.path,
 				prop);
 
-		prop.showBindPanel();
-
-		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize =  dialog.getSize();
-
-		if (frameSize.height > screenSize.height)
-			frameSize.height = screenSize.height;
-		if (frameSize.width > screenSize.width)
-			frameSize.width = screenSize.width;
-		dialog.setLocation(
-				(screenSize.width - frameSize.width)/2, 
-				(screenSize.height - frameSize.height)/2);
 		dialog.setVisible(true);
 
 		if ( dialog.ifAccept())
-		{// think about repainting?..
+		{
+			// think about repainting?..
 		}
 	}
 

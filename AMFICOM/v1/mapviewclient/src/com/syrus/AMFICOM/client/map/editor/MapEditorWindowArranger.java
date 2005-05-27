@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.9 2005/04/29 14:05:10 krupenn Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.10 2005/05/27 15:14:57 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,11 @@
  */
 package com.syrus.AMFICOM.Client.Map.Editor;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapAdditionalPropertiesFrame;
@@ -19,15 +19,16 @@ import com.syrus.AMFICOM.Client.Map.UI.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
+import com.syrus.AMFICOM.client.UI.WindowArranger;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/04/29 14:05:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 15:14:57 $
  * @module mapviewclient_v1
  */
 
 public class MapEditorWindowArranger extends WindowArranger
-		implements OperationListener
+		implements PropertyChangeListener
 {
 	public static final String EVENT_ARRANGE = "ev_me_arrange";
 	
@@ -100,11 +101,11 @@ public class MapEditorWindowArranger extends WindowArranger
 		}
 	}
 	
-	public void operationPerformed(OperationEvent oe)
+	public void propertyChange(PropertyChangeEvent pce)
 	{
-		if (		(oe.getActionCommand().equals(MapEditorWindowArranger.EVENT_ARRANGE))
-				&& 	(oe.getSource() instanceof JDesktopPane)
-				&&	(oe.getSource().equals(this.desktop)))
+		if (		(pce.getPropertyName().equals(MapEditorWindowArranger.EVENT_ARRANGE))
+				&& 	(pce.getSource() instanceof JDesktopPane)
+				&&	(pce.getSource().equals(this.desktop)))
 		{
 			this.arrange();
 		}

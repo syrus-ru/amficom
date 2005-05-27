@@ -17,25 +17,22 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ImagesDialog;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ImagesDialog;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
 public final class SiteNodeTypeEditor
-		extends DefaultStorableObjectEditor
-{
+		extends DefaultStorableObjectEditor {
 	SiteNodeType type;
 
 	Identifier imageId;
@@ -54,23 +51,18 @@ public final class SiteNodeTypeEditor
 
 	private ApplicationContext aContext;
 
-	private SiteNodeTypeEditor()
-	{
-		try
-		{
+	public SiteNodeTypeEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 //		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -102,16 +94,13 @@ public final class SiteNodeTypeEditor
 		this.jPanel.add(this.descTextArea, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.type;
 	}
 
-	public void setObject(Object object)
-	{
-		this.type = (SiteNodeType)object;
-		if(this.type == null)
-		{
+	public void setObject(Object object) {
+		this.type = (SiteNodeType )object;
+		if(this.type == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
 			this.descTextArea.setEnabled(false);
@@ -121,8 +110,7 @@ public final class SiteNodeTypeEditor
 			this.imagePanel.removeAll();
 			this.imageButton.setEnabled(false);
 		}
-		else
-		{
+		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.type.getName());
 			this.descTextArea.setEnabled(true);
@@ -132,20 +120,17 @@ public final class SiteNodeTypeEditor
 			this.imagePanel.removeAll();
 
 			Image im;
-			try
-			{
-				AbstractImageResource imageResource = (AbstractImageResource )
-					ResourceStorableObjectPool.getStorableObject(this.imageId, true);
-				
+			try {
+				AbstractImageResource imageResource = (AbstractImageResource )StorableObjectPool
+						.getStorableObject(this.imageId, true);
+
 				ImageIcon icon = null;
 
-				if(imageResource instanceof FileImageResource)
-				{
+				if(imageResource instanceof FileImageResource) {
 					FileImageResource fir = (FileImageResource )imageResource;
 					icon = new ImageIcon(fir.getFileName());
 				}
-				else
-				{
+				else {
 					icon = new ImageIcon(imageResource.getImage());
 				}
 
@@ -161,19 +146,15 @@ public final class SiteNodeTypeEditor
 		}
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	void changeImage()
-	{
+	void changeImage() {
 		ImagesDialog frame = new ImagesDialog(this.aContext);
-		
-		try
-		{
-			AbstractImageResource imageResource = (AbstractImageResource )
-				ResourceStorableObjectPool.getStorableObject(this.imageId, true);
+
+		try {
+			AbstractImageResource imageResource = (AbstractImageResource )StorableObjectPool.getStorableObject(this.imageId, true);
 			frame.setImageResource((BitmapImageResource )imageResource);
 		} catch(ApplicationException e) {
 			e.printStackTrace();
@@ -189,20 +170,17 @@ public final class SiteNodeTypeEditor
 		frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 		frame.setModal(true);
 		frame.setVisible(true);
-		if(frame.ret_code == 1)
-		{
+		if(frame.retCode == 1) {
 			this.imagePanel.removeAll();
 			AbstractImageResource ir = frame.getImageResource();
 			this.imageId = ir.getId();
 			ImageIcon icon;
 
-			if(ir instanceof FileImageResource)
-			{
+			if(ir instanceof FileImageResource) {
 				FileImageResource fir = (FileImageResource )ir;
 				icon = new ImageIcon(fir.getFileName());
 			}
-			else
-			{
+			else {
 				icon = new ImageIcon(ir.getImage());
 			}
 
@@ -218,15 +196,12 @@ public final class SiteNodeTypeEditor
 	}
 
 	public void commitChanges() {
-		try 
-		{
+		try {
 			this.type.setName(this.nameTextField.getText());
 			this.type.setDescription(this.descTextArea.getText());
 			this.type.setImageId(this.imageId);
-		} 
-		catch (Exception ex) 
-		{
+		} catch(Exception ex) {
 			ex.printStackTrace();
-		} 
+		}
 	}
 }

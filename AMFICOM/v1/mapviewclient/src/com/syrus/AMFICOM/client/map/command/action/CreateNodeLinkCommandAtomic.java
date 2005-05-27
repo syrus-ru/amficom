@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.10 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.11 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,8 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
  * создание фрагмента линии св€зи, внесение ее в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandAtomic extends MapActionCommand

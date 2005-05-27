@@ -1,22 +1,20 @@
 /*
- * $Id: MapEditorSaveMapAsCommand.java,v 1.6 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapEditorSaveMapAsCommand.java,v 1.7 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
 */
 
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapSaveAsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.Map;
 import javax.swing.JDesktopPane;
 
@@ -25,48 +23,46 @@ import javax.swing.JDesktopPane;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/27 15:14:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
  */
-public class MapEditorSaveMapAsCommand extends VoidCommand
-{
+public class MapEditorSaveMapAsCommand extends AbstractCommand {
 	JDesktopPane desktop;
+
 	ApplicationContext aContext;
 
 	/**
-	 * 
 	 * @param aContext контекст модуля "Редактор топологических схем"
 	 */
-	public MapEditorSaveMapAsCommand(JDesktopPane desktop, ApplicationContext aContext)
-	{
+	public MapEditorSaveMapAsCommand(
+			JDesktopPane desktop,
+			ApplicationContext aContext) {
 		this.desktop = desktop;
 		this.aContext = aContext;
 	}
-	
-	public void execute()
-	{
+
+	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		if(mapFrame == null)
-		{
+		if(mapFrame == null) {
 			System.out.println("map frame is null! Cannot create new map.");
 			setResult(Command.RESULT_NO);
 			return;
 		}
-		MapSaveAsCommand msac = new MapSaveAsCommand(mapFrame.getMap(), this.aContext);
+		MapSaveAsCommand msac = new MapSaveAsCommand(
+				mapFrame.getMap(),
+				this.aContext);
 		msac.execute();
-		
-		if(msac.getResult() == RESULT_OK)
-		{
+
+		if(msac.getResult() == RESULT_OK) {
 			Map newMap = msac.getNewMap();
-		
-			if (mapFrame != null)
-			{
+
+			if(mapFrame != null) {
 				mapFrame.getMapView().setMap(newMap);
-				mapFrame.setTitle( 
-					LangModelMap.getString("Map") + " - " + newMap.getName());
+				mapFrame.setTitle(LangModelMap.getString("Map") + " - "
+						+ newMap.getName());
 			}
 		}
 

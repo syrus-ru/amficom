@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.9 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: MoveMarkCommand.java,v 1.10 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.map.Mark;
  * Команда перемещения метки. вызывает только функцию "обновить состояние 
  * местоположения"
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
 public class MoveMarkCommand extends MapActionCommand

@@ -11,15 +11,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -28,8 +27,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
-public class MapEditor extends DefaultStorableObjectEditor
-{
+/**
+ * @version $Revision: 1.4 $
+ * @author $Author: krupenn $
+ * @module mapviewclient_v1
+ */
+public class MapEditor extends DefaultStorableObjectEditor {
 	Map map;
 
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -38,32 +41,27 @@ public class MapEditor extends DefaultStorableObjectEditor
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
 	private JLabel domainLabel = new JLabel();
-	private ObjComboBox domainComboBox = null;
+	private WrapperedComboBox domainComboBox = null;
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
-	public MapEditor()
-	{
-		try
-		{
+	public MapEditor() {
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.domainComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.domainComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModel.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.domainLabel.setText(LangModelMap.getString("Domain"));
@@ -82,13 +80,11 @@ public class MapEditor extends DefaultStorableObjectEditor
 		super.addToUndoableListener(this.descTextArea);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return this.map;
 	}
 
-	public void setObject(Object object)
-	{
+	public void setObject(Object object) {
 		if(object instanceof Map)
 			this.map = (Map)object;
 		else
@@ -97,15 +93,13 @@ public class MapEditor extends DefaultStorableObjectEditor
 		
 		this.domainComboBox.removeAllItems();
 
-		if(this.map == null)
-		{
+		if(this.map == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText("");
 		}
-		else
-		{
+		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.map.getName());
 
@@ -114,21 +108,17 @@ public class MapEditor extends DefaultStorableObjectEditor
 			
 			StorableObjectCondition condition = 
 				new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
-			try
-			{
+			try {
 				domains = StorableObjectPool.getStorableObjectsByCondition(
 						condition,
 						true);
-			}
-			catch (ApplicationException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 
-			try
-			{
-				domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-						this.map.getDomainId(),
+			try {
+				domain = (Domain )StorableObjectPool.getStorableObject(
+						this.map.getDomainId(), 
 						false);
 			} catch(ApplicationException e) {
 				e.printStackTrace();
@@ -149,13 +139,11 @@ public class MapEditor extends DefaultStorableObjectEditor
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name))
-		try 
-		{
+		try {
 			this.map.setName(name);
 			this.map.setDescription(this.descTextArea.getText());
 		} 
-		catch (Exception ex) 
-		{
+		catch (Exception ex) {
 			ex.printStackTrace();
 		} 
 	}

@@ -1,22 +1,20 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.12 2005/04/28 12:57:53 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.13 2005/05/27 15:14:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Editor;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -32,11 +30,10 @@ import java.awt.event.ActionListener;
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/04/28 12:57:53 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/27 15:14:57 $
  * @module mapviewclient_v1
  */
-public class MapEditorToolBar extends JToolBar implements ApplicationModelListener
-{
+public class MapEditorToolBar extends JToolBar implements ApplicationModelListener {
 	private ApplicationModel aModel;
 
 	/**
@@ -104,30 +101,22 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	public static final int IMG_SIZE = 16;
 	public static final int BTN_SIZE = 24;
 
-	public MapEditorToolBar()
-	{
+	public MapEditorToolBar() {
 		super();
 
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void jbInit()
-	{
-		ActionListener actionAdapter =
-			new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					buttonActionPerformed(e);
-				}
-			};
+	private void jbInit() {
+		ActionListener actionAdapter = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonActionPerformed(e);
+			}
+		};
 
 		Dimension buttonSize = new Dimension(BTN_SIZE, BTN_SIZE);
 
@@ -135,7 +124,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.sessionOpen.setMaximumSize(buttonSize);
 		this.sessionOpen.setPreferredSize(buttonSize);
-		this.sessionOpen.setToolTipText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_NEW));
+		this.sessionOpen.setToolTipText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_NEW));
 		this.sessionOpen.setName(MapEditorApplicationModel.ITEM_SESSION_NEW);
 		this.sessionOpen.addActionListener(actionAdapter);
 
@@ -143,7 +132,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.buttonCloseSession.setMaximumSize(buttonSize);
 		this.buttonCloseSession.setPreferredSize(buttonSize);
-		this.buttonCloseSession.setToolTipText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
+		this.buttonCloseSession.setToolTipText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
 		this.buttonCloseSession.setName(MapEditorApplicationModel.ITEM_SESSION_CLOSE);
 //		this.buttonCloseSession.addActionListener(actionAdapter);
 
@@ -151,7 +140,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuSessionDomain.setMaximumSize(buttonSize);
 		this.menuSessionDomain.setPreferredSize(buttonSize);
-		this.menuSessionDomain.setToolTipText(LangModel.getString(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
+		this.menuSessionDomain.setToolTipText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
 		this.menuSessionDomain.setName(MapEditorApplicationModel.ITEM_SESSION_DOMAIN);
 //		this.menuSessionDomain.addActionListener(actionAdapter);
 
@@ -276,18 +265,20 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		addSeparator();
 	}
 
-	public void setModel(ApplicationModel a)
-	{
+	public void setModel(ApplicationModel a) {
 		this.aModel = a;
 	}
 
-	public ApplicationModel getModel()
-	{
+	public ApplicationModel getModel() {
 		return this.aModel;
 	}
 
-	public void modelChanged(String e[])
-	{
+	public void modelChanged(String e) {
+		modelChanged(new String[] { e
+		});
+	}
+
+	public void modelChanged(String[] elementNames) {
 		this.sessionOpen.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_NEW));
 		this.sessionOpen.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW));
 		this.buttonCloseSession.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
@@ -323,8 +314,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuViewSetup.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
 	}
 
-	public void buttonActionPerformed(ActionEvent e)
-	{
+	public void buttonActionPerformed(ActionEvent e) {
 		if(this.aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();

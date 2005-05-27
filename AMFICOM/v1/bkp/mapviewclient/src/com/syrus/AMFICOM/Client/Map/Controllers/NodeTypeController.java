@@ -1,12 +1,10 @@
 /**
- * $Id: NodeTypeController.java,v 1.18 2005/05/18 14:59:46 bass Exp $
+ * $Id: NodeTypeController.java,v 1.19 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
@@ -36,22 +34,19 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/05/18 14:59:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class NodeTypeController extends AbstractNodeController
-{
+public class NodeTypeController extends AbstractNodeController {
 
 	/**
 	 * Instance.
@@ -61,8 +56,7 @@ public class NodeTypeController extends AbstractNodeController
 	/** Хэш-таблица имен пиктограмм для предустановленных типов узлов. */
 	private static java.util.Map imageFileNames = new HashMap();
 	
-	static
-	{
+	static {
 		imageFileNames.put(SiteNodeType.DEFAULT_UNBOUND, "images/unbound.gif");
 		imageFileNames.put(SiteNodeType.DEFAULT_ATS, "images/ats.gif");
 		imageFileNames.put(SiteNodeType.DEFAULT_BUILDING, "images/building.gif");
@@ -75,16 +69,16 @@ public class NodeTypeController extends AbstractNodeController
 	/**
 	 * Private constructor.
 	 */
-	protected NodeTypeController()
-	{// empty
+	protected NodeTypeController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new NodeTypeController();
 		return instance;
@@ -94,60 +88,51 @@ public class NodeTypeController extends AbstractNodeController
 	 * {@inheritDoc}
 	 * Suppress since SiteNodeType is not really a Map Element
 	 */
-//	public boolean isSelectionVisible(MapElement me)
-//	{
-//		throw new UnsupportedOperationException();
-//	}
-
-	/**
-	 * {@inheritDoc}
-	 * Suppress since SiteNodeType is not really a Map Element
-	 */
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public boolean isElementVisible(
+			MapElement me,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since SiteNodeType is not really a Map Element
+	 * {@inheritDoc} Suppress since SiteNodeType is not really a Map Element
 	 */
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement me,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since SiteNodeType is not really a Map Element
+	 * {@inheritDoc} Suppress since SiteNodeType is not really a Map Element
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * Получить имя пиктограммы по кодовому имени для предустановленного типа 
+	 * Получить имя пиктограммы по кодовому имени для предустановленного типа
 	 * сетевого узла.
+	 * 
 	 * @param codename кодовое имя
 	 * @return имя пиктограммы
 	 */
-	public static String getImageFileName(String codename)
-	{
+	public static String getImageFileName(String codename) {
 		return (String )imageFileNames.get(codename);
 	}
 
-	public static Image getImage(SiteNodeType type)
-	{
+	public static Image getImage(SiteNodeType type) {
 		return MapPropertiesManager.getImage(type.getImageId());
 	}
 
 	/**
-	 * Получить пиктограмму по кодовому имени для предустановленного типа 
+	 * Получить пиктограмму по кодовому имени для предустановленного типа
 	 * сетевого узла. Если пиктограмма не существует, она создается.
+	 * 
 	 * @param userId пользователь
 	 * @param codename кодовое имя
 	 * @param filename файл пиктограммы
@@ -156,10 +141,8 @@ public class NodeTypeController extends AbstractNodeController
 	public static Identifier getImageId(
 			Identifier userId,
 			String codename, 
-			String filename)
-	{
-		try 
-		{
+			String filename) {
+		try {
 			StorableObjectCondition condition = new TypicalCondition(
 				String.valueOf(ImageResourceSort._FILE),
 				OperationSort.OPERATION_EQUALS,
@@ -168,31 +151,26 @@ public class NodeTypeController extends AbstractNodeController
 			Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 //			List bitMaps = Collections.EMPTY_LIST;
 
-			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
-			{
+			for(Iterator it = bitMaps.iterator(); it.hasNext();) {
 				FileImageResource ir = (FileImageResource )it.next();
 				if(ir.getCodename().equals(codename))
 					return ir.getId();
 				
 			}
-		}
-		catch (ApplicationException ex) 
-//		catch (Exception ex) 
-		{
+		} catch(ApplicationException ex) {
 			ex.printStackTrace();
 		}
-		try
-		{
+		try {
 			FileImageResource ir = FileImageResource.createInstance(
-				userId,
-				filename);
+					userId,
+					filename);
 			StorableObjectPool.putStorableObject(ir);
-			ResourceStorableObjectPool.flush(true);
+			StorableObjectPool.flush(ir.getId(), true);
 			return ir.getId();
-		} catch (CreateObjectException e) {
+		} catch(CreateObjectException e) {
 			e.printStackTrace();
 			return null;
-		} catch (IllegalObjectEntityException e) {
+		} catch(IllegalObjectEntityException e) {
 			e.printStackTrace();
 			return null;
 		} catch(ApplicationException e) {
@@ -203,39 +181,35 @@ public class NodeTypeController extends AbstractNodeController
 
 	/**
 	 * Получить тип сетевого узла по кодовому имени.
+	 * 
 	 * @param codename кодовое имя
 	 * @return тип сетевого узла
 	 */
-	public static SiteNodeType getSiteNodeType(
-			String codename)
-	{
+	public static SiteNodeType getSiteNodeType(String codename) {
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
-				codename, 
+				codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		try
-		{
-			Collection pTypes =
+		try {
+			Collection pTypes = 
 				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();)
-			{
+			for(Iterator it = pTypes.iterator(); it.hasNext();) {
 				SiteNodeType type = (SiteNodeType )it.next();
-				if (type.getCodename().equals(codename))
+				if(type.getCodename().equals(codename))
 					return type;
 			}
-		}
-		catch(ApplicationException ex)
-		{
+		} catch(ApplicationException ex) {
 			ex.printStackTrace();
 		}
 		return null;
 	}
 
 	/**
-	 * Получить тип сетевого узла по кодовому имени. В случае, если такого 
-	 * типа нет, создается новый.
+	 * Получить тип сетевого узла по кодовому имени. В случае, если такого типа
+	 * нет, создается новый.
+	 * 
 	 * @param userId пользователь
 	 * @param codename кодовое имя
 	 * @return тип сетевого узла
@@ -243,12 +217,10 @@ public class NodeTypeController extends AbstractNodeController
 	private static SiteNodeType getSiteNodeType(
 			Identifier userId,
 			SiteNodeTypeSort sort,
-			String codename)
-	{
+			String codename) {
 		SiteNodeType type = getSiteNodeType(codename);
 		if(type == null)
-		try
-		{
+			try {
 			type = SiteNodeType.createInstance(
 				userId,
 				sort,
@@ -262,18 +234,15 @@ public class NodeTypeController extends AbstractNodeController
 				true);
 				
 			StorableObjectPool.putStorableObject(type);
-			MapStorableObjectPool.flush(true);
-		}
-		catch (Exception e)
-		{
+			StorableObjectPool.flush(type.getId(), true);
+		} catch(Exception e) {
 			e.printStackTrace();
 			type = null;
 		}
 		return type;
 	}
 
-	public static void createDefaults(Identifier creatorId)
-	{
+	public static void createDefaults(Identifier creatorId) {
 		// make sure SiteNodeType.ATS is created
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS);
 		// make sure SiteNodeType.BUILDING is created
@@ -298,8 +267,9 @@ public class NodeTypeController extends AbstractNodeController
 		Collection list = Collections.EMPTY_LIST;
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		try {
-			list =
-				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			list = StorableObjectPool.getStorableObjectsByCondition(
+					pTypeCondition,
+					true);
 
 			list.remove(getUnboundNodeType());
 
@@ -308,8 +278,7 @@ public class NodeTypeController extends AbstractNodeController
 				if(!mnpe.isTopological())
 					it.remove();
 			}
-		}
-		catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return list;
@@ -319,10 +288,8 @@ public class NodeTypeController extends AbstractNodeController
 	 * Получить тип непривязанного сетевого узла ({@link SiteNodeType#DEFAULT_UNBOUND}).
 	 * @return тип сетевого узла
 	 */
-	public static SiteNodeType getUnboundNodeType()
-	{
+	public static SiteNodeType getUnboundNodeType() {
 		return NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_UNBOUND);
 	}
-
 
 }

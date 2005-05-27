@@ -1,17 +1,14 @@
 /**
- * $Id: SiteNodeController.java,v 1.10 2005/05/25 16:24:16 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.11 2005/05/27 15:14:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -29,11 +26,10 @@ import com.syrus.AMFICOM.map.SiteNode;
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/05/25 16:24:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/27 15:14:56 $
  * @module mapviewclient_v1
  */
-public class SiteNodeController extends AbstractNodeController
-{
+public class SiteNodeController extends AbstractNodeController {
 	static final int IMG_SIZE = 16;
 
 	public static Image externalNodeImage = Toolkit.getDefaultToolkit()
@@ -46,20 +42,20 @@ public class SiteNodeController extends AbstractNodeController
 	 * Instance
 	 */
 	private static SiteNodeController instance = null;
-	
+
 	/**
 	 * Private constructor.
 	 */
-	protected SiteNodeController()
-	{// empty
+	protected SiteNodeController() {
+		// empty
 	}
-	
+
 	/**
 	 * Get instance.
+	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance()
-	{
+	public static MapElementController getInstance() {
 		if(instance == null)
 			instance = new SiteNodeController();
 		return instance;
@@ -68,9 +64,11 @@ public class SiteNodeController extends AbstractNodeController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException
-	{
+	public void paint(
+			MapElement mapElement,
+			Graphics g,
+			Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
 		if(!(mapElement instanceof SiteNode))
 			return;
 		SiteNode site = (SiteNode)mapElement;
@@ -84,13 +82,11 @@ public class SiteNodeController extends AbstractNodeController
 		super.paint(site, g, visibleBounds);
 		
 		//Если внешний узел то рисовать рамку
-		if (getLogicalNetLayer().getMapView().getMap().getExternalNodes().contains(site))
-		{
+		if (getLogicalNetLayer().getMapView().getMap().getExternalNodes().contains(site)) {
 			MapCoordinatesConverter converter = getLogicalNetLayer();
 			
 			Point p = converter.convertMapToScreen(site.getLocation());
 	
-			int width = getBounds(site).width;
 			int height = getBounds(site).height;
 
 			Graphics2D pg = (Graphics2D )g; 
@@ -102,8 +98,7 @@ public class SiteNodeController extends AbstractNodeController
 	                null);
 		}
 
-		if(MapPropertiesManager.isLayerLabelVisible(site.getType()))
-		{
+		if(MapPropertiesManager.isLayerLabelVisible(site.getType())) {
 			MapCoordinatesConverter converter = getLogicalNetLayer();
 			
 			Point p = converter.convertMapToScreen(site.getLocation());

@@ -1,5 +1,5 @@
 /**
- * $Id: RemovePhysicalLinkCommandAtomic.java,v 1.6 2005/03/01 15:37:25 krupenn Exp $
+ * $Id: RemovePhysicalLinkCommandAtomic.java,v 1.7 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,14 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.PhysicalLink;
 
 /**
  * удаление физической линии из карты - атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/03/01 15:37:25 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/27 15:14:55 $
  * @module mapviewclient_v1
  */
 public class RemovePhysicalLinkCommandAtomic extends MapActionCommand

@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.20 2005/04/13 11:30:40 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.21 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -24,7 +22,6 @@ import java.awt.dnd.DropTargetListener;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -32,21 +29,24 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  * Обработчик событий drag/drop в окне карты 
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2005/04/13 11:30:40 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/27 15:14:59 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -76,7 +76,7 @@ public final class MapDropTargetListener implements DropTargetListener
 				{
 //					SiteNodeType mpe = (SiteNodeType)transferable.getTransferData(df[(0)]);
 					Identifier id = (Identifier )transferable.getTransferData(df[(0)]);
-					SiteNodeType mpe = (SiteNodeType)MapStorableObjectPool.getStorableObject(id, false);
+					SiteNodeType mpe = (SiteNodeType)StorableObjectPool.getStorableObject(id, false);
 
 					mapElementDropped(mpe, point);
 				}

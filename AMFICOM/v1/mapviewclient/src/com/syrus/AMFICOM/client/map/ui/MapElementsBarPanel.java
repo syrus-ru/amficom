@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.14 2005/04/22 11:37:58 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.15 2005/05/27 15:14:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.Dimension;
@@ -32,7 +32,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/04/22 11:37:58 $
+ * @version $Revision: 1.15 $, $Date: 2005/05/27 15:14:59 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

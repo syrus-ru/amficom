@@ -2,24 +2,23 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import java.awt.Color;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
-public class TunnelLayout implements OperationListener
-{
+public class TunnelLayout implements PropertyChangeListener {
 	private ApplicationContext internalContext = new ApplicationContext();
 	private UgoPanel panel;
 	private static final int RADIUS = 15;
@@ -34,8 +33,7 @@ public class TunnelLayout implements OperationListener
 	
 	PhysicalLinkAddEditor parent;
 
-	public TunnelLayout(PhysicalLinkAddEditor parent)
-	{
+	public TunnelLayout(PhysicalLinkAddEditor parent) {
 		this.parent = parent;
 
 		this.internalContext.setDispatcher(new Dispatcher());
@@ -44,90 +42,85 @@ public class TunnelLayout implements OperationListener
 		this.panel.getGraph().setGraphEditable(false);
 		this.panel.getGraph().setAntiAliased(true);
 
-		this.internalContext.getDispatcher().register(this, ObjectSelectedEvent.TYPE);
+		this.internalContext.getDispatcher().addPropertyChangeListener(
+				ObjectSelectedEvent.TYPE,
+				this);
 	}
 
-	public UgoPanel getPanel()
-	{
+	public UgoPanel getPanel() {
 		return this.panel;
 	}
 
-	protected void removeSelection()
-	{
+	protected void removeSelection() {
 		this.panel.getGraph().clearSelection();
 
-		for (int i = 0; i < this.m; i++) 
-		{
-			for (int j = 0; j < this.n; j++) 
-			{
-				GraphActions.setObjectBackColor(this.panel.getGraph(), this.cells[i][j], Color.WHITE);
+		for(int i = 0; i < this.m; i++) {
+			for(int j = 0; j < this.n; j++) {
+				GraphActions.setObjectBackColor(
+						this.panel.getGraph(),
+						this.cells[i][j],
+						Color.WHITE);
 			}
 		}
 	}
 
-	public void operationPerformed(OperationEvent oe)
-	{
-		if (oe.getActionCommand().equals(ObjectSelectedEvent.TYPE))
-		{
-			ObjectSelectedEvent ev = (ObjectSelectedEvent )oe;
-			if (ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT))
-			{
+	public void propertyChange(PropertyChangeEvent pce) {
+		if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent ev = (ObjectSelectedEvent )pce;
+			if(ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT)) {
 				Object obj = ev.getSelectedObject();
 
 				removeSelection();
 
-				if (obj instanceof EllipseCell)
-				{
+				if(obj instanceof EllipseCell) {
 					EllipseCell cell = (EllipseCell )obj;
-					GraphActions.setObjectBackColor(this.panel.getGraph(), cell, Color.YELLOW);
+					GraphActions.setObjectBackColor(
+							this.panel.getGraph(),
+							cell,
+							Color.YELLOW);
 					this.panel.getGraph().setSelectionCell(cell);
-					
+
 					boolean found = false;
-					for (int i = 0; i < this.m && !found; i++) 
-					{
-						for (int j = 0; j < this.n && !found; j++) 
-							if(this.cells[i][j].equals(cell))
-							{
+					for(int i = 0; i < this.m && !found; i++) {
+						for(int j = 0; j < this.n && !found; j++)
+							if(this.cells[i][j].equals(cell)) {
 								this.activeCoordinates = new IntPoint(i, j);
 								found = true;
 								this.parent.cableBindingSelected(i, j);
 							}
 					}
-					
+
 				}
 				// TODO нужна ли эта ботва?
-//				this.panel.getGraph().setGraphChanged(true);
+				// this.panel.getGraph().setGraphChanged(true);
 			}
 			else
-			if(ev.isSelected(ObjectSelectedEvent.ALL_DESELECTED))
-			{
-				this.activeCoordinates = null;
-			}
+				if(ev.isSelected(ObjectSelectedEvent.ALL_DESELECTED)) {
+					this.activeCoordinates = null;
+				}
 		}
 	}
 
-	public void setBinding(PhysicalLinkBinding binding)
-	{
+	public void setBinding(PhysicalLinkBinding binding) {
 		this.binding = binding;
 		if(binding == null)
 			setDimension(0, 0);
 		else
-			setDimension(binding.getDimension().getWidth(), binding.getDimension().getHeight());
+			setDimension(binding.getDimension().getWidth(), binding
+					.getDimension().getHeight());
 		updateElements();
 	}
 
-	private void setDimension(int m, int n)
-	{
+	private void setDimension(int m, int n) {
 		this.m = m;
 		this.n = n;
 
 		this.panel.getGraph().removeAll();
-		
+
 		this.cells = new EllipseCell[m][n];
 
-		for (int i = 0; i < m; i++)
-			for (int j = 0; j < n; j++)
-			{
+		for(int i = 0; i < m; i++)
+			for(int j = 0; j < n; j++) {
 				Rectangle bounds = new Rectangle(
 						(i + 1) * SPACE + 2 * i * RADIUS,
 						(j + 1) * SPACE + 2 * j * RADIUS,
@@ -137,28 +130,24 @@ public class TunnelLayout implements OperationListener
 			}
 	}
 
-	public void setActiveElement(Object or)
-	{
+	public void setActiveElement(Object or) {
 		removeSelection();
 		this.activeCoordinates = this.binding.getBinding(or);
 		if(this.activeCoordinates != null)
 			this.panel.getGraph().setSelectionCell(this.cells[this.activeCoordinates.x][this.activeCoordinates.y]);
 	}
 	
-	public void setActiveCoordinates(IntPoint activeCoordinates)
-	{
+	public void setActiveCoordinates(IntPoint activeCoordinates) {
 		removeSelection();
 		this.activeCoordinates = activeCoordinates;
 		this.panel.getGraph().setSelectionCell(this.cells[activeCoordinates.x][activeCoordinates.y]);
 	}
-	
-	public IntPoint getActiveCoordinates()
-	{
+
+	public IntPoint getActiveCoordinates() {
 		return this.activeCoordinates;
 	}
 
-	public void updateElements()
-	{
+	public void updateElements() {
 		int counter = 1;
 		int limit = this.n * this.m;
 
@@ -174,25 +163,20 @@ public class TunnelLayout implements OperationListener
 		int i = istart;
 		int j = jstart;
 
-		while(true)
-		{
+		while(true) {
 			GraphActions.setText(this.panel.getGraph(),this.cells[i][j], String.valueOf(counter++));
 			if(counter > limit)
 				break;
-			if(this.binding.isHorizontalVertical())
-			{
-				if(i == iend)
-				{
+			if(this.binding.isHorizontalVertical()) {
+				if(i == iend) {
 					i = istart;
 					j += jincrement;
 				}
 				else
 					i += iincrement;
 			}
-			else
-			{
-				if(j == jend)
-				{
+			else {
+				if(j == jend) {
 					j = jstart;
 					i += iincrement;
 				}
@@ -202,8 +186,7 @@ public class TunnelLayout implements OperationListener
 		}
 	}
 
-	EllipseCell addCell(SchemeGraph graph, Object userObject, Rectangle bounds)
-	{
+	EllipseCell addCell(SchemeGraph graph, Object userObject, Rectangle bounds) {
 		Map viewMap = new HashMap();
 		EllipseCell cell = new EllipseCell(userObject);
 		Map map = GraphConstants.createMap();

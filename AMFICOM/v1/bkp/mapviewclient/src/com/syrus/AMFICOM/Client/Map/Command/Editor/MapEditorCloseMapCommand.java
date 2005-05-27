@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseMapCommand.java,v 1.9 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapEditorCloseMapCommand.java,v 1.10 2005/05/27 15:14:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,9 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapCloseCommand;
@@ -29,12 +29,12 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/05/27 15:14:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapCloseCommand
  */
-public class MapEditorCloseMapCommand extends VoidCommand
+public class MapEditorCloseMapCommand extends AbstractCommand
 {
 	JDesktopPane desktop;
 	Dispatcher dispatcher;
@@ -68,7 +68,7 @@ public class MapEditorCloseMapCommand extends VoidCommand
 
 		mapView.setMap(map);
 
-		this.dispatcher.notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+		this.dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 		setResult(Command.RESULT_OK);
 	}
 
