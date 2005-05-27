@@ -13,7 +13,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.2 $, $Date: 2005/05/23 06:37:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/27 12:47:56 $
  * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -31,7 +31,7 @@ public class Dispatcher {
 	public synchronized void addPropertyChangeListener(	String propertyName,
 														PropertyChangeListener listener) {
 		Log.debugMessage("Dispatcher.addPropertyChangeListener | propertyName:" + propertyName + ", listener: "
-			+ listener.getClass().getName(), Log.FINEST);
+			+ listener.getClass().getName(), Log.DEBUGLEVEL10);
 		List listeners = (List) this.events.get(propertyName);
 		if (listeners == null) {
 			listeners = new LinkedList();
@@ -50,7 +50,7 @@ public class Dispatcher {
 															PropertyChangeListener listener) {
 		List listeners = (List) this.events.get(propertyName);
 		Log.debugMessage("Dispatcher.removePropertyChangeListener | propertyName:" + propertyName + ", listener: "
-			+ listener.getClass().getName(), Log.FINEST);
+			+ listener.getClass().getName(), Log.DEBUGLEVEL10);
 		if (listeners != null) {
 			if (!listeners.remove(listener)) {
 				Log.debugMessage("Dispatcher.removePropertyChangeListener | there is no added listener: " + listener.getClass().getName() , Log.WARNING);
@@ -78,12 +78,12 @@ public class Dispatcher {
 				 */
 				if (!canSendToSelf && listener == source) {
 					Log.debugMessage("Dispatcher.firePropertyChange | propertyName: " + propertyName
-							+ ", listener == source (" + source.getClass().getName() + ")", Log.FINEST);
+							+ ", listener == source (" + source.getClass().getName() + ")", Log.DEBUGLEVEL10);
 					continue;
 				}
 
 				Log.debugMessage("Dispatcher.firePropertyChange | propertyName: " + propertyName + ", listener: "
-						+ listener.getClass().getName(), Log.FINEST);
+						+ listener.getClass().getName(), Log.DEBUGLEVEL10);
 				listener.propertyChange(event);
 
 			}
