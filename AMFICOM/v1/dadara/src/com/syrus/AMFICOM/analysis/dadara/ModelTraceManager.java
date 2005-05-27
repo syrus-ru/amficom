@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.76 2005/05/26 13:35:52 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.77 2005/05/27 16:53:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.76 $, $Date: 2005/05/26 13:35:52 $
+ * @version $Revision: 1.77 $, $Date: 2005/05/27 16:53:57 $
  * @module
  */
 public class ModelTraceManager
@@ -309,6 +309,10 @@ implements DataStreamable, Cloneable
 		}
 	}
 
+    /**
+     * @param nEvent номер события
+     * @return массив редакторов всех порогов для данного события
+     */
 	public ThreshEditor[] getThreshEditors(int nEvent)
 	{
 		//return re[nEvents].getThreshold();
@@ -337,6 +341,22 @@ implements DataStreamable, Cloneable
 		}
 		return (ThreshEditor[] )ret.toArray(new ThreshEditor[ret.size()]);
 	}
+
+    /**
+     * @param nEvent номер события
+     * @return редактор для "порога по умолчанию" для данного события
+     *   либо null, если такого порога нет
+     */
+    public ThreshEditor getDefaultThreshEditor(int nEvent)
+    {
+        ThreshDY th = getDefaultThreshByNEvent(nEvent);
+        if (th == null)
+            return null;
+        if (th.getTypeL())
+            return new ThreshEditor(ThreshEditor.TYPE_L, th);
+        else
+            return new ThreshEditor(ThreshEditor.TYPE_A, th);
+    }
 
 	/**
 	 * Выдает модельную кривую указанного порога.
@@ -613,16 +633,33 @@ implements DataStreamable, Cloneable
 		
 	}
 
-	private Thresh[] getAllThreshByNEvent(int nEvent)
-	{
-		ArrayList al = new ArrayList();
-		for (int i = 0; i < this.tL.length; i++)
-		{
-			if (this.tL[i].isRelevantToNEvent(nEvent))
-				al.add(this.tL[i]);
-		}
-		return (Thresh[] )al.toArray(new Thresh[al.size()]);
-	}
+    private Thresh[] getAllThreshByNEvent(int nEvent)
+    {
+        ArrayList al = new ArrayList();
+        for (int i = 0; i < this.tL.length; i++)
+        {
+            if (this.tL[i].isRelevantToNEvent(nEvent))
+                al.add(this.tL[i]);
+        }
+        return (Thresh[] )al.toArray(new Thresh[al.size()]);
+    }
+    // определяет 'пороог по умолчанию' для данного события
+    // may return null, but not in the current version
+    private ThreshDY getDefaultThreshByNEvent(int nEvent)
+    {
+        // пытаемся вернуть DL-порог -- для коннекторов
+        for (int i = 0; i < this.tDY.length; i++) {
+            if (this.tDY[i].isRelevantToNEvent(nEvent) && this.tDY[i].getTypeL())
+                return this.tDY[i];
+        }
+        // возвращаем любой DY-порог (самый же первый) -- для не-коннекторов  
+        for (int i = 0; i < this.tDY.length; i++) {
+            if (this.tDY[i].isRelevantToNEvent(nEvent))
+                return this.tDY[i];
+        }
+        // DY-порогов для этого события нет совсем
+        return null;
+    }
 
 	/**
 	 * Выдает handle для изменения значения порогов мышью на основе кооординат
