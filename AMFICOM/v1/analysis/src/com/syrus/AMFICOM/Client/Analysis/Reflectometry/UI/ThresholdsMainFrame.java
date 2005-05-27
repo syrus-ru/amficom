@@ -284,9 +284,9 @@ implements PropertyChangeListener, BsHashChangeListener, EtalonMTMListener, Curr
 
 		aModel.fireModelChanged("");
 
-		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
-			internal_dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
-		}
+//		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
+//			internal_dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
+//		}
 	}
 
 	void setDefaultModel (ApplicationModel aModel)

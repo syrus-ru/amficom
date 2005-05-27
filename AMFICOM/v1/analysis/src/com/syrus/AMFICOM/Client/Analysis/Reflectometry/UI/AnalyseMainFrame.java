@@ -466,9 +466,9 @@ public class AnalyseMainFrame extends JFrame implements BsHashChangeListener,
 
 		aModel.fireModelChanged("");
 
-		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
-			internalDispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
-		}
+//		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
+//			internalDispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
+//		}
 	}
 
 	private AbstractCommand getLazyCommand(final Object key) {
