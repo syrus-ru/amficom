@@ -38,6 +38,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private double downLimit = -0.4;
 	private double upLimit = 0.8;
 	private double level = 0.2;
+	// transfer coefficient dB/km to dB 
+	// private double alpha = 0.013;
 
 	private double[] derivative;
 	private double[] gauss;
@@ -151,6 +153,25 @@ public class HistogrammPanel extends ScaledGraphPanel
 								 jw - 30,
 								 (int)((maxY - level - top) * scaleY - 4));
 	}
+	
+
+	// use this method to paint scale digits for krivulka in dB  
+/*protected void paint_scale_digits(Graphics g)
+	{
+		super.paint_scale_digits(g);
+				
+		int jh = getHeight();
+		int jw = getWidth();
+
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
+
+		double m = calcNodeDistance (cell_w / scaleX * Kx); // единиц на одно деление
+		double delta =	m * scaleX / Kx; // число экранных точек на одно деление
+		int x = (int)(((int)(start * Kx / m) ) * delta - start * scaleX); // сдвиг относительно начала
+
+		for (int i = 0; i < jw / delta + 1; i++)
+			g.drawString(String.valueOf(MathRef.round_2 ((i + (int)(start * Kx / m) ) * m   * alpha * 1000d)), (int)(i * delta + x - 12), 10);
+	}*/
 
 	protected void this_mousePressed(MouseEvent e)
 	{
