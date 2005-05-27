@@ -206,15 +206,21 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	protected void this_mouseClicked(MouseEvent e)
 	{
-	    // если кликнули, но не на текущее событие, переходим к новому событию
-	    int pos = coord2index(e.getPoint().x);
-        ModelTraceManager etalon = Heap.getMTMEtalon();
-	    int evId = etalon != null ? etalon.getMTAE().getEventByCoord(pos) : -1;
-		if (evId != -1 && evId != Heap.getCurrentEtalonEvent2())
-		{
-	    	Heap.setCurrentEtalonEvent(evId);
-		    return;
-		}
+        // для окна порогов переходим к другому событию,
+        // для окна анализа - не переходим
+        if (edit_thresholds) {
+    	    // если кликнули, но не на текущее событие, переходим к новому событию
+    	    int pos = coord2index(e.getPoint().x);
+            ModelTraceManager etalon = Heap.getMTMEtalon();
+    	    int evId = etalon != null ? etalon.getMTAE().getEventByCoord(pos) : -1;
+    		if (evId != -1 && evId != Heap.getCurrentEtalonEvent2())
+    		{
+    	    	Heap.setCurrentEtalonEvent(evId);
+    		    return;
+    		}
+        } else {
+            super.this_mouseClicked(e);
+        }
 	}
 
 	public void paint (Graphics g)
