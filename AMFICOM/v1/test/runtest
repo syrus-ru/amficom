@@ -2,7 +2,10 @@
 
 JUNITCLASSPATH=/mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
 JDBCCLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/orai18n.jar
-LIB=../lib
-APPCLASSPATH=$LIB/util.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/configuration.jar:$LIB/measurement.jar:$LIB/csbridge.jar
 
-java -classpath $APPCLASSPATH:$JDBCCLASSPATH:$JUNITCLASSPATH:./classes junit.textui.TestRunner com.syrus.AMFICOM.general.TestParameterType
+LIB=../lib
+EXTLIB=../../extlib
+APPCLASSPATH=$LIB/util.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/configuration.jar:$LIB/measurement.jar:$LIB/event.jar:$LIB/csbridge.jar
+EXTCLASSPATH=$EXTLIB/trove.jar
+
+java -ea -classpath $APPCLASSPATH:$EXTCLASSPATH:$JDBCCLASSPATH:$JUNITCLASSPATH:./classes junit.textui.TestRunner com.syrus.AMFICOM.event.TestEventType

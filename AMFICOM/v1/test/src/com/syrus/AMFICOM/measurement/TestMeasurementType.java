@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementType.java,v 1.3 2005/05/24 12:25:56 arseniy Exp $
+ * $Id: TestMeasurementType.java,v 1.4 2005/05/27 18:23:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.Com
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/24 12:25:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/27 18:23:51 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -45,7 +44,7 @@ public class TestMeasurementType extends CommonTest {
 		return suiteWrapper(TestMeasurementType.class);
 	}
 
-	public void testTransferable() throws ApplicationException {
+	public void tes1tTransferable() throws ApplicationException {
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 		MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Measurement type: '" + measurementType.getId() + "'");
@@ -137,7 +136,10 @@ public class TestMeasurementType extends CommonTest {
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_AVERAGE_COUNT));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON));
 		inParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT));
-		outParTypIds = Collections.singleton(parTypeIdsCodename.get(ParameterTypeCodenames.REFLECTOGRAMMA));
+
+		outParTypIds = new HashSet();
+		outParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.REFLECTOGRAMMA));
+		//outParTypIds.add(parTypeIdsCodename.get(ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT));
 
 		measurementType.setInParameterTypeIds(inParTypIds);
 		measurementType.setOutParameterTypeIds(outParTypIds);
