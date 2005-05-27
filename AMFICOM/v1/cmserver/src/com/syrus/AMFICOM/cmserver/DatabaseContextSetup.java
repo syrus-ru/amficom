@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.29 2005/05/26 08:33:31 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.30 2005/05/27 11:13:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,27 +49,12 @@ import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/26 08:33:31 $
+ * @version $Revision: 1.30 $, $Date: 2005/05/27 11:13:49 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 
 final class DatabaseContextSetup {
-	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
-	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
-	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
-	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
-	public static final String KEY_REFRESH_TIMEOUT = "RefreshTimeout";
-	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
-
-	
-	public static final int DEFAULT_GENERAL_POOL_SIZE = 1000;
-	public static final int DEFAULT_ADMINISTRATION_POOL_SIZE = 1000;
-	public static final int DEFAULT_CONFIGURATION_POOL_SIZE = 1000;
-	public static final int DEFAULT_MEASUREMENT_POOL_SIZE = 1000;
-	public static final int DEFAULT_REFRESH_TIMEOUT = 5;
-	public static final String DEFAULT_DATABASE_LOADER_ONLY = "false";
-
 	private DatabaseContextSetup() {
 		assert false;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.6 2005/05/27 09:55:32 bass Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.7 2005/05/27 11:13:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/27 09:55:32 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/27 11:13:49 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -75,7 +75,7 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 	}
 
 	/**
-	 * Should be <code>final</code>, but overridden in
+	 * Would be <code>final</code> unless overridden in
 	 * <code>MServerMeasurementObjectLoader</code>.
 	 *
 	 * @param identifiables
@@ -111,7 +111,14 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		}
 	}
 
-	public final Set refresh(final Set storableObjects) throws ApplicationException {
+	/**
+	 * Would be <code>final</code> unless overridden in
+	 * <code>*Server*ObjectLoader</code>.
+	 *
+	 * @param storableObjects
+	 * @throws ApplicationException
+	 */
+	public Set refresh(final Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 

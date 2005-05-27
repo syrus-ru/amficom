@@ -1,5 +1,5 @@
 /*
-* $Id: MSHServerMapObjectLoader.java,v 1.1 2005/04/01 15:12:43 bass Exp $
+* $Id: MSHServerMapObjectLoader.java,v 1.2 2005/05/27 11:13:49 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,20 +17,11 @@ import com.syrus.AMFICOM.map.DatabaseMapObjectLoader;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 15:12:43 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/27 11:13:49 $
  * @author $Author: bass $
  * @module mshserver_1
  */
 public final class MSHServerMapObjectLoader extends DatabaseMapObjectLoader {
-	private long refreshTimeout;
-
-	/**
-	 * @param refreshTimeout
-	 */
-	public MSHServerMapObjectLoader(final long refreshTimeout) {
-		this.refreshTimeout = refreshTimeout;
-	}
-
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
 		/**
 		 * there are not resons for refresh due to all changes made using one MSHServer

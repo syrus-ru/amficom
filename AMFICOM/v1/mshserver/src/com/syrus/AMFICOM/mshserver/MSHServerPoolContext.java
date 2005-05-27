@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerPoolContext.java,v 1.3 2005/05/23 09:02:09 bass Exp $
+ * $Id: MSHServerPoolContext.java,v 1.4 2005/05/27 11:13:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/23 09:02:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/27 11:13:49 $
  * @module mshserver_v1
  */
 final class MSHServerPoolContext extends PoolContext {
@@ -27,18 +27,11 @@ final class MSHServerPoolContext extends PoolContext {
 
 	public static final String KEY_SCHEME_POOL_SIZE = "SchemePoolSize";
 
-	public static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
-
 	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
 	public static final int MAP_POOL_SIZE = 1000;
 
 	public static final int SCHEME_POOL_SIZE = 1000;
-
-	/**
-	 * Refresh timeout in minutes;
-	 */
-	public static final int REFRESH_TIMEOUT = 5;
 
 	public static final String DATABASE_LOADER_ONLY = "false";
 
@@ -47,16 +40,15 @@ final class MSHServerPoolContext extends PoolContext {
 	 */
 	public void init() {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DATABASE_LOADER_ONLY)).booleanValue();
-		final long refreshTimeoutMillis = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, REFRESH_TIMEOUT) * 1000L * 60L;
 		final Class lruMapClass = StorableObjectResizableLRUMap.class;
 		MapStorableObjectPool.init(databaseLoaderOnly
 						? new DatabaseMapObjectLoader()
-						: new MSHServerMapObjectLoader(refreshTimeoutMillis),
+						: new MSHServerMapObjectLoader(),
 				lruMapClass,
 				ApplicationProperties.getInt(KEY_MAP_POOL_SIZE, MAP_POOL_SIZE));
 		SchemeStorableObjectPool.init(databaseLoaderOnly
 						? new DatabaseSchemeObjectLoader()
-						: new MSHServerSchemeObjectLoader(refreshTimeoutMillis),
+						: new MSHServerSchemeObjectLoader(),
 				lruMapClass,
 				ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, SCHEME_POOL_SIZE));
 	}
