@@ -188,26 +188,13 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		}
 	}
 
-	/**
-	 * Draws model curve using current graphics plotting settings.
-	 * May be used for drawing both model and threshold curve 
-	 * @param g graphics to plot
-	 * @param mt trace to plot
-	 * @param sre not null: range to plot coded as SimpleReflectogramEvent; null: plot whole trace
-	 * @param avoidLastPoint true to draw [sre.begin .. sre.end-1]; false to draw [sre.begin .. sre.end].
-	 *  This parameter takes no effect if sre == null.
-	 */
-	protected void drawModelCurve(Graphics g, ModelTrace mt,
-			SimpleReflectogramEvent sre, boolean avoidLastPoint)
-	{
-        int n1 = sre == null ? 0 : sre.getBegin();
-        int n2 = sre == null ? mt.getLength() - 1
-            : sre.getEnd() - (avoidLastPoint ? 1 : 0);
-        ModelTraceRange subrange =
-            new ModelTraceRangeImplMTRSubrange(mt, n1, n2, true); 
-        drawModelCurve(g, subrange, false);
-	}
-
+    /**
+     * Draw model curve using current graphics plotting settings.
+     * @param g graphics to plot (not null)
+     * @param mtr trace and range to plot
+     * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
+     *   false to draw [sre.begin .. sre.end].
+     */
     protected void drawModelCurve(Graphics g, ModelTraceRange mtr,
             boolean avoidLastPoint)
     {
@@ -215,12 +202,38 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
         int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
         if ((n1 <= end) && (n2 >= start))
         {
-            int iFrom = Math.max(0, n1 - start);
-            int iTo = Math.min(end, n2) - start;
+            int iFrom = Math.max(start, n1);
+            int iTo = Math.min(end, n2);
             if (iTo - iFrom >= 0)
             {
-                double[] vArr = mtr.getYArray(iFrom + start, iTo - iFrom + 1);
-                draw_y_curve(g, vArr, 0, iFrom, iTo - iFrom);
+                double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
+                draw_y_curve(g, vArr, 0, iFrom - start, iTo - iFrom);
+            }
+        }
+    }
+
+    /**
+     * Draw model curve using current graphics plotting settings.
+     * @param g graphics to plot, or null if no plotting is required
+     * @param r GraphRange to be updated, or null if update not requied
+     * @param mtr trace and range to plot
+     * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
+     *   false to draw [sre.begin .. sre.end].
+     */
+    protected void drawModelCurve(Graphics g, GraphRange r, ModelTraceRange mtr,
+            boolean avoidLastPoint)
+    {
+        if (g != null)
+            drawModelCurve(g, mtr, avoidLastPoint);
+        if (r != null) {
+            int n1 = mtr.getBegin();
+            int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
+            int iFrom = n1;
+            int iTo = n2;
+            if (iTo - iFrom >= 0)
+            {
+                double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
+                update_range_by_y_curve(r, vArr, 0, iFrom - start, iTo - iFrom);
             }
         }
     }
@@ -230,7 +243,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (mtae == null)
 			return;
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
-		drawModelCurve(g, mtae.getModelTrace(), null, false);
+		drawModelCurve(g, mtae.getModelTrace(), false);
 	}
 
 	protected void paint_reflectogram_events(Graphics g)

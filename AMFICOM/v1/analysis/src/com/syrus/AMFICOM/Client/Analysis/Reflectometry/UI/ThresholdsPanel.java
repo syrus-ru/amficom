@@ -26,6 +26,28 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	private int c_event = 0;
 	private ModelTraceManager.ThresholdHandle c_TH = null;
 
+    private static class FPSCounter { // FIXME: debug only: FSPCounter
+        long count = 0;
+        long time = 0;
+        public FPSCounter() {
+            this.time = System.currentTimeMillis();
+        }
+        void inc() {
+            this.count++;
+            long ct = System.currentTimeMillis();
+            final long ONE_SECOND = 1000;
+            final long DT = 1000;
+            if (ct < this.time + DT)
+                return;
+            double fps = count * 1.0 * ONE_SECOND / (ct - this.time);
+            System.out.println("FPSCounter: " + fps + " fps");
+            this.time = ct;
+            this.count = 0;
+        }
+    }
+
+    private FPSCounter fps = new FPSCounter();
+
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
 		super (panel, dispatcher, y, deltaX);		
@@ -239,21 +261,36 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		paint_scale_digits(g);
 
-		if (paint_thresholds)
-		{
+		if (paint_thresholds) {
+            updateGraphRangeByThresholds(new GraphRange()); // FIXME
 			if(isToPaintAllThresholds())
-				paintAllThresholds(g);
+				paintAllThresholds(g, null);
 			else
-				paintOneThreshold(g);
+				paintOneThreshold(g, null);
 		}
 	}
 
+    /**
+     * Extends GraphRange to cover all thresholds curves.
+     * (see {@link GraphRange})
+     * @param r GraphRange to update
+     */
+    public void updateGraphRangeByThresholds(GraphRange r) {
+        if (paint_thresholds) {
+            if(isToPaintAllThresholds())
+                paintAllThresholds(null, r);
+            else
+                paintOneThreshold(null, r);
+        }
+    }
+
 	/**
 	 * Paints one threshold or all thresholds.
-	 * @param g graphics
+	 * @param g graphics, may be null if no painting is actually required
+     * @param r range to be updated to cover curves painted 
 	 * @param nEvent event number >= 0 to paint or -1 to paint all thresholds.
 	 */
-	private void paintThresholdsEx(Graphics g, int nEvent)
+	private void paintThresholdsEx(Graphics g, GraphRange r, int nEvent)
 	{
 		if (etalon == null)
 			return;
@@ -261,94 +298,79 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		for (int key = 0; key < 4; key++)
 		{
             // определяем цвет
-			g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
-			     ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
-			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
+            if (g != null)
+                g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
+                        ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
+                        : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 
             // определяем, какую кривую рисовать
 			ModelTrace thresholdMT = etalon.getThresholdMT(key);
 
             // Определяем диапазон отрисовки
-			SimpleReflectogramEvent sre = null;
-			if (nEvent >= 0)
-			{
-				sre = etalon.getEventRangeOnThresholdCurve(nEvent, key);
+			if (nEvent >= 0) {
+                SimpleReflectogramEvent sre =
+                    etalon.getEventRangeOnThresholdCurve(nEvent, key);
 				if (sre == null)
-					continue;
-			}
+					continue; // if no region, then do not draw at all
+                // When we draw thresholds for one event only, avoid drawing thresholds at the end point.
+                // This is because sometimes (n/id event type) threshold curve can break.
 
-            // If we draw thresholds for one event only, avoid drawing thresholds at the end point.
-			// This is because sometimes (n/id event type) threshold curve can break.
-			drawModelCurve(g, thresholdMT, sre, nEvent >= 0);
+                ModelTraceRange subrange = new ModelTraceRangeImplMTRSubrange(
+                        thresholdMT, sre.getBegin(), sre.getEnd(), false);
+                    drawModelCurve(g, r, subrange, true);
+			} else {
+                drawModelCurve(g, r, thresholdMT, false);
+            }
 		}
 	}
 
     /**
      * Paints secondary line for one threshold or all thresholds.
-     * @param g graphics
+     * @param g graphics, null if no actual plotting is required
+     * @param r GraphRange to update, null if no range update is required
      * @param nEvent event number, must be >= 0.
      */
-    private void paintThresholdsSec(Graphics g, int nEvent, boolean dashStroke)
+    private void paintThresholdsSec(Graphics g, GraphRange r, int nEvent, boolean dashStroke)
     {
         if (etalon == null)
             return;
 
-        if (dashStroke)
-            ((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-
         ModelTraceRange[] curves = etalon.getEventThresholdMTR(nEvent);
-
-        for (int key = 0; key < 4; key++)
-        {
-            // определяем цвет
-            g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
-                 ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
-                 : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
-
-            drawModelCurve(g, curves[key], true);
-        }
-        if (dashStroke)
-            ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
         
-        this.fps.inc();
-    }
-
-    private static class FPSCounter { // FIXME: debug only: FSPCounter
-        long count = 0;
-        long time = 0;
-        public FPSCounter() {
-            this.time = System.currentTimeMillis();
-        }
-        void inc() {
-            this.count++;
-            long ct = System.currentTimeMillis();
-            final long ONE_SECOND = 1000;
-            final long DT = 1000;
-            if (ct < this.time + DT)
-                return;
-            double fps = count * 1.0 * ONE_SECOND / (ct - this.time);
-            System.out.println("FPSCounter: " + fps + " fps");
-            this.time = ct;
-            this.count = 0;
+        if (g != null) { // draw actually
+            if (dashStroke)
+                ((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+            for (int key = 0; key < 4; key++) {
+                // определяем цвет
+                g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
+                        ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
+                        : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
+                drawModelCurve(g, r, curves[key], true);
+            }
+            if (dashStroke)
+                ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+            this.fps.inc();
+        } else { // update range only
+            for (int key = 0; key < 4; key++) {
+                drawModelCurve(g, r, curves[key], true);
+            }
         }
     }
-    
-    FPSCounter fps = new FPSCounter();
 
-	private void paintOneThreshold(Graphics g)
+	private void paintOneThreshold(Graphics g, GraphRange r)
 	{
 		if (c_event >= 0)
         {
             // Note: эти два метода иногда могут давать заметно несовпадающие кривые.
             // Note: пунктирная линия - paintThresholdsSec(..., true) - очень медленно прорисовывается
-            paintThresholdsSec(g, c_event, false);
+            paintThresholdsSec(g, r, c_event, false);
             // Note: при рисовании пунктир и сплошная кривая могут совпадать неточно, что приводит к "мохнатости" линии
             //paintThresholdsEx(g, c_event);
         }
 	}
-	private void paintAllThresholds(Graphics g)
+	private void paintAllThresholds(Graphics g, GraphRange r)
 	{
-		paintThresholdsEx(g, -1);
+		paintThresholdsEx(g, r, -1);
 	}
 
 	private boolean isToPaintAllThresholds()
