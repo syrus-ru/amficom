@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
@@ -105,7 +106,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 						LangModelAnalyse.getString("totalEvents")
 					},
 					null);
-		this.jTable = new JTable(tModel);
+		this.jTable = new ATable(tModel);
 //		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -134,7 +135,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 
 		tabbedPane.add(LangModelAnalyse.getString("Title.comparative"), mainPanelWholeComp);
 		wctModel = new WholeCompareTableModel();
-		jTableWholeComp = new JTable (wctModel);
+		jTableWholeComp = new ATable (wctModel);
 		jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(150);
 		jTableWholeComp.getColumnModel().getColumn(1).setPreferredWidth(70);
 

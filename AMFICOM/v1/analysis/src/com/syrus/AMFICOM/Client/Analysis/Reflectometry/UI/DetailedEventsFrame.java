@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class DetailedEventsFrame extends JInternalFrame
@@ -187,7 +188,7 @@ implements EtalonMTMListener,
 				null);
 		tModels.put(TERMINATE, terminateModel);
 
-		this.mainTable = new JTable();
+		this.mainTable = new ATable();
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -230,7 +231,7 @@ implements EtalonMTMListener,
 			}
 		};
 		
-		this.comparativeTable = new JTable(this.ctModel);
+		this.comparativeTable = new ATable(this.ctModel);
 		this.comparativeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 //		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
 //		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);

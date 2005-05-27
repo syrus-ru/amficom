@@ -23,7 +23,6 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
@@ -45,8 +44,9 @@ import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
@@ -243,7 +243,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 			}
 		});
 
-		jTable.setDefaultRenderer(Object.class, new EventTableRenderer(jTable));
+		jTable.setDefaultRenderer(Object.class, new EventTableRenderer());
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
@@ -474,15 +474,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		}
 	}
 	
-	private class EventTableRenderer extends DefaultTableCellRenderer
+	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer
 	{
-		JTable table;
         int viewMode;
-
-		public EventTableRenderer(JTable table)
-		{
-			this.table = table;
-		}
 
 		public Component getTableCellRendererComponent(	JTable table1,
 														Object value,
