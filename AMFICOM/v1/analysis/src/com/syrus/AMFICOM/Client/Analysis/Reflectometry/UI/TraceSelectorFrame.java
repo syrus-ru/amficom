@@ -11,6 +11,8 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.AMFICOM.Client.Analysis.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
@@ -21,7 +23,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	protected static List traces = new ArrayList();
 	private FixedSizeEditableTableModel tModel; //DefaultTableModel
-	private ColorChooserTable jTable;
+	private ATable jTable;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -58,14 +60,16 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("selectorKey"),
 												LangModelAnalyse.getString("selectorValue")},
-					new Object[] {Color.BLACK},
+					new Color[] {Color.BLACK},
 					null,
 					null);
 
 //		tModel = new GeneralTableModel();
 
-		jTable = new ColorChooserTable (tModel);
-//		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+		jTable = new ATable(tModel);
+		jTable.setDefaultRenderer(Color.class, ColorCellRenderer.getInstance());
+		
+		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 
 		setContentPane(mainPanel);
 //		this.setSize(new Dimension(200, 213));
@@ -115,60 +119,6 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		scrollPane.getViewport().add(jTable);
 	}
 
-	class DefaultTableModel extends AbstractTableModel {
-		final String[] columnNames = {"Element", "Color"};
-		final Object[][] data = {
-				{"DefaultElement", Color.WHITE},
-				{"DefaultElement2", Color.WHITE}
-				};
-
-		public int getColumnCount() {
-				return columnNames.length;
-		}
-
-		public int getRowCount() {
-				return data.length;
-		}
-
-		public String getColumnName(int col) {
-				return columnNames[col];
-		}
-
-		public Object getValueAt(int row, int col) {
-				return data[row][col];
-		}
-
-		/*
-		 * JTable uses this method to determine the default renderer/
-		 * editor for each cell.  If we didn't implement this method,
-		 * then the last column would contain text ("true"/"false"),
-		 * rather than a check box.
-		 */
-		public Class getColumnClass(int c) {
-				return getValueAt(0, c).getClass();
-		}
-
-		/*
-		 * Don't need to implement this method unless your table's
-		 * editable.
-		 */
-		public boolean isCellEditable(int row, int col) {
-				//Note that the data/cell address is constant,
-				//no matter where the cell appears onscreen.
-				if (col < 1) {
-						return false;
-				} else {
-						return true;
-				}
-		}
-
-		public void setValueAt(Object value, int row, int col) {
-				data[row][col] = value;
-				fireTableCellUpdated(row, col);
-		}
-	}
-	
-
 	public void bsHashAdded(String key, BellcoreStructure bs)
 	{
 		String id = key;
@@ -179,6 +129,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Log.FINEST);
 		tModel.addRow(bs.title, new Color[] {GUIUtil.getColor(id)});
+		jTable.updateUI();
 		setVisible(true);
 	}
 

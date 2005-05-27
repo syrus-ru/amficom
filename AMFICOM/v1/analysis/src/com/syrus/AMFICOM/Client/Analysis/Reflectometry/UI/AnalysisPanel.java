@@ -24,8 +24,8 @@ public class AnalysisPanel extends MapMarkersPanel
 	protected AnaLine[] lines = new AnaLine[2];
 	protected MarkersInfo mInfo = new MarkersInfo();
 	protected Marker moving_marker;
-	private boolean moved_here = true;
-
+	private boolean moved_here = false;
+	
 	private static float marker_w = 1.6f; // width of marker in pixels
 	private static float ana_line_w = 1.6f; // width of analysis lines in pixels
 	public static Stroke ANA_LINE_STROKE = new BasicStroke(ana_line_w);
@@ -222,9 +222,9 @@ public class AnalysisPanel extends MapMarkersPanel
 				{
 					if (loss_analysis)
 					{
-						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 5;
+						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 6;
 						x = Math.min(x, n_x) - delta_left;
-						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 5;
+						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 6;
 						x2 = Math.max(x2, n_x2) + delta_right;
 
 						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
@@ -329,12 +329,10 @@ public class AnalysisPanel extends MapMarkersPanel
 			if (_activeEvent != activeEvent)
 			{
 				_activeEvent = activeEvent;
-				moved_here = true;
 				Heap.setCurrentEvent(activeEvent);
-				moved_here = false;
 			}
 			moved_here = true;
-			dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_LOCATED_EVENT));
+			dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_LOCATED_EVENT), false);
 			moved_here = false;
 			return;
 		}
@@ -365,15 +363,17 @@ public class AnalysisPanel extends MapMarkersPanel
 							moved_here = true;
 							Heap.setCurrentEvent(activeEvent);
 							moved_here = false;
-							return;
 						}
 					}
-					if (SwingUtilities.isLeftMouseButton(e))
+					else if (SwingUtilities.isLeftMouseButton(e))
 					{
 						int pos = coord2index(currpos.x);
 						moveMarker (markerA, pos);
 						updAnalysisMarkerInfo();
 					}
+					moved_here = true;
+					dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_LOCATED_EVENT), false);
+					moved_here = false;
 					parent.repaint();
 					return;
 				}

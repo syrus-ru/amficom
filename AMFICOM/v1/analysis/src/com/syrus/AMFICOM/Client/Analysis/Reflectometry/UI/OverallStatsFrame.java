@@ -37,7 +37,7 @@ public class OverallStatsFrame extends ATableFrame
 implements EtalonMTMListener, PrimaryRefAnalysisListener
 {
 	private FixedSizeEditableTableModel tModel;
-	private JTable jTable;
+	private ATable jTable;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -45,7 +45,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
 	private WholeCompareTableModel wctModel;
-	private JTable jTableWholeComp;
+	private ATable jTableWholeComp;
 
 	private JPanel mainPanelWholeComp = new JPanel();
 	private JScrollPane scrollPaneWholeComp = new JScrollPane();
@@ -106,8 +106,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 						LangModelAnalyse.getString("totalEvents")
 					},
 					null);
+
 		this.jTable = new ATable(tModel);
-//		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
+		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 

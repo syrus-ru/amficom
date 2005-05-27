@@ -56,7 +56,7 @@ implements PropertyChangeListener, BsHashChangeListener,
 	CurrentEventChangeListener, EtalonMTMListener
 {
 	protected Dispatcher dispatcher;
-	JTable jTable;
+	ATable jTable;
 
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();

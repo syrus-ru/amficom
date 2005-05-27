@@ -89,7 +89,7 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 					},
 					null);
 		jTable = new ATable(tModel);
-//		jTable.getColumnModel().getColumn(0).setPreferredWidth(160);
+		jTable.getColumnModel().getColumn(0).setPreferredWidth(160);
 
 		setContentPane(mainPanel);
 //		this.setSize(new Dimension(200, 213));

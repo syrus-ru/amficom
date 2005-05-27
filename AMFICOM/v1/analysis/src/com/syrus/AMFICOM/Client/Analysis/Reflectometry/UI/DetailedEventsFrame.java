@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -51,8 +52,8 @@ implements EtalonMTMListener,
 
 	private Map tModels = new HashMap(6);
 
-	private JTable mainTable;
-	private JTable comparativeTable;
+	private ATable mainTable;
+	private ATable comparativeTable;
 	
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -208,8 +209,7 @@ implements EtalonMTMListener,
 		scrollPane.setAutoscrolls(true);
 
 		mainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 200));
-//		jTable.setMinimumSize(new Dimension(200, 200));
+		
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(mainTable);
 		tabbedPane.setEnabledAt(0, true);
@@ -233,14 +233,12 @@ implements EtalonMTMListener,
 		
 		this.comparativeTable = new ATable(this.ctModel);
 		this.comparativeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
-//		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);
+		this.comparativeTable.getColumnModel().getColumn(0).setPreferredWidth(120);
+		this.comparativeTable.getColumnModel().getColumn(1).setPreferredWidth(100);
 
 		mainPanelComp.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPaneComp.setViewport(viewportComp);
 		scrollPaneComp.setAutoscrolls(true);
-//		jTableComp.setPreferredScrollableViewportSize(new Dimension(200, 213));
-//		jTableComp.setMinimumSize(new Dimension(200, 213));
 		comparativeTable.setDefaultRenderer(Object.class, new CompareTableRenderer());
 
 		mainPanelComp.add(scrollPaneComp, BorderLayout.CENTER);

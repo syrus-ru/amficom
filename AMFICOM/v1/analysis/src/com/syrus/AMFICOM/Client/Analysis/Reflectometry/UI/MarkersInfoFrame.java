@@ -36,7 +36,7 @@ implements PropertyChangeListener, BsHashChangeListener
 	private static String dash = "-----";
 
 	private FixedSizeEditableTableModel tModel;
-	private JTable jTable;
+	private ATable jTable;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();

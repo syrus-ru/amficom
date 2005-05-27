@@ -57,7 +57,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 	private static final String DASH = "-----";
 
 	private FixedSizeEditableTableModel tModel;
-	JTable jTable;
+	ATable jTable;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
