@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.1 2005/05/25 09:38:53 bob Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.2 2005/05/27 13:01:39 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import javax.swing.table.TableCellRenderer;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/25 09:38:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/27 13:01:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -49,7 +49,7 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 	protected static Hashtable					renderers;
 
 	private static ADefaultTableCellRenderer	instance;
-
+	
 	public ADefaultTableCellRenderer() {
 		super.setOpaque(true);
 		super.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
@@ -140,6 +140,8 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 		private static final long	serialVersionUID	= 3257007670052335929L;
 		
 		private Color	unselectedForeground;
+		
+		private static boolean usingItalic = false;
 
 		public ObjectRenderer() {
 			super.setOpaque(true);
@@ -165,9 +167,11 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			if (isSelected) {
 				this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
 						.getForeground());
+				if (usingItalic) {
 				Font font = table.getFont();
 				font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
 				this.setFont(font);
+				}
 				Color c = table.getSelectionBackground();
 				// calculate color with alpha-channel weight alpha
 				this
@@ -207,6 +211,14 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 		public void setForeground(Color c) {
 			super.setForeground(c);
 			this.unselectedForeground = c;
+		}
+		
+		public static boolean isUsingItalic() {
+			return usingItalic;
+		}
+		
+		public static void setUsingItalic(boolean italic) {
+			usingItalic = italic;
 		}
 	}
 
