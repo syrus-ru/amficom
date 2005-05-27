@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.18 2005/04/13 10:45:50 bob Exp $
+ * $Id: StorableObjectType.java,v 1.19 2005/05/27 12:58:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/13 10:45:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/05/27 12:58:45 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -81,11 +81,11 @@ public abstract class StorableObjectType extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setCodename0(String codename) {
+	protected void setCodename0(final String codename) {
 		this.codename = codename;
 	}
 
-	public void setCodename(String codename) {
+	public void setCodename(final String codename) {
 		this.setCodename0(codename);
 		super.changed = true;
 	}
@@ -97,11 +97,11 @@ public abstract class StorableObjectType extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setDescription0(String description) {
+	protected void setDescription0(final String description) {
 		this.description = description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.setDescription0(description);
 		super.changed = true;
 	}
@@ -109,14 +109,14 @@ public abstract class StorableObjectType extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creator_id,
-			Identifier modifier_id,
-			long version,
-			String codename,
-			String description) {
-		super.setAttributes(created, modified, creator_id, modifier_id, version);
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.codename = codename;
 		this.description = description;
 	}
