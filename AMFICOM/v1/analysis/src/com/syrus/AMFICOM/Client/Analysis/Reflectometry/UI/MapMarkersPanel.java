@@ -32,6 +32,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		super (panel, dispatcher, y, deltaX);
 
 		edit_thresholds = false;
+        paint_thresholds = false;
 
 		try
 		{
