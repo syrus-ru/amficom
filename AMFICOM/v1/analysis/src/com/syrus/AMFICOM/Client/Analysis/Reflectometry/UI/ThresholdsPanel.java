@@ -21,9 +21,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected boolean paint_thresholds = true;
 	protected boolean edit_thresholds = true;
 
-	private ModelTraceManager etalon;
-
-	private int c_event = 0;
 	private ModelTraceManager.ThresholdHandle c_TH = null;
 
     private static class FPSCounter { // FIXME: debug only: FSPCounter
@@ -57,17 +54,9 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	// Otherwise, our comunication with Heap.etalonEvent may not be accurate
 	public void updateEtalon()
 	{
-		etalon = Heap.getMTMEtalon();
-
-		if (etalon == null)
-		{
-			c_event = 0;
+		if (Heap.getMTMEtalon() == null) {
 			c_TH = null;
-			return;
 		}
-
-		if (c_event >= etalon.getMTAE().getNEvents())
-			c_event = etalon.getMTAE().getNEvents() - 1;
 	}
 
 	// XXX: transient code (slow refactoring);
@@ -92,11 +81,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (sevents == null)
 			return;
 
-		c_event = Heap.getCurrentEtalonEvent2();
-
-		if (etalon != null && c_event >= etalon.getMTAE().getNEvents())
-			c_event = etalon.getMTAE().getNEvents() - 1;
-
 		int num = Heap.getCurrentEvent2();
 
 		if (num >= 0) // XXX
@@ -108,6 +92,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	
 	protected void this_mousePressed(MouseEvent mev)
 	{
+        ModelTraceManager etalon = Heap.getMTMEtalon();
 		if (!edit_thresholds || etalon == null)
 		{
 			super.this_mousePressed(mev);
@@ -121,14 +106,14 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		boolean allThresholds = this.isToPaintAllThresholds(); // режим "все пороги"
 
 		// пытаемся "ухватить" (drag) порог
-		this.c_TH = this.etalon.getThresholdHandle(
+		this.c_TH = etalon.getThresholdHandle(
 			coord2indexF(this.currpos.x), // we need float value, without rounding
 			coord2value(this.currpos.y),
 			MOUSE_COUPLING / this.scaleX,
 			MOUSE_COUPLING / this.scaleY,
 			0.5,
 			isRbutton ? 1 : 0,
-			allThresholds ? -1 : c_event,
+			allThresholds ? -1 : Heap.getCurrentEtalonEvent2(),
                     true);
 
 		if (this.c_TH != null) {
@@ -177,7 +162,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	protected void this_mouseDragged(MouseEvent e)
 	{
-		if (!edit_thresholds || etalon == null)
+		if (!edit_thresholds || Heap.getMTMEtalon() == null)
 		{
 			super.this_mouseDragged(e);
 			return;
@@ -201,7 +186,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	protected void this_mouseReleased(MouseEvent e)
 	{
-		if (!edit_thresholds || etalon == null || c_TH == null)
+		if (!edit_thresholds || Heap.getMTMEtalon() == null || c_TH == null)
 		{
 			super.this_mouseReleased(e);
 		}
@@ -223,8 +208,9 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	{
 	    // если кликнули, но не на текущее событие, переходим к новому событию
 	    int pos = coord2index(e.getPoint().x);
+        ModelTraceManager etalon = Heap.getMTMEtalon();
 	    int evId = etalon != null ? etalon.getMTAE().getEventByCoord(pos) : -1;
-		if (evId != -1 && evId != c_event)
+		if (evId != -1 && evId != Heap.getCurrentEtalonEvent2())
 		{
 	    	Heap.setCurrentEtalonEvent(evId);
 		    return;
@@ -288,6 +274,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	 */
 	private void paintThresholdsEx(Graphics g, GraphRange r, int nEvent)
 	{
+        ModelTraceManager etalon = Heap.getMTMEtalon();
 		if (etalon == null)
 			return;
 
@@ -328,6 +315,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
      */
     private void paintThresholdsSec(Graphics g, GraphRange r, int nEvent, boolean dashStroke)
     {
+        ModelTraceManager etalon = Heap.getMTMEtalon();
         if (etalon == null)
             return;
 
@@ -355,11 +343,12 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	private void paintOneThreshold(Graphics g, GraphRange r)
 	{
-		if (c_event >= 0)
+        int cEvent = Heap.getCurrentEtalonEvent2();
+		if (cEvent >= 0)
         {
             // Note: эти два метода иногда могут давать заметно несовпадающие кривые.
             // Note: пунктирная линия - paintThresholdsSec(..., true) - очень медленно прорисовывается
-            paintThresholdsSec(g, r, c_event, false);
+            paintThresholdsSec(g, r, cEvent, false);
             // Note: при рисовании пунктир и сплошная кривая могут совпадать неточно, что приводит к "мохнатости" линии
             //paintThresholdsEx(g, c_event);
         }
