@@ -59,7 +59,6 @@ InitialAnalysis::InitialAnalysis(
     this->rSBig					= rSBig;
     this->wlet_width			= nonReflectiveSize;
 
-
     events = new ArrList();
 
 	if (lengthTillZero <= 0){
@@ -100,7 +99,7 @@ InitialAnalysis::InitialAnalysis(
 #endif
 }
 //------------------------------------------------------------------------------------------------------------
-InitialAnalysis::~InitialAnalysis()
+\InitialAnalysis::~InitialAnalysis()
 {	delete[] type;
 	delete[] noise;
     delete[] f_wlet;
@@ -141,7 +140,6 @@ return;}
 
     processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
     excludeShortLinesBetweenConnectors(data, wlet_width);
-    correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
     addLinearPartsBetweenEvents();
 	trimAllEvents(); // поскольку мы искусственно расширячет на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
 	verifyResults(); // проверяем ошибки
@@ -180,6 +178,7 @@ return;
       if( sp1->begin_weld!= -1 && fabs(sp1->end_weld-sp1->begin_weld)>1) //сварка
       {	EventParams *ep = new EventParams;
         setSpliceParamsBySplash( (EventParams&)*ep, (Splash&)*sp1 );
+        correctSpliceCoords(ep);
         events->add(ep);
 	continue;
       }
@@ -571,21 +570,11 @@ return;
     ev->begin = i_x - 1;
 }
 //------------------------------------------------------------------------------------------------------------
-// проводим разномасштабный авейвлет-анализ для уточнения положения сварок
-void InitialAnalysis::correctAllSpliceCoords()
-{	for(int n=1; n<events->getLength(); n++)
-    {	EventParams* ev = (EventParams*)(*events)[n];
-    	if(ev->type == EventParams::GAIN || ev->type == EventParams::LOSS)
-        {	correctSpliceCoords(n);
-        }
-    }
-}
-//------------------------------------------------------------------------------------------------------------
+// Проводим разномасштабный авейвлет-анализ для уточнения положения сварок
 // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 // Уточнение может только сужать сварки, но никак не расширять
-void InitialAnalysis::correctSpliceCoords(int n)
-{   EventParams* ev_lp = (EventParams*)(*events)[n];
-    EventParams& ev = *ev_lp;
+void InitialAnalysis::correctSpliceCoords(EventParams* splice)
+{   EventParams& ev = *splice;
 	// если это не сварка, то выход
     if( !(ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
 return;
@@ -684,14 +673,10 @@ return;
 void InitialAnalysis::excludeShortLinesBetweenConnectors(double* arr, int szc)
 {   if(events->getLength()<2)
 return;
-    int cou1 =0;
 	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
 	{   // пока не дойдём до коннектора
         EventParams* ev1 = (EventParams*)(*events)[n1];
     	if(ev1->type != EventParams::CONNECTOR)
-    continue;
-        else {cou1++;}
-		if(cou1 == 1) // первый "коннектор" это мёртвая зона
     continue;
         n2 = n1+1;
         if(n2 >= events->getLength())

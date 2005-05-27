@@ -106,9 +106,7 @@ private:
     void processEndOfTrace();  // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
     void addLinearPartsBetweenEvents();
 	void correctConnectorFront(EventParams* connector);
-    void correctAllConnectorsFronts();
-    void correctAllSpliceCoords(); // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
-    void correctSpliceCoords(int n);
+	void correctSpliceCoords(EventParams* splice);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
     void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
     void trimAllEvents(); // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
     void verifyResults();
