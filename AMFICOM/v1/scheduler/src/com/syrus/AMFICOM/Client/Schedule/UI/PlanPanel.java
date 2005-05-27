@@ -19,7 +19,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,6 +37,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 
 public class PlanPanel extends JPanel implements 
@@ -585,30 +585,35 @@ ActionListener, PropertyChangeListener {
 	}
 
 	protected void updateTestLines() {
-		Collection tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-		for (Iterator it = tests.iterator(); it.hasNext();) {
-			Test test = (Test) it.next();
-			MonitoredElement monitoredElement = test.getMonitoredElement();
-			if (!this.testLines.keySet().contains(monitoredElement)) {
-				TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElement.getId());
-				// testLine.setTestTemporalStamps((TestTemporalStamps)
-				// this.testTemporalLines.get(monitoredElement));
-				this.testLines.put(monitoredElement, testLine);
-				testLine.setPreferredSize(new Dimension(this.getWidth(), 25));
+		try {
+			for (Iterator it = StorableObjectPool.getStorableObjects(((SchedulerModel) this.aContext.getApplicationModel()).getTestIds(), true).iterator(); it.hasNext();) {
+				Test test = (Test) it.next();
+				MonitoredElement monitoredElement = test.getMonitoredElement();
+				if (!this.testLines.keySet().contains(monitoredElement)) {
+					TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElement.getId());
+					// testLine.setTestTemporalStamps((TestTemporalStamps)
+					// this.testTemporalLines.get(monitoredElement));
+					this.testLines.put(monitoredElement, testLine);
+					testLine.setPreferredSize(new Dimension(this.getWidth(), 25));
+				}
 			}
-		}
 
-		this.removeAll();
-		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-			TestLine testLine = (TestLine) this.testLines.get(it.next());
-			this.add(testLine);
+			this.removeAll();
+			for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
+				TestLine testLine = (TestLine) this.testLines.get(it.next());
+				this.add(testLine);
+			}
+			
+			
+			super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
+
+			this.updateTestLinesTimeRegion();
+			this.revalidate();
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		
-		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
-
-		this.updateTestLinesTimeRegion();
-		this.revalidate();
 
 	}
 

@@ -12,7 +12,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -148,19 +147,23 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		this.listTable.removeAll();
 		WrapperedTableModel model = (WrapperedTableModel) TableFrame.this.listTable.getModel();
 		model.clear();
-		Collection tests = this.schedulerModel.getTests();
-		for (Iterator it = tests.iterator(); it.hasNext();) {
-			Test test1 = (Test) it.next();
-			Identifier groupTestId = test1.getGroupTestId();
-			assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
-					+ groupTestId, Log.FINEST);
-			if (groupTestId != null && !groupTestId.equals(test1.getId())) {
-				continue;
+		try {
+			for (Iterator it = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true).iterator(); it.hasNext();) {
+				Test test1 = (Test) it.next();
+				Identifier groupTestId = test1.getGroupTestId();
+				assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
+						+ groupTestId, Log.FINEST);
+				if (groupTestId != null && !groupTestId.equals(test1.getId())) {
+					continue;
+				}
+				if (model.getIndexOfObject(test1) < 0) {
+					Log.debugMessage("TableFrame.setTests | added ", Log.FINEST);
+					model.getValues().add(test1);
+				}
 			}
-			if (model.getIndexOfObject(test1) < 0) {
-				Log.debugMessage("TableFrame.setTests | added ", Log.FINEST);
-				model.getValues().add(test1);
-			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		this.listTable.revalidate();
 		this.listTable.repaint();
