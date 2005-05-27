@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
 public class SimpleGraphPanel extends JPanel
 {
@@ -26,6 +27,42 @@ public class SimpleGraphPanel extends JPanel
 	protected int end = 0; // номер конечной точки
 	protected double top = 0; // столько находится за пределами экрана вверху (в единицах измерения - для рефлектограммы дБ)
 	protected double bottom = 0; // столько находится за пределами экрана внизу (в единицах измерения - для рефлектограммы дБ)
+
+    public static class GraphRange {
+        public int xMin;
+        public int xMax;
+        public double yMin;
+        public double yMax;
+        public GraphRange() {
+            xMin = 1;
+            xMax = 0;
+            yMin = 1;
+            yMax = 0;
+        }
+        public boolean isEmpty() {
+            return xMin > xMax || yMin > yMax;
+        }
+        public void coverX(int x) {
+            if (xMin < xMax) {
+                xMin = x;
+                xMax = x;
+            } else if (x < xMin) {
+                xMin = x;
+            } else if (x > xMax) {
+                xMax = x;
+            }
+        }
+        public void coverY(double y) {
+            if (yMin < yMax) {
+                yMin = y;
+                yMax = y;
+            } else if (y < yMin) {
+                yMin = y;
+            } else if (y > yMax) {
+                yMax = y;
+            }
+        }
+    }
 
 	public SimpleGraphPanel (double[] y, double deltaX, Color color)
 	{
@@ -113,7 +150,24 @@ public class SimpleGraphPanel extends JPanel
 			: color1;
 	}
 
-	// plots from y[i0] to y[i0+N] _inclusively_ at x=x0..x0+N
+    // XXX: it's better to take x0 ~ xTrace, not x0 ~ xTrace-start
+    protected void update_range_by_y_curve(
+            GraphRange r, double[] y1, int i0, int x0, int N)
+    {
+        if (N < 0)
+            return;
+        r.coverX(x0 + start);
+        r.coverX(x0 + N + start);
+        r.coverY(y1[ReflectogramMath.getArrayMaxIndex(y1, i0, i0 + N)]); // i0+N is included
+        r.coverY(y1[ReflectogramMath.getArrayMinIndex(y1, i0, i0 + N)]);
+    }
+	/**
+     * plots array data from y[i0] to y[i0+N] <b>inclusively</b>
+     * to graph's (xScreen/scaleX==xTrace-start) ranging from x0 to x0+N <b>inclusively</b>.
+     * Does not perform clipping
+     * FIXME: find all callers of draw_y_curve and make sure they are aware that y length is N+1, not N
+     * XXX: it's better to take x0 ~ xTrace, not x0 ~ xTrace-start
+	 */
 	protected void draw_y_curve(Graphics g, double[] y1, int i0, int x0, int N)
 	{
 		if (N < 0)
