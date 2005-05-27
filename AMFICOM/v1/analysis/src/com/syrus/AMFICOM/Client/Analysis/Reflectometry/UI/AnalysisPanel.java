@@ -3,12 +3,12 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
-import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
@@ -466,7 +466,10 @@ public class AnalysisPanel extends MapMarkersPanel
 			_activeEvent = activeEvent;
 			activeEvent = event;
 			if (markerB.pos < sevents[event].getBegin() || markerB.pos >= sevents[event].getEnd())
-				moveMarker(markerB, (sevents[event].getBegin()));
+                if (sevents[event].getEventType() == SimpleReflectogramEvent.ENDOFTRACE)
+                    moveMarker(markerB, sevents[event].getBegin());
+                else
+                    moveMarker(markerB, (sevents[event].getBegin() + sevents[event].getEnd()) / 2);
 		}
 		parent.repaint();
 	}
