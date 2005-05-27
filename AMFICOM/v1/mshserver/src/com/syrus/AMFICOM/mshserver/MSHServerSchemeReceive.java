@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeReceive.java,v 1.7 2005/05/25 13:01:10 bass Exp $
+ * $Id: MSHServerSchemeReceive.java,v 1.8 2005/05/27 11:37:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,11 +32,13 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/05/25 13:01:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/05/27 11:37:13 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeReceive extends MSHServerMapReceive {
+	private static final long serialVersionUID = 1127393868558975178L;
+
 	public final StorableObject_Transferable[] receiveSchemeProtoGroups(
 			final SchemeProtoGroup_Transferable transferables[],
 			final boolean force,

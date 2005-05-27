@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerMapReceive.java,v 1.5 2005/05/25 13:01:10 bass Exp $
+ * $Id: MSHServerMapReceive.java,v 1.6 2005/05/27 11:37:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,13 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/25 13:01:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/05/27 11:37:13 $
  * @module mshserver_v1
  */
 abstract class MSHServerMapReceive extends ServerCore implements MSHServerOperations {
+	private static final long serialVersionUID = -8091147854406929055L;
+
 	public final StorableObject_Transferable[] receiveSiteNodes(
 			final SiteNode_Transferable transferables[],
 			final boolean force,

@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.16 2005/05/26 11:20:31 max Exp $
+ * $Id: MSHServerImpl.java,v 1.17 2005/05/27 11:37:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/26 11:20:31 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2005/05/27 11:37:13 $
+ * @author $Author: arseniy $
  * @module mshserver_1
  */
 public final class MSHServerImpl extends MSHServerSchemeTransmit {
@@ -65,8 +65,8 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 		} catch (IllegalDataException e) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
-		RenderedImage_Transferable renderedImage_Transferable = new RenderedImage_Transferable(image);
-		return renderedImage_Transferable;
+		RenderedImage_Transferable renderedImageT = new RenderedImage_Transferable(image);
+		return renderedImageT;
 	}
 	
 	public void stopRenderTopologicalImage(

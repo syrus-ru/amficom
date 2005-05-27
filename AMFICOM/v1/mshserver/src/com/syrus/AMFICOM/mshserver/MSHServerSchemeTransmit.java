@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeTransmit.java,v 1.6 2005/05/26 17:52:55 bass Exp $
+ * $Id: MSHServerSchemeTransmit.java,v 1.7 2005/05/27 11:37:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,11 +48,13 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/26 17:52:55 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/05/27 11:37:13 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
+	private static final long serialVersionUID = 6830363270405840293L;
+
 	public SchemeProtoGroup_Transferable[] transmitSchemeProtoGroups(
 			final Identifier_Transferable ids[],
 			final SessionKey_Transferable sessionKey)

@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerMapTransmit.java,v 1.6 2005/05/26 17:52:55 bass Exp $
+ * $Id: MSHServerMapTransmit.java,v 1.7 2005/05/27 11:37:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,11 +41,13 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/26 17:52:55 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/05/27 11:37:13 $
  * @module mshserver_v1
  */
 abstract class MSHServerMapTransmit extends MSHServerSchemeReceive {
+	private static final long serialVersionUID = 8672802938668842557L;
+
 	public SiteNode_Transferable[] transmitSiteNodes(
 			final Identifier_Transferable ids[],
 			final SessionKey_Transferable sessionKey)
