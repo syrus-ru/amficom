@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.16 2005/05/20 21:14:47 arseniy Exp $
+ * $Id: event.idl,v 1.17 2005/05/27 18:37:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,17 @@ module corba {
 
 /////////////////////// Event ////////////////////////
 
+	enum AlertKind {
+		ALERT_KIND_WINDOW,
+		ALERT_KIND_EMAIL,
+		ALERT_KIND_SMS
+	};
+
+	struct ETUserAlertKinds {
+		general::corba::Identifier user_id;
+		sequence <AlertKind> alert_kinds;
+	};
+
 	struct EventType_Transferable {
 		general::corba::StorableObject header;
 
@@ -28,7 +39,7 @@ module corba {
 		general::corba::WString256 description;
 
 		general::corba::IdentifierSeq parameter_type_ids;
-		general::corba::IdentifierSeq user_ids;
+		sequence <ETUserAlertKinds> user_alert_kinds;
 	};
 
 	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;
@@ -55,12 +66,6 @@ module corba {
 
 		sequence <EventParameter_Transferable> parameters;
 		sequence <general::corba::Identifier> event_source_ids;
-	};
-
-	enum AlertKind {
-		ALERT_KIND_WINDOW,
-		ALERT_KIND_EMAIL,
-		ALERT_KIND_SMS
 	};
 
 
