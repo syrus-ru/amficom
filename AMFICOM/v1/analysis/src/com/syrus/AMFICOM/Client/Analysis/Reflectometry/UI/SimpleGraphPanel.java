@@ -28,20 +28,34 @@ public class SimpleGraphPanel extends JPanel
 	protected double top = 0; // столько находится за пределами экрана вверху (в единицах измерения - для рефлектограммы дБ)
 	protected double bottom = 0; // столько находится за пределами экрана внизу (в единицах измерения - для рефлектограммы дБ)
 
+    /**
+     * Диапазон на графике рефлектограммы
+     */
     public static class GraphRange {
-        public int xMin;
-        public int xMax;
-        public double yMin;
-        public double yMax;
+        private int xMin;
+        private int xMax;
+        private double yMin;
+        private double yMax;
+        /**
+         * Создает пустой диапазон
+         */
         public GraphRange() {
             xMin = 1;
             xMax = 0;
             yMin = 1;
             yMax = 0;
         }
+        /**
+         * проверяет, пуст ли диапазон
+         * @return true, если диапазон пуст, либо false, если не пуст
+         */
         public boolean isEmpty() {
             return xMin > xMax || yMin > yMax;
         }
+        /**
+         * расширяет диапазон так, чтобы он захватил указанную X-координату
+         * @param x
+         */
         public void coverX(int x) {
             if (xMin > xMax) {
                 xMin = x;
@@ -52,6 +66,10 @@ public class SimpleGraphPanel extends JPanel
                 xMax = x;
             }
         }
+        /**
+         * расширяет диапазон так, чтобы он захватил указанную Y-координату
+         * @param y
+         */
         public void coverY(double y) {
             if (yMin > yMax) {
                 yMin = y;
@@ -61,6 +79,34 @@ public class SimpleGraphPanel extends JPanel
             } else if (y > yMax) {
                 yMax = y;
             }
+        }
+        /**
+         * @return Левый край диапазона (включительно).
+         * Не определен для пустого диапазона.
+         */
+        public int getXMin() {
+            return xMin;
+        }
+        /**
+         * @return Правый край диапазона (включительно).
+         * Не определен для пустого диапазона.
+         */
+        public int getXMax() {
+            return xMax;
+        }
+        /**
+         * @return Минимальное значение Y диапазона.
+         * Не определено для пустого диапазона.
+         */
+        public double getYMin() {
+            return yMin;
+        }
+        /**
+         * @return Максимальное значение Y диапазона.
+         * Не определено для пустого диапазона.
+         */
+        public double getYMax() {
+            return yMax;
         }
     }
 
