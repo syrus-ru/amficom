@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2005/04/28 12:48:53 arseniy Exp $
+# $Id: Makefile,v 1.9 2005/05/27 09:42:17 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -26,7 +26,7 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) #\
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 
 
@@ -38,7 +38,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
 		-C $(CLASSDIR) com/syrus/AMFICOM/event \
 		-C $(CLASSDIR) com/syrus/AMFICOM/resource \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map #\
+		-C $(CLASSDIR) com/syrus/AMFICOM/map \
 		-C $(CLASSDIR) com/syrus/AMFICOM/scheme
 
 .mach:	.corba $(CLASSDIR)
