@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.19 2005/05/27 12:58:45 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.20 2005/05/27 12:59:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/27 12:58:45 $
+ * @version $Revision: 1.20 $, $Date: 2005/05/27 12:59:36 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -27,21 +27,21 @@ public abstract class StorableObjectType extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public StorableObjectType(Identifier id) {
+	public StorableObjectType(final Identifier id) {
 		super(id);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public StorableObjectType(Identifier id,
-			Date created,
-			Date modified,
-			Identifier creator_id,
-			Identifier modifier_id,
-			long version,
-			String codename,
-			String description) {
+	public StorableObjectType(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creator_id,
+			final Identifier modifier_id,
+			final long version,
+			final String codename,
+			final String description) {
 		super(id, created, modified, creator_id, modifier_id, version);
 		this.codename = codename;
 		this.description = description;
