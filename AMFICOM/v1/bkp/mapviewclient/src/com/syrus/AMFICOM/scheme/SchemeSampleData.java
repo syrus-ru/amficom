@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.8 2005/05/25 16:48:41 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.9 2005/05/30 16:29:25 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
@@ -35,7 +33,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -55,7 +53,7 @@ public final class SchemeSampleData {
 		}
 	}
 
-	private static void scheme1(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException, IdentifierGenerationException
+	private static void scheme1(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, IdentifierGenerationException
 	{
 		Set el = new HashSet();
 		Set link = new HashSet();
@@ -299,7 +297,7 @@ public final class SchemeSampleData {
 		StorableObjectPool.putStorableObject(scheme);
 	}
 
-	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, ObjectNotFoundException, RetrieveObjectException, IdentifierGenerationException
+	private static void scheme2(Identifier userId, Identifier domainId) throws CreateObjectException, IllegalObjectEntityException, IdentifierGenerationException
 	{
 		Set el = new HashSet();
 		Set link = new HashSet();
@@ -372,7 +370,7 @@ public final class SchemeSampleData {
 		clink0.setPhysicalLength(1000.0D);
 		clink0.setSourceSchemeCablePort(cport10);
 		clink0.setTargetSchemeCablePort(cport00);
-		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", null, null, null, null, clink0);
+		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink0);
 		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
 
 		SchemePath path0 = SchemePath.createInstance(userId, "Путяра измерений");

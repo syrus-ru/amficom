@@ -8,7 +8,7 @@ TARGET_SRC=$(LIBSRC)\mapviewclientsource.zip
 TARGET_DOC=$(LIBDOC)\mapviewclientdoc.zip
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\config.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\admin.jar;$(LIB)\adminclient.jar;$(LIB)\map.jar;$(LIB)\mapclient.jar;$(LIB)\scheme.jar;$(LIB)\schemeclient.jar;$(LIB)\resource.jar;$(LIB)\measurement.jar;$(LIB)\mapview.jar;$(LIB)\generalxml.jar;$(LIB)\mapxml.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\admin.jar;$(LIB)\resource.jar;$(LIB)\filter.jar;$(LIB)\config.jar;$(LIB)\measurement.jar;$(LIB)\map.jar;$(LIB)\scheme.jar;$(LIB)\mapview.jar;$(LIB)\csbridge.jar;$(LIB)\commonclient.jar;$(LIB)\mapclient.jar;$(LIB)\schemeclient.jar;$(LIB)\generalxml.jar;$(LIB)\mapxml.jar
 
 CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(XMLBEANSCP)
 
