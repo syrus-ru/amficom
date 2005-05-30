@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.3 2005/05/18 10:49:17 bass Exp $
+* $Id: Wrapper.java,v 1.4 2005/05/30 15:36:48 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,29 +22,15 @@ import java.util.List;
  * wrapper's constructor must be private and its instance must be obtained
  * using a static method <code>getInstance()</code>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/18 10:49:17 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/30 15:36:48 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module util
  */
-public interface Wrapper {
-
-	/**
-	 * Getter for entity key by index.
-	 *
-	 * @param index
-	 * @return key, if index in the range of keys array, <code>null</code>
-	 *         otherwise
-	 */
-	String getKey(final int index);
+public interface Wrapper {	
 	
 	/**
-	 * Entity keys of controller must be unique and cannot be changed.
-	 * This implementation uses unmodified List.
-	 *
-	 *
-	 *
-	 * @return array of keys
+	 * @return array of available keys
 	 */
 	List getKeys();
 
