@@ -65,8 +65,8 @@ public class RefAnalysis
 		ModelTrace mt = mtae.getModelTrace();
 		events = null; //new TraceEvent[re.length];
 
-		double maxY = 0; // XXX: saa: is 0 good for min/max? shall we use y[0] instead?
-		double minY = 0;
+		double maxY = y.length > 0 ? y[0] : 0;
+		double minY = maxY;
 		for (int i = 0; i < y.length; i++)
 		{
 			if (maxY < y[i])
@@ -74,7 +74,6 @@ public class RefAnalysis
 			if (minY > y[i])
 				minY = y[i];
 		}
-		double top = maxY - minY;
 
 		int lastPoint = de.length > 0
 			? de[de.length - 1].getBegin()
@@ -104,18 +103,21 @@ public class RefAnalysis
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
         {
     		double[] data = new double[5];
-            //double po = re[0].getAsympY0();
+            
+            // Po (отрицательна) - относительно maxY
             double po;
             if (de.length > 0 && de[0] instanceof DeadZoneDetailedEvent)
                 po = ((DeadZoneDetailedEvent)de[0]).getPo();
             else
-                po = 0;
-    		data[0] = po; // y0
-    		data[1] = maxY - y[lastPoint]; // y1
-            //data[2] = (maxY - maxNoise * 0.98); // noise // @todo: use correct noise determination algo - here and everywhere
-            data[2] = maxY - CoreAnalysisManager.getMedian(y, noiseStart, y.length, 0.98);
-    		data[3] = po; // po ?
-    		data[4] = de.length;
+                po = 0; // мертвой зоны нет - берем ноль
+            // ур. шума (отрицателен) - относительно maxY
+            double noise98 = CoreAnalysisManager.getMedian(
+                    y, noiseStart, y.length, 0.98) - maxY;
+    		data[0] = -po; // y0 (ось вниз)
+    		data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
+            data[2] = -noise98; // ур. щума по 98% (ось вниз)
+            data[3] = de.length; // число событий
+    		data[4] = po - noise98; // ƒƒ по 98%
     		overallStats.setData(data);
         }
 

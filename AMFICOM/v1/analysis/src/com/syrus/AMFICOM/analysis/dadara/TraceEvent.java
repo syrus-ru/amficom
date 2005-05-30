@@ -101,12 +101,12 @@ public class TraceEvent
 	public double overallStatsY1() {
 		return data[1];
 	}
-	public double overallStatsDD98pct() {
-		return data[2] - data[3];
-	}
 	public int overallStatsEvNum() {
-		return (int) data[4];
+		return (int) data[3];
 	}
+    public double overallStatsDD98pct() {
+        return data[4];
+    }
 	
 	// linear methods
 	public double linearData0() {
