@@ -1,5 +1,5 @@
 /*
- * $Id: EventServerImplementation.java,v 1.3 2005/05/18 13:29:31 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.4 2005/05/30 14:52:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,27 +7,51 @@
  */
 package com.syrus.AMFICOM.leserver;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.AMFICOM.event.Event;
+import com.syrus.AMFICOM.event.EventType;
 import com.syrus.AMFICOM.event.corba.Event_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 13:29:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/05/30 14:52:00 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public class EventServerImplementation extends EventServerPOA {
-	private static final long serialVersionUID = -5598344511722433000L;
+	private static final long serialVersionUID = 3257569516216398643L;
+
+	/*	Map of event queues for every user*/
+	private static Map userEventNotifiersMap;	//Map <Identifier userId, UserEventNotifier userEventNotifier>
+
+	static {
+		userEventNotifiersMap = Collections.synchronizedMap(new HashMap());
+	}
 
 	public void eventGeneration(Event_Transferable et) throws AMFICOMRemoteException {
 		try {
-			Event event = new Event(et);
-			EventProcessor.addEventToQueue(event);
+			final Event event = new Event(et);
+			final EventType eventType = (EventType) event.getType();
+			for (final Iterator it = eventType.getAlertedUserIds().iterator(); it.hasNext();) {
+				final Identifier userId = (Identifier) it.next();
+				UserEventNotifier userEventNotifier = (UserEventNotifier) userEventNotifiersMap.get(userId);
+				if (userEventNotifier == null) {
+					userEventNotifier = new UserEventNotifier(userId);
+					userEventNotifier.start();
+					userEventNotifiersMap.put(userId, userEventNotifier);
+				}
+				userEventNotifier.addEvent(event);
+			}
 		}
 		catch (CreateObjectException coe) {
 			Log.errorException(coe);
