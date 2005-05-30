@@ -102,22 +102,34 @@ public class RefAnalysis
 		}
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
         {
-    		double[] data = new double[5];
-            
+    		double[] data = new double[6];
+
             // Po (отрицательна) - относительно maxY
             double po;
             if (de.length > 0 && de[0] instanceof DeadZoneDetailedEvent)
                 po = ((DeadZoneDetailedEvent)de[0]).getPo();
             else
                 po = 0; // мертвой зоны нет - берем ноль
-            // ур. шума (отрицателен) - относительно maxY
-            double noise98 = CoreAnalysisManager.getMedian(
+            // ур. шума по уровню 98% (отрицателен) - относительно maxY
+            double noise98;
+            double noiseRMS;
+            if (y.length > noiseStart) {
+                noise98 = CoreAnalysisManager.getMedian(
                     y, noiseStart, y.length, 0.98) - maxY;
+                // ур. шума по RMS (отрицателен) - относительно maxY
+                noiseRMS = ReflectogramMath.getRMSValue(
+                    y, noiseStart, y.length) - maxY;
+            } else {
+                noise98 = minY - maxY;
+                noiseRMS = minY - maxY;
+            }
+
     		data[0] = -po; // y0 (ось вниз)
     		data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
             data[2] = -noise98; // ур. щума по 98% (ось вниз)
             data[3] = de.length; // число событий
-    		data[4] = po - noise98; // ДД по 98%
+            data[4] = po - noise98; // ДД по 98%
+            data[5] = po - noiseRMS; // ДД по RMS
     		overallStats.setData(data);
         }
 

@@ -8,7 +8,6 @@ import javax.swing.Icon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
@@ -210,7 +209,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 		double attenuation = loss / range_km;
 		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());
 		double noise = ev.overallStatsNoiseLevel();
-		double DD = ev.overallStatsDD98pct();
+        double DD98 = ev.overallStatsDD98pct();
+        double DDRMS = ev.overallStatsDDRMS(); // @todo: display
+        System.out.println("DD98 = " + DD98 + "; DDRMS = " + DDRMS);
 		int evNum = ev.overallStatsEvNum();
 
 		tModel.updateColumn(new Object[] {
@@ -219,7 +220,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 			MathRef.round_4(attenuation) + " " + LangModelAnalyse.getString("dB") + '/' + LangModelAnalyse.getString("km"),
 			MathRef.round_2(orl) + " " + LangModelAnalyse.getString("dB"),
 			MathRef.round_2(noise) + " " + LangModelAnalyse.getString("dB"),
-			MathRef.round_2(DD) + " " + LangModelAnalyse.getString("dB"),
+			MathRef.round_2(DD98) + " " + LangModelAnalyse.getString("dB"),
 			String.valueOf(evNum)
 		}, 1);
 		jTable.updateUI();

@@ -107,6 +107,9 @@ public class TraceEvent
     public double overallStatsDD98pct() {
         return data[4];
     }
+    public double overallStatsDDRMS() {
+        return data[5];
+    }
 	
 	// linear methods
 	public double linearData0() {
