@@ -209,26 +209,21 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener,
 		scrollPane.setAutoscrolls(true);
 
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		ListSelectionModel rowSM = jTable.getSelectionModel();
-		jTable.getColumnModel().setSelectionModel(rowSM);
-		rowSM.addListSelectionListener(new ListSelectionListener()
-		{
-			public void valueChanged(ListSelectionEvent e) {
-			//Ignore extra messages.
-			if (e.getValueIsAdjusting()) return;
+		ListSelectionModel rowSM = jTable.getSelectionModel();		
+		rowSM.addListSelectionListener(new ListSelectionListener() {
 
-			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-			if (lsm.isSelectionEmpty())
-			{
-						//no rows are selected
+			public void valueChanged(ListSelectionEvent e) {
+				// Ignore extra messages.
+				if (e.getValueIsAdjusting())
+					return;
+
+				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+				if (!lsm.isSelectionEmpty()) {
+					int selected = lsm.getMinSelectionIndex();
+					if (view.currentRow2() != selected)
+						view.moveTo(selected);
+				}
 			}
-			else
-			{
-				int selected = lsm.getMinSelectionIndex();
-                if (view.currentRow2() != selected)
-                    view.moveTo(selected);
-			}
-		}
 		});
 
 		final JPopupMenu popupMenu = this.createPopupMenu();
