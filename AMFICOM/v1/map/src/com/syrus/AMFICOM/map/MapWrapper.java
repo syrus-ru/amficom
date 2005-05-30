@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.10 2005/04/26 16:02:55 krupenn Exp $
+ * $Id: MapWrapper.java,v 1.11 2005/05/30 14:50:23 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/26 16:02:55 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/30 14:50:23 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -48,7 +48,7 @@ public class MapWrapper extends StorableObjectWrapper {
 
 	protected List				keys;
 
-	private MapWrapper() {
+	protected MapWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DOMAIN_ID,
 				LINK_COLUMN_COLLECTOR_ID, LINK_COLUMN_MARK_ID, LINK_COLUMN_NODE_LINK_ID, LINK_COLUMN_PHYSICAL_LINK_ID,

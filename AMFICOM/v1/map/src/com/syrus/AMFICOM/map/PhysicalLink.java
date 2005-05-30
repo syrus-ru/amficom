@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.57 2005/05/26 15:31:16 bass Exp $
+ * $Id: PhysicalLink.java,v 1.58 2005/05/30 14:50:23 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,6 +42,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
@@ -52,13 +55,13 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/05/26 15:31:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.58 $, $Date: 2005/05/30 14:50:23 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
  */
-public class PhysicalLink extends StorableObject implements TypedObject, MapElement {
+public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XMLBeansTransferable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -976,5 +979,124 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = com.syrus.amficom.map.xml.PhysicalLink.Factory.newInstance();
+		fillXMLTransferable(xmlPhysicalLink);
+		return xmlPhysicalLink;
+	}
+
+	public void fillXMLTransferable(XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink )xmlObject; 
+
+		PhysicalLinkType type = (PhysicalLinkType )this.getType(); 
+
+		com.syrus.amficom.general.xml.UID uid = xmlPhysicalLink.addNewUid();
+		uid.setStringValue(this.id.toString());
+		xmlPhysicalLink.setName(this.name);
+		xmlPhysicalLink.setDescription(this.description);
+		xmlPhysicalLink.setPhysicallinktypeuid(com.syrus.amficom.map.xml.PhysicalLinkTypeSort.Enum.forString(type.getSort().value()));
+
+		uid = xmlPhysicalLink.addNewStartnodeuid();
+		uid.setStringValue(this.startNode.getId().toString());
+
+		uid = xmlPhysicalLink.addNewEndnodeuid();
+		uid.setStringValue(this.endNode.getId().toString());
+
+		xmlPhysicalLink.setCity(this.city);
+		xmlPhysicalLink.setStreet(this.street);
+		xmlPhysicalLink.setBuilding(this.building);
+	}
+
+	PhysicalLink(
+			Identifier creatorId, 
+			com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink, 
+			ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, 
+						xmlPhysicalLink.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0);
+		this.characteristics = new HashSet();
+		this.nodeLinks = new ArrayList();
+		this.selected = false;
+		this.fromXMLTransferable(xmlPhysicalLink, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink )xmlObject; 
+
+		this.name = xmlPhysicalLink.getName();
+		this.description = xmlPhysicalLink.getDescription();
+		this.city = xmlPhysicalLink.getCity();
+		this.street = xmlPhysicalLink.getStreet();
+		this.building = xmlPhysicalLink.getBuilding();
+
+		Identifier startNodeId1 = clonedIdsPool.getClonedId(
+				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				xmlPhysicalLink.getStartnodeuid().getStringValue());
+		Identifier endNodeId1 = clonedIdsPool.getClonedId(
+				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				xmlPhysicalLink.getEndnodeuid().getStringValue());
+
+		if(xmlPhysicalLink.getStartnodeuid().getStringValue().equals("507133")) {
+			System.out.println("Start node 507133 id " + startNodeId1.toString());
+		}
+		if(xmlPhysicalLink.getEndnodeuid().getStringValue().equals("507133")) {
+			System.out.println("End node 507133 id " + endNodeId1.toString());
+		}
+		
+		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
+		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
+
+		String typeCodeName1 = xmlPhysicalLink.getPhysicallinktypeuid().toString();
+		TypicalCondition condition = new TypicalCondition(typeCodeName1,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+
+		Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		if (collection == null || collection.size() == 0) {
+			typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
+
+			condition.setValue(typeCodeName1);
+
+			collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (collection == null || collection.size() == 0) {
+				throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
+			}
+		}
+		
+		this.physicalLinkType = (PhysicalLinkType) collection.iterator().next();
+
+		this.dimensionX = this.physicalLinkType.getBindingDimension().getWidth();
+		this.dimensionY = this.physicalLinkType.getBindingDimension().getHeight();
+		this.leftToRight = true;
+		this.topToBottom = true;
+		this.binding = new PhysicalLinkBinding(this.physicalLinkType.getBindingDimension());
+	}
+
+	public static PhysicalLink createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink )xmlObject;
+
+		try {
+			PhysicalLink physicalLink = new PhysicalLink(creatorId, xmlPhysicalLink, clonedIdsPool);
+			physicalLink.changed = true;
+			StorableObjectPool.putStorableObject(physicalLink);
+			return physicalLink;
+		}
+		catch (Exception e) {
+			System.out.println(xmlPhysicalLink);
+			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
+		}
 	}
 }

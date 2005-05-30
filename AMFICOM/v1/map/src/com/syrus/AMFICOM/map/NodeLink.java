@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.43 2005/05/26 15:31:16 bass Exp $
+ * $Id: NodeLink.java,v 1.44 2005/05/30 14:50:23 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,6 +30,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
@@ -37,11 +40,11 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/05/26 15:31:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.44 $, $Date: 2005/05/30 14:50:23 $
  * @module map_v1
  */
-public class NodeLink extends StorableObject implements MapElement {
+public class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -469,4 +472,84 @@ public class NodeLink extends StorableObject implements MapElement {
 		return dependencies;
 	}
 
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.NodeLink xmlNodeLink = com.syrus.amficom.map.xml.NodeLink.Factory.newInstance();
+		fillXMLTransferable(xmlNodeLink);
+		return xmlNodeLink;
+	}
+
+	public void fillXMLTransferable(XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink )xmlObject; 
+
+		com.syrus.amficom.general.xml.UID uid = xmlNodeLink.addNewUid();
+		uid.setStringValue(this.id.toString());
+
+		xmlNodeLink.setLength(this.length);
+
+		uid = xmlNodeLink.addNewPhysicallinkuid();
+		uid.setStringValue(this.physicalLink.getId().toString());
+
+		uid = xmlNodeLink.addNewStartnodeuid();
+		uid.setStringValue(this.startNode.getId().toString());
+
+		uid = xmlNodeLink.addNewEndnodeuid();
+		uid.setStringValue(this.endNode.getId().toString());
+	}
+
+	NodeLink(
+			Identifier creatorId, 
+			com.syrus.amficom.map.xml.NodeLink xmlNodeLink, 
+			ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.NODE_LINK_ENTITY_CODE, 
+						xmlNodeLink.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0);
+		this.characteristics = new HashSet();
+		this.selected = false;
+		this.fromXMLTransferable(xmlNodeLink, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink )xmlObject; 
+
+		this.length = xmlNodeLink.getLength();
+
+		Identifier physicalLinkId1 = clonedIdsPool.getClonedId(
+				ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, 
+				xmlNodeLink.getPhysicallinkuid().getStringValue());
+		Identifier startNodeId1 = clonedIdsPool.getClonedId(
+				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				xmlNodeLink.getStartnodeuid().getStringValue());
+		Identifier endNodeId1 = clonedIdsPool.getClonedId(
+				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				xmlNodeLink.getEndnodeuid().getStringValue());
+
+		this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
+		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
+		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
+		this.physicalLink.addNodeLink(this);
+	}
+
+	public static NodeLink createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink )xmlObject;
+
+		try {
+			NodeLink nodeLink = new NodeLink(creatorId, xmlNodeLink, clonedIdsPool);
+			nodeLink.changed = true;
+			StorableObjectPool.putStorableObject(nodeLink);
+			return nodeLink;
+		}
+		catch (Exception e) {
+			throw new CreateObjectException("NodeLink.createInstance |  ", e);
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.43 2005/05/24 13:25:04 bass Exp $
+ * $Id: Map.java,v 1.44 2005/05/30 14:50:23 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,10 +19,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -32,6 +35,7 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
@@ -41,13 +45,13 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/05/24 13:25:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.44 $, $Date: 2005/05/30 14:50:23 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
  */
-public class Map extends DomainMember implements Namable {
+public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -484,14 +488,14 @@ public class Map extends DomainMember implements Namable {
 	public void removeNode(AbstractNode node) {
 		node.setSelected(false);
 		this.selectedElements.remove(node);
-		if (node instanceof SiteNode)
+		if (node instanceof SiteNode) {
 			this.siteNodes.remove(node);
+			this.externalNodes.remove(node);
+		}
 		else if (node instanceof TopologicalNode)
 			this.topologicalNodes.remove(node);
 		else if (node instanceof Mark)
 			this.marks.remove(node);
-		else
-			this.externalNodes.remove(node);
 		node.setRemoved(true);
 		this.changed = true;
 	}
@@ -997,6 +1001,184 @@ public class Map extends DomainMember implements Namable {
 		}
 
 		return returnLinks;
+	}
+
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.Map xmlMap = com.syrus.amficom.map.xml.Map.Factory.newInstance();
+		fillXMLTransferable(xmlMap);
+		return xmlMap;
+	}
+
+	public void fillXMLTransferable(XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject; 
+
+		com.syrus.amficom.general.xml.UID uid = xmlMap.addNewUid();
+		uid.setStringValue(this.id.toString());
+		xmlMap.setName(this.name);
+		xmlMap.setDescription(this.description);
+
+		com.syrus.amficom.map.xml.TopologicalNodes xmlTopologicalNodes = xmlMap.addNewTopologicalnodes();
+		com.syrus.amficom.map.xml.SiteNodes xmlSiteNodes = xmlMap.addNewSitenodes();
+		com.syrus.amficom.map.xml.PhysicalLinks xmlPhysicalLinks = xmlMap.addNewPhysicallinks();
+		com.syrus.amficom.map.xml.NodeLinks xmlNodeLinks = xmlMap.addNewNodelinks();
+		com.syrus.amficom.map.xml.Collectors xmlCollectors = xmlMap.addNewCollectors();
+
+		Collection xmlTopologicalNodesArray = new LinkedList();
+		for(Iterator it = getTopologicalNodes().iterator(); it.hasNext();) {
+			TopologicalNode topologicalNode = (TopologicalNode )it.next();
+			xmlTopologicalNodesArray.add(topologicalNode.getXMLTransferable());
+//			com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = xmlTopologicalNodes.addNewTopologicalnode();
+//			topologicalNode.fillXMLTransferable(xmlTopologicalNode);
+		}
+		xmlTopologicalNodes.setTopologicalnodeArray(
+				(com.syrus.amficom.map.xml.TopologicalNode[] )
+				xmlTopologicalNodesArray.toArray(
+						new com.syrus.amficom.map.xml.TopologicalNode[xmlTopologicalNodesArray.size()]));
+
+		Collection xmlSiteNodesArray = new LinkedList();
+		for(Iterator it = getSiteNodes().iterator(); it.hasNext();) {
+			SiteNode siteNode = (SiteNode )it.next();
+			xmlSiteNodesArray.add(siteNode.getXMLTransferable());
+//			com.syrus.amficom.map.xml.SiteNode xmlSiteNode = xmlSiteNodes.addNewSitenode();
+//			siteNode.fillXMLTransferable(xmlSiteNode);
+		}
+		xmlSiteNodes.setSitenodeArray(
+				(com.syrus.amficom.map.xml.SiteNode[] )
+				xmlSiteNodesArray.toArray(
+						new com.syrus.amficom.map.xml.SiteNode[xmlSiteNodesArray.size()]));
+
+		Collection xmlPhysicalLinksArray = new LinkedList();
+		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
+			PhysicalLink physicalLink = (PhysicalLink )it.next();
+			xmlPhysicalLinksArray.add(physicalLink.getXMLTransferable());
+//			com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = xmlPhysicalLinks.addNewPhysicallink();
+//			physicalLink.fillXMLTransferable(xmlPhysicalLink);
+		}
+		xmlPhysicalLinks.setPhysicallinkArray(
+				(com.syrus.amficom.map.xml.PhysicalLink[] )
+				xmlPhysicalLinksArray.toArray(
+						new com.syrus.amficom.map.xml.PhysicalLink[xmlPhysicalLinksArray.size()]));
+
+		Collection xmlNodeLinksArray = new LinkedList();
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();) {
+			NodeLink nodeLink = (NodeLink )it.next();
+			xmlNodeLinksArray.add(nodeLink.getXMLTransferable());
+//			com.syrus.amficom.map.xml.NodeLink xmlNodeLink = xmlNodeLinks.addNewNodelink();
+//			nodeLink.fillXMLTransferable(xmlNodeLink);
+		}
+		xmlNodeLinks.setNodelinkArray(
+				(com.syrus.amficom.map.xml.NodeLink[] )
+				xmlNodeLinksArray.toArray(
+						new com.syrus.amficom.map.xml.NodeLink[xmlNodeLinksArray.size()]));
+
+		Collection xmlCollectorsArray = new LinkedList();
+		for(Iterator it = getCollectors().iterator(); it.hasNext();) {
+			Collector collector = (Collector )it.next();
+			xmlCollectorsArray.add(collector.getXMLTransferable());
+//			com.syrus.amficom.map.xml.Collector xmlCollector = xmlCollectors.addNewCollector();
+//			collector.fillXMLTransferable(xmlCollector);
+		}
+		xmlCollectors.setCollectorArray(
+				(com.syrus.amficom.map.xml.Collector[] )
+				xmlCollectorsArray.toArray(
+						new com.syrus.amficom.map.xml.Collector[xmlCollectorsArray.size()]));
+	}
+
+	Map(
+			Identifier creatorId, 
+			Identifier domainId, 
+			com.syrus.amficom.map.xml.Map xmlMap, 
+			ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.MAP_ENTITY_CODE, 
+						xmlMap.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0,
+				domainId);
+		this.fromXMLTransferable(xmlMap, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject; 
+
+		Identifier creatorId = this.getCreatorId();
+		
+		this.name = xmlMap.getName();
+		this.description = xmlMap.getDescription();
+
+		this.siteNodes = new HashSet();
+		this.topologicalNodes = new HashSet();
+		this.nodeLinks = new HashSet();
+		this.physicalLinks = new HashSet();
+		this.marks = new HashSet();
+		this.collectors = new HashSet();
+
+		this.maps = new HashSet();
+		this.selectedElements = new HashSet();
+		this.allElements = new LinkedList();
+		this.nodeElements = new HashSet();
+		this.externalNodes = new HashSet();
+		
+		com.syrus.amficom.map.xml.TopologicalNode[] xmlTopologicalNodesArray = 
+			xmlMap.getTopologicalnodes().getTopologicalnodeArray();
+		for(int i = 0; i < xmlTopologicalNodesArray.length; i++) {
+			com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = 
+				xmlTopologicalNodesArray[i];
+			this.addNode(TopologicalNode.createInstance(creatorId, xmlTopologicalNode, clonedIdsPool));
+		}
+
+		com.syrus.amficom.map.xml.SiteNode[] xmlSiteNodesArray = 
+			xmlMap.getSitenodes().getSitenodeArray();
+		for(int i = 0; i < xmlSiteNodesArray.length; i++) {
+			com.syrus.amficom.map.xml.SiteNode xmlSiteNode = 
+				xmlSiteNodesArray[i];
+			this.addNode(SiteNode.createInstance(creatorId, xmlSiteNode, clonedIdsPool));
+		}
+
+		com.syrus.amficom.map.xml.PhysicalLink[] xmlPhysicalLinksArray = 
+			xmlMap.getPhysicallinks().getPhysicallinkArray();
+		for(int i = 0; i < xmlPhysicalLinksArray.length; i++) {
+			com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = 
+				xmlPhysicalLinksArray[i];
+			this.addPhysicalLink(PhysicalLink.createInstance(creatorId, xmlPhysicalLink, clonedIdsPool));
+		}
+
+		com.syrus.amficom.map.xml.NodeLink[] xmlNodeLinksArray = 
+			xmlMap.getNodelinks().getNodelinkArray();
+		for(int i = 0; i < xmlNodeLinksArray.length; i++) {
+			com.syrus.amficom.map.xml.NodeLink xmlNodeLink = 
+				xmlNodeLinksArray[i];
+			this.addNodeLink(NodeLink.createInstance(creatorId, xmlNodeLink, clonedIdsPool));
+		}
+
+		com.syrus.amficom.map.xml.Collector[] xmlCollectorsArray = 
+			xmlMap.getCollectors().getCollectorArray();
+		for(int i = 0; i < xmlCollectorsArray.length; i++) {
+			com.syrus.amficom.map.xml.Collector xmlCollector = 
+				xmlCollectorsArray[i];
+			this.addCollector(Collector.createInstance(creatorId, xmlCollector, clonedIdsPool));
+		}
+	}
+
+	public static Map createInstance(Identifier creatorId, Identifier domainId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject;
+
+		try {
+			Map map = new Map(creatorId, domainId, xmlMap, clonedIdsPool);
+			map.changed = true;
+			return map;
+		}
+		catch (Exception e) {
+			throw new CreateObjectException("Map.createInstance |  ", e);
+		}
 	}
 
 }

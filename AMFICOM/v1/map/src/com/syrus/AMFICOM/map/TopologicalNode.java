@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.37 2005/05/26 15:31:16 bass Exp $
+ * $Id: TopologicalNode.java,v 1.38 2005/05/30 14:50:23 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -32,6 +34,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
@@ -40,12 +43,12 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/05/26 15:31:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2005/05/30 14:50:23 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
-public class TopologicalNode extends AbstractNode {
+public class TopologicalNode extends AbstractNode implements XMLBeansTransferable{
 
 	public static final String CLOSED_NODE = "node";
 	public static final String OPEN_NODE = "void";
@@ -401,5 +404,67 @@ public class TopologicalNode extends AbstractNode {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = com.syrus.amficom.map.xml.TopologicalNode.Factory.newInstance();
+		fillXMLTransferable(xmlTopologicalNode);
+		return xmlTopologicalNode;
+	}
+
+	public void fillXMLTransferable(XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject; 
+
+		com.syrus.amficom.general.xml.UID uid = xmlTopologicalNode.addNewUid();
+		uid.setStringValue(this.id.toString());
+		xmlTopologicalNode.setX(this.location.getX());
+		xmlTopologicalNode.setY(this.location.getY());
+		xmlTopologicalNode.setActive(this.active);
+	}
+
+	TopologicalNode(
+			Identifier creatorId, 
+			com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode, 
+			ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, 
+						xmlTopologicalNode.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0,
+				"",
+				"",
+				new DoublePoint(0, 0));
+		this.characteristics = new HashSet();
+		this.selected = false;
+		this.fromXMLTransferable(xmlTopologicalNode, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject;
+
+		this.active = xmlTopologicalNode.getActive();
+		super.location.setLocation(xmlTopologicalNode.getX(), xmlTopologicalNode.getY());
+	}
+
+	public static TopologicalNode createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject;
+
+		try {
+			TopologicalNode topologicalNode = new TopologicalNode(creatorId, xmlTopologicalNode, clonedIdsPool);
+			topologicalNode.changed = true;
+			StorableObjectPool.putStorableObject(topologicalNode);
+			return topologicalNode;
+		}
+		catch (Exception e) {
+			throw new CreateObjectException("TopologicalNode.createInstance |  ", e);
+		}
 	}
 }

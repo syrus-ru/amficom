@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.43 2005/05/26 15:31:15 bass Exp $
+ * $Id: Collector.java,v 1.44 2005/05/30 14:50:23 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -31,6 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
@@ -38,11 +41,11 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.44 $, $Date: 2005/05/30 14:50:23 $
  * @module map_v1
  */
-public class Collector extends StorableObject implements MapElement {
+public class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -398,5 +401,85 @@ public class Collector extends StorableObject implements MapElement {
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		this.changed = true;
+	}
+
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.Collector xmlCollector = com.syrus.amficom.map.xml.Collector.Factory.newInstance();
+		fillXMLTransferable(xmlCollector);
+		return xmlCollector;
+	}
+
+	public void fillXMLTransferable(XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
+
+		com.syrus.amficom.general.xml.UID uid = xmlCollector.addNewUid();
+		uid.setStringValue(this.id.toString());
+		xmlCollector.setName(this.name);
+		xmlCollector.setDescription(this.description);
+
+		com.syrus.amficom.map.xml.PhysicalLinkUIds xmlPhysicalLinkUIds = xmlCollector.addNewPhysicallinkuids();
+
+		for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
+			PhysicalLink link = (PhysicalLink) it.next();
+			com.syrus.amficom.general.xml.UID xmlPhysicalLinkUId = xmlPhysicalLinkUIds.addNewPhysicallinkuid();
+			xmlPhysicalLinkUId.setStringValue(link.getId().toString());
+		}
+	}
+
+	Collector(
+			Identifier creatorId, 
+			com.syrus.amficom.map.xml.Collector xmlCollector, 
+			ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.COLLECTOR_ENTITY_CODE, 
+						xmlCollector.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0);
+
+		this.physicalLinks = new HashSet();
+		this.characteristics = new HashSet();
+		
+		this.fromXMLTransferable(xmlCollector, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
+
+		this.name = xmlCollector.getName();
+		this.description = xmlCollector.getDescription();
+
+		com.syrus.amficom.map.xml.PhysicalLinkUIds[] xmlPhysicalLinkUIdsArray = 
+			xmlCollector.getPhysicallinkuidsArray();
+		com.syrus.amficom.general.xml.UID[] xmlUIDsArray = 
+			xmlPhysicalLinkUIdsArray[0].getPhysicallinkuidArray();
+		for(int i = 0; i < xmlUIDsArray.length; i++) {
+			Identifier physicalLinkId = clonedIdsPool.getClonedId(
+					ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, 
+					xmlUIDsArray[i].getStringValue());
+			PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
+			this.addPhysicalLink(physicalLink);
+		}
+	}
+
+	public static Collector createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject;
+
+		try {
+			Collector collector = new Collector(creatorId, xmlCollector, clonedIdsPool);
+			collector.changed = true;
+			StorableObjectPool.putStorableObject(collector);
+			return collector;
+		}
+		catch (Exception e) {
+			throw new CreateObjectException("Collector.createInstance |  ", e);
+		}
 	}
 }

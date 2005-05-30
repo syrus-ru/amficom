@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.12 2005/05/18 11:48:20 bass Exp $
+ * $Id: MapElement.java,v 1.13 2005/05/30 14:50:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.Namable;
  *
  *
  *
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/05/30 14:50:23 $
  * @module map_v1
  */
 public interface MapElement extends Characterizable, Namable
@@ -95,6 +95,7 @@ public interface MapElement extends Characterizable, Namable
 	 * Возвращает описывающий элемент набор параметров,
 	 * который используется для экспорта.
 	 * @return хэш-таблица параметров элемента
+	 * @deprecated use <pre>XMLBeansTransferable.fillXMLTransferable(XMLObject)</pre> instead
 	 */
 	java.util.Map getExportMap();
 

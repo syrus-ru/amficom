@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.38 2005/05/26 15:31:15 bass Exp $
+ * $Id: SiteNode.java,v 1.39 2005/05/30 14:50:23 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,10 +16,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,6 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
@@ -51,11 +55,11 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.39 $, $Date: 2005/05/30 14:50:23 $
  * @module map_v1
  */
-public class SiteNode extends AbstractNode implements TypedObject {
+public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -445,5 +449,103 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
+	}
+
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = com.syrus.amficom.map.xml.SiteNode.Factory.newInstance();
+		fillXMLTransferable(xmlSiteNode);
+		return xmlSiteNode;
+	}
+
+	public void fillXMLTransferable(XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject; 
+
+		SiteNodeType type = (SiteNodeType )this.getType(); 
+
+		com.syrus.amficom.general.xml.UID uid = xmlSiteNode.addNewUid();
+		uid.setStringValue(this.id.toString());
+		xmlSiteNode.setName(this.name);
+		xmlSiteNode.setDescription(this.description);
+		xmlSiteNode.setSitenodetypeuid(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forString(type.getSort().value()));
+		xmlSiteNode.setX(this.location.getX());
+		xmlSiteNode.setY(this.location.getY());
+		xmlSiteNode.setCity(this.city);
+		xmlSiteNode.setStreet(this.street);
+		xmlSiteNode.setBuilding(this.building);
+	}
+
+	SiteNode(
+			Identifier creatorId, 
+			com.syrus.amficom.map.xml.SiteNode xmlSiteNode, 
+			ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.SITE_NODE_ENTITY_CODE, 
+						xmlSiteNode.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0,
+				"",
+				"",
+				new DoublePoint(0, 0));
+		if(xmlSiteNode.getUid().getStringValue().equals("507133")) {
+			System.out.println("id for 507133 is " + this.id.toString());
+		}
+		this.characteristics = new HashSet();
+		this.selected = false;
+		this.fromXMLTransferable(xmlSiteNode, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject;
+
+		this.name = xmlSiteNode.getName();
+		this.description = xmlSiteNode.getDescription();
+		this.city = xmlSiteNode.getCity();
+		this.street = xmlSiteNode.getStreet();
+		this.building = xmlSiteNode.getBuilding();
+		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
+
+		String typeCodeName1 = xmlSiteNode.getSitenodetypeuid().toString();
+		TypicalCondition condition = new TypicalCondition(typeCodeName1,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+
+		Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		if (collection == null || collection.size() == 0) {
+			typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
+
+			condition.setValue(typeCodeName1);
+
+			collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (collection == null || collection.size() == 0) {
+				throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
+			}
+		}
+		
+		this.type = (SiteNodeType) collection.iterator().next();
+
+		this.imageId = this.type.getImageId();
+	}
+
+	public static SiteNode createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject;
+
+		try {
+			SiteNode siteNode = new SiteNode(creatorId, xmlSiteNode, clonedIdsPool);
+			siteNode.changed = true;
+			StorableObjectPool.putStorableObject(siteNode);
+			return siteNode;
+		}
+		catch (Exception e) {
+			throw new CreateObjectException("SiteNode.createInstance |  ", e);
+		}
 	}
 }
