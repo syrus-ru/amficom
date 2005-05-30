@@ -10,62 +10,58 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/30 15:35:12 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class WrapperedPropertyTableModel extends AbstractTableModel {
 
-	private static final long		serialVersionUID	= 4007513055820570639L;
+	private static final long	serialVersionUID	= 4007513055820570639L;
 
-	public static final String KEY_PROPERTY = "Property";
-	public static final String KEY_VALUE = "Value";
-
-	/**
-	 * Wrapper of Model (ObjectResource) will be used for
-	 * sorting. see {@link Wrapper}
-	 */
-	protected Wrapper	wrapper;
+	public static final String	KEY_PROPERTY		= "Property";
+	public static final String	KEY_VALUE			= "Value";
 
 	/**
-	 * list of Model elements. 
+	 * Wrapper of Model (ObjectResource) will be used for sorting. see
+	 * {@link Wrapper}
 	 */
+	protected Wrapper			wrapper;
+
+	protected String[]			keys;
+
 	private Object				object;
 
 	/**
-	 * saved direction of column sorting. Used when change direction to
-	 * negative to current. see {@link com.syrus.util.WrapperComparator#ascend}
+	 * saved direction of column sorting. Used when change direction to negative
+	 * to current. see {@link com.syrus.util.WrapperComparator#ascend}
 	 */
 	private boolean[]			ascendings;
 
 	/**
-	 * @param controller
-	 *                see {@link #wrapper}
+	 * @param wrapper
+	 *            see {@link #wrapper}
 	 * @param object
 	 */
-	public WrapperedPropertyTableModel(Wrapper controller, Object object) {
-		this.wrapper = controller;
-		this.ascendings = new boolean[this.wrapper.getKeys().size()];
-		setObject(object);
+	public WrapperedPropertyTableModel(final Wrapper wrapper, final Object object, final String[] keys) {
+		this.wrapper = wrapper;
+		this.object = object;
+		this.keys = keys;
+		this.ascendings = new boolean[this.keys.length];
 	}
 
 	/**
 	 * override {@link AbstractTableModel#getColumnClass(int)}method
 	 */
-	public Class getColumnClass(int columnIndex) 
-	{
+	public Class getColumnClass(int columnIndex) {
 		Class clazz;
-		if(columnIndex == 0)
+		if (columnIndex == 0) {
 			clazz = String.class;
-		else
+		} else {
+			// TODO really ?
 			clazz = Object.class;
+		}
 		return clazz;
 	}
-
-//	public Class getColumnClass(int columnIndex) {
-//		String key = this.controller.getKey(columnIndex);
-//		return this.controller.getPropertyClass(key);
-//	}
 
 	/**
 	 * override {@link javax.swing.table.TableModel#getColumnCount()}method
@@ -74,40 +70,37 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		return 2;
 	}
 
-	public String getColumnName(int columnIndex) 
-	{
-		String name = "";
+	public String getColumnName(int columnIndex) {
+		String name;
 
-		if(columnIndex == 0)
+		if (columnIndex == 0) {
 			name = LangModel.getString(KEY_PROPERTY);
-		else
-		if(columnIndex == 1)
+		} else if (columnIndex == 1) {
 			name = LangModel.getString(KEY_VALUE);
+		} else {
+			name = "";
+		}
 
 		return name;
 	}
-
-//	public String getColumnName(int columnIndex) {
-//		String key = this.controller.getKey(columnIndex);
-//		return this.controller.getName(key);
-//	}
 
 	public Object getObject() {
 		return this.object;
 	}
 
 	public int getRowCount() {
-		return this.wrapper.getKeys().size();
+		return this.keys.length;
 	}
 
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		String key = this.wrapper.getKey(rowIndex);
+	public Object getValueAt(	int rowIndex,
+								int columnIndex) {
+		// String key = this.wrapper.getKey(rowIndex);
 		if (columnIndex == 0)
-			return this.wrapper.getName(key);
-		Object obj = this.wrapper.getValue(this.object, key);
+			return this.wrapper.getName(this.keys[rowIndex]);
+		Object obj = this.wrapper.getValue(this.object, this.keys[rowIndex]);
 
-		if (this.wrapper.getPropertyValue(key) instanceof Map) {
-			Map map = (Map) this.wrapper.getPropertyValue(key);
+		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
+			Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
 			Object keyObject = null;
 			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 				Object keyObj = it.next();
@@ -123,11 +116,12 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		return obj;
 	}
 
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
+	public boolean isCellEditable(	int rowIndex,
+									int columnIndex) {
 		if (columnIndex == 0)
 			return false;
-		String key = this.wrapper.getKey(rowIndex);
-		return this.wrapper.isEditable(key);
+		// String key = this.wrapper.getKey(rowIndex);
+		return this.wrapper.isEditable(this.keys[rowIndex]);
 	}
 
 	public void setObject(Object object) {
@@ -135,25 +129,21 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		super.fireTableDataChanged();
 	}
 
-	public void setValueAt(Object obj, int rowIndex, int columnIndex) {
+	public void setValueAt(	Object obj,
+							int rowIndex,
+							int columnIndex) {
 		if (columnIndex == 0)
 			return;
-		String key = this.wrapper.getKey(rowIndex);
+		// String key = this.wrapper.getKey(rowIndex);
 
-		//		ObjectResource or = (ObjectResource)
+		// ObjectResource or = (ObjectResource)
 		// this.orList.get(rowIndex);
-		if (this.wrapper.getPropertyValue(key) instanceof Map) {
-			Map map = (Map) this.wrapper.getPropertyValue(key);
-			this.wrapper.setValue(this.object, key, map.get(obj));
-		} else
-			this.wrapper.setValue(this.object, key, obj);
-		this.fireTableDataChanged();
-	}
-
-
-	public void setController(Wrapper wrapper)
-	{
-		this.wrapper = wrapper;
+		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
+			Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
+			this.wrapper.setValue(this.object, this.keys[rowIndex], map.get(obj));
+		} else {
+			this.wrapper.setValue(this.object, this.keys[rowIndex], obj);
+		}
 		this.fireTableDataChanged();
 	}
 
