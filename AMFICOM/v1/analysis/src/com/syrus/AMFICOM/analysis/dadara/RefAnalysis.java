@@ -124,13 +124,6 @@ public class RefAnalysis
                 noiseRMS = minY - maxY;
             }
 
-//            data[0] = -po; // y0 (ось вниз)
-//            data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
-//            data[2] = -noise98; // ур. щума по 98% (ось вниз)
-//            data[3] = de.length; // число событий
-//            data[4] = po - noise98; // ДД по 98%
-//            data[5] = po - noiseRMS; // ДД по RMS
-
             data[0] = -po; // y0 (ось вниз)
             data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
             data[2] = de.length; // число событий
