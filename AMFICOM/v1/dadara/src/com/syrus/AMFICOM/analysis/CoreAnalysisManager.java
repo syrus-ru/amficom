@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.73 2005/05/26 06:58:56 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.74 2005/05/30 12:34:35 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.73 $, $Date: 2005/05/26 06:58:56 $
+ * @version $Revision: 1.74 $, $Date: 2005/05/30 12:34:35 $
  * @module
  */
 
@@ -136,12 +136,10 @@ public class CoreAnalysisManager
 
 	/**
 	 * Оценка уровня шума по кривой рефлектограммы.
-	 * Алгоритм может пользоваться или не пользоваться данными
-	 * предварительного IA анализа (ev). Не исключено, что после
-	 * определения шума будет сделан уточненный IA.
-	 * @param y  Входная кривая рефлектограммы в дБ.
+	 * @param y Входная кривая рефлектограммы в дБ.
 	 * @param length Длина волокна, > 0
-	 * @return относительная величина шума (дБ) по уровню 3 сигма, длина массива length  
+	 * @return относительная величина шума (дБ) по уровню 3 сигма в каждой
+     *  точке, длина массива length  
 	 */
 	public static double[] calcNoiseArray(double[] y, int length)
 	{
