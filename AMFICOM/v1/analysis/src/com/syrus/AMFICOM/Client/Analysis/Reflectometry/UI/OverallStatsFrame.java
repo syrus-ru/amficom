@@ -210,7 +210,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 		double attenuation = loss / range_km;
 		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());
 		double noise = ev.overallStatsNoiseLevel();
-		double DD = ev.overallStatsDD();
+		double DD = ev.overallStatsDD98pct();
 		int evNum = ev.overallStatsEvNum();
 
 		tModel.updateColumn(new Object[] {

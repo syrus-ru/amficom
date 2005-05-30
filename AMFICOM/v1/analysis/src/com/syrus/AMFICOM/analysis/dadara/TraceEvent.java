@@ -101,7 +101,7 @@ public class TraceEvent
 	public double overallStatsY1() {
 		return data[1];
 	}
-	public double overallStatsDD() {
+	public double overallStatsDD98pct() {
 		return data[2] - data[3];
 	}
 	public int overallStatsEvNum() {
