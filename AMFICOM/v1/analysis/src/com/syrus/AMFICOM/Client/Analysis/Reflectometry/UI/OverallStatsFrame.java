@@ -208,7 +208,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 		double loss = ev.overallStatsLoss();
 		double attenuation = loss / range_km;
 		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());
-		double noise = ev.overallStatsNoiseLevel();
+		double noise = ev.overallStatsNoiseLevel98Pct();
         double DD98 = ev.overallStatsDD98pct();
         double DDRMS = ev.overallStatsDDRMS(); // @todo: display
         System.out.println("DD98 = " + DD98 + "; DDRMS = " + DDRMS);

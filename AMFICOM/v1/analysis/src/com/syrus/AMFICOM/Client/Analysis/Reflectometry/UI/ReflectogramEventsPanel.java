@@ -61,7 +61,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			TraceEvent ev = ana.overallStats;
 			if (ev != null)
-				noise_level = ev.overallStatsNoiseLevel();
+				noise_level = ev.overallStatsNoiseLevel98Pct();
 		}
 
 		updateMinTraceLevel(noise_level - 3);
