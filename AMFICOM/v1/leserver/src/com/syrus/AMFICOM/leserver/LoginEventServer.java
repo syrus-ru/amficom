@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.17 2005/05/24 13:24:56 bass Exp $
+ * $Id: LoginEventServer.java,v 1.18 2005/05/30 14:52:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/24 13:24:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/05/30 14:52:28 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class LoginEventServer {
@@ -67,10 +67,6 @@ public final class LoginEventServer {
 
 		/*	All preparations on startup*/
 		startup();
-
-		/*	Start Event Processor*/
-		EventProcessor eventProcessor = new EventProcessor();
-		eventProcessor.start();
 
 		/*	Start Login Processor*/
 		LoginProcessor loginProcessor = new LoginProcessor();
