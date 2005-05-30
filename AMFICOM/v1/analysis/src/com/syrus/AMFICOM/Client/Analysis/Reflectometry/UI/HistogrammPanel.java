@@ -226,7 +226,6 @@ public class HistogrammPanel extends ScaledGraphPanel
 	}
 
     protected void levelUpdated() {
-        System.err.println("level = " + this.level);
         double vThresh = 0.0;
         for (int i = 0; i < threshold.length; i++) {
             if (threshold[i] < this.level) {
