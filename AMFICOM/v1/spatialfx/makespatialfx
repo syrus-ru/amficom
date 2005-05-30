@@ -7,7 +7,7 @@ TARGET_SRC=$(LIBSRC)\spatialfxsource.zip
 TARGET_DOC=$(LIBDOC)\spatialfxdoc.zip
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\scheme.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\commonclient.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\scheme.jar
 
 CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP)
 
