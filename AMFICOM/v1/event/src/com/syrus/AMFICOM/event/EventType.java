@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.25 2005/05/30 12:46:35 arseniy Exp $
+ * $Id: EventType.java,v 1.26 2005/05/30 14:38:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/30 12:46:35 $
+ * @version $Revision: 1.26 $, $Date: 2005/05/30 14:38:45 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -228,6 +228,10 @@ public final class EventType extends StorableObjectType {
 	public void setParameterTypeIds(final Set parameterTypeIds) {
 		this.setParameterTypeIds0(parameterTypeIds);
 		this.changed = true;
+	}
+
+	public Set getAlertedUserIds() {
+		return this.userAlertKindsMap.keySet();
 	}
 
 	public Set getUserAlertKinds(final Identifier userId) {
