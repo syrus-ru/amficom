@@ -407,4 +407,14 @@ public class ReflectogramMath
     public static double getYMax(SimpleReflectogramEvent ev, ModelTrace mt) {
         return getArrayMax(mt.getYRE(ev));
     }
+    /**
+     * used to find RMS Value of noise
+     */
+    public static double getRMSValue(double[]y, int iFrom, int iToEx) {
+        double acc = 0;
+        for (int i = iFrom; i < iToEx; i++) {
+            acc += y[i] * y[i];
+        }
+        return Math.sqrt(acc / (iToEx - iFrom));
+    }
 }
