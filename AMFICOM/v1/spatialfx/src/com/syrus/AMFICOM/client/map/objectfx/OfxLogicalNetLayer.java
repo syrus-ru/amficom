@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.6 2005/02/22 14:45:17 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.7 2005/05/30 15:42:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,9 +30,9 @@ import com.ofx.mapViewer.SxMapLayer;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.query.SxQueryResultInterface;
 import com.ofx.repository.SxSpatialObject;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/22 14:45:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/05/30 15:42:33 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -234,6 +234,13 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		this.spatialViewer.setScale(scale);
 		updateZoom();
+		if(this.aContext != null) {
+			Dispatcher disp = this.aContext.getDispatcher();
+			if(disp != null) {
+				Double p = new Double(getScale());
+				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+			}
+		}
 	}
 
 	/**
@@ -249,6 +256,13 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		this.spatialViewer.setScale(this.spatialViewer.getScale() * scaleСoef);
 		updateZoom();
+		if(this.aContext != null) {
+			Dispatcher disp = this.aContext.getDispatcher();
+			if(disp != null) {
+				Double p = new Double(getScale());
+				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+			}
+		}
 	}
 
 	/**
@@ -264,6 +278,13 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		this.spatialViewer.zoomIn();
 		updateZoom();
+		if(this.aContext != null) {
+			Dispatcher disp = this.aContext.getDispatcher();
+			if(disp != null) {
+				Double p = new Double(getScale());
+				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+			}
+		}
 	}
 
 	/**
@@ -279,6 +300,13 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		this.spatialViewer.zoomOut();
 		updateZoom();
+		if(this.aContext != null) {
+			Dispatcher disp = this.aContext.getDispatcher();
+			if(disp != null) {
+				Double p = new Double(getScale());
+				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+			}
+		}
 	}
 	
 	/**
@@ -289,19 +317,13 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	{
 		this.spatialViewer.zoomToRect(from.getX(), from.getY(), to.getX(), to.getY());
 		updateZoom();
-	}
-
-	public void updateZoom()
-	{
-		super.updateZoom();
-
-		if(this.aContext == null)
-			return;
-		Dispatcher disp = this.aContext.getDispatcher();
-		if(disp == null)
-			return;
-		Double p = new Double(getScale());
-		disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+		if(this.aContext != null) {
+			Dispatcher disp = this.aContext.getDispatcher();
+			if(disp != null) {
+				Double p = new Double(getScale());
+				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+			}
+		}
 	}
 
 	public void handDragged(MouseEvent me)

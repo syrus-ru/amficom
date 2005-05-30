@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.7 2005/02/25 13:58:59 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.8 2005/05/30 15:42:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.Client.Map.ObjectFX;
 import com.ofx.base.SxEnvironment;
 import com.ofx.component.swing.JMapViewer;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.7 $, $Date: 2005/02/25 13:58:59 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/30 15:42:33 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */

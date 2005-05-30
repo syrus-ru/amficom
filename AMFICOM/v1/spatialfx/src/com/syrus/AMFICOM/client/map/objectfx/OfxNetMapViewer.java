@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.5 2005/02/24 13:46:09 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.6 2005/05/30 15:42:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import com.ofx.mapViewer.SxMapLayerInterface;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.mapViewer.SxMarkerLayer;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -46,7 +46,7 @@ import javax.swing.ToolTipManager;
 
 /**
  * 
- * @version $Revision: 1.5 $, $Date: 2005/02/24 13:46:09 $
+ * @version $Revision: 1.6 $, $Date: 2005/05/30 15:42:33 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
