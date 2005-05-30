@@ -14,7 +14,7 @@ import com.syrus.util.Wrapper;
 /**
  * Abstract class for JComboBox rendering at JTable
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/30 15:45:42 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -55,7 +55,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 		Object object = model.getObject(rowIndex);
 
 		int mColIndex = table.convertColumnIndexToModel(vColIndex);
-		String key = model.wrapper.getKey(mColIndex);
+		String key = model.keys[mColIndex];
 
 		super.setBackground(table.getBackground());
 		customRendering(table, object, model.wrapper, key);

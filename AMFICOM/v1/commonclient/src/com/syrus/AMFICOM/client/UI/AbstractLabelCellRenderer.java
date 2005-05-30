@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/30 15:45:42 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -90,14 +90,14 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		if (tableModel instanceof WrapperedTableModel) {
 			WrapperedTableModel model = (WrapperedTableModel) tableModel;
 			obj = model.getObject(rowIndex);
-			colId = model.wrapper.getKey(mColIndex);
+			colId = model.keys[mColIndex];
 			customRendering(table, obj, model.wrapper, colId);
 		} else if (tableModel instanceof WrapperedPropertyTableModel) {
 			WrapperedPropertyTableModel model = (WrapperedPropertyTableModel) tableModel;
 			obj = model.getObject();
 			if(mColIndex == 1) // 'property' field
 			{
-				colId = model.wrapper.getKey(rowIndex);
+				colId = model.keys[rowIndex];
 				customRendering(table, obj, model.wrapper, colId);
 			}
 		}
