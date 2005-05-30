@@ -87,11 +87,14 @@ public class TraceEvent
 		}
 		return (baos.toByteArray());
 	}
-	
+
 	// overallStats methods
-	public double overallStatsNoiseLevel98Pct() { // yMax - yNoise
-		return data[2];
-	}
+    public double overallStatsNoiseLevel98Pct() { // yMax - yNoise
+        return data[3];
+    }
+    public double overallStatsNoiseLevelRMS() { // yMax - yNoise
+        return data[4];
+    }
 	public double overallStatsLoss() {
 		return Math.abs(data[0] -  data[1]);
 	}
@@ -102,15 +105,15 @@ public class TraceEvent
 		return data[1];
 	}
 	public int overallStatsEvNum() {
-		return (int) data[3];
+		return (int) data[2];
 	}
     public double overallStatsDD98pct() {
-        return data[4];
+        return data[3] - data[0];
     }
     public double overallStatsDDRMS() {
-        return data[5];
+        return data[4] - data[0];
     }
-	
+
 	// linear methods
 	public double linearData0() {
 		return data[0];

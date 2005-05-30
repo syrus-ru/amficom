@@ -102,7 +102,7 @@ public class RefAnalysis
 		}
 		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
         {
-    		double[] data = new double[6];
+    		double[] data = new double[5];
 
             // Po (отрицательна) - относительно maxY
             double po;
@@ -124,13 +124,20 @@ public class RefAnalysis
                 noiseRMS = minY - maxY;
             }
 
-    		data[0] = -po; // y0 (ось вниз)
-    		data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
-            data[2] = -noise98; // ур. щума по 98% (ось вниз)
-            data[3] = de.length; // число событий
-            data[4] = po - noise98; // ДД по 98%
-            data[5] = po - noiseRMS; // ДД по RMS
-    		overallStats.setData(data);
+//            data[0] = -po; // y0 (ось вниз)
+//            data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
+//            data[2] = -noise98; // ур. щума по 98% (ось вниз)
+//            data[3] = de.length; // число событий
+//            data[4] = po - noise98; // ДД по 98%
+//            data[5] = po - noiseRMS; // ДД по RMS
+
+            data[0] = -po; // y0 (ось вниз)
+            data[1] = maxY - y[lastPoint]; // y1 (ось вниз)
+            data[2] = de.length; // число событий
+            data[3] = -noise98; // ур. ш. по 98%
+            data[4] = -noiseRMS; // ур. ш. по RMS
+
+            overallStats.setData(data);
         }
 
 		filtered = new double[veryLastPoint];
