@@ -78,17 +78,19 @@ public class TraceEventsPanel extends ScaledGraphPanel
 			if ((sevents[j].getBegin() < end) && (sevents[j].getEnd() > start))
 			{
 				int stype = sevents[j].getEventType();
+                Color color;
 				switch (stype)
 				{
-					case SimpleReflectogramEvent.LINEAR:   g.setColor(linezoneColor); break;
-					case SimpleReflectogramEvent.DEADZONE: g.setColor(deadzoneColor); break;
-					case SimpleReflectogramEvent.GAIN:     g.setColor(weldColor); break;
-					case SimpleReflectogramEvent.LOSS:     g.setColor(weldColor); break;
-					case SimpleReflectogramEvent.CONNECTOR: g.setColor(connectColor); break;
-					case SimpleReflectogramEvent.ENDOFTRACE: g.setColor(endColor); break;
-					case SimpleReflectogramEvent.NOTIDENTIFIED: g.setColor(nonidColor); break;
-					default: g.setColor(noiseColor);
+					case SimpleReflectogramEvent.LINEAR:   color = linezoneColor; break;
+					case SimpleReflectogramEvent.DEADZONE: color = deadzoneColor; break;
+					case SimpleReflectogramEvent.GAIN:     color = weldColor; break;
+					case SimpleReflectogramEvent.LOSS:     color = weldColor; break;
+					case SimpleReflectogramEvent.CONNECTOR: color = connectColor; break;
+					case SimpleReflectogramEvent.ENDOFTRACE: color = endColor; break;
+					case SimpleReflectogramEvent.NOTIDENTIFIED: color = nonidColor; break;
+					default: color = noiseColor;
 				}
+                g.setColor(correctColor(color));
 
 				int iFrom = sevents[j].getBegin() - start;
 				int iTo = Math.min (end, sevents[j].getEnd()) - start;
@@ -100,8 +102,8 @@ public class TraceEventsPanel extends ScaledGraphPanel
 //				}
 			}
 		}
-        g.setColor(noiseColor);
-        int lastPoint = sevents.length > 0 ? sevents[sevents.length - 1].getEnd() : 0; 
+        g.setColor(correctColor(noiseColor));
+        int lastPoint = sevents.length > 0 ? sevents[sevents.length - 1].getEnd() : 0;
 		if (lastPoint < end)
 		{
 			int iFrom = lastPoint - start;
