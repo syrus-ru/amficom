@@ -10,6 +10,10 @@ LOCALIDLDIR = ./idl
 HOST := mongol
 SERVICE_NAME := mongol
 
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
+
 TRANSCEIVER_DIR := ./transceiver
 
 include ../tools/Makefile.inc
