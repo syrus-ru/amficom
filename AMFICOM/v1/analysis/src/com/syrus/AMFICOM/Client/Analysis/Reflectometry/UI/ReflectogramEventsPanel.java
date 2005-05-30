@@ -246,64 +246,10 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		drawModelCurve(g, mtae.getModelTrace(), false);
 	}
 
-	protected void paint_reflectogram_events(Graphics g)
-	{
-		if (mtae == null || mtae.getNEvents() == 0)
-		{
-			paint_events(g); // метод суперкласса....
-			return;
-		}
-		SimpleReflectogramEvent []ep = mtae.getSimpleEvents();
-		for(int j=0; j<ep.length; j++)
-		{
-			if ((ep[j].getBegin() < end) && (ep[j].getEnd() > start))
-			{
-				int type = ep[j].getEventType();
-				Color color;
-				switch (type)
-				{
-					case SimpleReflectogramEvent.LINEAR:
-					    color = linezoneColor;
-						break;
-					case SimpleReflectogramEvent.CONNECTOR:
-					    color = connectColor;
-					    break;
-					case SimpleReflectogramEvent.DEADZONE:
-						color = deadzoneColor;
-						break;
-					case SimpleReflectogramEvent.ENDOFTRACE:
-					    color = endColor;
-						break;
-					case SimpleReflectogramEvent.GAIN:
-						// fall through
-					case SimpleReflectogramEvent.LOSS:
-					    color = weldColor;
-						break;
-					default:
-					    color = noiseColor;
-				}
-				g.setColor(correctColor(color));
-
-				int iFrom = Math.max(start, ep[j].getBegin()) - start;
-				int iTo = Math.min (end, ep[j].getEnd()) - start;
-				draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
-//				for (int i = iFrom; i < iFrom; i++)
-//				{
-//					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
-//					        (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
-//				}
-			}
-		}
-
-		g.setColor(correctColor(noiseColor));
-		int iFrom = Math.max(0, ep[ep.length-1].getEnd() - start);
-		int iTo = Math.min (end, y.length - start - 1);
-		draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
-//		if (ep[ep.length-1].getEnd() < end)
-//			for (int i = iFrom; i < iTo; i++)
-//				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
-//					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
-	}
+    protected void paint_reflectogram_events(Graphics g)
+    {
+        paint_events(g);
+    }
 
     protected void updateMinTraceLevel(double value)
     {
