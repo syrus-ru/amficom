@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.24 2005/05/27 18:38:15 arseniy Exp $
+ * $Id: EventType.java,v 1.25 2005/05/30 12:46:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/27 18:38:15 $
+ * @version $Revision: 1.25 $, $Date: 2005/05/30 12:46:35 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -269,6 +269,13 @@ public final class EventType extends StorableObjectType {
 				this.userAlertKindsMap.remove(userId);
 			super.changed = true;
 		}
+	}
+
+	public void removeAlertKindsFromUser(final Identifier userId) {
+		assert (userId != null) : "User id is NULL";
+
+		if (this.userAlertKindsMap.remove(userId) != null)
+			super.changed = true;
 	}
 
 	public Set getDependencies() {
