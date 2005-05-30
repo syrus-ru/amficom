@@ -18,7 +18,7 @@ import javax.swing.table.TableCellRenderer;
 /**
  * Renderer for java.awt.Color cell at JTable.
  * see {@link java.awt.Color}
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/30 15:34:36 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -51,14 +51,14 @@ public class ColorCellRenderer extends JComponent implements TableCellRenderer {
 							boolean hasFocus,
 							int rowIndex,
 							int vColIndex) {
-		// Set the color to paint
-		if (this.curColor != null) {
-			//System.out.println(value.getClass().getName());
+//		// Set the color to paint
+//		if (this.curColor != null) {
+//			//System.out.println(value.getClass().getName());
 			this.curColor = (Color) value;
-		} else {
-			// If color unknown, use table's background
-			this.curColor = table.getBackground();
-		}
+//		} else {
+//			// If color unknown, use table's background
+//			this.curColor = table.getBackground();
+//		}
 
 		Color color = super.getBackground();
 		color = (color == null) ? table.getBackground() : color;
