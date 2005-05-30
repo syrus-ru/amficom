@@ -1,5 +1,5 @@
 /*-
- * $Id: MClientServantManager.java,v 1.4 2005/05/30 15:13:02 bass Exp $
+ * $Id: ARClientServantManager.java,v 1.1 2005/05/30 15:13:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,19 +12,20 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/30 15:13:02 $
+ * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2005/05/30 15:13:02 $
  * @module commonclient_v1
  */
-public final class MClientServantManager extends AbstractClientServantManager {
-	public MClientServantManager(final CORBAServer corbaServer,
+public final class ARClientServantManager extends AbstractClientServantManager {
+	public ARClientServantManager(final CORBAServer corbaServer,
 			final String loginServerServantName,
 			final String eventServerServantName,
-			final String cmServerServantName) {
-		super(corbaServer, loginServerServantName, eventServerServantName, cmServerServantName);
+			final String arServerServantName) {
+		super(corbaServer, loginServerServantName, eventServerServantName, arServerServantName);
 	}
 
-	public static MClientServantManager create() throws CommunicationException {
+	public static ARClientServantManager create() throws CommunicationException {
 		final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
 		final String contextName = ContextNameFactory.generateContextName(serverHostName);
 		final CORBAServer corbaServer = new CORBAServer(contextName);
@@ -33,13 +34,13 @@ public final class MClientServantManager extends AbstractClientServantManager {
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-		final String cmServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_CMSERVER_PROCESS_CODENAME,
-				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME);
+		final String arServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_ARSERVER_PROCESS_CODENAME,
+				ServerProcessWrapper.ARSERVER_PROCESS_CODENAME);
 
-		final MClientServantManager mClientServantManager = new MClientServantManager(corbaServer,
+		final ARClientServantManager arClientServantManager = new ARClientServantManager(corbaServer,
 				loginServerServantName,
 				eventServerServantName,
-				cmServerServantName);
-		return mClientServantManager;
+				arServerServantName);
+		return arClientServantManager;
 	}
 }
