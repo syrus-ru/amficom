@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.3 2005/05/27 18:30:59 arseniy Exp $
+ * $Id: TestEventType.java,v 1.4 2005/05/30 12:47:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/27 18:30:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/30 12:47:18 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -114,7 +114,7 @@ public class TestEventType extends CommonTest {
 		eventTypeDatabase.update(eventType, creatorUser.getId(), StorableObjectDatabase.UPDATE_FORCE);
 	}
 
-	public void tes1tChangeUserAlertKinds() throws ApplicationException {
+	public void testChangeUserAlertKinds() throws ApplicationException {
 		TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.EVENTTYPE_ENTITY_CODE,
@@ -128,9 +128,7 @@ public class TestEventType extends CommonTest {
 		for (final Iterator it = users.iterator(); it.hasNext();) {
 			final User user = (User) it.next();
 			final Identifier userId = user.getId();
-			eventType.addAlertKindToUser(userId, AlertKind.ALERT_KIND_EMAIL);
-			eventType.addAlertKindToUser(userId, AlertKind.ALERT_KIND_SMS);
-			eventType.addAlertKindToUser(userId, AlertKind.ALERT_KIND_WINDOW);
+			eventType.removeAlertKindsFromUser(userId);
 		}
 
 		eventType.printUserAlertKinds();
