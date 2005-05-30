@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.10 2005/02/07 17:00:54 krupenn Exp $
+ * $Id: MapEvent.java,v 1.11 2005/05/30 13:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,16 +10,18 @@
 
 package com.syrus.AMFICOM.Client.General.Event;
 
+import java.beans.PropertyChangeEvent;
+
 /**
  * Событие карты
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/07 17:00:54 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/30 13:42:13 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
-public class MapEvent extends OperationEvent 
+public class MapEvent extends PropertyChangeEvent 
 {
 	/** Открыто окно карты. */
 	public static final String MAP_FRAME_SHOWN = "mapframeshownevent";
@@ -69,6 +71,6 @@ public class MapEvent extends OperationEvent
 	
 	public MapEvent(Object source, String type)
 	{	
-		super(source, 0, type);
+		super(source, type, null, null);
 	}
 }
