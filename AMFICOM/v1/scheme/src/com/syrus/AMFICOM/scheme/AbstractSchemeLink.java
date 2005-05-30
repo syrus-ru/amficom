@@ -1,7 +1,7 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.16 2005/05/23 10:01:26 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.17 2005/05/30 12:13:37 bass Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -14,9 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
-import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Link;
-import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -32,7 +30,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/05/23 10:01:26 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/30 12:13:37 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -53,8 +51,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	private double opticalLength;
 
 	/**
-	 * Depending on implementation, may reference either {@link LinkType} or
-	 * {@link CableLinkType}.
+	 * Depending on implementation, may reference either
+	 * {@link com.syrus.AMFICOM.configuration.LinkType} or
+	 * {@link com.syrus.AMFICOM.configuration.CableLinkType}.
 	 */
 	Identifier abstractLinkTypeId;
 
