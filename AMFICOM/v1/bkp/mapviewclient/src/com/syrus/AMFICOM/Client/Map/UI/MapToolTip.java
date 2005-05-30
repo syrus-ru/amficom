@@ -1,34 +1,27 @@
 /**
- * $Id: MapToolTip.java,v 1.2 2005/02/10 11:48:40 krupenn Exp $
- *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * $Id: MapToolTip.java,v 1.3 2005/05/30 12:19:02 krupenn Exp $
+ * Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 package com.syrus.AMFICOM.Client.Map.UI;
-
-import com.syrus.AMFICOM.Client.General.UI.MultiRowToolTipUI;
 
 import javax.swing.JToolTip;
 
+import com.syrus.AMFICOM.client.UI.MultiRowToolTipUI;
+
 /**
- * Класс $RCSfile: MapToolTip.java,v $ используется для отображения всплывающей подсказки в 
- * несколько строк
+ * Класс используется для отображения всплывающей
+ * подсказки в несколько строк
  * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/02/10 11:48:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/05/30 12:19:02 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
-public class MapToolTip extends JToolTip 
-{
+public class MapToolTip extends JToolTip {
 	MultiRowToolTipUI toolTipUI = new MultiRowToolTipUI();
-	
-	public MapToolTip()
-	{
+
+	public MapToolTip() {
 		super();
 		setUI(this.toolTipUI);
 	}

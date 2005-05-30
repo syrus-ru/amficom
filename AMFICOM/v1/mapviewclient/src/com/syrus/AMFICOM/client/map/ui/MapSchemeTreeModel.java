@@ -1,12 +1,10 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.17 2005/04/22 11:35:52 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.18 2005/05/30 12:19:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.UI;
@@ -83,7 +81,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.17 $, $Date: 2005/04/22 11:35:52 $
+ * @version $Revision: 1.18 $, $Date: 2005/05/30 12:19:02 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -177,10 +175,10 @@ public class MapSchemeTreeModel
 			return schemeCableLink.getName();
 		}
 		else
-			if(object instanceof SchemePath) {
-				SchemePath schemePath = (SchemePath )object;
-				return schemePath.getName();
-			}
+		if(object instanceof SchemePath) {
+			SchemePath schemePath = (SchemePath )object;
+			return schemePath.getName();
+		}
 		return LangModelMap.getString(NONAME_BRANCH);
 	}
 
@@ -236,17 +234,15 @@ public class MapSchemeTreeModel
 		treeNode.setTopological(isTopological);
 
 		List compoundElements = new LinkedList();
-		for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();)
-		{
-			final SchemeElement schemeElement = (SchemeElement) schemeElementIterator.next();
+		for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();) {
+			final SchemeElement schemeElement = (SchemeElement) 
+					schemeElementIterator.next();
 			if (schemeElement.getScheme() != null)
 				compoundElements.add(schemeElement);
 		}
 		
-		if (compoundElements.size() > 0)
-		{
-			for(Iterator it = compoundElements.iterator(); it.hasNext();)
-			{
+		if(compoundElements.size() > 0) {
+			for(Iterator it = compoundElements.iterator(); it.hasNext();) {
 				SchemeElement schemeElement = (SchemeElement )it.next();
 				Scheme internalScheme = schemeElement.getScheme();
 
@@ -273,22 +269,20 @@ public class MapSchemeTreeModel
 
 		Set compoundElements = scheme.getSchemeElements();
 
-		if (compoundElements.size() > 0)
-		{
-			for(Iterator it = compoundElements.iterator(); it.hasNext();)
-			{
+		if(compoundElements.size() > 0) {
+			for(Iterator it = compoundElements.iterator(); it.hasNext();) {
 				SchemeElement element = (SchemeElement)it.next();
 				boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
 
 				Scheme internalScheme = element.getScheme();
 				
-				if (internalScheme != null)
-				{
-					childNode = buildSchemeTree(internalScheme, internalScheme.getKind().equals(Kind.CABLE_SUBNETWORK), isTopological); 
+				if(internalScheme != null) {
+					childNode = buildSchemeTree(
+							internalScheme, 
+							internalScheme.getKind().equals(Kind.CABLE_SUBNETWORK), 
+							isTopological); 
 				}
-				else
-				if (element.getScheme() == null && isTopological)
-				{
+				else if(element.getScheme() == null && isTopological) {
 					childNode = (MapSchemeTreeNode )buildElementTree(element, true, isTopological, allowsChildren); 
 				}
 				else
@@ -324,15 +318,12 @@ public class MapSchemeTreeModel
 
 		Set compoundElements = schemeElement.getSchemeElements();
 
-		if (compoundElements.size() > 0)
-		{
-			for(Iterator it = compoundElements.iterator(); it.hasNext();)
-			{
+		if(compoundElements.size() > 0) {
+			for(Iterator it = compoundElements.iterator(); it.hasNext();) {
 				SchemeElement element = (SchemeElement)it.next();
 				boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
 
-				if (element.getScheme() == null && isTopological)
-				{
+				if(element.getScheme() == null && isTopological) {
 					childNode = (MapSchemeTreeNode )buildElementTree(element, true, isTopological, allowsChildren); 
 				}
 				else
@@ -380,11 +371,9 @@ public class MapSchemeTreeModel
 		MapSchemeTreeNode childNode;
 		treeNode.setTopological(isTopological);
 
-		for (final Iterator schemeCableLinkIterator = parentScheme.getSchemeCableLinks().iterator(); schemeCableLinkIterator.hasNext();)
-		{
+		for (final Iterator schemeCableLinkIterator = parentScheme.getSchemeCableLinks().iterator(); schemeCableLinkIterator.hasNext();) {
 			final SchemeCableLink schemeCableLink = (SchemeCableLink) schemeCableLinkIterator.next();
-			if(isTopological)
-			{
+			if(isTopological) {
 				childNode = new MapSchemeTreeNode(null,schemeCableLink, getObjectName(schemeCableLink), cableIcon, false);
 				childNode.setDragDropEnabled(true);
 			}
@@ -401,11 +390,9 @@ public class MapSchemeTreeModel
 		MapSchemeTreeNode childNode;
 		treeNode.setTopological(isTopological);
 
-		for(Iterator it = SchemeUtils.getTopologicalPaths(parentScheme).iterator(); it.hasNext();)
-		{
+		for(Iterator it = SchemeUtils.getTopologicalPaths(parentScheme).iterator(); it.hasNext();) {
 			SchemePath schemePath = (SchemePath )it.next();
-			if(isTopological)
-			{
+			if(isTopological) {
 				childNode = new MapSchemeTreeNode(null,schemePath, getObjectName(schemePath), pathIcon, false);
 				childNode.setDragDropEnabled(true);
 			}

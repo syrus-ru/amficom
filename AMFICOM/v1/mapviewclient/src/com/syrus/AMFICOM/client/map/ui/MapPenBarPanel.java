@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.10 2005/05/05 09:49:13 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.11 2005/05/30 12:19:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,21 +17,22 @@ import java.util.Collection;
 
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.UI.dialogs.NamedObjectController;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * @version $Revision: 1.10 $, $Date: 2005/05/05 09:49:13 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/30 12:19:02 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapPenBarPanel extends JPanel 
 {
 	static final int ELEMENT_DIMENSION = 30;
-	private ObjectResourceComboBox penComboBox = new ObjectResourceComboBox();
+	private WrapperedComboBox penComboBox;
 
 	private LogicalNetLayer logicalNetLayer;
 
@@ -61,6 +62,13 @@ public final class MapPenBarPanel extends JPanel
 		setPreferredSize(new Dimension(150, 27));
 		setMinimumSize(new Dimension(150, 27));
 		setMaximumSize(new Dimension(150, 27));
+		
+		NamedObjectController controller = NamedObjectController.getInstance(); 
+		this.penComboBox = new WrapperedComboBox(
+				controller, 
+				NamedObjectController.KEY_NAME, 
+				NamedObjectController.KEY_NAME);
+		
 		this.penComboBox.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -76,15 +84,16 @@ public final class MapPenBarPanel extends JPanel
 		if(this.logicalNetLayer == null)
 			return;
 		Collection els = LinkTypeController.getTopologicalLinkTypes();
-		this.penComboBox.setContents(els, false);
-		this.penComboBox.setSelected(this.logicalNetLayer.getCurrentPhysicalLinkType());
+		this.penComboBox.removeAllItems();
+		this.penComboBox.addElements(els);
+		this.penComboBox.setSelectedItem(this.logicalNetLayer.getCurrentPhysicalLinkType());
 	}
 
 	void penSelected(ActionEvent e)
 	{
 		if(this.logicalNetLayer == null)
 			return;
-		PhysicalLinkType mpe = (PhysicalLinkType)this.penComboBox.getSelectedObjectResource();
+		PhysicalLinkType mpe = (PhysicalLinkType )this.penComboBox.getSelectedItem();
 		this.logicalNetLayer.setCurrentPhysicalLinkType(mpe);
 	}
 }

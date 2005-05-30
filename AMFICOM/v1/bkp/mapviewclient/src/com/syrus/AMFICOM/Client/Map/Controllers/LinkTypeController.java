@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.22 2005/05/27 15:14:56 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.23 2005/05/30 12:19:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.23 $, $Date: 2005/05/30 12:19:02 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -226,9 +225,8 @@ public final class LinkTypeController extends AbstractLinkController {
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(attribute);
@@ -291,9 +289,8 @@ public final class LinkTypeController extends AbstractLinkController {
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(attribute);
@@ -376,9 +373,8 @@ public final class LinkTypeController extends AbstractLinkController {
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(attribute);
@@ -453,9 +449,8 @@ public final class LinkTypeController extends AbstractLinkController {
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(attribute);
@@ -531,9 +526,8 @@ public final class LinkTypeController extends AbstractLinkController {
 						cType,
 						"",
 						"",
-						CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 						"",
-						linkType.getId(),
+						linkType,
 						true,
 						true);
 				linkType.addCharacteristic(attribute);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeNode.java,v 1.1 2005/04/22 11:34:31 krupenn Exp $
+ * $Id: MapSchemeTreeNode.java,v 1.2 2005/05/30 12:19:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import javax.swing.Icon;
 
-import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 

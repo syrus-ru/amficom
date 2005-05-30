@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.7 2005/02/18 12:19:47 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.8 2005/05/30 12:19:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
- * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/05/30 12:19:03 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -108,7 +108,7 @@ public final class NodeSizePanel extends JPanel
 		if(this.logicalNetLayer == null)
 			return;
 		this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() * COEF);
-		this.logicalNetLayer.getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 	}
 
 	void reduce()
@@ -116,7 +116,7 @@ public final class NodeSizePanel extends JPanel
 		if(this.logicalNetLayer == null)
 			return;
 		this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() / COEF);
-		this.logicalNetLayer.getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 	}
 
 	public void setEnabled(boolean bool)

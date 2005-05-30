@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.20 2005/05/27 15:14:59 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.21 2005/05/30 12:19:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,12 +39,12 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.20 $, $Date: 2005/05/27 15:14:59 $
+ * @version $Revision: 1.21 $, $Date: 2005/05/30 12:19:02 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapToolBar extends JPanel 
-		implements ApplicationModelListener//, OperationListener
+		implements ApplicationModelListener
 {
 	private ApplicationModel aModel = null;
 
