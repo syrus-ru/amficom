@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -66,7 +67,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/26 10:29:45 $
+ * @version $Revision: 1.39 $, $Date: 2005/05/31 12:21:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -232,7 +233,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					}
 				}
 			} catch (ApplicationException e) {
-				SchedulerModel.showErrorMessage(this, e);
+				AbstractMainFrame.showErrorMessage(this, e);
 				this.setId = null;
 			}
 		}
@@ -358,9 +359,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				// Log.FINEST);
 			} catch (IllegalArgumentException e) {
 				// Log.errorException(e);
-				SchedulerModel.showErrorMessage(this, e);
+				AbstractMainFrame.showErrorMessage(this, e);
 			} catch (ApplicationException ae) {
-				SchedulerModel.showErrorMessage(this, ae);
+				AbstractMainFrame.showErrorMessage(this, ae);
 				this.schedulerModel.setBreakData();
 			}
 		} else {
@@ -391,7 +392,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 									byteArray.getBytes());
 								parameters[i] = setParameter;
 							} catch (CreateObjectException e) {
-								SchedulerModel.showErrorMessage(this, e);
+								AbstractMainFrame.showErrorMessage(this, e);
 							}
 						}
 					} else if (codename.equals(this.pulswdLowResParameterType.getCodename())) {
@@ -406,7 +407,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 									byteArray.getBytes());
 								parameters[i] = setParameter;
 							} catch (CreateObjectException e) {
-								SchedulerModel.showErrorMessage(this, e);
+								AbstractMainFrame.showErrorMessage(this, e);
 							}
 						}
 					}
@@ -425,7 +426,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						try {
 							parameters[i] = SetParameter.createInstance(type, byteArray.getBytes());
 						} catch (CreateObjectException e) {
-							SchedulerModel.showErrorMessage(this, e);
+							AbstractMainFrame.showErrorMessage(this, e);
 						}
 					}
 				}
@@ -633,7 +634,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			this.gsOptionBox.setVisible(this.gsFlagParameterType != null);
 			this.lfdOptionBox.setVisible(this.lfdFlagParameterType != null);
 		} catch (ApplicationException exception) {
-			SchedulerModel.showErrorMessage(this, exception);
+			AbstractMainFrame.showErrorMessage(this, exception);
 		}
 	}
 
@@ -926,7 +927,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				}
 
 			} catch (ApplicationException ae) {
-				SchedulerModel.showErrorMessage(this, ae);
+				AbstractMainFrame.showErrorMessage(this, ae);
 			}
 		}
 		this.skip = false;
@@ -996,7 +997,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						this.skip = false;
 					}
 				} catch (ApplicationException e) {
-					SchedulerModel.showErrorMessage(this, e);
+					AbstractMainFrame.showErrorMessage(this, e);
 				}
 			}
 		}
@@ -1035,7 +1036,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						this.gsOptionBox.setSelected(b);
 
 					} catch (IOException e) {
-						SchedulerModel.showErrorMessage(this, e);
+						AbstractMainFrame.showErrorMessage(this, e);
 					}
 				} else if (codename.equals(ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT)) {
 					try {
@@ -1045,7 +1046,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						this.lfdOptionBox.setSelected(b);
 
 					} catch (IOException e) {
-						SchedulerModel.showErrorMessage(this, e);
+						AbstractMainFrame.showErrorMessage(this, e);
 					}
 				}
 

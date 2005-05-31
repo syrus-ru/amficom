@@ -16,7 +16,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,8 +41,10 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -397,7 +398,7 @@ class PlanToolBar {
 
 			public void actionPerformed(ActionEvent e) {
 				aContext.getDispatcher().firePropertyChange(
-					new PropertyChangeEvent(PlanToolBar.this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE, Boolean.FALSE, Boolean.TRUE));
+					new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 				CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 					public void run() {
@@ -414,12 +415,12 @@ class PlanToolBar {
 
 							panel.setDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
 							PlanToolBar.this.dispatcher
-									.firePropertyChange(new PropertyChangeEvent(PlanToolBar.this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE,  Boolean.TRUE, Boolean.FALSE));
+									.firePropertyChange(new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(PlanToolBar.this.toolBar, e1);
+							AbstractMainFrame.showErrorMessage(PlanToolBar.this.toolBar, e1);
 						} catch (Exception e1) {
-							SchedulerModel.showErrorMessage(PlanToolBar.this.toolBar, e1);
+							AbstractMainFrame.showErrorMessage(PlanToolBar.this.toolBar, e1);
 						}
 					}
 				}, LangModelSchedule.getString("Updating_tests_from_DB"));

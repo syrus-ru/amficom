@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -398,7 +399,7 @@ ActionListener, PropertyChangeListener {
 			updateTestLines();
 
 		} catch (ApplicationException e) {
-			SchedulerModel.showErrorMessage(this, e);
+			AbstractMainFrame.showErrorMessage(this, e);
 		}
 
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

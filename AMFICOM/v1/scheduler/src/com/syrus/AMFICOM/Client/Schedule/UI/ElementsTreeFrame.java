@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -265,7 +266,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 																	.getStorableObject((Identifier) parent.getObject(),
 																		true) : null);
 											} catch (ApplicationException e) {
-												SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);
+												AbstractMainFrame.showErrorMessage(ElementsTreeFrame.this, e);
 											}
 										}
 									});
@@ -278,7 +279,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 												.setSelectedMeasurementType((MeasurementType) StorableObjectPool
 														.getStorableObject(identifier, true));
 									} catch (ApplicationException e) {
-										SchedulerModel.showErrorMessage(ElementsTreeFrame.this, e);
+										AbstractMainFrame.showErrorMessage(ElementsTreeFrame.this, e);
 									}
 								}
 									break;

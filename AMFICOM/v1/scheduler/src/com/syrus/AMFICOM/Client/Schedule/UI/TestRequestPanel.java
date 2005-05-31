@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -123,7 +124,7 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 				MonitoredElement me = test.getMonitoredElement();
 				this.portTextField.setText(me.getName());
 			} catch (ApplicationException ae) {
-				SchedulerModel.showErrorMessage(this, ae);
+				AbstractMainFrame.showErrorMessage(this, ae);
 			}
 		} else {
 			this.cleanAllFields();

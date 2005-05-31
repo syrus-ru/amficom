@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -218,7 +219,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 							}
 						}
 					} catch (ApplicationException e1) {
-						SchedulerModel.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
+						AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 					}
 				}
 			}
@@ -241,7 +242,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 							}
 						}
 					} catch (ApplicationException e1) {
-						SchedulerModel.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
+						AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 					}
 				}
 			}
@@ -301,7 +302,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 								}
 							}
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
+							AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 						}
 					}
 
@@ -539,7 +540,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 					this.tabbedPane.revalidate();
 				}
 			} catch (ApplicationException e) {
-				SchedulerModel.showErrorMessage(this.tabbedPane, e);
+				AbstractMainFrame.showErrorMessage(this.tabbedPane, e);
 			}
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE)) {
 			this.selectComboBox(this.analysisComboBox, (Identifier) newValue, true);
@@ -627,7 +628,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 			try {
 				storableObject = StorableObjectPool.getStorableObject(identifier, true);
 			} catch (ApplicationException e) {
-				SchedulerModel.showErrorMessage(this.parametersTestPanel, e);
+				AbstractMainFrame.showErrorMessage(this.parametersTestPanel, e);
 			}
 		}
 		cb.setSelectedItem(storableObject);

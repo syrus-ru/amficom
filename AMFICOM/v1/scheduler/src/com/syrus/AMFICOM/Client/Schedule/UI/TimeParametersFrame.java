@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -641,7 +642,7 @@ public class TimeParametersFrame extends JInternalFrame {
 //							// TODO Auto-generated catch block
 //							e1.printStackTrace();
 //						} catch (IllegalObjectEntityException ioee) {
-//							SchedulerModel.showErrorMessage(TimeParametersPanel.this, ioee);
+//							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this, ioee);
 //						}
 //
 //					}
@@ -819,9 +820,9 @@ public class TimeParametersFrame extends JInternalFrame {
 ////								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
 ////								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, getStartDate(), getEndDate(), intervalsTemporalPattern);
 ////							} catch (IllegalObjectEntityException e1) {
-////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////							} catch (CreateObjectException e1) {
-////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////							}
 ////							
 ////						} 
@@ -851,7 +852,7 @@ public class TimeParametersFrame extends JInternalFrame {
 ////						try {
 ////							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, Identifier.VOID_IDENTIFIER), Collections.singletonMap(newMs, null));
 ////						} catch (IllegalDataException e1) {
-////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////						}
 ////						/* TODO */
 //////						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
@@ -900,9 +901,9 @@ public class TimeParametersFrame extends JInternalFrame {
 ////																									startDate, endDate,
 ////																									intervalsTemporalPattern);
 ////							} catch (IllegalObjectEntityException e1) {
-////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////							} catch (CreateObjectException e1) {
-////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////							}
 ////
 ////						}
@@ -927,7 +928,7 @@ public class TimeParametersFrame extends JInternalFrame {
 ////									periodicTemporalPattern = (PeriodicalTemporalPattern) set.iterator().next();
 ////								}
 ////							} catch (ApplicationException e1) {
-////								SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////								return;
 ////							}
 ////
@@ -956,11 +957,11 @@ public class TimeParametersFrame extends JInternalFrame {
 ////							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, periodicTemporalPattern
 ////									.getId()), Collections.singletonMap(newMs, new Long(endTime - startTime)));
 ////						} catch (IllegalObjectEntityException e1) {
-////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////						} catch (CreateObjectException e1) {
-////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////						} catch (IllegalDataException e1) {
-////							SchedulerModel.showErrorMessage(TimeParametersPanel.this.panel, e1);
+////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
 ////						}
 ////
 ////						// while(startTime + times < endTime) {
@@ -1183,7 +1184,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						temporalPattern = (AbstractTemporalPattern)set.iterator().next();
 					}
 				} catch (ApplicationException e) {
-					SchedulerModel.showErrorMessage(this.panel, e);
+					AbstractMainFrame.showErrorMessage(this.panel, e);
 					return null;
 				}
 				
@@ -1191,14 +1192,14 @@ public class TimeParametersFrame extends JInternalFrame {
 					try {
 						temporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
 					} catch (CreateObjectException e) {
-						SchedulerModel.showErrorMessage(this.panel, e);
+						AbstractMainFrame.showErrorMessage(this.panel, e);
 						return null;
 					}
 					
 					try {
 						StorableObjectPool.putStorableObject(temporalPattern);
 					} catch (IllegalObjectEntityException e) {
-						SchedulerModel.showErrorMessage(this.panel, e);
+						AbstractMainFrame.showErrorMessage(this.panel, e);
 						return null;
 					}
 				}
@@ -1226,7 +1227,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				}
 			}
 			else {
-				// SchedulerModel.showErrorMessage(this, ne)
+				// ModuleMainFrame.showErrorMessage(this, ne)
 				this.schedulerModel.setBreakData();
 				return null;
 			}

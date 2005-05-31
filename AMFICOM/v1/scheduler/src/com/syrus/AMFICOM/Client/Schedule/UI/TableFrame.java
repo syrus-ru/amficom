@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -102,7 +103,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						identifier = groupTestId;
 					}
 				} catch (ApplicationException e) {
-					SchedulerModel.showErrorMessage(this, e);
+					AbstractMainFrame.showErrorMessage(this, e);
 				}
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					Test test = (Test) tableModel.getObject(i);
@@ -161,7 +162,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				}
 			}
 		} catch (ApplicationException e) {
-			SchedulerModel.showErrorMessage(this, e);
+			AbstractMainFrame.showErrorMessage(this, e);
 		}
 		this.listTable.revalidate();
 		this.listTable.repaint();
@@ -192,7 +193,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 									.addSelectedTest((Test) ((WrapperedTableModel) TableFrame.this.listTable
 											.getModel()).getObject(selectedRow));
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TableFrame.this, e1);
+							AbstractMainFrame.showErrorMessage(TableFrame.this, e1);
 						}
 					}
 				}

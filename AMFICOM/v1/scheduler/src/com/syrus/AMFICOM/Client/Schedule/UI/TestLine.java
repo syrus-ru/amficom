@@ -32,6 +32,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -170,7 +171,7 @@ public class TestLine extends TimeLine {
 	// try {
 	// TestLine.this.schedulerModel.setSelectedTest(null);
 	// } catch (ApplicationException e1) {
-	// SchedulerModel.showErrorMessage(TestLine.this, e1);
+	// ModuleMainFrame.showErrorMessage(TestLine.this, e1);
 	// }
 	// }
 	// }
@@ -205,7 +206,7 @@ public class TestLine extends TimeLine {
 					// Log.debugMessage("TestLine.selectTest | select " +
 					// ((Test) testTimeItem.object).getId(), Log.FINEST);
 				} catch (ApplicationException e) {
-					SchedulerModel.showErrorMessage(this, e);
+					AbstractMainFrame.showErrorMessage(this, e);
 				}
 				this.selectedItems.add(testTimeItem);
 				// Log.debugMessage("TestLine.selectTest | selectedItems.size()
@@ -378,7 +379,7 @@ public class TestLine extends TimeLine {
 						try {
 							TestLine.this.schedulerModel.unselectTests();
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TestLine.this, e1);
+							AbstractMainFrame.showErrorMessage(TestLine.this, e1);
 						}
 					}
 					if (!TestLine.this.timeItems.isEmpty()) {
@@ -387,7 +388,7 @@ public class TestLine extends TimeLine {
 								try {
 									TestLine.this.schedulerModel.unselectTests();
 								} catch (ApplicationException e1) {
-									SchedulerModel.showErrorMessage(TestLine.this, e1);
+									AbstractMainFrame.showErrorMessage(TestLine.this, e1);
 								}
 							}
 						}
@@ -395,7 +396,7 @@ public class TestLine extends TimeLine {
 						try {
 							TestLine.this.schedulerModel.unselectTests();
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TestLine.this, e1);
+							AbstractMainFrame.showErrorMessage(TestLine.this, e1);
 						}
 					}
 				} else if (SwingUtilities.isRightMouseButton(e)) {
@@ -441,7 +442,7 @@ public class TestLine extends TimeLine {
 																				SchedulerModel.COMMAND_REFRESH_TIME_STAMPS,
 																				null, null));
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TestLine.this, e1);
+							AbstractMainFrame.showErrorMessage(TestLine.this, e1);
 						}
 
 					}
@@ -485,7 +486,7 @@ public class TestLine extends TimeLine {
 								continue;
 							}
 						} catch (ApplicationException e1) {
-							SchedulerModel.showErrorMessage(TestLine.this, e1);
+							AbstractMainFrame.showErrorMessage(TestLine.this, e1);
 						}
 						testTimeItem.x += dx;
 						// Log.debugMessage(".mouseDragged | dx is " + dx,
@@ -556,7 +557,7 @@ public class TestLine extends TimeLine {
 							}
 
 						} catch (ApplicationException e) {
-							SchedulerModel.showErrorMessage(this, e);
+							AbstractMainFrame.showErrorMessage(this, e);
 						}
 
 					}
@@ -646,7 +647,7 @@ public class TestLine extends TimeLine {
 				}
 			}
 		} catch (ApplicationException e) {
-			SchedulerModel.showErrorMessage(this, e);
+			AbstractMainFrame.showErrorMessage(this, e);
 		}
 
 		this.updateScale();
@@ -755,7 +756,7 @@ public class TestLine extends TimeLine {
 			Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + this.unsavedTestTimeItems.size(),
 				Log.FINEST);
 		} catch (ApplicationException e) {
-			SchedulerModel.showErrorMessage(this, e);
+			AbstractMainFrame.showErrorMessage(this, e);
 		}
 		super.repaint();
 		super.revalidate();
@@ -791,7 +792,7 @@ public class TestLine extends TimeLine {
 									+ ", " + testController.getName(TestController.KEY_START_TIME) + ':'
 									+ testController.getValue(test, TestController.KEY_START_TIME);
 						} catch (ApplicationException e) {
-							SchedulerModel.showErrorMessage(this, e);
+							AbstractMainFrame.showErrorMessage(this, e);
 						}
 
 					}
