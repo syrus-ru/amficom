@@ -58,7 +58,7 @@ private:
 	double  delta_x;
 	double *noise;
 
-    double* f_wlet;
+    double* f_wletB;	// в/л образ базового масштаба
     double average_factor; // характеризует ср. наклона на р/г, не привязан ни к масштабу вейвлета, ни к выбранной норме
 
     ArrList* events; // список всех событий
@@ -70,7 +70,7 @@ private:
     double minimalEnd;
     double noiseFactor;
 
-    int wlet_width; // базовая ширина вейвлета
+    int scaleB; // базовая ширина вейвлета
     int reflectiveSize; // максимальная ширина коннектора
     double rACrit;  	// порог "большого" коннектора
 	int rSSmall;		// макс. длина для маленького коннектора
@@ -95,22 +95,25 @@ private:
 	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
 
+	// расчет R-параметров splash (в момент его обнаружения, т.к. потом будет потерян вейвлет-образ)
+	void fillSplashRParameters(Splash &spl, double *f_wlet, int wlet_width);
+
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	double calcWletMeanValue(double* fw, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
 	void calcAverageFactor(double* fw, int scale, double norma1);
 	void shiftThresholds();// изменить границы порогов в соответствии со средним значением вейвлета 
 
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
-	void findAllWletSplashes(double* f_wlet, ArrList& splashes);
+	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
 
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
-    void findEventsBySplashes(ArrList&  splashes);
+    void findEventsBySplashes(double* f_wlet, int wlet_width, ArrList&  splashes);
 	int	 processDeadZone(ArrList& splashes);
-    int  processIfIsConnector(int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
-    void setSpliceParamsBySplash( EventParams& ep, Splash& sp1);
-    void setConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
+    int  processIfIsConnector(double* f_wlet, int wlet_width, int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
+    void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
+    void setConnectorParamsBySplashes(int wlet_width, EventParams& ep, Splash& sp1, Splash& sp2);
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
-	void correctSpliceCoords(EventParams* splice);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
+	void correctSpliceCoords(double *f_wletTMP, int wlet_width, EventParams* splice);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 	void correctConnectorFront(EventParams* connector);
 
 	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
@@ -130,12 +133,18 @@ class Splash
 	int begin_conn;		// пересечение коннекторного порога
     int end_conn;
 
+	int scale;
+	double r_conn;		// max{(f_wlet[i]-minimalConnector)/noise[i]} (<0, если порог не достигнут)
+	double r_acrit;		// max{(f_wlet[i]-rACrit)/noise[i]} (<0, если rACrit не достигнут)
+	double r_weld;		// max{(f_wlet[i]-minimalWeld)/noise[i]} (<0, если порог не достигнут)
+
 	double f_extr;		// экстремальное значение всплеска
     int sign;  // знак всплеска
 
-	// инициализируем неопределёнными значениями ()
-    Splash()
-    {	begin_thr 		= -1;
+	// инициализируем неопределёнными значениями, указав только масштаб обнаружения
+    Splash(int scale1)
+    {	// NB: begin=end - это дает нам возможность не всегда проверять, определены они или нет
+		begin_thr 		= -1;
     	end_thr 		= -1;
 		begin_weld		= -1;
     	end_weld 		= -1;
@@ -143,6 +152,10 @@ class Splash
     	end_conn 		= -1;
         f_extr 			= 0;
     	sign 			= 0;
+		scale			= scale1;
+		r_conn			= -1;
+		r_acrit			= -1;
+		r_weld			= -1;
     }
 };
 //====================================================================================================
