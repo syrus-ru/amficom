@@ -22,7 +22,7 @@ public class TraceSelectorFrame extends JInternalFrame
 implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, PropertyChangeListener
 {
 	Dispatcher dispatcher;
-	protected static List traces = new ArrayList();
+	protected static List traces = new LinkedList();
 	private WrapperedTable jTable;
 	private WrapperedTableModel tModel;
 
@@ -34,7 +34,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, 
 	public TraceSelectorFrame(Dispatcher dispatcher)
 	{
 		super();
-
+		
 		try
 		{
 			jbInit();
@@ -155,10 +155,13 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, 
 
 	public void bsHashRemovedAll()
 	{
-		for (Iterator it = traces.iterator(); it.hasNext();) {
-			String id = (String) it.next();
-			bsHashRemoved(id);
+		List values = tModel.getValues();
+		for (Iterator it = values.iterator(); it.hasNext();) {
+			TraceResource tr = (TraceResource)it.next();	
+			tr.removePropertyChangeListener(this);
+			it.remove();
 		}
+		traces.clear();
 		setVisible(false);
 	}
 
