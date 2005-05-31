@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.68 2005/05/30 16:29:25 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.69 2005/05/31 16:07:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,7 +80,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.68 $, $Date: 2005/05/30 16:29:25 $
+ * @version $Revision: 1.69 $, $Date: 2005/05/31 16:07:47 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -205,7 +205,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		throws MapConnectionException, MapDataException;
 
 	/**
-	 * Получить дистанцию между двумя точками в экранных координатах.
+	 * Получить дистанцию между двумя точками в географических координатах.
 	 * @param from географическая координата
 	 * @param to географическая координата
 	 * @return расстояние
@@ -321,12 +321,28 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 	/**
 	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
-	 * передвинута мышь.
+	 * передвинута мышь с нажатой клавишей.
 	 * @param me мышиное событие
 	 */	
 	public abstract void handDragged(MouseEvent me)
 		throws MapConnectionException, MapDataException;
 	
+	/**
+	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
+	 * передвинута мышь.
+	 * @param me мышиное событие
+	 */	
+	public abstract void handMoved(MouseEvent me)
+		throws MapConnectionException, MapDataException;
+
+	/**
+	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
+	 * нажата мышь.
+	 * @param me мышиное событие
+	 */	
+	public abstract void handClicked(MouseEvent me)
+		throws MapConnectionException, MapDataException;
+
 	/**
 	 * При изменении масштаба отображения карты необходимо обновить
 	 * масштаб отображения всех объектов на карте.
@@ -1815,40 +1831,40 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return this.userId;
 	}
 
-	public Dimension getDiscreteShifts(int shiftX, int shiftY)
-	{
-		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
-
-		int discreteShiftX = 0;
-		int discreteShiftY = 0;
-		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
-		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
-		
-		if (angle > 90)
-			angle = 180 - angle;
-		
-		if ((22.5 < angle) && (angle < 67.5))
-		{
-			if (	(Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
-					&&(Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE))
-			{
-				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
-				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
-			}
-		}
-		else if (angle <= 22.5)
-		{
-			if (Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)			
-				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
-			discreteShiftY = 0;			
-		}
-		else if (67.5 <= angle)
-		{
-			discreteShiftX = 0;
-			if (Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
-				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);			
-		}
-		return new Dimension(discreteShiftX,discreteShiftY);
-	}
+//	public Dimension getDiscreteShifts(int shiftX, int shiftY)
+//	{
+//		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
+//
+//		int discreteShiftX = 0;
+//		int discreteShiftY = 0;
+//		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
+//		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
+//		
+//		if (angle > 90)
+//			angle = 180 - angle;
+//		
+//		if ((22.5 < angle) && (angle < 67.5))
+//		{
+//			if (	(Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
+//					&&(Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE))
+//			{
+//				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
+//				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
+//			}
+//		}
+//		else if (angle <= 22.5)
+//		{
+//			if (Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)			
+//				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
+//			discreteShiftY = 0;			
+//		}
+//		else if (67.5 <= angle)
+//		{
+//			discreteShiftX = 0;
+//			if (Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
+//				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);			
+//		}
+//		return new Dimension(discreteShiftX,discreteShiftY);
+//	}
 	
 }
