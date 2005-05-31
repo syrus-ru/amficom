@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.16 2005/05/27 15:14:54 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.17 2005/05/31 16:07:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/05/27 15:14:54 $
+ * @version $Revision: 1.17 $, $Date: 2005/05/31 16:07:00 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -78,7 +78,7 @@ public final class MapPropertiesManager
 	protected static final String KEY_LAST_VIEW = "lastView";
 	protected static final String KEY_LAST_DIRECTORY = "lastDirectory";
 	protected static final String KEY_DESCRETE_NAVIGATION = "descreteNavigation";
-
+ 	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache";	
 
 	public static final double DEFAULT_ZOOM = 1.0D;
 
@@ -101,6 +101,7 @@ public final class MapPropertiesManager
 	protected static String lastView = "";
 	protected static String lastDirectory = ".";
 	protected static String descreteNavigation = "false";
+	protected static String useTopologicalImageCache = "false";	
 
 	/* display constants. */
 	public static final Color DEFAULT_TEXT_BACKGROUND = Color.YELLOW;
@@ -399,6 +400,10 @@ public final class MapPropertiesManager
 		return Boolean.valueOf(descreteNavigation).booleanValue();
 	}
 	
+ 	public static boolean isTopologicalImageCache() {
+		return Boolean.valueOf(useTopologicalImageCache).booleanValue();
+	}
+
 	/**
 	 * Установить значения из инициализационного файла.
 	 */
@@ -423,7 +428,8 @@ public final class MapPropertiesManager
 			lastZoom = "0.0000";
 		
 		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
-		descreteNavigation = properties.getProperty(KEY_LAST_DIRECTORY);
+		descreteNavigation = properties.getProperty(KEY_DESCRETE_NAVIGATION);
+		useTopologicalImageCache = properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE);		
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
 //		showPhysicalNodes = iniFile.getValue("showNodes");
@@ -441,6 +447,7 @@ public final class MapPropertiesManager
 		dataBaseURL = "";
 		lastDirectory = ".";
 		descreteNavigation = "false";
+		useTopologicalImageCache = "false";
 	}
 
 	/**
