@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.11 2005/05/24 10:27:41 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.12 2005/05/31 07:59:40 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/05/24 10:27:41 $
+ * @version $Revision: 1.12 $, $Date: 2005/05/31 07:59:40 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -53,6 +53,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		// сохраняем в Pool
 		Heap.setMinuitAnalysisParams(minuitParams);
 		Heap.setMinuitInitialParams((AnalysisParameters)minuitParams.clone());
+        Heap.notifyAnalysisParametersUpdated();
 	}
 
 	public void saveIni() {

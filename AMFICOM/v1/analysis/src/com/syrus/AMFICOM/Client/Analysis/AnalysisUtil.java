@@ -256,6 +256,7 @@ public class AnalysisUtil
 		Heap.setMinuitAnalysisParams(
 			(AnalysisParameters)analysisParams.clone());
 		Heap.setMinuitInitialParams(analysisParams);
+        Heap.notifyAnalysisParametersUpdated();
 	}
 
 	public static String getSimpleEventNameByType(int eventType)

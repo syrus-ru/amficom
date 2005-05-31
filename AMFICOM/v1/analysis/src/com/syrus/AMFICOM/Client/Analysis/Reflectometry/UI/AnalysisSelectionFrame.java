@@ -66,6 +66,8 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 
 	ApplicationContext aContext;
 
+    private boolean analysisParametersUpdatedHere = false;
+
 	public AnalysisSelectionFrame(ApplicationContext aContext)
 	{
 		super();
@@ -211,6 +213,9 @@ public class AnalysisSelectionFrame extends ATableFrame implements
                 ((Double )table.getValueAt(3, 1)).doubleValue());
         Heap.getMinuitAnalysisParams().setNoiseFactor(
                 ((Double )table.getValueAt(4, 1)).doubleValue());
+        analysisParametersUpdatedHere = true;
+        Heap.notifyAnalysisParametersUpdated();
+        analysisParametersUpdatedHere  = false;
     }
 
 	void analysisStartButton_actionPerformed(ActionEvent e)
@@ -478,6 +483,8 @@ public class AnalysisSelectionFrame extends ATableFrame implements
 	}
 
     public void analysisParametersUpdated() {
+        if (analysisParametersUpdatedHere)
+            return;
         setValues(Heap.getMinuitAnalysisParams());
     }
 }

@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -7,7 +10,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.io.BellcoreStructure;
 
 public class HistogrammFrame extends ScalableFrame
-implements BsHashChangeListener
+implements BsHashChangeListener, AnalysisParametersListener
 {
 	Dispatcher dispatcher;
 	public HistogrammFrame(Dispatcher dispatcher)
@@ -39,6 +42,7 @@ implements BsHashChangeListener
 	{
 		this.dispatcher = dispatcher;
 		Heap.addBsHashListener(this);
+        Heap.addAnalysisParametersListener(this);
 	}
 
 	public void addTrace (String id)
@@ -78,4 +82,16 @@ implements BsHashChangeListener
 		((ScalableLayeredPanel)panel).removeAllGraphPanels();
 		setVisible (false);
 	}
+
+    public void analysisParametersUpdated() {
+        JLayeredPane slp = ((ScalableLayeredPanel)panel).jLayeredPane;
+        for(int i=0; i<slp.getComponentCount(); i++)
+        {
+            JPanel panel1 = (JPanel)slp.getComponent(i);
+            if (panel1 instanceof HistogrammPanel)
+            {
+                ((HistogrammPanel)panel1).updAnalysisParameters();
+            }
+        }
+    }
 }

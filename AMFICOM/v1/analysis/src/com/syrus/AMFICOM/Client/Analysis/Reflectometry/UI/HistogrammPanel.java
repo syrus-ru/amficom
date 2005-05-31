@@ -51,15 +51,12 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private Color thresholdColor;
 
 	private boolean moveLevel = false;
+    private boolean movedHere = false;
 
 	public HistogrammPanel(ResizableLayeredPanel panel, double[] y, double deltaX)
 	{
 		super(panel, y, deltaX);
 		inversed_y = false;
-		grid_shift_x = downLimit;
-
-		Kx = (upLimit - downLimit) / nBins;
-		Ky = 1;
 
 		init();
 
@@ -167,7 +164,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	{
 		super.paint_scale_digits(g);
 				
-		int jh = getHeight();
+		//int jh = getHeight();
 		int jw = getWidth();
 
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
@@ -225,23 +222,55 @@ public class HistogrammPanel extends ScaledGraphPanel
 		super.this_mouseReleased(e);
 	}
 
-    protected void levelUpdated() {
-        double vThresh = 0.0;
+    private double level2thresh(double level1) {
+        double thresh = 0.0;
         for (int i = 0; i < threshold.length; i++) {
-            if (threshold[i] < this.level) {
-                vThresh = i * Kx * alpha;
+            if (threshold[i] < level1) {
+                thresh = i * Kx * alpha;
                 break;
             }
         }
+        return thresh;
+    }
+    private double thresh2level(double thresh) {
+        double fIndex = Math.round(thresh / alpha / Kx);
+        if (fIndex < 0)
+            return threshold[0];
+        else if (fIndex > threshold.length - 1)
+            return threshold[threshold.length - 1];
+        else
+        return threshold[(int)fIndex];
+    }
+    private double getHeapThreshold() {
+        AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+        return ap.getMinSplice();
+    }
+    private void setHeapThreshold(double vThresh) {
+        AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+        ap.setMinSplice(vThresh); // FIXME: проверять, чтобы оно не оказывалось за пределами minThresh/minConn (это специфично для AnalysisParameters)
+        movedHere = true;
+        Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
+        movedHere = false;
+    }
+
+    protected void levelUpdated() {
+        double vThresh = level2thresh(this.level);
         // округляем
         // XXX: скорее всего, округление должно проводиться в AnalysisParameters, а не здесь
         vThresh = MathRef.round_4(vThresh);
         if (vThresh > 0) {
-            AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-            ap.setMinSplice(vThresh); // FIXME: проверять, чтобы оно не оказывалось за пределами minThresh/minConn (это специфично для AnalysisParameters)
-            Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
-            // XXX: maybe we should be a subscribe too
+            setHeapThreshold(vThresh);
         }
+    }
+
+    public void updAnalysisParameters() {
+        if (movedHere)
+            return;
+        double level1 = thresh2level(getHeapThreshold());
+        if (level1 == this.level)
+            return;
+        this.level = level1;
+        parent.repaint();
     }
 
 	public void updateHistogrammData(int start1, int end1)
@@ -250,9 +279,17 @@ public class HistogrammPanel extends ScaledGraphPanel
 		y = histo.init(derivative, start1, end1);
 		int maxIndex = histo.getMaximumIndex();
 
+        grid_shift_x = downLimit;
+        Kx = (upLimit - downLimit) / nBins;
+        Ky = 1;
+
 		init(y, deltaX);
+//        long t0 = System.currentTimeMillis();
 		gauss = CoreAnalysisManager.calcGaussian(y, maxIndex); // XXX: takes about 98% of updateHistogrammData execution time
+//        long t1 = System.currentTimeMillis();
 		threshold = CoreAnalysisManager.calcThresholdCurve(y, maxIndex);
+//        long t2 = System.currentTimeMillis();
+//        System.out.println("dt hist: gauss " + (t1-t0) + ", thr " + (t2-t1));
 
 		for (int i = 0; i < y.length; i++)
 		{
