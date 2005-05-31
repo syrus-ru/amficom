@@ -234,34 +234,12 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 	}
 	
 	public static final String FIELD_PREFIX = "field";
-
-	/**
-	 * @deprecated use FIELD_STATUS
-	 */	
-	public static String field_status = "status";
-	/**
-	 * @deprecated use FIELD_SERVER
-	 */	
-	public static String field_server = "server";
-	/**
-	 * @deprecated use FIELD_SESSION
-	 */	
-	public static String field_session = "session";
-	/**
-	 * @deprecated use FIELD_USER
-	 */	
-	public static String field_user = "user";
-	/**
-	 * @deprecated use FIELD_TIME
-	 */	
-	public static String field_time = "time";
-
-	public static String FIELD_DOMAIN = "domain";
-	public static String FIELD_STATUS = "status";
-	public static String FIELD_SERVER = "server";
-	public static String FIELD_SESSION = "session";
-	public static String FIELD_USER = "user";
-	public static String FIELD_TIME = "time";
+	public static final String FIELD_DOMAIN = "domain";
+	public static final String FIELD_STATUS = "status";
+	public static final String FIELD_SERVER = "server";
+	public static final String FIELD_SESSION = "session";
+	public static final String FIELD_USER = "user";
+	public static final String FIELD_TIME = "time";
 
 	private ProgressBar pbar;
 	private boolean pbarEnabled = false;
@@ -433,7 +411,7 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 
 		distribute();
 
-		if(field_id.equals(StatusBarModel.field_time))
+		if(field_id.equals(StatusBarModel.FIELD_TIME))
 		{
 			new MyTimeDisplay(this.fields[index]).start();
 		}
@@ -562,7 +540,7 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 
 	void separator_mouseEntered(MouseEvent e)
 	{
-		setCursor(new Cursor(Cursor.E_RESIZE_CURSOR));
+		setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 //		System.out.println("mouse Enter");
 	}
 
@@ -657,13 +635,13 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 		if (evt instanceof StatusMessageEvent) {
 			StatusMessageEvent sme = (StatusMessageEvent) evt;
 			if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
-				setText(StatusBarModel.field_status, sme.getText());
+				setText(StatusBarModel.FIELD_STATUS, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_SESSION)) {
-				setText(StatusBarModel.field_session, sme.getText());
+				setText(StatusBarModel.FIELD_SESSION, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_SERVER)) {
-				setText(StatusBarModel.field_server, sme.getText());
+				setText(StatusBarModel.FIELD_SERVER, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_USER)) {
-				setText(StatusBarModel.field_user, sme.getText());
+				setText(StatusBarModel.FIELD_USER, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_DOMAIN)) {
 				setText(StatusBarModel.FIELD_DOMAIN, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_BAR)) {
