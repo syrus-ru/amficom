@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMeasurementObjectLoader.java,v 1.10 2005/05/27 16:24:44 bass Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.11 2005/05/31 14:54:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,9 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,6 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -24,6 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
@@ -47,395 +52,193 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/27 16:24:44 $
+ * @version $Revision: 1.11 $, $Date: 2005/05/31 14:54:42 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implements MeasurementObjectLoader {
-
 	public CORBAMeasurementObjectLoader(ServerConnectionManager cmServerConnectionManager) {
 		super(cmServerConnectionManager);
 	}
 
-
-
-	/* Load multiple objects*/
-
-	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			MeasurementType_Transferable[] transferables = cmServer.transmitMeasurementTypes(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new MeasurementType(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadMeasurementTypes(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitMeasurementTypes(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
-	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			AnalysisType_Transferable[] transferables = cmServer.transmitAnalysisTypes(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new AnalysisType(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadAnalysisTypes(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.ANALYSISTYPE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitAnalysisTypes(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			EvaluationType_Transferable[] transferables = cmServer.transmitEvaluationTypes(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new EvaluationType(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitEvaluationTypes(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			ModelingType_Transferable[] transferables = cmServer.transmitModelingTypes(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new ModelingType(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.MODELINGTYPE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitModelingTypes(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
-
-
 	public java.util.Set loadMeasurements(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Measurement_Transferable[] transferables = cmServer.transmitMeasurements(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Measurement(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitMeasurements(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadAnalyses(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Analysis_Transferable[] transferables = cmServer.transmitAnalyses(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Analysis(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.ANALYSIS_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitAnalyses(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadEvaluations(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Evaluation_Transferable[] transferables = cmServer.transmitEvaluations(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Evaluation(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.EVALUATION_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitEvaluations(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Modeling_Transferable[] transferables = cmServer.transmitModelings(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Modeling(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.MODELING_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitModelings(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			MeasurementSetup_Transferable[] transferables = cmServer.transmitMeasurementSetups(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new MeasurementSetup(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitMeasurementSetups(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadResults(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Result_Transferable[] transferables = cmServer.transmitResults(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Result(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.RESULT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitResults(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Set_Transferable[] transferables = cmServer.transmitSets(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Set(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.SET_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitSets(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadTests(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Test_Transferable[] transferables = cmServer.transmitTests(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Test(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.TEST_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitTests(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			CronTemporalPattern_Transferable[] transferables = cmServer.transmitCronTemporalPatterns(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new CronTemporalPattern(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitCronTemporalPatterns(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadIntervalsTemporalPatterns(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			IntervalsTemporalPattern_Transferable[] transferables = cmServer.transmitIntervalsTemporalPatterns(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new IntervalsTemporalPattern(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitIntervalsTemporalPatterns(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public java.util.Set loadPeriodicalTemporalPatterns(java.util.Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			PeriodicalTemporalPattern_Transferable[] transferables = cmServer.transmitPeriodicalTemporalPatterns(idsT, sessionKeyT);
-			java.util.Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new PeriodicalTemporalPattern(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitPeriodicalTemporalPatterns(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 
@@ -719,7 +522,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 			java.util.Set objects = new HashSet(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
-					objects.add(new Set(transferables[i]));
+					objects.add(new com.syrus.AMFICOM.measurement.Set(transferables[i]));
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -1090,7 +893,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
 		int i = 0;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Set_Transferable) ((Set) it.next()).getTransferable();
+			transferables[i] = (Set_Transferable) ((com.syrus.AMFICOM.measurement.Set) it.next()).getTransferable();
 
 		try {
 			StorableObject_Transferable[] headers = cmServer.receiveSets(transferables, force, sessionKeyT);

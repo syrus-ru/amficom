@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.3 2005/05/27 16:24:44 bass Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.4 2005/05/31 14:54:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,275 +10,361 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CommonServer;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.mshserver.corba.MSHServer;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements SchemeObjectLoader {
 	public CORBASchemeObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}
 
-	public Set loadCableChannelingItems(Set ids)
-			throws ApplicationException {
+	public Set loadCableChannelingItems(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitCableChannelingItems(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadPathElements(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitPathElements(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeCableLinks(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeCableLinks(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeCablePorts(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeCablePorts(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeCableThreads(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeCableThreads(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeDevices(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeDevices(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeElements(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeElements(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeLinks(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_LINK_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeLinks(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeMonitoringSolutions(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeMonitoringSolutions(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeOptimizeInfos(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeOptimizeInfos(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeOptimizeInfoSwitches(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeOptimizeInfoSwitches(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeOptimizeInfoRtus(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeOptimizeInfoRtus(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemePaths(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PATH_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemePaths(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemePorts(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PORT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemePorts(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeProtoElements(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeProtoElements(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemeProtoGroups(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeProtoGroups(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadSchemes(final Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemes(ids1, sessionKey);
+			}
+		});
+	}
+
+	public Set loadCableChannelingItemsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadCableChannelingItemsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadPathElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadPathElements(Set ids) throws ApplicationException {
+	public Set loadSchemeCableLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadPathElementsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadSchemeCablePortsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeCableLinks(Set ids) throws ApplicationException {
+	public Set loadSchemeCableThreadsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeCableLinksButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadSchemeDevicesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeCablePorts(Set ids) throws ApplicationException {
+	public Set loadSchemeElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeCablePortsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadSchemeLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeCableThreads(Set ids) throws ApplicationException {
+	public Set loadSchemeMonitoringSolutionsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeCableThreadsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadSchemeOptimizeInfosButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeDevices(Set ids) throws ApplicationException {
+	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeDevicesButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeElements(Set ids) throws ApplicationException {
+	public Set loadSchemePathsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeElementsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadSchemePortsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeLinks(Set ids) throws ApplicationException {
+	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeLinksButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public Set loadSchemeProtoGroupsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeMonitoringSolutions(Set ids)
-			throws ApplicationException {
+	public Set loadSchemesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeMonitoringSolutionsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveCableChannelingItems(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeOptimizeInfos(Set ids) throws ApplicationException {
+	public void savePathElements(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeOptimizeInfosButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemeCableLinks(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeOptimizeInfoSwitches(Set ids)
-			throws ApplicationException {
+	public void saveSchemeCablePorts(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeOptimizeInfoSwitchesButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemeCableThreads(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeOptimizeInfoRtus(Set ids)
-			throws ApplicationException {
+	public void saveSchemeDevices(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeOptimizeInfoRtusButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemeElements(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemePaths(Set ids) throws ApplicationException {
+	public void saveSchemeLinks(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemePathsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemeMonitoringSolutions(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemePorts(Set ids) throws ApplicationException {
+	public void saveSchemeOptimizeInfos(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemePortsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemeOptimizeInfoSwitches(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeProtoElements(Set ids) throws ApplicationException {
+	public void saveSchemeOptimizeInfoRtus(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeProtoElementsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemePaths(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeProtoGroups(Set ids) throws ApplicationException {
+	public void saveSchemePorts(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemeProtoGroupsButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemeProtoElements(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemes(Set ids) throws ApplicationException {
+	public void saveSchemeProtoGroups(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set loadSchemesButIds(
-			StorableObjectCondition storableObjectCondition, Set ids)
-			throws ApplicationException {
+	public void saveSchemes(final Set storableObjects, final boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
-
-	public void saveCableChannelingItems(Set cableChannelingItems,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void savePathElements(Set pathElements, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeCableLinks(Set schemeCableLinks, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeCablePorts(Set schemeCablePorts, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeCableThreads(Set schemeCableThreads, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeDevices(Set schemeDevices, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeElements(Set schemeElements, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeLinks(Set schemeLinks, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeMonitoringSolutions(
-			Set schemeMonitoringSolutions, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeOptimizeInfos(Set schemeOptimizeInfos,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeOptimizeInfoSwitches(
-			Set schemeOptimizeInfoSwitches, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeOptimizeInfoRtus(Set schemeOptimizeInfoRtus,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemePaths(Set schemePaths, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemePorts(Set schemePorts, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeProtoElements(Set schemeProtoElements,
-			boolean force) throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemeProtoGroups(Set schemeProtoGroups, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
-	public void saveSchemes(Set schemes, boolean force)
-			throws ApplicationException {
-		throw new UnsupportedOperationException();
-	}
-
 }

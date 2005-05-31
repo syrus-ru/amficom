@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAGeneralObjectLoader.java,v 1.13 2005/05/27 16:24:44 bass Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.14 2005/05/31 14:54:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
@@ -26,100 +28,49 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/27 16:24:44 $
+ * @version $Revision: 1.14 $, $Date: 2005/05/31 14:54:42 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAGeneralObjectLoader extends CORBAObjectLoader implements GeneralObjectLoader {
-
 	public CORBAGeneralObjectLoader(ServerConnectionManager cmServerConnectionManager) {
 		super(cmServerConnectionManager);
 	}
 
-
-
-	/* Load multiple objects*/
-
 	public Set loadParameterTypes(Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-
-		int n = 0;
-		while (true) {
-			SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-			try {
-				n++;
-				ParameterType_Transferable[] transferables = cmServer.transmitParameterTypes(idsT, sessionKeyT);
-				Set objects = new HashSet(transferables.length);
-				for (int i = 0; i < transferables.length; i++) {
-					try {
-						objects.add(new ParameterType(transferables[i]));
-					}
-					catch (CreateObjectException coe) {
-						Log.errorException(coe);
-					}
-				}
-				return objects;
+		return super.loadStorableObjects(ids, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitParameterTypes(ids1, sessionKey);
 			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN) {
-					if (n <= 1) {
-						if (LoginManager.restoreLogin()) {
-							continue;
-						}
-						Log.debugMessage("CORBAGeneralObjectLoader.loadParameterTypes | Restore login cancelled", Log.DEBUGLEVEL09);
-						return Collections.EMPTY_SET;
-					}
-					throw new LoginException(are.message);
-				}
-				throw new RetrieveObjectException(are.message);
-			}
-		}
+		});
 	}
 
 	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			CharacteristicType_Transferable[] transferables = cmServer.transmitCharacteristicTypes(idsT, sessionKeyT);
-			Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				objects.add(new CharacteristicType(transferables[i]));
+		return super.loadStorableObjects(ids, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitCharacteristicTypes(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 	public Set loadCharacteristics(Set ids) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		try {
-			Characteristic_Transferable[] transferables = cmServer.transmitCharacteristics(idsT, sessionKeyT);
-			Set objects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					objects.add(new Characteristic(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+		return super.loadStorableObjects(ids, ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).transmitCharacteristics(ids1, sessionKey);
 			}
-			return objects;
-		}
-		catch (AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new RetrieveObjectException(are.message);
-		}
+		});
 	}
 
 

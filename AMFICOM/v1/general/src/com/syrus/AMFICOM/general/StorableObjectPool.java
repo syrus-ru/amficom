@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.90 2005/05/26 06:00:45 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.91 2005/05/31 14:54:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/05/26 06:00:45 $
+ * @version $Revision: 1.91 $, $Date: 2005/05/31 14:54:41 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -948,6 +948,93 @@ public abstract class StorableObjectPool {
 
 	/*	From transferable*/
 
+	/**
+	 * Just a uniform way to create a <code>StorableObject</code> from its
+	 * corresponding transferable.
+	 * 
+	 * This method has nothing to do with the pool, but only uses factories
+	 * registered within it. Subject to move to any
+	 * <em>more appropriate</em> place.
+	 * 
+	 * @todo Move to StorableObject.
+	 */
+	public static StorableObject fromTransferableLocal(
+			final short entityCode,
+			final IDLEntity transferable)
+			throws CreateObjectException {
+		assert ObjectEntities.isEntityCodeValid(entityCode);
+		final StorableObjectFactory factory = (StorableObjectFactory) ENTITY_CODE_FACTORY_MAP.get(entityCode);
+		if (factory == null) {
+			throw new CreateObjectException(
+					"StorableObjectPool.fromTransferableLocal() | Don't know how to create an identifier/instance of type: "
+					+ ObjectEntities.codeToString(entityCode)
+					+ '(' + entityCode
+					+ ") since the corresponding factory is not registered");
+		}
+		return fromTransferableLocal(factory, transferable);
+	}
+
+	/**
+	 * @see #fromTransferableLocal(short, IDLEntity)
+	 * @todo Move to StorableObject.
+	 */
+	public static StorableObject fromTransferableLocal(
+			final StorableObjectFactory factory,
+			final IDLEntity transferable)
+			throws CreateObjectException {
+		assert factory != null && transferable != null: ErrorMessages.NON_NULL_EXPECTED;
+		try {
+			return factory.newInstance(transferable);
+		} catch (final ClassCastException cce) {
+			throw new CreateObjectException(
+					"StorableObjectPool.fromTransferableLocal() | Factory: ``"
+					+ factory.getClass().getName()
+					+ "'' is inappropriate for type: ``"
+					+ transferable.getClass().getName()
+					+ "''. Contact your system administrator and/or your local Microsoft Windows Support Center.");
+		}
+	}
+
+	/**
+	 * @see #fromTransferableLocal(short, IDLEntity)
+	 * @todo Move to StorableObject.
+	 */
+	public static Set fromTransferablesLocal(final short entityCode,
+			final IDLEntity transferables[],
+			final boolean continueOnError)
+			throws CreateObjectException {
+		assert ObjectEntities.isEntityCodeValid(entityCode);
+
+		final StorableObjectFactory factory = (StorableObjectFactory) ENTITY_CODE_FACTORY_MAP.get(entityCode);
+		if (factory == null) {
+			final String message = 
+					"StorableObjectPool.fromTransferableLocal() | Don't know how to create an identifier/instance of type: "
+					+ ObjectEntities.codeToString(entityCode)
+					+ '(' + entityCode
+					+ ") since the corresponding factory is not registered";
+			if (continueOnError) {
+				Log.debugMessage(message, Log.SEVERE);
+				return Collections.EMPTY_SET;
+			} // else
+			throw new CreateObjectException(message);
+		}
+
+		final int length = transferables.length;
+		final Set storableObjects = new HashSet(length);
+		for (int i = 0; i < length; i++) {
+			try {
+				storableObjects.add(fromTransferableLocal(factory, transferables[i]));
+			} catch (final CreateObjectException coe) {
+				if (continueOnError) {
+					Log.debugException(coe, Log.SEVERE);
+					continue;
+				} // else
+				throw coe;
+			}
+		}
+		return storableObjects;
+	}
+
 	public static StorableObject fromTransferable(final short entityCode, final IDLEntity transferable) throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode);
 		final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
@@ -1029,7 +1116,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.90 $, $Date: 2005/05/26 06:00:45 $
+	 * @version $Revision: 1.91 $, $Date: 2005/05/31 14:54:41 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
