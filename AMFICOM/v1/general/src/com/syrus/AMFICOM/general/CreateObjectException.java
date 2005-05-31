@@ -1,5 +1,5 @@
 /*
- * $Id: CreateObjectException.java,v 1.3 2004/08/06 13:43:43 arseniy Exp $
+ * $Id: CreateObjectException.java,v 1.4 2005/05/31 10:30:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/06 13:43:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/05/31 10:30:38 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -21,11 +21,11 @@ public class CreateObjectException extends DatabaseException {
 		super(message);
 	}
 
-	public CreateObjectException(String message, Throwable e) {
-		super(message, e);
+	public CreateObjectException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-	public CreateObjectException(Throwable e) {
-		super(e);
+	public CreateObjectException(Throwable cause) {
+		super(cause);
 	}
 }
