@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.1 2005/05/19 14:06:41 bob Exp $
+ * $Id: ApplicationModel.java,v 1.2 2005/05/31 12:20:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -14,12 +14,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.util.Log;
+
 /**
  * ћодель приложени€ описывает действи€, которые пользователь (оператор) может
  * производить с системой
  * 
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/31 12:20:43 $
  * @module generalclient_v1
  */
 public class ApplicationModel {
@@ -58,14 +60,15 @@ public class ApplicationModel {
 	 * добавить в модель элемент с указанием всех членов
 	 */
 	public void add(final String name,
-					Command command,
+					final Command command,
 					final boolean installed,
 					final boolean visible,
 					final boolean usable,
 					final boolean accessible,
 					final boolean selected) {
 		if (command == null) {
-			add(name, VoidCommand.VOID_COMMAND, installed, visible, usable, accessible, selected);
+			Log.debugMessage("ApplicationModel.add | name: " + name + " , command is null ", Log.WARNING);
+			this.add(name, VoidCommand.VOID_COMMAND, installed, visible, usable, accessible, selected);
 		} else {
 			this.appications.put(name,
 				new ApplicationEntry(name, command, installed, visible, usable, accessible, selected));
@@ -326,7 +329,7 @@ public class ApplicationModel {
 	 * параметров нет, так как элемент определ€етс€ идентификатором
 	 * 
 	 * @author $Author: bob $
-	 * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+	 * @version $Revision: 1.2 $, $Date: 2005/05/31 12:20:43 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry {
