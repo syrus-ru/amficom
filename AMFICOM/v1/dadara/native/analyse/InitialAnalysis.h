@@ -17,6 +17,10 @@ private:
 	FILE *logf;
 #endif
 
+	// Wavelet constants;
+private:
+    double wn;// норма вейвлета (НОРМА специфическая ! См реализацию ! )
+
 public:
 #ifdef debug_lines
 	static const int sz = 1000000;
@@ -85,35 +89,35 @@ private:
 	void getNoise(double *noise, int freq);
 	double calcThresh(double thres, double noise); // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
 
-	// подготовка среднего значения
-	double calcWletMeanValue(double* fw, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
-	void calcAverageFactor(double* fw, int scale, double norma1);
-
 	// выполнение вейвлет-преобразования
 	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma);
 	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
 
-	// анализ
+	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
+	double calcWletMeanValue(double* fw, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
+	void calcAverageFactor(double* fw, int scale, double norma1);
 	void shiftThresholds();// изменить границы порогов в соответствии со средним значением вейвлета 
-    void findAllWletSplashes(double* f_wlet, ArrList& splashes);
+
+	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
+	void findAllWletSplashes(double* f_wlet, ArrList& splashes);
+
+	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
     void findEventsBySplashes(ArrList&  splashes);
 	int	 processDeadZone(ArrList& splashes);
     int  processIfIsConnector(int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
     void setSpliceParamsBySplash( EventParams& ep, Splash& sp1);
     void setConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
+	void correctSpliceCoords(EventParams* splice);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
+	void correctConnectorFront(EventParams* connector);
+
+	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
     void processEndOfTrace();  // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
     void addLinearPartsBetweenEvents();
-	void correctConnectorFront(EventParams* connector);
-	void correctSpliceCoords(EventParams* splice);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
     void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
     void trimAllEvents(); // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
     void verifyResults();
-
-// Wavelet constants;
-private:
-    double wn;// норма вейвлета (НОРМА специфическая ! См реализацию ! )
 };
 //====================================================================================================
 class Splash
