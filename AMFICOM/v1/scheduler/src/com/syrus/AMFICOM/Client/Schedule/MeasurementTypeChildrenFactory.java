@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.1 2005/05/24 08:46:00 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.2 2005/05/31 12:21:59 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -38,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/24 08:46:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/05/31 12:21:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
