@@ -7,7 +7,6 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
@@ -28,9 +27,11 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -72,7 +73,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public static final String	COMMAND_CHANGE_KIS					= "ChangeKIS";					
 	public static final String	COMMAND_CHANGE_ME_TYPE				= "ChangeMEType";				
-	public static final String	COMMAND_CHANGE_STATUSBAR_STATE		= "ChangeStatusBarState";
+	
 
 	// //$NON-NLS-1$
 	public static final String	COMMAND_CLEAN						= "Clean";
@@ -224,13 +225,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
 		add(ScheduleMainMenuBar.MENU_VIEW_TIME);
 		add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
-		add(ScheduleMainMenuBar.MENU_VIEW_ARRANGE);
+		add(AbstractMainMenuBar.MENU_VIEW_ARRANGE);
 
 		add(ScheduleMainMenuBar.MENU_REPORT);
 		add(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT);
 
-		add(ScheduleMainMenuBar.MENU_HELP);
-		add(ScheduleMainMenuBar.MENU_HELP_ABOUT);
+		add(AbstractMainMenuBar.MENU_HELP);
+		add(AbstractMainMenuBar.MENU_HELP_ABOUT);
 
 		setVisible("menuSessionSave", false);
 		setVisible("menuSessionUndo", false);
@@ -245,8 +246,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		setVisible(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
 		setVisible(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
 
-		setVisible(ScheduleMainMenuBar.MENU_HELP, true);
-		setVisible(ScheduleMainMenuBar.MENU_HELP_ABOUT, true);
+		setVisible(AbstractMainMenuBar.MENU_HELP, true);
+		setVisible(AbstractMainMenuBar.MENU_HELP_ABOUT, true);
 
 	}
 
@@ -295,7 +296,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			try {
 				this.refreshEditors();
 			} catch (ApplicationException e) {
-				showErrorMessage(Environment.getActiveWindow(), e);
+				AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 			}
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
 			this.analysisTypeId = (Identifier) evt.getNewValue();
@@ -537,7 +538,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		try {
 			this.refreshTest();
 		} catch (ApplicationException e) {
-			SchedulerModel.showErrorMessage(Environment.getActiveWindow(), e);
+			AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 		}
 	}
 
@@ -830,7 +831,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 
 		} catch (ApplicationException e) {
-			showErrorMessage(Environment.getActiveWindow(), e);
+			AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 		}
 	}
 
@@ -1186,14 +1187,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 		Log.debugMessage("SchedulerModel.isValid | result is " + result, Log.FINEST);
 		return result;
-	}
-
-	public static void showErrorMessage(Component component,
-										Exception exception) {
-		exception.printStackTrace();
-		JOptionPane.showMessageDialog(component, exception.getMessage(), LangModelSchedule.getString("Error"),
-			JOptionPane.OK_OPTION);
-	}
+	}	
 
 	public static Color getColor(TestStatus testStatus) {
 		return getColor(testStatus, false);
