@@ -68,11 +68,12 @@ InitialAnalysis::InitialAnalysis(
 		lastPoint = lengthTillZero - 1;
     }
 	f_wlet	= new double[lastPoint];
+	noise	= new double[lastPoint];
+
 #ifdef debug_VCL
 	f_tmp   = new double[lastPoint];
-#endif
-	noise	= new double[lastPoint];
 	type	= new double[data_length];
+#endif
 
 	// если массив с уровнем шума не задан извне,
 	// либо пользователь IA не указал его размер,
@@ -100,7 +101,10 @@ InitialAnalysis::InitialAnalysis(
 }
 //------------------------------------------------------------------------------------------------------------
 InitialAnalysis::~InitialAnalysis()
-{	delete[] type;
+{
+#ifdef debug_VCL
+	delete[] type;
+#endif
 	delete[] noise;
     delete[] f_wlet;
 
@@ -117,7 +121,7 @@ void InitialAnalysis::performAnalysis()
 
 	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
 	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
-    wn = getWLetNorma(wlet_width);
+    double wn = getWLetNorma(wlet_width);
     performTransformationOnly(data, 0, lastPoint, f_wlet, wlet_width, wn);
 	calcAverageFactor(f_wlet, wlet_width, wn);
 	centerWletImageOnly(f_wlet, wlet_width, 0, lastPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
@@ -450,7 +454,7 @@ void InitialAnalysis::setSpliceParamsBySplash( EventParams& ep, Splash& sp)
 }
 //------------------------------------------------------------------------------------------------------------
 // Проводим разномасштабный авейвлет-анализ для уточнения положения сварок
-// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
+// ф-я ПОРТИТ f_wlet - вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 // Уточнение может только сужать сварки, но никак не расширять
 void InitialAnalysis::correctSpliceCoords(EventParams* splice)
 {   EventParams& ev = *splice;
@@ -479,7 +483,7 @@ return;
     {   width = (int)(width/factor);//(int )(wlet_width/pow(factor,step) +0.5);// чтобы не накапливать ошибки
     	if(width<=1)
     break;
-	    wn = getWLetNorma(width);
+	    double wn = getWLetNorma(width);
 		performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
 		// сначала ищём положение экстремума при данном масштабе
         int i_max = w_l;
@@ -543,12 +547,13 @@ return;
     	if(w_r<old_right && w_r>old_left)  { ev.end = w_r;}
     }
 #ifdef debug_VCL
-    wn = getWLetNorma(wlet_width);
+    double wn = getWLetNorma(wlet_width);
   	performTransformationAndCenter(data, 0, lastPoint, f_wlet, wlet_width, wn);
 #endif
 	//prf_b("correctSpliceCoords: return");
 }
 // -------------------------------------------------------------------------------------------------
+// пользуется f_wlet (на каком масштабе?)
 void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
 {   double r1s, r1b, r2, r3s, r3b, rmin;
     ep.type = EventParams::CONNECTOR;
@@ -564,7 +569,7 @@ void InitialAnalysis::setConnectorParamsBySplashes( EventParams& ep, Splash& sp1
     double max1 = -1, max2 = -1, max3 = -1;
     int i;
     for(i=sp1.begin_conn ; i<sp1.end_conn; i++)
-    { double res = (f_wlet[i]-minimalConnector)/noise[i];
+    { double res = (f_wlet[i]-minimalConnector)/noise[i]; // WONDER: какой f_wlet - на исходном масштабе?
       if(max1<res) { max1 = res;}
       res = (f_wlet[i]-rACrit)/noise[i];
       if(max2<res) { max2 = res;}

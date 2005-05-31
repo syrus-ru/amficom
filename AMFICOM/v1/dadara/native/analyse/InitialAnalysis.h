@@ -17,16 +17,18 @@ private:
 	FILE *logf;
 #endif
 
-	// Wavelet constants;
-private:
-    double wn;// норма вейвлета (НОРМА специфическая ! См реализацию ! )
-
 public:
+
 #ifdef debug_lines
 	static const int sz = 1000000;
 	int cou;
     double xs[sz], xe[sz], ys[sz], ye[sz], col[sz];//использовалось для отладки при рисованити прямых
 #endif
+#ifdef debug_VCL
+    double* type; // массив в котором прописаны типы уже распознанных точек
+    double* f_tmp; //!!! массив для временного хранения обработанной рефлектограммы ( исользуется при отладке )
+#endif
+
 	InitialAnalysis(
 		double *data,
         int data_length,
@@ -46,22 +48,21 @@ public:
 	~InitialAnalysis();
 
     ArrList& getEvents(){return *events;}
+
 #ifndef debug_VCL
 private:
 #endif
+
 	double *data;
 	int     data_length;
 	double  delta_x;
-
-    double* type; // массив в котором прописаны типы уже распознанных точек
 	double *noise;
 
     double* f_wlet;
-    double average_factor; // не зависит ни от выбранного масштаба вейвлета, ни от выбранной нормы (а только от ср. наклона на р/г)
-#ifdef debug_VCL
-    double* f_tmp; //!!! массив для временного хранения обработанной рефлектограммы ( исользуется при отладке )
-#endif
+    double average_factor; // характеризует ср. наклона на р/г, не привязан ни к масштабу вейвлета, ни к выбранной норме
+
     ArrList* events; // список всех событий
+
 //Parameters of the analysis (criteria);
 	double minimalThreshold;
 	double minimalWeld;
