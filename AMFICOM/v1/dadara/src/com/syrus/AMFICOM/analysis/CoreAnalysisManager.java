@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.74 2005/05/30 12:34:35 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.75 2005/05/31 13:00:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.74 $, $Date: 2005/05/30 12:34:35 $
+ * @version $Revision: 1.75 $, $Date: 2005/05/31 13:00:51 $
  * @module
  */
 
@@ -157,7 +157,17 @@ public class CoreAnalysisManager
 		}
 	}
 
-	public static double[] calcGaussian(double[] y, int maxIndex) {
+    /**
+     * фитирует кривую гауссианой y = amplitude * exp(-(x-center)**2 / sigma**2)
+     * @param y входная кривая
+     * @param maxIndex начальное значение положения максимума
+     * @param outParams если не null, то заполняется результатами фитировки
+     *   outParams[0] = center
+     *   outParams[1] = amplitude
+     *   outParams[2] = sigma (в sqrt(2) раз большая, чем стандартная)
+     * @return фирирующая кривая
+     */
+	public static double[] calcGaussian(double[] y, int maxIndex, double[] outParams) {
 		double[] gauss = new double[y.length];
 
 		double maxValue = y[maxIndex];
@@ -169,6 +179,12 @@ public class CoreAnalysisManager
 
         double[] d = gauss(y, maxIndex, maxValue, width);
 
+        if (outParams != null) {
+            outParams[0] = d[0];
+            outParams[1] = d[1];
+            outParams[2] = d[2];
+        }
+
         double center = d[0];
 		maxValue = d[1];
 		double sigmaSquared = d[2] * d[2];
@@ -179,6 +195,10 @@ public class CoreAnalysisManager
 
 		return gauss;
 	}
+
+    public static double[] calcGaussian(double[] y, int maxIndex) {
+        return calcGaussian(y, maxIndex, null);
+    }
 
 	public static double[] calcThresholdCurve(double[] y, int max_index) {
 		double[] threshold = new double[y.length];
