@@ -35,14 +35,12 @@ public class HistogrammPanel extends ScaledGraphPanel
     private static final Stroke GAUSS_STROKE = new BasicStroke(GAUSS_W);
     private static final Stroke THRESHOLD_STROKE = new BasicStroke(1);
 
-	private int nBins = 400;
-	private double downLimit = -0.4;
-	private double upLimit = 0.8;
-	private double level = 0.2;
+    private double level = 0.2;
 
     // transfer coefficient dB/km to dB 
 	private double alpha = 0.0;
 
+    private int gaussI0 = 0; // при отображении массив gauss будет смещаться на эту величину
 	private double[] derivative;
 	private double[] gauss;
 	private double[] threshold;
@@ -125,9 +123,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 		g.setColor(gaussColor);
 		((Graphics2D) g).setStroke(GAUSS_STROKE);
 
-		for (int i= Math.max(0, -start); i < Math.min (end + 1, gauss.length) - start - 1; i++)
-			g.drawLine((int)(i*scaleX+1), (int)((maxY - gauss[i+start] - top) * scaleY - 1),
-								 (int)((i+1)*scaleX+1), (int)((maxY - gauss[i+start+1] - top) * scaleY - 1));
+        for (int i= Math.max(0, gaussI0-start); i < Math.min (end + 1, gauss.length + gaussI0) - start - 1; i++)
+			g.drawLine((int)(i*scaleX+1), (int)((maxY - gauss[i+start - gaussI0] - top) * scaleY - 1),
+								 (int)((i+1)*scaleX+1), (int)((maxY - gauss[i+start+1 - gaussI0] - top) * scaleY - 1));
 
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
@@ -275,28 +273,43 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 	public void updateHistogrammData(int start1, int end1)
 	{
-		Histogramm histo = new Histogramm(downLimit, upLimit, nBins);
-		y = histo.init(derivative, start1, end1);
-		int maxIndex = histo.getMaximumIndex();
+        int nBins = 4000;
+        // '1' for total histogram
+        double downLimit1 = -4;
+        double upLimit1 = 8;
+        // '2' for gauss histogram
+        double downLimit2 = -0.1;
+        double upLimit2 = 0.5;
 
-        grid_shift_x = downLimit;
-        Kx = (upLimit - downLimit) / nBins;
+        Histogramm histo1 = new Histogramm(downLimit1, upLimit1, nBins);
+		double[] y1 = histo1.init(derivative, start1, end1);
+        int i0 = (int)Math.round((downLimit2 - downLimit1) / (upLimit1 - downLimit1) * nBins);
+        int i1 = (int)Math.round((upLimit2 - downLimit1) / (upLimit1 - downLimit1) * nBins);
+        gaussI0 = i0;
+        double[] y2 = new double[i1 - i0];
+        System.arraycopy(y1, i0, y2, 0, i1 - i0);
+        int maxIndex2 = ReflectogramMath.getArrayMaxIndex(y2, 0, y2.length - 1);
+        double yMax = y2[maxIndex2];
+
+        grid_shift_x = downLimit1;
+        Kx = (upLimit1 - downLimit1) / nBins;
         Ky = 1;
 
-		init(y, deltaX);
+		init(y1, deltaX);
 //        long t0 = System.currentTimeMillis();
-		gauss = CoreAnalysisManager.calcGaussian(y, maxIndex); // XXX: takes about 98% of updateHistogrammData execution time
+        double[] fitResultingParams = new double[3];
+		gauss = CoreAnalysisManager.calcGaussian(y2, maxIndex2, fitResultingParams); // XXX: takes about 98% of updateHistogrammData execution time
 //        long t1 = System.currentTimeMillis();
-		threshold = CoreAnalysisManager.calcThresholdCurve(y, maxIndex);
+        int maxIndexFitted = (int)Math.round(fitResultingParams[0]);
+		threshold = CoreAnalysisManager.calcThresholdCurve(y1,
+                maxIndexFitted + i0);
 //        long t2 = System.currentTimeMillis();
 //        System.out.println("dt hist: gauss " + (t1-t0) + ", thr " + (t2-t1));
-
-		for (int i = 0; i < y.length; i++)
-		{
-			y[i] /= maxY;
-			gauss[i] /= maxY;
-		}
-		maxY = 1;
-		minY = 0;
+		for (int i = 0; i < y1.length; i++)
+			y1[i] /= yMax;
+        for (int i = 0; i < y2.length; i++)
+			gauss[i] /= yMax;
+        maxY = 1;
+        minY = 0;
 	}
 }
