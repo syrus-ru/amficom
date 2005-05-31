@@ -1,5 +1,5 @@
 /*-
- * $Id: ModuleMainFrame.java,v 1.1 2005/05/27 16:16:11 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.1 2005/05/31 12:18:43 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,8 @@ import java.awt.SystemColor;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
@@ -27,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.StatusBarModel;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
@@ -38,14 +41,15 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/27 16:16:11 $
+ * @version $Revision: 1.1 $, $Date: 2005/05/31 12:18:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
-public abstract class ModuleMainFrame extends JFrame implements PropertyChangeListener {
+public abstract class AbstractMainFrame extends JFrame implements PropertyChangeListener {
 
 	protected ApplicationContext		aContext;
 	protected JDesktopPane				desktopPane;
@@ -62,7 +66,7 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 	protected final AbstractMainMenuBar	menuBar;
 	private final AbstractMainToolBar	toolBar;
 
-	public ModuleMainFrame(final ApplicationContext aContext,
+	public AbstractMainFrame(final ApplicationContext aContext,
 			final String applicationTitle,
 			final AbstractMainMenuBar menuBar,
 			final AbstractMainToolBar toolBar) {
@@ -86,12 +90,12 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 		this.statusBar = new StatusBarModel(0);
 		this.statusBarPanel.add(this.statusBar, BorderLayout.CENTER);
 
-		this.statusBar.add("status");
-		this.statusBar.add("server");
-		this.statusBar.add("session");
-		this.statusBar.add("user");
-		this.statusBar.add("domain");
-		this.statusBar.add("time");
+		this.statusBar.add(StatusBarModel.FIELD_STATUS);
+		this.statusBar.add(StatusBarModel.FIELD_SERVER);
+		this.statusBar.add(StatusBarModel.FIELD_SESSION);
+		this.statusBar.add(StatusBarModel.FIELD_USER);
+		this.statusBar.add(StatusBarModel.FIELD_DOMAIN);
+		this.statusBar.add(StatusBarModel.FIELD_TIME);
 
 		this.viewport = new JViewport();
 		this.viewport.setView(this.desktopPane);
@@ -104,17 +108,14 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 		this.mainPanel.add(this.statusBarPanel, BorderLayout.SOUTH);
 		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 
-		// this.testFilterFrame = new TestFilterFrame(aContext);
-		// this.desktopPane.add(this.testFilterFrame);
-
 		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
 		this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
 		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 
 		Environment.addWindow(this);
-		initModule();
-		setContext(aContext);
+		this.initModule();
+		this.setContext(aContext);
 	}
 
 	public ApplicationContext getContext() {
@@ -131,60 +132,74 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
+		Log.debugMessage("AbstractMainFrame.propertyChange | propertyName " + propertyName, Log.FINEST);
 		if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
 			StatusMessageEvent sme = (StatusMessageEvent) evt;
-			this.statusBar.setText("status", sme.getText());
+			this.statusBar.setText(StatusBarModel.FIELD_STATUS, sme.getText());
 		} else if (propertyName.equals(ContextChangeEvent.TYPE)) {
+			Log.debugMessage("AbstractMainFrame.propertyChange | 1 ", Log.FINEST);
 			ContextChangeEvent cce = (ContextChangeEvent) evt;
 			if (cce.isSessionOpened()) {
-				setSessionOpened();
+				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionOpened() ", Log.FINEST);
+				this.setSessionOpened();
 
-				this.statusBar.setText("status", LangModel.getString("statusReady"));
-				// SimpleDateFormat sdf = (SimpleDateFormat)
-				// UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				// this.statusBar.setText("session", sdf.format(new
-				// Date(this.aContext.getSessionInterface()
-				// .getLogonTime())));
-				// this.statusBar.setText("user",
-				// this.aContext.getSessionInterface().getUser());
+				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+//				 SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				 // TODO
+//				this.statusBar.setText("session", sdf.format(new Date(this.aContext.getSessionInterface()
+//						.getLogonTime())));
+				{
+					try {
+						User user = (User) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
+						this.statusBar.setText("user", user.getName());
+					} catch (ApplicationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 			if (cce.isSessionClosed()) {
-				setSessionClosed();
+				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionClosed() ", Log.FINEST);
+				this.setSessionClosed();
 
-				this.statusBar.setText("status", LangModel.getString("statusReady"));
-				this.statusBar.setText("session", LangModel.getString("statusNoSession"));
-				this.statusBar.setText("user", LangModel.getString("statusNoUser"));
+				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+				this.statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+				this.statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
 			}
 			if (cce.isConnectionOpened()) {
-				setConnectionOpened();
+				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isConnectionOpened() ", Log.FINEST);
+				this.setConnectionOpened();
 
-				this.statusBar.setText("status", LangModel.getString("statusReady"));
+				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
 				// this.statusBar.setText("server",
 				// ConnectionInterface.getInstance().getServerName());
 			}
 			if (cce.isConnectionClosed()) {
-				this.statusBar.setText("status", LangModel.getString("statusError"));
-				this.statusBar.setText("server", LangModel.getString("statusConnectionError"));
+				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isConnectionClosed() ", Log.FINEST);
+				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusError"));
+				this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusConnectionError"));
 
-				this.statusBar.setText("status", LangModel.getString("statusDisconnected"));
-				this.statusBar.setText("server", LangModel.getString("statusNoConnection"));
+				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusDisconnected"));
+				this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
 
-				setConnectionClosed();
+				this.setConnectionClosed();
 			}
 			if (cce.isConnectionFailed()) {
-				this.statusBar.setText("status", LangModel.getString("statusError"));
-				this.statusBar.setText("server", LangModel.getString("statusConnectionError"));
+				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusError"));
+				this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusConnectionError"));
 
-				setConnectionFailed();
+				this.setConnectionFailed();
 			}
 			if (cce.isDomainSelected()) {
-				setDomainSelected();
+				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isDomainSelected()() ", Log.FINEST);
+				this.setDomainSelected();
 			}
 		}
 
 	}
 
 	public void setConnectionClosed() {
+		Log.debugMessage("AbstractMainFrame.setConnectionClosed | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, true);
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, false);
@@ -204,6 +219,7 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 	}
 
 	public void setConnectionOpened() {
+		Log.debugMessage("AbstractMainFrame.setConnectionOpened | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, true);
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, false);
@@ -216,13 +232,10 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
 		aContext.setDispatcher(this.dispatcher);
-		setModel(aContext.getApplicationModel());
+		this.setModel(aContext.getApplicationModel());
 	}
 
 	public void setDomainSelected() {
-		// DataSourceInterface dataSource = this.aContext.getDataSource();
-		// new ConfigDataSourceImage(dataSource).LoadISM();
-
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, true);
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_OPTIONS, true);
@@ -232,7 +245,7 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 
 		try {
 			Domain domain = (Domain) StorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
-			this.statusBar.setText("domain", domain.getName());
+			this.statusBar.setText(StatusBarModel.FIELD_DOMAIN, domain.getName());
 		} catch (ApplicationException e) {
 			showErrorMessage(this, e);
 		}
@@ -242,10 +255,17 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 	}
 
 	public void setModel(ApplicationModel aModel) {
-		// TODO
 		this.toolBar.setModel(aModel);
-		this.menuBar.setModel(aModel);
-		aModel.addListener(this.menuBar.getApplicationModelListener());
+		this.menuBar.setApplicationModel(aModel);
+		List applicationModelListeners = this.menuBar.getApplicationModelListeners();
+		if (applicationModelListeners != null && !applicationModelListeners.isEmpty()) {
+			for (Iterator iterator = applicationModelListeners.iterator(); iterator.hasNext();) {
+				ApplicationModelListener listener = (ApplicationModelListener) iterator.next();
+				Log.debugMessage("AbstractMainFrame.setModel | listener " + listener, Log.FINEST);
+				aModel.addListener(listener);
+			}
+		}
+		
 		aModel.addListener(this.toolBar);
 		aModel.fireModelChanged("");
 	}
@@ -260,7 +280,7 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 
 		aModel.fireModelChanged("");
 
-		this.statusBar.setText("domain", LangModel.getString("statusNoDomain"));
+		this.statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
 	}
 
 	public void setSessionOpened() {
@@ -289,7 +309,6 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 			Environment.setActiveWindow(this);
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			// cManager.saveIni();
 			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 			this.aContext.getApplicationModel().getCommand(AbstractMainMenuBar.MENU_EXIT).execute();
@@ -309,19 +328,19 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		this.statusBar.distribute();
-		this.statusBar.setWidth("status", 300);
-		this.statusBar.setWidth("server", 250);
-		this.statusBar.setWidth("session", 200);
-		this.statusBar.setWidth("user", 100);
-		this.statusBar.setWidth("domain", 150);
-		this.statusBar.setWidth("time", 50);
+		this.statusBar.setWidth(StatusBarModel.FIELD_STATUS, 300);
+		this.statusBar.setWidth(StatusBarModel.FIELD_SERVER, 250);
+		this.statusBar.setWidth(StatusBarModel.FIELD_SESSION, 200);
+		this.statusBar.setWidth(StatusBarModel.FIELD_USER, 100);
+		this.statusBar.setWidth(StatusBarModel.FIELD_DOMAIN, 150);
+		this.statusBar.setWidth(StatusBarModel.FIELD_TIME, 50);
 
-		this.statusBar.setText("status", LangModel.getString("statusReady"));
-		this.statusBar.setText("server", LangModel.getString("statusNoConnection"));
-		this.statusBar.setText("session", LangModel.getString("statusNoSession"));
-		this.statusBar.setText("user", LangModel.getString("statusNoUser"));
-		this.statusBar.setText("domain", LangModel.getString("statusNoDomain"));
-		this.statusBar.setText("time", " ");
+		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
+		this.statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+		this.statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
+		this.statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
+		this.statusBar.setText(StatusBarModel.FIELD_TIME, " ");
 		this.statusBar.organize();
 
 		this.aContext.setDispatcher(this.dispatcher);
@@ -334,7 +353,6 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 		dispatcher1.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
 		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1));
-		// TODO FIXXX
 		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1));
 		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
 		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1,
@@ -346,38 +364,16 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 																								this.aContext));
 		aModel.setCommand(AbstractMainMenuBar.MENU_EXIT, new ExitCommand(this));
 
-		aModel.setCommand(AbstractMainMenuBar.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(this.windowArranger));
-		/**
-		 * TODO remove when all ok
-		 */
-		// CreateScheduleReportCommand csrCommand = new
-		// CreateScheduleReportCommand(aContext);
-		// csrCommand.setParameter(this);
-		// aModel.setCommand(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT,
-		// csrCommand);
+//		this.setWindowArranger(this.windowArranger);
+//		if (this.windowArranger != null) {
+//			aModel.setCommand(AbstractMainMenuBar.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(this.windowArranger));
+//		}
 		aModel.setCommand(AbstractMainMenuBar.MENU_HELP_ABOUT, new HelpAboutCommand(this));
 
 		setDefaultModel(aModel);
 
 		aModel.fireModelChanged("");
 
-		// ConnectionInterface connectionInterface =
-		// ConnectionInterface.getInstance();
-		// if (connectionInterface != null) {
-		// if (connectionInterface.isConnected())
-		// this.dispatcher.notify(new ContextChangeEvent(connectionInterface,
-		// ContextChangeEvent.CONNECTION_OPENED_EVENT));
-		// }
-		// if (SessionInterface.getActiveSession() != null) {
-		// this.aContext.setSessionInterface(SessionInterface.getActiveSession());
-		// if (this.aContext.getSessionInterface().isOpened())
-		// this.dispatcher.notify(new
-		// ContextChangeEvent(this.aContext.getSessionInterface(),
-		// ContextChangeEvent.SESSION_OPENED_EVENT));
-		// } else {
-		// this.aContext.setSessionInterface(Environment.getDefaultSessionInterface(connectionInterface));
-		// SessionInterface.setActiveSession(this.aContext.getSessionInterface());
-		// }
 	}
 
 	protected void setDefaultModel(ApplicationModel aModel) {
@@ -386,9 +382,16 @@ public abstract class ModuleMainFrame extends JFrame implements PropertyChangeLi
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, true);
 		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CONNECTION, true);
 		aModel.setEnabled(AbstractMainMenuBar.MENU_VIEW_ARRANGE, false);
+		
+		aModel.setEnabled(AbstractMainMenuBar.MENU_HELP, true);
+		aModel.setEnabled(AbstractMainMenuBar.MENU_HELP_ABOUT, true);
 	}
 
 	public void setWindowArranger(WindowArranger windowArranger) {
-		this.windowArranger = windowArranger;
+		if (windowArranger != null) {
+			ApplicationModel aModel = this.aContext.getApplicationModel();
+			aModel.setCommand(AbstractMainMenuBar.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(windowArranger));
+			this.windowArranger = windowArranger;
+		}
 	}
 }
