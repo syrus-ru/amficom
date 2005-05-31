@@ -1,20 +1,20 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ComponentEvent;
+import java.beans.*;
 import java.util.HashMap;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 
-public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener, EtalonMTMListener
+public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 {
 	protected Dispatcher dispatcher;
 	public HashMap traces = new HashMap();
@@ -59,6 +59,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 	private void init_module(Dispatcher dispatcher1)
 	{
 		this.dispatcher = dispatcher1;
+		this.dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 	}
@@ -177,5 +178,19 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 	public void etalonMTMRemoved()
 	{
 		removeEtalon();
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent ev = (RefUpdateEvent)evt;
+			if (ev.traceChanged()) {
+				TraceResource tr = (TraceResource)evt.getNewValue();
+				SimpleGraphPanel p = (SimpleGraphPanel)traces.get(tr.getId());
+				if (p != null) {
+					p.setShown(tr.isShown());
+					panel.repaint();
+				}
+			}
+		}
 	}
 }

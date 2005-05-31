@@ -500,7 +500,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		mInfo.lsa_attenuation = -1000d * lsa[0] / deltaX;
 		mInfo.a_b_orl = MathRef.calcORL(y[l], y[r]);
 		moved_here = true;
-		dispatcher.firePropertyChange(new RefUpdateEvent(mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
+		dispatcher.firePropertyChange(new RefUpdateEvent(this, mInfo, RefUpdateEvent.MARKER_MOVED_EVENT));
 		moved_here = false;
 	}
 

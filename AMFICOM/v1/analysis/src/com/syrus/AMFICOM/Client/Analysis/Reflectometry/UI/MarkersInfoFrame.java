@@ -83,7 +83,7 @@ implements PropertyChangeListener, BsHashChangeListener
 
 			if (rue.markerMoved())
 			{
-				updTableModel ((MarkersInfo)rue.getSource());
+				updTableModel ((MarkersInfo)rue.getNewValue());
 			}
 		}
 	}

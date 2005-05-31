@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.*;
 
 import javax.swing.JPanel;
 
@@ -17,6 +15,8 @@ public class SimpleGraphPanel extends JPanel
 	protected Color traceColor; // color really used to paint graphic itself (shadowed color)
 
 	protected boolean weakColor;
+	
+	protected boolean isShown = true;
 
 	protected double[] y; // array of graphic points
 	protected double deltaX;  // range between two neighbour points
@@ -121,6 +121,14 @@ public class SimpleGraphPanel extends JPanel
 	{
 		init (y, deltaX);
 		setDefaultScales();
+	}
+	
+	public void setShown(boolean isShown) {
+	    this.isShown = isShown;
+	}
+	
+	public boolean isShown() {
+    return this.isShown;
 	}
 	
 	public void setWeakColors(boolean weakColors)
@@ -241,12 +249,16 @@ public class SimpleGraphPanel extends JPanel
 
 	protected void paint_trace(Graphics g)
 	{
+		if (!isShown) {
+			return;
+		}
+
 		g.setColor(traceColor);
 
 		int iFrom = Math.max(0, -start);
 		int iTo = Math.min(end + 1, y.length) - start - 1;
 		draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
-
+		
 //		for (int i= Math.max(0, -start); i< Math.min (end + 1, y.length) - start - 1; i++)
 //			g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
 //				 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));

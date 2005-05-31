@@ -1,29 +1,30 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
+import java.beans.*;
 import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.*;
 import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 public class TraceSelectorFrame extends JInternalFrame
-implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
+implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, PropertyChangeListener
 {
+	Dispatcher dispatcher;
 	protected static List traces = new ArrayList();
-	private FixedSizeEditableTableModel tModel; //DefaultTableModel
-	private ATable jTable;
+	private WrapperedTable jTable;
+	private WrapperedTableModel tModel;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -43,11 +44,12 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 			e.printStackTrace();
 		}
 
-		init_module();
+		init_module(dispatcher);
 	}
 
-	private void init_module()
+	private void init_module(Dispatcher dispatcher1)
 	{
+		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
@@ -57,19 +59,19 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 	{
 		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		tModel = new FixedSizeEditableTableModel(
-					new String[] {LangModelAnalyse.getString("selectorKey"),
-												LangModelAnalyse.getString("selectorValue")},
-					new Color[] {Color.BLACK},
-					null,
-					null);
-
+		
 //		tModel = new GeneralTableModel();
 
-		jTable = new ATable(tModel);
+		tModel = new WrapperedTableModel(TraceResourceWrapper.getInstance(), new String[] {
+			TraceResourceWrapper.KEY_IS_SHOWN,
+			TraceResourceWrapper.KEY_TITLE,
+			TraceResourceWrapper.KEY_COLOR
+		});
+		jTable = new WrapperedTable(tModel);
 		jTable.setDefaultRenderer(Color.class, ColorCellRenderer.getInstance());
 		
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+		jTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+		jTable.getColumnModel().getColumn(1).setPreferredWidth(250);
 
 		setContentPane(mainPanel);
 //		this.setSize(new Dimension(200, 213));
@@ -128,8 +130,14 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		traces.add(id);
 
 		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Log.FINEST);
-		tModel.addRow(bs.title, new Color[] {GUIUtil.getColor(id)});
-		jTable.updateUI();
+		
+		TraceResource tr = new TraceResource(id);
+		tr.addPropertyChangeListener(this);
+		tr.setTitle(bs.title);
+		tr.setColor(GUIUtil.getColor(id));
+		tr.setShown(true);
+		
+		tModel.addObject(tr);
 		setVisible(true);
 	}
 
@@ -138,15 +146,19 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		int index = traces.indexOf(key);
 		if (index != -1)
 		{
-			tModel.removeRow(index);
+			TraceResource tr = (TraceResource)tModel.getObject(index);
+			tr.removePropertyChangeListener(this);
+			tModel.removeObject(tr);
 			traces.remove(key);
 		}
 	}
 
 	public void bsHashRemovedAll()
 	{
-		tModel.clearTable();
-		traces = new ArrayList();
+		for (Iterator it = traces.iterator(); it.hasNext();) {
+			String id = (String) it.next();
+			bsHashRemoved(id);
+		}
 		setVisible(false);
 	}
 
@@ -159,10 +171,18 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 		traces.add(id);
 
-        String name = LangModelAnalyse.getString("etalon");
+    String name = LangModelAnalyse.getString("etalon");
 
 		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + "'; name = '" + name + "'", Log.FINEST);
-		tModel.addRow(name, new Color[] {GUIUtil.getColor(id)});
+		
+		TraceResource tr = new TraceResource(id);
+		tr.addPropertyChangeListener(this);
+		tr.setTitle(name);
+		tr.setColor(GUIUtil.getColor(id));
+		tr.setShown(true);
+		
+		tModel.addObject(tr);
+		
 		setVisible(true);
 	}
 
@@ -177,5 +197,12 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		if (selected != -1)
 			jTable.setRowSelectionInterval(selected, selected);
 		here = false;
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(TraceResourceWrapper.KEY_IS_SHOWN)) {
+			TraceResource tr = (TraceResource)evt.getSource();
+			this.dispatcher.firePropertyChange(new RefUpdateEvent(this, tr, RefUpdateEvent.TRACE_CHANGED_EVENT));
+		}
 	}
 }

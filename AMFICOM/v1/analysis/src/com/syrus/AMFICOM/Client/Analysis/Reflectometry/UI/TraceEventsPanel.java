@@ -68,6 +68,10 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	protected void paint_events(Graphics g)
 	{
+		if (!isShown) {
+			return;
+		}
+			
 		if (sevents == null)
 		{
 			paint_trace(g);

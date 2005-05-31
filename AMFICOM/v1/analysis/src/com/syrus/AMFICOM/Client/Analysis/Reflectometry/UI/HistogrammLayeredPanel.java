@@ -60,7 +60,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
 			if(rue.markerMoved()) {
-				mInfo = (MarkersInfo)rue.getSource();
+				mInfo = (MarkersInfo)rue.getNewValue();
 			}
 
 			if(rue.markerLocated())

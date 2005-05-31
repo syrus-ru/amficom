@@ -64,17 +64,17 @@ implements PropertyChangeListener,
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
-			for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-			{
-				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-				if (panel instanceof ThresholdsPanel)
+			if(rue.thresholdChanged()) {
+				for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 				{
-					if(rue.thresholdChanged())
+					SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+					if (panel instanceof ThresholdsPanel)
 					{
 						jLayeredPane.repaint();
 					}
 				}
 			}
+			
 		}
 		super.propertyChange(ae);
 	}

@@ -1,18 +1,23 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.analysis.TraceResourceWrapper;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsFrame extends SimpleResizableFrame
-implements BsHashChangeListener, EtalonMTMListener
+implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
@@ -40,6 +45,7 @@ implements BsHashChangeListener, EtalonMTMListener
 	void init_module(Dispatcher dispatcher1)
 	{
 		this.dispatcher = dispatcher1;
+		this.dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 	}
@@ -140,5 +146,19 @@ implements BsHashChangeListener, EtalonMTMListener
 	public void etalonMTMRemoved()
 	{
 		removeEtalon();
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent ev = (RefUpdateEvent)evt;
+			if (ev.traceChanged()) {
+				TraceResource tr = (TraceResource)evt.getNewValue();
+				SimpleGraphPanel p = (SimpleGraphPanel)traces.get(tr.getId());
+				if (p != null) {
+					p.setShown(tr.isShown());
+					panel.repaint();
+				}
+			}
+		}
 	}
 }
