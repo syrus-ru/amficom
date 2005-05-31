@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.12 2005/05/27 15:14:59 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.13 2005/05/31 16:10:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.12 $, $Date: 2005/05/27 15:14:59 $
+ * @version $Revision: 1.13 $, $Date: 2005/05/31 16:10:25 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -148,6 +148,21 @@ public final class MapMouseMotionListener implements MouseMotionListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		mapState.setMouseMode( MapState.MOUSE_NONE);
+
+		//Обрабатывает события на панели инстрементов
+		if(mapState.getOperationMode() == MapState.MOVE_HAND) {
+				try {
+					//Если перемещают карту лапкой
+					this.logicalNetLayer.handMoved(me);
+				} catch(MapConnectionException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				} catch(MapDataException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+		}
+
+		mapState.setMouseMode(MapState.MOUSE_NONE);
 	}
 }
