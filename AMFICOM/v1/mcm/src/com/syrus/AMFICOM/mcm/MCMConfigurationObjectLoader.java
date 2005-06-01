@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.39 2005/05/27 09:55:32 bass Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.40 2005/06/01 20:54:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,226 +8,77 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.KISDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
-import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/05/27 09:55:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/06/01 20:54:59 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoader {
+final class MCMConfigurationObjectLoader extends MCMObjectLoader implements ConfigurationObjectLoader {
+
+	public MCMConfigurationObjectLoader(final MCMServantManager mcmServantManager) {
+		super(mcmServantManager, new DatabaseConfigurationObjectLoader());
+	}
 
 	/* Load multiple objects*/
 
-	public Set loadMeasurementPortTypes(Set ids) throws RetrieveObjectException {
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		if (loadIdsT.length == 0)
-			return objects;
-
-		Set loadedObjects = new HashSet();
-
-		try {
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			MeasurementPortType_Transferable[] transferables = mServerRef.transmitMeasurementPortTypes(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new MeasurementPortType(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadMeasurementPortTypes(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(CommonServer server,
+					Identifier_Transferable[] idsT,
+					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).transmitMeasurementPortTypes(idsT, sessionKey);
 			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
+		});
 	}
 
 
 
-	public Set loadMeasurementPorts(Set ids) throws RetrieveObjectException {
-		MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		if (loadIdsT.length == 0)
-			return objects;
 
-		Set loadedObjects = new HashSet();
-
-		try {
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			MeasurementPort_Transferable[] transferables = mServerRef.transmitMeasurementPorts(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new MeasurementPort(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadMeasurementPorts(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(CommonServer server,
+					Identifier_Transferable[] idsT,
+					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).transmitMeasurementPorts(idsT, sessionKey);
 			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPorts | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
+		});
 	}
 
-	public Set loadKISs(Set ids) throws RetrieveObjectException {
-		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		if (loadIdsT.length == 0)
-			return objects;
-	
-		Set loadedObjects = new HashSet();
-	
-		try {
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			KIS_Transferable[] transferables = mServerRef.transmitKISs(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new KIS(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadKISs(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.KIS_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(CommonServer server,
+					Identifier_Transferable[] idsT,
+					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).transmitKISs(idsT, sessionKey);
 			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-	
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-	
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-	
-		return objects;
+		});
 	}
 
-	public Set loadMonitoredElements(Set ids) throws RetrieveObjectException {
-		MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		if (loadIdsT.length == 0)
-			return objects;
-
-		Set loadedObjects = new HashSet();
-
-		try {
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			MonitoredElement_Transferable[] transferables = mServerRef.transmitMonitoredElements(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new MonitoredElement(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadMonitoredElements(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(CommonServer server,
+					Identifier_Transferable[] idsT,
+					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).transmitKISs(idsT, sessionKey);
 			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadMonitoredElements | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
+		});
 	}
 
 
@@ -235,48 +86,18 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 	/* Load multiple objects but ids*/
 
-	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
-		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
-
-		Set loadedObjects = new HashSet();
-
-		try {
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			KIS_Transferable[] transferables = mServerRef.transmitKISsButIdsByCondition(loadButIdsT, conditionT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new KIS(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadKISsButIds | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
+	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids,
+				condition,
+				ObjectEntities.KIS_ENTITY_CODE,
+				new TransmitButIdsConditionProcedure() {
+					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+							Identifier_Transferable[] idsT,
+							SessionKey_Transferable sessionKey,
+							StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+						return ((MServer) server).transmitKISsButIdsByCondition(idsT, conditionT, sessionKey);
+					}
+				});
 	}
 
 

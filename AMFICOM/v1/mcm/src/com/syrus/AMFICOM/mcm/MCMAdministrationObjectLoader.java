@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.23 2005/05/27 09:55:32 bass Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.24 2005/06/01 20:54:59 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,129 +8,58 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.administration.AdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
-import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/27 09:55:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/01 20:54:59 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
-final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
+final class MCMAdministrationObjectLoader extends MCMObjectLoader implements AdministrationObjectLoader {
+
+	public MCMAdministrationObjectLoader(final MCMServantManager mcmServantManager) {
+		super(mcmServantManager, new DatabaseAdministrationObjectLoader());
+	}
 
 	/* Load multiple objects*/
 
-	public Set loadServers(Set ids) throws RetrieveObjectException {
-		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		if (loadIdsT.length == 0)
-			return objects;
-
-		Set loadedObjects = new HashSet();
-
-		try {
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			Server_Transferable[] transferables = mServerRef.transmitServers(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new Server(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadServers(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.SERVER_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(CommonServer server,
+					Identifier_Transferable[] idsT,
+					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).transmitServers(idsT, sessionKey);
 			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMGeneralObjectLoader.loadServers | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
+		});
 	}
 
-	public Set loadMCMs(Set ids) throws RetrieveObjectException {
-		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
-		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
-		if (loadIdsT.length == 0)
-			return objects;
-
-		Set loadedObjects = new HashSet();
-
-		try {
-			MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-			MCM_Transferable[] transferables = mServerRef.transmitMCMs(loadIdsT);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					loadedObjects.add(new MCM(transferables[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
+	public Set loadMCMs(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.MCM_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(CommonServer server,
+					Identifier_Transferable[] idsT,
+					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).transmitMCMs(idsT, sessionKey);
 			}
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage("MCMGeneralObjectLoader.loadMCMs | Cannot load objects from MeasurementServer");
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-		}
-
-		if (!loadedObjects.isEmpty()) {
-			objects.addAll(loadedObjects);
-
-			try {
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		return objects;
+		});
 	}
 
 
