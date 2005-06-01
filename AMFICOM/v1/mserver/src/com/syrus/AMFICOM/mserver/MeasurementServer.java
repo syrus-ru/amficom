@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.49 2005/05/24 13:24:56 bass Exp $
+ * $Id: MeasurementServer.java,v 1.50 2005/06/01 13:29:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/05/24 13:24:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.50 $, $Date: 2005/06/01 13:29:33 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -159,6 +159,11 @@ public class MeasurementServer extends SleepButWorkThread {
 			final User user = new User(serverProcess.getUserId());
 			final Set mcmIds = Identifier.getIdentifiers(((MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE)).retrieveForServer(serverId));
 			login = user.getLogin();
+			
+			/*	Create map of test queues*/
+			mcmTestQueueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
+			for (Iterator it = mcmIds.iterator(); it.hasNext();)
+				mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet()));
 	
 			/*	Init database object loader*/
 			DatabaseObjectLoader.init(user.getId());
@@ -174,11 +179,6 @@ public class MeasurementServer extends SleepButWorkThread {
 			catch (final LoginException le) {
 				Log.errorException(le);
 			}
-	
-			/*	Create map of test queues*/
-			mcmTestQueueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
-			for (Iterator it = mcmIds.iterator(); it.hasNext();)
-				mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet()));
 	
 			/*	Create collection of MCM identifiers for aborting tests*/
 			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet());
