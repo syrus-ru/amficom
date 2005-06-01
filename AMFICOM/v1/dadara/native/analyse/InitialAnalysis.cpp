@@ -164,7 +164,7 @@ void InitialAnalysis::performAnalysis(int scaleB)
 			delete[] f_wletTEMP;
 return;}
 		// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
-		findEventsBySplashes(f_wletTEMP, scaleB, splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
+		findEventsBySplashes(f_wletTEMP, splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
 		// используем ArrList и его объекты
 		splashes.disposeAll(); // очищаем массив ArrList
     } // удаляем пустой массив splashes
@@ -301,7 +301,7 @@ return;
 // ======= ФУНКЦИИ ТРЕТЬЕГО ЭТАПА АНАЛИЗА - ОПРЕДЕЛЕНИЯ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 //
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, int wlet_width_initial, ArrList& splashes)
+void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes)
 {//* мёртвую зону ищём  чуть иначе
     int shift = 0;
     if( splashes.getLength() <=2 )
@@ -334,7 +334,7 @@ return;
       if( sp1->begin_weld!= -1 && fabs(sp1->end_weld-sp1->begin_weld)>1) //сварка
       {	EventParams *ep = new EventParams;
         setSpliceParamsBySplash((EventParams&)*ep, (Splash&)*sp1 );
-        correctSpliceCoords(f_wletTEMP, wlet_width_initial, ep);
+        correctSpliceCoords(f_wletTEMP, sp1->scale, ep);
         events->add(ep);
 	continue;
       }

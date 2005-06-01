@@ -106,7 +106,7 @@ private:
 	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
 
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
-    void findEventsBySplashes(double* f_wletTEMP, int wlet_width_initial, ArrList&  splashes);
+    void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes);
 	int	 processDeadZone(ArrList& splashes);
     int  processIfIsConnector(int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
@@ -132,7 +132,7 @@ class Splash
 	int begin_conn;		// пересечение коннекторного порога
     int end_conn;
 
-	int scale;
+	int scale;			// масштаб, на котором splash был обнаружен
 	double r_conn;		// max{(f_wlet[i]-minimalConnector)/noise[i]} (<0, если порог не достигнут)
 	double r_acrit;		// max{(f_wlet[i]-rACrit)/noise[i]} (<0, если rACrit не достигнут)
 	double r_weld;		// max{(f_wlet[i]-minimalWeld)/noise[i]} (<0, если порог не достигнут)
