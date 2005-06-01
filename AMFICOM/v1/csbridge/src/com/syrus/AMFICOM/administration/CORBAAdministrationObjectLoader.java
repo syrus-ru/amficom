@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.14 2005/06/01 13:02:06 bass Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.15 2005/06/01 16:08:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,13 +37,13 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/01 13:02:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/06/01 16:08:05 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader implements AdministrationObjectLoader {
-	public CORBAAdministrationObjectLoader(ServerConnectionManager cmServerConnectionManager) {
-		super(cmServerConnectionManager);
+	public CORBAAdministrationObjectLoader(ServerConnectionManager serverConnectionManager) {
+		super(serverConnectionManager);
 	}
 
 	public Set loadUsers(Set ids) throws ApplicationException {
