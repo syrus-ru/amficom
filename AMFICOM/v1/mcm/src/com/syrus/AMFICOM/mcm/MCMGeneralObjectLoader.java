@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.21 2005/05/27 09:55:32 bass Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.22 2005/06/01 15:41:34 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/27 09:55:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/06/01 15:41:34 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
@@ -191,21 +191,6 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	/*
 	 * MCM do not need in all below methods
 	 * */
-
-	public void saveParameterType(ParameterType parameterType, boolean force) {
-		throw new UnsupportedOperationException("Method not implemented, parameterType: " + parameterType.getId() + ", force: " + force);
-	}
-
-	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) {
-		throw new UnsupportedOperationException("Method not implemented, characteristicType: " + characteristicType.getId() + ", force: " + force);
-	}
-
-	public void saveCharacteristic(Characteristic characteristic, boolean force) {
-		throw new UnsupportedOperationException("Method not implemented, characteristic: " + characteristic.getId() + ", force: " + force);
-	}
-
-
-
 
 	public void saveParameterTypes(Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
