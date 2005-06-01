@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMSessionEnvironment.java,v 1.4 2005/05/13 17:57:01 bass Exp $
+ * $Id: MCMSessionEnvironment.java,v 1.5 2005/06/01 20:56:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.general.BaseSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/13 17:57:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/01 20:56:02 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMSessionEnvironment extends BaseSessionEnvironment {
@@ -30,7 +30,7 @@ final class MCMSessionEnvironment extends BaseSessionEnvironment {
 
 	public static void createInstance(final String serverHostName) throws CommunicationException {
 		final MCMServantManager mcmServantManager = MCMServantManager.createAndStart(serverHostName);
-		instance = new MCMSessionEnvironment(mcmServantManager, new MCMPoolContext());
+		instance = new MCMSessionEnvironment(mcmServantManager, new MCMPoolContext(mcmServantManager));
 	}
 
 	public static MCMSessionEnvironment getInstance() {
