@@ -19,7 +19,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 $(LIBNAME_INTERFACE):	.corba
-	$(JAR) -cf $@ $(wildcard -C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/*.class)	
+	$(JAR) -cf $@ -C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/	
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
