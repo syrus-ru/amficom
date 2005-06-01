@@ -1,173 +1,171 @@
+
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 
-public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelListener
-{
-	private ApplicationModel aModel;
+public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 
-	JMenu menuSession = new JMenu();
-	JMenuItem menuSessionNew = new JMenuItem();
-	JMenuItem menuSessionClose = new JMenuItem();
-	JMenuItem menuSessionOptions = new JMenuItem();
-	JMenuItem menuSessionConnection = new JMenuItem();
-	JMenuItem menuSessionChangePassword = new JMenuItem();
-	JMenuItem menuSessionDomain = new JMenuItem();
-	JMenuItem menuExit = new JMenuItem();
+	// JMenu menuSession = new JMenu();
+	// JMenuItem menuSessionNew = new JMenuItem();
+	// JMenuItem menuSessionClose = new JMenuItem();
+	// JMenuItem menuSessionOptions = new JMenuItem();
+	// JMenuItem menuSessionConnection = new JMenuItem();
+	// JMenuItem menuSessionChangePassword = new JMenuItem();
+	// JMenuItem menuSessionDomain = new JMenuItem();
+	// JMenuItem menuExit = new JMenuItem();
+	//
+	
 
-	JMenu menuFile = new JMenu();
-	JMenuItem menuFileOpen = new JMenuItem();
-	JMenuItem menuFileOpenAs = new JMenu();
-	JMenuItem menuFileOpenAsBellcore = new JMenuItem();
-	JMenuItem menuFileOpenAsWavetek = new JMenuItem();
-	JMenuItem menuFileSave = new JMenuItem();
-	JMenuItem menuFileSaveAll = new JMenuItem();
-	JMenuItem menuFileSaveAs = new JMenu();
-	JMenuItem menuFileSaveAsText = new JMenuItem();
-	JMenuItem menuFileClose = new JMenuItem();
-	JMenuItem menuFileAddCompare = new JMenuItem();
-	JMenuItem menuFileRemoveCompare = new JMenuItem();
+	// public AnalyseMainMenuBar()
+	// {
+	// super();
+	// try
+	// {
+	// jbInit();
+	// }
+	// catch (Exception e)
+	// {
+	// e.printStackTrace();
+	// }
+	// }
 
-	JMenu menuTrace = new JMenu();
-	JMenuItem menuTraceAddCompare = new JMenuItem();
-	JMenuItem menuTraceRemoveCompare = new JMenuItem();
-	JMenuItem menuTraceDownload = new JMenuItem();
-	JMenuItem menuTraceDownloadEtalon = new JMenuItem();
-	JMenuItem menuTraceCloseEtalon = new JMenuItem();
-	JMenuItem menuTraceClose = new JMenuItem();
-
-	JMenu menuTestSetup = new JMenu();
-	JMenuItem menuCreateTestSetup = new JMenuItem();
-	JMenuItem menuSaveTestSetup = new JMenuItem();
-	JMenuItem menuLoadTestSetup = new JMenuItem();
-	JMenuItem menuSaveTestSetupAs = new JMenuItem();
-	JMenuItem menuNetStudy = new JMenuItem();
-
-	JMenuItem menuAnalyseUpload = new JMenuItem();
-
-	JMenu menuOptions = new JMenu();
-	JMenuItem menuOptionsColor = new JMenuItem();
-
-	JMenu menuReport = new JMenu();
-	JMenuItem menuReportCreate = new JMenuItem();
-
-	JMenu menuWindow = new JMenu();
-	JMenuItem menuWindowArrange = new JMenuItem();
-	JMenuItem menuWindowTraceSelector = new JMenuItem();
-	JMenuItem menuWindowPrimaryParameters = new JMenuItem();
-	JMenuItem menuWindowOverallStats = new JMenuItem();
-	JMenuItem menuWindowNoiseFrame = new JMenuItem();
-	JMenuItem menuWindowFilteredFrame = new JMenuItem();
-	JMenuItem menuWindowEvents = new JMenuItem();
-	JMenuItem menuWindowDetailedEvents = new JMenuItem();
-	JMenuItem menuWindowAnalysis = new JMenuItem();
-	JMenuItem menuWindowMarkersInfo = new JMenuItem();
-	JMenuItem menuWindowAnalysisSelection = new JMenuItem();
-	JMenuItem menuWindowDerivHistoFrame = new JMenuItem();
-	JMenuItem menuWindowThresholdsSelection = new JMenuItem();
-	JMenuItem menuWindowThresholds = new JMenuItem();
-
-
-	public AnalyseMainMenuBar()
-	{
-		super();
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+	public AnalyseMainMenuBar(ApplicationModel aModel) {
+		// this();
+		super(aModel);
 	}
 
-	public AnalyseMainMenuBar(ApplicationModel aModel)
-	{
-		this();
-		this.aModel = aModel;
-	}
+	protected void addMenuItems() {
+		// AnalyseMainMenuBar_this_actionAdapter actionAdapter =
+		// new AnalyseMainMenuBar_this_actionAdapter(this);
 
-	private void jbInit() throws Exception
-	{
-				AnalyseMainMenuBar_this_actionAdapter actionAdapter =
-		new AnalyseMainMenuBar_this_actionAdapter(this);
+		// menuSession.setText(LangModel.getString("menuSession"));
+		// menuSession.setName("menuSession");
+		// menuSessionNew.setText(LangModel.getString("menuSessionNew"));
+		// menuSessionNew.setName("menuSessionNew");
+		// menuSessionNew.addActionListener(actionAdapter);
+		// menuSessionClose.setText(LangModel.getString("menuSessionClose"));
+		// menuSessionClose.setName("menuSessionClose");
+		// menuSessionClose.addActionListener(actionAdapter);
+		// menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
+		// menuSessionOptions.setName("menuSessionOptions");
+		// menuSessionOptions.addActionListener(actionAdapter);
+		// menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
+		// menuSessionConnection.setName("menuSessionConnection");
+		// menuSessionConnection.addActionListener(actionAdapter);
+		// menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
+		// menuSessionChangePassword.setName("menuSessionChangePassword");
+		// menuSessionChangePassword.addActionListener(actionAdapter);
+		// menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
+		// menuSessionDomain.setName("menuSessionDomain");
+		// menuSessionDomain.addActionListener(actionAdapter);
+		// menuExit.setText(LangModel.getString("menuExit"));
+		// menuExit.setName("menuExit");
+		// menuExit.addActionListener(actionAdapter);
+		//
+		// menuSession.add(menuSessionNew);
+		// menuSession.add(menuSessionClose);
+		// menuSession.add(menuSessionOptions);
+		// menuSession.add(menuSessionChangePassword);
+		// menuSession.addSeparator();
+		// menuSession.add(menuSessionConnection);
+		// menuSession.addSeparator();
+		//
+		// menuSession.add(menuSessionDomain);
+		// menuSession.addSeparator();
+		// menuSession.add(menuExit);
 
-		menuSession.setText(LangModel.getString("menuSession"));
-		menuSession.setName("menuSession");
-		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
-		menuSessionNew.setName("menuSessionNew");
-		menuSessionNew.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
-		menuSessionClose.setName("menuSessionClose");
-		menuSessionClose.addActionListener(actionAdapter);
-		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
-		menuSessionOptions.setName("menuSessionOptions");
-		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
-		menuSessionConnection.setName("menuSessionConnection");
-		menuSessionConnection.addActionListener(actionAdapter);
-		menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
-		menuSessionChangePassword.setName("menuSessionChangePassword");
-		menuSessionChangePassword.addActionListener(actionAdapter);
-		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
-		menuSessionDomain.setName("menuSessionDomain");
-		menuSessionDomain.addActionListener(actionAdapter);
-		menuExit.setText(LangModel.getString("menuExit"));
-		menuExit.setName("menuExit");
-		menuExit.addActionListener(actionAdapter);
+		final JMenu						menuFile						= new JMenu();
+		final JMenuItem					menuFileOpen					= new JMenuItem();
+		final JMenuItem					menuFileOpenAs					= new JMenu();
+		final JMenuItem					menuFileOpenAsBellcore			= new JMenuItem();
+		final JMenuItem					menuFileOpenAsWavetek			= new JMenuItem();
+		final JMenuItem					menuFileSave					= new JMenuItem();
+		final JMenuItem					menuFileSaveAll					= new JMenuItem();
+		final JMenuItem					menuFileSaveAs					= new JMenu();
+		final JMenuItem					menuFileSaveAsText				= new JMenuItem();
+		final JMenuItem					menuFileClose					= new JMenuItem();
+		final JMenuItem					menuFileAddCompare				= new JMenuItem();
+		final JMenuItem					menuFileRemoveCompare			= new JMenuItem();
 
-		menuSession.add(menuSessionNew);
-		menuSession.add(menuSessionClose);
-		menuSession.add(menuSessionOptions);
-		menuSession.add(menuSessionChangePassword);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionConnection);
-		menuSession.addSeparator();
+		final JMenu						menuTrace						= new JMenu();
+		final JMenuItem					menuTraceAddCompare				= new JMenuItem();
+		final JMenuItem					menuTraceRemoveCompare			= new JMenuItem();
+		final JMenuItem					menuTraceDownload				= new JMenuItem();
+		final JMenuItem					menuTraceDownloadEtalon			= new JMenuItem();
+		final JMenuItem					menuTraceCloseEtalon			= new JMenuItem();
+		final JMenuItem					menuTraceClose					= new JMenuItem();
 
-		menuSession.add(menuSessionDomain);
-		menuSession.addSeparator();
-		menuSession.add(menuExit);
+		final JMenu						menuTestSetup					= new JMenu();
+		final JMenuItem					menuCreateTestSetup				= new JMenuItem();
+		final JMenuItem					menuSaveTestSetup				= new JMenuItem();
+		final JMenuItem					menuLoadTestSetup				= new JMenuItem();
+		final JMenuItem					menuSaveTestSetupAs				= new JMenuItem();
+		final JMenuItem					menuNetStudy					= new JMenuItem();
 
+		final JMenuItem					menuAnalyseUpload				= new JMenuItem();
+
+		final JMenu						menuOptions						= new JMenu();
+		final JMenuItem					menuOptionsColor				= new JMenuItem();
+
+		final JMenu						menuReport						= new JMenu();
+		final JMenuItem					menuReportCreate				= new JMenuItem();
+
+		final JMenu						menuWindow						= new JMenu();
+		final JMenuItem					menuWindowArrange				= new JMenuItem();
+		final JMenuItem					menuWindowTraceSelector			= new JMenuItem();
+		final JMenuItem					menuWindowPrimaryParameters		= new JMenuItem();
+		final JMenuItem					menuWindowOverallStats			= new JMenuItem();
+		final JMenuItem					menuWindowNoiseFrame			= new JMenuItem();
+		final JMenuItem					menuWindowFilteredFrame			= new JMenuItem();
+		final JMenuItem					menuWindowEvents				= new JMenuItem();
+		final JMenuItem					menuWindowDetailedEvents		= new JMenuItem();
+		final JMenuItem					menuWindowAnalysis				= new JMenuItem();
+		final JMenuItem					menuWindowMarkersInfo			= new JMenuItem();
+		final JMenuItem					menuWindowAnalysisSelection		= new JMenuItem();
+		final JMenuItem					menuWindowDerivHistoFrame		= new JMenuItem();
+		final JMenuItem					menuWindowThresholdsSelection	= new JMenuItem();
+		final JMenuItem					menuWindowThresholds			= new JMenuItem();
+		
 		menuFile.setText(LangModelAnalyse.getString("menuFile"));
 		menuFile.setName("menuFile");
 		menuFileOpen.setText(LangModelAnalyse.getString("menuFileOpen"));
 		menuFileOpen.setName("menuFileOpen");
-		menuFileOpen.addActionListener(actionAdapter);
+		menuFileOpen.addActionListener(this.actionAdapter);
 		menuFileOpenAs.setText(LangModelAnalyse.getString("menuFileOpenAs"));
 		menuFileOpenAs.setName("menuFileOpenAs");
-		menuFileOpenAs.addActionListener(actionAdapter);
+		menuFileOpenAs.addActionListener(this.actionAdapter);
 		menuFileOpenAsBellcore.setText(LangModelAnalyse.getString("menuFileOpenAsBellcore"));
 		menuFileOpenAsBellcore.setName("menuFileOpenAsBellcore");
-		menuFileOpenAsBellcore.addActionListener(actionAdapter);
+		menuFileOpenAsBellcore.addActionListener(this.actionAdapter);
 		menuFileOpenAsWavetek.setText(LangModelAnalyse.getString("menuFileOpenAsWavetek"));
 		menuFileOpenAsWavetek.setName("menuFileOpenAsWavetek");
-		menuFileOpenAsWavetek.addActionListener(actionAdapter);
+		menuFileOpenAsWavetek.addActionListener(this.actionAdapter);
 		menuFileSave.setText(LangModelAnalyse.getString("menuFileSave"));
 		menuFileSave.setName("menuFileSave");
-		menuFileSave.addActionListener(actionAdapter);
+		menuFileSave.addActionListener(this.actionAdapter);
 		menuFileSaveAll.setText(LangModelAnalyse.getString("menuFileSaveAll"));
 		menuFileSaveAll.setName("menuFileSaveAll");
-		menuFileSaveAll.addActionListener(actionAdapter);
+		menuFileSaveAll.addActionListener(this.actionAdapter);
 		menuFileSaveAs.setText(LangModelAnalyse.getString("menuFileSaveAs"));
 		menuFileSaveAs.setName("menuFileSaveAs");
 		menuFileSaveAsText.setText(LangModelAnalyse.getString("menuFileSaveAsTextFile"));
 		menuFileSaveAsText.setName("menuFileSaveAsText");
-		menuFileSaveAsText.addActionListener(actionAdapter);
+		menuFileSaveAsText.addActionListener(this.actionAdapter);
 		menuFileClose.setText(LangModelAnalyse.getString("menuFileClose"));
 		menuFileClose.setName("menuFileClose");
-		menuFileClose.addActionListener(actionAdapter);
+		menuFileClose.addActionListener(this.actionAdapter);
 		menuFileAddCompare.setText(LangModelAnalyse.getString("menuFileAddCompare"));
 		menuFileAddCompare.setName("menuFileAddCompare");
-		menuFileAddCompare.addActionListener(actionAdapter);
+		menuFileAddCompare.addActionListener(this.actionAdapter);
 		menuFileRemoveCompare.setText(LangModelAnalyse.getString("menuFileRemoveCompare"));
 		menuFileRemoveCompare.setName("menuFileRemoveCompare");
-		menuFileRemoveCompare.addActionListener(actionAdapter);
+		menuFileRemoveCompare.addActionListener(this.actionAdapter);
 		menuFile.add(menuFileOpen);
 		menuFile.add(menuFileOpenAs);
 		menuFileOpenAs.add(menuFileOpenAsBellcore);
@@ -186,22 +184,22 @@ public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelList
 		menuTrace.setName("menuTrace");
 		menuTraceAddCompare.setText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		menuTraceAddCompare.setName("menuTraceAddCompare");
-		menuTraceAddCompare.addActionListener(actionAdapter);
+		menuTraceAddCompare.addActionListener(this.actionAdapter);
 		menuTraceRemoveCompare.setText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		menuTraceRemoveCompare.setName("menuTraceRemoveCompare");
-		menuTraceRemoveCompare.addActionListener(actionAdapter);
+		menuTraceRemoveCompare.addActionListener(this.actionAdapter);
 		menuTraceDownload.setText(LangModelAnalyse.getString("menuTraceDownload"));
 		menuTraceDownload.setName("menuTraceDownload");
-		menuTraceDownload.addActionListener(actionAdapter);
+		menuTraceDownload.addActionListener(this.actionAdapter);
 		menuTraceDownloadEtalon.setText(LangModelAnalyse.getString("menuTraceDownloadEtalon"));
 		menuTraceDownloadEtalon.setName("menuTraceDownloadEtalon");
-		menuTraceDownloadEtalon.addActionListener(actionAdapter);
+		menuTraceDownloadEtalon.addActionListener(this.actionAdapter);
 		menuTraceClose.setText(LangModelAnalyse.getString("menuFileClose"));
 		menuTraceClose.setName("menuFileClose");
-		menuTraceClose.addActionListener(actionAdapter);
+		menuTraceClose.addActionListener(this.actionAdapter);
 		menuTraceCloseEtalon.setText(LangModelAnalyse.getString("menuTraceCloseEtalon"));
 		menuTraceCloseEtalon.setName("menuTraceCloseEtalon");
-		menuTraceCloseEtalon.addActionListener(actionAdapter);
+		menuTraceCloseEtalon.addActionListener(this.actionAdapter);
 		menuTrace.add(menuTraceDownload);
 		menuTrace.add(menuTraceDownloadEtalon);
 		menuTrace.add(menuTraceAddCompare);
@@ -217,22 +215,22 @@ public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelList
 		menuTestSetup.setName("menuTestSetup");
 		menuAnalyseUpload.setText(LangModelAnalyse.getString("menuAnalyseUpload"));
 		menuAnalyseUpload.setName("menuAnalyseUpload");
-		menuAnalyseUpload.addActionListener(actionAdapter);
+		menuAnalyseUpload.addActionListener(this.actionAdapter);
 		menuCreateTestSetup.setText(LangModelAnalyse.getString("menuCreateTestSetup"));
 		menuCreateTestSetup.setName("menuCreateTestSetup");
-		menuCreateTestSetup.addActionListener(actionAdapter);
+		menuCreateTestSetup.addActionListener(this.actionAdapter);
 		menuLoadTestSetup.setText(LangModelAnalyse.getString("menuLoadTestSetup"));
 		menuLoadTestSetup.setName("menuLoadTestSetup");
-		menuLoadTestSetup.addActionListener(actionAdapter);
+		menuLoadTestSetup.addActionListener(this.actionAdapter);
 		menuSaveTestSetup.setText(LangModelAnalyse.getString("menuSaveTestSetup"));
 		menuSaveTestSetup.setName("menuSaveTestSetup");
-		menuSaveTestSetup.addActionListener(actionAdapter);
+		menuSaveTestSetup.addActionListener(this.actionAdapter);
 		menuSaveTestSetupAs.setText(LangModelAnalyse.getString("menuSaveTestSetupAs"));
 		menuSaveTestSetupAs.setName("menuSaveTestSetupAs");
-		menuSaveTestSetupAs.addActionListener(actionAdapter);
+		menuSaveTestSetupAs.addActionListener(this.actionAdapter);
 		menuNetStudy.setText(LangModelAnalyse.getString("menuNetStudy"));
 		menuNetStudy.setName("menuNetStudy");
-		menuNetStudy.addActionListener(actionAdapter);
+		menuNetStudy.addActionListener(this.actionAdapter);
 		menuTestSetup.add(menuCreateTestSetup);
 		menuTestSetup.add(menuLoadTestSetup);
 		menuTestSetup.addSeparator();
@@ -243,60 +241,60 @@ public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelList
 		menuOptions.setName("menuOptions");
 		menuOptionsColor.setText(LangModelAnalyse.getString("menuOptionsColor"));
 		menuOptionsColor.setName("menuOptionsColor");
-		menuOptionsColor.addActionListener(actionAdapter);
+		menuOptionsColor.addActionListener(this.actionAdapter);
 		menuOptions.add(menuOptionsColor);
 
 		menuReport.setText(LangModelAnalyse.getString("menuReport"));
 		menuReport.setName("menuReport");
 		menuReportCreate.setText(LangModelAnalyse.getString("menuReportCreate"));
 		menuReportCreate.setName("menuReportCreate");
-		menuReportCreate.addActionListener(actionAdapter);
+		menuReportCreate.addActionListener(this.actionAdapter);
 		menuReport.add(menuReportCreate);
 
 		menuWindow.setText(LangModelAnalyse.getString("menuWindow"));
 		menuWindow.setName("menuWindow");
 		menuWindowArrange.setText(LangModelAnalyse.getString("menuWindowArrange"));
 		menuWindowArrange.setName("menuWindowArrange");
-		menuWindowArrange.addActionListener(actionAdapter);
+		menuWindowArrange.addActionListener(this.actionAdapter);
 		menuWindowTraceSelector.setText(LangModelAnalyse.getString("menuWindowTraceSelector"));
 		menuWindowTraceSelector.setName("menuWindowTraceSelector");
-		menuWindowTraceSelector.addActionListener(actionAdapter);
+		menuWindowTraceSelector.addActionListener(this.actionAdapter);
 		menuWindowPrimaryParameters.setText(LangModelAnalyse.getString("menuWindowPrimaryParameters"));
 		menuWindowPrimaryParameters.setName("menuWindowPrimaryParameters");
-		menuWindowPrimaryParameters.addActionListener(actionAdapter);
+		menuWindowPrimaryParameters.addActionListener(this.actionAdapter);
 		menuWindowOverallStats.setText(LangModelAnalyse.getString("menuWindowOverallStats"));
 		menuWindowOverallStats.setName("menuWindowOverallStats");
-		menuWindowOverallStats.addActionListener(actionAdapter);
+		menuWindowOverallStats.addActionListener(this.actionAdapter);
 		menuWindowNoiseFrame.setText(LangModelAnalyse.getString("menuWindowNoiseFrame"));
 		menuWindowNoiseFrame.setName("menuWindowNoiseFrame");
-		menuWindowNoiseFrame.addActionListener(actionAdapter);
+		menuWindowNoiseFrame.addActionListener(this.actionAdapter);
 		menuWindowFilteredFrame.setText(LangModelAnalyse.getString("menuWindowFilteredFrame"));
 		menuWindowFilteredFrame.setName("menuWindowFilteredFrame");
-		menuWindowFilteredFrame.addActionListener(actionAdapter);
+		menuWindowFilteredFrame.addActionListener(this.actionAdapter);
 		menuWindowEvents.setText(LangModelAnalyse.getString("menuWindowEvents"));
 		menuWindowEvents.setName("menuWindowEvents");
-		menuWindowEvents.addActionListener(actionAdapter);
+		menuWindowEvents.addActionListener(this.actionAdapter);
 		menuWindowDetailedEvents.setText(LangModelAnalyse.getString("menuWindowDetailedEvents"));
 		menuWindowDetailedEvents.setName("menuWindowDetailedEvents");
-		menuWindowDetailedEvents.addActionListener(actionAdapter);
+		menuWindowDetailedEvents.addActionListener(this.actionAdapter);
 		menuWindowAnalysis.setText(LangModelAnalyse.getString("menuWindowAnalysis"));
 		menuWindowAnalysis.setName("menuWindowAnalysis");
-		menuWindowAnalysis.addActionListener(actionAdapter);
+		menuWindowAnalysis.addActionListener(this.actionAdapter);
 		menuWindowMarkersInfo.setText(LangModelAnalyse.getString("menuWindowMarkersInfo"));
 		menuWindowMarkersInfo.setName("menuWindowMarkersInfo");
-		menuWindowMarkersInfo.addActionListener(actionAdapter);
+		menuWindowMarkersInfo.addActionListener(this.actionAdapter);
 		menuWindowAnalysisSelection.setText(LangModelAnalyse.getString("menuWindowAnalysisSelection"));
 		menuWindowAnalysisSelection.setName("menuWindowAnalysisSelection");
-		menuWindowAnalysisSelection.addActionListener(actionAdapter);
+		menuWindowAnalysisSelection.addActionListener(this.actionAdapter);
 		menuWindowDerivHistoFrame.setText(LangModelAnalyse.getString("menuWindowDerivHistoFrame"));
 		menuWindowDerivHistoFrame.setName("menuWindowDerivHistoFrame");
-		menuWindowDerivHistoFrame.addActionListener(actionAdapter);
+		menuWindowDerivHistoFrame.addActionListener(this.actionAdapter);
 		menuWindowThresholdsSelection.setText(LangModelAnalyse.getString("menuWindowThresholdsSelection"));
 		menuWindowThresholdsSelection.setName("menuWindowThresholdsSelection");
-		menuWindowThresholdsSelection.addActionListener(actionAdapter);
+		menuWindowThresholdsSelection.addActionListener(this.actionAdapter);
 		menuWindowThresholds.setText(LangModelAnalyse.getString("menuWindowThresholds"));
 		menuWindowThresholds.setName("menuWindowThresholds");
-		menuWindowThresholds.addActionListener(actionAdapter);
+		menuWindowThresholds.addActionListener(this.actionAdapter);
 
 		menuWindow.add(menuWindowArrange);
 		menuWindow.addSeparator();
@@ -314,153 +312,126 @@ public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelList
 		menuWindow.add(menuWindowThresholdsSelection);
 		menuWindow.add(menuWindowThresholds);
 
-		this.add(menuSession);
+		// this.add(menuSession);
 		this.add(menuFile);
 		this.add(menuTrace);
 		this.add(menuTestSetup);
 		this.add(menuReport);
 		this.add(menuWindow);
-		//this.add(menuOptions);
+		// this.add(menuOptions);
+		
+		this.addApplicationModelListener(new ApplicationModelListener() {
+			public void modelChanged(String e) {
+				modelChanged(new String[] { e});
+			}
+
+			public void modelChanged(String e[]) {
+				// menuSession.setVisible(aModel.isVisible("menuSession"));
+				// menuSession.setEnabled(aModel.isEnabled("menuSession"));
+				// menuSessionNew.setVisible(aModel.isVisible("menuSessionNew"));
+				// menuSessionNew.setEnabled(aModel.isEnabled("menuSessionNew"));
+				// menuSessionClose.setVisible(aModel.isVisible("menuSessionClose"));
+				// menuSessionClose.setEnabled(aModel.isEnabled("menuSessionClose"));
+				// menuSessionOptions.setVisible(aModel.isVisible("menuSessionOptions"));
+				// menuSessionOptions.setEnabled(aModel.isEnabled("menuSessionOptions"));
+				// menuSessionConnection.setVisible(aModel.isVisible("menuSessionConnection"));
+				// menuSessionConnection.setEnabled(aModel.isEnabled("menuSessionConnection"));
+				// menuSessionChangePassword.setVisible(aModel.isVisible("menuSessionChangePassword"));
+				// menuSessionChangePassword.setEnabled(aModel.isEnabled("menuSessionChangePassword"));
+				// menuSessionDomain.setVisible(aModel.isVisible("menuSessionDomain"));
+				// menuSessionDomain.setEnabled(aModel.isEnabled("menuSessionDomain"));
+
+				menuFileOpen.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileOpen"));
+				menuFileOpen.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileOpen"));
+				menuFileOpenAs.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileOpenAs"));
+				menuFileOpenAs.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileOpenAs"));
+				menuFileOpenAsBellcore.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileOpenAsBellcore"));
+				menuFileOpenAsBellcore.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileOpenAsBellcore"));
+				menuFileOpenAsWavetek.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileOpenAsWavetek"));
+				menuFileOpenAsWavetek.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileOpenAsWavetek"));
+				menuFileSave.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileSave"));
+				menuFileSave.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileSave"));
+				menuFileSaveAs.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileSaveAs"));
+				menuFileSaveAs.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileSaveAs"));
+				menuFileSaveAsText.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileSaveAsText"));
+				menuFileSaveAsText.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileSaveAsText"));
+				menuFileSaveAll.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileSaveAll"));
+				menuFileSaveAll.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileSaveAll"));
+				menuFileClose.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileClose"));
+				menuFileClose.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileClose"));
+				menuFileAddCompare.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileAddCompare"));
+				menuFileAddCompare.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileAddCompare"));
+				menuFileRemoveCompare.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuFileRemoveCompare"));
+				menuFileRemoveCompare.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuFileRemoveCompare"));
+
+				menuTraceAddCompare.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceAddCompare"));
+				menuTraceAddCompare.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceAddCompare"));
+				menuTraceRemoveCompare.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceRemoveCompare"));
+				menuTraceRemoveCompare.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceRemoveCompare"));
+
+				menuAnalyseUpload.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuAnalyseUpload"));
+				menuAnalyseUpload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuAnalyseUpload"));
+
+				menuTraceDownload.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceDownload"));
+				menuTraceDownload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownload"));
+				menuTraceDownloadEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceDownloadEtalon"));
+				menuTraceDownloadEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownloadEtalon"));
+				menuTraceClose.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceClose"));
+				menuTraceClose.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceClose"));
+				menuTraceCloseEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceCloseEtalon"));
+				menuTraceCloseEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceCloseEtalon"));
+				menuTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTestSetup"));
+				menuTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTestSetup"));
+				menuCreateTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuCreateTestSetup"));
+				menuCreateTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuCreateTestSetup"));
+				menuLoadTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuLoadTestSetup"));
+				menuLoadTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuLoadTestSetup"));
+				menuSaveTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuSaveTestSetup"));
+				menuSaveTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuSaveTestSetup"));
+				menuSaveTestSetupAs.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuSaveTestSetupAs"));
+				menuSaveTestSetupAs.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuSaveTestSetupAs"));
+				menuNetStudy.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuNetStudy"));
+				menuNetStudy.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuNetStudy"));
+
+				menuReport.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuReport"));
+				menuReport.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuReport"));
+				menuReportCreate.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuReportCreate"));
+				menuReportCreate.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuReportCreate"));
+
+				menuWindow.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindow"));
+				menuWindow.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindow"));
+				menuWindowArrange.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowArrange"));
+				menuWindowArrange.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowArrange"));
+				menuWindowTraceSelector.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowTraceSelector"));
+				menuWindowTraceSelector.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowTraceSelector"));
+				menuWindowPrimaryParameters.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowPrimaryParameters"));
+				menuWindowPrimaryParameters.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowPrimaryParameters"));
+				menuWindowOverallStats.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowOverallStats"));
+				menuWindowOverallStats.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowOverallStats"));
+				menuWindowNoiseFrame.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowNoiseFrame"));
+				menuWindowNoiseFrame.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowNoiseFrame"));
+				menuWindowFilteredFrame.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowFilteredFrame"));
+				menuWindowFilteredFrame.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowFilteredFrame"));
+				menuWindowEvents.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowEvents"));
+				menuWindowEvents.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowEvents"));
+				menuWindowDetailedEvents.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowDetailedEvents"));
+				menuWindowDetailedEvents.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowDetailedEvents"));
+				menuWindowAnalysis.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowAnalysis"));
+				menuWindowAnalysis.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowAnalysis"));
+				menuWindowMarkersInfo.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowMarkersInfo"));
+				menuWindowMarkersInfo.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowMarkersInfo"));
+				menuWindowAnalysisSelection.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowAnalysisSelection"));
+				menuWindowAnalysisSelection.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowAnalysisSelection"));
+				menuWindowDerivHistoFrame.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowDerivHistoFrame"));
+				menuWindowDerivHistoFrame.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowDerivHistoFrame"));
+				menuWindowThresholdsSelection.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowThresholdsSelection"));
+				menuWindowThresholdsSelection.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowThresholdsSelection"));
+				menuWindowThresholds.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuWindowThresholds"));
+				menuWindowThresholds.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuWindowThresholds"));
+			}
+		}
+			);
 	}
 
-	public void modelChanged(String e){
-		modelChanged(new String[] {e});
-	}
 	
-	public void modelChanged(String e[])
-	{
-		menuSession.setVisible(aModel.isVisible("menuSession"));
-		menuSession.setEnabled(aModel.isEnabled("menuSession"));
-		menuSessionNew.setVisible(aModel.isVisible("menuSessionNew"));
-		menuSessionNew.setEnabled(aModel.isEnabled("menuSessionNew"));
-		menuSessionClose.setVisible(aModel.isVisible("menuSessionClose"));
-		menuSessionClose.setEnabled(aModel.isEnabled("menuSessionClose"));
-		menuSessionOptions.setVisible(aModel.isVisible("menuSessionOptions"));
-		menuSessionOptions.setEnabled(aModel.isEnabled("menuSessionOptions"));
-		menuSessionConnection.setVisible(aModel.isVisible("menuSessionConnection"));
-		menuSessionConnection.setEnabled(aModel.isEnabled("menuSessionConnection"));
-		menuSessionChangePassword.setVisible(aModel.isVisible("menuSessionChangePassword"));
-		menuSessionChangePassword.setEnabled(aModel.isEnabled("menuSessionChangePassword"));
-		menuSessionDomain.setVisible(aModel.isVisible("menuSessionDomain"));
-		menuSessionDomain.setEnabled(aModel.isEnabled("menuSessionDomain"));
-
-		menuFileOpen.setVisible(aModel.isVisible("menuFileOpen"));
-		menuFileOpen.setEnabled(aModel.isEnabled("menuFileOpen"));
-		menuFileOpenAs.setVisible(aModel.isVisible("menuFileOpenAs"));
-		menuFileOpenAs.setEnabled(aModel.isEnabled("menuFileOpenAs"));
-		menuFileOpenAsBellcore.setVisible(aModel.isVisible("menuFileOpenAsBellcore"));
-		menuFileOpenAsBellcore.setEnabled(aModel.isEnabled("menuFileOpenAsBellcore"));
-		menuFileOpenAsWavetek.setVisible(aModel.isVisible("menuFileOpenAsWavetek"));
-		menuFileOpenAsWavetek.setEnabled(aModel.isEnabled("menuFileOpenAsWavetek"));
-		menuFileSave.setVisible(aModel.isVisible("menuFileSave"));
-		menuFileSave.setEnabled(aModel.isEnabled("menuFileSave"));
-		menuFileSaveAs.setVisible(aModel.isVisible("menuFileSaveAs"));
-		menuFileSaveAs.setEnabled(aModel.isEnabled("menuFileSaveAs"));
-		menuFileSaveAsText.setVisible(aModel.isVisible("menuFileSaveAsText"));
-		menuFileSaveAsText.setEnabled(aModel.isEnabled("menuFileSaveAsText"));
-		menuFileSaveAll.setVisible(aModel.isVisible("menuFileSaveAll"));
-		menuFileSaveAll.setEnabled(aModel.isEnabled("menuFileSaveAll"));
-		menuFileClose.setVisible(aModel.isVisible("menuFileClose"));
-		menuFileClose.setEnabled(aModel.isEnabled("menuFileClose"));
-		menuFileAddCompare.setVisible(aModel.isVisible("menuFileAddCompare"));
-		menuFileAddCompare.setEnabled(aModel.isEnabled("menuFileAddCompare"));
-		menuFileRemoveCompare.setVisible(aModel.isVisible("menuFileRemoveCompare"));
-		menuFileRemoveCompare.setEnabled(aModel.isEnabled("menuFileRemoveCompare"));
-
-		menuTraceAddCompare.setVisible(aModel.isVisible("menuTraceAddCompare"));
-		menuTraceAddCompare.setEnabled(aModel.isEnabled("menuTraceAddCompare"));
-		menuTraceRemoveCompare.setVisible(aModel.isVisible("menuTraceRemoveCompare"));
-		menuTraceRemoveCompare.setEnabled(aModel.isEnabled("menuTraceRemoveCompare"));
-
-		menuAnalyseUpload.setVisible(aModel.isVisible("menuAnalyseUpload"));
-		menuAnalyseUpload.setEnabled(aModel.isEnabled("menuAnalyseUpload"));
-
-
-		menuTraceDownload.setVisible(aModel.isVisible("menuTraceDownload"));
-		menuTraceDownload.setEnabled(aModel.isEnabled("menuTraceDownload"));
-		menuTraceDownloadEtalon.setVisible(aModel.isVisible("menuTraceDownloadEtalon"));
-		menuTraceDownloadEtalon.setEnabled(aModel.isEnabled("menuTraceDownloadEtalon"));
-		menuTraceClose.setVisible(aModel.isVisible("menuTraceClose"));
-		menuTraceClose.setEnabled(aModel.isEnabled("menuTraceClose"));
-		menuTraceCloseEtalon.setVisible(aModel.isVisible("menuTraceCloseEtalon"));
-		menuTraceCloseEtalon.setEnabled(aModel.isEnabled("menuTraceCloseEtalon"));
-		menuTestSetup.setVisible(aModel.isVisible("menuTestSetup"));
-		menuTestSetup.setEnabled(aModel.isEnabled("menuTestSetup"));
-		menuCreateTestSetup.setVisible(aModel.isVisible("menuCreateTestSetup"));
-		menuCreateTestSetup.setEnabled(aModel.isEnabled("menuCreateTestSetup"));
-		menuLoadTestSetup.setVisible(aModel.isVisible("menuLoadTestSetup"));
-		menuLoadTestSetup.setEnabled(aModel.isEnabled("menuLoadTestSetup"));
-		menuSaveTestSetup.setVisible(aModel.isVisible("menuSaveTestSetup"));
-		menuSaveTestSetup.setEnabled(aModel.isEnabled("menuSaveTestSetup"));
-		menuSaveTestSetupAs.setVisible(aModel.isVisible("menuSaveTestSetupAs"));
-		menuSaveTestSetupAs.setEnabled(aModel.isEnabled("menuSaveTestSetupAs"));
-		menuNetStudy.setVisible(aModel.isVisible("menuNetStudy"));
-		menuNetStudy.setEnabled(aModel.isEnabled("menuNetStudy"));
-
-		menuReport.setVisible(aModel.isVisible("menuReport"));
-		menuReport.setEnabled(aModel.isEnabled("menuReport"));
-		menuReportCreate.setVisible(aModel.isVisible("menuReportCreate"));
-		menuReportCreate.setEnabled(aModel.isEnabled("menuReportCreate"));
-
-		menuWindow.setVisible(aModel.isVisible("menuWindow"));
-		menuWindow.setEnabled(aModel.isEnabled("menuWindow"));
-		menuWindowArrange.setVisible(aModel.isVisible("menuWindowArrange"));
-		menuWindowArrange.setEnabled(aModel.isEnabled("menuWindowArrange"));
-		menuWindowTraceSelector.setVisible(aModel.isVisible("menuWindowTraceSelector"));
-		menuWindowTraceSelector.setEnabled(aModel.isEnabled("menuWindowTraceSelector"));
-		menuWindowPrimaryParameters.setVisible(aModel.isVisible("menuWindowPrimaryParameters"));
-		menuWindowPrimaryParameters.setEnabled(aModel.isEnabled("menuWindowPrimaryParameters"));
-		menuWindowOverallStats.setVisible(aModel.isVisible("menuWindowOverallStats"));
-		menuWindowOverallStats.setEnabled(aModel.isEnabled("menuWindowOverallStats"));
-		menuWindowNoiseFrame.setVisible(aModel.isVisible("menuWindowNoiseFrame"));
-		menuWindowNoiseFrame.setEnabled(aModel.isEnabled("menuWindowNoiseFrame"));
-		menuWindowFilteredFrame.setVisible(aModel.isVisible("menuWindowFilteredFrame"));
-		menuWindowFilteredFrame.setEnabled(aModel.isEnabled("menuWindowFilteredFrame"));
-		menuWindowEvents.setVisible(aModel.isVisible("menuWindowEvents"));
-		menuWindowEvents.setEnabled(aModel.isEnabled("menuWindowEvents"));
-		menuWindowDetailedEvents.setVisible(aModel.isVisible("menuWindowDetailedEvents"));
-		menuWindowDetailedEvents.setEnabled(aModel.isEnabled("menuWindowDetailedEvents"));
-		menuWindowAnalysis.setVisible(aModel.isVisible("menuWindowAnalysis"));
-		menuWindowAnalysis.setEnabled(aModel.isEnabled("menuWindowAnalysis"));
-		menuWindowMarkersInfo.setVisible(aModel.isVisible("menuWindowMarkersInfo"));
-		menuWindowMarkersInfo.setEnabled(aModel.isEnabled("menuWindowMarkersInfo"));
-		menuWindowAnalysisSelection.setVisible(aModel.isVisible("menuWindowAnalysisSelection"));
-		menuWindowAnalysisSelection.setEnabled(aModel.isEnabled("menuWindowAnalysisSelection"));
-		menuWindowDerivHistoFrame.setVisible(aModel.isVisible("menuWindowDerivHistoFrame"));
-		menuWindowDerivHistoFrame.setEnabled(aModel.isEnabled("menuWindowDerivHistoFrame"));
-		menuWindowThresholdsSelection.setVisible(aModel.isVisible("menuWindowThresholdsSelection"));
-		menuWindowThresholdsSelection.setEnabled(aModel.isEnabled("menuWindowThresholdsSelection"));
-		menuWindowThresholds.setVisible(aModel.isVisible("menuWindowThresholds"));
-		menuWindowThresholds.setEnabled(aModel.isEnabled("menuWindowThresholds"));
-	}
-
-	public void setModel (ApplicationModel aModel)
-	{
-		this.aModel = aModel;
-	}
-
-	public void this_actionPerformed(ActionEvent e)
-	{
-		if(aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command.execute();
-	}
-}
-
-class AnalyseMainMenuBar_this_actionAdapter implements java.awt.event.ActionListener
-{
-	AnalyseMainMenuBar adaptee;
-
-	AnalyseMainMenuBar_this_actionAdapter(AnalyseMainMenuBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.this_actionPerformed(e);
-	}
 }
