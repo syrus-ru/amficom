@@ -10,8 +10,12 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,7 +37,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		try
 		{
-			MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
+			MonitoredElement me = (MonitoredElement)StorableObjectPool.getStorableObject(
 						 new Identifier(bs.monitoredElementId), true);
 			return new ObjectResourceTreeNode("root", "Шаблоны на \"" +
 					(me.getName().equals("") ? me.getId().getIdentifierString() : me.getName()) + "\"", true);

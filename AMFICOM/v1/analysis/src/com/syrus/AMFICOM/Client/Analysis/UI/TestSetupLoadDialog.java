@@ -1,19 +1,14 @@
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
@@ -129,7 +124,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 	void okButton_actionPerformed(ActionEvent e)
 	{
 		ret_code = 1;
-		dispose();
+		dispose(); 
 	}
 
 	void cancelButton_actionPerformed(ActionEvent e)
