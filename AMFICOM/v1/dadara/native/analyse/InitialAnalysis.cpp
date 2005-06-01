@@ -164,12 +164,12 @@ return;}
 //
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
-{	double f_wlet_avrg = calcWletMeanValue(fw, -0.5, 0, 500);
+{	double f_wlet_avrg = calcWletMeanValue(fw, lastPoint, -0.5, 0, 500);
 	average_factor = f_wlet_avrg * norma1 / getWLetNorma2(scale);
 }
 //------------------------------------------------------------------------------------------------------------
 // вычислить среднее значение вейвлет-образа
-double InitialAnalysis::calcWletMeanValue(double *fw, double from, double to, int columns)
+double InitialAnalysis::calcWletMeanValue(double *fw, int lastPoint, double from, double to, int columns)
 {   // возможное затухание находитс€ в пределах [0; -0.5] дЅ
 	Histogramm* histo = new Histogramm(from, to, columns);
 	histo->init(fw, 0, lastPoint-1);

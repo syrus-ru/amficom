@@ -85,10 +85,10 @@ private:
 	// вычислить коэфф "a" и "b" прямой y=ax+b, минимизирующей RMS
     void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit
 
-	// заполнить массив шума (шум не постоянен, поэтому используем массив для описания значеня шума в каждой точке)
-	void fillNoiseArray(double *y, int data_length, int N, double Neff, double NoiseFactor, double *outNoise);
-	void getNoise(double *noise, int freq);
-	double calcThresh(double thres, double noise); // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
+	// работа с шумом
+	static void fillNoiseArray(double *y, int data_length, int N, double Neff, double NoiseFactor, double *outNoise);
+	static void getNoise(double *noise, int freq);
+	static double calcThresh(double thres, double noise); // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
 
 	// выполнение вейвлет-преобразования
 	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma);
@@ -99,7 +99,7 @@ private:
 	void fillSplashRParameters(Splash &spl, double *f_wlet, int wlet_width);
 
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
-	double calcWletMeanValue(double* fw, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
+	static double calcWletMeanValue(double* fw, int lastPoint, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
 	void calcAverageFactor(double* fw, int scale, double norma1);
 	void shiftThresholds();// изменить границы порогов в соответствии со средним значением вейвлета 
 
