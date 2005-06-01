@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.1 2005/05/31 12:18:43 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.2 2005/06/01 09:54:36 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/31 12:18:43 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/01 09:54:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -255,19 +255,20 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	}
 
 	public void setModel(ApplicationModel aModel) {
-		this.toolBar.setModel(aModel);
+		this.toolBar.setApplicationModel(aModel);
 		this.menuBar.setApplicationModel(aModel);
-		List applicationModelListeners = this.menuBar.getApplicationModelListeners();
+		this.addListeners(aModel, this.menuBar.getApplicationModelListeners());
+		this.addListeners(aModel, this.toolBar.getApplicationModelListeners());
+		aModel.fireModelChanged("");
+	}
+	
+	private void addListeners(ApplicationModel aModel, List applicationModelListeners) {
 		if (applicationModelListeners != null && !applicationModelListeners.isEmpty()) {
 			for (Iterator iterator = applicationModelListeners.iterator(); iterator.hasNext();) {
-				ApplicationModelListener listener = (ApplicationModelListener) iterator.next();
-				Log.debugMessage("AbstractMainFrame.setModel | listener " + listener, Log.FINEST);
+				ApplicationModelListener listener = (ApplicationModelListener) iterator.next();				
 				aModel.addListener(listener);
 			}
 		}
-		
-		aModel.addListener(this.toolBar);
-		aModel.fireModelChanged("");
 	}
 
 	public void setSessionClosed() {
