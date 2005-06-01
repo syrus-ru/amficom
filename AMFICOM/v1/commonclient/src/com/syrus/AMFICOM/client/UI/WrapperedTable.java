@@ -23,11 +23,11 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/24 10:01:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/01 06:22:48 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
-public class WrapperedTable extends JTable {
+public class WrapperedTable extends ATable {
 
 	private static final long	serialVersionUID	= -437251205606073016L;
 
