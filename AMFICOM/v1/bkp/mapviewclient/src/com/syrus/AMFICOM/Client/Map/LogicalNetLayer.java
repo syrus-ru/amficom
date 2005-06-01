@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.69 2005/05/31 16:07:47 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.70 2005/06/01 11:33:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -80,7 +79,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.69 $, $Date: 2005/05/31 16:07:47 $
+ * @version $Revision: 1.70 $, $Date: 2005/06/01 11:33:50 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
