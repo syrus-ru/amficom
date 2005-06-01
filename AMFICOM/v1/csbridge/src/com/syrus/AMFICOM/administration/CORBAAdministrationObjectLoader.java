@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.15 2005/06/01 16:08:05 arseniy Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.16 2005/06/01 18:51:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/01 16:08:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/06/01 18:51:34 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader implements AdministrationObjectLoader {
@@ -171,31 +172,16 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-
-
-	/* Save multiple objects*/
-
-	public void saveUsers(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		User_Transferable[] transferables = new User_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (User_Transferable) ((User) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveUsers(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveUsers(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.USER_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveUsers((User_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
 	public void saveDomains(Set objects, boolean force) throws ApplicationException {

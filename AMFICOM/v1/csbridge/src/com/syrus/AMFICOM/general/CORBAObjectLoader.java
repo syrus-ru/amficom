@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.14 2005/06/01 15:46:38 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.15 2005/06/01 18:51:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -18,12 +19,13 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/01 15:46:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/06/01 18:51:34 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -65,8 +67,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.14 $, $Date: 2005/06/01 15:46:38 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.15 $, $Date: 2005/06/01 18:51:34 $
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitProcedure {
@@ -79,8 +81,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.14 $, $Date: 2005/06/01 15:46:38 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.15 $, $Date: 2005/06/01 18:51:34 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -90,6 +92,20 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 				final Identifier_Transferable ids[],
 				final SessionKey_Transferable sessionKey,
 				final StorableObjectCondition_Transferable condition)
+				throws AMFICOMRemoteException;
+	}
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.15 $, $Date: 2005/06/01 18:51:34 $
+	 * @module csbridge_v1
+	 */
+	protected interface ReceiveProcedure {
+		StorableObject_Transferable[] receiveStorableObjects(
+				final CommonServer server,
+				final IDLEntity transferables[],
+				final SessionKey_Transferable sessionKey)
 				throws AMFICOMRemoteException;
 	}
 
@@ -200,6 +216,35 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 						throw new RetrieveObjectException(are.message);
 				}
 			}
+		}
+	}
+
+	/**
+	 * @todo Login restoration & error handling.
+	 */
+	protected final void saveStorableObjects(final Set storableObjects,
+			final short entityCode,
+			final ReceiveProcedure receiveProcedure)
+			throws ApplicationException {
+		final CommonServer server = this.serverConnectionManager.getServerReference();
+		final SessionKey_Transferable sessionKey = LoginManager.getSessionKeyTransferable();
+
+		final IDLEntity transferables[] = StorableObject.allocateArrayOfTransferables(entityCode, storableObjects.size());
+		int i = 0;
+		for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++) {
+			transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable();
+		}
+
+		try {
+			final StorableObject_Transferable headers[] = receiveProcedure.receiveStorableObjects(server, transferables, sessionKey);
+			super.updateHeaders(storableObjects, headers);
+		} catch (final AMFICOMRemoteException are) {
+			final String mesg = "Cannot save objects -- ";
+			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
+			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+				throw new LoginException("Not logged in");
+			throw new UpdateObjectException(mesg + are.message);
 		}
 	}
 }
