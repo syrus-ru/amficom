@@ -1,81 +1,50 @@
+
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class AnalyseMainToolBar extends AbstractMainToolBar 
-{
-//	private ApplicationModel aModel;
-//
-//	private JButton sessionOpen = new JButton();
-	private JButton traceDownload = new JButton();
-	private JButton traceAddCompare = new JButton();
-	private JButton traceRemoveCompare = new JButton();
+public class AnalyseMainToolBar extends AbstractMainToolBar {
 
-	private JButton buttonFileOpen = new JButton();
-	private JButton fileAdd = new JButton();
-	private JButton fileRemove = new JButton();
+	private JButton	traceDownload		= new JButton();
+	private JButton	traceAddCompare		= new JButton();
+	private JButton	traceRemoveCompare	= new JButton();
 
-	private JButton buttonFileClose = new JButton();
-	private JButton buttonExit = new JButton();
+	private JButton	buttonFileOpen		= new JButton();
+	private JButton	fileAdd				= new JButton();
+	private JButton	fileRemove			= new JButton();
 
-//	public final static int img_siz = 16;
+	private JButton	buttonFileClose		= new JButton();
+	private JButton	buttonExit			= new JButton();
 
-	public AnalyseMainToolBar()
-	{
-		super();
-
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+	public AnalyseMainToolBar() {
+		this.initItems();
 	}
 
-	private void jbInit() throws Exception
-	{
-//		AnalyseMainToolBar_this_actionAdapter actionAdapter =
-//				new AnalyseMainToolBar_this_actionAdapter(this);
+	private void initItems() {
 
-//		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
-//		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-//		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-//		this.sessionOpen.setName("menuSessionNew");
-//		this.sessionOpen.addActionListener(actionAdapter);
-		
 		this.traceDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE));
 		this.traceDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
 		this.traceDownload.setName("menuTraceDownload");
 		this.traceDownload.addActionListener(super.actionListener);
-		
+
 		this.traceAddCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_ADD));
 		this.traceAddCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		this.traceAddCompare.setName("menuTraceAddCompare");
 		this.traceAddCompare.addActionListener(super.actionListener);
-		
-		this.traceRemoveCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE ));
+
+		this.traceRemoveCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE));
 		this.traceRemoveCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		this.traceRemoveCompare.setName("menuTraceRemoveCompare");
 		this.traceRemoveCompare.addActionListener(super.actionListener);
-
 
 		this.buttonFileOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_FILE));
 		this.buttonFileOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
@@ -93,7 +62,6 @@ public class AnalyseMainToolBar extends AbstractMainToolBar
 		this.fileRemove.setName("menuFileRemoveCompare");
 		this.fileRemove.addActionListener(super.actionListener);
 
-//		super.add(this.sessionOpen);
 		super.addSeparator();
 		super.add(this.buttonFileOpen);
 		super.add(this.fileAdd);
@@ -104,27 +72,15 @@ public class AnalyseMainToolBar extends AbstractMainToolBar
 		super.add(this.traceRemoveCompare);
 	}
 
-	public void setModel(ApplicationModel a)
-	{
-		this.aModel = a;
-	}
-
-	public ApplicationModel getModel()
-	{
-		return this.aModel;
-	}
-
 	public void modelChanged(String e) {
-		modelChanged(new String[] {e});
+		this.modelChanged(new String[] { e});
 	}
-	
-	public void modelChanged(String e[])
-	{
-		this.buttonFileOpen.setVisible(true);//this.aModel.isVisible("menuFileOpen"));
-		this.buttonFileOpen.setEnabled(true);//this.aModel.isEnabled("menuFileOpen"));
 
-//		this.sessionOpen.setVisible(this.aModel.isVisible("menuSessionNew"));
-//		this.sessionOpen.setEnabled(this.aModel.isEnabled("menuSessionNew"));
+	public void modelChanged(String e[]) {
+		super.modelChanged(e);
+		this.buttonFileOpen.setVisible(true);// this.aModel.isVisible("menuFileOpen"));
+		this.buttonFileOpen.setEnabled(true);// this.aModel.isEnabled("menuFileOpen"));
+
 		this.traceDownload.setVisible(this.aModel.isVisible("menuTraceDownload"));
 		this.traceDownload.setEnabled(this.aModel.isEnabled("menuTraceDownload"));
 		this.traceAddCompare.setVisible(this.aModel.isVisible("menuTraceAddCompare"));
