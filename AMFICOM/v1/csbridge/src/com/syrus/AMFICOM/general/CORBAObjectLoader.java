@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.16 2005/06/01 20:45:30 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.17 2005/06/01 20:53:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/01 20:45:30 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -37,7 +37,10 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/*	Delete*/
 
-	public final void delete(final Set identifiables) {
+	/**
+	 * Overridden in MCMObjectLoader
+	 */
+	public void delete(final Set identifiables) {
 		try {
 			this.serverConnectionManager.getServerReference().delete(
 					Identifier.createTransferables(identifiables),
@@ -68,7 +71,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.16 $, $Date: 2005/06/01 20:45:30 $
+	 * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -82,7 +85,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.16 $, $Date: 2005/06/01 20:45:30 $
+	 * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -98,7 +101,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.16 $, $Date: 2005/06/01 20:45:30 $
+	 * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.10 2005/06/01 15:59:42 arseniy Exp $
+# $Id: Makefile,v 1.11 2005/06/01 20:53:28 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,6 +19,8 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar:$(LIBDIR)/arserver_interface.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java) \
@@ -43,7 +45,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SOURCES)
 	touch $@
