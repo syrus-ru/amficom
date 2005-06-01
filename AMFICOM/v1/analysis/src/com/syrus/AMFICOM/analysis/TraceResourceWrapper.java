@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceResourceWrapper.java,v 1.1 2005/05/31 10:43:02 stas Exp $
+ * $Id: TraceResourceWrapper.java,v 1.2 2005/06/01 08:14:42 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,12 @@ package com.syrus.AMFICOM.analysis;
 
 import java.awt.Color;
 import java.util.*;
-import java.util.List;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/31 10:43:02 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/01 08:14:42 $
  * @module analysis_v1
  */
 
