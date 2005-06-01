@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.16 2005/06/01 18:51:34 bass Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.17 2005/06/01 20:42:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -38,12 +37,13 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/01 18:51:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/06/01 20:42:53 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader implements AdministrationObjectLoader {
-	public CORBAAdministrationObjectLoader(ServerConnectionManager serverConnectionManager) {
+
+	public CORBAAdministrationObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}
 
@@ -173,13 +173,14 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveUsers(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.USER_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(storableObjects, ObjectEntities.USER_ENTITY_CODE, force, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
+					final boolean force1,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveUsers((User_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveUsers((User_Transferable[]) transferables, force1, sessionKey);
 			}
 		});
 	}
