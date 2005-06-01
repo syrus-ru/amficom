@@ -37,30 +37,30 @@ package com.syrus.AMFICOM.client.model;
 
 public interface Command extends Cloneable
 {
-	public static int RESULT_UNSPECIFIED = 0;
-	public static int RESULT_OK = 1;
-	public static int RESULT_YES = 1;
-	public static int RESULT_NO = 2;
-	public static int RESULT_CANCEL = 3;
+	static int RESULT_UNSPECIFIED = 0;
+	static int RESULT_OK = 1;
+	static int RESULT_YES = 1;
+	static int RESULT_NO = 2;
+	static int RESULT_CANCEL = 3;
 	
-	public void execute();			// первое выполнение команды
+	void execute();			// первое выполнение команды
 
-	public void undo();				// обратное выполнение - восстановление
+	void undo();				// обратное выполнение - восстановление
 									// предыдущего состояния
 
-	public void redo();				// повторное выполнение команды
+	void redo();				// повторное выполнение команды
 
-	public void commitExecute();	// подтверждение окончательного выполнения
+	void commitExecute();	// подтверждение окончательного выполнения
 									// команды и освобождение ресурсов
 
-	public void commitUndo();		// подтверждение окончательного обратного
+	void commitUndo();		// подтверждение окончательного обратного
 									// выполнения команды и освобождение
 									// ресурсов
 
-	public Object getSource();		// получить источник команды
+	Object getSource();		// получить источник команды
 
-	public void setParameter(String field, Object value);
+	void setParameter(String field, Object value);
 									// установить значение параметра field
 
-	public int getResult();
+	int getResult();
 }
