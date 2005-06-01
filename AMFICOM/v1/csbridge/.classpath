@@ -15,5 +15,6 @@
 	<classpathentry kind="src" path="/resource_v1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/leserver_interface"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/arserver_interface"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/trove"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
