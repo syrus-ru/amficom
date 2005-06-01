@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.30 2005/05/24 13:24:57 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.31 2005/06/01 15:42:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/24 13:24:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/06/01 15:42:32 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -138,8 +138,11 @@ public class AnalysisEvaluationProcessor {
 		catch (IllegalAccessException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
 		}
-		catch (InvocationTargetException e) {
-			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
+		catch (InvocationTargetException ite) {
+			Throwable cause = ite.getCause();
+			if (cause instanceof AnalysisException)
+				throw (AnalysisException) cause;
+			throw new AnalysisException(ite.getMessage(), ite);
 		}
 	}
 
