@@ -6,24 +6,40 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/administration.jar
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)
 
-all: $(LIBNAME_INTERFACE)
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/arserver/*.java)
+
+
+all:	$(LIBNAME) $(LIBNAME_INTERFACE)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
 $(LIBNAME_INTERFACE):	.corba
-	$(JAR) -cf $@ -C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/	
+	$(JAR) -cf $@ \
+		-C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/ARServer.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/ARServerOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/_ARServerStub.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/ARServerHelper.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/arserver/corba/ARServerHolder.class
+	$(CP) $@ $(LIBDIR)
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) $(wildcard $(SRCDIR)/com/syrus/AMFICOM/arserver/*.java)
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -40,11 +56,11 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	$(RM) $(LIBNAME_INTERFACE)
+	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/arserver/*.class)
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -58,10 +74,11 @@ cleancorba:
 install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
 	$(CP) $^
 
-#### Archive ####
-#.PHONY:	arch
-#arch:
-#	tar -czvf $(ARCHFILE) \
+### Archive ####
+.PHONY:	arch
+arch:
+	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/cmserver.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java
+		$(IDLDIR)/arserver.idl \
+		$(SOURCES)
+

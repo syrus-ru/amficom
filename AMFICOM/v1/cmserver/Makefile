@@ -16,7 +16,6 @@ JIKESFLAGS = -target 1.4.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)
-$(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
@@ -25,7 +24,7 @@ EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java)
 
 
-all: $(LIBNAME) $(LIBNAME_INTERFACE)
+all:	$(LIBNAME) $(LIBNAME_INTERFACE)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
