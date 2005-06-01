@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.4 2005/05/31 14:54:42 bass Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.5 2005/06/01 13:02:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.mshserver.corba.MSHServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
@@ -232,72 +233,225 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		});
 	}
 
-	public Set loadCableChannelingItemsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadCableChannelingItemsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitCableChannelingItemsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadPathElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadPathElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitPathElementsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeCableLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeCableLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeCableLinksButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeCablePortsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeCablePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeCablePortsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeCableThreadsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeCableThreadsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeCableThreadsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeDevicesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeDevicesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeDevicesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeElementsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_LINK_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeLinksButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeMonitoringSolutionsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeMonitoringSolutionsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeMonitoringSolutionsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeOptimizeInfosButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeOptimizeInfosButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeOptimizeInfosButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeOptimizeInfoSwitchesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeOptimizeInfoRtusButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemePathsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemePathsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PATH_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemePathsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemePortsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PORT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemePortsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeProtoElementsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemeProtoGroupsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemeProtoGroupsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemeProtoGroupsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSchemesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSchemesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSchemesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
 	public void saveCableChannelingItems(final Set storableObjects, final boolean force) throws ApplicationException {

@@ -1,9 +1,9 @@
-/*
- * $Id: CORBAObjectLoader.java,v 1.11 2005/05/31 14:54:42 bass Exp $
+/*-
+ * $Id: CORBAObjectLoader.java,v 1.12 2005/06/01 13:02:06 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.general;
@@ -17,11 +17,12 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/31 14:54:42 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/01 13:02:06 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -62,11 +63,33 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 		}
 	}
 
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.12 $, $Date: 2005/06/01 13:02:06 $
+	 * @module csbridge_v1
+	 */
 	protected interface TransmitProcedure {
 		IDLEntity[] transmitStorableObjects(
 				final CommonServer server,
 				final Identifier_Transferable ids[],
 				final SessionKey_Transferable sessionKey)
+				throws AMFICOMRemoteException;
+	}
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.12 $, $Date: 2005/06/01 13:02:06 $
+	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, TransmitButIdsConditionProcedure)
+	 * @module csbridge_v1
+	 */
+	protected interface TransmitButIdsConditionProcedure {
+		IDLEntity[] transmitStorableObjectsButIdsCondition(
+				final CommonServer server,
+				final Identifier_Transferable ids[],
+				final SessionKey_Transferable sessionKey,
+				final StorableObjectCondition_Transferable condition)
 				throws AMFICOMRemoteException;
 	}
 
@@ -81,7 +104,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 		while (true) {
 			try {
 				final IDLEntity transferables[] = transmitProcedure.transmitStorableObjects(server, ids1, sessionKey);
-				return StorableObjectPool.fromTransferablesLocal(entityCode, transferables, true);
+				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
 			} catch (final AMFICOMRemoteException are) {
 				switch (are.error_code.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
@@ -89,7 +112,81 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 							if (LoginManager.restoreLogin()) {
 								continue;
 							}
-							Log.debugMessage("CORBAMapObjectLoader.loadStorableObjects() | Login restoration cancelled by user", Log.INFO);
+							Log.debugMessage("CORBAObjectLoader.loadStorableObjects() | Login restoration cancelled by user", Log.INFO);
+							return Collections.EMPTY_SET;
+						}
+						throw new LoginException(are.message);
+					default:
+						throw new RetrieveObjectException(are.message);
+				}
+			}
+		}
+	}
+
+	/**
+	 * <p>This method can be considered a duplicate of
+	 * {@link #loadStorableObjects(Set, short, TransmitProcedure)}, since
+	 * any particular <code>load...ButIdsCondition()</code> method can be
+	 * implemented using <em>only</em> <code>loadStorableObjects(...)</code>
+	 * and {@link TransmitProcedure}.</p>
+	 * 
+	 * <p>For instance, the <code>loadUsersButIds(...)</code> method can
+	 * have two different implementations, and both of them are correct:</p>
+	 * 
+	 * <pre>
+	 * public Set loadUsersButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	 * 	return super.loadStorableObjects(ids, ObjectEntities.USER_ENTITY_CODE, new TransmitProcedure() {
+	 * 		public IDLEntity[] transmitStorableObjects(
+	 * 				final CommonServer server,
+	 * 				final Identifier_Transferable ids1[],
+	 * 				final SessionKey_Transferable sessionKey)
+	 * 				throws AMFICOMRemoteException {
+	 * 			return ((CMServer) server).transmitUsersButIdsCondition(ids1, sessionKey, (StorableObjectCondition_Transferable) condition.getTransferable());
+	 * 		}
+	 * 	});
+	 * }
+	 * 
+	 * public Set loadUsersButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	 * 	return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.USER_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+	 * 		public IDLEntity[] transmitStorableObjectsButIdsCondition(
+	 * 				final CommonServer server,
+	 * 				final Identifier_Transferable ids1[],
+	 * 				final SessionKey_Transferable sessionKey,
+	 * 				final StorableObjectCondition_Transferable condition1)
+	 * 				throws AMFICOMRemoteException {
+	 * 			return ((CMServer) server).transmitUsersButIdsCondition(ids1, sessionKey, condition1);
+	 * 		}
+	 * 	});
+	 * }
+	 * </pre>
+	 * 
+	 * <p>However, the choice was made to discourage the first
+	 * implementation in favor of the second one, in order not to fool a
+	 * programmer unintentionally, since the <code>ids</code> parameter in
+	 * the above two cases has <em>different</em> meaning.</p>
+	 */
+	protected final Set loadStorableObjectsButIdsCondition(final Set ids,
+			final StorableObjectCondition condition,
+			final short entityCode,
+			final TransmitButIdsConditionProcedure transmitButIdsConditionProcedure)
+			throws ApplicationException {
+		final CommonServer server = this.serverConnectionManager.getServerReference();
+		final Identifier_Transferable ids1[] = Identifier.createTransferables(ids);
+		final SessionKey_Transferable sessionKey = LoginManager.getSessionKeyTransferable();
+		final StorableObjectCondition_Transferable condition1 = (StorableObjectCondition_Transferable) condition.getTransferable();
+		int numEfforts = 0;
+		while (true) {
+			try {
+				final IDLEntity transferables[] = transmitButIdsConditionProcedure.transmitStorableObjectsButIdsCondition(server, ids1, sessionKey, condition1);
+				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
+			} catch (final AMFICOMRemoteException are) {
+				switch (are.error_code.value()) {
+					case ErrorCode._ERROR_NOT_LOGGED_IN:
+						if (++numEfforts == 1) {
+							if (LoginManager.restoreLogin()) {
+								continue;
+							}
+							Log.debugMessage("CORBAObjectLoader.loadStorableObjectsButIdsCondition() | Login restoration cancelled by user", Log.INFO);
 							return Collections.EMPTY_SET;
 						}
 						throw new LoginException(are.message);

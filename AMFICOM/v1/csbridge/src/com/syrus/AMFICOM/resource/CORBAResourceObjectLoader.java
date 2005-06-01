@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.4 2005/05/31 14:54:42 bass Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.5 2005/06/01 13:02:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
@@ -40,8 +41,17 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 		});
 	}
 
-	public Set loadImageResourcesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadImageResourcesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((ARServer) server).transmitImageResourcesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
 	public void saveImageResources(final Set storableObjects, final boolean force) throws ApplicationException {

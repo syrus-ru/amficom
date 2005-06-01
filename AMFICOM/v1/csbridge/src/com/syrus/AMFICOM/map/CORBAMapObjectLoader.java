@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.4 2005/05/31 14:54:42 bass Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.5 2005/06/01 13:02:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.mshserver.corba.MSHServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
@@ -136,40 +137,121 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadCollectorsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadCollectorsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.COLLECTOR_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitCollectorsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadMapsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadMapsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MAP_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitMapsButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadMarksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadMarksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MARK_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitMarksButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadNodeLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadNodeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.NODE_LINK_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitNodeLinksButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadPhysicalLinksButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadPhysicalLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitPhysicalLinksButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitPhysicalLinkTypesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSiteNodesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSiteNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SITE_NODE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSiteNodesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadSiteNodeTypesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadSiteNodeTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitSiteNodeTypesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
-	public Set loadTopologicalNodesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+	public Set loadTopologicalNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+					final CommonServer server,
+					final Identifier_Transferable ids1[],
+					final SessionKey_Transferable sessionKey,
+					final StorableObjectCondition_Transferable condition1)
+					throws AMFICOMRemoteException {
+				return ((MSHServer) server).transmitTopologicalNodesButIdsCondition(ids1, sessionKey, condition1);
+			}
+		});
 	}
 
 	public void saveCollectors(final Set storableObjects, final boolean force) throws ApplicationException {
