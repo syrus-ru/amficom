@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkTypeFactory.java,v 1.1 2005/05/25 13:01:09 bass Exp $
+ * $Id: LinkTypeFactory.java,v 1.2 2005/06/01 18:49:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectFactory;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 13:01:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/01 18:49:44 $
  * @module config_v1
  */
 final class LinkTypeFactory extends StorableObjectFactory {
@@ -38,5 +38,13 @@ final class LinkTypeFactory extends StorableObjectFactory {
 	 */
 	protected Identifier getId(final IDLEntity transferable) {
 		return new Identifier(((LinkType_Transferable) transferable).header.id);
+	}
+
+	/**
+	 * @param length
+	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
+	 */
+	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
+		return new LinkType_Transferable[length];
 	}
 }

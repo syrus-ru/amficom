@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMFactory.java,v 1.1 2005/06/01 17:09:18 arseniy Exp $
+ * $Id: MCMFactory.java,v 1.2 2005/06/01 18:49:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectFactory;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.1 $, $Date: 2005/06/01 17:09:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/01 18:49:45 $
  * @module admin_v1
  */
 final class MCMFactory extends StorableObjectFactory {
@@ -38,5 +38,13 @@ final class MCMFactory extends StorableObjectFactory {
 	 */
 	protected Identifier getId(final IDLEntity transferable) {
 		return new Identifier(((MCM_Transferable) transferable).header.id);
+	}
+
+	/**
+	 * @param length
+	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
+	 */
+	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
+		return new MCM_Transferable[length];
 	}
 }

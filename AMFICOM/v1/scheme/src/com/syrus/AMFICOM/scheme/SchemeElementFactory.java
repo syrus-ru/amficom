@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementFactory.java,v 1.2 2005/05/25 13:01:07 bass Exp $
+ * $Id: SchemeElementFactory.java,v 1.3 2005/06/01 18:49:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/25 13:01:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/01 18:49:46 $
  * @module scheme_v1
  */
 final class SchemeElementFactory extends StorableObjectFactory {
@@ -38,5 +38,13 @@ final class SchemeElementFactory extends StorableObjectFactory {
 	 */
 	protected Identifier getId(final IDLEntity transferable) {
 		return new Identifier(((SchemeElement_Transferable) transferable).header.id);
+	}
+
+	/**
+	 * @param length
+	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
+	 */
+	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
+		return new SchemeElement_Transferable[length];
 	}
 }
