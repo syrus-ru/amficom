@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMServantManager.java,v 1.9 2005/05/18 13:21:12 bass Exp $
+ * $Id: MCMServantManager.java,v 1.10 2005/06/01 20:56:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
+import com.syrus.AMFICOM.general.ServerConnectionManager;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
@@ -24,11 +26,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/18 13:21:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/01 20:56:26 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
-final class MCMServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
+final class MCMServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
 	private String loginServerServantName;
 	private String eventServerServantName;
 	private String mServerServantName;
@@ -80,15 +82,19 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 		}
 	}
 
-	protected MServer getMServerReference() throws CommunicationException {
+	public CommonServer getServerReference() throws CommunicationException {
 		try {
-			return (MServer) super.getVerifiableReference(this.mServerServantName);
+			return (CommonServer) super.getVerifiableReference(this.mServerServantName);
 		}
-		catch (IllegalDataException e) {
+		catch (final IllegalDataException ide) {
 			// Never
 			assert false;
 			return null;
 		}
+	}
+
+	protected MServer getMServerReference() throws CommunicationException {
+		return (MServer) this.getServerReference();
 	}
 
 	protected void onLoseConnection(String servantName) {
