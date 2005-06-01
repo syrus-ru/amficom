@@ -11,12 +11,12 @@
   <xsd:include schemaLocation="Characteristic.xsd"/>
 
   <xsd:element name="sitenodetypes" type="map:SiteNodeTypes">
-<!--
+
     <xsd:key name="sitenodetypeuid">
       <xsd:selector xpath="map:sitenodetype"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
--->
+
   </xsd:element>
 
   <xsd:complexType name="SiteNodeTypes">
