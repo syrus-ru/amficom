@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.8 2005/06/01 20:52:02 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.9 2005/06/01 21:03:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/01 20:52:02 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/01 21:03:22 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -30,6 +30,7 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		userId = userId1;
 	}
 
+	/**@deprecated*/
 	protected final Set retrieveFromDatabase(final StorableObjectDatabase database, final Set ids) throws RetrieveObjectException {
 		try {
 			return database.retrieveByIdsByCondition(ids, null);
@@ -40,6 +41,7 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		}
 	}
 
+	/**@deprecated*/
 	protected final Set retrieveFromDatabaseButIdsByCondition(final StorableObjectDatabase database,
 			final Set ids,
 			final StorableObjectCondition condition)
@@ -53,6 +55,7 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		}
 	}
 
+	/**@deprecated*/
 	public final Set createLoadIds(final Set ids, final Set butIdentifiables) {
 		Identifier id;
 		Set loadIds = new HashSet(ids);
@@ -63,10 +66,12 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		return loadIds;
 	}
 
+	/**@deprecated*/
 	public final Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butIdentifiables) {
 		return Identifier.createTransferables(this.createLoadIds(ids, butIdentifiables));
 	}
 
+	/**@deprecated*/
 	public final Set createLoadButIds(final Set butIds, final Set alsoButIdentifiables) {
 		Identifier id;
 		Set loadButIds = new HashSet(butIds);
@@ -77,6 +82,7 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		return loadButIds;
 	}
 
+	/**@deprecated*/
 	public final Identifier_Transferable[] createLoadButIdsTransferable(final Set butIds, final Set alsoButIdentifiables) {
 		return Identifier.createTransferables(this.createLoadButIds(butIds, alsoButIdentifiables));
 	}
