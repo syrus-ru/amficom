@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.9 2005/05/27 09:42:17 arseniy Exp $
+# $Id: Makefile,v 1.10 2005/06/01 15:59:42 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -18,7 +18,7 @@ JIKESFLAGS = -target 1.4.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar:$(LIBDIR)/arserver_interface.jar
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java) \

@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.8 2005/05/23 08:09:43 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.9 2005/06/01 15:59:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.omg.PortableServer.IdAssignmentPolicyValue;
 import org.omg.PortableServer.IdUniquenessPolicyValue;
@@ -41,7 +42,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/23 08:09:43 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/01 15:59:42 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -82,7 +83,7 @@ public class CORBAServer {
 	/*	Hooks themselves*/
 	private Set hooks;	//Set <WrappedHook hook>
 
-	public CORBAServer(String rootContextName) throws CommunicationException {
+	public CORBAServer(final String rootContextName) throws CommunicationException {
 		this.initORB();
 
 		try {
@@ -133,12 +134,12 @@ public class CORBAServer {
 		this.poa.the_POAManager().activate();
 	}
 
-	private void initNamingContext(String rootContextNameStr) throws CommunicationException {
+	private void initNamingContext(final String rootContextNameStr) throws CommunicationException {
 		this.bindIfNonExistingNamingContext(rootContextNameStr);
 		this.servantNames = Collections.synchronizedSet(new HashSet());
 	}
 
-	private void bindIfNonExistingNamingContext(String rootContextNameStr) throws CommunicationException {
+	private void bindIfNonExistingNamingContext(final String rootContextNameStr) throws CommunicationException {
 		try {
 			NamingContextExt rootNamingContext = NamingContextExtHelper.narrow(this.orb.resolve_initial_references("NameService"));
 
@@ -207,10 +208,10 @@ public class CORBAServer {
 			throw new IllegalStateException("Cannot resolve reference '" + name + "' -- shutting down");
 	}
 
-	public org.omg.CORBA.Object resolveReference(String name) throws CommunicationException {
+	public org.omg.CORBA.Object resolveReference(final String name) throws CommunicationException {
 		try {
 			Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
-			org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
+			final org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
 			Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
 			return ref;
 		}
@@ -219,7 +220,48 @@ public class CORBAServer {
 		}
 	}
 
-	public void addShutdownHook(Thread hook) {
+	/*	TODO Maybe return set of CORBA references instead of strings*/
+	public String[] getSubContextReferences(final String subContextName) throws CommunicationException {
+		org.omg.CORBA.Object subContextRef = null;
+		try {
+			subContextRef = this.namingContext.resolve_str(subContextName);
+		}
+		catch (UserException ue) {
+			throw new CommunicationException("Cannot resolve subcontext '" + subContextName + "' -- " + ue.getMessage(), ue);
+		}
+
+		NamingContextExt subContext = null;
+		try {
+			subContext = NamingContextExtHelper.narrow(subContextRef);
+		}
+		catch (Exception e) {
+			throw new CommunicationException("Cannot narrow reference '" + subContextName + "' to naming context -- " + e.getMessage(),
+					e);
+		}
+
+		final BindingListHolder bindingListHolder = new BindingListHolder();
+		final BindingIteratorHolder bindingIteratorHolder = new BindingIteratorHolder();
+		subContext.list(Integer.MAX_VALUE, bindingListHolder, bindingIteratorHolder);
+		final Binding[] bindings = bindingListHolder.value;
+		final String[] ret = new String[bindings.length];
+		for (int i = 0; i < bindings.length; i++) {
+			final Binding binding = bindings[i];
+			try {
+				final String bindingName = subContext.to_string(binding.binding_name);
+				if (binding.binding_type.value() == BindingType._nobject) {
+					ret[i] = bindingName;
+				}
+				else
+					Log.errorMessage("Binding '" + bindingName + "' not of type object");
+			}
+			catch (InvalidName in) {
+				Log.errorException(in);
+			}
+		}
+		return ret;
+	}
+
+	public void addShutdownHook(final Thread hook) {
 		if (this.running) {
 			if (!hook.isAlive()) {
 				if (this.hooks == null) {
@@ -241,7 +283,7 @@ public class CORBAServer {
 			Log.errorMessage("CORBAServer | Cannot add shutdown hook -- shutting down");
 	}
 
-	public boolean removeShutdownHook(Thread hook) {
+	public boolean removeShutdownHook(final Thread hook) {
 		if (this.hooks == null)
 			return false;
 
@@ -294,7 +336,7 @@ public class CORBAServer {
 		this.orb.shutdown(true);
 	}
 
-	private void unbindServant(String name) throws CommunicationException {
+	private void unbindServant(final String name) throws CommunicationException {
 		try {
 			NameComponent[] nameComponents = this.namingContext.to_name(name);
 			this.namingContext.unbind(nameComponents);
