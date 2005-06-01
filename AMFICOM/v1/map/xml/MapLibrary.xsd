@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/map/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	elementFormDefault="qualified">
+
+  <xsd:include schemaLocation="SiteNodeType.xsd"/>
+  <xsd:include schemaLocation="PhysicalLinkType.xsd"/>
+
+  <xsd:element name="library" type="map:MapLibrary"/>
+
+  <xsd:complexType name="MapLibrary">
+    <xsd:all>
+      <xsd:element name="physicallinktypes" type="map:PhysicalLinkTypes" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="sitenodetypes" type="map:SiteNodeTypes" minOccurs="1" maxOccurs="1"/>
+    </xsd:all>
+  </xsd:complexType>
+</xsd:schema>

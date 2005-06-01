@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:library
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml">
+	<map:physicallinktypes>
+		<map:physicallinktype>
+			<map:uid>1</map:uid>
+			<map:name>Коллектор</map:name>
+			<map:description/>
+			<map:sort>collector</map:sort>
+			<map:dimension_x>2</map:dimension_x>
+			<map:dimension_y>6</map:dimension_y>
+			<map:characteristics>
+				<map:characteristic sort="visual" name="color" value="-12566464"/>
+				<map:characteristic sort="visual" name="thickness" value="4"/>
+			</map:characteristics>
+		</map:physicallinktype>
+		<map:physicallinktype>
+			<map:uid>1</map:uid>
+			<map:name>Тонель</map:name>
+			<map:description/>
+			<map:sort>tunnel</map:sort>
+			<map:dimension_x>3</map:dimension_x>
+			<map:dimension_y>4</map:dimension_y>
+			<map:characteristics>
+				<map:characteristic sort="visual" name="color" value="-16777216"/>
+				<map:characteristic sort="visual" name="thickness" value="2"/>
+			</map:characteristics>
+		</map:physicallinktype>
+		<map:physicallinktype>
+			<map:uid>1</map:uid>
+			<map:name>Прокладка по зданию</map:name>
+			<map:description/>
+			<map:sort>indoor</map:sort>
+			<map:dimension_x>1</map:dimension_x>
+			<map:dimension_y>1</map:dimension_y>
+			<map:characteristics>
+				<map:characteristic sort="visual" name="color" value="-16777216"/>
+				<map:characteristic sort="visual" name="thickness" value="1"/>
+				<map:characteristic sort="visual" name="style" value="dotted"/>
+			</map:characteristics>
+		</map:physicallinktype>
+		<map:physicallinktype>
+			<map:uid>1</map:uid>
+			<map:name>Подводная прокладка</map:name>
+			<map:description/>
+			<map:sort>submarine</map:sort>
+			<map:dimension_x>3</map:dimension_x>
+			<map:dimension_y>4</map:dimension_y>
+			<map:characteristics>
+				<map:characteristic sort="visual" name="color" value="-16777216"/>
+				<map:characteristic sort="visual" name="thickness" value="2"/>
+				<map:characteristic sort="visual" name="style" value="dashed"/>
+			</map:characteristics>
+		</map:physicallinktype>
+		<map:physicallinktype>
+			<map:uid>1</map:uid>
+			<map:name>Навесная линия</map:name>
+			<map:description/>
+			<map:sort>overhead</map:sort>
+			<map:dimension_x>6</map:dimension_x>
+			<map:dimension_y>1</map:dimension_y>
+			<map:characteristics>
+				<map:characteristic sort="visual" name="color" value="-16777216"/>
+				<map:characteristic sort="visual" name="thickness" value="2"/>
+				<map:characteristic sort="visual" name="style" value="dashdot"/>
+			</map:characteristics>
+		</map:physicallinktype>
+	</map:physicallinktypes>
+	<map:sitenodetypes>
+		<map:sitenodetype>
+			<map:uid>1</map:uid>
+			<map:sort>well</map:sort>
+			<map:image>images/well.gif</map:image>
+			<map:name>Колодец</map:name>
+			<map:topological>true</map:topological>
+		</map:sitenodetype>
+		<map:sitenodetype>
+			<map:uid>2</map:uid>
+			<map:sort>building</map:sort>
+			<map:image>images/building.gif</map:image>
+			<map:name>Здание</map:name>
+			<map:topological>true</map:topological>
+		</map:sitenodetype>
+		<map:sitenodetype>
+			<map:uid>3</map:uid>
+			<map:sort>piquet</map:sort>
+			<map:image>images/piquet.gif</map:image>
+			<map:name>Пикет</map:name>
+			<map:topological>true</map:topological>
+		</map:sitenodetype>
+		<map:sitenodetype>
+			<map:uid>4</map:uid>
+			<map:sort>cableinlet</map:sort>
+			<map:image>images/cableinlet.gif</map:image>
+			<map:name>Кабельный ввод</map:name>
+			<map:topological>true</map:topological>
+		</map:sitenodetype>
+		<map:sitenodetype>
+			<map:uid>5</map:uid>
+			<map:sort>ats</map:sort>
+			<map:image>images/ats.gif</map:image>
+			<map:name>Телефонный узел</map:name>
+			<map:topological>true</map:topological>
+		</map:sitenodetype>
+		<map:sitenodetype>
+			<map:uid>6</map:uid>
+			<map:sort>tower</map:sort>
+			<map:image>images/tower.gif</map:image>
+			<map:name></map:name>
+			<map:topological>true</map:topological>
+		</map:sitenodetype>
+	</map:sitenodetypes>
+</map:library>
