@@ -1,5 +1,5 @@
 /*-
- * $Id: McmFactory.java,v 1.1 2005/05/25 13:01:02 bass Exp $
+ * $Id: MCMFactory.java,v 1.1 2005/06/01 17:09:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.StorableObjectFactory;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 13:01:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/06/01 17:09:18 $
  * @module admin_v1
  */
-final class McmFactory extends StorableObjectFactory {
+final class MCMFactory extends StorableObjectFactory {
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException

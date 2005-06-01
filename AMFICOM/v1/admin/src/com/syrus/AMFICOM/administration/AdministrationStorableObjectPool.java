@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.30 2005/05/25 13:01:02 bass Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.31 2005/06/01 17:09:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/25 13:01:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/06/01 17:09:18 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -51,7 +51,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.USER_ENTITY_CODE, new UserFactory());
 		registerFactory(ObjectEntities.DOMAIN_ENTITY_CODE, new DomainFactory());
 		registerFactory(ObjectEntities.SERVER_ENTITY_CODE, new ServerFactory());
-		registerFactory(ObjectEntities.MCM_ENTITY_CODE, new McmFactory());
+		registerFactory(ObjectEntities.MCM_ENTITY_CODE, new MCMFactory());
 		registerFactory(ObjectEntities.SERVERPROCESS_ENTITY_CODE, new ServerProcessFactory());
 //		registerFactory(ObjectEntities.PERMATTR_ENTITY_CODE, new PermissionAttributesFactory());
 	}
