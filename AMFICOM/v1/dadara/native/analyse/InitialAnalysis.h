@@ -25,6 +25,7 @@ public:
     double xs[sz], xe[sz], ys[sz], ye[sz], col[sz];//использовалось для отладки при рисованити прямых
 #endif
 #ifdef debug_VCL
+	double* debug_f_wlet; // вейвлет-образ для отладки
     double* type; // массив в котором прописаны типы уже распознанных точек
     double* f_tmp; //!!! массив для временного хранения обработанной рефлектограммы ( исользуется при отладке )
 #endif
@@ -58,7 +59,6 @@ private:
 	double  delta_x;
 	double *noise;
 
-    double* f_wletB;	// в/л образ базового масштаба
     double average_factor; // характеризует ср. наклона на р/г, не привязан ни к масштабу вейвлета, ни к выбранной норме
 
     ArrList* events; // список всех событий
@@ -70,7 +70,6 @@ private:
     double minimalEnd;
     double noiseFactor;
 
-    int scaleB; // базовая ширина вейвлета
     int reflectiveSize; // максимальная ширина коннектора
     double rACrit;  	// порог "большого" коннектора
 	int rSSmall;		// макс. длина для маленького коннектора
@@ -79,7 +78,7 @@ private:
 	int lastPoint;
 	double wletMeanValue; // среднее значение образа рефлектограммы
 
-	void performAnalysis();
+	void performAnalysis(int scaleB);
 	int getLastPoint();
 
 	// вычислить коэфф "a" и "b" прямой y=ax+b, минимизирующей RMS
@@ -101,7 +100,7 @@ private:
 	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	static double calcWletMeanValue(double* fw, int lastPoint, double from, double to, int columns);// вычислить самое популярное значение ф-ции fw
 	void calcAverageFactor(double* fw, int scale, double norma1);
-	void shiftThresholds();// изменить границы порогов в соответствии со средним значением вейвлета 
+	void shiftThresholds(int scale);// изменить границы порогов в соответствии со средним значением вейвлета 
 
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
 	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);

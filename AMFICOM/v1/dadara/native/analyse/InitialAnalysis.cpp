@@ -57,7 +57,8 @@ InitialAnalysis::InitialAnalysis(
     this->rACrit 				= rACrit;
     this->rSSmall				= rSSmall;
     this->rSBig					= rSBig;
-    this->scaleB				= nonReflectiveSize;
+
+    int scaleB				= nonReflectiveSize;
 
     events = new ArrList();
 
@@ -67,10 +68,10 @@ InitialAnalysis::InitialAnalysis(
 	else{
 		lastPoint = lengthTillZero - 1;
     }
-	f_wletB	= new double[lastPoint];
 	noise	= new double[lastPoint];
 
 #ifdef debug_VCL
+	debug_f_wlet = new double[lastPoint];
 	f_tmp   = new double[lastPoint];
 	type	= new double[data_length];
 #endif
@@ -92,9 +93,13 @@ InitialAnalysis::InitialAnalysis(
 		{	noise[i] = externalNoise[i] * noiseFactor;
         }
 	}
+
 	prf_b("IA: analyse");
-	performAnalysis();
+
+	performAnalysis(scaleB);
+
 	prf_b("IA: done");
+
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(logf, "IA: resulting nEvents = %d\n", (int)(getEvents().getLength()));
 #endif
@@ -103,10 +108,10 @@ InitialAnalysis::InitialAnalysis(
 InitialAnalysis::~InitialAnalysis()
 {
 #ifdef debug_VCL
+	delete[] debug_f_wlet;
 	delete[] type;
 #endif
 	delete[] noise;
-    delete[] f_wletB;
 
     events->disposeAll();
 
@@ -116,18 +121,28 @@ InitialAnalysis::~InitialAnalysis()
 #endif
 }
 //------------------------------------------------------------------------------------------------------------
-void InitialAnalysis::performAnalysis()
+void InitialAnalysis::performAnalysis(int scaleB)
 {	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 
+	double *f_wletB	= new double[lastPoint]; // space for wavelet image
+
 	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
-	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
+	// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
     double wn = getWLetNorma(scaleB);
     performTransformationOnly(data, 0, lastPoint, f_wletB, scaleB, wn);
 	calcAverageFactor(f_wletB, scaleB, wn);
 	centerWletImageOnly(f_wletB, scaleB, 0, lastPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
 
+#ifdef debug_VCL
+	{
+		int i;
+		for (i = 0; i < lastPoint; i++)
+			debug_f_wlet[i] = f_wletB[i];
+	}
+#endif
+
 	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
-    shiftThresholds();// сдвинуть пороги 
+    shiftThresholds(scaleB);// сдвинуть пороги 
 
 #if 0
 	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
@@ -144,6 +159,7 @@ void InitialAnalysis::performAnalysis()
 		ArrList splashes; // создаем пустой ArrList
 		findAllWletSplashes(f_wletB, scaleB, splashes); // заполняем массив splashes объектами
 		if(splashes.getLength() == 0){
+			delete[] f_wletB;
 return;}
 		// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 		findEventsBySplashes(f_wletB, scaleB, splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
@@ -157,6 +173,7 @@ return;}
     addLinearPartsBetweenEvents();
 	trimAllEvents(); // поскольку мы искусственно расширячет на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
 	verifyResults(); // проверяем ошибки
+	delete[] f_wletB;
 }
 // -------------------------------------------------------------------------------------------------
 //
@@ -179,8 +196,8 @@ double InitialAnalysis::calcWletMeanValue(double *fw, int lastPoint, double from
 }
 //------------------------------------------------------------------------------------------------------------
 // изменить пороги в соответствии с соотношением норм и масштаба используемого вейвлета
-void InitialAnalysis::shiftThresholds()
-{   double f_wlet_avrg = average_factor * getWLetNorma2(scaleB) / getWLetNorma(scaleB); // средний наклон
+void InitialAnalysis::shiftThresholds(int scale)
+{   double f_wlet_avrg = average_factor * getWLetNorma2(scale) / getWLetNorma(scale); // средний наклон
 	double thres_factor = 0.2;// степень влияния общего наклона на сдвиг порогов
     minimalThreshold += fabs(f_wlet_avrg)*thres_factor;
     if(minimalThreshold > 0.9*minimalWeld)
