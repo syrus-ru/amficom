@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.2 2005/05/31 12:20:43 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.3 2005/06/01 06:22:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/31 12:20:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/01 06:22:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -29,6 +29,8 @@ import com.syrus.util.Log;
 public abstract class AbstractMainToolBar extends JToolBar implements ApplicationModelListener {
 
 	protected ApplicationModel	aModel;
+
+	protected ActionListener	actionListener;
 
 	private JButton				sessionOpen;
 
@@ -38,7 +40,7 @@ public abstract class AbstractMainToolBar extends JToolBar implements Applicatio
 		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		this.sessionOpen.setName(AbstractMainMenuBar.MENU_SESSION_NEW);
 		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.sessionOpen.addActionListener(new ActionListener() {
+		this.actionListener = new ActionListener() {
 
 			private boolean	executed	= false;
 
@@ -55,7 +57,8 @@ public abstract class AbstractMainToolBar extends JToolBar implements Applicatio
 				command.execute();
 				this.executed = false;
 			}
-		});
+		};
+		this.sessionOpen.addActionListener(this.actionListener);
 
 		add(this.sessionOpen);
 		addSeparator();
