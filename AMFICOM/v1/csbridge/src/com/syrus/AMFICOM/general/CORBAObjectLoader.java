@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.13 2005/06/01 13:35:37 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.14 2005/06/01 15:46:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/01 13:35:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/01 15:46:38 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -65,8 +65,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.13 $, $Date: 2005/06/01 13:35:37 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.14 $, $Date: 2005/06/01 15:46:38 $
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitProcedure {
@@ -79,8 +79,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.13 $, $Date: 2005/06/01 13:35:37 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.14 $, $Date: 2005/06/01 15:46:38 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -174,20 +174,25 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final Identifier_Transferable ids1[] = Identifier.createTransferables(ids);
 		final SessionKey_Transferable sessionKey = LoginManager.getSessionKeyTransferable();
-		final StorableObjectCondition_Transferable condition1 = (StorableObjectCondition_Transferable) condition.getTransferable();
+		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
-				final IDLEntity transferables[] = transmitButIdsConditionProcedure.transmitStorableObjectsButIdsCondition(server, ids1, sessionKey, condition1);
+				final IDLEntity transferables[] = transmitButIdsConditionProcedure.transmitStorableObjectsButIdsCondition(server,
+						ids1,
+						sessionKey,
+						conditionT);
 				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
-			} catch (final AMFICOMRemoteException are) {
+			}
+			catch (final AMFICOMRemoteException are) {
 				switch (are.error_code.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
 							if (LoginManager.restoreLogin()) {
 								continue;
 							}
-							Log.debugMessage("CORBAObjectLoader.loadStorableObjectsButIdsCondition() | Login restoration cancelled by user", Log.INFO);
+							Log.debugMessage("CORBAObjectLoader.loadStorableObjectsButIdsCondition() | Login restoration cancelled by user",
+									Log.INFO);
 							return Collections.EMPTY_SET;
 						}
 						throw new LoginException(are.message);
