@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.12 2005/06/01 13:02:06 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.13 2005/06/01 13:35:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/01 13:02:06 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/01 13:35:37 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -66,7 +66,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.12 $, $Date: 2005/06/01 13:02:06 $
+	 * @version $Revision: 1.13 $, $Date: 2005/06/01 13:35:37 $
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitProcedure {
@@ -80,8 +80,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.12 $, $Date: 2005/06/01 13:02:06 $
-	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, TransmitButIdsConditionProcedure)
+	 * @version $Revision: 1.13 $, $Date: 2005/06/01 13:35:37 $
+	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitButIdsConditionProcedure {
@@ -125,10 +125,11 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * <p>This method can be considered a duplicate of
-	 * {@link #loadStorableObjects(Set, short, TransmitProcedure)}, since
-	 * any particular <code>load...ButIdsCondition()</code> method can be
-	 * implemented using <em>only</em> <code>loadStorableObjects(...)</code>
-	 * and {@link TransmitProcedure}.</p>
+	 * {@link #loadStorableObjects(Set, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitProcedure)},
+	 * since any particular <code>load...ButIdsCondition()</code> method can
+	 * be implemented using <em>only</em>
+	 * <code>loadStorableObjects(...)</code> and {@link TransmitProcedure}.
+	 * </p>
 	 * 
 	 * <p>For instance, the <code>loadUsersButIds(...)</code> method can
 	 * have two different implementations, and both of them are correct:</p>
@@ -163,7 +164,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	 * <p>However, the choice was made to discourage the first
 	 * implementation in favor of the second one, in order not to fool a
 	 * programmer unintentionally, since the <code>ids</code> parameter in
-	 * the above two cases has <em>different</em> meaning.</p>
+	 * the above two cases has <em>different</em> meanings.</p>
 	 */
 	protected final Set loadStorableObjectsButIdsCondition(final Set ids,
 			final StorableObjectCondition condition,
