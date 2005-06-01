@@ -106,11 +106,11 @@ private:
 	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
 
 	// ======= “–≈“»… Ё“јѕ јЌјЋ»«ј - ќѕ–≈ƒ≈Ћ≈Ќ»≈ —ќЅџ“»… ѕќ ¬—ѕЋ≈— јћ =======
-    void findEventsBySplashes(double* f_wlet, int wlet_width, ArrList&  splashes);
+    void findEventsBySplashes(double* f_wletTEMP, int wlet_width_initial, ArrList&  splashes);
 	int	 processDeadZone(ArrList& splashes);
-    int  processIfIsConnector(double* f_wlet, int wlet_width, int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
+    int  processIfIsConnector(int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
-    void setConnectorParamsBySplashes(int wlet_width, EventParams& ep, Splash& sp1, Splash& sp2);
+    void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2);
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
 	void correctSpliceCoords(double *f_wletTMP, int wlet_width, EventParams* splice);// ф-€ ѕќ–“»“ вейвлет образ !  (так как использует тот же массив дл€ хранени€ образа на другом масштабе)
 	void correctConnectorFront(EventParams* connector);

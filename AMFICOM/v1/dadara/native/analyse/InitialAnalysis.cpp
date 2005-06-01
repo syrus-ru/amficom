@@ -124,7 +124,8 @@ InitialAnalysis::~InitialAnalysis()
 void InitialAnalysis::performAnalysis(int scaleB)
 {	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 
-	double *f_wletB	= new double[lastPoint]; // space for wavelet image
+	double *f_wletB	= new double[lastPoint]; // space for base-scale wavelet image
+	double *f_wletTEMP	= new double[lastPoint]; // space for temporal wavelet image parts
 
 	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
 	// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
@@ -160,9 +161,10 @@ void InitialAnalysis::performAnalysis(int scaleB)
 		findAllWletSplashes(f_wletB, scaleB, splashes); // заполняем массив splashes объектами
 		if(splashes.getLength() == 0){
 			delete[] f_wletB;
+			delete[] f_wletTEMP;
 return;}
 		// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
-		findEventsBySplashes(f_wletB, scaleB, splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
+		findEventsBySplashes(f_wletTEMP, scaleB, splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
 		// используем ArrList и его объекты
 		splashes.disposeAll(); // очищаем массив ArrList
     } // удаляем пустой массив splashes
@@ -174,6 +176,7 @@ return;}
 	trimAllEvents(); // поскольку мы искусственно расширячет на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
 	verifyResults(); // проверяем ошибки
 	delete[] f_wletB;
+	delete[] f_wletTEMP;
 }
 // -------------------------------------------------------------------------------------------------
 //
@@ -298,7 +301,7 @@ return;
 // ======= ФУНКЦИИ ТРЕТЬЕГО ЭТАПА АНАЛИЗА - ОПРЕДЕЛЕНИЯ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 //
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::findEventsBySplashes(double *f_wlet, int wlet_width, ArrList& splashes)
+void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, int wlet_width_initial, ArrList& splashes)
 {//* мёртвую зону ищём  чуть иначе
     int shift = 0;
     if( splashes.getLength() <=2 )
@@ -308,7 +311,7 @@ return;
     shift = processDeadZone(splashes);// ищем мёртвую зону
 	// ищем остальные коннекторы  и сварки
     for(int i = shift+1; i<splashes.getLength()-1; i++)
-    { int len = processIfIsConnector(f_wlet, wlet_width, i, splashes);
+    { int len = processIfIsConnector(i, splashes);
       if(len != -1)// если коннектор был найден
       { i+= len;
     continue;
@@ -331,7 +334,7 @@ return;
       if( sp1->begin_weld!= -1 && fabs(sp1->end_weld-sp1->begin_weld)>1) //сварка
       {	EventParams *ep = new EventParams;
         setSpliceParamsBySplash((EventParams&)*ep, (Splash&)*sp1 );
-        correctSpliceCoords(f_wlet, wlet_width, ep);
+        correctSpliceCoords(f_wletTEMP, wlet_width_initial, ep);
         events->add(ep);
 	continue;
       }
@@ -391,7 +394,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
 // Если на указанной на входе позиции находится коннекторный всплеск вверх и в пределах reflSize находится
 // коннекторный вниз, то он и берётся. Если коннекторного нет, но есть хотя бы сварочный вниз, то в качестве
 // граничного берётся самый дальний ( в пределах reflSize ) сварочный.
-int InitialAnalysis::processIfIsConnector(double* f_wlet, int wlet_width, int i, ArrList& splashes)
+int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
 {   int shift = -1;
     Splash* sp1 = (Splash*)splashes[i];
     Splash* sp2, *sp_tmp;
@@ -444,7 +447,7 @@ int InitialAnalysis::processIfIsConnector(double* f_wlet, int wlet_width, int i,
       //  если таки нашли коннектор, то добавляем это в события
       if(shift!=-1 )
       { EventParams *ep = new EventParams;
-        setConnectorParamsBySplashes(wlet_width, (EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
+        setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
         correctConnectorFront(ep); // уточняем фронт коннекора
         events->add(ep);
 #ifdef debug_lines
@@ -576,8 +579,7 @@ return;
 	//prf_b("correctSpliceCoords: return");
 }
 // -------------------------------------------------------------------------------------------------
-// пользуется f_wlet (на каком масштабе?)
-void InitialAnalysis::setConnectorParamsBySplashes(int wlet_width, EventParams& ep, Splash& sp1, Splash& sp2 )
+void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2 )
 {   double r1s, r1b, r2, r3s, r3b, rmin;
     ep.type = EventParams::CONNECTOR;
     ep.begin = sp1.begin_thr;
@@ -610,8 +612,9 @@ void InitialAnalysis::setConnectorParamsBySplashes(int wlet_width, EventParams& 
 
     double l = sp2.begin_thr - sp1.end_conn;
     assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
-    r3s = r2*(rSSmall - l)/wlet_width;
-    r3b = r2*(rSBig - l)/wlet_width;
+	int av_scale = (sp1.scale + sp2.scale) / 2; // используем средний масштаб для определения R3-параметров. XXX: возможно, надо использовать максимальный либо начальный
+    r3s = r2*(rSSmall - l)/av_scale;
+    r3b = r2*(rSBig - l)/av_scale;
     // может ли этот "коннектор" быть концом волокна
     if(sp1.sign>0 && sp1.f_extr>= minimalEnd)
     { ep.can_be_endoftrace = true;
