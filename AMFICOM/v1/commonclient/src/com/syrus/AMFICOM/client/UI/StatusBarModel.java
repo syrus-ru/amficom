@@ -76,6 +76,8 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 
 public class StatusBarModel extends JPanel implements PropertyChangeListener
 {
+	private static final long serialVersionUID = 4049354223311403313L;
+
 	class StatusBarField
 	{
 		StatusBarModel parent;
@@ -86,7 +88,7 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 		int start;
 		int size;
 		boolean visible;
-		String field_id;
+		String fieldId;
 
 		public StatusBarField(StatusBarModel parent, int index, int start, int size)
 		{
@@ -100,7 +102,7 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 			this.start = start;
 			this.size = size;
 
-			this.field_id = StatusBarModel.FIELD_PREFIX + String.valueOf(index);
+			this.fieldId = StatusBarModel.FIELD_PREFIX + String.valueOf(index);
 
 			parent.add(this.label,
 					new XYConstraints(start, 1, size - 3, parent.getHeight() - 2));
@@ -109,8 +111,8 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 
 			this.separator.setVisible(true);
 			this.separator.setOrientation(SwingConstants.VERTICAL);
-			this.separator.addMouseListener(new StatusBarModel_separator_mouseAdapter(this));
-			this.separator.addMouseMotionListener(new StatusBarModel_separator_mouseMotionAdapter(this));
+			this.separator.addMouseListener(new StatusBarModelSeparatorMouseAdapter(this));
+			this.separator.addMouseMotionListener(new StatusBarModelSeparatorMouseMotionAdapter(this));
 
 			this.label.setVisible(true);
 			this.label.setDisabledTextColor(Color.black);
@@ -127,76 +129,76 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 					new Color(142, 142, 142),
 					new Color(99, 99, 99));
 
-			label.setBorder(border);
+			this.label.setBorder(border);
 		}
 	}
 	
-	class StatusBarModel_separator_mouseAdapter extends java.awt.event.MouseAdapter
+	class StatusBarModelSeparatorMouseAdapter extends java.awt.event.MouseAdapter
 	{
 		StatusBarField adaptee;
 
-		StatusBarModel_separator_mouseAdapter(StatusBarField adaptee)
+		StatusBarModelSeparatorMouseAdapter(StatusBarField adaptee)
 		{
 			this.adaptee = adaptee;
 		}
 
 		public void mouseEntered(MouseEvent e)
 		{
-			adaptee.parent.separator_mouseEntered(e);
+			this.adaptee.parent.separatorMouseEntered(e);
 		}
 
 		public void mouseExited(MouseEvent e)
 		{
-			adaptee.parent.separator_mouseExited(e);
+			this.adaptee.parent.separatorMouseExited(e);
 		}
 
 
 		public void mousePressed(MouseEvent e)
 		{
-			adaptee.parent.separator_mousePressed(e, adaptee);
+			this.adaptee.parent.separatorMousePressed(e, this.adaptee);
 		}
 
 		public void mouseReleased(MouseEvent e)
 		{
-			adaptee.parent.separator_mouseReleased(e);
+			this.adaptee.parent.separatorMouseReleased(e);
 		}
 	}
 
-	class StatusBarModel_separator_mouseMotionAdapter extends java.awt.event.MouseMotionAdapter
+	class StatusBarModelSeparatorMouseMotionAdapter extends java.awt.event.MouseMotionAdapter
 	{
 		StatusBarField adaptee;
 
-		StatusBarModel_separator_mouseMotionAdapter(StatusBarField adaptee)
+		StatusBarModelSeparatorMouseMotionAdapter(StatusBarField adaptee)
 		{
 			this.adaptee = adaptee;
 		}
 
 		public void mouseDragged(MouseEvent e)
 		{
-			adaptee.parent.separator_mouseDragged(e);
+			this.adaptee.parent.separatorMouseDragged(e);
 		}
 	}
 
-	class StatusBarModel_this_componentAdapter extends java.awt.event.ComponentAdapter
+	class StatusBarModelThisComponentAdapter extends java.awt.event.ComponentAdapter
 	{
 		StatusBarModel adaptee;
 
-		StatusBarModel_this_componentAdapter(StatusBarModel adaptee)
+		StatusBarModelThisComponentAdapter(StatusBarModel adaptee)
 		{
 			this.adaptee = adaptee;
 		}
 
 		public void componentResized(ComponentEvent e)
 		{
-			adaptee.this_componentResized(e);
+			this.adaptee.thisComponentResized(e);
 		}
 	}
 
 	class MyTimeDisplay extends Thread
 	{
 		StatusBarField sbf = null;
-		String cur_time;
-		String new_time;
+		String curTime;
+		String newTime;
 		SimpleDateFormat sdf =
 			new java.text.SimpleDateFormat("HH:mm:ss");
 
@@ -212,15 +214,15 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 
 		public void run()
 		{
-			if(sbf == null)
+			if(this.sbf == null)
 				return;
-			cur_time = sdf.format(new Date(System.currentTimeMillis()));
+			this.curTime = this.sdf.format(new Date(System.currentTimeMillis()));
 			while (true)
 			{
-				new_time = sdf.format(new Date(System.currentTimeMillis()));
-				if(!cur_time.equals(new_time))
-					cur_time = new_time;
-				sbf.label.setText(cur_time);
+				this.newTime = this.sdf.format(new Date(System.currentTimeMillis()));
+				if(!this.curTime.equals(this.newTime))
+					this.curTime = this.newTime;
+				this.sbf.label.setText(this.curTime);
 				try
 				{
 					sleep(100);
@@ -245,19 +247,19 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 	private boolean pbarEnabled = false;
 
 	StatusBarField fields[];
-	int field_num;
+	int fieldNum;
 	public static final int MAX_FIELDS = 8;
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	XYLayout xYLayout1 = new XYLayout();
 
 	boolean dragging = false;
-	StatusBarField dragging_sbf;
-	StatusBarField right_sbf;
+	StatusBarField draggingSbf;
+	StatusBarField rightSbf;
 
 	public StatusBarModel()
 	{
 		this.setEnabled(true);
-		this.addComponentListener(new StatusBarModel_this_componentAdapter(this));
+		this.addComponentListener(new StatusBarModelThisComponentAdapter(this));
 //		this.setLayout(xYLayout1);
 //		this.setLayout(gridBagLayout1);
 		this.setLayout(new LineLayout());
@@ -278,19 +280,19 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 		int i;
 
 		this.fields = new StatusBarField[MAX_FIELDS];
-		this.field_num = field_num;
+		this.fieldNum = field_num;
 
-		if(this.field_num == 0)
+		if(this.fieldNum == 0)
 			return;
 
 		int width = this.getWidth();
-		int f_width = width / this.field_num;
-		int f_start = 0;
+		int fWidth = width / this.fieldNum;
+		int fStart = 0;
 
-		for(i = 0; i < this.field_num; i++)
+		for(i = 0; i < this.fieldNum; i++)
 		{
-			this.fields[i] = new StatusBarField(this, i, f_start, f_width);
-			f_start += f_width;
+			this.fields[i] = new StatusBarField(this, i, fStart, fWidth);
+			fStart += fWidth;
 		}
 	}
 
@@ -331,11 +333,11 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 		this.fields[index].label.setText(text);
 	}
 
-	public void setText(String field_id, String text)
+	public void setText(String fieldId, String text)
 	{
 		try
 		{
-			this.fields[getIndex(field_id)].label.setText(text);
+			this.fields[getIndex(fieldId)].label.setText(text);
 		}
 		catch (Exception ex)
 		{
@@ -356,8 +358,8 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 	public int getIndex(String field_id)
 	{
 		int i;
-		for(i = 0; i < this.field_num; i++)
-			if(this.fields[i].field_id.equals(field_id))
+		for(i = 0; i < this.fieldNum; i++)
+			if(this.fields[i].fieldId.equals(field_id))
 				break;
 		if(i >= this.fields.length)
 			return -1;
@@ -366,12 +368,12 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 
 	public String getID(int index)
 	{
-		return this.fields[index].field_id;
+		return this.fields[index].fieldId;
 	}
 
 	public void setID(int index, String field_id)
 	{
-		this.fields[index].field_id = field_id;
+		this.fields[index].fieldId = field_id;
 	}
 
 	public void setIndex(int index, int old_index)
@@ -402,12 +404,12 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 	{
 		int i;
 
-		for(i = this.field_num; i > index; i--)
+		for(i = this.fieldNum; i > index; i--)
 			this.fields[i] = this.fields[i - 1];
-		this.field_num++;
+		this.fieldNum++;
 
 		this.fields[index] = new StatusBarField(this, index, 0, getHeight() - 2);
-		this.fields[index].field_id = field_id;
+		this.fields[index].fieldId = field_id;
 
 		distribute();
 
@@ -419,24 +421,24 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 
 	public void add(int index)
 	{
-		add(index, FIELD_PREFIX + String.valueOf(this.field_num));
+		add(index, FIELD_PREFIX + String.valueOf(this.fieldNum));
 	}
 
 	public void add(String field_id)
 	{
-		add(this.field_num, field_id);
+		add(this.fieldNum, field_id);
 	}
 
 	public void add()
 	{
-		add(this.field_num);
+		add(this.fieldNum);
 	}
 
 	public void remove(int index)
 	{
-		for(int i = this.field_num; i > index; i--)
+		for(int i = this.fieldNum; i > index; i--)
 			this.fields[i] = this.fields[i - 1];
-		this.field_num--;
+		this.fieldNum--;
 	}
 
 	public void remove(String field_id)
@@ -478,30 +480,30 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 
 	public void distribute()
 	{
-		if(this.field_num == 0)
+		if(this.fieldNum == 0)
 			return;
 
 		//int i;
 		int width = getWidth();
-		int f_width = width / this.field_num;
+		int fWidth = width / this.fieldNum;
 //		int f_start = 0;
-		int f_start = 0;
+		int fStart = 0;
 		if (this.pbarEnabled)
-			f_start = this.pbar.getWidth() + 3;
+			fStart = this.pbar.getWidth() + 3;
 
-		for(int i = 0; i < this.field_num; i++)
+		for(int i = 0; i < this.fieldNum; i++)
 		{
-			if(i == this.field_num - 1)
-				f_width = getWidth() - f_start;
-			setWidth(i, f_width);
-			setStart(i, f_start);
+			if(i == this.fieldNum - 1)
+				fWidth = getWidth() - fStart;
+			setWidth(i, fWidth);
+			setStart(i, fStart);
 			this.fields[i].label.setBounds(
 					this.fields[i].start,
 					1,
-					f_width - 3,
+					fWidth - 3,
 					getHeight() - 2);
 			this.fields[i].separator.setBounds(
-					this.fields[i].start + f_width - 2,
+					this.fields[i].start + fWidth - 2,
 					1,
 					1,
 					getHeight() - 2);
@@ -509,21 +511,21 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 //					String.valueOf(f_start) + " width " +
 //					String.valueOf(f_width) + " height " +
 //					String.valueOf(this.fields[i].label.getHeight()));
-			f_start += f_width;
+			fStart += fWidth;
 		}
 	}
 
 	public void organize()
 	{
-		if(this.field_num == 0)
+		if(this.fieldNum == 0)
 			return;
 
-		int f_start = this.fields[0].start;
-		for(int i = 0; i < this.field_num; i++)
+		int fStart = this.fields[0].start;
+		for(int i = 0; i < this.fieldNum; i++)
 		{
-			if(i == this.field_num - 1)
-				setWidth(i, getWidth() - f_start);
-			setStart(i, f_start);
+			if(i == this.fieldNum - 1)
+				setWidth(i, getWidth() - fStart);
+			setStart(i, fStart);
 			this.fields[i].label.setBounds(
 					this.fields[i].start,
 					1,
@@ -534,33 +536,33 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 					1,
 					1,
 					getHeight() - 2);
-			f_start += this.fields[i].size;
+			fStart += this.fields[i].size;
 		}
 	}
 
-	void separator_mouseEntered(MouseEvent e)
+	void separatorMouseEntered(MouseEvent e)
 	{
 		setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 //		System.out.println("mouse Enter");
 	}
 
-	void separator_mouseExited(MouseEvent e)
+	void separatorMouseExited(MouseEvent e)
 	{
 		setCursor(Cursor.getDefaultCursor());
 //		System.out.println("mouse Exit");
 	}
 
-	void separator_mousePressed(MouseEvent e, StatusBarField sbf)
+	void separatorMousePressed(MouseEvent e, StatusBarField sbf)
 	{
 //		System.out.println("mouse pressed on ..."+ String.valueOf(sbf.index));
-		if(sbf.index == this.field_num - 1)
+		if(sbf.index == this.fieldNum - 1)
 			return;
-		dragging = true;
-		dragging_sbf = sbf;
-		right_sbf = null;
+		this.dragging = true;
+		this.draggingSbf = sbf;
+		this.rightSbf = null;
 //		if(sbf.index != this.field_num - 2)
 //		{
-			right_sbf = this.fields[sbf.index + 1];
+			this.rightSbf = this.fields[sbf.index + 1];
 //			System.out.println("start dragging " + String.valueOf(sbf.index) +
 //				" and " + String.valueOf(right_sbf.index));
 //		}
@@ -568,15 +570,15 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 //			System.out.println("start dragging " + String.valueOf(sbf.index));
 	}
 
-	void separator_mouseReleased(MouseEvent e)
+	void separatorMouseReleased(MouseEvent e)
 	{
-		dragging = false;
+		this.dragging = false;
 //		System.out.println("mouse Released");
 	}
 
-	void separator_mouseDragged(MouseEvent e)
+	void separatorMouseDragged(MouseEvent e)
 	{
-		if(!dragging)
+		if(!this.dragging)
 			return;
 //		System.out.println("mouse Dragged to X: " + e.getX() + "  Y: " + e.getY());
 		int diff = e.getX();// - dragging_sbf.separator.getX();
@@ -589,32 +591,32 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 //		if(diff > 0)
 //		{
 			setWidth(
-					dragging_sbf.field_id,
-					dragging_sbf.size + diff);
-			dragging_sbf.separator.setBounds(
-					dragging_sbf.start + dragging_sbf.size - 2,
+					this.draggingSbf.fieldId,
+					this.draggingSbf.size + diff);
+			this.draggingSbf.separator.setBounds(
+					this.draggingSbf.start + this.draggingSbf.size - 2,
 					1,
 					1,
 					getHeight() - 2);
-			dragging_sbf.label.setBounds(
-					dragging_sbf.start,
+			this.draggingSbf.label.setBounds(
+					this.draggingSbf.start,
 					1,
-					dragging_sbf.size - 3,
+					this.draggingSbf.size - 3,
 					getHeight() - 2);
 
 			setStart(
-					right_sbf.field_id,
-					right_sbf.start + diff);
+					this.rightSbf.fieldId,
+					this.rightSbf.start + diff);
 			setWidth(
-					right_sbf.field_id,
-					right_sbf.size - diff);
-			right_sbf.label.setBounds(
-					right_sbf.start,
+					this.rightSbf.fieldId,
+					this.rightSbf.size - diff);
+			this.rightSbf.label.setBounds(
+					this.rightSbf.start,
 					1,
-					right_sbf.size - 3,
+					this.rightSbf.size - 3,
 					getHeight() - 2);
-			right_sbf.separator.setBounds(
-					right_sbf.start + right_sbf.size - 2,
+			this.rightSbf.separator.setBounds(
+					this.rightSbf.start + this.rightSbf.size - 2,
 					1,
 					1,
 					getHeight() - 2);
@@ -624,7 +626,7 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 //		}
 	}
 
-	void this_componentResized(ComponentEvent e)
+	void thisComponentResized(ComponentEvent e)
 	{
 //		distribute();
 		organize();

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.3 2005/05/27 16:24:46 bass Exp $
+ * $Id: ClientPoolContext.java,v 1.4 2005/06/01 16:55:11 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,23 +13,23 @@ import com.syrus.AMFICOM.configuration.CORBAConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/27 16:24:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/01 16:55:11 $
+ * @author $Author: arseniy $
  * @module generalclient_v1
  */
 class ClientPoolContext extends PoolContext {
-	ServerConnectionManager cmServerConnectionManager;
+	ServerConnectionManager serverConnectionManager;
 
 	public ClientPoolContext(final ServerConnectionManager cmServerConnectionManager) {
-		this.cmServerConnectionManager = cmServerConnectionManager;
+		this.serverConnectionManager = cmServerConnectionManager;
 	}
 
 	public void init() {
-		GeneralStorableObjectPool.init(new CORBAGeneralObjectLoader(this.cmServerConnectionManager),
+		GeneralStorableObjectPool.init(new CORBAGeneralObjectLoader(this.serverConnectionManager),
 				StorableObjectResizableLRUMap.class);
-		AdministrationStorableObjectPool.init(new CORBAAdministrationObjectLoader(this.cmServerConnectionManager),
+		AdministrationStorableObjectPool.init(new CORBAAdministrationObjectLoader(this.serverConnectionManager),
 				StorableObjectResizableLRUMap.class);
-		ConfigurationStorableObjectPool.init(new CORBAConfigurationObjectLoader(this.cmServerConnectionManager),
+		ConfigurationStorableObjectPool.init(new CORBAConfigurationObjectLoader(this.serverConnectionManager),
 				StorableObjectResizableLRUMap.class);
 	}	
 

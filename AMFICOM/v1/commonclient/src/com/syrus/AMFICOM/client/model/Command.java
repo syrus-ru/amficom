@@ -37,11 +37,11 @@ package com.syrus.AMFICOM.client.model;
 
 public interface Command extends Cloneable
 {
-	static int RESULT_UNSPECIFIED = 0;
-	static int RESULT_OK = 1;
-	static int RESULT_YES = 1;
-	static int RESULT_NO = 2;
-	static int RESULT_CANCEL = 3;
+	int RESULT_UNSPECIFIED = 0;
+	int RESULT_OK = 1;
+	int RESULT_YES = 1;
+	int RESULT_NO = 2;
+	int RESULT_CANCEL = 3;
 	
 	void execute();			// первое выполнение команды
 

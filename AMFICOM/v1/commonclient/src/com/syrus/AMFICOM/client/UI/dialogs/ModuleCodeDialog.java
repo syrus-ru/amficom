@@ -7,12 +7,14 @@ import oracle.jdeveloper.layout.*;
 
 /**
  * TODO - rebuild !
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:07:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/06/01 16:55:11 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public class ModuleCodeDialog extends JDialog
 {
+	private static final long serialVersionUID = 4049639009691120440L;
+
 	private JButton buttonCancel = new JButton();
 	private JButton buttonOk = new JButton();
 	private JLabel jLabel2 = new JLabel();
@@ -31,7 +33,7 @@ public class ModuleCodeDialog extends JDialog
 	public ModuleCodeDialog(String stb, String module_title)
 	{
 		this.stb = stb;
-		title = module_title;
+		this.title = module_title;
 		try
 		{
 			jbInit();
@@ -44,46 +46,46 @@ public class ModuleCodeDialog extends JDialog
 	}
 
 	public int getRetCode() {
-		return retCode;
+		return this.retCode;
 	}
 
 	private void jbInit() throws Exception
 	{
-		this.setTitle("Введите код модуля '" + title + "'");
+		this.setTitle("Введите код модуля '" + this.title + "'");
 
 		this.setResizable(false);
-		jPanel1.setLayout(xYLayout1);
-		jPanel1.addKeyListener(new ModuleCodeDialog_jPanel1_keyAdapter(this));
-		xYLayout1.setWidth(370);
-		xYLayout1.setHeight(75);
-		jLabel2.setText("Код модуля");
-		fieldPassword.addKeyListener(new ModuleCodeDialog_fieldPassword_keyAdapter(this));
-		buttonOk.setText("Открыть модуль");
-		buttonOk.addActionListener(new ModuleCodeDialog_buttonOk_actionAdapter(this));
-		buttonCancel.setText("Отменить");
-		buttonCancel.addActionListener(new ModuleCodeDialog_buttonCancel_actionAdapter(this));
-		jPanel1.add(jLabel2, new XYConstraints(10, 13, -1, -1));
-		jPanel1.add(fieldPassword, new XYConstraints(90, 10, 270, 24));
-		jPanel1.add(buttonOk, new XYConstraints(10, 40, 140, 27));
-		jPanel1.add(buttonCancel, new XYConstraints(260, 40, 100, 27));
-		this.getContentPane().add(jPanel1, BorderLayout.CENTER);
+		this.jPanel1.setLayout(this.xYLayout1);
+		this.jPanel1.addKeyListener(new ModuleCodeDialog_jPanel1_keyAdapter(this));
+		this.xYLayout1.setWidth(370);
+		this.xYLayout1.setHeight(75);
+		this.jLabel2.setText("Код модуля");
+		this.fieldPassword.addKeyListener(new ModuleCodeDialog_fieldPassword_keyAdapter(this));
+		this.buttonOk.setText("Открыть модуль");
+		this.buttonOk.addActionListener(new ModuleCodeDialog_buttonOk_actionAdapter(this));
+		this.buttonCancel.setText("Отменить");
+		this.buttonCancel.addActionListener(new ModuleCodeDialog_buttonCancel_actionAdapter(this));
+		this.jPanel1.add(this.jLabel2, new XYConstraints(10, 13, -1, -1));
+		this.jPanel1.add(this.fieldPassword, new XYConstraints(90, 10, 270, 24));
+		this.jPanel1.add(this.buttonOk, new XYConstraints(10, 40, 140, 27));
+		this.jPanel1.add(this.buttonCancel, new XYConstraints(260, 40, 100, 27));
+		this.getContentPane().add(this.jPanel1, BorderLayout.CENTER);
 	}
 
 	void buttonOk_actionPerformed(ActionEvent e)
 	{
-		String sta = new String(fieldPassword.getPassword());
+		String sta = new String(this.fieldPassword.getPassword());
 
-		if(sta.equals(stb))
+		if(sta.equals(this.stb))
 		{
-			retCode = RET_OK;
+			this.retCode = RET_OK;
 			dispose();
 			return;
 		}
-		fieldPassword.setText("");
+		this.fieldPassword.setText("");
 		JOptionPane.showMessageDialog(
 				this,
 				"Неправильный код",
-				"Код модуля '" + title + "'",
+				"Код модуля '" + this.title + "'",
 				JOptionPane.ERROR_MESSAGE,
 				null);
 		return;
@@ -91,22 +93,22 @@ public class ModuleCodeDialog extends JDialog
 
 	void buttonCancel_actionPerformed(ActionEvent e)
 	{
-		retCode = RET_CANCEL;
+		this.retCode = RET_CANCEL;
 		dispose();
 	}
 
 	void fieldPassword_keyPressed(KeyEvent e)
 	{
 		if (e.getKeyCode() == KeyEvent.VK_ENTER)
-			buttonOk.doClick();
+			this.buttonOk.doClick();
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-			buttonCancel.doClick();
+			this.buttonCancel.doClick();
 	}
 
 	void jPanel1_keyPressed(KeyEvent e)
 	{
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-			buttonCancel.doClick();
+			this.buttonCancel.doClick();
 	}
 
 }
@@ -122,7 +124,7 @@ class ModuleCodeDialog_buttonOk_actionAdapter implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		adaptee.buttonOk_actionPerformed(e);
+		this.adaptee.buttonOk_actionPerformed(e);
 	}
 }
 class ModuleCodeDialog_buttonCancel_actionAdapter implements ActionListener
@@ -136,7 +138,7 @@ class ModuleCodeDialog_buttonCancel_actionAdapter implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		adaptee.buttonCancel_actionPerformed(e);
+		this.adaptee.buttonCancel_actionPerformed(e);
 	}
 }
 
@@ -151,7 +153,7 @@ class ModuleCodeDialog_jPanel1_keyAdapter extends KeyAdapter
 
 	public void keyPressed(KeyEvent e)
 	{
-		adaptee.jPanel1_keyPressed(e);
+		this.adaptee.jPanel1_keyPressed(e);
 	}
 }
 
@@ -166,6 +168,6 @@ class ModuleCodeDialog_fieldPassword_keyAdapter extends KeyAdapter
 
 	public void keyPressed(KeyEvent e)
 	{
-		adaptee.fieldPassword_keyPressed(e);
+		this.adaptee.fieldPassword_keyPressed(e);
 	}
 }

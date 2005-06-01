@@ -5,6 +5,8 @@ import java.beans.PropertyChangeEvent;
 
 public class ContextChangeEvent extends PropertyChangeEvent {
 
+	private static final long serialVersionUID = 3762253058452566068L;
+
 	public static final long	SESSION_OPENED_EVENT		= 0x00000001;
 	public static final long	SESSION_CLOSED_EVENT		= 0x00000002;
 	public static final long	SESSION_CHANGED_EVENT		= 0x00000004;

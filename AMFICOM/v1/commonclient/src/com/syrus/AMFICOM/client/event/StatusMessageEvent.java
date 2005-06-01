@@ -5,6 +5,8 @@ import java.beans.PropertyChangeEvent;
 
 public class StatusMessageEvent extends PropertyChangeEvent {
 
+	private static final long serialVersionUID = 3257847671132730418L;
+
 	public static final String	STATUS_MESSAGE		= "statusmessage";
 	public static final String	STATUS_DOMAIN		= "statusdomain";
 	public static final String	STATUS_USER			= "statususer";
