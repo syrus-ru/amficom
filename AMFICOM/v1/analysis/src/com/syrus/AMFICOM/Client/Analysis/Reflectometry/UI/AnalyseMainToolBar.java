@@ -6,6 +6,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
@@ -78,6 +79,10 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 
 	public void modelChanged(String e[]) {
 //		super.modelChanged(e);
+		// TODO remove EXTRA TUPIZM
+		super.sessionOpen.setVisible(this.aModel.isVisible(AbstractMainMenuBar.MENU_SESSION_NEW));
+		super.sessionOpen.setEnabled(this.aModel.isEnabled(AbstractMainMenuBar.MENU_SESSION_NEW));
+		
 		this.buttonFileOpen.setVisible(true);// this.aModel.isVisible("menuFileOpen"));
 		this.buttonFileOpen.setEnabled(true);// this.aModel.isEnabled("menuFileOpen"));
 
