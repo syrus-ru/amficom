@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.5 2005/06/01 13:02:06 bass Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.6 2005/06/01 20:41:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.mshserver.corba.MSHServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements SchemeObjectLoader {
+
 	public CORBASchemeObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}

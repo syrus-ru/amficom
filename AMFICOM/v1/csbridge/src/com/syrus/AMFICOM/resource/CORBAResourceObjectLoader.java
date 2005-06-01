@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.5 2005/06/01 13:02:06 bass Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.6 2005/06/01 20:41:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
+
 	public CORBAResourceObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}

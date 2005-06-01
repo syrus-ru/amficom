@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMeasurementObjectLoader.java,v 1.13 2005/06/01 16:08:05 arseniy Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.14 2005/06/01 20:41:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,12 +47,13 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/01 16:08:05 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/01 20:41:01 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implements MeasurementObjectLoader {
-	public CORBAMeasurementObjectLoader(ServerConnectionManager serverConnectionManager) {
+
+	public CORBAMeasurementObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAConfigurationObjectLoader.java,v 1.15 2005/06/01 16:08:05 arseniy Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.16 2005/06/01 20:41:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,12 +47,13 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/01 16:08:05 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/01 20:41:01 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader implements ConfigurationObjectLoader {
-	public CORBAConfigurationObjectLoader(ServerConnectionManager serverConnectionManager) {
+
+	public CORBAConfigurationObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}
 
