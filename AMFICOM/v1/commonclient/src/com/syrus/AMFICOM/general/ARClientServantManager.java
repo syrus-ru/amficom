@@ -1,5 +1,5 @@
 /*-
- * $Id: ARClientServantManager.java,v 1.1 2005/05/30 15:13:02 bass Exp $
+ * $Id: ARClientServantManager.java,v 1.2 2005/06/01 16:55:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,12 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/30 15:13:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/06/01 16:55:08 $
  * @module commonclient_v1
  */
-public final class ARClientServantManager extends AbstractClientServantManager {
+public final class ARClientServantManager extends ClientServantManager {
+
 	public ARClientServantManager(final CORBAServer corbaServer,
 			final String loginServerServantName,
 			final String eventServerServantName,

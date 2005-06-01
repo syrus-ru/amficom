@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHClientServantManager.java,v 1.4 2005/05/30 15:13:02 bass Exp $
+ * $Id: MSHClientServantManager.java,v 1.5 2005/06/01 16:55:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/30 15:13:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/01 16:55:08 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
-public final class MSHClientServantManager extends AbstractClientServantManager {
+public final class MSHClientServantManager extends ClientServantManager {
 	public MSHClientServantManager(final CORBAServer corbaServer,
 			final String loginServerServantName,
 			final String eventServerServantName,
