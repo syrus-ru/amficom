@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.42 2005/05/30 16:29:25 krupenn Exp $
+ * $Id: MapFrame.java,v 1.43 2005/06/01 11:35:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,13 +75,15 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.42 $, $Date: 2005/05/30 16:29:25 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/01 11:35:16 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
 		implements PropertyChangeListener
 {
+	public static final String MAP_FRAME_SHOWN = "map_frame_shown";
+	
 	/**
 	 * Внутренний для окна карты диспетчер сообщений
 	 */
@@ -579,9 +581,9 @@ public class MapFrame extends JInternalFrame
 	}
 
 	void thisComponentShown(ComponentEvent e)
-	{//empty
-//		MapFrame.this.mapViewer.
-//			getVisualComponent().getComponentListeners()[0].componentShown(e);
+	{
+		this.mapViewer.getVisualComponent().firePropertyChange(MAP_FRAME_SHOWN, false, true);
+		MapFrame.this.mapViewer.getVisualComponent().requestFocus();
 	}
 
 	void thisComponentHidden(ComponentEvent e)
