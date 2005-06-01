@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.92 2005/06/01 13:02:06 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.93 2005/06/01 18:50:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/06/01 13:02:06 $
+ * @version $Revision: 1.93 $, $Date: 2005/06/01 18:50:42 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -60,7 +60,7 @@ public abstract class StorableObjectPool {
 	 * An "entity code" -- "factory" map so store factories pool can use to
 	 * create objects.
 	 */
-	private static final TShortObjectHashMap ENTITY_CODE_FACTORY_MAP = new TShortObjectHashMap();
+	static final TShortObjectHashMap ENTITY_CODE_FACTORY_MAP = new TShortObjectHashMap();
 
 	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode) {
 		this(objectPoolMapSize, selfGroupCode, LRUMap.class);
@@ -1052,7 +1052,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.92 $, $Date: 2005/06/01 13:02:06 $
+	 * @version $Revision: 1.93 $, $Date: 2005/06/01 18:50:42 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

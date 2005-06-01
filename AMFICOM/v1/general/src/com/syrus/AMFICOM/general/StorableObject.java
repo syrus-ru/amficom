@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.60 2005/05/27 13:00:07 arseniy Exp $
+ * $Id: StorableObject.java,v 1.61 2005/06/01 18:50:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/05/27 13:00:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/06/01 18:50:42 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -337,6 +337,23 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 		return headersT;
 	}
+
+	public static IDLEntity[] allocateArrayOfTransferables(
+			final short entityCode,
+			final int length)
+			throws CreateObjectException {
+		final StorableObjectFactory factory
+				= (StorableObjectFactory) StorableObjectPool.ENTITY_CODE_FACTORY_MAP.get(entityCode);
+		if (factory == null) {
+			throw new CreateObjectException(
+					"Unable to allocate an array of transferables for type: "
+					+ ObjectEntities.codeToString(entityCode)
+					+ '(' + entityCode
+					+ ") since the corresponding factory was not found");
+		}
+		return factory.allocateArrayOfTransferables(length);
+	}
+
 	/**
 	 * This method should only be invoked during assertion evaluation, and
 	 * never in a release system.
