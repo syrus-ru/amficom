@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.4 2005/06/01 08:38:40 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.5 2005/06/01 09:54:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.client.model;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -21,18 +23,20 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/01 08:38:40 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/01 09:54:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
-public abstract class AbstractMainToolBar extends JToolBar implements ApplicationModelListener {
+public abstract class AbstractMainToolBar extends JToolBar {
 
-	protected ApplicationModel	aModel;
+	protected ApplicationModel	applicationModel;
 
 	protected ActionListener	actionListener;
 
-	protected JButton			sessionOpen;
+	protected List				applicationModelListeners;
+
+	JButton				sessionOpen;
 
 	public AbstractMainToolBar() {
 		this.sessionOpen = new JButton();
@@ -45,7 +49,7 @@ public abstract class AbstractMainToolBar extends JToolBar implements Applicatio
 			private boolean	executed	= false;
 
 			public void actionPerformed(ActionEvent e) {
-				ApplicationModel model = AbstractMainToolBar.this.getModel();
+				ApplicationModel model = AbstractMainToolBar.this.getApplicationModel();
 				if (this.executed || model == null)
 					return;
 				this.executed = true;
@@ -60,24 +64,51 @@ public abstract class AbstractMainToolBar extends JToolBar implements Applicatio
 		};
 		this.sessionOpen.addActionListener(this.actionListener);
 
-		add(this.sessionOpen);
-		addSeparator();
+		this.add(this.sessionOpen);
+		this.addSeparator();
+
+		this.addApplicationModelListener(new ApplicationModelListener() {
+
+			public void modelChanged(String e[]) {
+				this.modelChanged("");
+			}
+
+			public void modelChanged(String elementName) {
+				AbstractMainToolBar.this.sessionOpen.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(
+					AbstractMainMenuBar.MENU_SESSION_NEW));
+				AbstractMainToolBar.this.sessionOpen.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(
+					AbstractMainMenuBar.MENU_SESSION_NEW));
+			}
+		});
+
 	}
 
-	public void setModel(ApplicationModel aModel) {
-		this.aModel = aModel;
+	public void setApplicationModel(ApplicationModel applicationModel) {
+		this.applicationModel = applicationModel;
 	}
 
-	public ApplicationModel getModel() {
-		return this.aModel;
+	public ApplicationModel getApplicationModel() {
+		return this.applicationModel;
 	}
 
-	public void modelChanged(String e[]) {
-		this.modelChanged("");
+	protected void addApplicationModelListener(ApplicationModelListener listener) {
+		if (this.applicationModelListeners == null) {
+			this.applicationModelListeners = new LinkedList();
+		}
+
+		if (!this.applicationModelListeners.contains(listener)) {
+			this.applicationModelListeners.add(listener);
+		}
 	}
 
-	public void modelChanged(String elementName) {
-		this.sessionOpen.setVisible(this.aModel.isVisible(AbstractMainMenuBar.MENU_SESSION_NEW));
-		this.sessionOpen.setEnabled(this.aModel.isEnabled(AbstractMainMenuBar.MENU_SESSION_NEW));
+	protected void removeApplicationModelListener(ApplicationModelListener listener) {
+		if (this.applicationModelListeners != null) {
+			this.applicationModelListeners.remove(listener);
+		}
 	}
+
+	public List getApplicationModelListeners() {
+		return this.applicationModelListeners;
+	}
+
 }
