@@ -28,7 +28,7 @@ public class CreateAnalysisReportCommand extends AbstractCommand
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(aContext);
 		for (Iterator it = tableFrames.iterator(); it.hasNext();)
 		{
-			ATableFrame tf = (ATableFrame)it.next();
+			ReportTable tf = (ReportTable)it.next();
 			rc.setParameter(TABLE, tf);
 		}
 		for (Iterator it = panels.iterator(); it.hasNext();)
@@ -44,7 +44,7 @@ public class CreateAnalysisReportCommand extends AbstractCommand
 
 	public void setParameter(String key, Object value)
 	{
-		if (key.equals(TABLE) && value instanceof ATableFrame)
+		if (key.equals(TABLE) && value instanceof ReportTable)
 		{
 			tableFrames.add(value);
 		}

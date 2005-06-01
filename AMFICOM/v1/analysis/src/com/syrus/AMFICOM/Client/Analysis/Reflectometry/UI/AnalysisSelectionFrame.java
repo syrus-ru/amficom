@@ -11,6 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
@@ -46,8 +47,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
-public class AnalysisSelectionFrame extends ATableFrame implements
-		BsHashChangeListener, PrimaryMTAEListener, AnalysisParametersListener
+public class AnalysisSelectionFrame extends JInternalFrame implements
+		BsHashChangeListener, PrimaryMTAEListener, AnalysisParametersListener, ReportTable
 {
 	static final Double[] nf = { new Double(0.7), new Double(1.0),
 			new Double(1.5), new Double(2.0), new Double(2.5), new Double(3) };

@@ -1,34 +1,24 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.text.DateFormat;
 
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
-public class PrimaryParametersFrame extends ATableFrame
-implements BsHashChangeListener, CurrentTraceChangeListener
+public class PrimaryParametersFrame extends JInternalFrame
+implements BsHashChangeListener, CurrentTraceChangeListener, ReportTable
 {
-
-	private FixedSizeEditableTableModel tModel;
-	private ATable jTable;
+	private WrapperedPropertyTableModel tModel;
+	private WrapperedPropertyTable jTable;
+	private PrimaryParameters p;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -71,28 +61,22 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 	{
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		tModel = new FixedSizeEditableTableModel(
-					new String[] {LangModelAnalyse.getString("parametersKey"),
-												LangModelAnalyse.getString("parametersValue")},
-					new String[] {""},
-					new String[] {
-						LangModelAnalyse.getString("module id"),
-						LangModelAnalyse.getString("wavelength"),
-						LangModelAnalyse.getString("pulsewidth"),
-						LangModelAnalyse.getString("groupindex"),
-						LangModelAnalyse.getString("averages"),
-						LangModelAnalyse.getString("resolution"),
-						LangModelAnalyse.getString("range"),
-						LangModelAnalyse.getString("date"),
-						LangModelAnalyse.getString("time"),
-						LangModelAnalyse.getString("backscatter")
-					},
-					null);
-		jTable = new ATable(tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(160);
+		p = new PrimaryParameters();
+		tModel = new WrapperedPropertyTableModel(PrimaryParameretrsWrapper.getInstance(), p,
+				new String[] { PrimaryParameretrsWrapper.KEY_MODULE_ID,
+						PrimaryParameretrsWrapper.KEY_WAVELENGTH,
+						PrimaryParameretrsWrapper.KEY_PULSEWIDTH,
+						PrimaryParameretrsWrapper.KEY_GROUPINDEX,
+						PrimaryParameretrsWrapper.KEY_AVERAGES,
+						PrimaryParameretrsWrapper.KEY_RESOLUTION,
+						PrimaryParameretrsWrapper.KEY_RANGE,
+						PrimaryParameretrsWrapper.KEY_DATE,
+						PrimaryParameretrsWrapper.KEY_TIME,
+						PrimaryParameretrsWrapper.KEY_BACKSCATTER });
+		jTable = new WrapperedPropertyTable(tModel);
+		jTable.getColumnModel().getColumn(0).setPreferredWidth(170);
 
 		setContentPane(mainPanel);
-//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -105,20 +89,8 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 		scrollPane.setAutoscrolls(true);
 
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-//		jTable.setMaximumSize(new Dimension(200, 213));
-//		jTable.setMinimumSize(new Dimension(200, 213));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
-		updColorModel();
-	}
-
-	private void updColorModel()
-	{
-//		scrollPane.getViewport().setBackground(SystemColor.window);
-//		jTable.setBackground(SystemColor.window);
-//		jTable.setForeground(ColorManager.getColor("textColor"));
-//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	void updTableModel(String id)
@@ -127,28 +99,7 @@ implements BsHashChangeListener, CurrentTraceChangeListener
 		if (bs == null)
 			return;
 
-		double res = bs.getResolution();
-		double range = bs.getRange();
-		// XXX: date formatting: temporal fix
-		//SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-		String date = DateFormat.getDateInstance().format(bs.getDate());
-		String time = DateFormat.getTimeInstance().format(bs.getDate());
-
-		tModel.updateColumn(new Object[] {
-			bs.getOpticalModuleId(),
-			bs.getWavelength() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NM),
-			bs.getPulsewidth() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NS),
-			String.valueOf(bs.getIOR()),
-			String.valueOf(bs.getAverages()),
-			// XXX: we round resolution with 3 digits;
-			// 4 digits can sometimes give 3.999 m resolution;
-			// 2 digits are not enough for 0.125 m
-			MathRef.floatRound(res, 3) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
-			Math.round(range) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-			date,
-			time,
-			bs.getBackscatter() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-		}, 1);
+		p.setBellcoreStructure(bs);
 		jTable.updateUI();
 	}
 

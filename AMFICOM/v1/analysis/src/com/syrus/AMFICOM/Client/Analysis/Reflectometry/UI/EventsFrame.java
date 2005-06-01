@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
@@ -50,8 +51,8 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
-public class EventsFrame extends ATableFrame
-implements EtalonMTMListener, PrimaryRefAnalysisListener,
+public class EventsFrame extends JInternalFrame
+implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     CurrentEventChangeListener
 {
 	private static final String DASH = "-----";

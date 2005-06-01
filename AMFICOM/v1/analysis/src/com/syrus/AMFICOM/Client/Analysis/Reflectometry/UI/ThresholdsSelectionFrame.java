@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.beans.*;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -51,8 +52,8 @@ import com.syrus.io.BellcoreStructure;
  *    увеличить/уменьшить пороги, и, вроде как, загрузить начальные пороги(?)
  * </ol>
  */
-public class ThresholdsSelectionFrame extends ATableFrame
-implements PropertyChangeListener, BsHashChangeListener,
+public class ThresholdsSelectionFrame extends JInternalFrame
+implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	CurrentEventChangeListener, EtalonMTMListener
 {
 	protected Dispatcher dispatcher;

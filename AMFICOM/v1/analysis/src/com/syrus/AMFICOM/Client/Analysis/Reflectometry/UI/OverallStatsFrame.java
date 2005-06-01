@@ -1,50 +1,34 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.*;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
-import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
-public class OverallStatsFrame extends ATableFrame
-implements EtalonMTMListener, PrimaryRefAnalysisListener
+public class OverallStatsFrame extends JInternalFrame
+implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 {
-	private FixedSizeEditableTableModel tModel;
-	private ATable jTable;
-
+	private WrapperedPropertyTableModel tModel;
+	private WrapperedPropertyTable jTable;
+	private OverallStats stats;
+	
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	private WholeCompareTableModel wctModel;
-	private ATable jTableWholeComp;
+	private WrapperedPropertyTableModel wctModel;
+	private WrapperedPropertyTable jTableWholeComp;
 
 	private JPanel mainPanelWholeComp = new JPanel();
 	private JScrollPane scrollPaneWholeComp = new JScrollPane();
@@ -91,27 +75,24 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 	{
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		tModel = new FixedSizeEditableTableModel(
-					new String[] {LangModelAnalyse.getString("overallKey"),
-												LangModelAnalyse.getString("overallValue")},
-					new String[] {"1", "2"},
-					new String[] {
-						LangModelAnalyse.getString("totalLength"),
-						LangModelAnalyse.getString("totalLoss"),
-						LangModelAnalyse.getString("totalAttenuation"),
-						LangModelAnalyse.getString("totalReturnLoss"),
-						LangModelAnalyse.getString("totalNoiseLevel"),
-						LangModelAnalyse.getString("totalNoiseDD"),
-						LangModelAnalyse.getString("totalEvents")
-					},
-					null);
+		
+		stats = new OverallStats();
+		tModel = new WrapperedPropertyTableModel(OverallStatsWrapper.getInstance(),
+				stats,
+				new String[] { OverallStatsWrapper.KEY_LENGTH,
+						OverallStatsWrapper.KEY_LOSS,
+						OverallStatsWrapper.KEY_ATTENUATION,
+						OverallStatsWrapper.KEY_RETURN_LOSS,
+						OverallStatsWrapper.KEY_NOISE_LEVEL,
+						OverallStatsWrapper.KEY_NOISE_DD,
+						OverallStatsWrapper.KEY_NOISE_DDRMS,
+						OverallStatsWrapper.KEY_EVENTS });
 
-		this.jTable = new ATable(tModel);
+		this.jTable = new WrapperedPropertyTable(tModel);
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-//		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -125,32 +106,31 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 		tabbedPane.add(LangModelAnalyse.getString("Title.main"), mainPanel);
 
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-//		this.jTable.setMaximumSize(new Dimension(200, 213));
-//		this.jTable.setMinimumSize(new Dimension(200, 213));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
 		tabbedPane.setEnabledAt(0, true);
 
 
 		tabbedPane.add(LangModelAnalyse.getString("Title.comparative"), mainPanelWholeComp);
-		wctModel = new WholeCompareTableModel();
-		jTableWholeComp = new ATable (wctModel);
-		jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(150);
-		jTableWholeComp.getColumnModel().getColumn(1).setPreferredWidth(70);
+		wctModel = new WrapperedPropertyTableModel(OverallStatsWrapper
+				.getInstance(), stats, new String[] {
+				OverallStatsWrapper.KEY_LENGTH,
+				OverallStatsWrapper.KEY_ETALON_LENGTH,
+				OverallStatsWrapper.KEY_MAX_DEVIATION,
+				OverallStatsWrapper.KEY_MEAN_DEVIATION,
+				OverallStatsWrapper.KEY_D_LOSS });
+		jTableWholeComp = new WrapperedPropertyTable(wctModel);
+		jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		mainPanelWholeComp.setLayout(new BorderLayout());
 		mainPanelWholeComp.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPaneWholeComp.setViewport(viewportWholeComp);
 		scrollPaneWholeComp.setAutoscrolls(true);
-		jTableWholeComp.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTableWholeComp.setMinimumSize(new Dimension(200, 213));
 
+		this.jTableWholeComp.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		mainPanelWholeComp.add(scrollPaneWholeComp, BorderLayout.CENTER);
 		scrollPaneWholeComp.getViewport().add(jTableWholeComp);
 		tabbedPane.setEnabledAt(1, false);
-
-		updColorModel();
 	}
 
 	private void setWholeData()
@@ -168,32 +148,19 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 		ModelTrace etalonMTrace = etalonMTM.getMTAE().getModelTrace();
 		ModelTrace dataMTrace = dataMTAE.getModelTrace();
 		SimpleReflectogramEvent []etalonSRE = etalonMTM.getMTAE().getSimpleEvents();
-		SimpleReflectogramEvent []dataSRE = dataMTAE.getSimpleEvents();
+//		SimpleReflectogramEvent []dataSRE = dataMTAE.getSimpleEvents();
 
 		double maxDeviation = ReflectogramComparer.getMaxDeviation(etalonMTrace, dataMTrace);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalonMTrace, dataMTrace);
 		double etalonLength = ReflectogramMath.getEndOfTraceBegin(etalonSRE) * deltaX;
-		double dataLength = ReflectogramMath.getEndOfTraceBegin(dataSRE) * deltaX;
+//		double dataLength = ReflectogramMath.getEndOfTraceBegin(dataSRE) * deltaX;
 		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
 
-		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.getString("km"), 1, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(maxDeviation)) + " " + LangModelAnalyse.getString("dB"), 2, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(meanDeviation)) + " " + LangModelAnalyse.getString("dB"), 3, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(lossDifference)) + " " + LangModelAnalyse.getString("dB"), 4, 1);
-	}
-
-	private void updColorModel()
-	{
-//		scrollPane.getViewport().setBackground(SystemColor.window);
-//		jTable.setBackground(SystemColor.window);
-//		jTable.setForeground(ColorManager.getColor("textColor"));
-//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-//
-//		scrollPaneWholeComp.getViewport().setBackground(SystemColor.window);
-//		jTableWholeComp.setBackground(SystemColor.window);
-//		jTableWholeComp.setForeground(ColorManager.getColor("textColor"));
-//		jTableWholeComp.setGridColor(ColorManager.getColor("tableGridColor"));
+		stats.setEtalonLength(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.getString("km"));
+		stats.setMaxDeviation(String.valueOf(MathRef.round_4(maxDeviation)) + " " + LangModelAnalyse.getString("dB"));
+		stats.setMeanDeviation(String.valueOf(MathRef.round_4(meanDeviation)) + " " + LangModelAnalyse.getString("dB"));
+		stats.setDLoss(String.valueOf(MathRef.round_4(lossDifference)) + " " + LangModelAnalyse.getString("dB"));
+		jTableWholeComp.updateUI();
 	}
 
 	void updTableModel()
@@ -209,26 +176,23 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 		double attenuation = loss / range_km;
 		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());
 		double noise = ev.overallStatsNoiseLevel98Pct();
-        double DD98 = ev.overallStatsDD98pct();
-        double DDRMS = ev.overallStatsDDRMS(); // @todo: display
-        System.out.println("DD98 = " + DD98 + "; DDRMS = " + DDRMS);
+    double DD98 = ev.overallStatsDD98pct();
+    double DDRMS = ev.overallStatsDDRMS();
 		int evNum = ev.overallStatsEvNum();
 
-		tModel.updateColumn(new Object[] {
-			MathRef.round_3(range_km) + " " + LangModelAnalyse.getString("km"),
-			MathRef.round_2(loss) + " " + LangModelAnalyse.getString("dB"),
-			MathRef.round_4(attenuation) + " " + LangModelAnalyse.getString("dB") + '/' + LangModelAnalyse.getString("km"),
-			MathRef.round_2(orl) + " " + LangModelAnalyse.getString("dB"),
-			MathRef.round_2(noise) + " " + LangModelAnalyse.getString("dB"),
-			MathRef.round_2(DD98) + " " + LangModelAnalyse.getString("dB"),
-			String.valueOf(evNum)
-		}, 1);
+		stats.setTotalLength(MathRef.round_3(range_km) + " " + LangModelAnalyse.getString("km"));
+		stats.setTotalLoss(MathRef.round_2(loss) + " " + LangModelAnalyse.getString("dB"));
+		stats.setTotalAttenuation(MathRef.round_4(attenuation) + " " + LangModelAnalyse.getString("dB/km"));
+		stats.setTotalReturnLoss(MathRef.round_2(orl) + " " + LangModelAnalyse.getString("dB"));
+		stats.setTotalNoiseLevel(MathRef.round_2(noise) + " " + LangModelAnalyse.getString("dB"));
+		stats.setTotalNoiseDD(MathRef.round_2(DD98) + " " + LangModelAnalyse.getString("dB"));
+		stats.setTotalNoiseDDRMS(MathRef.round_2(DDRMS) + " " + LangModelAnalyse.getString("dB"));
+		stats.setTotalEvents(String.valueOf(evNum));
 		jTable.updateUI();
 	}
 
 	public void etalonMTMCUpdated()
 	{
-		wctModel.clearTable();
 		if (Heap.getRefAnalysisPrimary() != null)
 		{
 			setWholeData();
@@ -238,7 +202,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
 
 	public void etalonMTMRemoved()
 	{
-		wctModel.clearTable();
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 	}
@@ -246,7 +209,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
     public void primaryRefAnalysisCUpdated() {
         updTableModel();
         setVisible(true);
-        wctModel.clearTable(); // ?
         if(Heap.getMTMEtalon() != null)
         {
             setWholeData();
@@ -255,88 +217,10 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener
     }
 
     public void primaryRefAnalysisRemoved() {
-        wctModel.clearTable();
         tabbedPane.setSelectedIndex(0);
         tabbedPane.setEnabledAt(1, false);
         setVisible(false);
     }
-}
 
-
-
-class WholeCompareTableModel extends AbstractTableModel
-{
-
-//  String[] columnNames = {LangModelModel.String("parameter") ,
-//    LangModelModel.String("value")};
-
-	String[] columnNames = {null ,
-		null};
-
-	Object[][] data = {
-		{LangModelAnalyse.getString("traceLength"), "--"},
-		{LangModelAnalyse.getString("etLength"), "--"},
-		{LangModelAnalyse.getString("maxDeviation"), "--"},
-		{LangModelAnalyse.getString("meanDeviation"), "--"},
-		{LangModelAnalyse.getString("dLoss"), "--"},
-	};
-
-	WholeCompareTableModel()
-	{
-		super();
-	}
-
-	public void clearTable()
-	{
-		setValueAt("--", 0, 1);
-		setValueAt("--", 1, 1);
-		setValueAt("--", 2, 1);
-		setValueAt("--", 3, 1);
-		setValueAt("--", 4, 1);
-
-		super.fireTableDataChanged();
-	}
-
-	public int getColumnCount() {
-		return columnNames.length;
-	}
-
-	public int getRowCount() {
-		return data.length;
-	}
-
-	public String getColumnName(int col) {
-		return columnNames[col];
-	}
-
-	public Object getValueAt(int row, int col) {
-		return data[row][col];
-	}
-
-	public double getvalueat(int row, int col) {
-		return ((Double)(data[row][col])).doubleValue();
-	}
-
-	public Class getColumnClass(int c) {
-		return getValueAt(0, c).getClass();
-	}
-
-	public boolean isCellEditable(int row, int col)
-	{
-		return false;
-	}
-
-	public void setValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
-	}
-
-
-	public void setInicialValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
-	}
 }
 
