@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.10 2005/05/26 12:01:59 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.11 2005/06/01 20:58:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -33,20 +34,20 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
-import com.syrus.AMFICOM.mserver.corba.MServerPOA;
+import com.syrus.AMFICOM.mserver.corba.MServerOperations;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/26 12:01:59 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/01 20:58:09 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
-abstract class MServerMeasurementReceive extends MServerPOA {
+abstract class MServerMeasurementReceive extends ServerCore implements MServerOperations {
 
 	private static final long serialVersionUID = 8337247295980850931L;
 
-	public void receiveResults(Result_Transferable[] resultsT, Identifier_Transferable mcmIdT) throws AMFICOMRemoteException {
+	public void receiveResults(Result_Transferable[] resultsT, Identifier_Transferable mcmIdT, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			Identifier mcmId = new Identifier(mcmIdT);
 			Log.debugMessage("Received " + resultsT.length + " results from MCM '" + mcmId + "'", Log.DEBUGLEVEL03);
