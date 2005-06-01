@@ -69,7 +69,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 	public ThresholdsMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("ThresholdsTitle"), new AnalyseMainMenuBar(aContext
 			.getApplicationModel()), new AnalyseMainToolBar());	
-		this.dispatcher = aContext.getDispatcher();
+		
 		this.setWindowArranger( new WindowArranger(this) {
 
 			public void arrange() {
