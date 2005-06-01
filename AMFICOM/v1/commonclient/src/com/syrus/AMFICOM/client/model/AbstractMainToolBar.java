@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.3 2005/06/01 06:22:31 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.4 2005/06/01 08:38:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/01 06:22:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/01 08:38:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -32,7 +32,7 @@ public abstract class AbstractMainToolBar extends JToolBar implements Applicatio
 
 	protected ActionListener	actionListener;
 
-	private JButton				sessionOpen;
+	protected JButton			sessionOpen;
 
 	public AbstractMainToolBar() {
 		this.sessionOpen = new JButton();

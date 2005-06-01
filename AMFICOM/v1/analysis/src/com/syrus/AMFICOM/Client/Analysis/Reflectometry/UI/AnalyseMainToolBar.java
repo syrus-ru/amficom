@@ -77,7 +77,7 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 	}
 
 	public void modelChanged(String e[]) {
-		super.modelChanged(e);
+//		super.modelChanged(e);
 		this.buttonFileOpen.setVisible(true);// this.aModel.isVisible("menuFileOpen"));
 		this.buttonFileOpen.setEnabled(true);// this.aModel.isEnabled("menuFileOpen"));
 
