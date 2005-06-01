@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.94 2005/06/01 15:42:04 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.95 2005/06/01 20:57:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -55,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/06/01 15:42:04 $
+ * @version $Revision: 1.95 $, $Date: 2005/06/01 20:57:04 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -351,7 +352,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 				try {
 					resultsT = createTransferables();
 					mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-					mServerRef.receiveResults(resultsT, (Identifier_Transferable) mcmId.getTransferable());
+					mServerRef.receiveResults(resultsT,
+							(Identifier_Transferable) mcmId.getTransferable(),
+							LoginManager.getSessionKeyTransferable());
 					resultList.clear();
 					super.clearFalls();
 				}
