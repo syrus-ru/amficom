@@ -96,7 +96,13 @@ InitialAnalysis::InitialAnalysis(
 
 	prf_b("IA: analyse");
 
-	performAnalysis(scaleB);
+	double *f_wletB	= new double[lastPoint]; // space for base-scale wavelet image
+	double *f_wletTEMP	= new double[lastPoint]; // space for temporal wavelet image parts
+
+	performAnalysis(f_wletB, f_wletTEMP, scaleB);
+
+	delete[] f_wletB;
+	delete[] f_wletTEMP;
 
 	prf_b("IA: done");
 
@@ -121,12 +127,8 @@ InitialAnalysis::~InitialAnalysis()
 #endif
 }
 //------------------------------------------------------------------------------------------------------------
-void InitialAnalysis::performAnalysis(int scaleB)
+void InitialAnalysis::performAnalysis(double *f_wletB, double *f_wletTEMP, int scaleB)
 {	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
-
-	double *f_wletB	= new double[lastPoint]; // space for base-scale wavelet image
-	double *f_wletTEMP	= new double[lastPoint]; // space for temporal wavelet image parts
-
 	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
 	// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
     double wn = getWLetNorma(scaleB);
@@ -160,8 +162,6 @@ void InitialAnalysis::performAnalysis(int scaleB)
 		ArrList splashes; // создаем пустой ArrList
 		findAllWletSplashes(f_wletB, scaleB, splashes); // заполняем массив splashes объектами
 		if(splashes.getLength() == 0){
-			delete[] f_wletB;
-			delete[] f_wletTEMP;
 return;}
 		// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 		findEventsBySplashes(f_wletTEMP, splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
@@ -175,8 +175,6 @@ return;}
     addLinearPartsBetweenEvents();
 	trimAllEvents(); // поскольку мы искусственно расширячет на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
 	verifyResults(); // проверяем ошибки
-	delete[] f_wletB;
-	delete[] f_wletTEMP;
 }
 // -------------------------------------------------------------------------------------------------
 //

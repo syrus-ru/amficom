@@ -78,7 +78,7 @@ private:
 	int lastPoint;
 	double wletMeanValue; // среднее значение образа рефлектограммы
 
-	void performAnalysis(int scaleB);
+	void performAnalysis(double *f_wletB, double *f_wletTEMP, int scaleB);
 	int getLastPoint();
 
 	// вычислить коэфф "a" и "b" прямой y=ax+b, минимизирующей RMS
