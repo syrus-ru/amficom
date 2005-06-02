@@ -70,11 +70,12 @@ InitialAnalysis::InitialAnalysis(
 	else{
 		lastPoint = lengthTillZero - 1;
     }
-	noise	= new double[lastPoint];
+
+	noise	= new double[lastPoint + 1];
 
 #ifdef debug_VCL
-	debug_f_wlet = new double[lastPoint];
-	f_tmp   = new double[lastPoint];
+	debug_f_wlet = new double[lastPoint + 1];
+	f_tmp   = new double[lastPoint + 1];
 	type	= new double[data_length];
 #endif
 
@@ -84,7 +85,7 @@ InitialAnalysis::InitialAnalysis(
 	if (externalNoise == 0 || lengthTillZero <= 0)
 	{	prf_b("IA: noise");
 		// вычисляем уровень шума
-		{ const int sz = lastPoint;
+		{ const int sz = lastPoint + 1;
 		  //fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
 		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise);
 		}
@@ -100,24 +101,10 @@ InitialAnalysis::InitialAnalysis(
 
 	// FIXME: treatment of lastPoint !!!
 
-	double *f_wletTEMP	= new double[lastPoint + 2]; // space for temporal wavelet image parts
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-	f_wletTEMP[lastPoint] = 123456;
-	f_wletTEMP[lastPoint + 1] = 123457;
-#endif
+	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
 
 	performAnalysis(f_wletTEMP, scaleB);
 
-#ifdef DEBUG_INITIAL_ANALYSIS
-	fprintf(logf, "IA: performAnalysis returned\n");
-	if (f_wletTEMP[lastPoint] != 123456) {
-		fprintf(logf, "f_wletTEMP[lastPoint] == %g\n", f_wletTEMP[lastPoint]);
-		fflush(logf);
-	}
-#endif
-
-	//delete[] f_wletB;
 	delete[] f_wletTEMP;
 
 #ifdef DEBUG_INITIAL_ANALYSIS
@@ -180,15 +167,15 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 		// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
 		// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
 		double wn = getWLetNorma(scaleB);
-		performTransformationOnly(data, 0, lastPoint, TEMP, scaleB, wn);
+		performTransformationOnly(data, 0, lastPoint + 1, TEMP, scaleB, wn);
 		calcAverageFactor(TEMP, scaleB, wn);
-		centerWletImageOnly(TEMP, scaleB, 0, lastPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
+		centerWletImageOnly(TEMP, scaleB, 0, lastPoint + 1, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
 	}
 
 #ifdef debug_VCL
 	{
 		int i;
-		for (i = 0; i < lastPoint; i++)
+		for (i = 0; i <= lastPoint; i++)
 			debug_f_wlet[i] = f_wletB[i];
 	}
 #endif
@@ -199,7 +186,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 #if 0
 	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
 		int i;
-		for (i = 0; i < lastPoint; i++)
+		for (i = 0; i <= lastPoint; i++)
 			fprintf(f,"%d %g %g %g\n", i, data[i], f_wletB[i], noise[i]);
 		fclose(f);
 	}
@@ -216,7 +203,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 			continue;
 		// проводим поиск всплесков на данном масштабе
 		ArrList newSpl;
-		performTransformationAndCenter(data, 0, lastPoint, TEMP, scale, getWLetNorma(scale));
+		performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scale, getWLetNorma(scale));
 		findAllWletSplashes(TEMP, scale, newSpl);
 		// анализируем, что делать  с каждым найденным всплеском
 		int i;
@@ -298,7 +285,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 			fflush(stderr);
 		}*/
 	}
-	//performTransformationAndCenter(data, 0, lastPoint, TEMP, scaleB, getWLetNorma(scaleB));
+	//performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scaleB, getWLetNorma(scaleB));
 	//findAllWletSplashes(TEMP, scaleB, accSpl);
 
 	if(accSpl.getLength() == 0){
@@ -334,7 +321,7 @@ void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
 double InitialAnalysis::calcWletMeanValue(double *fw, int lastPoint, double from, double to, int columns)
 {   // возможное затухание находится в пределах [0; -0.5] дБ
 	Histogramm* histo = new Histogramm(from, to, columns);
-	histo->init(fw, 0, lastPoint-1);
+	histo->init(fw, 0, lastPoint + 1);
 	double mean_att = histo->getMaximumValue();
 	delete histo;
 	return mean_att;
@@ -425,7 +412,7 @@ return;
     	spl->begin_thr 		= lastPoint+1; spl->begin_weld 	= lastPoint+1; spl->begin_conn 	= lastPoint+1;
         spl->end_thr 		= lastPoint+2; spl->end_weld 	= lastPoint+2; spl->end_conn 	= lastPoint+2;
 		spl->sign			= -1;
-		fillSplashRParameters(*spl, f_wlet, wlet_width);
+		// fillSplashRParameters() не вызываем, т.к. это невозможно, да и ни к чему
         splashes.add(spl);
     }
 #ifdef debug_lines
@@ -475,7 +462,7 @@ return;
       // сварка
       if( sp1->begin_weld!= -1 && fabs(sp1->end_weld-sp1->begin_weld)>1) //сварка
       {	EventParams *ep = new EventParams;
-        setSpliceParamsBySplash((EventParams&)*ep, (Splash&)*sp1 );
+        setSpliceParamsBySplash(*ep, *sp1 );
         correctSpliceCoords(f_wletTEMP, sp1->scale, ep);
         events->add(ep);
 	continue;
@@ -601,7 +588,6 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
     return shift;//если коннектора не нашли, то shift = -1
 }
 // -------------------------------------------------------------------------------------------------
-// к этому мменту мы предполагаем, что свёртка f_wlet сделана для вейвлета той ширины, на которой сварка была обнаружена
 void InitialAnalysis::setSpliceParamsBySplash(EventParams& ep, Splash& sp)
 {   if(sp.sign>0) { ep.type = EventParams::GAIN; }
     else 		  { ep.type = EventParams::LOSS; }
@@ -646,12 +632,15 @@ return;
 #endif
     bool w_lr_ch = false; // цветом !!! при дебаге !!! выделяются участки только на тех масштабах, на которых границы изменились
 
+	assert(w_r <= lastPoint);
+
     // анализируем при разныех масштабах
 	for(int step=0; step<=nscale; step++)
     {   width = (int)(width/factor);//(int )(wlet_width/pow(factor,step) +0.5);// чтобы не накапливать ошибки
     	if(width<=1)
     break;
 	    double wn = getWLetNorma(width);
+		assert(w_r <= lastPoint);
 		performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
 		// сначала ищём положение экстремума при данном масштабе
         int i_max = w_l;
@@ -672,11 +661,12 @@ return;
         { if(fabs(f_wlet[i])>fabs(f_lmax)) { f_lmax = f_wlet[i];}// новый максимум отклонения
           if(df_right<fabs(f_lmax-f_wlet[i])){ df_right=fabs(f_lmax-f_wlet[i]);} // новый максимальный уровень падения
         }
+		const int BUGGY_SHIFT = 0; // было 1; но так границы события могут расширяться и выйти за пределы массива и сломать систему
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
         for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
         {	//if(fabs(f_wlet[i])>= minimalThreshold+noise[i]*noise_factor+df_left)
 	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_left)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
-        	{	w_l=i-1;//w_l=i;
+        	{	w_l=i-BUGGY_SHIFT;//w_l=i;
             	w_lr_ch = true;
 	            if(w_l+width*angle_factor<left_cross){ left_cross = (int)(w_l+width*angle_factor);}
         break;
@@ -686,7 +676,7 @@ return;
         for(int j=w_r; j>w_l && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повёрнутой на 45 СК
         {	//if(fabs(f_wlet[j])>=minimalThreshold+noise[j]*noise_factor+df_right)
             if(fabs(f_wlet[j])>= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_right)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
-        	{	w_r=j+1;//w_r=j;
+        	{	w_r=j+BUGGY_SHIFT;//w_r=j;
                 w_lr_ch = true;
 	            if(w_r-width*angle_factor>right_cross)
                 { right_cross = (int)(w_r-width*angle_factor);}
@@ -716,7 +706,7 @@ return;
     }
 #ifdef debug_VCL
     double wn = getWLetNorma(wlet_width);
-  	performTransformationAndCenter(data, 0, lastPoint, f_wlet, wlet_width, wn);
+  	performTransformationAndCenter(data, 0, lastPoint + 1, f_wlet, wlet_width, wn);
 #endif
 	//prf_b("correctSpliceCoords: return");
 }
@@ -985,8 +975,11 @@ void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, 
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
 {	//int len = end - begin;
-	wavelet.transform(freq, f, lastPoint, begin, end - 1, f_wlet + begin, norma);
+	assert(begin >= 0);
+	assert(end <= lastPoint + 1);
+	wavelet.transform(freq, f, lastPoint + 1, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
 }
+//------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getMinScale() {
 	return wavelet.getMinScale();
 }
