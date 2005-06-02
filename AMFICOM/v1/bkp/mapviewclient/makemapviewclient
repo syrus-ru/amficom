@@ -1,0 +1,50 @@
+HOME=.
+
+include ..\make.inc
+
+TARGET=$(LIB)\mapviewclient.jar
+TARGET_CLASS_LIST=src_mapviewclient.txt
+TARGET_SRC=$(LIBSRC)\mapviewclientsource.zip
+TARGET_DOC=$(LIBDOC)\mapviewclientdoc.zip
+
+SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\config.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\admin.jar;$(LIB)\adminclient.jar;$(LIB)\map.jar;$(LIB)\mapclient.jar;$(LIB)\scheme.jar;$(LIB)\schemeclient.jar;$(LIB)\resource.jar;$(LIB)\measurement.jar;$(LIB)\mapview.jar
+
+CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP)
+
+.PHONY:	$(TARGET)
+
+$(TARGET):	clean impl javadoc jar
+
+jar:
+	$(ARCHIVER) -cf $(TARGET) -C $(CLASSES) com
+	$(ARCHIVER) -cf $(TARGET_SRC) -C $(SRC) com
+	$(ARCHIVER) -cf $(TARGET_DOC) -C $(DOCS) .
+
+impl:
+	$(COMPILER) \
+		-d $(CLASSES) \
+		-classpath $(CLASSPATH) \
+		-sourcepath $(SRC) \
+		src\com\syrus\AMFICOM\Client\General\Model\*.java \
+		src\com\syrus\AMFICOM\Client\Map\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Action\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Editor\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Map\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Command\Navigate\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Controllers\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Editor\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Operations\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Popup\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Props\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Report\*.java \
+		src\com\syrus\AMFICOM\Client\Map\Strategy\*.java \
+		src\com\syrus\AMFICOM\Client\Map\UI\*.java
+
+javadoc:
+	$(JAVADOCGENERATOR) com
+
+clean:
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)

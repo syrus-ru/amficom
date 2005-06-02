@@ -1,0 +1,658 @@
+package com.syrus.AMFICOM.Client.Map.Props;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
+
+public final class CablePathAddEditor extends DefaultStorableObjectEditor {
+
+	GridBagLayout gridBagLayout1 = new GridBagLayout();
+	GridBagLayout gridBagLayout2 = new GridBagLayout();
+	GridBagLayout gridBagLayout3 = new GridBagLayout();
+
+	private CablePath cablePath;
+
+	LogicalNetLayer logicalNetLayer;
+	
+	/**
+	 * таблица
+	 */
+	private CableBindingController controller;
+	private ObjectResourceTableModel model;
+	ObjectResourceTable table;
+
+	JPanel jPanel = new JPanel();
+	JLabel titleLabel = new JLabel();
+
+	JScrollPane scrollPane = new JScrollPane();
+	
+	JPanel buttonsPanel = new JPanel();
+	JButton bindButton = new JButton();
+	JButton bindChainButton = new JButton();
+	JButton unbindButton = new JButton();
+	JButton clearBindingButton = new JButton();
+
+	JPanel startPanel = new JPanel();
+
+	JLabel startNodeTitleLabel = new JLabel();
+	JLabel startNodeLabel = new JLabel();
+	JLabel startLinkLabel = new JLabel();
+	JLabel startNodeToLabel = new JLabel();
+	JTextField startNodeTextField = new JTextField();
+	ObjComboBox startLinkComboBox = null;
+	ObjComboBox startNodeToComboBox = null;
+
+	JPanel endPanel = new JPanel();
+	JLabel endNodeTitleLabel = new JLabel();
+	JLabel endNodeLabel = new JLabel();
+	JLabel endLinkLabel = new JLabel();
+	JLabel endNodeToLabel = new JLabel();
+	JTextField endNodeTextField = new JTextField();
+	ObjComboBox endLinkComboBox = null;
+	ObjComboBox endNodeToComboBox = null;
+
+	AbstractNode startNode;
+	AbstractNode endNode;
+	
+	private PhysicalLink startLastBound;
+	private int startAvailableLinksCount;
+	private PhysicalLink endLastBound;
+	private int endAvailableLinksCount;
+	
+	// holds original list of cable path links
+	private List links = new LinkedList();
+	
+	private String stubObject = "";
+	
+	public CablePathAddEditor()
+	{
+		this.controller = CableBindingController.getInstance();
+		this.model = new ObjectResourceTableModel(this.controller);
+		this.table = new ObjectResourceTable(this.model);
+
+		try
+		{
+			jbInit();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
+		this.logicalNetLayer = lnl;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return this.logicalNetLayer;
+	}
+
+	boolean doChanges = true;
+
+	private void jbInit()
+	{
+		SimpleMapElementController comboController = 
+				SimpleMapElementController.getInstance();
+
+		this.startLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.startNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.endLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.endNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+
+		this.jPanel.setLayout(this.gridBagLayout1);
+		this.jPanel.setName(LangModelMap.getString("LinkBinding"));
+		this.titleLabel.setText(LangModelMap.getString("LinkBinding"));
+		
+		ActionListener lcbal = new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					if(!CablePathAddEditor.this.doChanges)
+						return;
+
+					Object mle = CablePathAddEditor.this.startLinkComboBox.getSelectedItem();
+					Object mle2 = CablePathAddEditor.this.endLinkComboBox.getSelectedItem();
+					boolean flag = (mle instanceof PhysicalLink) || (mle2 instanceof PhysicalLink);
+					CablePathAddEditor.this.bindButton.setEnabled(flag);
+					CablePathAddEditor.this.bindChainButton.setEnabled(flag);
+					
+					CablePathAddEditor.this.doChanges = false;
+					if(mle instanceof PhysicalLink)
+					{
+						PhysicalLink pl = (PhysicalLink)mle;
+						CablePathAddEditor.this.startNodeToComboBox.setSelectedItem(pl.getOtherNode(CablePathAddEditor.this.startNode));
+					}
+					if(mle2 instanceof PhysicalLink)
+					{
+						PhysicalLink pl = (PhysicalLink)mle2;
+						CablePathAddEditor.this.endNodeToComboBox.setSelectedItem(pl.getOtherNode(CablePathAddEditor.this.endNode));
+					}
+					CablePathAddEditor.this.doChanges = true;
+				}
+			};
+		this.startLinkComboBox.addActionListener(lcbal);
+		this.endLinkComboBox.addActionListener(lcbal);
+
+		ActionListener ncbal = new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					if(!CablePathAddEditor.this.doChanges)
+						return;
+
+					Object mle = CablePathAddEditor.this.startNodeToComboBox.getSelectedItem();
+					Object mle2 = CablePathAddEditor.this.endNodeToComboBox.getSelectedItem();
+					boolean flag = (mle instanceof SiteNode) || (mle2 instanceof SiteNode);
+					CablePathAddEditor.this.bindButton.setEnabled(flag);
+					CablePathAddEditor.this.bindChainButton.setEnabled(flag);
+
+					CablePathAddEditor.this.doChanges = false;
+					if(mle instanceof SiteNode)
+					{
+						SiteNode s = (SiteNode)mle;
+						CablePathAddEditor.this.startLinkComboBox.setSelectedItem(
+								CablePathAddEditor.this.logicalNetLayer.getMapView().getMap().getPhysicalLink(CablePathAddEditor.this.startNode, s));
+					}
+					if(mle2 instanceof SiteNode)
+					{
+						SiteNode s = (SiteNode)mle2;
+						CablePathAddEditor.this.endLinkComboBox.setSelectedItem(
+								CablePathAddEditor.this.logicalNetLayer.getMapView().getMap().getPhysicalLink(CablePathAddEditor.this.endNode, s));
+					}
+					CablePathAddEditor.this.doChanges = true;
+				}
+			};
+		this.startNodeToComboBox.addActionListener(ncbal);
+		this.endNodeToComboBox.addActionListener(ncbal);
+
+		this.table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
+			{
+				CablePathAddEditor.this.unbindButton.setEnabled(CablePathAddEditor.this.table.getSelectedRowCount() != 0);
+			}
+		});
+
+		this.bindButton.setText("Привязать");
+		this.bindButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					addBinding();
+				}
+			});
+		this.bindChainButton.setText("Привязать цепочку");
+		this.bindChainButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					addChainBinding();
+				}
+			});
+		this.unbindButton.setText("Убрать связь");
+		this.unbindButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					removeBinding();
+				}
+			});
+		this.clearBindingButton.setText("Отвязать кабель");
+		this.clearBindingButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					clearBinding();
+				}
+			});
+
+		this.startPanel.setLayout(this.gridBagLayout3);
+		this.startNodeTitleLabel.setText(LangModelMap.getString("StartNodeTitle"));
+		this.startNodeLabel.setText(LangModelMap.getString("StartNode"));
+		this.startLinkLabel.setText(LangModelMap.getString("StartLink"));
+		this.startNodeToLabel.setText(LangModelMap.getString("To"));
+
+		this.endPanel.setLayout(this.gridBagLayout2);
+		this.endNodeTitleLabel.setText(LangModelMap.getString("EndNodeTitle"));
+		this.endNodeLabel.setText(LangModelMap.getString("EndNode"));
+		this.endLinkLabel.setText(LangModelMap.getString("EndLink"));
+		this.endNodeToLabel.setText(LangModelMap.getString("To"));
+
+		this.buttonsPanel.add(this.bindButton, null);
+		this.buttonsPanel.add(this.bindChainButton, null);
+		this.buttonsPanel.add(this.unbindButton, null);
+		this.buttonsPanel.add(this.clearBindingButton, null);
+
+		this.scrollPane.getViewport().add(this.table);
+
+		this.scrollPane.setWheelScrollingEnabled(true);
+		this.scrollPane.getViewport().setBackground(SystemColor.window);
+		this.table.setBackground(SystemColor.window);
+
+//		this.this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
+//		this.this.add(this.bindingPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		
+		this.jPanel.add(this.titleLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.startPanel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.endPanel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.jPanel.add(this.scrollPane, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.jPanel.add(this.buttonsPanel, ReusedGridBagConstraints.get(0, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+
+		this.startPanel.add(this.startNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.startPanel.add(this.startNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.startPanel.add(this.startLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.startPanel.add(this.startNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.startPanel.add(this.startNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.startPanel.add(this.startLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.startPanel.add(this.startNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+
+		this.endPanel.add(this.endNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.endPanel.add(this.endNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.endPanel.add(this.endLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.endPanel.add(this.endNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.endPanel.add(this.endNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.endPanel.add(this.endLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.endPanel.add(this.endNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+
+		this.startNodeTextField.setEnabled(false);
+		this.endNodeTextField.setEnabled(false);
+	}
+
+	public Object getObject()
+	{
+		return this.cablePath;
+	}
+
+	public void setObject(Object object)
+	{
+		this.cablePath = (CablePath)object;
+
+		this.table.removeAll();
+		this.links = new LinkedList();
+
+		this.startNodeTextField.setText("");
+		this.endNodeTextField.setText("");
+		this.startLinkComboBox.removeAllItems();
+		this.endLinkComboBox.removeAllItems();
+		this.startNodeToComboBox.removeAllItems();
+		this.endNodeToComboBox.removeAllItems();
+
+		this.startLinkComboBox.setEnabled(true);
+		this.endLinkComboBox.setEnabled(true);
+		this.startNodeToComboBox.setEnabled(true);
+		this.endNodeToComboBox.setEnabled(true);
+		
+		if(this.cablePath == null)
+		{//empty
+		}
+		else
+		{
+			this.controller.setCablePath(this.cablePath);
+
+			this.links.addAll(this.cablePath.getLinks());
+
+			this.model.setContents(this.cablePath.getLinks());
+			
+			setBindingPanels();
+		}
+	}
+	
+	private void setBindingPanels()
+	{
+		PhysicalLinkType unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
+
+		this.startNode = this.cablePath.getStartUnboundNode();
+		
+		this.endNode = this.cablePath.getEndUnboundNode();
+
+		if(this.startNode == null && this.endNode == null)
+			return;// no unbound elements
+
+		this.startNodeTextField.setText(this.startNode.getName());
+		this.endNodeTextField.setText(this.endNode.getName());
+
+		this.startLastBound = this.cablePath.getStartLastBoundLink();
+		this.endLastBound = this.cablePath.getEndLastBoundLink();
+		
+		Collection smnelinks = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.startNode);
+		if(this.startLastBound != null)
+			smnelinks.remove(this.startLastBound);
+
+		List smnenodes = new LinkedList();
+
+		this.startAvailableLinksCount = smnelinks.size();
+		for(Iterator it = smnelinks.iterator(); it.hasNext();)
+		{
+			PhysicalLink mle = (PhysicalLink)it.next();
+			if(mle.getType().equals(unboundType))
+			{
+				it.remove();
+				this.startAvailableLinksCount--;
+			}
+			else
+			if(mle.getStartNode() instanceof TopologicalNode
+				|| mle.getEndNode() instanceof TopologicalNode)
+					it.remove();
+			else
+			{
+				smnenodes.add(mle.getOtherNode(this.startNode));
+			}
+		}
+
+		Collection emnelinks = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.endNode);
+		if(this.endLastBound != null)
+			emnelinks.remove(this.endLastBound);
+
+		List emnenodes = new LinkedList();
+
+		this.endAvailableLinksCount = emnelinks.size();
+		for(Iterator it = emnelinks.iterator(); it.hasNext();)
+		{
+			PhysicalLink mle = (PhysicalLink)it.next();
+			if(mle.getType().equals(unboundType))
+			{
+				it.remove();
+				this.endAvailableLinksCount--;
+			}
+			else
+			if(mle.getStartNode() instanceof TopologicalNode
+				|| mle.getEndNode() instanceof TopologicalNode)
+					it.remove();
+			else
+			{
+				emnenodes.add(mle.getOtherNode(this.endNode));
+			}
+		}
+
+		this.startLinkComboBox.removeAllItems();
+		this.startLinkComboBox.addItem(this.stubObject);
+		this.startLinkComboBox.addElements(smnelinks);
+		this.startLinkComboBox.setSelectedItem(this.stubObject);
+
+		this.endLinkComboBox.removeAllItems();
+		this.endLinkComboBox.addItem(this.stubObject);
+		this.endLinkComboBox.addElements(emnelinks);
+		this.endLinkComboBox.setSelectedItem(this.stubObject);
+
+		this.startNodeToComboBox.removeAllItems();
+		this.startNodeToComboBox.addItem(this.stubObject);
+		this.startNodeToComboBox.addElements(smnenodes);
+		this.startNodeToComboBox.setSelectedItem(this.stubObject);
+
+		this.endNodeToComboBox.removeAllItems();
+		this.endNodeToComboBox.addItem(this.stubObject);
+		this.endNodeToComboBox.addElements(emnenodes);
+		this.endNodeToComboBox.setSelectedItem(this.stubObject);
+
+		this.startLinkComboBox.setEnabled(!this.startNode.equals(this.cablePath.getEndNode()));
+		this.endLinkComboBox.setEnabled(!this.endNode.equals(this.cablePath.getStartNode()));
+		this.startNodeToComboBox.setEnabled(this.startLinkComboBox.isEnabled());
+		this.endNodeToComboBox.setEnabled(this.endLinkComboBox.isEnabled());
+	}
+
+	/**
+	 * @todo working woth nodelinks and creation/deletion of elements
+	 */
+	void removeBinding()
+	{
+		PhysicalLink link = (PhysicalLink)this.model.getObject(this.table.getSelectedRow());
+		PhysicalLink previous = this.cablePath.previousLink(link);
+		if(link instanceof UnboundLink)
+		{
+			if(link.getStartNode().equals(link.getEndNode()))
+			{
+				this.cablePath.removeLink(link);
+
+				RemoveUnboundLinkCommandBundle command = 
+						new RemoveUnboundLinkCommandBundle(
+							(UnboundLink)link);
+				command.setLogicalNetLayer(this.logicalNetLayer);
+				command.execute();
+			}
+			else
+			if(previous != null
+				&& previous instanceof UnboundLink)
+			{
+				CableChannelingItem cci = (CableChannelingItem )this.cablePath.getBinding().get(link);
+				AbstractNode removedNode = cci.getStartSiteNode();
+			
+				if(previous.getEndNode().equals(removedNode))
+					previous.setEndNode(link.getOtherNode(removedNode));
+				else
+				if(previous.getStartNode().equals(removedNode))
+					previous.setStartNode(link.getOtherNode(removedNode));
+					
+				for(Iterator it = previous.getNodeLinksAt(removedNode).iterator(); it.hasNext();)
+				{
+					NodeLink nl = (NodeLink)it.next();
+					if(nl.getEndNode().equals(removedNode))
+						nl.setEndNode(link.getOtherNode(removedNode));
+					else
+					if(nl.getStartNode().equals(removedNode))
+						nl.setStartNode(link.getOtherNode(removedNode));
+				}
+
+				this.cablePath.removeLink(link);
+
+				RemoveUnboundLinkCommandBundle command = 
+						new RemoveUnboundLinkCommandBundle(
+							(UnboundLink)link);
+				command.setLogicalNetLayer(this.logicalNetLayer);
+				command.execute();
+			}
+		}
+		else
+		// replace binding to physical link with unbound link
+		{
+			this.cablePath.removeLink(link);
+
+			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
+					link.getStartNode(),
+					link.getEndNode());
+			command.setLogicalNetLayer(this.logicalNetLayer);
+			command.execute();
+
+			UnboundLink unbound = command.getUnbound();
+			unbound.setCablePath(this.cablePath);
+			this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
+			link.getBinding().remove(this.cablePath);
+		}
+		this.model.setContents(this.cablePath.getLinks());
+		this.model.fireTableDataChanged();
+		setBindingPanels();
+	}
+	
+	void clearBinding()
+	{
+		this.cablePath.clearLinks();
+
+		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
+			this.cablePath.getStartNode(), this.cablePath.getEndNode());
+		command.setLogicalNetLayer(this.logicalNetLayer);
+		command.execute();
+
+		UnboundLink unbound = command.getUnbound();
+		this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
+		unbound.setCablePath(this.cablePath);
+
+		this.model.fireTableDataChanged();
+		setBindingPanels();
+	}
+	
+	private void addLinkBinding(
+			PhysicalLink link, 
+			UnboundLink unbound, 
+			AbstractNode fromSite)
+	{
+		if(link.getOtherNode(fromSite).equals(unbound.getOtherNode(fromSite)))
+		{
+			if(unbound != null)
+			{
+				this.cablePath.removeLink(unbound);
+
+				RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
+				command.setLogicalNetLayer(this.logicalNetLayer);
+				command.execute();
+			}
+		}
+		else
+		{
+			if(unbound.getStartNode().equals(fromSite))
+			{
+				unbound.setStartNode(link.getOtherNode(fromSite));
+			}
+			else
+			{
+				unbound.setEndNode(link.getOtherNode(fromSite));
+			}
+
+			for(Iterator it = unbound.getNodeLinksAt(fromSite).iterator(); it.hasNext();)
+			{
+				NodeLink nl = (NodeLink)it.next();
+				if(nl.getStartNode().equals(fromSite))
+					nl.setStartNode(link.getOtherNode(fromSite));
+				else
+					nl.setEndNode(link.getOtherNode(fromSite));
+			}
+		}
+		this.cablePath.addLink(link, CableController.generateCCI(this.cablePath, link, this.logicalNetLayer.getUserId()));
+		link.getBinding().add(this.cablePath);
+	}
+
+	void addBinding()
+	{
+		PhysicalLink selectedStartLink;
+		PhysicalLink selectedEndLink;
+		
+		Object selectedItem;
+	
+		selectedItem = this.startLinkComboBox.getSelectedItem();
+		if(selectedItem instanceof PhysicalLink)
+		{
+			selectedStartLink = (PhysicalLink )selectedItem;
+			
+			UnboundLink unbound = (UnboundLink)this.cablePath.nextLink(this.startLastBound);
+
+			if(unbound != null)
+				addLinkBinding(selectedStartLink, unbound, this.startNode);
+		}
+		else
+		{
+			selectedStartLink = null;
+		}
+
+		selectedItem = this.endLinkComboBox.getSelectedItem();
+		if(selectedItem instanceof PhysicalLink)
+		{
+			selectedEndLink = (PhysicalLink )selectedItem;
+			
+			if(!selectedEndLink.equals(selectedStartLink))
+			{
+				UnboundLink unbound = (UnboundLink)this.cablePath.previousLink(this.endLastBound);
+
+				if(unbound != null)
+					addLinkBinding(selectedEndLink, unbound, this.endNode);
+			}
+		}
+		
+		this.model.setContents(this.cablePath.getLinks());
+		this.model.fireTableDataChanged();
+		
+		setBindingPanels();
+	}
+
+	void addChainBinding()
+	{
+		while(true)
+		{
+			addBinding();
+			boolean proceed = false;
+
+			if(this.startAvailableLinksCount == 1 && this.startLinkComboBox.isEnabled())
+			{
+				proceed = true;
+				ComboBoxModel cbmodel = this.startLinkComboBox.getModel();
+				for (int i = 0; i < cbmodel.getSize(); i++) 
+				{
+					Object or = cbmodel.getElementAt(i);
+					if(!or.equals(this.stubObject))
+					{
+						cbmodel.setSelectedItem(or);
+						break;
+					}
+				}
+			}
+
+			if(this.endAvailableLinksCount == 1 && this.endLinkComboBox.isEnabled())
+			{
+				proceed = true;
+				ComboBoxModel cbmodel = this.endLinkComboBox.getModel();
+				for (int i = 0; i < cbmodel.getSize(); i++) 
+				{
+					Object or = cbmodel.getElementAt(i);
+					if(!or.equals(this.stubObject))
+					{
+						cbmodel.setSelectedItem(or);
+						break;
+					}
+				}
+			}
+
+			if(!proceed)
+				break;
+		}
+	}
+
+
+	public JComponent getGUI() {
+		return this.jPanel;
+	}
+
+	public void commitChanges() {
+		// nothing to commet - all actions are autocommitted
+	}
+}
