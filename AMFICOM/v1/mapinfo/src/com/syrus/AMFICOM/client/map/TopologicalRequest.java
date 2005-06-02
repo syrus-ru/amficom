@@ -6,8 +6,8 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * Структура запроса изображения с сервера
- * @author $Author: krupenn $
- * @version $Revision: 1.1.2.1 $, $Date: 2005/05/05 10:20:04 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.1.2.2 $, $Date: 2005/06/02 12:14:04 $
  * @module mapinfo_v1
  */
 public class TopologicalRequest implements Comparable
@@ -37,24 +37,24 @@ public class TopologicalRequest implements Comparable
 	/**
 	 * Приоритет запроса
 	 */
-	int priority = TopologicalRequest.PRIORITY_BACKGROUND;
+	private int priority = TopologicalRequest.PRIORITY_BACKGROUND;
 	
 	/**
 	 * Отображаемое изображение
 	 */
-	ImageIcon image = null;
+	private ImageIcon image = null;
 	/**
 	 * Масштаб избражения (для текущей ширины изображения!)
 	 */
-	double topoScale = 1.f;
+	private double topoScale = 1.f;
 	/**
 	 * Сферические координаты границы избражения
 	 */
-	DoublePoint topoCenter = null;
+	private DoublePoint topoCenter = null;
 	/**
 	 * Время последнего использования
 	 */
-	long lastUsed = 0;
+	private long lastUsed = 0;
 	
 	public String toString()
 	{

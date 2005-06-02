@@ -1,11 +1,12 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 
@@ -27,24 +28,41 @@ public class MapImagePanel extends JPanel
 			this.removeComponentListener(listeners[i]);
 
 		this.addComponentListener(new ComponentAdapter()
-		{
-			private void setLayerSize()
-			{
-				if(MapImagePanel.this.layerToPaint != null)
-					MapImagePanel.this.layerToPaint.setMapImageSize(
-							MapImagePanel.this.getWidth(),
-							MapImagePanel.this.getHeight());
-			}
-			public void componentResized(ComponentEvent e)
-			{
-				setLayerSize();
-			}
+				{
+					public void componentResized(ComponentEvent e)
+					{
+						setLayerSize();
+					}
+				});
+		
+		this.addPropertyChangeListener(MapFrame.MAP_FRAME_SHOWN, new PropertyChangeListener() {
 
-			public void componentShown(ComponentEvent e)
+			public void propertyChange(PropertyChangeEvent evt)
 			{
+				if(evt.getPropertyName().equals(MapFrame.MAP_FRAME_SHOWN)
+						&& ((Boolean )evt.getNewValue()).booleanValue())
 				setLayerSize();
 			}
 		});
+	}
+
+	void setLayerSize()
+	{
+		if(this.layerToPaint != null)
+			try
+			{
+				this.layerToPaint.setMapImageSize(
+						this.getWidth(),
+						this.getHeight());
+			} catch (MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	public Image getImage()
@@ -54,8 +72,11 @@ public class MapImagePanel extends JPanel
 	
 	public void setImage(Image newImage)
 	{
-		this.mapImage = newImage;
-		this.imageIsMoving = false;
+        if (newImage != null)
+        {
+    		this.mapImage = newImage;
+    		this.imageIsMoving = false;
+        }
 //		if (newImage != null)
 //			this.mapImage.getGraphics().drawImage(newImage,0,0,this);
 	}

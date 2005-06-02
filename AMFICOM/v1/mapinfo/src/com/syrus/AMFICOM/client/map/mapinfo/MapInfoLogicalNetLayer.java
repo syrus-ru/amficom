@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -12,23 +11,22 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.util.DoubleRect;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.Logger;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
+import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import com.syrus.AMFICOM.Client.Map.TopologicalImageCache;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.mapperservlet.ServletCommandNames;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer
 {
@@ -39,12 +37,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public MapInfoLogicalNetLayer(NetMapViewer viewer)
 	{
 		super();
-		Environment.log(
-				Environment.LOG_LEVEL_FINER,
-				"constructor call",
-				getClass().getName(),
-				"SpatialLogicalNetLayer(" + viewer + ")");
-
 		setMapViewer(viewer);
 	}
 
@@ -55,7 +47,12 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public void initializeImageCache()
 		throws MapConnectionException, MapDataException
 	{
-		this.imageCache = new TopologicalImageCache(this, new MapInfoMapImageLoader(this));		
+	    try {
+            //		this.imageCache = new TopologicalImageCache(this, new MapInfoServletMapImageLoader(this));
+            this.imageCache = new TopologicalImageCache(this, new MapInfoCorbaMapImageLoader(this));
+        } catch (IOException e) {
+            throw new MapDataException("TopologicalImageCache is not initialized.");
+        }        
 	}
 	
 	public void refreshLayers()
@@ -64,7 +61,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		this.imageCache.refreshLayers();		
 	}
 	
-	public void setMapImageSize(int width, int height)
+	public void setMapImageSize(int width, int height) throws MapConnectionException, MapDataException
 	{
 		if((width > 0) && (height > 0))
 		{
@@ -149,12 +146,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public double convertMapToScreen(double topologicalDistance)
 			throws MapConnectionException, MapDataException
 	{
-		Point p1 = convertMapToScreen(new DoublePoint(0, 0));
-		Point p2 = convertMapToScreen(new DoublePoint(topologicalDistance, 0));		
-		
-		double returnValue = Math.pow((Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2)),0.5);
-		return returnValue;
-	}
+	    throw new UnsupportedOperationException();
+    }
 
 	public DoublePoint pointAtDistance(
 			DoublePoint startPoint,
@@ -174,7 +167,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	}
 
 	/**
-	 * Получить дистанцию между двумя точками в экранных координатах
+	 * Получить дистанцию между двумя точками в географических координатах
 	 */
 	public double distance(DoublePoint from, DoublePoint to)
 			throws MapConnectionException, MapDataException
@@ -197,18 +190,22 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public void setCenter(DoublePoint center)
 			throws MapConnectionException, MapDataException
 	{
+		DoublePoint nearestDescreteCenter = center;
+		if(MapPropertiesManager.isDescreteNavigation())
+			nearestDescreteCenter = this.imageCache.getNearestCenter(center);
+ 
 		try
 		{
 			getLocalMapJ().setCenter(new com.mapinfo.util.DoublePoint(
-					center.getX(),
-					center.getY()));
+					nearestDescreteCenter.getX(),
+					nearestDescreteCenter.getY()));
 		}
 		catch(Exception exc)
 		{
 			System.out.println("MILNL - Failed setting center.");
 			throw new MapConnectionException("Cannot set center", exc);
 		}
-		this.imageCache.centerChanged();			
+		this.imageCache.setCenter(center);			
 	}
 
 	/**
@@ -265,12 +262,10 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		if(fullRepaint)
 		{
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - repaint - Entered full repaint");
+			Logger.log(" MIFLNL - repaint - Entered full repaint");
 			
 			this.nmViewer.mapImagePanel.setImage(this.imageCache.getImage());
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
-				" MIFLNL - repaint - Exiting full repaint");
+			Logger.log(" MIFLNL - repaint - Exiting full repaint");
 		}
 		this.nmViewer.mapImagePanel.repaint();		
 	}
@@ -331,7 +326,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
 			}
 		}
-		this.imageCache.scaleChanged();			
+		this.imageCache.setScale(z);			
 	}
 
 	/**
@@ -387,41 +382,36 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
 			}
 		}
-		this.imageCache.scaleChanged();
+		this.imageCache.setScale(this.getScale());
 	}
 
 	public void handDragged(MouseEvent me)
 			throws MapConnectionException, MapDataException
 	{
-		Point hdEndPoint = me.getPoint();
-		int shiftX = (int )(me.getX() - this.startPoint.getX());
-		int shiftY = (int )(me.getY() - this.startPoint.getY());
-		Dimension discreteShift = this.getDiscreteShifts(shiftX,shiftY);
-		
-		if ((discreteShift.width != 0) || (discreteShift.height != 0))
-		{
-			hdEndPoint.setLocation(
-					this.getStartPoint().x + discreteShift.width,
-					this.getStartPoint().y + discreteShift.height);
-			
-			DoublePoint center = this.getCenter();
-			DoublePoint p1 = this.convertScreenToMap(this.getStartPoint());
-			DoublePoint p2 = this.convertScreenToMap(hdEndPoint);
-			
-			double dx = p1.getX() - p2.getX();
-			double dy = p1.getY() - p2.getY();
-			center.setLocation(center.getX() + dx, center.getY() + dy);
-			this.setCenter(center);
-			this.getMapView().setCenter(this.getCenter());
-			this.repaint(true);
-			
-			this.setStartPoint(hdEndPoint);
-		}
-		
-//		this.nmViewer.mapImagePanel.repaint(
-//				this.nmViewer.mapImagePanel.getGraphics(),
-//				shiftX,
-//				shiftY);
+//		Point hdEndPoint = me.getPoint();
+//		int shiftX = (int )(me.getX() - this.startPoint.getX());
+//		int shiftY = (int )(me.getY() - this.startPoint.getY());
+//		Dimension discreteShift = this.getDiscreteShifts(shiftX,shiftY);
+//		
+//		if ((discreteShift.width != 0) || (discreteShift.height != 0))
+//		{
+//			hdEndPoint.setLocation(
+//					this.getStartPoint().x + discreteShift.width,
+//					this.getStartPoint().y + discreteShift.height);
+//			
+//			DoublePoint center = this.getCenter();
+//			DoublePoint p1 = this.convertScreenToMap(this.getStartPoint());
+//			DoublePoint p2 = this.convertScreenToMap(hdEndPoint);
+//			
+//			double dx = p1.getX() - p2.getX();
+//			double dy = p1.getY() - p2.getY();
+//			center.setLocation(center.getX() + dx, center.getY() + dy);
+//			this.setCenter(center);
+//			this.getMapView().setCenter(this.getCenter());
+//			this.repaint(true);
+//			
+//			this.setStartPoint(hdEndPoint);
+//		}
 	}
 
 	public List findSpatialObjects(String searchText)
@@ -455,9 +445,9 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				Object readObject = ois.readObject();
 				if(readObject instanceof String)
 				{
-					Environment.log(
-							Environment.LOG_LEVEL_FINER,
-							(String )readObject);
+//					Environment.log(
+//							Environment.LOG_LEVEL_FINER,
+//							(String )readObject);
 					return resultList;
 				}
 			}
@@ -505,8 +495,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	public void setMapViewer(NetMapViewer mapViewer)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "setMapViewer(" + mapViewer + ")");
+//		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
+//				.getName(), "setMapViewer(" + mapViewer + ")");
 
 		super.setMapViewer(mapViewer);
 
@@ -529,7 +519,16 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		MapInfoConnection miConnection = 
 			(MapInfoConnection)this.nmViewer.getConnection();
-		
 		return miConnection.getLocalMapJ();
+	}
+
+	public void handMoved(MouseEvent me) throws MapConnectionException, MapDataException
+	{
+		this.imageCache.analyzeMouseLocation(me);
+	}
+
+	public void handClicked(MouseEvent me) throws MapConnectionException, MapDataException
+	{
+		this.imageCache.analyzeMouseLocation(me);
 	}
 }

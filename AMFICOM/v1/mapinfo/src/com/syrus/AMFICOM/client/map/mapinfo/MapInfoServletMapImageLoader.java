@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoMapImageLoader.java,v 1.1.2.1 2005/05/05 10:25:34 krupenn Exp $
+ * $Id: MapInfoServletMapImageLoader.java,v 1.1.2.1 2005/06/02 12:14:04 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,24 +23,23 @@ import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapImageLoader;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.TopologicalRequest;
-import com.syrus.AMFICOM.map.mapperservlet.ServletCommandNames;
 
-public class MapInfoMapImageLoader implements MapImageLoader
+public class MapInfoServletMapImageLoader implements MapImageLoader
 {
 	private LogicalNetLayer logicalNetLayer = null;
 	private String uriString = null;
 	
 	private byte[] imageBuffer = null;
 	
-	public MapInfoMapImageLoader(
+	public MapInfoServletMapImageLoader(
 			LogicalNetLayer miLayer)
 	{
 		this.logicalNetLayer = miLayer;
@@ -64,8 +63,10 @@ public class MapInfoMapImageLoader implements MapImageLoader
 	public void stopRenderingAtServer()
 	{
 		String requestString = new String(
-				this.uriString + "?" + ServletCommandNames.COMMAND_NAME + "="
-				+ ServletCommandNames.CN_CANCEL_RENDERING);
+				this.uriString +
+				"?" + ServletCommandNames.COMMAND_NAME + "=" + ServletCommandNames.CN_CANCEL_RENDERING +
+				"&" + ServletCommandNames.USER_ID +
+				this.logicalNetLayer.getContext().getSessionInterface().getAccessIdentity().sess_id);
 
 		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 				" TIC - loadingthread - stopping rendering at server");
@@ -75,24 +76,28 @@ public class MapInfoMapImageLoader implements MapImageLoader
 			URI mapServerURI = new URI(requestString);
 			URL mapServerURL = new URL(mapServerURI.toASCIIString());
 			URLConnection connection = mapServerURL.openConnection();
-			
-			if(connection.getInputStream() == null)
-				return;
-			
-			ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
 
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingthread - getServerMapImage - got data at ObjectInputStream");
+            String connectionResult = null;
+            while (connectionResult == null)
+            {
+                connectionResult = connection.getHeaderField(ServletCommandNames.STATUS_FIELD_NAME);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }   
 
-			Object readObject = ois.readObject();
-			System.out.println(readObject);
-			if(readObject instanceof String)
+			if (!connectionResult.equals(ServletCommandNames.STATUS_SUCCESS))
 			{
-				Environment.log(
-						Environment.LOG_LEVEL_FINER,
-						(String )readObject);
+				System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
+						" Server returned: " + connectionResult);
+				
 				return;
 			}
+//		if(connection.getInputStream() == null)
+//			return;
+			
 		} catch (MalformedURLException e)
 		{
 			// TODO Auto-generated catch block
@@ -105,10 +110,6 @@ public class MapInfoMapImageLoader implements MapImageLoader
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -116,7 +117,7 @@ public class MapInfoMapImageLoader implements MapImageLoader
 	 * Посылает запрос на рендеринг изображения на сервере
 	 * @throws MapConnectionException 
 	 */
-	public void renderMapImageAtServer(TopologicalRequest request) throws MapConnectionException
+	public ImageIcon renderMapImageAtServer(TopologicalRequest request) throws MapConnectionException
 	{
 		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 			" TIC - loadingthread - starting rendering at server");
@@ -127,24 +128,44 @@ public class MapInfoMapImageLoader implements MapImageLoader
 			URI mapServerURI = new URI(requestString);
 			URL mapServerURL = new URL(mapServerURI.toASCIIString());
 			URLConnection connection = mapServerURL.openConnection();
-			
-			if(connection.getInputStream() == null)
-				return;
-			
+
+            if(connection.getInputStream() == null)
+                return null;
+
 			ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
 
 			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 					" TIC - loadingthread - getServerMapImage - got data at ObjectInputStream");
 
-			Object readObject = ois.readObject();
-			System.out.println(readObject);
-			if(readObject instanceof String)
+			try
 			{
-				Environment.log(
-						Environment.LOG_LEVEL_FINER,
-						(String )readObject);
-				return;
+				ois.readFully(this.imageBuffer);
 			}
+			catch(EOFException eofExc)
+			{
+			}
+			
+			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
+					" TIC - loadingthread - getServerMapImage - Read array from stream");
+
+			String connectionResult = connection.getHeaderField(ServletCommandNames.STATUS_FIELD_NAME);
+            if (!connectionResult.equals(ServletCommandNames.STATUS_SUCCESS))
+            {
+                System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
+                        " Server returned: " + connectionResult);
+                
+                return null;
+            }
+            
+			ois.close();
+
+			Image imageReceived = Toolkit.getDefaultToolkit().createImage(this.imageBuffer);
+
+			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
+					" TIC - loadingthread - getServerMapImage - Image created");
+			
+			return new ImageIcon(imageReceived);
+
 		} catch (MalformedURLException e)
 		{
 			// TODO Auto-generated catch block
@@ -161,85 +182,10 @@ public class MapInfoMapImageLoader implements MapImageLoader
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ClassNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Подгружает изображение с сервера по HTTP-запросу
-	 * @return Изображение
-	 */
-	public ImageIcon getServerMapImage()
-	{
-		try
-		{
-			String requestURIString = new String(
-					this.uriString + "?" + ServletCommandNames.COMMAND_NAME + "="
-					+ ServletCommandNames.CN_GET_RENDITION);
-			
-			URI mapServerURI = new URI(requestURIString);
-			URL mapServerURL = new URL(mapServerURI.toASCIIString());
-
-			URLConnection s = mapServerURL.openConnection();
-
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingthread - getServerMapImage - Conection opened for URL: " + mapServerURL);
-
-			if(s.getInputStream() == null)
-				return null;
-			
-			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
-
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingthread - getServerMapImage - got data at ObjectInputStream");
-
-			try
-			{
-				Object readObject = ois.readObject();
-				System.out.println(readObject);
-				if(readObject instanceof String)
-				{
-					Environment.log(
-							Environment.LOG_LEVEL_FINER,
-							(String )readObject);
-					return null;
-				}
-			}
-			catch(IOException optExc)
-			{	
-			}
-
-			try
-			{
-				ois.readFully(this.imageBuffer);
-			}
-			catch(EOFException eofExc)
-			{
-			}
-			
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingthread - getServerMapImage - Read array from stream");
-
-			ois.close();
-
-			Image imageReceived = Toolkit.getDefaultToolkit().createImage(this.imageBuffer);
-
-			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
-					" TIC - loadingthread - getServerMapImage - Image created");
-			
-			return new ImageIcon(imageReceived);
-		}
-		catch(Exception exc)
-		{
-			exc.printStackTrace();
 		}
 		
 		return null;
 	}
-	
 	
 	/**
 	 * Создаёт по текущему запросу строку параметров для HTTP запроса к серверу
@@ -253,8 +199,10 @@ public class MapInfoMapImageLoader implements MapImageLoader
 		throws MapDataException, MapConnectionException
 	{
 		String result = "";
-
-		result += "?" + ServletCommandNames.COMMAND_NAME + "="
+		result += "?" + ServletCommandNames.USER_ID + "="
+		    + this.logicalNetLayer.getContext().getSessionInterface().getAccessIdentity().sess_id;
+		
+		result += "&" + ServletCommandNames.COMMAND_NAME + "="
 		+ ServletCommandNames.CN_START_RENDER_IMAGE;
 		
 		Dimension size = this.logicalNetLayer.getMapViewer().getVisualComponent().getSize();

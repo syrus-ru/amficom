@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageLoader.java,v 1.1.2.1 2005/05/05 10:22:15 krupenn Exp $
+ * $Id: MapImageLoader.java,v 1.1.2.2 2005/06/02 12:14:04 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,11 +19,6 @@ public interface MapImageLoader
 	/**
 	 * Посылает запрос на рендеринг изображения на сервере
 	 */
-	void renderMapImageAtServer(TopologicalRequest request)  throws MapConnectionException;
-
-	/**
-	 * Подгружает изображение с сервера по HTTP-запросу
-	 * @return Изображение
-	 */
-	ImageIcon getServerMapImage();
+	ImageIcon renderMapImageAtServer(TopologicalRequest request)
+        throws MapConnectionException, MapDataException;
 }

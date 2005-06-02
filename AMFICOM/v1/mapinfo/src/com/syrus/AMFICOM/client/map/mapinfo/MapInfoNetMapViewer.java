@@ -119,8 +119,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 					this.mapImagePanel.addMouseMotionListener(this.mml);
 				}
 			}
-			
-			this.lnl.initializeImageCache();
+
+			this.lnl.initializeImageCache();			
 			this.lnl.setCenter(MapPropertiesManager.getCenter());
 			this.lnl.setScale(MapPropertiesManager.getZoom());
 		}
