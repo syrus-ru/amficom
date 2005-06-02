@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryParameretrsWrapper.java,v 1.1 2005/06/01 08:14:42 stas Exp $
+ * $Id: PrimaryParameretrsWrapper.java,v 1.2 2005/06/02 12:53:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/01 08:14:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 12:53:29 $
  * @module analysis_v1
  */
 
@@ -81,28 +81,28 @@ public class PrimaryParameretrsWrapper implements Wrapper {
 	public Object getValue(	Object object, String key) {
 		
 		if (object instanceof PrimaryParameters) {
-			PrimaryParameters paramaters = (PrimaryParameters) object;
+			PrimaryParameters parameters = (PrimaryParameters) object;
 			
 			if (key.equals(KEY_MODULE_ID)) {
-				return paramaters.getModuleId();
+				return parameters.getModuleId();
 			} else if (key.equals(KEY_WAVELENGTH)) {
-				return paramaters.getWavelength();
+				return parameters.getWavelength();
 			} else if (key.equals(KEY_PULSEWIDTH)) {
-				return paramaters.getPulsewidth();
+				return parameters.getPulsewidth();
 			} else if (key.equals(KEY_GROUPINDEX)) {
-				return paramaters.getGroupindex();
+				return parameters.getGroupindex();
 			} else if (key.equals(KEY_AVERAGES)) {
-				return paramaters.getAverages();
+				return parameters.getAverages();
 			} else if (key.equals(KEY_RESOLUTION)) {
-				return paramaters.getResolution();
+				return parameters.getResolution();
 			} else if (key.equals(KEY_RANGE)) {
-				return paramaters.getRange();
+				return parameters.getRange();
 			} else if (key.equals(KEY_DATE)) {
-				return paramaters.getDate();
+				return parameters.getDate();
 			} else if (key.equals(KEY_TIME)) {
-				return paramaters.getTime();
+				return parameters.getTime();
 			} else if (key.equals(KEY_BACKSCATTER)) {
-				return paramaters.getBackscatter();
+				return parameters.getBackscatter();
 			}
 		}
 		return null;
@@ -122,29 +122,29 @@ public class PrimaryParameretrsWrapper implements Wrapper {
 	public void setValue(	Object object,
 							String key,
 							Object value) {
-		if (object instanceof TraceResource) {
-			PrimaryParameters paramaters = (PrimaryParameters) object;
+		if (object instanceof PrimaryParameters) {
+			PrimaryParameters parameters = (PrimaryParameters) object;
 			
 			if (key.equals(KEY_MODULE_ID)) {
-				paramaters.setModuleId((String) value);
+				parameters.setModuleId((String) value);
 			} else if (key.equals(KEY_WAVELENGTH)) {
-				paramaters.setWavelength((String) value);
+				parameters.setWavelength((String) value);
 			} else if (key.equals(KEY_PULSEWIDTH)) {
-				paramaters.setPulsewidth((String) value);
+				parameters.setPulsewidth((String) value);
 			} else if (key.equals(KEY_GROUPINDEX)) {
-				paramaters.setGroupindex((String)value);
+				parameters.setGroupindex((String)value);
 			} else if (key.equals(KEY_AVERAGES)) {
-				paramaters.setAverages((String) value);
+				parameters.setAverages((String) value);
 			} else if (key.equals(KEY_RESOLUTION)) {
-				paramaters.setResolution((String) value);
+				parameters.setResolution((String) value);
 			} else if (key.equals(KEY_RANGE)) {
-				paramaters.setRange((String) value);
+				parameters.setRange((String) value);
 			} else if (key.equals(KEY_DATE)) {
-				paramaters.setDate((String) value);
+				parameters.setDate((String) value);
 			} else if (key.equals(KEY_TIME)) {
-				paramaters.setTime((String) value);
+				parameters.setTime((String) value);
 			} else if (key.equals(KEY_BACKSCATTER)) {
-				paramaters.setBackscatter((String) value);
+				parameters.setBackscatter((String) value);
 			}
 		}
 	}

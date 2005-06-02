@@ -99,7 +99,7 @@ implements BsHashChangeListener, CurrentTraceChangeListener, ReportTable
 		if (bs == null)
 			return;
 
-		p.setBellcoreStructure(bs);
+		p.init(bs);
 		jTable.updateUI();
 	}
 

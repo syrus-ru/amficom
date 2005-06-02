@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStatsWrapper.java,v 1.1 2005/06/01 08:14:42 stas Exp $
+ * $Id: OverallStatsWrapper.java,v 1.2 2005/06/02 12:53:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/01 08:14:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 12:53:29 $
  * @module analysis_v1
  */
 
@@ -129,7 +129,7 @@ public class OverallStatsWrapper implements Wrapper {
 	public void setValue(	Object object,
 							String key,
 							Object value) {
-		if (object instanceof TraceResource) {
+		if (object instanceof OverallStats) {
 			OverallStats stats = (OverallStats) object;
 			
 			if (key.equals(KEY_LENGTH)) {

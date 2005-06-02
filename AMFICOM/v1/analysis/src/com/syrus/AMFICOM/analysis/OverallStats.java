@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.1 2005/06/01 08:14:42 stas Exp $
+ * $Id: OverallStats.java,v 1.2 2005/06/02 12:53:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,14 @@ package com.syrus.AMFICOM.analysis;
 import java.beans.*;
 import java.util.*;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.io.BellcoreStructure;
+
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/01 08:14:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 12:53:29 $
  * @module analysis_v1
  */
 
@@ -34,6 +39,33 @@ public class OverallStats {
 	private String dLoss;
 	
 	private List						propertyChangeListeners;
+	
+	public void initGeneralStatistics(TraceEvent ev, BellcoreStructure bs) {
+		double range_km = ev.last_point * bs.getResolution() / 1000.0;
+		double loss = ev.overallStatsLoss();
+		double attenuation = loss / range_km;
+		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());
+		double noise = ev.overallStatsNoiseLevel98Pct();
+    double DD98 = ev.overallStatsDD98pct();
+    double DDRMS = ev.overallStatsDDRMS();
+		int evNum = ev.overallStatsEvNum();
+
+		setTotalLength(MathRef.round_3(range_km) + " " + LangModelAnalyse.getString("km"));
+		setTotalLoss(MathRef.round_2(loss) + " " + LangModelAnalyse.getString("dB"));
+		setTotalAttenuation(MathRef.round_4(attenuation) + " " + LangModelAnalyse.getString("dB/km"));
+		setTotalReturnLoss(MathRef.round_2(orl) + " " + LangModelAnalyse.getString("dB"));
+		setTotalNoiseLevel(MathRef.round_2(noise) + " " + LangModelAnalyse.getString("dB"));
+		setTotalNoiseDD(MathRef.round_2(DD98) + " " + LangModelAnalyse.getString("dB"));
+		setTotalNoiseDDRMS(MathRef.round_2(DDRMS) + " " + LangModelAnalyse.getString("dB"));
+		setTotalEvents(String.valueOf(evNum));
+	}
+	
+	public void initCompareStatistics(double maxDeviation1, double meanDeviation1, double etalonLength1,	double lossDifference1) {
+		setEtalonLength(String.valueOf(MathRef.round_3(etalonLength1)) + " " + LangModelAnalyse.getString("km"));
+		setMaxDeviation(String.valueOf(MathRef.round_4(maxDeviation1)) + " " + LangModelAnalyse.getString("dB"));
+		setMeanDeviation(String.valueOf(MathRef.round_4(meanDeviation1)) + " " + LangModelAnalyse.getString("dB"));
+		setDLoss(String.valueOf(MathRef.round_4(lossDifference1)) + " " + LangModelAnalyse.getString("dB"));
+	}
 	
 	public String getTotalAttenuation() {
 		return this.totalAttenuation;

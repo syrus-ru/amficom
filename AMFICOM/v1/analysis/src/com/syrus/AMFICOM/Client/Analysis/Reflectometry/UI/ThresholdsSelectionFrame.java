@@ -238,6 +238,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 //		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
 //		this.jTable.setMinimumSize(new Dimension(200, 213));
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.jTable.setCellSelectionEnabled(false);
 
 		this.jTable.setColumnSelectionAllowed(true);
 		this.jTable.setRowSelectionAllowed(false);		

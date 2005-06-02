@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryParameters.java,v 1.1 2005/06/01 08:14:42 stas Exp $
+ * $Id: PrimaryParameters.java,v 1.2 2005/06/02 12:53:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/01 08:14:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 12:53:29 $
  * @module analysis_v1
  */
 
@@ -38,7 +38,7 @@ public class PrimaryParameters {
 	
 	private List						propertyChangeListeners;
 
-	public void setBellcoreStructure(BellcoreStructure bs) {
+	public void init(BellcoreStructure bs) {
 		setAverages(Integer.toString(bs.getAverages()));
 		setBackscatter((Double.toString(bs.getBackscatter()) + " " 
 				+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)));

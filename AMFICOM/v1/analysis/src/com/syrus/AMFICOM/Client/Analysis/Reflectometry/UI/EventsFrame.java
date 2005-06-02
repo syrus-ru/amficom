@@ -1,53 +1,21 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FontMetrics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Iterator;
 
 import javax.swing.*;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.CompositeEventList;
-import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.Analysis.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
-import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
-import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
+import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
-import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
-import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
-import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
-import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
-import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
-import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
-import com.syrus.AMFICOM.client.UI.ATable;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
@@ -55,10 +23,8 @@ public class EventsFrame extends JInternalFrame
 implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     CurrentEventChangeListener
 {
-	private static final String DASH = "-----";
-
-	private FixedSizeEditableTableModel tModel;
-	ATable jTable;
+	private WrapperedTableModel tModel;
+	WrapperedTable jTable;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
@@ -178,25 +144,21 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		tModel = new FixedSizeEditableTableModel (
-					new String[] {LangModelAnalyse.getString("eventNum"),
-												LangModelAnalyse.getString("eventType"),
-												LangModelAnalyse.getString("eventStartLocationKM"),
-												LangModelAnalyse.getString("eventLengthKM"),
-												LangModelAnalyse.getString("eventReflectanceDB"),
-												LangModelAnalyse.getString("eventLossDB"),
-												LangModelAnalyse.getString("eventLeadAttenuationDBKM")},
-					new Object[] {"", "", "", "", "", "", "", ""},
-					null,
-					null);
+		tModel = new WrapperedTableModel(
+				DetailedEventWrapper.getInstance(),
+				new String[] { DetailedEventWrapper.KEY_N,
+						DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_DISTANCE,
+						DetailedEventWrapper.KEY_LENGTH,
+						DetailedEventWrapper.KEY_REFLECTANCE,
+						DetailedEventWrapper.KEY_LOSS, DetailedEventWrapper.KEY_ATTENUATION });
 
-		jTable = new ATable(tModel);
+		jTable = new WrapperedTable(tModel);
+		jTable.setAllowSorting(false);
 
-		{
-			FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());			
-			jTable.getColumnModel().getColumn(0).setPreferredWidth(fontMetrics.stringWidth("WW"));
-			jTable.getColumnModel().getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
-		}
+		FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());			
+		jTable.getColumnModel().getColumn(0).setPreferredWidth(fontMetrics.stringWidth("WW"));
+		jTable.getColumnModel().getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
+
 
 		setContentPane(mainPanel);
 		this.setResizable(true);
@@ -221,8 +183,10 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 				if (!lsm.isSelectionEmpty()) {
 					int selected = lsm.getMinSelectionIndex();
-					if (view.currentRow2() != selected)
-						view.moveTo(selected);
+					DetailedEventResource res = (DetailedEventResource)tModel.getObject(selected);
+					int number = Integer.parseInt(res.getNumber()) - 1;
+					if (view.currentRow2() != number)
+						view.moveTo(number);
 				}
 			}
 		});
@@ -369,11 +333,12 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         double resKm = resMt / 1000.0;
 		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 
-        int nRows = view.nRows(Heap.getEventList());
-		tModel.clearTable();
+		int nRows = view.nRows(Heap.getEventList());
 
-        CompositeEventList eList = Heap.getEventList();
-        CompositeEventList.Walker w = eList.new Walker();
+    CompositeEventList eList = Heap.getEventList();
+    CompositeEventList.Walker w = eList.new Walker();
+    
+    clearTable();
 		for (int row = 0; row < nRows; row++, view.toNextRow(w))
 		{
             // nPri или nEt может быть -1, но не оба одновременно
@@ -383,91 +348,11 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
             // выбираем, параметры какого события будем выводить - primary или etalon
             // предпочтение отдается primary
             DetailedEvent ev = nPri >= 0 ? pevents[nPri] : eevents[nEt];
-
-            int sType = ev.getEventType();
-
-            String vCol1 = AnalysisUtil.getSimpleEventNameByType(sType); // тип
-            String vCol2 = Double.toString(MathRef.round_3(
-                    resKm * ev.getBegin())); //начало
-            String vCol3 = Double.toString(MathRef.round_3(
-                    resKm * (DetailedEventUtil.getWidth(ev)))); //протяженность
-
-			switch (sType)
-			{
-			case SimpleReflectogramEvent.DEADZONE:
-				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
-					 vCol1,
-                     vCol2,
-                     vCol3,
-					 DASH, // отраж
-					 DASH, // потери
-					 DASH  // затух
-				});
-				break;
-			case SimpleReflectogramEvent.LINEAR:
-			    // TODO: использовать только один параметр в data[] вместо трех
-				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
-                     vCol1,
-                     vCol2,
-                     vCol3,
-					 DASH, // отраж
-					 Double.toString(MathRef.round_3(((LinearDetailedEvent)ev).getLoss())), // потери
-					 Double.toString(MathRef.round_4(((LinearDetailedEvent)ev).getAttenuation() / resKm)) //затух
-				});
-				break;
-			case SimpleReflectogramEvent.NOTIDENTIFIED:
-				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
-                    vCol1,
-                    vCol2,
-                    vCol3,
-                    DASH, // отраж
-                    //dash, // потери
-                    Double.toString(MathRef.round_3(((NotIdentifiedDetailedEvent)ev).getLoss())), // потери
-                    DASH  // затух
-				});
-				break;
-			case SimpleReflectogramEvent.CONNECTOR:
-				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
-                    vCol1,
-                    vCol2,
-                    vCol3,
-                    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((ConnectorDetailedEvent)ev).getAmpl()))), // отраж
-                    Double.toString(MathRef.round_3(((ConnectorDetailedEvent)ev).getLoss())), // потери
-                    DASH  // затух
-				});
-				break;
-			case SimpleReflectogramEvent.GAIN:
-				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
-                    vCol1,
-                    vCol2,
-                    vCol3,
-				    DASH, // отраж
-				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)ev).getLoss())), // потери
-				    DASH  // затух
-				});
-				break;
-			case SimpleReflectogramEvent.LOSS:
-				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
-                    vCol1,
-                    vCol2,
-                    vCol3,
-				    DASH, // отраж
-				    Double.toString(MathRef.round_3(((SpliceDetailedEvent)ev).getLoss())), // потери
-				    DASH  // затух
-				});
-				break;
-			case SimpleReflectogramEvent.ENDOFTRACE:
-				tModel.addRow(String.valueOf(nPri + 1), new Object[] {
-                    vCol1,
-                    vCol2,
-                    vCol3,
-				    Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((EndOfTraceDetailedEvent)ev).getAmpl()))), // отраж
-				    DASH, // потери
-				    DASH  // затух
-				});
-				break;
-			}			
+            DetailedEventResource res = new DetailedEventResource();
+            res.initGeneral(ev, nPri + 1, resKm, sigma);
+            tModel.addObject(res);
 		}
+		jTable.updateUI();
 	}
 	
 	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer
@@ -569,9 +454,17 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         }
         setVisible(true);
     }
+    
+    private void clearTable() {
+    	for (Iterator it = tModel.getValues().iterator(); it.hasNext();) {
+				it.next();
+    		it.remove();
+			}
+    }
 
     public void primaryRefAnalysisRemoved() {
-        tModel.clearTable();
+    	clearTable();
+    	
         this.jTable.revalidate();
         this.jTable.repaint();
         setVisible(false);

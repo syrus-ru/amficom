@@ -156,10 +156,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 //		double dataLength = ReflectogramMath.getEndOfTraceBegin(dataSRE) * deltaX;
 		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
 
-		stats.setEtalonLength(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.getString("km"));
-		stats.setMaxDeviation(String.valueOf(MathRef.round_4(maxDeviation)) + " " + LangModelAnalyse.getString("dB"));
-		stats.setMeanDeviation(String.valueOf(MathRef.round_4(meanDeviation)) + " " + LangModelAnalyse.getString("dB"));
-		stats.setDLoss(String.valueOf(MathRef.round_4(lossDifference)) + " " + LangModelAnalyse.getString("dB"));
+		stats.initCompareStatistics(maxDeviation, meanDeviation, etalonLength, lossDifference);
 		jTableWholeComp.updateUI();
 	}
 
@@ -171,23 +168,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 		if (ev == null)
 			return;
 
-		double range_km = ev.last_point * bs.getResolution() / 1000.0;
-		double loss = ev.overallStatsLoss();
-		double attenuation = loss / range_km;
-		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());
-		double noise = ev.overallStatsNoiseLevel98Pct();
-    double DD98 = ev.overallStatsDD98pct();
-    double DDRMS = ev.overallStatsDDRMS();
-		int evNum = ev.overallStatsEvNum();
-
-		stats.setTotalLength(MathRef.round_3(range_km) + " " + LangModelAnalyse.getString("km"));
-		stats.setTotalLoss(MathRef.round_2(loss) + " " + LangModelAnalyse.getString("dB"));
-		stats.setTotalAttenuation(MathRef.round_4(attenuation) + " " + LangModelAnalyse.getString("dB/km"));
-		stats.setTotalReturnLoss(MathRef.round_2(orl) + " " + LangModelAnalyse.getString("dB"));
-		stats.setTotalNoiseLevel(MathRef.round_2(noise) + " " + LangModelAnalyse.getString("dB"));
-		stats.setTotalNoiseDD(MathRef.round_2(DD98) + " " + LangModelAnalyse.getString("dB"));
-		stats.setTotalNoiseDDRMS(MathRef.round_2(DDRMS) + " " + LangModelAnalyse.getString("dB"));
-		stats.setTotalEvents(String.valueOf(evNum));
+		stats.initGeneralStatistics(ev, bs);
 		jTable.updateUI();
 	}
 
