@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.1 2005/06/01 07:20:19 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.2 2005/06/02 10:02:54 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.io.BellcoreStructure;
@@ -28,14 +29,14 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/06/01 07:20:19 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 10:02:54 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
     final static int MAX_ERROR_CODE_P1 = 5;
     final static int NO_ERROR = MAX_ERROR_CODE_P1 - 1; // the bigger code the softer error
     //final static String A_PARAMS = "0.001;0.01;0.5;1.5;1.0;";
-    final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.0;";
+    final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.3;";
 
     private static class FailCounter {
         // new/changed and lost events
@@ -344,12 +345,13 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         AnalysisParameters ap = new AnalysisParameters(
                 A_PARAMS,
                 ClientAnalysisManager.getDefaultAPClone());
-        SimpleReflectogramEvent re[] =
+        ReliabilitySimpleReflectogramEvent re[] =
+            (ReliabilitySimpleReflectogramEvent[])
             CoreAnalysisManager.makeAnalysis(bs, ap).getSimpleEvents();
 
         assertNotNull(re);
-        
-        boolean veryVerbose = verbose && true;
+
+        boolean veryVerbose = verbose && false;
 
         if (veryVerbose) {
             System.out.println("NEvents=" + re.length);
@@ -357,6 +359,20 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 System.out.println(re[i].toString());
             }
         }
+
+        // проверка согласованности результата анализа
+
+        for (int i = 0; i < re.length; i++) {
+            int evType = re[i].getEventType();
+            boolean shouldHaveReliability =
+                   evType == SimpleReflectogramEvent.CONNECTOR
+                || evType == SimpleReflectogramEvent.GAIN
+                || evType == SimpleReflectogramEvent.LOSS;
+            if (shouldHaveReliability && false)
+                assertTrue(re[i].hasReliability());
+        }
+
+        // сравнение с эталонами
 
         int eventBeyondEtalon = 0; // XXX
         int eventTypeChanged = 0; // XXX
@@ -419,11 +435,15 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                     + " OT=" + ets[i][et].getEventType()
                                     + " B=" + re[k].getBegin()
                                     + " km=" + re[k].getBegin()*dxkm);
-                        level = Math.min(level, eventTypeChanged);
+                        level = Math.min(level, Math.max(eventTypeChanged,
+                                    ets[i][et].getNewLevel()));
                     }
-                    // (2) comparison of event begin and end
-                    // -- for precise type match and for first etalon only
-                    if (compareBeginEnd && ets[i][et].getEventType() == re[k].getEventType() && i == 0) {
+                    // (2) comparison of event begin and end:
+                    // -- for precise type match only
+                    // -- for first etalon only
+                    if (compareBeginEnd
+                            && ets[i][et].getEventType() == re[k].getEventType()
+                            && i == 0) {
                         ToleranceSimpleReflectogramEvent ete = ets[i][et];
                         double etBegin = ete.getBegin();
                         double etEnd = ete.getEnd();
@@ -451,59 +471,76 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                             dEMin = -unitEnd * 10;
                             dEMax = unitEnd * 10;
                         }
-                        // update dbmin/dbmax acc. to etalon
-                        if (ete.hasBeginMin())
-                            dBMin = ete.getBeginMin() - etBegin;
-                        if (ete.hasBeginMax())
-                            dBMax = ete.getBeginMax() - etBegin;
-                        if (ete.hasEndMin())
-                            dEMin = ete.getEndMin() - etEnd;
-                        if (ete.hasEndMax())
-                            dEMax = ete.getEndMax() - etEnd;
-                        String problem;
-                        problem = null;
-                        if (dBeginS < dBMin)
-                            problem = "begin moved too much to left ";
-                        if (dBeginS > dBMax)
-                            problem = "begin moved too much to right";
-                        if (problem != null) {
-                            System.out.println(problem
-                                    + " T=" + re[k].getEventType()
-                                    + " B=" + re[k].getBegin()
-                                    + " BE= " + ete.getBegin()
-                                    + " Bkm=" + re[k].getBegin()*dxkm
-                                    + " BEkm=" + ete.getBegin()*dxkm);
+                        // не оцениваем begin и end для лин. событий,
+                        // у которых не определены явно границы
+                        // колебаний begin/end 
+                        // -- begin processing
+                        if (ete.hasBeginMin() || ete.hasBeginMax()
+                                || ete.getEventType()
+                                    != SimpleReflectogramEvent.LINEAR)
+                        {
+                            // update dbmin/dbmax acc. to etalon
+                            if (ete.hasBeginMin())
+                                dBMin = ete.getBeginMin() - etBegin;
+                            if (ete.hasBeginMax())
+                                dBMax = ete.getBeginMax() - etBegin;
+                            String problem;
+                            problem = null;
+                            if (dBeginS < dBMin)
+                                problem = "begin moved too much to left ";
+                            if (dBeginS > dBMax)
+                                problem = "begin moved too much to right";
+                            if (problem != null) {
+                                System.out.println(problem
+                                        + " T=" + re[k].getEventType()
+                                        + " B=" + re[k].getBegin()
+                                        + " BE= " + ete.getBegin()
+                                        + " Bkm=" + re[k].getBegin()*dxkm
+                                        + " BEkm=" + ete.getBegin()*dxkm);
+                            }
+                            double beginRoughness =
+                                Math.abs(dBeginS - etBegin) / (dBMax - dBMin);
+                            // 0.5 / ( 1/x + 1/sqrt(x) ) == 1 * x / (1 + sqrt(x))
+                            // имеет асимпотики - лин. в нуле, sqrt на +inf
+                            beginRoughness *= 1.0 / (1.0 + Math.sqrt(beginRoughness));
+                            if (ets[i][et].getEventType()
+                                    == SimpleReflectogramEvent.CONNECTOR)
+                                fails.incConnBegin(beginRoughness);
+                            else
+                                fails.incPosition(beginRoughness);
                         }
-                        problem = null;
-                        if (dEndS < dEMin)
-                            problem = "end   moved too much to left ";
-                        if (dEndS > dEMax)
-                            problem = "end   moved too much to right";
-                        if (problem != null) {
-                            System.out.println("end   moved too much "
-                                    + " T=" + re[k].getEventType()
-                                    + " B=" + re[k].getBegin()
-                                    + " E=" + re[k].getEnd()
-                                    + " EE=" + ete.getEnd()
-                                    + " Bkm=" + re[k].getBegin()*dxkm
-                                    + " Ekm=" + re[k].getEnd()*dxkm
-                                    + " EEkm=" + ete.getEnd()*dxkm);
-                        }
-                        double beginRoughness =
-                            Math.abs(dBeginS - etBegin) / (dBMax - dBMin);
-                        double endRoughness =
-                            Math.abs(dEndS - etEnd) / (dEMax - dEMin);
-                        // 0.5 / ( 1/x + 1/sqrt(x) ) == 1 * x / (1 + sqrt(x))
-                        // имеет асимпотики - лин. в нуле, sqrt на +inf
-                        beginRoughness *= 1.0 / (1.0 + Math.sqrt(beginRoughness));
-                        endRoughness *= 1.0 / (1.0 + Math.sqrt(endRoughness));
-                        if (ets[i][et].getEventType()
-                                == SimpleReflectogramEvent.CONNECTOR) {
-                            fails.incConnBegin(beginRoughness);
-                            fails.incConnEnd(endRoughness);
-                        } else {
-                            fails.incPosition(beginRoughness);
-                            fails.incPosition(endRoughness);
+                        // -- end processing
+                        if (ete.hasEndMin() || ete.hasEndMax()
+                                || ete.getEventType()
+                                    != SimpleReflectogramEvent.LINEAR)
+                        {
+                            if (ete.hasEndMin())
+                                dEMin = ete.getEndMin() - etEnd;
+                            if (ete.hasEndMax())
+                                dEMax = ete.getEndMax() - etEnd;
+                            String problem = null;
+                            if (dEndS < dEMin)
+                                problem = "end   moved too much to left ";
+                            if (dEndS > dEMax)
+                                problem = "end   moved too much to right";
+                            if (problem != null) {
+                                System.out.println("end   moved too much "
+                                        + " T=" + re[k].getEventType()
+                                        + " B=" + re[k].getBegin()
+                                        + " E=" + re[k].getEnd()
+                                        + " EE=" + ete.getEnd()
+                                        + " Bkm=" + re[k].getBegin()*dxkm
+                                        + " Ekm=" + re[k].getEnd()*dxkm
+                                        + " EEkm=" + ete.getEnd()*dxkm);
+                            }
+                            double endRoughness =
+                                Math.abs(dEndS - etEnd) / (dEMax - dEMin);
+                            endRoughness *= 1.0 / (1.0 + Math.sqrt(endRoughness));
+                            if (ets[i][et].getEventType()
+                                    == SimpleReflectogramEvent.CONNECTOR)
+                                fails.incConnEnd(endRoughness);
+                            else
+                                fails.incPosition(endRoughness);
                         }
                     }
                 }
