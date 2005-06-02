@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.10 2005/05/20 17:50:18 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.11 2005/06/02 07:16:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/05/20 17:50:18 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/02 07:16:15 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -267,10 +267,10 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
      * protected because hopes that caller will not modify the array returned
      * @return internal array of reliability events.
      */
-	protected ReliabilitySimpleReflectogramEventImpl[] getRSE()
-	{
-		return rse;
-	}
+    protected ReliabilitySimpleReflectogramEventImpl[] getRSE()
+    {
+        return rse;
+    }
 	protected ModelFunction getMF()
 	{
 		return mf;
@@ -292,6 +292,10 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 		this.traceLength = traceLength;
 	}
 
+    /**
+     * согласно контракту {@link ReliabilityModelTraceAndEvents}
+     * возвращает массив {@link ReliabilitySimpleReflectogramEvent}
+     */
 	public SimpleReflectogramEvent[] getSimpleEvents()
 	{
         // Copy an array and all its references to protect se array.
@@ -328,6 +332,10 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 		return getRSE().length;
 	}
 
+    /**
+     * согласно контракту {@link ReliabilityModelTraceAndEvents}
+     * возвращает {@link ReliabilitySimpleReflectogramEvent}
+     */
 	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
 		return getRSE()[nEvent];
