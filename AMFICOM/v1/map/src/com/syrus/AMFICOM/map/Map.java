@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.44 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: Map.java,v 1.45 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,10 +27,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -39,14 +41,15 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/05/30 14:50:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -156,7 +159,16 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 					domainId,
 					name,
 					description);
+
+			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			map.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(map);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return map;
 		}
 		catch (IdentifierGenerationException ige) {
@@ -896,6 +908,14 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 		try {
 			Map map = new Map(id1, creatorId, 0L, domainId, name1, description1);
 			map.changed = true;
+			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			try {
+				StorableObjectPool.putStorableObject(map);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return map;
 		}
 		catch (Exception e) {
@@ -1174,6 +1194,14 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 		try {
 			Map map = new Map(creatorId, domainId, xmlMap, clonedIdsPool);
 			map.changed = true;
+			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			try {
+				StorableObjectPool.putStorableObject(map);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return map;
 		}
 		catch (Exception e) {

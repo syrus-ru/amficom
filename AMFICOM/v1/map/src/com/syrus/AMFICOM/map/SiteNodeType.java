@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.34 2005/05/26 15:31:16 bass Exp $
+ * $Id: SiteNodeType.java,v 1.35 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -32,6 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -39,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/05/26 15:31:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -134,7 +137,16 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 					description,
 					imageId,
 					isTopological);
+
+			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			siteNodeType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(siteNodeType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return siteNodeType;
 		}
 		catch (IdentifierGenerationException ige) {

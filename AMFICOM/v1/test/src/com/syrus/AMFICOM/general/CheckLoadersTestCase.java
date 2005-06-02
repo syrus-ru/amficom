@@ -1,24 +1,21 @@
 /*
- * $Id: CheckLoadersTestCase.java,v 1.1 2005/02/02 07:46:19 cvsadmin Exp $
+ * $Id: CheckLoadersTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package test.com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectGroupEntities;
-
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/02 07:46:19 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class CheckLoadersTestCase extends TestCase {

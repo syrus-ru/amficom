@@ -1,12 +1,12 @@
 /*
- * $Id: ConfigureTestCase.java,v 1.1 2005/04/15 17:34:36 cvsadmin Exp $
+ * $Id: ConfigureTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package test.com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.configuration;
 
 import java.util.Set;
 
@@ -15,23 +15,23 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.cmserver.DatabaseContextSetup;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DefaultIdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.DatabaseContextSetup;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/15 17:34:36 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class ConfigureTestCase extends TestCase {
@@ -75,14 +75,14 @@ public class ConfigureTestCase extends TestCase {
 
 		EquivalentCondition equivalentCondition = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
 		try {
-			Set users = AdministrationStorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
+			Set users = StorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
 			equivalentCondition.setEntityCode(ObjectEntities.DOMAIN_ENTITY_CODE);
-			Set domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
+			Set domains = StorableObjectPool.getStorableObjectsByCondition(equivalentCondition, true);
 
 			ConfigureTestCase.creatorId = ((User) users.iterator().next()).getId();
 			ConfigureTestCase.domainId = ((Domain) domains.iterator().next()).getId();
 
-			IdentifierPool.init(new DefaultIdentifierGeneratorServer());
+			IdentifierPool.init(new DatabaseIdentifierGeneratorServer());
 		} catch (ApplicationException e) {
 			fail();
 		}

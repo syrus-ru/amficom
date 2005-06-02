@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.71 2005/05/25 13:01:05 bass Exp $
+ * $Id: AnalysisType.java,v 1.72 2005/06/02 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,15 +24,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.72 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -158,8 +161,16 @@ public class AnalysisType extends ActionType {
 					etalonParameterTypeIds,
 					outParameterTypeIds,
 					measurementTypeIds);
-			analysisType.changed = true;
+
 			assert analysisType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			analysisType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(analysisType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return analysisType;
 		}
 		catch (IdentifierGenerationException ige) {

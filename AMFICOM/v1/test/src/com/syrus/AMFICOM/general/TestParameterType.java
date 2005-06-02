@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.8 2005/05/26 13:02:51 bob Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.9 2005/06/02 14:31:02 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/26 13:02:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module test
  */
 public class TestParameterType extends CommonTest {
@@ -46,8 +46,6 @@ public class TestParameterType extends CommonTest {
 		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
 		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
 
-		StorableObjectPool.putStorableObject(parameterType);
-
 
 		codename = ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT;
 		name = "Live fiber detect";
@@ -66,8 +64,6 @@ public class TestParameterType extends CommonTest {
 		assertEquals(parameterType.getName(), parameterType1.getName());
 		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
 		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
-
-		StorableObjectPool.putStorableObject(parameterType);
 
 
 		StorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
@@ -90,7 +86,6 @@ public class TestParameterType extends CommonTest {
 				"Ширина импульса в режиме низкого разрешения",
 				"Ширина импульса",
 				parameterType.getDataType());
-		StorableObjectPool.putStorableObject(parameterType);
 		StorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, false);
 	}
 

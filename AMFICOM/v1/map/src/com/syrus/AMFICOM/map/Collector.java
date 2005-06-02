@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.44 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: Collector.java,v 1.45 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -36,13 +38,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/05/30 14:50:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -126,7 +129,16 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 					0L,
 					name,
 					description);
+
+			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			collector.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(collector);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return collector;
 		}
 		catch (IdentifierGenerationException ige) {
@@ -367,6 +379,14 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 				PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
 				collector.addPhysicalLink(physicalLink);
 			}
+			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			try {
+				StorableObjectPool.putStorableObject(collector);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return collector;
 		}
 		catch (ApplicationException e) {
@@ -475,6 +495,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		try {
 			Collector collector = new Collector(creatorId, xmlCollector, clonedIdsPool);
 			collector.changed = true;
+			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			StorableObjectPool.putStorableObject(collector);
 			return collector;
 		}

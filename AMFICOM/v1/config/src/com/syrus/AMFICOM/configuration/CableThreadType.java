@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.36 2005/05/25 13:01:08 bass Exp $
+ * $Id: CableThreadType.java,v 1.37 2005/06/02 14:27:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,10 +19,12 @@ import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -30,6 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
  * <code>CableThreadType</code>, among other fields, contain references to
@@ -37,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.36 $, $Date: 2005/05/25 13:01:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/06/02 14:27:03 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -127,7 +130,16 @@ public final class CableThreadType extends StorableObjectType implements Namable
 					color,
 					linkType,
 					cableLinkType);
+
+			assert cableThreadType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			cableThreadType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(cableThreadType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return cableThreadType;
 		}
 		catch (IdentifierGenerationException ige) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: InitialSetup.java,v 1.1 2005/05/26 14:32:22 bob Exp $
+ * $Id: InitialSetup.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,15 +32,14 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/26 14:32:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module test
  */
@@ -56,19 +55,16 @@ public class InitialSetup extends CommonTest {
 
 	public void testCreateSystemAdministrator() throws ApplicationException {
 		User user = User.createInstance(null, "sys", UserSort.USER_SORT_SYSADMIN, "sys", "System Administrator");
-		StorableObjectPool.putStorableObject(user);
 		StorableObjectPool.flush(user.getId(), true);
 	}
 
 	public void testCreateEquipmentType() throws ApplicationException {
 		EquipmentType eqType = EquipmentType.createInstance(creatorUser.getId(), "EqTypeKIS", "", "", "", "");
-		StorableObjectPool.putStorableObject(eqType);
 		StorableObjectPool.flush(eqType.getId(), true);
 	}
 
 	private static EquipmentType createEquipmentType(Identifier creatorId) throws ApplicationException {
 		EquipmentType eqType = EquipmentType.createInstance(creatorId, "EqTypeKIS", "", "", "", "");
-		StorableObjectPool.putStorableObject(eqType);
 		StorableObjectPool.flush(eqType.getId(), true);
 		return eqType;
 
@@ -77,7 +73,6 @@ public class InitialSetup extends CommonTest {
 	private static TransmissionPathType createTransmissionPathType(Identifier creatorId) throws ApplicationException {
 		TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(creatorId,
 			"Type of TransmissionPath", "", "");
-		StorableObjectPool.putStorableObject(transmissionPathType);
 		StorableObjectPool.flush(transmissionPathType.getId(), true);
 		return transmissionPathType;
 	}
@@ -85,7 +80,6 @@ public class InitialSetup extends CommonTest {
 	private static PortType createPortType(Identifier creatorId) throws ApplicationException {
 		PortType portType = PortType.createInstance(creatorId, "PortTypeReflectometry", "", "",
 			PortTypeSort.PORTTYPESORT_ELECTRICAL);
-		StorableObjectPool.putStorableObject(portType);
 		StorableObjectPool.flush(portType.getId(), true);
 		return portType;
 
@@ -94,7 +88,6 @@ public class InitialSetup extends CommonTest {
 	private static MeasurementPortType createMeasurementPortType(Identifier creatorId) throws ApplicationException {
 		MeasurementPortType mportType = MeasurementPortType.createInstance(creatorId,
 			"MeasurementPortTypeReflectometry", "", "");
-		StorableObjectPool.putStorableObject(mportType);
 		StorableObjectPool.flush(mportType.getId(), true);
 		return mportType;
 
@@ -102,7 +95,6 @@ public class InitialSetup extends CommonTest {
 
 	private static Identifier createDomain(Identifier creatorId) throws ApplicationException {
 		Domain domain = Domain.createInstance(creatorId, null, "domain 1", "System domain");
-		StorableObjectPool.putStorableObject(domain);
 		StorableObjectPool.flush(domain.getId(), true);
 		return domain.getId();
 	}
@@ -111,7 +103,6 @@ public class InitialSetup extends CommonTest {
 											Identifier domainId,
 											String hostname) throws ApplicationException {
 		Server server = Server.createInstance(creatorId, domainId, "server 1", "Measurement server", hostname);
-		StorableObjectPool.putStorableObject(server);
 		StorableObjectPool.flush(server.getId(), true);
 		return server.getId();
 
@@ -124,7 +115,6 @@ public class InitialSetup extends CommonTest {
 										Identifier serverId) throws ApplicationException {
 		MCM mcm = MCM.createInstance(creatorId, domainId, "mcm 1", "Measurement control module", hostname, mcmUserId,
 			serverId);
-		StorableObjectPool.putStorableObject(mcm);
 		StorableObjectPool.flush(mcm.getId(), true);
 		return mcm.getId();
 	}
@@ -136,7 +126,6 @@ public class InitialSetup extends CommonTest {
 										String hostName,
 										short tcpPort) throws ApplicationException {
 		KIS kis = KIS.createInstance(creatorId, domainId, "KIS", "kis ", hostName, tcpPort, equipmentId, mcmId);
-		StorableObjectPool.putStorableObject(kis);
 		StorableObjectPool.flush(kis.getId(), true);
 		return kis.getId();
 
@@ -148,7 +137,6 @@ public class InitialSetup extends CommonTest {
 		try {
 			Equipment eq = Equipment.createInstance(creatorId, domainId, eqType, "Equipment", "equipment",
 				new Identifier("Image_1"), "default supplier", "default supplierCode", 0.0f, 0.0f, "", "", "", "", "");
-			StorableObjectPool.putStorableObject(eq);
 			StorableObjectPool.flush(eq.getId(), true);
 			return eq.getId();
 		} catch (Exception e) {
@@ -161,7 +149,6 @@ public class InitialSetup extends CommonTest {
 											PortType type,
 											Identifier equipmentId) throws ApplicationException {
 		Port port = Port.createInstance(creatorId, type, "Port", equipmentId, PortSort.PORT_SORT_PORT);
-		StorableObjectPool.putStorableObject(port);
 		StorableObjectPool.flush(port.getId(), true);
 		return port.getId();
 
@@ -174,7 +161,6 @@ public class InitialSetup extends CommonTest {
 														TransmissionPathType type) throws ApplicationException {
 		TransmissionPath tp = TransmissionPath.createInstance(creatorId, domainId, "TransmissionPath",
 			"TransmissionPath", type, startPortId, finishPortId);
-		StorableObjectPool.putStorableObject(tp);
 		StorableObjectPool.flush(tp.getId(), true);
 		return tp.getId();
 	}
@@ -185,7 +171,6 @@ public class InitialSetup extends CommonTest {
 													Identifier portId) throws ApplicationException {
 		MeasurementPort mport = MeasurementPort.createInstance(creatorId, type, "MeasurementPort",
 			"MeasurementPortTest", kisId, portId);
-		StorableObjectPool.putStorableObject(mport);
 		StorableObjectPool.flush(mport.getId(), true);
 		return mport.getId();
 
@@ -198,7 +183,6 @@ public class InitialSetup extends CommonTest {
 		MonitoredElement monitoredElement = MonitoredElement.createInstance(creatorId, domainId, "ME", mPortId,
 			MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH, "ME", Collections
 					.singleton(transmissionPathId));
-		StorableObjectPool.putStorableObject(monitoredElement);
 		StorableObjectPool.flush(monitoredElement.getId(), true);
 		return monitoredElement;
 
@@ -210,7 +194,6 @@ public class InitialSetup extends CommonTest {
 											String name,
 											String description) throws ApplicationException {
 		User user = User.createInstance(creatorId, login, sort, name, description);
-		StorableObjectPool.putStorableObject(user);
 		StorableObjectPool.flush(user.getId(), true);
 		return user.getId();
 
@@ -341,7 +324,6 @@ public class InitialSetup extends CommonTest {
 													DataType dataType) throws ApplicationException {
 		ParameterType parameterType = ParameterType.createInstance(creatorId, codename, description, name, dataType);
 		Identifier id = parameterType.getId();
-		StorableObjectPool.putStorableObject(parameterType);
 		StorableObjectPool.flush(id, true);
 		return id;
 	}
@@ -353,7 +335,6 @@ public class InitialSetup extends CommonTest {
 													java.util.Set outParameterTypes) throws ApplicationException {
 		MeasurementType measurementType = MeasurementType.createInstance(creatorId, codename, description,
 			inParameterTypes, outParameterTypes, new HashSet());
-		StorableObjectPool.putStorableObject(measurementType);
 		StorableObjectPool.flush(measurementType.getId(), true);
 		return measurementType.getId();
 	}
@@ -368,7 +349,6 @@ public class InitialSetup extends CommonTest {
 									java.util.Set measurementTypeIds) throws ApplicationException {
 		AnalysisType analysisType = AnalysisType.createInstance(creatorId, codename, description, inParameterTypes,
 			criParameterTypes, etaParameterTypes, outParameterTypes, measurementTypeIds);
-		StorableObjectPool.putStorableObject(analysisType);
 		StorableObjectPool.flush(analysisType.getId(), true);
 	}
 
@@ -382,7 +362,6 @@ public class InitialSetup extends CommonTest {
 										java.util.Set measurementTypeIds) throws ApplicationException {
 		EvaluationType evaluationType = EvaluationType.createInstance(creatorId, codename, description,
 			inParameterTypes, thrParameterTypes, etaParameterTypes, outParameterTypes, measurementTypeIds);
-		StorableObjectPool.putStorableObject(evaluationType);
 		StorableObjectPool.flush(evaluationType.getId(), true);
 	}
 

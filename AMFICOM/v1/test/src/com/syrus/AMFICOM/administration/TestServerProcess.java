@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,12 +19,13 @@ import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -45,7 +46,7 @@ public final class TestServerProcess extends CommonTest {
 
 	public void testCreateInstance() throws ApplicationException {
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SERVER_ENTITY_CODE);
-		Server server = (Server) AdministrationStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		Server server = (Server) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Server '" + server.getId() + "'");
 
 //	sys user
@@ -91,7 +92,7 @@ public final class TestServerProcess extends CommonTest {
 				UserWrapper.COLUMN_LOGIN);
 		cc.addCondition(tc1);
 
-		Set users = AdministrationStorableObjectPool.getStorableObjectsByCondition(cc, true);
+		Set users = StorableObjectPool.getStorableObjectsByCondition(cc, true);
 		Map usersMap = new HashMap(users.size());
 		for (Iterator it = users.iterator(); it.hasNext();) {
 			final User user = (User) it.next();
@@ -106,29 +107,24 @@ public final class TestServerProcess extends CommonTest {
 //	login process
 		user = (User) usersMap.get(UserWrapper.LOGINPROCESSOR_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), LOGIN_PROCESS_CODENAME, server.getId(), user.getId(), "Login process");
-		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	event process
 		user = (User) usersMap.get(UserWrapper.EVENTPROCESSOR_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), EVENT_PROCESS_CODENAME, server.getId(), user.getId(), "Event process");
-		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	mserver process
 		user = (User) usersMap.get(UserWrapper.MSERVER_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), MSERVER_PROCESS_CODENAME, server.getId(), user.getId(), "Measurement Server");
-		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	cmserver process
 		user = (User) usersMap.get(UserWrapper.CMSERVER_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), CMSERVER_PROCESS_CODENAME, server.getId(), user.getId(), "Client Measurement Server");
-		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
 //	mshserver process
 		user = (User) usersMap.get(UserWrapper.MSHSERVER_LOGIN);
 		serverProcess = ServerProcess.createInstance(sysUser.getId(), MSHSERVER_PROCESS_CODENAME, server.getId(), user.getId(), "Map/Scheme Server");
-		AdministrationStorableObjectPool.putStorableObject(serverProcess);
 
-		AdministrationStorableObjectPool.flush(ObjectEntities.SERVERPROCESS_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.SERVERPROCESS_ENTITY_CODE, true);
 	}
 
 }

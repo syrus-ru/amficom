@@ -1,26 +1,21 @@
 /*
- * $Id: CharacteristicTestCase.java,v 1.1 2005/04/15 17:33:02 cvsadmin Exp $
+ * $Id: CharacteristicTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package test.com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.configuration;
 
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentDatabase;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
-import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -30,10 +25,11 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/15 17:33:02 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class CharacteristicTestCase extends ConfigureTestCase {

@@ -1,5 +1,5 @@
 /*
- * $Id: TestUser.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
+ * $Id: TestUser.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,12 @@ import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -38,7 +39,7 @@ public final class TestUser extends CommonTest {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.USER_ENTITY_CODE,
 				UserWrapper.COLUMN_LOGIN);
-		Set users = AdministrationStorableObjectPool.getStorableObjectsByCondition(tc, true);
+		Set users = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 		User sysUser = (User) users.iterator().next();
 		System.out.println("Sys user: '" + sysUser.getLogin() + "', id: '" + sysUser.getId() + "'");
 
@@ -83,11 +84,6 @@ public final class TestUser extends CommonTest {
 		System.out.println("MSHServer user: '" + mshserverUser.getLogin() + "', id: '" + mshserverUser.getId() + "'");
 
 //	save all
-		AdministrationStorableObjectPool.putStorableObject(loginUser);
-		AdministrationStorableObjectPool.putStorableObject(eventUser);
-		AdministrationStorableObjectPool.putStorableObject(mserverUser);
-		AdministrationStorableObjectPool.putStorableObject(cmserverUser);
-		AdministrationStorableObjectPool.putStorableObject(mshserverUser);
-		AdministrationStorableObjectPool.flush(ObjectEntities.USER_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.USER_ENTITY_CODE, true);
 	}
 }

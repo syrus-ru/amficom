@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.39 2005/05/26 15:31:16 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.40 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -32,14 +34,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/05/26 15:31:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -147,7 +150,16 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 					name,
 					description,
 					bindingDimension);
+
+			assert physicalLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			physicalLinkType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(physicalLinkType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return physicalLinkType;
 		}
 		catch (IdentifierGenerationException ige) {

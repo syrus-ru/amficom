@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.17 2005/05/25 13:01:05 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.18 2005/06/02 14:27:15 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -91,9 +91,15 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 					0L,
 					intervalsAbstractTemporalPatternMap,
 					intervalsDuration);
-			intervalsTemporalPattern.changed = true;
 
-			assert intervalsTemporalPattern.isValid() : ErrorMessages.OBJECT_NOT_INITIALIZED;
+			assert intervalsTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			intervalsTemporalPattern.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(intervalsTemporalPattern);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
 
 			return intervalsTemporalPattern;
 		}
@@ -741,14 +747,6 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(this.modifierId,
 				offsetIds,
 				offsetDuration);
-		try {
-			StorableObjectPool.putStorableObject(intervalsTemporalPattern);
-		}
-		catch (IllegalObjectEntityException e) {
-			// newer occur
-			assert false;
-		}
-
 		this.intervalsAbstractTemporalPatternMap.put(firstOffset, intervalsTemporalPattern.getId());
 		this.intervalsDuration.put(firstOffset, new Long(duration));
 	}

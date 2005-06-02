@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.24 2005/05/24 13:25:05 bass Exp $
+ * $Id: CableThread.java,v 1.25 2005/06/02 14:27:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,10 +18,12 @@ import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,10 +31,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/24 13:25:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/06/02 14:27:03 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -99,7 +102,16 @@ public class CableThread extends DomainMember implements TypedObject {
 											name,
 											description,
 											type);
+
+			assert cableThread.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			cableThread.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(cableThread);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return cableThread;
 		}
 		catch (IdentifierGenerationException ige) {

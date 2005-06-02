@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.31 2005/05/26 15:31:17 bass Exp $
+ * $Id: Domain.java,v 1.32 2005/06/02 14:26:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/05/26 15:31:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/06/02 14:26:53 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -32,11 +32,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 public class Domain extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 6401785674412391641L;
@@ -204,8 +206,14 @@ public class Domain extends DomainMember implements Characterizable {
 					description);
 
 			assert domain.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 			domain.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(domain);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return domain;
 		}
 		catch (IdentifierGenerationException ige) {

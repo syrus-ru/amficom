@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.7 2005/05/25 13:01:05 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.8 2005/06/02 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,20 +25,24 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -847,13 +851,22 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CronTemporalPattern temporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
+			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
 					creatorId,
 					0L,
 					description,
 					cronString);
-			temporalPattern.changed = true;
-			return temporalPattern;
+
+			assert cronTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			cronTemporalPattern.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(cronTemporalPattern);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
+			return cronTemporalPattern;
 		}
 		catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);

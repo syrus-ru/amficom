@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.5 2005/05/25 13:01:05 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.6 2005/06/02 14:27:15 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,14 +20,17 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -90,28 +93,35 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	 * @param creatorId creator id
 	 * @param period period in milliseconds
 	 */
-	public static PeriodicalTemporalPattern createInstance(	Identifier creatorId,
-															long period) throws CreateObjectException {
+	public static PeriodicalTemporalPattern createInstance(Identifier creatorId, long period) throws CreateObjectException {
 
 		try {
-			PeriodicalTemporalPattern periodicalTemporalPattern =
-				new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE),
+			PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE),
 					creatorId,
 					0L,
 					period);
+
+			assert periodicalTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			periodicalTemporalPattern.changed = true;
-			
-			assert periodicalTemporalPattern.isValid() : ErrorMessages.OBJECT_NOT_INITIALIZED;			
-			
+			try {
+				StorableObjectPool.putStorableObject(periodicalTemporalPattern);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return periodicalTemporalPattern;
-		} catch (IdentifierGenerationException ige) {
+		}
+		catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	protected boolean isValid() {
 		return super.isValid() && this.period > 0;

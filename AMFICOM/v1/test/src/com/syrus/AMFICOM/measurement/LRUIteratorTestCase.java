@@ -1,26 +1,28 @@
 /*
- * $Id: LRUIteratorTestCase.java,v 1.1 2004/11/11 12:16:16 cvsadmin Exp $
+ * $Id: LRUIteratorTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package test.com.syrus.AMFICOM.measurement;
+package com.syrus.AMFICOM.measurement;
 
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.util.ClientLRUMap;
+import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.LRUMap;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/11 12:16:16 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools/test
  */
 public class LRUIteratorTestCase extends TestCase {
@@ -37,15 +39,20 @@ public class LRUIteratorTestCase extends TestCase {
 	
 	public void testClientLRUMapItarator(){
 		System.out.println("testClientLRUMapItarator | ");
-		ClientLRUMap map = new ClientLRUMap();
+		StorableObjectResizableLRUMap map = new StorableObjectResizableLRUMap();
 		dosmth(map);		
 	}
 	
 	private void dosmth(LRUMap map){		
 		Identifier id = new Identifier("ParameterType_1");
 		Identifier creatorId = new Identifier("User_1");
-		ParameterType parameterType = ParameterType.createInstance(id , creatorId, "test", "parameterType", "name");
-		map.put(parameterType.getId(), parameterType);
+		try {
+			ParameterType parameterType = ParameterType.createInstance(creatorId, "test", "parameterType", "name", DataType.DATA_TYPE_BOOLEAN);
+			map.put(parameterType.getId(), parameterType);
+		}
+		catch (CreateObjectException e) {
+			e.printStackTrace();
+		}
 		
 		for (Iterator it = map.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();

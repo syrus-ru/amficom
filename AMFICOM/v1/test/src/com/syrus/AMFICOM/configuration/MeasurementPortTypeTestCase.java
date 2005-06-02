@@ -1,20 +1,17 @@
 /*
- * $Id: MeasurementPortTypeTestCase.java,v 1.1 2004/11/09 16:00:25 cvsadmin Exp $
+ * $Id: MeasurementPortTypeTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package test.com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.configuration;
 
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,8 +23,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/09 16:00:25 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class MeasurementPortTypeTestCase extends ConfigureTestCase {

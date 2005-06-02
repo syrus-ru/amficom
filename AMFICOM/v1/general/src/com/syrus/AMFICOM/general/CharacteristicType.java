@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.26 2005/05/25 13:01:03 bass Exp $
+ * $Id: CharacteristicType.java,v 1.27 2005/06/02 14:26:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/25 13:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/06/02 14:26:37 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -118,6 +118,13 @@ public final class CharacteristicType extends StorableObjectType {
 											sort.value());
 			assert characteristicType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			characteristicType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(characteristicType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return characteristicType;
 		}
 		catch (IdentifierGenerationException ige) {

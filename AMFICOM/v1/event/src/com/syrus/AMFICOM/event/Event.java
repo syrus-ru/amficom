@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.24 2005/05/25 13:01:01 bass Exp $
+ * $Id: Event.java,v 1.25 2005/06/02 14:27:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -34,10 +35,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/25 13:01:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/06/02 14:27:29 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -127,8 +129,14 @@ public final class Event extends StorableObject implements TypedObject {
 											eventSourceIds);
 
 			assert event.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 			event.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(event);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return event;
 		}
 		catch (IdentifierGenerationException ige) {

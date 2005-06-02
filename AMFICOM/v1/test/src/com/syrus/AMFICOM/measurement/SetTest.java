@@ -1,5 +1,5 @@
 /*-
- * $Id: SetTest.java,v 1.1 2005/04/14 12:54:06 cvsadmin Exp $
+ * $Id: SetTest.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.DataType;
@@ -32,8 +33,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/14 12:54:06 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -152,8 +153,7 @@ public class SetTest extends AbstractMeasurementTestCase {
 		Set set = Set.createInstance(creatorId, SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 			"Set created by Scheduler", params, Collections.singleton(meId));
 		Log.debugMessage("SetTest.testSet | set id is " + set.getId(), Log.FINEST);
-		MeasurementStorableObjectPool.putStorableObject(set);
-		MeasurementStorableObjectPool.flush(true);
+		StorableObjectPool.flush(set.getId(), true);
 	}
 	
 	private ByteArray getByteArray(String value, ParameterType parameterType) {

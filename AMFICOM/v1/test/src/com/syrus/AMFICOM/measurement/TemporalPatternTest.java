@@ -1,29 +1,26 @@
 /*-
- * $Id: TemporalPatternTest.java,v 1.1 2005/04/13 09:35:39 cvsadmin Exp $
+ * $Id: TemporalPatternTest.java,v 1.2 2005/06/02 14:31:03 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package test.com.syrus.AMFICOM.measurement;
+package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.SortedSet;
+
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
-
-import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/13 09:35:39 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:03 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module tools
  */

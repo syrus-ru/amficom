@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.52 2005/05/25 13:01:09 bass Exp $
+ * $Id: MonitoredElement.java,v 1.53 2005/06/02 14:27:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,18 +21,22 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/05/25 13:01:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/06/02 14:27:03 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -119,7 +123,16 @@ public class MonitoredElement extends DomainMember {
 								sort.value(),
 								localAddress,
 								monitoredDomainMemberIds);
+
+			assert monitoredElement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			monitoredElement.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(monitoredElement);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return monitoredElement;
 		}
 		catch (IdentifierGenerationException ige) {

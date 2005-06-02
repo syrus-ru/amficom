@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.69 2005/05/25 13:01:05 bass Exp $
+ * $Id: Set.java,v 1.70 2005/06/02 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,19 +23,22 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -135,8 +138,14 @@ public final class Set extends StorableObject {
 					monitoredElementIds);
 
 			assert set.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 			set.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(set);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return set;
 		}
 		catch (IdentifierGenerationException ige) {

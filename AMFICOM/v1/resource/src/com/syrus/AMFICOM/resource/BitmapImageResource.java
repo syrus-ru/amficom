@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.15 2005/05/24 16:40:06 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.16 2005/06/02 14:27:40 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,20 +13,24 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.BitmapImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/05/24 16:40:06 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/06/02 14:27:40 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -77,7 +81,16 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 					0L,
 					codename,
 					image);
+
+			assert bitmapImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			bitmapImageResource.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(bitmapImageResource);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return bitmapImageResource;
 		}
 		catch (IdentifierGenerationException ige) {

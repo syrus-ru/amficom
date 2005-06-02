@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.38 2005/05/26 15:31:15 bass Exp $
+ * $Id: Mark.java,v 1.39 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,16 +23,19 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется
@@ -41,8 +44,8 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -199,7 +202,16 @@ public class Mark extends AbstractNode {
 					city,
 					street,
 					building);
+
+			assert mark.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			mark.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(mark);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return mark;
 		}
 		catch (IdentifierGenerationException ige) {
@@ -506,7 +518,7 @@ public class Mark extends AbstractNode {
 
 		try {
 			PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
-   			Mark mark = new Mark(
+			Mark mark = new Mark(
 					id1,
 					creatorId,
 					0L,
@@ -519,7 +531,16 @@ public class Mark extends AbstractNode {
 					city1,
 					street1,
 					building1);
+			
+			assert mark.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			mark.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(mark);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+			
 			return mark;
 		}
 		catch (ApplicationException e) {

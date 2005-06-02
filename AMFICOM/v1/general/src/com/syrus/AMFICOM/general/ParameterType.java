@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.30 2005/05/26 15:31:14 bass Exp $
+ * $Id: ParameterType.java,v 1.31 2005/06/02 14:26:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/26 15:31:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/06/02 14:26:37 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -116,6 +116,13 @@ public final class ParameterType extends StorableObjectType implements Character
 			assert parameterType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			
 			parameterType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(parameterType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return parameterType;
 		}
 		catch (IdentifierGenerationException ige) {

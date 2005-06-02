@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.67 2005/05/25 13:01:05 bass Exp $
+ * $Id: EvaluationType.java,v 1.68 2005/06/02 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,15 +24,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.68 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -158,8 +161,16 @@ public class EvaluationType extends ActionType {
 					etalonParameterTypeIds,
 					outParameterTypeIds,
 					measurementTypeIds);
+
 			assert evaluationType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			evaluationType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(evaluationType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return evaluationType;
 		}
 		catch (IdentifierGenerationException ige) {

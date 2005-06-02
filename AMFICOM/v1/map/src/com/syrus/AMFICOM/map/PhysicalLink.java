@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.58 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.59 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,10 +27,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -46,6 +48,7 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы,
@@ -55,8 +58,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.58 $, $Date: 2005/05/30 14:50:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -240,7 +243,16 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					dimensionY,
 					leftToRight,
 					topToBottom);
+
+			assert physicalLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			physicalLink.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(physicalLink);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return physicalLink;
 		}
 		catch (IdentifierGenerationException ige) {
@@ -940,7 +952,16 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					physicalLinkType1.getBindingDimension().getHeight(),
 					true,
 					true);
+
+			assert link1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			link1.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(link1);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return link1;
 		}
 		catch (ApplicationException e) {
@@ -1091,6 +1112,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		try {
 			PhysicalLink physicalLink = new PhysicalLink(creatorId, xmlPhysicalLink, clonedIdsPool);
 			physicalLink.changed = true;
+			assert physicalLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			StorableObjectPool.putStorableObject(physicalLink);
 			return physicalLink;
 		}

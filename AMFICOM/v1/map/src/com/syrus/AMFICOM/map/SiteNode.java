@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.39 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: SiteNode.java,v 1.40 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -42,6 +44,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.util.Log;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -55,8 +58,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/05/30 14:50:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -191,7 +194,16 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 					city,
 					street,
 					building);
+
+			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			siteNode.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(siteNode);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return siteNode;
 		}
 		catch (IdentifierGenerationException ige) {
@@ -424,7 +436,16 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			imageId1 = ((AbstractImageResource) set.iterator().next()).getId();
 
 			SiteNode siteNode = new SiteNode(id1, creatorId, 0L, imageId1, name1, description1, siteNodeType, x1, y1, city1, street1, building1);
+
+			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			siteNode.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(siteNode);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return siteNode;
 		}
 		catch (ApplicationException e) {
@@ -541,6 +562,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		try {
 			SiteNode siteNode = new SiteNode(creatorId, xmlSiteNode, clonedIdsPool);
 			siteNode.changed = true;
+			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			StorableObjectPool.putStorableObject(siteNode);
 			return siteNode;
 		}

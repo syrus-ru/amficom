@@ -1,5 +1,5 @@
 /*
- * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.2 2005/05/26 13:02:51 bob Exp $
+ * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/26 13:02:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class UnitsOfQP1643ACharacteristrics extends CommonTest {
@@ -49,12 +49,9 @@ public class UnitsOfQP1643ACharacteristrics extends CommonTest {
 				CharacteristicTypeCodenames.UNITS_RESOLUTION, "resolution unit type", DataType.DATA_TYPE_STRING,
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			StorableObjectPool.putStorableObject(resolutionType);
-
 			Characteristic resolutionCharacteristic = Characteristic.createInstance(creatorUser.getId(), resolutionType,
 				"resolution unit", "resolution unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
 				"м", measurementPortTypeId, false, true);
-			StorableObjectPool.putStorableObject(resolutionCharacteristic);
 		}
 
 		{
@@ -62,12 +59,9 @@ public class UnitsOfQP1643ACharacteristrics extends CommonTest {
 				CharacteristicTypeCodenames.UNITS_WAVELENGTH, "wave length unit type", DataType.DATA_TYPE_STRING,
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			StorableObjectPool.putStorableObject(waveLengthType);
-
 			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), waveLengthType,
 				"wavelength unit", "wavelength unit", CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
 				"нм", measurementPortTypeId, false, true);
-			StorableObjectPool.putStorableObject(characteristic);
 		}
 
 		{
@@ -75,12 +69,10 @@ public class UnitsOfQP1643ACharacteristrics extends CommonTest {
 				CharacteristicTypeCodenames.UNITS_AVERAGE_COUNT, "average count unit type",
 				DataType.DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			StorableObjectPool.putStorableObject(averageCountType);
 			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), averageCountType,
 				"average count unit", "average count unit",
 				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "точек", measurementPortTypeId, false,
 				true);
-			StorableObjectPool.putStorableObject(characteristic);
 		}
 
 		{
@@ -88,12 +80,10 @@ public class UnitsOfQP1643ACharacteristrics extends CommonTest {
 				CharacteristicTypeCodenames.UNITS_TRACE_LENGTH, "trace length unit type",
 				DataType.DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			StorableObjectPool.putStorableObject(traceLengthType);
 			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), traceLengthType,
 				"trace length unit", "trace length unit",
 				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "км", measurementPortTypeId, false,
 				true);
-			StorableObjectPool.putStorableObject(characteristic);
 		}
 
 		{
@@ -101,12 +91,10 @@ public class UnitsOfQP1643ACharacteristrics extends CommonTest {
 				CharacteristicTypeCodenames.UNITS_PULSE_WIDTH, "average count unit type",
 				DataType.DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
 
-			StorableObjectPool.putStorableObject(pulseWidthType);
 			Characteristic characteristic = Characteristic.createInstance(creatorUser.getId(), pulseWidthType,
 				"pulse width unit", "pulse width unit",
 				CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE, "нс", measurementPortTypeId, false,
 				true);
-			StorableObjectPool.putStorableObject(characteristic);
 		}
 		
 		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, true);

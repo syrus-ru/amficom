@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.38 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.39 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,10 +23,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -37,14 +39,15 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
  * быть концевым для линии и для фрагмента линии. В физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.38 $, $Date: 2005/05/30 14:50:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -178,7 +181,16 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 					location.getX(),
 					location.getY(),
 					false);
+
+			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			topologicalNode.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(topologicalNode);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return topologicalNode;
 
 		}
@@ -377,8 +389,16 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		try {
 			PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
 			TopologicalNode node1 = new TopologicalNode(id1, creatorId, 0L, name1, description1, x1, y1, active1);
-			node1.changed = true;
 			node1.setPhysicalLink(physicalLink1);
+
+			assert node1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			node1.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(node1);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
 
 			return node1;
 		}
@@ -460,6 +480,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		try {
 			TopologicalNode topologicalNode = new TopologicalNode(creatorId, xmlTopologicalNode, clonedIdsPool);
 			topologicalNode.changed = true;
+			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			StorableObjectPool.putStorableObject(topologicalNode);
 			return topologicalNode;
 		}

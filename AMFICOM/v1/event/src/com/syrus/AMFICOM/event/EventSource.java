@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.16 2005/05/25 13:01:02 bass Exp $
+ * $Id: EventSource.java,v 1.17 2005/06/02 14:27:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,20 +18,23 @@ import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/05/25 13:01:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/06/02 14:27:29 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public final class EventSource extends StorableObject {
@@ -78,7 +81,16 @@ public final class EventSource extends StorableObject {
 					creatorId,
 					0L,
 					sourceEntityId);
+
+			assert eventSource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			eventSource.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(eventSource);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return eventSource;
 		}
 		catch (IdentifierGenerationException ige) {

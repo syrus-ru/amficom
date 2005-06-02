@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.69 2005/05/25 13:01:05 bass Exp $
+ * $Id: Measurement.java,v 1.70 2005/06/02 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -33,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -271,10 +272,16 @@ public class Measurement extends Action {
 										startTime,
 										localAddress,
 										testId);
-			
+
 			assert measurement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
 			measurement.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(measurement);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return measurement;
 		}
 		catch (IdentifierGenerationException ige) {

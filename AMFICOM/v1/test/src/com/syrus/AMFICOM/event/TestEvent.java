@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvent.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
+ * $Id: TestEvent.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,13 +22,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -49,7 +50,7 @@ public class TestEvent extends CommonTest {
 				OperationSort.OPERATION_EQUALS,
 				new Short(ObjectEntities.EVENTTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
-		Set eventTypes = EventStorableObjectPool.getStorableObjectsByCondition(tc, true);
+		Set eventTypes = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 		System.out.println("###################### Retrieved: " + eventTypes.size() + " event types");
 		EventType eventType = (EventType) eventTypes.iterator().next();
 
@@ -64,7 +65,7 @@ public class TestEvent extends CommonTest {
 				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
-		Set parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
+		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
 		System.out.println("###################### Retrieved: " + parameterTypes.size() + " parameter types");
 		ParameterType pt, pt1 = null, pt2 = null;
 		for (Iterator it = parameterTypes.iterator(); it.hasNext();) {
@@ -87,7 +88,7 @@ public class TestEvent extends CommonTest {
 
 		//LinkedIdsCondition lic = new LinkedIdsCondition()
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
-		Set eventSources = EventStorableObjectPool.getStorableObjectsByCondition(ec, true);
+		Set eventSources = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 		System.out.println("###################### Retrieved: " + eventSources.size() + " event sources");
 		Set eventSourceIds = new HashSet(eventSources.size());
 		for (Iterator it = eventSources.iterator(); it.hasNext();)
@@ -95,8 +96,7 @@ public class TestEvent extends CommonTest {
 
 		Event event = Event.createInstance(creatorId, eventType, description, eventParameters, eventSourceIds);
 
-		EventStorableObjectPool.putStorableObject(event);
-		EventStorableObjectPool.flush(false);
+		StorableObjectPool.flush(ObjectEntities.EVENT_ENTITY_CODE, false);
 	}
 
 }

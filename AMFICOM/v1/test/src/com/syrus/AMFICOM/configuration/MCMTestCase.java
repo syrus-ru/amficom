@@ -1,27 +1,26 @@
 /*
- * $Id: MCMTestCase.java,v 1.1 2004/09/10 06:50:56 cvsadmin Exp $
+ * $Id: MCMTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package test.com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.configuration;
 
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.MCM;
-import com.syrus.AMFICOM.configuration.MCMDatabase;
+import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/10 06:50:56 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class MCMTestCase extends ConfigureTestCase {

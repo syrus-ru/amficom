@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
+ * $Id: TestEventSource.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,9 +17,11 @@ import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -53,13 +55,12 @@ public class TestEventSource extends CommonTest {
 		for (Iterator it = eventSources.iterator(); it.hasNext();) {
 			eventSource = (EventSource) it.next();
 			System.out.println("id: "+ eventSource.getId());
-			EventStorableObjectPool.putStorableObject(eventSource);
 		}
-		EventStorableObjectPool.flush(false);
+		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_ENTITY_CODE, false);
 	}
 
 	private EventSource createAndTestEventSource(Identifier sourceEntityId) throws ApplicationException {
-		EventSource eventSource = EventSource.createInstance(SessionContext.getAccessIdentity().getUserId(), sourceEntityId);
+		EventSource eventSource = EventSource.createInstance(creatorUser.getId(), sourceEntityId);
 
 		EventSource_Transferable est = (EventSource_Transferable) eventSource.getTransferable();
 

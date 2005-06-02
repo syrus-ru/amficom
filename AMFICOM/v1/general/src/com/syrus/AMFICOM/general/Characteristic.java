@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.34 2005/05/26 15:31:13 bass Exp $
+ * $Id: Characteristic.java,v 1.35 2005/06/02 14:26:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,10 +16,11 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/05/26 15:31:13 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/06/02 14:26:37 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -138,8 +139,14 @@ public class Characteristic extends StorableObject implements TypedObject {
 					visible);
 
 			assert characteristic.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
 			characteristic.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(characteristic);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return characteristic;
 		}
 		catch (final IdentifierGenerationException ige) {

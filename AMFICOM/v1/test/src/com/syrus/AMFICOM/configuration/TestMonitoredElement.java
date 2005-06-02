@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.2 2005/04/30 14:18:45 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,9 +21,10 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/30 14:18:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -38,19 +39,17 @@ public class TestMonitoredElement extends CommonTest {
 	}
 
 	public void testCreate() throws ApplicationException {
-		AccessIdentity accessIdentity = SessionContext.getAccessIdentity();
-
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
-		Iterator it = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		MeasurementPort measurementPort = (MeasurementPort) it.next();
 
 		String localAddress = "SW=01:06";
 
 		ec = new EquivalentCondition(ObjectEntities.TRANSPATH_ENTITY_CODE);
-		it = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		TransmissionPath transmissionPath = (TransmissionPath) it.next();
 
-		MonitoredElement monitoredElement = MonitoredElement.createInstance(accessIdentity.getUserId(),
+		MonitoredElement monitoredElement = MonitoredElement.createInstance(creatorUser.getId(),
 				accessIdentity.getDomainId(),
 				"monitored element",
 				measurementPort.getId(),
@@ -61,10 +60,10 @@ public class TestMonitoredElement extends CommonTest {
 		this.checkMonitoredElement(monitoredElement);
 
 		ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_ENTITY_CODE);
-		it = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		Equipment equipment = (Equipment) it.next();
 
-		MonitoredElement monitoredElement1 = MonitoredElement.createInstance(accessIdentity.getUserId(),
+		MonitoredElement monitoredElement1 = MonitoredElement.createInstance(creatorUser.getId(),
 				accessIdentity.getDomainId(),
 				"monitored element 1",
 				measurementPort.getId(),
@@ -74,9 +73,7 @@ public class TestMonitoredElement extends CommonTest {
 
 		this.checkMonitoredElement(monitoredElement1);
 
-		ConfigurationStorableObjectPool.putStorableObject(monitoredElement);
-		ConfigurationStorableObjectPool.putStorableObject(monitoredElement1);
-		ConfigurationStorableObjectPool.flush(false);
+		StorableObjectPool.flush(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, false);
 	}
 
 	private void checkMonitoredElement(MonitoredElement monitoredElement) {

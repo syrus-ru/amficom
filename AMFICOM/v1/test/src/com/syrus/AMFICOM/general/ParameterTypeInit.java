@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeInit.java,v 1.1 2005/05/06 16:07:51 bob Exp $
+ * $Id: ParameterTypeInit.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/06 16:07:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class ParameterTypeInit extends GeneralTestCase {
@@ -36,24 +36,14 @@ public class ParameterTypeInit extends GeneralTestCase {
 	}
 
 	public void testCreateCharacteristics() throws ApplicationException {
-
-		
-		{	
-			
-
+		{
 			ParameterType parameterType = ParameterType.createInstance(creatorId, ParameterTypeCodenames.DADARA_CRITERIA, "Dadara criteria parameter type", "Dadara criteria",
-				DataType.DATA_TYPE_RAW);
-			
-			GeneralStorableObjectPool.putStorableObject(parameterType);
+					DataType.DATA_TYPE_RAW);
 		}
 
-		if (false){	
-			
-
+		if (false) {	
 			ParameterType parameterType = ParameterType.createInstance(creatorId, ParameterTypeCodenames.REFLECTOGRAMMA, "Reflectoramm parameter type", "Reflectoramm",
 				DataType.DATA_TYPE_RAW);
-			
-			GeneralStorableObjectPool.putStorableObject(parameterType);
 		}
 
 	}

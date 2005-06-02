@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.60 2005/05/25 13:01:05 bass Exp $
+ * $Id: Analysis.java,v 1.61 2005/06/02 14:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -28,10 +29,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/06/02 14:27:15 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -217,10 +219,16 @@ public class Analysis extends Action {
 				measurement,
 				name,
 				criteriaSet);
-			
+
 			assert analysis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
 			analysis.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(analysis);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return analysis;
 		}
 		catch (IdentifierGenerationException ige) {

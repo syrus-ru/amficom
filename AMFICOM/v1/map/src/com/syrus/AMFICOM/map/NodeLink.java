@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.44 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: NodeLink.java,v 1.45 2005/06/02 14:28:23 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -34,14 +36,15 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
+import com.syrus.util.Log;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/05/30 14:50:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/06/02 14:28:23 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -152,7 +155,16 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 					starNode,
 					endNode,
 					length);
+
+			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			nodeLink.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(nodeLink);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return nodeLink;
 		}
 		catch (IdentifierGenerationException ige) {
@@ -421,8 +433,16 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 			AbstractNode startNode1 = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
 			AbstractNode endNode1 = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
 			NodeLink nodeLink1 = new NodeLink(id1, creatorId, 0L, name1, physicalLink1, startNode1, endNode1, length1);
-			nodeLink1.changed = true;
 			physicalLink1.addNodeLink(nodeLink1);
+
+			assert nodeLink1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			nodeLink1.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(nodeLink1);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
 
 			return nodeLink1;
 		}
@@ -544,6 +564,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 
 		try {
 			NodeLink nodeLink = new NodeLink(creatorId, xmlNodeLink, clonedIdsPool);
+			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			nodeLink.changed = true;
 			StorableObjectPool.putStorableObject(nodeLink);
 			return nodeLink;

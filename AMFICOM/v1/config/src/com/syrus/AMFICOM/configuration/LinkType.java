@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.48 2005/05/26 15:31:16 bass Exp $
+ * $Id: LinkType.java,v 1.49 2005/06/02 14:27:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,19 +23,22 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/05/26 15:31:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/06/02 14:27:03 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -129,7 +132,16 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 						manufacturer,
 						manufacturerCode,
 						imageId);
+
+			assert linkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			linkType.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(linkType);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return linkType;
 		}
 		catch (IdentifierGenerationException ige) {

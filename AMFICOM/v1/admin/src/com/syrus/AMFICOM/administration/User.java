@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.23 2005/05/26 13:19:12 bob Exp $
+ * $Id: User.java,v 1.24 2005/06/02 14:26:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,15 +24,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/26 13:19:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/06/02 14:26:54 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -175,8 +177,14 @@ public final class User extends StorableObject {
 					description);
 
 			assert user.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 			user.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(user);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+
 			return user;
 		}
 		catch (IdentifierGenerationException ige) {
