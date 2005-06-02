@@ -112,8 +112,8 @@ private:
 	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
 
 	// ======= “–≈“»… Ё“јѕ јЌјЋ»«ј - ќѕ–≈ƒ≈Ћ≈Ќ»≈ —ќЅџ“»… ѕќ ¬—ѕЋ≈— јћ =======
-    void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes);
-	int	 processDeadZone(ArrList& splashes);
+    void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes, int dzMaxDist);
+	int	 processDeadZone(ArrList& splashes, int dzMaxDist);
     int  processIfIsConnector(int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
     void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2);

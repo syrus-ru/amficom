@@ -292,7 +292,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 return;}
 
 	// ======= “–≈“»… Ё“јѕ јЌјЋ»«ј - ќѕ–≈ƒ≈Ћ≈Ќ»≈ —ќЅџ“»… ѕќ ¬—ѕЋ≈— јћ =======
-	findEventsBySplashes(TEMP, accSpl); // по выделенным всплескам определить событи€ (по сути - сгруппировать всплсески)
+	findEventsBySplashes(TEMP, accSpl, scaleB); // по выделенным всплескам определить событи€ (по сути - сгруппировать всплсески)
 	// используем ArrList и его объекты
 	accSpl.disposeAll(); // очищаем массив ArrList
 
@@ -430,14 +430,14 @@ return;
 // ======= ‘”Ќ ÷»» “–≈“№≈√ќ Ё“јѕј јЌјЋ»«ј - ќѕ–≈ƒ≈Ћ≈Ќ»я —ќЅџ“»… ѕќ ¬—ѕЋ≈— јћ =======
 //
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes)
+void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes, int dzMaxDist)
 {//* мЄртвую зону ищЄм  чуть иначе
     int shift = 0;
     if( splashes.getLength() <=2 )
 return;
 	Splash* sp1 = (Splash*)splashes[0];
     Splash* sp2;
-    shift = processDeadZone(splashes);// ищем мЄртвую зону
+    shift = processDeadZone(splashes, dzMaxDist);// ищем мЄртвую зону
 	// ищем остальные коннекторы  и сварки
     for(int i = shift+1; i<splashes.getLength()-1; i++)
     { int len = processIfIsConnector(i, splashes);
@@ -470,7 +470,65 @@ return;
     }
 }
 //-------------------------------------------------------------------------------------------------
-int InitialAnalysis::processDeadZone(ArrList& splashes)
+//*
+int InitialAnalysis::processDeadZone(ArrList& splashes, int maxDist)
+{
+	int i;
+	const double DY1 = 3.0; // кандидаты на м.з. - в пределах -3 дЅ от абс. макс
+	const double DY2 = 2.0; // м.з. длитс€ до лок. максимума, если нет спада более 2 дЅ
+	// ищем абс. макс.
+	double vAbsMax = data[0];
+	for (i = 0; i <= lastPoint; i++)
+		if (vAbsMax < data[i])
+			vAbsMax = data[i];
+	// ищем начало м.з.
+	for (i = 0; i <= lastPoint; i++)
+		if (data[i] > vAbsMax - DY1)
+			break;
+	// i - начало м.з. (!: м б > lastPoint)
+	// ищем первый макс. в м.з.
+	for (; i <= lastPoint - 1; i++)
+		if (data[i + 1] < data[i])
+			break;
+	if (i > lastPoint)
+		return -1; // м.з. не найдена - XXX: как обрабатывать?
+	// ищем абс. макс. до спада на DY2
+	int dzMaxBeg = i;
+	int dzMaxEnd = i;
+	for (; i <= lastPoint; i++) {
+		if (data[i] < data[dzMaxBeg] - DY2)
+			break;
+		if (data[i] > data[dzMaxBeg]) {
+			dzMaxBeg = dzMaxEnd = i;
+		} else if (data[i] == data[dzMaxBeg]) {
+			if (dzMaxEnd == i - 1)
+				dzMaxEnd++;
+		}
+	}
+	int sureMax = dzMaxEnd;
+	// ищем все спады правее sureMax, отсто€щие друг от друга не более чем на maxDist
+	int pos = sureMax;
+	for (i = 0; i < splashes.getLength(); i++) {
+		Splash *sp = (Splash*)splashes[i];
+		if (sp->begin_thr < sureMax) {			// пропускаем все всплески, начало которых левее sureMax
+			if (sp->sign < 0 && sp->end_thr > pos)	// ... но при этом дл€ спадов отслеживаем их конец
+				pos = sp->end_thr;
+			continue;
+		}
+		if (sp->sign > 0 || sp->begin_thr > pos + maxDist) // останавливаемс€ на подъеме или лин. участке больше maxDist правее sureMax
+			break;
+		pos = sp->end_thr;
+	}
+    { EventParams *ep = new EventParams;
+      ep->type = EventParams::DEADZONE;
+      ep->begin = 0; ep->end = pos;
+      if(ep->end > lastPoint){ ep->end = lastPoint;}
+      events->add(ep);
+    }
+	return i - 1;
+}
+//-------------------------------------------------------------------------------------------------
+/*/int InitialAnalysis::processDeadZone(ArrList& splashes, int dummy)
 {   int i, shift = 0;
 	int begin = 0, end = -1;
     double f_max = 0, f_min = 0;
@@ -487,7 +545,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
         if(sp1->sign>0 && f_max<sp1->f_extr )
         { f_max = sp1->f_extr;
           begin = sp1->begin_thr;
-		  // сбрасываем запомненный слева мнимум, так как максимум сдвинулс€ вправо 	
+		  // сбрасываем запомненный слева мнимум, так как максимум сдвинулс€ вправо
           end = -1;
           f_min = 0;
         }
@@ -515,7 +573,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes)
       events->add(ep);
     }
     return shift;
-}
+}//*/
 // -------------------------------------------------------------------------------------------------
 // ѕосмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и
 // добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен -1.
