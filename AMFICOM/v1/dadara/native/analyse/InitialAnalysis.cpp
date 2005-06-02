@@ -12,6 +12,8 @@
 
 #include "../common/prf.h"
 
+static	SineWavelet wavelet; // используемый вейвлет
+
 #define xsign(f) ((f)>=0?1:-1) 
 //------------------------------------------------------------------------------------------------------------
 // Construction/Destruction
@@ -37,8 +39,8 @@ InitialAnalysis::InitialAnalysis(
 	fprintf(logf, "=== IA invoked\n"
 		"len %d deltaX %g minTh %g minWeld %g minConn %g minEnd %g noiseFactor %g\n",
 		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, minimalEnd, noiseFactor);
-	fprintf(logf, "rSBig %d rSSmall %d nRefSize %d lTZ %d extNoise %s\n",
-		rSBig, rSSmall, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
+	fprintf(logf, "nRefSize %d rACrit %g rSBig %d rSSmall %d lTZ %d extNoise %s\n",
+		nonReflectiveSize, rACrit, rSBig, rSSmall, lengthTillZero, externalNoise ? "present" : "absent");
 	fflush(logf);
 #endif
 
@@ -96,13 +98,31 @@ InitialAnalysis::InitialAnalysis(
 
 	prf_b("IA: analyse");
 
-	double *f_wletB	= new double[lastPoint]; // space for base-scale wavelet image
-	double *f_wletTEMP	= new double[lastPoint]; // space for temporal wavelet image parts
+	// FIXME: treatment of lastPoint !!!
 
-	performAnalysis(f_wletB, f_wletTEMP, scaleB);
+	double *f_wletTEMP	= new double[lastPoint + 2]; // space for temporal wavelet image parts
 
-	delete[] f_wletB;
+#ifdef DEBUG_INITIAL_ANALYSIS
+	f_wletTEMP[lastPoint] = 123456;
+	f_wletTEMP[lastPoint + 1] = 123457;
+#endif
+
+	performAnalysis(f_wletTEMP, scaleB);
+
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(logf, "IA: performAnalysis returned\n");
+	if (f_wletTEMP[lastPoint] != 123456) {
+		fprintf(logf, "f_wletTEMP[lastPoint] == %g\n", f_wletTEMP[lastPoint]);
+		fflush(logf);
+	}
+#endif
+
+	//delete[] f_wletB;
 	delete[] f_wletTEMP;
+
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(logf, "IA: f_wletTEMP deleted\n");
+#endif
 
 	prf_b("IA: done");
 
@@ -127,14 +147,43 @@ InitialAnalysis::~InitialAnalysis()
 #endif
 }
 //------------------------------------------------------------------------------------------------------------
-void InitialAnalysis::performAnalysis(double *f_wletB, double *f_wletTEMP, int scaleB)
+// поиск прекрывающихся событий
+// XXX: пересечение - по thr или по weld порогу?
+// note: null-ссылки пропускаем (они остаются при перемещении объектов из одного списка в другой)
+int InitialAnalysis::splashesOverlap(Splash &spl1, Splash &spl2) {
+	return
+		spl1.begin_thr < spl2.end_thr && spl2.begin_thr < spl1.end_thr;
+}
+
+int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
+	int j;
+	for (j = 0; j < arrList.getLength(); j++) {
+		if (arrList[j] && splashesOverlap(spl, *(Splash*)arrList[j]))
+			return j;
+	}
+	return -1;
+}
+
+int InitialAnalysis::findMaxOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
+	int j;
+	int ret = -1;
+	for (j = 0; j < arrList.getLength(); j++) {
+		if (arrList[j] && splashesOverlap(spl, *(Splash*)arrList[j]))
+			ret = j;
+	}
+	return ret;
+}
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 {	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
-	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
-	// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
-    double wn = getWLetNorma(scaleB);
-    performTransformationOnly(data, 0, lastPoint, f_wletB, scaleB, wn);
-	calcAverageFactor(f_wletB, scaleB, wn);
-	centerWletImageOnly(f_wletB, scaleB, 0, lastPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
+	{
+		// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
+		// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
+		double wn = getWLetNorma(scaleB);
+		performTransformationOnly(data, 0, lastPoint, TEMP, scaleB, wn);
+		calcAverageFactor(TEMP, scaleB, wn);
+		centerWletImageOnly(TEMP, scaleB, 0, lastPoint, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
+	}
 
 #ifdef debug_VCL
 	{
@@ -156,18 +205,109 @@ void InitialAnalysis::performAnalysis(double *f_wletB, double *f_wletTEMP, int s
 	}
 #endif
 
-	{	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
-		// ищём все всплески вейвлет-образа.
-		// На входе - вейвлет-образ, пороги, шум. На выходе - объекты splash
-		ArrList splashes; // создаем пустой ArrList
-		findAllWletSplashes(f_wletB, scaleB, splashes); // заполняем массив splashes объектами
-		if(splashes.getLength() == 0){
+	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
+
+	ArrList accSpl; // текущий список найденных сварок (пустой)
+
+	int scaleIndex;
+	for (scaleIndex = 4; scaleIndex <= 4; scaleIndex += 1) {
+		int scale = scaleB * scaleIndex / 4;
+		if (scale < getMinScale())
+			continue;
+		// проводим поиск всплесков на данном масштабе
+		ArrList newSpl;
+		performTransformationAndCenter(data, 0, lastPoint, TEMP, scale, getWLetNorma(scale));
+		findAllWletSplashes(TEMP, scale, newSpl);
+		// анализируем, что делать  с каждым найденным всплеском
+		int i;
+		for (i = 0; i < newSpl.getLength(); i++) {
+			Splash *cnSplash = (Splash*)newSpl[i];
+
+			// ищем, с какими всплесками accSpl пересекается текущий cnSplash
+			int minAccIndex = findMinOverlappingSplashIndex(*cnSplash, accSpl);
+			int maxAccIndex = findMaxOverlappingSplashIndex(*cnSplash, accSpl);
+
+			enum {
+				ACTION_IGNORE = 1,
+				ACTION_INSERT = 2,
+				ACTION_REPLACE = 3
+			} action = ACTION_IGNORE;
+
+			int replaceIndex = -1;
+
+			if (minAccIndex < 0) { // новый всплеск
+				action = ACTION_INSERT;
+			} else if (minAccIndex < maxAccIndex) { // пересекает несколько всплесков acc
+				action = ACTION_IGNORE;
+			} else { // пересекли ровно один всплеск acc
+				Splash *caSplash = (Splash*)accSpl[minAccIndex];
+				int minBackIndex = findMinOverlappingSplashIndex(*caSplash, newSpl);
+				int maxBackIndex = findMaxOverlappingSplashIndex(*caSplash, newSpl);
+				if (maxBackIndex > minBackIndex) { // соответствующий всплеск пересекает еще какие-то, кроме нашего
+					action = ACTION_IGNORE;
+				} else { // связь взаимно-однозначна
+					assert(minBackIndex >= 0);
+					if (fabs(cnSplash->f_extr) / sqrt(cnSplash->scale)
+						> fabs(caSplash->f_extr) / sqrt(caSplash->scale)) {
+						action = ACTION_REPLACE;
+						replaceIndex = minAccIndex;
+					}
+					else {
+						action = ACTION_IGNORE;
+					}
+				}
+			}
+			// NB: ACTION_REPLACE и ACTION_INSERT производится только для
+			// всплесков, не пересекающихся ни с какими всплесками accSpl
+			// и для всплесков, пересекающихся взаимно-однозначно с одним
+			// accSpl-всплесков.
+			// Это гарантирует, что удаление всплеска из newSpl (при
+			// его перемещении в accSpl) не повлияет на обработку других
+			// всплесков этого же newSpl.
+
+			if (action == ACTION_REPLACE) {
+				// удаляем splash и ставим на его место найденный
+				delete (Splash*)accSpl[replaceIndex];
+				accSpl.set(replaceIndex, cnSplash);
+				// 'убираем' splash из newSpl списка, чтобы не удалять его дважды
+				newSpl.set(i, 0);
+			} else if (action == ACTION_INSERT) {
+				// надо найти точку вставки
+				int j;
+				for (j = 0; j < accSpl.getLength(); j++) {
+					if (((Splash*)accSpl[j])->begin_thr > cnSplash->begin_thr)
+						break;
+				}
+				// j - точка вставки
+				accSpl.slowInsert(j, cnSplash);
+				// 'убираем' splash из newSpl списка, чтобы не удалять его дважды
+				newSpl.set(i, 0);
+			}
+		}
+		newSpl.disposeAll();
+		/*{
+			int i;
+			fprintf(stderr, "accSpl dump at scale %d:\n", scale);
+			for (i = 0; i < accSpl.getLength(); i++) {
+				fprintf(stderr, "spl[%d]: %d - %d  @ %d\n",
+					i,
+					((Splash*)accSpl[i])->begin_thr,
+					((Splash*)accSpl[i])->end_thr,
+					((Splash*)accSpl[i])->scale);
+			}
+			fflush(stderr);
+		}*/
+	}
+	//performTransformationAndCenter(data, 0, lastPoint, TEMP, scaleB, getWLetNorma(scaleB));
+	//findAllWletSplashes(TEMP, scaleB, accSpl);
+
+	if(accSpl.getLength() == 0){
 return;}
-		// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
-		findEventsBySplashes(f_wletTEMP, splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
-		// используем ArrList и его объекты
-		splashes.disposeAll(); // очищаем массив ArrList
-    } // удаляем пустой массив splashes
+
+	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
+	findEventsBySplashes(TEMP, accSpl); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
+	// используем ArrList и его объекты
+	accSpl.disposeAll(); // очищаем массив ArrList
 
 	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
     processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
@@ -175,6 +315,10 @@ return;}
     addLinearPartsBetweenEvents();
 	trimAllEvents(); // поскольку мы искусственно расширячет на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
 	verifyResults(); // проверяем ошибки
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(logf, "performAnalysis: done\n");
+	fflush(logf);
+#endif
 }
 // -------------------------------------------------------------------------------------------------
 //
@@ -841,8 +985,10 @@ void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, 
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
 {	//int len = end - begin;
-	SineWavelet wavelet;
 	wavelet.transform(freq, f, lastPoint, begin, end - 1, f_wlet + begin, norma);
+}
+int InitialAnalysis::getMinScale() {
+	return wavelet.getMinScale();
 }
 //------------------------------------------------------------------------------------------------------------
 // считаем, что расстояние медлу точками _динаковое_

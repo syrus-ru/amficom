@@ -78,8 +78,13 @@ private:
 	int lastPoint;
 	double wletMeanValue; // среднее значение образа рефлектограммы
 
-	void performAnalysis(double *f_wletB, double *f_wletTEMP, int scaleB);
+	void performAnalysis(double *f_wletTEMP, int scaleB);
 	int getLastPoint();
+
+	// splash comparison for many-scale analysis
+	static int splashesOverlap(Splash &spl1, Splash &spl2);
+	static int findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList);
+	static int findMaxOverlappingSplashIndex(Splash &spl, ArrList &arrList);
 
 	// вычислить коэфф "a" и "b" прямой y=ax+b, минимизирующей RMS
     void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit
@@ -90,6 +95,7 @@ private:
 	static double calcThresh(double thres, double noise); // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
 
 	// выполнение вейвлет-преобразования
+	int getMinScale();
 	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma);
 	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
