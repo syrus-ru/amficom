@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.1 2005/06/01 20:54:26 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.2 2005/06/02 14:44:03 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/01 20:54:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 14:44:03 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 abstract class MCMObjectLoader extends CORBAObjectLoader {
@@ -102,6 +102,12 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		return objects;
 	}
 
+	/**
+	 * This method does <em>not</em> override
+	 * {@link CORBAObjectLoader#saveStorableObjects(Set, short, ReceiveProcedure)},
+	 * since it has an extra argument, <code>final boolean force</code>,
+	 * unnecessary in super implementation.
+	 */
 	protected void saveStorableObjects(final Set storableObjects,
 			final short entityCode,
 			final boolean force,
@@ -109,7 +115,7 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 			throws ApplicationException {
 		this.databaseObjectLoader.saveStorableObjects(storableObjects, force);
 
-		super.saveStorableObjects(storableObjects, entityCode, force, receiveProcedure);
+		super.saveStorableObjects(storableObjects, entityCode, receiveProcedure);
 	}
 
 	public void delete(Set identifiables) {

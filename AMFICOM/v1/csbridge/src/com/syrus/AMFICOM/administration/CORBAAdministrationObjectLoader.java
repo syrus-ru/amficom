@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.17 2005/06/01 20:42:53 arseniy Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.18 2005/06/02 14:44:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/01 20:42:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader implements AdministrationObjectLoader {
@@ -173,14 +173,13 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 	}
 
 	public void saveUsers(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.USER_ENTITY_CODE, force, new ReceiveProcedure() {
+		super.saveStorableObjects(storableObjects, ObjectEntities.USER_ENTITY_CODE, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final boolean force1,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveUsers((User_Transferable[]) transferables, force1, sessionKey);
+				return ((CMServer) server).receiveUsers((User_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.6 2005/06/01 20:41:01 arseniy Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.7 2005/06/02 14:44:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.mshserver.corba.MSHServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 public final class CORBAMapObjectLoader extends CORBAObjectLoader implements MapObjectLoader {
-
 	public CORBAMapObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}

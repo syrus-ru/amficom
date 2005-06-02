@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.52 2005/06/01 20:54:59 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.53 2005/06/02 14:44:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/01 20:54:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/06/02 14:44:03 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends MCMObjectLoader implements MeasurementObjectLoader {
@@ -289,15 +289,14 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		super.databaseObjectLoader.saveStorableObjects(storableObjects, force);
 	}
 	
-	public void saveTests(java.util.Set storableObjects, boolean force) throws ApplicationException {
+	public void saveTests(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(storableObjects, ObjectEntities.TEST_ENTITY_CODE, force, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final boolean force1,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MServer) server).receiveTests((Test_Transferable[]) transferables, force1, sessionKey);
+				return ((MServer) server).receiveTests((Test_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}

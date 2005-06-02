@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.17 2005/06/01 20:53:28 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.18 2005/06/02 14:44:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -70,11 +70,11 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
 	 * @module csbridge_v1
 	 */
-	public interface TransmitProcedure {
+	protected interface TransmitProcedure {
 		IDLEntity[] transmitStorableObjects(
 				final CommonServer server,
 				final Identifier_Transferable ids[],
@@ -84,12 +84,12 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
-	public interface TransmitButIdsConditionProcedure {
+	protected interface TransmitButIdsConditionProcedure {
 		IDLEntity[] transmitStorableObjectsButIdsCondition(
 				final CommonServer server,
 				final Identifier_Transferable ids[],
@@ -100,25 +100,24 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.17 $, $Date: 2005/06/01 20:53:28 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
 		StorableObject_Transferable[] receiveStorableObjects(
 				final CommonServer server,
 				final IDLEntity transferables[],
-				final boolean force,
 				final SessionKey_Transferable sessionKey)
 				throws AMFICOMRemoteException;
 	}
 
 	/**
-	 * Overridden in MCMObjectLoader
+	 * <p>Overridden in <code>MCMObjectLoader</code>.</p>
+	 *
 	 * @param ids
 	 * @param entityCode
 	 * @param transmitProcedure
-	 * @return
 	 * @throws ApplicationException
 	 */
 	protected Set loadStorableObjects(final Set ids,
@@ -194,7 +193,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	 * programmer unintentionally, since the <code>ids</code> parameter in
 	 * the above two cases has <em>different</em> meanings.</p>
 	 * 
-	 * Overridden in MCMObjectLoader
+	 * <p>Overridden in <code>MCMObjectLoader</code>.</p>
 	 */
 	protected Set loadStorableObjectsButIdsCondition(final Set ids,
 			final StorableObjectCondition condition,
@@ -235,11 +234,9 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @todo Login restoration & error handling.
-	 * Overridden in MCMObjectLoader
 	 */
-	protected void saveStorableObjects(final Set storableObjects,
+	protected final void saveStorableObjects(final Set storableObjects,
 			final short entityCode,
-			final boolean force,
 			final ReceiveProcedure receiveProcedure)
 			throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
@@ -254,7 +251,6 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 		try {
 			final StorableObject_Transferable headers[] = receiveProcedure.receiveStorableObjects(server,
 					transferables,
-					force,
 					sessionKey);
 			super.updateHeaders(storableObjects, headers);
 		} catch (final AMFICOMRemoteException are) {

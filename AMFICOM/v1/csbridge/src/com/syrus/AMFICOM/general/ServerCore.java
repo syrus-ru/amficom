@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.9 2005/06/01 20:52:44 arseniy Exp $
+ * $Id: ServerCore.java,v 1.10 2005/06/02 14:44:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/06/01 20:52:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/02 14:44:03 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -65,11 +65,9 @@ public abstract class ServerCore implements CommonServer {
 	
 			Log.debugMessage("ServerCore.delete() | Trying to delete... ", Log.INFO);
 			StorableObjectPool.delete(Identifier.fromTransferables(ids));
-		}
-		catch (AMFICOMRemoteException are) {
+		} catch (final AMFICOMRemoteException are) {
 			throw are;
-		}
-		catch (final Throwable t) {
+		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
 	}
@@ -81,8 +79,7 @@ public abstract class ServerCore implements CommonServer {
 	public final void verify(final byte b) {
 		try {
 			Log.debugMessage("ServerCore.verify() | Verifying value: " + b, Log.CONFIG);
-		}
-		catch (final Throwable t) {
+		} catch (final Throwable t) {
 			Log.debugException(t, Log.SEVERE);
 		}
 	}
@@ -270,11 +267,9 @@ public abstract class ServerCore implements CommonServer {
 			}
 
 			return Identifier.createTransferables(storableObjects);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
-		}
-		catch (final Throwable t) {
+		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
 	}
