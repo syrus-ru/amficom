@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.75 2005/05/31 13:00:51 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.76 2005/06/02 09:44:48 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.75 $, $Date: 2005/05/31 13:00:51 $
+ * @version $Revision: 1.76 $, $Date: 2005/06/02 09:44:48 $
  * @module
  */
 
@@ -258,7 +258,7 @@ public class CoreAnalysisManager
 	 */
 	public static boolean checkAnalysisParameters(AnalysisParameters ap)
 	{
-        final double MIN_MIN_THRESHOLD = 0.001; // FIXME: debug: MIN_MIN_THRESHOLD should be 0.01 or 0.005 (?)
+        final double MIN_MIN_THRESHOLD = 0.001; // FIXME: debug: MIN_MIN_THRESHOLD should be 0.01 or 0.005 or 0.001 (?)
 		if (ap.getMinThreshold() < MIN_MIN_THRESHOLD)
 			return false;
 		if (ap.getMinSplice() < ap.getMinThreshold())
