@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.17 2005/05/27 11:37:13 arseniy Exp $
+ * $Id: MSHServerImpl.java,v 1.18 2005/06/02 09:46:13 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/27 11:37:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/06/02 09:46:13 $
+ * @author $Author: max $
  * @module mshserver_1
  */
 public final class MSHServerImpl extends MSHServerSchemeTransmit {
@@ -56,6 +56,7 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 			final TopologicalImageQuery_Transferable topologicalImageQuery_Transferable,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
+		try {
 		Log.debugMessage("MSHServerTopologicalImageTransmit.transmitTopologicalImage | Trying to transmit "
 				+ '\'', Log.INFO);
 		TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQuery_Transferable);
@@ -67,6 +68,10 @@ public final class MSHServerImpl extends MSHServerSchemeTransmit {
 		}
 		RenderedImage_Transferable renderedImageT = new RenderedImage_Transferable(image);
 		return renderedImageT;
+		} catch (final Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
+		}
 	}
 	
 	public void stopRenderTopologicalImage(

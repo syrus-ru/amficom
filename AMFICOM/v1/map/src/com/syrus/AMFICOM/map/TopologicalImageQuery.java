@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageQuery.java,v 1.1 2005/05/26 11:22:40 max Exp $
+ * $Id: TopologicalImageQuery.java,v 1.2 2005/06/02 09:42:28 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.map.corba.TopologicalImageQuery_Transferable;
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 11:22:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 09:42:28 $
  * @module mapinfo_v1
  */
 public class TopologicalImageQuery {
@@ -100,7 +100,7 @@ public class TopologicalImageQuery {
     /**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-    public IDLEntity getTransferable() {
+    public TopologicalImageQuery_Transferable getTransferable() {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
