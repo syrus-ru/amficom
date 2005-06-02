@@ -14,6 +14,18 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
 
+XMLDIR=./xml
+XMLSRCDIR=$(XMLDIR)/src
+XMLCLASSDIR=$(XMLDIR)/classes
+XMLBEANSCLASSPATH=$(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
+LIBNAME_GENERALXML=generalxml.jar
+LIBNAME_MAPXML=mapxml.jar
+
+XMLBEANS_HOME=/mnt/d/xmlbeans-2.0.0-beta1
+SCOMP=$(XMLBEANS_HOME)/bin/scomp
+SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
+
+
 APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
@@ -26,9 +38,9 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/map
 		
 
-.mach:	.corba $(CLASSDIR)
+.mach:	.corba $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -39,6 +51,30 @@ $(LIBNAME): .mach
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java 
 	touch $@
+
+
+#### XML ####
+.PHONY:	xmlinstall
+xmlinstall:	$(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
+	$(CP) $^ $(LIBDIR)
+
+$(LIBNAME_MAPXML):	$(LIBNAME_GENERALXML)
+	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBNAME_GENERALXML) \
+		$(XMLDIR)/Map.xsd \
+		$(XMLDIR)/Characteristic.xsd \
+		$(XMLDIR)/Collector.xsd \
+		$(XMLDIR)/NodeLink.xsd \
+		$(XMLDIR)/PhysicalLink.xsd \
+		$(XMLDIR)/PhysicalLinkType.xsd \
+		$(XMLDIR)/SiteNode.xsd \
+		$(XMLDIR)/SiteNodeType.xsd \
+		$(XMLDIR)/TopologicalNode.xsd
+
+$(LIBNAME_GENERALXML):
+	$(SCOMP) $(SCOMPFLAGS) -out $@ \
+		$(XMLDIR)/General.xsd
+
+
 
 $(CLASSDIR):
 	mkdir -p $@
