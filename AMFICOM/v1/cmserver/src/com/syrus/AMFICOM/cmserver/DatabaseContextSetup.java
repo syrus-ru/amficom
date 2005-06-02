@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.30 2005/05/27 11:13:49 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.31 2005/06/02 14:32:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/27 11:13:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/06/02 14:32:41 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -60,43 +60,46 @@ final class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
-		DatabaseContext.registerDatabase(new AnalysisDatabase());
-		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
-		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
-		DatabaseContext.registerDatabase(new CableThreadDatabase());
-		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
-		DatabaseContext.registerDatabase(new CharacteristicDatabase());
-		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
-		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new DomainDatabase());
-		DatabaseContext.registerDatabase(new EquipmentDatabase());
-		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
-		DatabaseContext.registerDatabase(new EvaluationDatabase());
-		DatabaseContext.registerDatabase(new EvaluationTypeDatabase());
-		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new KISDatabase());
-		DatabaseContext.registerDatabase(new LinkDatabase());
-		DatabaseContext.registerDatabase(new LinkTypeDatabase());
-		DatabaseContext.registerDatabase(new MCMDatabase());
-		DatabaseContext.registerDatabase(new MeasurementDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
-		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
-		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
-		DatabaseContext.registerDatabase(new ModelingDatabase());
-		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
-		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
-		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
-		DatabaseContext.registerDatabase(new PortDatabase());
-		DatabaseContext.registerDatabase(new PortTypeDatabase());
-		DatabaseContext.registerDatabase(new ResultDatabase());
+		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
+		DatabaseContext.registerDatabase(new CharacteristicDatabase());
+
+		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
+		DatabaseContext.registerDatabase(new MCMDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
+
+		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
+		DatabaseContext.registerDatabase(new PortTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
+		DatabaseContext.registerDatabase(new LinkTypeDatabase());
+		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
+		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
+		DatabaseContext.registerDatabase(new EquipmentDatabase());
+		DatabaseContext.registerDatabase(new PortDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new LinkDatabase());
+		DatabaseContext.registerDatabase(new CableThreadDatabase());
+
+		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
+		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
+		DatabaseContext.registerDatabase(new EvaluationTypeDatabase());
+		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementDatabase());
+		DatabaseContext.registerDatabase(new AnalysisDatabase());
+		DatabaseContext.registerDatabase(new EvaluationDatabase());
+		DatabaseContext.registerDatabase(new ModelingDatabase());
+		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
+		DatabaseContext.registerDatabase(new ResultDatabase());
 		DatabaseContext.registerDatabase(new SetDatabase());
 		DatabaseContext.registerDatabase(new TestDatabase());
-		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
-		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
-		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
 	}
 }
