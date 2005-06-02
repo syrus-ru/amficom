@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeServer.java,v 1.8 2005/05/24 13:25:05 bass Exp $
+ * $Id: MapSchemeServer.java,v 1.9 2005/06/02 09:54:20 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/24 13:25:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/06/02 09:54:20 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 public class MapSchemeServer {
@@ -134,6 +134,11 @@ public class MapSchemeServer {
 			 * Init database object loader.
 			 */
 			DatabaseObjectLoader.init(user.getId());
+			
+			/*
+			 * Mapinfo pool init.
+			 */
+			MapInfoPool.init();
 
 			/*
 			 * Create session environment.
