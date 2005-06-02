@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.1 2005/05/26 11:13:23 max Exp $
+ * $Id: MapJLocalRenderer.java,v 1.2 2005/06/02 09:53:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 11:13:23 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/02 09:53:21 $
  * @module mapper-servlet
  */
 public class MapJLocalRenderer
@@ -52,10 +52,17 @@ public class MapJLocalRenderer
      */
     private MapJ mapJObject = null;
     
+    /**
+     * Flag is true when the rendering is stopped and
+     * the image is not to be encoded.
+     */
+    private boolean cancelEncoding = false;
+    
     public MapJLocalRenderer()
         throws IllegalDataException  
     {
-    	String fileToLoad = new String("qweqwe");
+    	// TODO: use property file
+    	String fileToLoad = new String("/home/max/src/amficom/lib/mapinfo/cb.mdf");
     	Log.debugMessage("MapJLocalRenderer<init> | RunningThread - Constructor - Initializing MapJ.", Log.DEBUGLEVEL07);         
         this.mapJObject = createMapJ(fileToLoad);
     }
@@ -103,72 +110,77 @@ public class MapJLocalRenderer
         this.renderer = renderer;
     }
     
-    public byte[] render(TopologicalImageQuery query)
-        throws Exception
-    {
-    	int miWidth = query.getMapImageWidth();
-    	int miHeight = query.getMapImageHeight();
-      //Setting size, zoom and center point
-      if (  (this.imageBuffer == null)
-          ||(this.imageBuffer.getWidth() != miWidth)
-          ||(this.imageBuffer.getHeight() != miHeight))
-      {
-         this.imageBuffer = new BufferedImage(
-         		miWidth,
-         		miHeight,
-         		BufferedImage.TYPE_USHORT_565_RGB);
-         Log.debugMessage("MapJLocalRenderer.render | RunningThread - Constructor - Creating MapXtreme renderer.", Log.DEBUGLEVEL07);           
-         this.renderer = new LocalRenderer(this.imageBuffer);
-         Log.debugMessage("MapJLocalRenderer.render | RunningThread - Constructor - MapXtreme renderer created.", Log.DEBUGLEVEL07);
-      }
-      
-      this.setSize(miWidth,miHeight);
-      this.setCenter(new DoublePoint(query.getTopoCenterX(), query.getTopoCenterY()));
-      this.setScale(query.getTopoScale());
-      
-      boolean[] layerVisibilities = query.getLayerVisibilities();
-      boolean[] labelVisibilities = query.getLabelVisibilities();      
-      
-      for (int i = 0; i < query.getLayerVisibilities().length; i++)
-          this.setLayerVisibility(
-                  i,
-                  layerVisibilities[i],
-                  labelVisibilities[i]);
-      
-    	
-      if (this.renderer == null)
-      {
-          Log.errorMessage("MapJLocalRenderer.render | RunningThread - Constructor - Renderer is not initialized. " +
-                     "Run setRenderingParameters first.");
-          throw new IllegalDataException("MapJLocalRenderer.render | Failed to initialize Renderer");
-      }
-      
-      Log.debugMessage("MapJLocalRenderer.render | RenderToStream - Before rendering.", Log.DEBUGLEVEL07);
-      
-      this.renderer.render(ImageRequestComposer.create(
-              this.mapJObject,
-              NUM_OF_COLORS,
-              BACKGROUND_COLOR,
-              "image/png"));
-      
-      //Output the map as a GIF Image
-      ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
-      Log.debugMessage("MapJLocalRenderer.render | RenderToStream - Encoding image.", Log.DEBUGLEVEL07);        
-      ImageIO.write(this.imageBuffer,"PNG",resultStream);
-      
-      resultStream.flush();        
-      resultStream.close();
-      
-      byte[] result = resultStream.toByteArray();
-      Log.debugMessage("MapJLocalRenderer.render | RenderToStream - Successfully rendered.", Log.DEBUGLEVEL07);
-      return result;
-    }
+    public byte[] render(TopologicalImageQuery query) throws Exception {
+		this.cancelEncoding = false;
+
+		int miWidth = query.getMapImageWidth();
+		int miHeight = query.getMapImageHeight();
+		// Setting size, zoom and center point
+		if ((this.imageBuffer == null)
+				|| (this.imageBuffer.getWidth() != miWidth)
+				|| (this.imageBuffer.getHeight() != miHeight)) {
+			this.imageBuffer = new BufferedImage(miWidth, miHeight,
+					BufferedImage.TYPE_USHORT_565_RGB);
+			Log.debugMessage("MapJLocalRenderer.render | RunningThread - Constructor - Creating MapXtreme renderer.",
+							Log.DEBUGLEVEL07);
+			this.renderer = new LocalRenderer(this.imageBuffer);
+			Log.debugMessage("MapJLocalRenderer.render | RunningThread - Constructor - MapXtreme renderer created.",
+							Log.DEBUGLEVEL07);
+		}
+
+		this.setSize(miWidth, miHeight);
+		this.setCenter(new DoublePoint(query.getTopoCenterX(), query
+				.getTopoCenterY()));
+		this.setScale(query.getTopoScale());
+
+		boolean[] layerVisibilities = query.getLayerVisibilities();
+		boolean[] labelVisibilities = query.getLabelVisibilities();
+
+		for (int i = 0; i < query.getLayerVisibilities().length; i++)
+			this.setLayerVisibility(i, layerVisibilities[i],
+					labelVisibilities[i]);
+
+		if (this.renderer == null) {
+			Log.errorMessage("MapJLocalRenderer.render | RunningThread - Constructor - Renderer is not initialized. "
+							+ "Run setRenderingParameters first.");
+			throw new IllegalDataException("MapJLocalRenderer.render | Failed to initialize Renderer");
+		}
+
+		Log.debugMessage("MapJLocalRenderer.render | RenderToStream - Before rendering.",
+						Log.DEBUGLEVEL07);
+
+		try {
+			this.renderer.render(ImageRequestComposer.create(this.mapJObject,
+					NUM_OF_COLORS, BACKGROUND_COLOR, "image/png"));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+
+		if (this.cancelEncoding)
+			return null;
+
+		// Output the map as a GIF Image
+		ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
+		Log.debugMessage("MapJLocalRenderer.render | RenderToStream - Encoding image.",
+				Log.DEBUGLEVEL07);
+		ImageIO.write(this.imageBuffer, "PNG", resultStream);
+
+		resultStream.flush();
+		resultStream.close();
+
+		byte[] result = resultStream.toByteArray();
+		Log.debugMessage("MapJLocalRenderer.render | RenderToStream - Successfully rendered.",
+						Log.DEBUGLEVEL07);
+		return result;
+	}
     
     public void cancelRendering()
         throws Exception
     {
         Log.debugMessage("MapJLocalRenderer.cancelRendering | Stopping the rendering of map.", Log.DEBUGLEVEL07);  
         
+        this.cancelEncoding = true;
         this.renderer.interrupt();
         
         Log.debugMessage("MapJLocalRenderer.cancelRendering | Rendering stopped.", Log.DEBUGLEVEL07);      
