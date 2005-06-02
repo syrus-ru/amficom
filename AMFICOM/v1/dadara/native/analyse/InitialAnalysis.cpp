@@ -176,7 +176,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 	{
 		int i;
 		for (i = 0; i <= lastPoint; i++)
-			debug_f_wlet[i] = f_wletB[i];
+			debug_f_wlet[i] = TEMP[i];
 	}
 #endif
 
@@ -187,7 +187,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
 		int i;
 		for (i = 0; i <= lastPoint; i++)
-			fprintf(f,"%d %g %g %g\n", i, data[i], f_wletB[i], noise[i]);
+			fprintf(f,"%d %g %g %g\n", i, data[i], TEMP[i], noise[i]);
 		fclose(f);
 	}
 #endif
@@ -272,18 +272,22 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 			}
 		}
 		newSpl.disposeAll();
-		/*{
+#if 0
+		{
 			int i;
 			fprintf(stderr, "accSpl dump at scale %d:\n", scale);
 			for (i = 0; i < accSpl.getLength(); i++) {
-				fprintf(stderr, "spl[%d]: %d - %d  @ %d\n",
+				fprintf(stderr, "spl[%d]: %d - %d  s %+d @ %d -- ampl %g\n",
 					i,
 					((Splash*)accSpl[i])->begin_thr,
 					((Splash*)accSpl[i])->end_thr,
-					((Splash*)accSpl[i])->scale);
+					((Splash*)accSpl[i])->sign,
+					((Splash*)accSpl[i])->scale,
+					((Splash*)accSpl[i])->f_extr);
 			}
 			fflush(stderr);
-		}*/
+		}
+#endif
 	}
 	//performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scaleB, getWLetNorma(scaleB));
 	//findAllWletSplashes(TEMP, scaleB, accSpl);
