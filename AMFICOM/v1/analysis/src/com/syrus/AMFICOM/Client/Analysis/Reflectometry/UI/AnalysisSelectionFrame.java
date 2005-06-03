@@ -1,46 +1,20 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.SystemColor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.NumberFormat;
 
 import javax.swing.*;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.AnalysisParametersWrapper;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
-import com.syrus.AMFICOM.client.UI.AComboBox;
-import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
-import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -55,10 +29,10 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 
 	private Dispatcher dispatcher;
 
-	private ParamTableModel tModelMinuit;
+	private WrapperedPropertyTableModel tModelMinuit;
 
-	private ATable table;
-
+	private WrapperedPropertyTable table;
+	
 	private JPanel mainPanel;
 
 	JScrollPane scrollPane = new JScrollPane();
@@ -105,15 +79,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 
 	void setValues(AnalysisParameters ap)
 	{
-		tModelMinuit.updateData(new Object[] {
-				new Double(ap.getMinThreshold()),
-				new Double(ap.getMinSplice()),
-				new Double(ap.getMinConnector()),
-				new Double(ap.getMinEnd()),
-				new Double(ap.getNoiseFactor()) });
-
-		table.setModel(tModelMinuit);
-		table.getColumnModel().getColumn(0).setPreferredWidth(250);
+		tModelMinuit.setObject(ap);
 	}
 
 	private void updColorModel()
@@ -129,12 +95,34 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle"));
 
-		tModelMinuit = new ParamTableModel();
-		table = new ATable(tModelMinuit);
-		table.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(
-				tModelMinuit));
-		table.setDefaultEditor(Object.class, new ModelParamsTableEditor(
-				tModelMinuit));
+		tModelMinuit = new WrapperedPropertyTableModel(AnalysisParametersWrapper
+				.getInstance(), null, new String[] {
+				AnalysisParametersWrapper.KEY_MIN_THRESHOLD,
+				AnalysisParametersWrapper.KEY_MIN_SPLICE,
+				AnalysisParametersWrapper.KEY_MIN_CONNECTOR,
+				AnalysisParametersWrapper.KEY_MIN_END,
+				AnalysisParametersWrapper.KEY_NOISE_FACTOR });
+		table = new WrapperedPropertyTable(tModelMinuit);
+//		{
+//			public Class getColumnClass(int columnIndex) {
+//			
+//				Class clazz;
+//				if (columnIndex == 0) {
+//					clazz = String.class;
+//				} else {
+//					// TODO really ?
+//					clazz = Double.class;
+//				}
+//				return clazz;
+//			}
+//		};
+//		JFormattedTextField editor = new JFormattedTextField(NumberFormat.getInstance());
+//		editor.setHorizontalAlignment(SwingConstants.RIGHT);
+//		table.setDefaultEditor(String.class, new DefaultCellEditor(editor));
+//		table.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(
+//				tModelMinuit));
+//		table.setDefaultEditor(Object.class, new ModelParamsTableEditor(
+//				tModelMinuit));
 
 		JButton analysisStartButton = new JButton();
 		JButton analysisInitialButton = new JButton();
@@ -187,6 +175,8 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		jToolBar1.add(analysisStartButton);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.getColumnModel().getColumn(0).setPreferredWidth(300);
+		table.getColumnModel().getColumn(1).setPreferredWidth(60);
 
 		scrollPane.setViewport(viewport);
 		scrollPane.getViewport().add(table);
@@ -331,7 +321,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		}
 	}
 
-	private class ModelParamsTableEditor extends DefaultCellEditor
+	/*private class ModelParamsTableEditor extends DefaultCellEditor
 	{
 		Object editor;
 
@@ -406,7 +396,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 				return super.getTableCellRendererComponent(table, value,
 					isSelected1, hasFocus, row, column);
 		}
-	}
+	}*/
 
 	public void bsHashAdded(String key, BellcoreStructure bs)
 	{
@@ -441,8 +431,6 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 
 	public void bsHashRemovedAll()
 	{
-		table.setModel(new FixedSizeEditableTableModel(new String[] { "" },
-				new String[] { "" }, new String[] { "" }, new int[] {}));
 		setVisible(false);
 	}
 

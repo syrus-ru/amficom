@@ -21,11 +21,11 @@ implements PropertyChangeListener, BsHashChangeListener
 	//Don't change sequence
 	private static String[] DEFAULT_KEYS = new String[] {
 			MarkerResourceWrapper.KEY_A_POSITION, // 0
-			MarkerResourceWrapper.KEY_A_LOSS, // 1
+			MarkerResourceWrapper.KEY_A_LOSS, // 1 (changes to KEY_A_REFLECTANCE)
 			MarkerResourceWrapper.KEY_A_ATTENUATION, // 2
 			MarkerResourceWrapper.KEY_A_CUMULATIVE_LOSS, // 3
 			MarkerResourceWrapper.KEY_B_POSITION, // 4
-			MarkerResourceWrapper.KEY_BA_DISTANCE, // 5
+			MarkerResourceWrapper.KEY_BA_DISTANCE, // 5 (changes to KEY_AB_DISTANCE)
 			MarkerResourceWrapper.KEY_AB_LOSS, // 6
 			MarkerResourceWrapper.KEY_AB_ATTENUATION, // 7
 			MarkerResourceWrapper.KEY_AB_LSA_ATTENUATION, // 8

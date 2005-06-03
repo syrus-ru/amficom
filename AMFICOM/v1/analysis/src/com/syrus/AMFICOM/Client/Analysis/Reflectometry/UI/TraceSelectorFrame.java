@@ -68,6 +68,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, 
 			TraceResourceWrapper.KEY_COLOR
 		});
 		jTable = new WrapperedTable(tModel);
+		jTable.setAllowSorting(false);
 				
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(20);
 		jTable.getColumnModel().getColumn(1).setPreferredWidth(250);

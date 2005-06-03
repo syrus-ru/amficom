@@ -100,7 +100,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
 
-		this.tModelEmpty = new ThresholdTableModel( // FIXME - переделать
+		this.tModelEmpty = new ThresholdTableModel(
 			new String[] { LangModelAnalyse.getString("thresholdsKey") },
 			new String[] {
 					LangModelAnalyse.getString("thresholdsUpWarning"),
