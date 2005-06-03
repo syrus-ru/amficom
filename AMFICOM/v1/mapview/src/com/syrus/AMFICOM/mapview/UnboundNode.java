@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.16 2005/05/26 06:24:20 bass Exp $
+ * $Id: UnboundNode.java,v 1.17 2005/06/03 20:45:09 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному
  * ни к какому элементу топологической схемы.
  *
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/05/26 06:24:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/06/03 20:45:09 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -120,7 +120,7 @@ public class UnboundNode extends SiteNode
 				schemeElement,
 				location,
 				nodeType);
-			unboundNode.changed = true;
+			unboundNode.markAsChanged();
 			return unboundNode;
 		}
 		catch (IdentifierGenerationException e)
@@ -170,15 +170,6 @@ public class UnboundNode extends SiteNode
 	}
 
 ////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Suppress since this class is not storable
-	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
-	 */
-	public void insert()
-	{
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * {@inheritDoc}

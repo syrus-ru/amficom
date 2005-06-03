@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.31 2005/05/24 16:40:05 bass Exp $
+* $Id: MapView.java,v 1.32 2005/06/03 20:45:09 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/24 16:40:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/06/03 20:45:09 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -164,7 +164,7 @@ public class MapView extends DomainMember implements Namable {
 					scale,
 					defaultScale,
 					map);
-			mapView.changed = true;
+			mapView.markAsChanged();
 			return mapView;
 		}
 		catch (IdentifierGenerationException ige) {
@@ -243,13 +243,13 @@ public class MapView extends DomainMember implements Namable {
 	public void addScheme(Scheme scheme)
 	{
 		this.schemes.add(scheme);
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	public void removeScheme(Scheme scheme)
 	{
 		this.schemes.remove(scheme);
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	protected void setSchemes0(Set schemes) {
@@ -260,7 +260,7 @@ public class MapView extends DomainMember implements Namable {
 	
 	public void setSchemeIds(Set schemeIds) {
 		this.setSchemes0(schemeIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	/**
@@ -277,7 +277,7 @@ public class MapView extends DomainMember implements Namable {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	/**
@@ -294,7 +294,7 @@ public class MapView extends DomainMember implements Namable {
 	 */
 	public void setName(String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}	
 	
 	protected synchronized void setAttributes(final Date created,
@@ -332,7 +332,7 @@ public class MapView extends DomainMember implements Namable {
 	
 	public void setDefaultScale(double defaultScale) {
 		this.defaultScale = defaultScale;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	public double getLatitude() {
@@ -341,7 +341,7 @@ public class MapView extends DomainMember implements Namable {
 	
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	public double getLongitude() {
@@ -350,7 +350,7 @@ public class MapView extends DomainMember implements Namable {
 	
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	/**
@@ -367,7 +367,7 @@ public class MapView extends DomainMember implements Namable {
 	 */
 	public void setMap(Map map) {
 		this.map = map;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	/**
@@ -384,7 +384,7 @@ public class MapView extends DomainMember implements Namable {
 	 */
 	public void setScale(double scale) {
 		this.scale = scale;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
