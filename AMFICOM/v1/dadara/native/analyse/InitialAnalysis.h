@@ -115,6 +115,7 @@ private:
     void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes, int dzMaxDist);
 	int	 processDeadZone(ArrList& splashes, int dzMaxDist);
     int  processIfIsConnector(int i, ArrList& splashes);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
+    int  processIfIsNonId(int i, ArrList& splashes);// поиск неид. областей (есть и другой код, создающий неид. области)
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
     void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2);
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);

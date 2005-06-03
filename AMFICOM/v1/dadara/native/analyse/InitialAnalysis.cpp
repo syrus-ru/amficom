@@ -185,7 +185,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
     shiftThresholds(scaleB);// сдвинуть пороги 
 
-#if 1
+#if 0
 	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
 		int i;
 		for (i = 0; i <= lastPoint; i++)
@@ -199,7 +199,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 	ArrList accSpl; // текущий список найденных сварок (пустой)
 
 	int scaleIndex;
-	for (scaleIndex = 4; scaleIndex <= 4; scaleIndex += 1) {
+	for (scaleIndex = 4; scaleIndex <= 4; scaleIndex += 2) {
 		int scale = scaleB * scaleIndex / 4;
 		if (scale < getMinScale())
 			continue;
@@ -495,6 +495,11 @@ return;
     for(int i = shift+1; i<splashes.getLength()-1; i++)
     { int len = processIfIsConnector(i, splashes);
       if(len != -1)// если коннектор был найден
+      { i+= len;
+    continue;
+      }
+	  len = processIfIsNonId(i, splashes);
+	  if (len != -1) // если нашли неид. область
       { i+= len;
     continue;
       }
@@ -917,6 +922,53 @@ return;
     }
     double ev_beg_old = ev->begin;
     ev->begin = i_x - 1;
+}
+// -------------------------------------------------------------------------------------------------
+// к этому моменту уже известно, что перед нами не коннектор
+int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
+{
+    int shift = -1;
+	double mult = 1.0; // множитель для масштаба при определения дистанции связывания событий
+	double amplMagn = 5.0; // множитель для определения, что всплеск не связан с неид. соб.,т.к. его ампл. много больше ампл. неид.
+    Splash* cur = (Splash*)splashes[i];
+	int countPlus = 0;
+	int countMinus = 0;
+	if (cur->sign > 0)
+		countPlus++;
+	else
+		countMinus++;
+	int lastPos = cur->end_thr + (int)(cur->scale * mult); // конец зоны связывания неид. соб.
+	int eventEnd = cur->end_thr;
+	int eventBegin = cur->begin_thr;
+	double ampl = fabs(cur->f_extr); // текущая хар. ампл. неид. соб.
+	int j;
+	for(j = i + 1; j<splashes.getLength(); j++) {
+		cur = (Splash*)splashes[j];
+		int begin2 = cur->begin_thr - (int)(cur->scale * mult);
+		if (begin2 > lastPos)
+	break; // это событие уже далеко от lastPos
+		if (fabs(cur->f_extr) > ampl * amplMagn)
+	break; // это событие больше по амплитуде, чем наше неид. соб.
+		if (cur->sign > 0)
+			countPlus++;
+		else
+			countMinus++;
+		ampl = fmax(ampl,fabs(cur->f_extr));
+		lastPos = cur->end_thr + (int)(cur->scale * mult);
+		eventEnd = cur->end_thr;
+	}
+	if (countPlus + countMinus < 3)
+		return -1; // не связываем события (маленький коннектор будет определен как неид. и без этого кода)
+
+	// создаем неид. событие
+	EventParams &ep = *new EventParams;
+    ep.type = EventParams::UNRECOGNIZED;
+    ep.begin = eventBegin;
+    if(ep.begin<0) {ep.begin=0;}
+    ep.end = eventEnd;
+    if(ep.end>lastPoint) {ep.end=lastPoint;}
+	events->add(&ep);
+	return j - i - 1;
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
