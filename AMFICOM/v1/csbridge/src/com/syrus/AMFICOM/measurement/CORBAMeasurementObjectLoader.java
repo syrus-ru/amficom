@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMeasurementObjectLoader.java,v 1.14 2005/06/01 20:41:01 arseniy Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.15 2005/06/03 10:49:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -16,16 +15,11 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
-import com.syrus.AMFICOM.general.LoginException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -47,8 +41,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/01 20:41:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/06/03 10:49:19 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implements MeasurementObjectLoader {
@@ -81,7 +75,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
+	public Set loadEvaluationTypes(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -93,7 +87,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
+	public Set loadModelingTypes(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.MODELINGTYPE_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -105,7 +99,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadMeasurements(java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurements(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENT_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -117,7 +111,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadAnalyses(java.util.Set ids) throws ApplicationException {
+	public Set loadAnalyses(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.ANALYSIS_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -129,7 +123,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadEvaluations(java.util.Set ids) throws ApplicationException {
+	public Set loadEvaluations(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.EVALUATION_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -141,7 +135,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
+	public Set loadModelings(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.MODELING_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -153,7 +147,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurementSetups(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -165,7 +159,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadResults(java.util.Set ids) throws ApplicationException {
+	public Set loadResults(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.RESULT_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -177,7 +171,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
+	public Set loadSets(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.SET_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -189,7 +183,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadTests(java.util.Set ids) throws ApplicationException {
+	public Set loadTests(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.TEST_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -201,7 +195,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadCronTemporalPatterns(java.util.Set ids) throws ApplicationException {
+	public Set loadCronTemporalPatterns(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -213,7 +207,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadIntervalsTemporalPatterns(java.util.Set ids) throws ApplicationException {
+	public Set loadIntervalsTemporalPatterns(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -225,7 +219,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadPeriodicalTemporalPatterns(java.util.Set ids) throws ApplicationException {
+	public Set loadPeriodicalTemporalPatterns(Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -237,7 +231,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurementTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -250,7 +244,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadAnalysisTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.ANALYSISTYPE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -263,7 +257,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadEvaluationTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -276,7 +270,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadModelingTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MODELINGTYPE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -289,7 +283,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadMeasurementsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MEASUREMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -302,7 +296,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadAnalysesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.ANALYSIS_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -315,7 +309,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadEvaluationsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.EVALUATION_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -328,7 +322,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadModelingsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadModelingsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MODELING_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -341,7 +335,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurementSetupsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -354,7 +348,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadResultsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadResultsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.RESULT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -367,7 +361,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadSetsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SET_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -380,7 +374,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadTestsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadTestsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.TEST_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -393,7 +387,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -406,7 +400,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadIntervalsTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadIntervalsTemporalPatternsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -419,7 +413,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public java.util.Set loadPeriodicalTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public Set loadPeriodicalTemporalPatternsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -432,354 +426,183 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-
-
-	/* Save multiple objects*/
-
-	public void saveMeasurementTypes(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (MeasurementType_Transferable) ((MeasurementType) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveMeasurementTypes(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveMeasurementTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveMeasurementTypes((MeasurementType_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveAnalysisTypes(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (AnalysisType_Transferable) ((AnalysisType) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveAnalysisTypes(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveAnalysisTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.ANALYSISTYPE_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveAnalysisTypes((AnalysisType_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveEvaluationTypes(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (EvaluationType_Transferable) ((EvaluationType) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveEvaluationTypes(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveEvaluationTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveEvaluationTypes((EvaluationType_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveModelingTypes(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (ModelingType_Transferable) ((ModelingType) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveModelingTypes(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveModelingTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.MODELINGTYPE_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveModelingTypes((ModelingType_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-
-
-	public void saveMeasurements(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Measurement_Transferable) ((Measurement) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveMeasurements(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveMeasurements(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.MEASUREMENT_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveMeasurements((Measurement_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveAnalyses(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Analysis_Transferable) ((Analysis) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveAnalyses(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveAnalyses(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.ANALYSIS_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveAnalyses((Analysis_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveEvaluations(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Evaluation_Transferable) ((Evaluation) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveEvaluations(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveEvaluations(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.EVALUATION_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveEvaluations((Evaluation_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveModelings(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Modeling_Transferable) ((Modeling) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveModelings(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveModelings(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.MODELING_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveModelings((Modeling_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveMeasurementSetups(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (MeasurementSetup_Transferable) ((MeasurementSetup) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveMeasurementSetups(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveMeasurementSetups(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveMeasurementSetups((MeasurementSetup_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveResults(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Result_Transferable) ((Result) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveResults(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveResults(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.RESULT_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveResults((Result_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveSets(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Set_Transferable) ((com.syrus.AMFICOM.measurement.Set) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveSets(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveSets(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.SET_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveSets((Set_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveTests(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Test_Transferable) ((Test) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveTests(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveTests(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.TEST_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveTests((Test_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveCronTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		CronTemporalPattern_Transferable[] transferables = new CronTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (CronTemporalPattern_Transferable) ((CronTemporalPattern) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveCronTemporalPatterns(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveCronTemporalPatterns(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveCronTemporalPatterns((CronTemporalPattern_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveIntervalsTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		IntervalsTemporalPattern_Transferable[] transferables = new IntervalsTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (IntervalsTemporalPattern_Transferable) ((IntervalsTemporalPattern) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveIntervalsTemporalPatterns(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveIntervalsTemporalPatterns(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveIntervalsTemporalPatterns((IntervalsTemporalPattern_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void savePeriodicalTemporalPatterns(java.util.Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		PeriodicalTemporalPattern_Transferable[] transferables = new PeriodicalTemporalPattern_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (PeriodicalTemporalPattern_Transferable) ((PeriodicalTemporalPattern) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receivePeriodicalTemporalPatterns(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void savePeriodicalTemporalPatterns(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receivePeriodicalTemporalPatterns((PeriodicalTemporalPattern_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 }

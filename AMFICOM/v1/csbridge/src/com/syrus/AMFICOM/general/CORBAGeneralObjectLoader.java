@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAGeneralObjectLoader.java,v 1.17 2005/06/01 20:41:01 arseniy Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.18 2005/06/03 10:49:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -18,7 +17,6 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
@@ -26,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/01 20:41:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/06/03 10:49:19 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements GeneralObjectLoader {
@@ -111,76 +109,39 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 		});
 	}
 
-
-
-	/* Save multiple objects*/
-
-	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (ParameterType_Transferable) ((ParameterType) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveParameterTypes(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveParameterTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveParameterTypes((ParameterType_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (CharacteristicType_Transferable) ((CharacteristicType) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveCharacteristicTypes(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveCharacteristicTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveCharacteristicTypes((CharacteristicType_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
-	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
-		CMServer cmServer = (CMServer) super.serverConnectionManager.getServerReference();
-		SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
-		int i = 0;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++)
-			transferables[i] = (Characteristic_Transferable) ((Characteristic) it.next()).getTransferable();
-
-		try {
-			StorableObject_Transferable[] headers = cmServer.receiveCharacteristics(transferables, force, sessionKeyT);
-			super.updateHeaders(objects, headers);
-		}
-		catch (AMFICOMRemoteException are) {
-			String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
-				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
-				throw new LoginException("Not logged in");
-			throw new UpdateObjectException(mesg + are.message);
-		}
+	public void saveCharacteristics(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(storableObjects, ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new ReceiveProcedure() {
+			public StorableObject_Transferable[] receiveStorableObjects(
+					final CommonServer server,
+					final IDLEntity transferables[],
+					final SessionKey_Transferable sessionKey)
+					throws AMFICOMRemoteException {
+				return ((CMServer) server).receiveCharacteristics((Characteristic_Transferable[]) transferables, force, sessionKey);
+			}
+		});
 	}
 }
