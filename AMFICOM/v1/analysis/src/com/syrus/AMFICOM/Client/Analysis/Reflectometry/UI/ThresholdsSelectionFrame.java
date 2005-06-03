@@ -63,6 +63,13 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	
+	JButton analysisInitialButton;
+	JButton analysisDefaultsButton;
+	JButton increaseThreshButton;
+	JButton decreaseThreshButton;
+	JButton previuosEventButton;
+	JButton nextEventButton;
+	
 	private ThresholdTableModel tModelEmpty;
 
 	public ThresholdsSelectionFrame(Dispatcher dispatcher)
@@ -112,28 +119,28 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		);
 		this.jTable = new ATable(this.tModelEmpty);
 		
-		JButton analysisInitialButton = new JButton();
+		analysisInitialButton = new JButton();
 		analysisInitialButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 		
-		JButton analysisDefaultsButton = new JButton();
+		analysisDefaultsButton = new JButton();
 		analysisDefaultsButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 		
-		JButton increaseThreshButton = new JButton();
+		increaseThreshButton = new JButton();
 		increaseThreshButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 		
-		JButton decreaseThreshButton = new JButton();
+		decreaseThreshButton = new JButton();
 		decreaseThreshButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 		
 		
-		JButton previuosEventButton = new JButton();
+		previuosEventButton = new JButton();
 		previuosEventButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 		
-		JButton nextEventButton = new JButton();
+		nextEventButton = new JButton();
 		nextEventButton.setMargin(UIManager.getInsets(
 			ResourceKeys.INSETS_ICONED_BUTTON));
 
@@ -158,6 +165,11 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			public void actionPerformed(ActionEvent e)
 			{
 				new CreateEtalonCommand().execute();
+				analysisInitialButton.setEnabled(true);
+      	increaseThreshButton.setEnabled(true);
+      	decreaseThreshButton.setEnabled(true);
+      	previuosEventButton.setEnabled(true);
+      	nextEventButton.setEnabled(true);
 			}
 		});
 
@@ -223,6 +235,11 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		this.setContentPane(mainPanel);
 
+		analysisInitialButton.setEnabled(false);
+  	increaseThreshButton.setEnabled(false);
+  	decreaseThreshButton.setEnabled(false);
+  	previuosEventButton.setEnabled(false);
+  	nextEventButton.setEnabled(false);
 		//jToolBar1.setBorderPainted(true);
 		JToolBar jToolBar = new JToolBar();
 		jToolBar.setFloatable(false);
@@ -494,7 +511,12 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 	public void bsHashRemovedAll()
 	{
-			this.jTable.setModel(this.tModelEmpty);
+		this.jTable.setModel(this.tModelEmpty);
+		analysisInitialButton.setEnabled(false);
+		increaseThreshButton.setEnabled(false);
+		decreaseThreshButton.setEnabled(false);
+		previuosEventButton.setEnabled(false);
+		nextEventButton.setEnabled(false);
 	}
 
 	public void currentEventChanged()
