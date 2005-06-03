@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.18 2005/06/02 14:44:03 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.19 2005/06/03 10:48:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/03 10:48:38 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -38,7 +38,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/*	Delete*/
 
 	/**
-	 * Overridden in MCMObjectLoader
+	 * Overridden in <code>MCMObjectLoader</code>.
 	 */
 	public void delete(final Set identifiables) {
 		try {
@@ -71,7 +71,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
+	 * @version $Revision: 1.19 $, $Date: 2005/06/03 10:48:38 $
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitProcedure {
@@ -85,7 +85,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
+	 * @version $Revision: 1.19 $, $Date: 2005/06/03 10:48:38 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -101,7 +101,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/06/02 14:44:03 $
+	 * @version $Revision: 1.19 $, $Date: 2005/06/03 10:48:38 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
