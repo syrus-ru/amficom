@@ -1,3 +1,5 @@
+-- $Id: mapview.sql,v 1.5 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE MapView (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -26,4 +28,6 @@ CREATE TABLE MapView (
   REFERENCES Map (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE mapview_seq ORDER;
+COMMENT ON TABLE MapView IS '$Id: mapview.sql,v 1.5 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE MapView_Seq ORDER;

@@ -1,3 +1,5 @@
+-- $Id: map.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE Map (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -19,4 +21,6 @@ CREATE TABLE Map (
   REFERENCES Domain (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE map_seq ORDER;
+COMMENT ON TABLE Map IS '$Id: map.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE Map_Seq ORDER;

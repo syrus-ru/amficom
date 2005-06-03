@@ -1,3 +1,5 @@
+-- $Id: topologicalnode.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE TopologicalNode (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -19,4 +21,6 @@ CREATE TABLE TopologicalNode (
   REFERENCES "User" (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE topologicalnode_seq ORDER;
+COMMENT ON TABLE TopologicalNode IS '$Id: topologicalnode.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE TopologicalNode_Seq ORDER;

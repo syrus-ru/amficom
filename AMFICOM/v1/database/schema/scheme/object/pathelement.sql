@@ -1,4 +1,4 @@
--- $Id: pathelement.sql,v 1.4 2005/04/21 10:50:00 bass Exp $
+-- $Id: pathelement.sql,v 1.5 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "PathElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -47,6 +47,6 @@ CREATE TABLE "PathElement" (
 		AND scheme_link_id IS NOT NULL))
 );
 
-COMMENT ON TABLE "PathElement" IS '$Id: pathelement.sql,v 1.4 2005/04/21 10:50:00 bass Exp $';
+COMMENT ON TABLE "PathElement" IS '$Id: pathelement.sql,v 1.5 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "PathElement_Seq" ORDER;
+CREATE SEQUENCE PathElement_Seq ORDER;

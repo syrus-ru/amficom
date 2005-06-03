@@ -1,3 +1,5 @@
+-- $Id: physicallink.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE PhysicalLink (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -27,4 +29,6 @@ CREATE TABLE PhysicalLink (
   REFERENCES PhysicalLinkType (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE physicallink_seq ORDER;
+COMMENT ON TABLE PhysicalLink IS '$Id: physicallink.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE PhysicalLink_Seq ORDER;

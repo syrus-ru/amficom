@@ -1,3 +1,5 @@
+-- $Id: nodelink.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE NodeLink (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -21,4 +23,6 @@ CREATE TABLE NodeLink (
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE nodelink_seq ORDER;
+COMMENT ON TABLE NodeLink IS '$Id: nodelink.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE NodeLink_Seq ORDER;

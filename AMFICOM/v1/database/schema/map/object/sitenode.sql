@@ -1,3 +1,5 @@
+-- $Id: sitenode.sql,v 1.5 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE SiteNode (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -25,4 +27,6 @@ CREATE TABLE SiteNode (
   REFERENCES SiteNodeType (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE sitenode_seq ORDER;
+COMMENT ON TABLE SiteNode IS '$Id: sitenode.sql,v 1.5 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE SiteNode_Seq ORDER;

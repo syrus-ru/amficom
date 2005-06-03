@@ -1,4 +1,4 @@
--- $Id: schemedevice.sql,v 1.3 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemedevice.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemeDevice" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -36,6 +36,6 @@ CREATE TABLE "SchemeDevice" (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE "SchemeDevice" IS '$Id: schemedevice.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeDevice" IS '$Id: schemedevice.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "SchemeDevice_Seq" ORDER;
+CREATE SEQUENCE SchemeDevice_Seq ORDER;

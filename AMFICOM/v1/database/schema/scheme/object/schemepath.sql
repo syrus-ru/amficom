@@ -1,4 +1,4 @@
--- $Id: schemepath.sql,v 1.1 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemepath.sql,v 1.2 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemePath" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -20,6 +20,6 @@ CREATE TABLE "SchemePath" (
 		REFERENCES "User"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemePath" IS '$Id: schemepath.sql,v 1.1 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemePath" IS '$Id: schemepath.sql,v 1.2 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "SchemePath_Seq" ORDER;
+CREATE SEQUENCE SchemePath_Seq ORDER;

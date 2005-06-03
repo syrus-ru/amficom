@@ -1,4 +1,4 @@
--- $Id: schemelink.sql,v 1.4 2005/04/21 10:42:38 bass Exp $
+-- $Id: schemelink.sql,v 1.5 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemeLink" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -72,6 +72,6 @@ CREATE TABLE "SchemeLink" (
 		AND parent_scheme_proto_element_id IS NOT NULL))
 );
 
-COMMENT ON TABLE "SchemeLink" IS '$Id: schemelink.sql,v 1.4 2005/04/21 10:42:38 bass Exp $';
+COMMENT ON TABLE "SchemeLink" IS '$Id: schemelink.sql,v 1.5 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "SchemeLink_Seq" ORDER;
+CREATE SEQUENCE SchemeLink_Seq ORDER;

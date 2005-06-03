@@ -1,3 +1,5 @@
+-- $Id: collector.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE Collector (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -16,4 +18,6 @@ CREATE TABLE Collector (
   REFERENCES "User" (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE collector_seq ORDER;
+COMMENT ON TABLE Collector IS '$Id: collector.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE Collector_Seq ORDER;

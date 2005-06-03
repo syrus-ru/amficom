@@ -1,4 +1,4 @@
--- $Id: schemeprotogroup.sql,v 1.4 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemeprotogroup.sql,v 1.5 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemeProtoGroup" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -28,6 +28,6 @@ CREATE TABLE "SchemeProtoGroup" (
 		REFERENCES "SchemeProtoGroup"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeProtoGroup" IS '$Id: schemeprotogroup.sql,v 1.4 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeProtoGroup" IS '$Id: schemeprotogroup.sql,v 1.5 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "SchemeProtoGroup_Seq" ORDER;
+CREATE SEQUENCE SchemeProtoGroup_Seq ORDER;

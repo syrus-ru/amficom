@@ -1,4 +1,4 @@
--- $Id: scheme.sql,v 1.5 2005/04/21 10:42:52 bass Exp $
+-- $Id: scheme.sql,v 1.6 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "Scheme" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE "Scheme" (
 		REFERENCES "ImageResource"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "Scheme" IS '$Id: scheme.sql,v 1.5 2005/04/21 10:42:52 bass Exp $';
+COMMENT ON TABLE "Scheme" IS '$Id: scheme.sql,v 1.6 2005/06/03 11:48:02 bass Exp $';
 COMMENT ON COLUMN "Scheme".kind IS 'Logically this is a SchemeKind. While SchemeType table is absent, it will remain an enum.';
 
-CREATE SEQUENCE "Scheme_Seq" ORDER;
+CREATE SEQUENCE Scheme_Seq ORDER;

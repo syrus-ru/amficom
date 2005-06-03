@@ -1,3 +1,5 @@
+-- $Id: mark.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE Mark (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -25,4 +27,6 @@ CREATE TABLE Mark (
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE mark_seq ORDER;
+COMMENT ON TABLE Mark IS '$Id: mark.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE Mark_Seq ORDER;

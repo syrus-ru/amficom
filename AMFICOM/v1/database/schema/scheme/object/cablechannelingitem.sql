@@ -1,4 +1,4 @@
--- $Id: cablechannelingitem.sql,v 1.2 2005/04/22 14:45:49 bass Exp $
+-- $Id: cablechannelingitem.sql,v 1.3 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "CableChannelingItem" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -17,6 +17,6 @@ CREATE TABLE "CableChannelingItem" (
 		REFERENCES "User"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "CableChannelingItem" IS '$Id: cablechannelingitem.sql,v 1.2 2005/04/22 14:45:49 bass Exp $';
+COMMENT ON TABLE "CableChannelingItem" IS '$Id: cablechannelingitem.sql,v 1.3 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "CableChannelingItem_Seq" ORDER;
+CREATE SEQUENCE CableChannelingItem_Seq ORDER;

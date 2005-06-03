@@ -1,4 +1,4 @@
--- $Id: schemecableport.sql,v 1.4 2005/04/27 10:10:10 bass Exp $
+-- $Id: schemecableport.sql,v 1.5 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemeCablePort" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -43,6 +43,6 @@ CREATE TABLE "SchemeCablePort" (
 		AND cable_port_id IS NULL))
 );
 
-COMMENT ON TABLE "SchemeCablePort" IS '$Id: schemecableport.sql,v 1.4 2005/04/27 10:10:10 bass Exp $';
+COMMENT ON TABLE "SchemeCablePort" IS '$Id: schemecableport.sql,v 1.5 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "SchemeCablePort_Seq" ORDER;
+CREATE SEQUENCE SchemeCablePort_Seq ORDER;

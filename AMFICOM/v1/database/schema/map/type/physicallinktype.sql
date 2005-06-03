@@ -1,3 +1,5 @@
+-- $Id: physicallinktype.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+
 CREATE TABLE PhysicalLinkType (
  id VARCHAR2(32),
  created DATE NOT NULL,
@@ -20,4 +22,6 @@ CREATE TABLE PhysicalLinkType (
   REFERENCES "User" (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE physycallinktype_seq ORDER;
+COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+
+CREATE SEQUENCE PhysicalLinkType_Seq ORDER;

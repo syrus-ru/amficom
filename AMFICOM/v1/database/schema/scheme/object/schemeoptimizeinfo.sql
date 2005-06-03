@@ -1,4 +1,4 @@
--- $Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $
+-- $Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemeOptimizeInfo" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -37,9 +37,9 @@ CREATE TABLE "SchemeOptimizeInfo" (
 		REFERENCES "Scheme"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "SchemeOptimizeInfo_Seq" ORDER;
+CREATE SEQUENCE SchemeOptimizeInfo_Seq ORDER;
 
 
 CREATE TABLE "SchemeOptimizeInfoRtu" (
@@ -63,11 +63,11 @@ CREATE TABLE "SchemeOptimizeInfoRtu" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".price_usd IS 'RTU price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".range_db IS 'RTU range in decibels, from 0.00 to 128.00 db.';
 
-CREATE SEQUENCE "SchemeOptimizeInfoRtu_Seq" ORDER;
+CREATE SEQUENCE SchemeOptimizeInfoRtu_Seq ORDER;
 
 
 CREATE TABLE "SchemeOptimizeInfoSwitch" (
@@ -91,8 +91,8 @@ CREATE TABLE "SchemeOptimizeInfoSwitch" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.5 2005/04/22 14:46:31 bass Exp $';
+COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".price_usd IS 'Optical switch price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".no_of_ports IS 'Number of ports in this optical switch. Up to 256.';
 
-CREATE SEQUENCE "SchemeOptimizeInfoSwitch_Seq" ORDER;
+CREATE SEQUENCE SchemeOptimizeInfoSwitch_Seq ORDER;

@@ -1,4 +1,4 @@
--- $Id: schemecablethread.sql,v 1.1 2005/02/21 08:30:18 bass Exp $
+-- $Id: schemecablethread.sql,v 1.2 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemeCableThread" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -20,6 +20,6 @@ CREATE TABLE "SchemeCableThread" (
 		REFERENCES "User"(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeCableThread" IS '$Id: schemecablethread.sql,v 1.1 2005/02/21 08:30:18 bass Exp $';
+COMMENT ON TABLE "SchemeCableThread" IS '$Id: schemecablethread.sql,v 1.2 2005/06/03 11:48:02 bass Exp $';
 
-CREATE SEQUENCE "SchemeCableThread_Seq" ORDER;
+CREATE SEQUENCE SchemeCableThread_Seq ORDER;

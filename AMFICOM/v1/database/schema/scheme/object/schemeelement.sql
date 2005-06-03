@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.7 2005/04/21 10:42:52 bass Exp $
+-- $Id: schemeelement.sql,v 1.8 2005/06/03 11:48:02 bass Exp $
 
 CREATE TABLE "SchemeElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -62,11 +62,11 @@ CREATE TABLE "SchemeElement" (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE "SchemeElement" IS '$Id: schemeelement.sql,v 1.7 2005/04/21 10:42:52 bass Exp $';
+COMMENT ON TABLE "SchemeElement" IS '$Id: schemeelement.sql,v 1.8 2005/06/03 11:48:02 bass Exp $';
 
 ALTER TABLE "Scheme" ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)
 		REFERENCES "SchemeElement"(id) ON DELETE CASCADE ENABLE
 );
 
-CREATE SEQUENCE "SchemeElement_Seq" ORDER;
+CREATE SEQUENCE SchemeElement_Seq ORDER;
