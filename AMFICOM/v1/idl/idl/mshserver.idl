@@ -1,5 +1,5 @@
 /*-
- * $Id: mshserver.idl,v 1.14 2005/05/27 16:24:46 bass Exp $
+ * $Id: mshserver.idl,v 1.15 2005/06/03 17:57:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,6 +75,12 @@ module com {
 								in boolean force, 	
 								in security::corba::SessionKey sessionKey)
 								raises (general::corba::AMFICOMRemoteException);
+
+						general::corba::StorableObjectSeq receiveMapViews(
+								in map::corba::MapViewSeq mapViews,
+								in boolean force,
+								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);								
 
 /*-************************************************************
  * Map -- transmit multiple objects.                          *
@@ -174,6 +180,17 @@ module com {
 								raises (general::corba::AMFICOMRemoteException);
 
 						map::corba::PhysicalLinkTypeSeq transmitPhysicalLinkTypesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+								raises (general::corba::AMFICOMRemoteException);
+
+						map::corba::MapViewSeq transmitMapViews(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey)
+								raises (general::corba::AMFICOMRemoteException);
+
+						map::corba::MapViewSeq transmitMapViewsButIdsCondition(
 								in general::corba::IdentifierSeq ids,
 								in security::corba::SessionKey sessionKey,
 								in general::corba::StorableObjectCondition condition)

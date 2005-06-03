@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerMapReceive.java,v 1.6 2005/05/27 11:37:13 arseniy Exp $
+ * $Id: MSHServerMapReceive.java,v 1.7 2005/06/03 17:57:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
+import com.syrus.AMFICOM.map.corba.MapView_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/05/27 11:37:13 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/03 17:57:41 $
  * @module mshserver_v1
  */
 abstract class MSHServerMapReceive extends ServerCore implements MSHServerOperations {
@@ -103,5 +104,13 @@ abstract class MSHServerMapReceive extends ServerCore implements MSHServerOperat
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, transferables, force, sessionKey);
+	}
+
+	public final StorableObject_Transferable[] receiveMapViews(
+			final MapView_Transferable transferables[],
+			final boolean force,
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		return super.receiveStorableObjects(ObjectEntities.MAPVIEW_ENTITY_CODE, transferables, force, sessionKey);
 	}
 }

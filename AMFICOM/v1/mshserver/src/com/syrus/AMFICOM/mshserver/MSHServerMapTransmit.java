@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerMapTransmit.java,v 1.8 2005/05/27 16:24:45 bass Exp $
+ * $Id: MSHServerMapTransmit.java,v 1.9 2005/06/03 17:57:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
+import com.syrus.AMFICOM.map.corba.MapView_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/05/27 16:24:45 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/03 17:57:41 $
  * @module mshserver_v1
  */
 abstract class MSHServerMapTransmit extends MSHServerSchemeReceive {
@@ -239,5 +240,28 @@ abstract class MSHServerMapTransmit extends MSHServerSchemeReceive {
 		final PhysicalLinkType_Transferable physicalLinkTypes[] = new PhysicalLinkType_Transferable[length];
 		System.arraycopy(storableObjects, 0, physicalLinkTypes, 0, length);
 		return physicalLinkTypes;
+	}
+
+	public final MapView_Transferable[] transmitMapViews(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
+		final int length = storableObjects.length;
+		final MapView_Transferable mapViews[] = new MapView_Transferable[length];
+		System.arraycopy(storableObjects, 0, mapViews, 0, length);
+		return mapViews;
+	}
+
+	public final MapView_Transferable[] transmitMapViewsButIdsCondition(
+			final Identifier_Transferable ids[],
+			final SessionKey_Transferable sessionKey,
+			final StorableObjectCondition_Transferable storableObjectCondition)
+			throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final int length = storableObjects.length;
+		final MapView_Transferable mapViews[] = new MapView_Transferable[length];
+		System.arraycopy(storableObjects, 0, mapViews, 0, length);
+		return mapViews;
 	}
 }
