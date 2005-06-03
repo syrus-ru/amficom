@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.33 2005/05/24 13:24:57 bass Exp $
+ * $Id: KISReport.java,v 1.34 2005/06/03 16:43:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,23 +8,27 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
-import com.syrus.AMFICOM.general.ParameterTypeDatabase;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
@@ -32,21 +36,50 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/05/24 13:24:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/06/03 16:43:00 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class KISReport {
-	private static Map outParameterTypeIds;	//Map <String parameterTypeCodename, Identifier parameterId>
+	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
 	private Identifier measurementId;
 	private String[] parameterCodenames;
 	private byte[][] parameterValues;
 
 	static {
-		outParameterTypeIds = new HashMap(1);
-		addOutParameterTypeId(ParameterTypeCodenames.REFLECTOGRAMMA);
+		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap(1);
+		addOutParameterTypeIds(new String[] {ParameterTypeCodenames.REFLECTOGRAMMA});
+	}
+
+	private static void addOutParameterTypeIds(String[] codenames) {
+		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+
+		final java.util.Set typicalConditions = new HashSet(codenames.length);
+		for (int i = 0; i < codenames.length; i++) {
+			typicalConditions.add(new TypicalCondition(codenames[i],
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME));
+		}
+
+		try {
+			final StorableObjectCondition condition;
+			if (typicalConditions.size() == 1)
+				condition = (StorableObjectCondition) typicalConditions.iterator().next();
+			else
+				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
+			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			for (final Iterator it = parameterTypes.iterator(); it.hasNext();) {
+				final ParameterType parameterType = (ParameterType) it.next();
+				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());
+			}
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
 	}
 
 	public KISReport(String measurementIdStr,
@@ -59,13 +92,12 @@ public class KISReport {
 
 	public Result createResult() throws MeasurementException {
 		try {
-			Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(this.measurementId, true);
+			final Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(this.measurementId, true);
 
-			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
-			ParameterType parameterType;
+			final SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
 			for (int i = 0; i < parameters.length; i++) {
-				parameterType = (ParameterType) StorableObjectPool.getStorableObject((Identifier) outParameterTypeIds.get(this.parameterCodenames[i]),
-						true);
+				final Identifier parameterTypeId = (Identifier) OUT_PARAMETER_TYPE_IDS_MAP.get(this.parameterCodenames[i]);
+				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
 				parameters[i] = SetParameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 
@@ -82,32 +114,5 @@ public class KISReport {
 
 	public Identifier getMeasurementId() {
 		return this.measurementId;
-	}
-
-	private static void addOutParameterTypeId(String codename) {
-		ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-		try {
-			TypicalCondition tc = new TypicalCondition(codename,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-			Collection collection = parameterTypeDatabase.retrieveButIdsByCondition(null, tc);
-			if (collection != null || !collection.isEmpty()) {
-				ParameterType parameterType = (ParameterType) collection.iterator().next();
-				Identifier id = parameterType.getId();
-				if (!outParameterTypeIds.containsKey(codename)) {
-					outParameterTypeIds.put(codename, id);
-					StorableObjectPool.putStorableObject(parameterType);
-				}
-				else
-					Log.errorMessage("Out parameter type of codename '" + codename
-							+ "' already added to map; id: '" + parameterType.getId() + "'");
-			}
-			else
-				Log.errorMessage("Out parameter type of codename '" + codename + "' not found");
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}
 	}
 }

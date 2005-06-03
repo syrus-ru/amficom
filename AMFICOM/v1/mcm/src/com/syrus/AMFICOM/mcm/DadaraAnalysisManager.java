@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.39 2005/06/01 15:45:06 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.40 2005/06/03 16:43:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/01 15:45:06 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/03 16:43:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
@@ -64,16 +65,16 @@ public class DadaraAnalysisManager implements AnalysisManager
 //	public static final String CODENAME_DARARA_SIMPLEEVENTS = "simpleevents";
 	public static final String CODENAME_ALARMS = ParameterTypeCodenames.DADARA_ALARMS;
 
-	private static Map parameterTypesMap;	//Map <String codename, ParameterType parameterType>
+	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
-	private Map parametersMap;	//Map <String codename, SetParameter parameter>
+	private final Map parametersMap;	//Map <String codename, SetParameter parameter>
 
 	static {
-		parameterTypesMap = new HashMap();
-		addParameterTypes(new String[] {CODENAME_ALARMS});
+		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap();
+		addParameterTypeIds(new String[] {CODENAME_ALARMS});
 	}
 
-	private static void addParameterTypes(final String[] codenames) {
+	private static void addParameterTypeIds(final String[] codenames) {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
@@ -94,7 +95,7 @@ public class DadaraAnalysisManager implements AnalysisManager
 			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (final Iterator it = parameterTypes.iterator(); it.hasNext();) {
 				final ParameterType parameterType = (ParameterType) it.next();
-				parameterTypesMap.put(parameterType.getCodename(), parameterType);
+				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());
 			}
 		}
 		catch (ApplicationException ae) {
@@ -200,19 +201,25 @@ public class DadaraAnalysisManager implements AnalysisManager
 		// формируем результаты анализа
 		SetParameter[] ret = new SetParameter[outParameters.size()];
 		int i = 0;
-		for (final Iterator it = outParameters.keySet().iterator(); it.hasNext(); i++) {
-			final String codename = (String) it.next();
-			final ParameterType parameterType = (ParameterType) parameterTypesMap.get(codename);
-			if (parameterType != null) {
-				try {
-					ret[i] = SetParameter.createInstance(parameterType, (byte[]) outParameters.get(codename));
+		try {
+			for (final Iterator it = outParameters.keySet().iterator(); it.hasNext(); i++) {
+				final String codename = (String) it.next();
+				final Identifier parameterTypeId = (Identifier) OUT_PARAMETER_TYPE_IDS_MAP.get(codename);
+				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
+				if (parameterType != null) {
+					try {
+						ret[i] = SetParameter.createInstance(parameterType, (byte[]) outParameters.get(codename));
+					}
+					catch (CreateObjectException coe) {
+						throw new AnalysisException("Cannot create parameter -- " + coe.getMessage(), coe);
+					}
 				}
-				catch (CreateObjectException coe) {
-					throw new AnalysisException("Cannot create parameter -- " + coe.getMessage(), coe);
-				}
+				else
+					throw new AnalysisException("Cannot find parameter type of codename: '" + codename + "'");
 			}
-			else
-				throw new AnalysisException("Cannot find parameter type of codename: '" + codename + "'");
+		}
+		catch (ApplicationException ae) {
+			throw new AnalysisException("Cannot load parameter types -- " + ae.getMessage(), ae);
 		}
 
 		return ret;
