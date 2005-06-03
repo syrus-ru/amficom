@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.1.2.3 2005/06/02 12:14:04 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.1.2.4 2005/06/03 10:27:24 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.3 $, $Date: 2005/06/02 12:14:04 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2005/06/03 10:27:24 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -103,6 +103,8 @@ public class TopologicalImageCache
 	 * к серверу из очереди
 	 */
 	private LoadingThread loadingThread = null;
+	
+	private boolean toBreak = false;
 
 	/**
 	 * Режим работы кэша
@@ -719,6 +721,14 @@ public class TopologicalImageCache
 		while (this.requestToPaint.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
 		{
 			// Изображение по запросу ещё не подгружено
+			
+			if (this.toBreak)
+			{
+				//Остановливаем работу потока подгрузки
+				this.loadingThread.cancel();
+				return null;
+			}
+			
 			try
 			{
 				Thread.sleep(10);
@@ -741,6 +751,15 @@ public class TopologicalImageCache
 		return imageToReturn;
 	}
 
+	/**
+	 * Если карта использует кэш, этот метод выызвается на выходе из модуля
+	 *
+	 */
+	public void cancel()
+	{
+		this.toBreak = true;
+	}
+	
 	/**
 	 * Используется при задании нового центра для карты.
 	 * Выдаёт ближайший к указанной точке центр для дискретного режима перемещения 

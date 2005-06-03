@@ -531,4 +531,10 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		this.imageCache.analyzeMouseLocation(me);
 	}
+	
+	public void actionOnExit()
+	{
+		if (MapPropertiesManager.isTopologicalImageCache())
+			this.imageCache.cancel();
+	}
 }

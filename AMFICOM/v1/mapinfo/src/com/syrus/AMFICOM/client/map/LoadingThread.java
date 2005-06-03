@@ -1,6 +1,6 @@
 
 /**
- * $Id: LoadingThread.java,v 1.1.2.3 2005/06/02 12:14:04 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.1.2.4 2005/06/03 10:27:24 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,8 @@ public class LoadingThread extends Thread {
      * Запрос, обрабатываемый в текущий момент
      */
     private TopologicalRequest requestCurrentlyProcessed = null;
+    
+    private boolean toCancelLoading = false;
 
     class State {
         public static final int STATE_IDLE = 0;
@@ -63,7 +65,7 @@ public class LoadingThread extends Thread {
 
     public void run()
     {
-      while (true)
+      while (!this.toCancelLoading)
       {
       	//Задержка - для пустой очереди
         try
@@ -87,33 +89,26 @@ public class LoadingThread extends Thread {
           	continue;          	
         }
 
-          // Посылаем запрос на рендеринг
+        // Посылаем запрос на рендеринг
+        ImageIcon imageForRequest = null;
         try
         {
 	          Logger.log(" TIC - loadingThread - run - processing request ("
 	              + this.requestCurrentlyProcessed + ")");
         	
-            ImageIcon imageForRequest = this.mapImageLoader
-                    .renderMapImageAtServer(this.requestCurrentlyProcessed);
-            
+            imageForRequest = this.mapImageLoader.renderMapImageAtServer(this.requestCurrentlyProcessed);
+
             if (imageForRequest == null)
             {
-            	//Если рендеринг был остановлен
-              synchronized (this.state)
-              {
-                  this.state.setValue(State.STATE_IDLE);
-                  this.requestCurrentlyProcessed = null;            
-              }
+	            synchronized (this.state)
+	            {
+	            	//Если рендеринг был остановлен
+                this.state.setValue(State.STATE_IDLE);
+                this.requestCurrentlyProcessed = null;            
               
-              continue;
+	              continue;
+	            }
             }
-            
-            this.requestCurrentlyProcessed.setImage(imageForRequest);
-            this.requestCurrentlyProcessed
-                    .setPriority(TopologicalRequest.PRIORITY_ALREADY_LOADED);
-
-            Logger.log(" TIC - loadingThread - run - image loaded for request ("
-                            + this.requestCurrentlyProcessed + ")");
         } 
         catch (MapConnectionException e1)
         {
@@ -129,8 +124,17 @@ public class LoadingThread extends Thread {
 
         synchronized (this.state)
         {
-            this.state.setValue(State.STATE_IDLE);
-            this.requestCurrentlyProcessed = null;            
+        	//Рендеринг успешно завершён. Ставим синхронизированный блок, чтобы
+        	//нельзя было для подгруженного запроса приоритет изменить на более низкий
+          this.requestCurrentlyProcessed.setImage(imageForRequest);
+          this.requestCurrentlyProcessed
+                  .setPriority(TopologicalRequest.PRIORITY_ALREADY_LOADED);
+
+          Logger.log(" TIC - loadingThread - run - image loaded for request ("
+                        + this.requestCurrentlyProcessed + ")");
+        	
+          this.state.setValue(State.STATE_IDLE);
+          this.requestCurrentlyProcessed = null;            
         }
       }
     }
@@ -210,7 +214,6 @@ public class LoadingThread extends Thread {
     	Logger.log(" TIC - loadingThread - changeRequestPriority - changing request's ("
                  + request + ") priority for " + newPriority);
 
-    	
       synchronized (this.state)
       {
       	if (	(this.state.getValue() == State.STATE_RENDERING)
@@ -228,9 +231,13 @@ public class LoadingThread extends Thread {
         	
         	TopologicalRequest firstElement = (TopologicalRequest)rqIt.next();
         	if (firstElement.getPriority() < newPriority)
+        	{
         		//Первый элемент будет иметь приоритет более высокий,
         		//чем новый приоритет для обрабатываемого запроса - останавливаем рендеринг.
         		this.stopRendering();
+        		//И рассматриваемый запрос ставим обратно в очередь
+        		this.add(this.requestCurrentlyProcessed);
+        	}
         }
         else if (this.requestQueue.remove(request))
         {
@@ -265,5 +272,14 @@ public class LoadingThread extends Thread {
         if (this.state.getValue() == State.STATE_RENDERING)
             this.stopRendering();
       }
+    }
+    
+    /**
+     * Завершает работу потока подгрузки.
+     *
+     */
+    public void cancel()
+    {
+    	this.toCancelLoading = true;
     }
 }
