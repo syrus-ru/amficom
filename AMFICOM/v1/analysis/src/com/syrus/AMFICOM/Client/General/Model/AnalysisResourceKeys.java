@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.15 2005/05/25 15:15:09 stas Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.16 2005/06/03 09:48:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/25 15:15:09 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/03 09:48:34 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -78,6 +78,16 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_THRESHOLD_DECREASE		= "com.syrus.AMFICOM.icon.analisys.thresholdDecrease";
 	String	ICON_ANALYSIS_EVENTS					= "com.syrus.AMFICOM.icon.analisys.events";
 	String	ICON_ANALYSIS_MODELED					= "com.syrus.AMFICOM.icon.analisys.modeled";
+
+	String	ICON_ANALYSIS_GAIN					= "com.syrus.AMFICOM.icon.analisys.gain";
+	String	ICON_ANALYSIS_SPLICE_GAIN					= "com.syrus.AMFICOM.icon.analisys.splicegain";
+	String	ICON_ANALYSIS_BEND_LOSS					= "com.syrus.AMFICOM.icon.analisys.bendloss";
+	String	ICON_ANALYSIS_SPLICE_LOSS					= "com.syrus.AMFICOM.icon.analisys.spliceloss";
+	String	ICON_ANALYSIS_REFLECTION					= "com.syrus.AMFICOM.icon.analisys.reflection";
+	String	ICON_ANALYSIS_SINGULARITY					= "com.syrus.AMFICOM.icon.analisys.singularity";
+	String	ICON_ANALYSIS_END						= "com.syrus.AMFICOM.icon.analisys.end";
+	String	ICON_ANALYSIS_DEADZONE					= "com.syrus.AMFICOM.icon.analisys.deadzone";
+	String	ICON_ANALYSIS_BREAK					= "com.syrus.AMFICOM.icon.analisys.break";
 
 	String	TEXT_KM									= "km";
 	String	TEXT_DB									= "dB";

@@ -146,7 +146,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 		tModel = new WrapperedTableModel(
 				DetailedEventWrapper.getInstance(),
-				new String[] { DetailedEventWrapper.KEY_N,
+				new String[] { DetailedEventWrapper.KEY_N, DetailedEventWrapper.KEY_IMAGE,
 						DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_DISTANCE,
 						DetailedEventWrapper.KEY_LENGTH,
 						DetailedEventWrapper.KEY_REFLECTANCE,
@@ -158,6 +158,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());			
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(fontMetrics.stringWidth("WW"));
 		jTable.getColumnModel().getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
+		Dimension bttnSize = (Dimension) UIManager.get(ResourceKeys.SIZE_BUTTON);
+		jTable.getColumnModel().getColumn(1).setPreferredWidth(bttnSize.width);
+		jTable.getColumnModel().getColumn(1).setMaxWidth(bttnSize.width);
 
 
 		setContentPane(mainPanel);

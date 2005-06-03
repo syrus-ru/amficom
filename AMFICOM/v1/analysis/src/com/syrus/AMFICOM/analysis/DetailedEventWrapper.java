@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventWrapper.java,v 1.1 2005/06/02 12:53:28 stas Exp $
+ * $Id: DetailedEventWrapper.java,v 1.2 2005/06/03 09:48:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,18 +10,21 @@ package com.syrus.AMFICOM.analysis;
 
 import java.util.*;
 
+import javax.swing.Icon;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/02 12:53:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/03 09:48:34 $
  * @module analysis_v1
  */
 
 public class DetailedEventWrapper implements Wrapper {
 	
 	public static final String KEY_N = "eventNum";
+	public static final String KEY_IMAGE = "eventImage";
 	public static final String KEY_TYPE = "eventType";
 	public static final String KEY_DISTANCE = "eventStartLocationKM";
 	public static final String KEY_LENGTH = "eventLengthKM";
@@ -63,7 +66,7 @@ public class DetailedEventWrapper implements Wrapper {
 				KEY_REFLECTION_LEVEL, KEY_ADZ, KEY_EDZ, KEY_MAX_LEVEL, KEY_MIN_LEVEL,
 				KEY_EXTENSION, KEY_ETALON_TYPE, KEY_ETALON_MAX_DEVIATION,
 				KEY_ETALON_MEAN_DEVIATION, KEY_LOSS_DIFFERENCE,
-				KEY_LOCATION_DIFFERENCE, KEY_LENGTH_DIFFERENCE };
+				KEY_LOCATION_DIFFERENCE, KEY_LENGTH_DIFFERENCE, KEY_IMAGE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -86,7 +89,9 @@ public class DetailedEventWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (this.keys.contains(key)) {
+		if (key.equals(KEY_IMAGE)) {
+			return Icon.class;
+		} else if (this.keys.contains(key)) {
 			return String.class; 
 		}
 		return null;
@@ -104,6 +109,8 @@ public class DetailedEventWrapper implements Wrapper {
 			
 			if (key.equals(KEY_N)) {
 				return ev.getNumber();
+			} if (key.equals(KEY_IMAGE)) {
+				return ev.getImage();
 			} else if (key.equals(KEY_TYPE)) {
 				return ev.getType();
 			} else if (key.equals(KEY_DISTANCE)) {

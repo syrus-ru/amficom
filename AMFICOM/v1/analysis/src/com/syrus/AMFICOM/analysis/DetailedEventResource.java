@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.1 2005/06/02 12:53:28 stas Exp $
+ * $Id: DetailedEventResource.java,v 1.2 2005/06/03 09:48:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,9 @@
 
 package com.syrus.AMFICOM.analysis;
 
+import javax.swing.*;
+
 import com.syrus.AMFICOM.Client.Analysis.*;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
@@ -17,13 +18,23 @@ import com.syrus.AMFICOM.analysis.dadara.events.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/02 12:53:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/03 09:48:34 $
  * @module analysis_v1
  */
 
 public class DetailedEventResource {
 	private static final String DEFAULT_TYPE = AnalysisUtil.getSimpleEventNameByType(SimpleReflectogramEvent.RESERVED);
 	private static final String DASH = LangModelAnalyse.getString("eventTypeNoType");
+	
+	private static final Icon ICON_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_GAIN);
+	private static final Icon ICON_SPLICE_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_GAIN);
+	private static final Icon ICON_SPLICE_LOSS = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_LOSS);
+	private static final Icon ICON_BEND_LOSS = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BEND_LOSS);
+	private static final Icon ICON_REFLECTION = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_REFLECTION);
+	private static final Icon ICON_SINGULARITY = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SINGULARITY);
+	private static final Icon ICON_DEADZONE = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_DEADZONE);
+	private static final Icon ICON_END = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_END);
+	private static final Icon ICON_BREAK = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BREAK);
 	
 	// Basic details
 	private String number;
@@ -54,7 +65,10 @@ public class DetailedEventResource {
 	private String locationDifference;
 	private String lengthDifference;
 	
+	private DetailedEvent event;
+	
 	public void initGeneral(DetailedEvent ev, int num, double res, double sigma) {
+		this.event = ev;
 		setNumber(Integer.toString(num));
 		int sType = ev.getEventType();
 		setType(AnalysisUtil.getSimpleEventNameByType(sType));
@@ -97,6 +111,7 @@ public class DetailedEventResource {
 	}
 	
 	public void initAdditional(DetailedEvent ev, double res) {
+		this.event = ev;
 		String sDB = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB);
 		String sMT = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT);
 		
@@ -140,6 +155,7 @@ public class DetailedEventResource {
 	}
 	
 	public void initComparative(DetailedEvent dataEvent, DetailedEvent etalonEvent, ModelTrace etalonMT, double deltaX) {
+		this.event = dataEvent;
 		setType(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
 		setEtalonType(etalonEvent != null ? AnalysisUtil.getSimpleEventNameByType(etalonEvent.getEventType()) : DEFAULT_TYPE);
 		
@@ -221,6 +237,28 @@ public class DetailedEventResource {
 	
 	public String getNumber() {
 		return this.number;
+	}
+	
+	public Object getImage() {
+		int sType = event.getEventType();
+
+		switch (sType) {
+		case SimpleReflectogramEvent.DEADZONE:
+			return ICON_DEADZONE;
+		case SimpleReflectogramEvent.LINEAR:
+			return "";
+		case SimpleReflectogramEvent.NOTIDENTIFIED:
+			return ICON_SINGULARITY;
+		case SimpleReflectogramEvent.CONNECTOR:
+			return ICON_REFLECTION;
+		case SimpleReflectogramEvent.GAIN:
+			return ICON_SPLICE_GAIN;
+		case SimpleReflectogramEvent.LOSS:
+			return ICON_SPLICE_LOSS;
+		case SimpleReflectogramEvent.ENDOFTRACE:
+			return ICON_END;
+		default: return null;
+		}
 	}
 	
 	public void setNumber(String number) {

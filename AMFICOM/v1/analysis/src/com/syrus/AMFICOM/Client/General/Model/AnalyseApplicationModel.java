@@ -141,6 +141,25 @@ public class AnalyseApplicationModel extends ApplicationModel {
 			"images/events.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MODELED, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/modeled.gif")));
+		
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_GAIN, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/gain.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_GAIN, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/splicegain.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_BEND_LOSS, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/bendloss.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_LOSS, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/spliceloss.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_SINGULARITY, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/singularity.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_REFLECTION, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/reflection.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DEADZONE, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/deadzone.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_END, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/end.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_BREAK, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/break.gif")));
 
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 
