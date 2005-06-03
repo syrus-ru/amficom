@@ -514,11 +514,6 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	public void bsHashRemovedAll()
 	{
 		this.jTable.setModel(this.tModel);
-		analysisInitialButton.setEnabled(false);
-		increaseThreshButton.setEnabled(false);
-		decreaseThreshButton.setEnabled(false);
-		previuosEventButton.setEnabled(false);
-		nextEventButton.setEnabled(false);
 	}
 
 	public void currentEventChanged()
@@ -534,5 +529,10 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	public void etalonMTMRemoved()
 	{
 		updateThresholds();
+		analysisInitialButton.setEnabled(false);
+		increaseThreshButton.setEnabled(false);
+		decreaseThreshButton.setEnabled(false);
+		previuosEventButton.setEnabled(false);
+		nextEventButton.setEnabled(false);
 	}
 }
