@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerPoolContext.java,v 1.4 2005/05/27 11:13:49 bass Exp $
+ * $Id: MSHServerPoolContext.java,v 1.5 2005/06/03 14:53:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,16 @@
 
 package com.syrus.AMFICOM.mshserver;
 
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.PoolContext;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.map.DatabaseMapObjectLoader;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.mapview.DatabaseMapViewObjectLoader;
+import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import com.syrus.AMFICOM.scheme.DatabaseSchemeObjectLoader;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
@@ -19,19 +25,31 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/27 11:13:49 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/03 14:53:14 $
  * @module mshserver_v1
  */
 final class MSHServerPoolContext extends PoolContext {
+	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; 
+
+	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
+
 	public static final String KEY_MAP_POOL_SIZE = "MapPoolSize";
 
 	public static final String KEY_SCHEME_POOL_SIZE = "SchemePoolSize";
 
+	public static final String KEY_MAP_VIEW_POOL_SIZE = "MapViewPoolSize";
+
 	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
+
+	public static final int GENERAL_POOL_SIZE = 1000;
+
+	public static final int ADMINISTRATION_POOL_SIZE = 1000;
 
 	public static final int MAP_POOL_SIZE = 1000;
 
 	public static final int SCHEME_POOL_SIZE = 1000;
+
+	public static final int MAP_VIEW_POOL_SIZE = 1000;
 
 	public static final String DATABASE_LOADER_ONLY = "false";
 
@@ -41,6 +59,16 @@ final class MSHServerPoolContext extends PoolContext {
 	public void init() {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DATABASE_LOADER_ONLY)).booleanValue();
 		final Class lruMapClass = StorableObjectResizableLRUMap.class;
+		GeneralStorableObjectPool.init(databaseLoaderOnly
+						? new DatabaseGeneralObjectLoader()
+						: new MSHServerGeneralObjectLoader(),
+				lruMapClass,
+				ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, GENERAL_POOL_SIZE));
+		AdministrationStorableObjectPool.init(databaseLoaderOnly
+						? new DatabaseAdministrationObjectLoader()
+						: new MSHServerAdministrationObjectLoader(),
+				lruMapClass,
+				ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, ADMINISTRATION_POOL_SIZE));
 		MapStorableObjectPool.init(databaseLoaderOnly
 						? new DatabaseMapObjectLoader()
 						: new MSHServerMapObjectLoader(),
@@ -51,5 +79,10 @@ final class MSHServerPoolContext extends PoolContext {
 						: new MSHServerSchemeObjectLoader(),
 				lruMapClass,
 				ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, SCHEME_POOL_SIZE));
+		MapViewStorableObjectPool.init(databaseLoaderOnly
+						? new DatabaseMapViewObjectLoader()
+						: new MSHServerMapViewObjectLoader(),
+				lruMapClass,
+				ApplicationProperties.getInt(KEY_MAP_VIEW_POOL_SIZE, MAP_VIEW_POOL_SIZE));
 	}
 }
