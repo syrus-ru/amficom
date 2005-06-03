@@ -14,7 +14,9 @@
 
 static	SineWavelet wavelet; // используемый вейвлет
 
-#define xsign(f) ((f)>=0?1:-1) 
+#define xsign(f) ((f)>=0?1:-1)
+inline double fmin(double a, double b) { return a < b ? a : b; }
+inline double fmax(double a, double b) { return a > b ? a : b; }
 //------------------------------------------------------------------------------------------------------------
 // Construction/Destruction
 InitialAnalysis::InitialAnalysis(
@@ -880,20 +882,29 @@ return;
     // ищем точку на фронте коннектора такую, что всё слква от неё - меньше, а справа - выше,
 	// которая при этом не меньше, чем на 0.02*(max-minLeft) выше абс. мин. minLeft слева от нее
 
-    int i_x = -1; // x - искомая точка;
+	// допускается, что искомая точка не обязательно должна быть привязана к сетке целых X,
+	// в таком случае определяется X с округлением вверх, даже в том случае, если так округленное
+	// X дает значение Y, не удовлетворяющее требованию "все справа от X выше Y".
+	// Так сделано специально для улучшения работы на резких фронтах в зашумленных коннекторах.
+	// Для этого используется переменная f_x (значение функции в дробной координате x)
+
+    int i_x = -1; // x - искомая точка с привязкой к целочисленной сетке
+	double f_x = 0; // (undefined if i-x < 0) значение в искомой точке (точка без привязки к целым X)
     double f_cmax = data[i_begin]; // текущий максимум (слева до тек. точки)
     double f_lmin = data[i_begin]; // текущий минимум (слева до тек. точки)
-    for( i=i_begin; i<i_max; i++ )
+	for( i=i_begin; i<i_max; i++ )
     {
 		if (f_lmin > data[i])
 			f_lmin = data[i];
-		if(f_cmax <= data[i] && data[i] - f_lmin > 0.02 * (f_max - f_lmin))
+		double thr = fmax(f_cmax, f_lmin + 0.02 * (f_max - f_lmin));
+		if(data[i] >= thr)
         {	f_cmax = data[i];
             if(i_x == -1)
             {	i_x = i;
+				f_x = thr;
             }
         }
-        if(	i_x!=-1 && data[i]<data[i_x] )
+        if(	i_x!=-1 && data[i]<f_x )
         {	i_x = -1;
         }
     }
