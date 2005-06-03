@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.121 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: Test.java,v 1.122 2005/06/03 19:07:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.122 $, $Date: 2005/06/03 19:07:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -58,14 +58,6 @@ public class Test extends StorableObject {
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
 	protected static final int		RETRIEVE_NUMBER_OF_RESULTS	= 3;
-	/**
-	 * @deprecated
-	 */
-	protected static final int		UPDATE_MODIFIED			= 2;
-	/**
-	 * @deprecated
-	 */
-	protected static final int		UPDATE_STATUS			= 1;
 
 	private int temporalType;
 	private TestTimeStamps timeStamps;
