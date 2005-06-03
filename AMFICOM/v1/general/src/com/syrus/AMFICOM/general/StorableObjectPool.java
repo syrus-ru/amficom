@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.94 2005/06/03 10:07:25 max Exp $
+ * $Id: StorableObjectPool.java,v 1.95 2005/06/03 10:16:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/06/03 10:07:25 $
- * @author $Author: max $
+ * @version $Revision: 1.95 $, $Date: 2005/06/03 10:16:10 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -83,7 +83,13 @@ public abstract class StorableObjectPool {
 
 	private static final void registerPool(final short groupCode, final StorableObjectPool pool) {
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
-		assert !GROUP_CODE_POOL_MAP.containsKey(groupCode);
+		/*
+		 * Assertion below turned off, since, currently, a
+		 * double-registration of pool may happen (for instance, when
+		 * user performs a repeated login after an unsuccessful one, or
+		 * when he logs out and back in.
+		 */
+		assert true || !GROUP_CODE_POOL_MAP.containsKey(groupCode);
 		GROUP_CODE_POOL_MAP.put(groupCode, pool);
 	}
 
@@ -1051,8 +1057,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: max $
-	 * @version $Revision: 1.94 $, $Date: 2005/06/03 10:07:25 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.95 $, $Date: 2005/06/03 10:16:10 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
