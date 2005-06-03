@@ -139,7 +139,7 @@ InitialAnalysis::~InitialAnalysis()
 // note: null-ссылки пропускаем (они остаются при перемещении объектов из одного списка в другой)
 int InitialAnalysis::splashesOverlap(Splash &spl1, Splash &spl2) {
 	return
-		spl1.begin_thr < spl2.end_thr && spl2.begin_thr < spl1.end_thr;
+		spl1.begin_thr + 1 < spl2.end_thr && spl2.begin_thr + 1 < spl1.end_thr;
 }
 
 int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
@@ -183,7 +183,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
     shiftThresholds(scaleB);// сдвинуть пороги 
 
-#if 0
+#if 1
 	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
 		int i;
 		for (i = 0; i <= lastPoint; i++)
@@ -205,6 +205,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 		ArrList newSpl;
 		performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scale, getWLetNorma(scale));
 		findAllWletSplashes(TEMP, scale, newSpl);
+		//fprintf(stderr, "scale %d: %d splashes\n", scale, newSpl.getLength()); fflush(stderr);
 		// анализируем, что делать  с каждым найденным всплеском
 		int i;
 		for (i = 0; i < newSpl.getLength(); i++) {
@@ -275,7 +276,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 #if 0
 		{
 			int i;
-			fprintf(stderr, "accSpl dump at scale %d:\n", scale);
+			fprintf(stderr, "accSpl dump at scale %d: Total %d splices\n", scale, accSpl.getLength());
 			for (i = 0; i < accSpl.getLength(); i++) {
 				fprintf(stderr, "spl[%d]: %d - %d  s %+d @ %d -- ampl %g\n",
 					i,
@@ -352,11 +353,13 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 	//minimalWeld,		//минимальный уровень неотражательного события
 	//minimalConnector,	//минимальный уровень отражательного события
 	double minimal_threshold_noise_factor = 0.4;  // XXX - надо бы это снаружи задавать
-    for(int i=1; i<lastPoint; i++)// 1 т.к. i-1
-    {   if( fabs(f_wlet[i])<=calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) )
+    for(int i=1; i <= lastPoint-1; i++)// 1 т.к. i-1 // цикл (1)
+    {
+/*
+		if( fabs(f_wlet[i])<=calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) )
      continue;
 		Splash& spl = (Splash&)(*(new Splash(wlet_width)));// раз уж пересекли хотя бы один порог, то объект уже должен быть создан;
-        spl.begin_thr = i;
+        spl.begin_thr = i; // saa: i-1?
         spl.f_extr = f_wlet[i];
 		int sign, sign_cur;
 		sign = xsign(f_wlet[i]);
@@ -389,6 +392,50 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
         }
 		spl.end_thr = i; // на случай выхода из цикла не по break а по условию в for   
 		spl.sign = sign;
+/*/
+		if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor))
+	continue;
+		int bt = i - 1;
+		int bw = -1;
+		int ew = -1;
+		int bc = -1;
+		int ec = -1;
+		int sign = xsign(f_wlet[i]);
+		double f_extr = f_wlet[i];
+		for (; i <= lastPoint-1; i++) { // цикл (2)
+			if (f_wlet[i] * sign < 0)	// смена знака
+		break;
+			if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor)) // стал меньше minTh
+		break;
+			if (fabs(f_wlet[i]) >= calcThresh(minimalWeld, noise[i])) {
+				ew = i + 1;
+				if (bw == -1)
+					bw = i - 1;
+			}
+			if (fabs(f_wlet[i]) >= calcThresh(minimalConnector, noise[i])) {
+				ec = i + 1;
+				if (bc == -1)
+					bc = i - 1;
+			}
+			if (fabs(f_wlet[i]) > f_extr)
+				f_extr = f_wlet[i];
+		}
+		int et = i; // на этой точке всплеск уже закончился и, возможно, начался следующий
+		assert(et > bt + 1); // трудно поверить, чтобы цикл (2) не выполнился ни разу. Для этого нужен очень странный FPU // FIXME: debug only
+		if (et > bt + 1) // но на всякий случай проверяем, чтобы избежать зацикливания (в этом случае i-- делать не надо)
+			i--; // ставим точку перед возможным началом следующего всплеска, т.к. в цикле (1) есть пост-операция i++
+		if (bw == -1)
+	continue; // Weld-порог так и не пересекли - такой всплеск не создаем (XXX: в будущем анализе, возможно, они понадобяться для интерпретации более крупных соседних всплесков)
+		Splash& spl = (Splash&)(*(new Splash(wlet_width)));
+        spl.f_extr = f_extr;
+		spl.sign = sign;
+        spl.begin_thr = bt;
+		spl.end_thr = et;
+		spl.begin_weld = bw;
+		spl.end_weld = ew;
+		spl.begin_conn = bc;
+		spl.end_conn = ec;
+//*/
 		fillSplashRParameters(spl, f_wlet, wlet_width);
         if( spl.begin_thr < spl.end_thr // begin>end только если образ так и не пересёк ни разу верхний порог
 	        && spl.begin_weld != -1 // !!!  добавляем только существенные всплески ( если эту проверку убрать, то распознавание коннекторов надо изменить, так как если между двумя коннекторными всплесками вдруг окажется случайный незначимый всплеск вверх, то конннектор распознан НЕ БУДЕТ ! )
