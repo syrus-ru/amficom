@@ -2,10 +2,9 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.NumberFormat;
 
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
@@ -24,9 +23,6 @@ import com.syrus.io.BellcoreStructure;
 public class AnalysisSelectionFrame extends JInternalFrame implements
 		BsHashChangeListener, PrimaryMTAEListener, AnalysisParametersListener, ReportTable
 {
-	static final Double[] nf = { new Double(0.7), new Double(1.0),
-			new Double(1.5), new Double(2.0), new Double(2.5), new Double(3) };
-
 	private Dispatcher dispatcher;
 
 	private WrapperedPropertyTableModel tModelMinuit;
@@ -228,175 +224,6 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		AnalysisParameters ap = Heap.getMinuitDefaultParams();
 		setValues(ap);
 	}
-
-	private class ParamTableModel extends AbstractTableModel
-	{
-		AComboBox nfComboBox = new AComboBox(AComboBox.SMALL_FONT);
-
-		String[] columnNames = { "", "" };
-
-		Object[][] data = {
-				{ LangModelAnalyse.getString("analysisMinEvent"), new Double(0) },
-				{ LangModelAnalyse.getString("analysisMinWeld"), new Double(0) },
-				{ LangModelAnalyse.getString("analysisMinConnector"),
-						new Double(0) },
-				{ LangModelAnalyse.getString("analysisMinEnd"), new Double(0) },
-				{ LangModelAnalyse.getString("analysisNoiseFactor"), nfComboBox } };
-
-		ParamTableModel() {
-			for (int i = 0; i < nf.length; i++) {
-				nfComboBox.addItem(nf[i]);
-			}
-
-			this.nfComboBox.addItemListener(new ItemListener() {
-
-				public void itemStateChanged(ItemEvent e) {
-					if (e.getID() == ItemEvent.ITEM_STATE_CHANGED) {
-						AnalysisSelectionFrame.this.updateHeapAP();
-					}
-
-				}
-			});
-		}
-        void updateData(Object[] d)
-        {
-            for (int i = 0; i < d.length; i++) {
-                if (data[i][1] instanceof Double)
-                    data[i][1] = d[i];
-                else if (data[i][1] instanceof JComboBox)
-                    ((JComboBox )data[i][1]).setSelectedItem(d[i]);
-            }
-            super.fireTableDataChanged();
-        }
-
-		public void clearTable()
-		{
-			data = new Object[][] {};
-			super.fireTableDataChanged();
-		}
-
-		public int getColumnCount()
-		{
-			return columnNames.length;
-		}
-
-		public int getRowCount()
-		{
-			return data.length;
-		}
-
-		public String getColumnName(int col)
-		{
-			return columnNames[col];
-		}
-
-		public Object getValueAt(int row, int col)
-		{
-			if (data[row][col] instanceof JComboBox)
-				return ((JComboBox )data[row][col]).getSelectedItem();
-			else
-				return data[row][col];
-		}
-
-		public Class getColumnClass(int p_col)
-		{
-			return Object.class;
-		}
-
-		public boolean isCellEditable(int row, int col)
-		{
-			if (col < 1)
-				return false;
-			else
-				return true;
-		}
-
-		public void setValueAt(Object value, int row, int col)
-		{
-			if (!(data[row][col] instanceof JComboBox))	{
-				data[row][col] = value;
-				super.fireTableCellUpdated(row, col);
-				AnalysisSelectionFrame.this.updateHeapAP();
-			}
-		}
-	}
-
-	/*private class ModelParamsTableEditor extends DefaultCellEditor
-	{
-		Object editor;
-
-		ParamTableModel model;
-
-		public ModelParamsTableEditor(ParamTableModel model)
-		{
-			super(new JTextField());
-			this.model = model;
-			setClickCountToStart(1);
-			super.editorComponent.addFocusListener(new FocusAdapter() {
-				public void focusLost(FocusEvent e) {
-					ModelParamsTableEditor.this.stopCellEditing();
-				}
-			});
-		}
-
-		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected1, int row, int column)
-		{
-			editor = value;
-			if (model.data[row][column] instanceof JComboBox)
-			{
-				JComboBox box = (JComboBox )model.data[row][column];
-				box.setBackground(SystemColor.window);
-				return box;
-			} else
-				return super.getTableCellEditorComponent(table, value,
-					isSelected1, row, column);
-		}
-
-		public Object getCellEditorValue()
-		{
-			if (editor instanceof JComboBox)
-				return editor;
-			Object obj = super.getCellEditorValue();
-			if (obj instanceof String)
-			{
-				String str = (String )obj;
-				while (str.length() > 0)
-				{
-					try
-					{
-						return Double.valueOf(str);
-					} catch (NumberFormatException ex)
-					{
-						str = str.substring(0, str.length() - 1);
-					}
-				}
-				return new Double(0);
-			} else
-				return obj;
-		}
-	}
-
-	private class ModelParamsTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer
-	{
-		ParamTableModel model;
-
-		public ModelParamsTableRenderer(ParamTableModel model)
-		{
-			this.model = model;
-		}
-
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected1, boolean hasFocus, int row,
-				int column)
-		{
-			if (model.data[row][column] instanceof JComboBox)
-				return (JComboBox )model.data[row][column];
-			else
-				return super.getTableCellRendererComponent(table, value,
-					isSelected1, hasFocus, row, column);
-		}
-	}*/
 
 	public void bsHashAdded(String key, BellcoreStructure bs)
 	{

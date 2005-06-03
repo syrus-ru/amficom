@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.1 2005/06/03 06:59:12 stas Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.2 2005/06/03 10:43:53 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,11 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/03 06:59:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/03 10:43:53 $
  * @module analysis_v1
  */
 
 public class AnalysisParametersWrapper implements Wrapper {
-	static final Double[] nf = { new Double(0.7), new Double(1.0),
-		new Double(1.5), new Double(2.0), new Double(2.5), new Double(3) };
 	
 	public static final String KEY_MIN_THRESHOLD = "analysisMinEvent";
 	public static final String KEY_MIN_SPLICE = "analysisMinWeld";
@@ -33,8 +31,10 @@ public class AnalysisParametersWrapper implements Wrapper {
 	private static AnalysisParametersWrapper	instance;
 	private static Map noiseFactors = new HashMap();
 	static {
-		 for (int i = 0; i < nf.length; i++) {
-			noiseFactors.put(nf[i], nf[i]);
+		double[] nf = AnalysisParameters.getRecommendedNoiseFactors();
+		for (int i = 0; i < nf.length; i++) {
+			Double d = new Double(nf[i]);
+			noiseFactors.put(d, d);
 		}
 	}
 
