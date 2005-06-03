@@ -869,19 +869,26 @@ void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1,
 void InitialAnalysis::correctConnectorFront(EventParams* ev)
 {	if( ev->type != EventParams::CONNECTOR )// пока не дойдём до коннектора
 return;
-    // ищем точку на фронте коннектора такую, что всё слква от неё - меьше, а справа - не меньше
     int i_begin = ev->begin, i_end = ev->end;
+	// ищем максимум
     int i_max = i_begin;// номер макс точки
     double f_max = data[i_max];
     int i;
-    for( i=i_begin; i<i_end; i++ ) // ищем максимум
+    for( i=i_begin; i<i_end; i++ )
     {	if(data[i]>f_max) {i_max = i; f_max = data[i];}
     }
+    // ищем точку на фронте коннектора такую, что всё слква от неё - меньше, а справа - выше,
+	// которая при этом не меньше, чем на 0.02*(max-minLeft) выше абс. мин. minLeft слева от нее
+
     int i_x = -1; // x - искомая точка;
-    double f_lmax = data[i_begin];
+    double f_cmax = data[i_begin]; // текущий максимум (слева до тек. точки)
+    double f_lmin = data[i_begin]; // текущий минимум (слева до тек. точки)
     for( i=i_begin; i<i_max; i++ )
-    { 	if(f_lmax <= data[i])
-        {	f_lmax = data[i];
+    {
+		if (f_lmin > data[i])
+			f_lmin = data[i];
+		if(f_cmax <= data[i] && data[i] - f_lmin > 0.02 * (f_max - f_lmin))
+        {	f_cmax = data[i];
             if(i_x == -1)
             {	i_x = i;
             }
@@ -892,17 +899,6 @@ return;
     }
     if( i_x==-1 )
     {	i_x = i_begin;
-    }
-    else
-    { // поднимаем уровень на 0.02 (прививка от плавных подъёмов перед коннектором)
-      double f_min = data[i_begin];
-      double f_x = f_min + (f_max-f_min)*0.02;
-      for( int i=i_x; i<i_max; i++ )
-      {	if(data[i]>f_x)
-        { i_x = i;
-      break;
-        }
-      }
     }
     double ev_beg_old = ev->begin;
     ev->begin = i_x - 1;
