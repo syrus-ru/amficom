@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.123 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: Test.java,v 1.124 2005/06/03 21:02:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,13 +25,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.123 $, $Date: 2005/06/03 20:38:04 $
+ * @version $Revision: 1.124 $, $Date: 2005/06/03 21:02:18 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -380,24 +380,20 @@ public class Test extends StorableObject {
 				msIdsT);
 	}
 
-	public java.util.Set retrieveMeasurementsOrderByStartTime(final MeasurementStatus measurementStatus)
-			throws RetrieveObjectException, ObjectNotFoundException {
-		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
-		try {
-			return (java.util.Set) database.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
-	
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
 		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
-			return (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
+			Measurement measurement = (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
+			try {
+				StorableObjectPool.putStorableObject(measurement);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+			return measurement;
 		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
