@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.95 2005/06/03 10:16:10 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.96 2005/06/03 12:16:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/06/03 10:16:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.96 $, $Date: 2005/06/03 12:16:33 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -88,6 +88,8 @@ public abstract class StorableObjectPool {
 		 * double-registration of pool may happen (for instance, when
 		 * user performs a repeated login after an unsuccessful one, or
 		 * when he logs out and back in.
+		 * NOTE: Correctly written application never attempts to repeatedly register a pool,
+		 * so this assert  must be turned on.
 		 */
 		assert true || !GROUP_CODE_POOL_MAP.containsKey(groupCode);
 		GROUP_CODE_POOL_MAP.put(groupCode, pool);
@@ -1057,8 +1059,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.95 $, $Date: 2005/06/03 10:16:10 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.96 $, $Date: 2005/06/03 12:16:33 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
