@@ -892,11 +892,13 @@ return;
 	double f_x = 0; // (undefined if i-x < 0) значение в искомой точке (точка без привязки к целым X)
     double f_cmax = data[i_begin]; // текущий максимум (слева до тек. точки)
     double f_lmin = data[i_begin]; // текущий минимум (слева до тек. точки)
-	for( i=i_begin; i<i_max; i++ )
+	for( i=i_begin; i<=i_max; i++ )
     {
 		if (f_lmin > data[i])
 			f_lmin = data[i];
-		double thr = fmax(f_cmax, f_lmin + 0.02 * (f_max - f_lmin));
+		double thr = fmax(f_cmax, f_lmin + 0.05 * (f_max - f_lmin));
+		//fprintf(stderr, "i_x %d f_x %g i %d data[i] %g f_cmax %g f_lmin %g f_max %g thr %g\n",
+		//	i_x, f_x, i, data[i], f_cmax, f_lmin, f_max, thr);
 		if(data[i] >= thr)
         {	f_cmax = data[i];
             if(i_x == -1)
@@ -908,6 +910,8 @@ return;
         {	i_x = -1;
         }
     }
+	//fprintf(stderr, "correctConnectorFront: i_begin %d i_end %d i_max %d i_x %d\n",
+	//	i_begin, i_end, i_max, i_x); fflush(stderr);
     if( i_x==-1 )
     {	i_x = i_begin;
     }
