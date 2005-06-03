@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
@@ -33,7 +32,10 @@ public class FileRemoveCommand extends AbstractCommand
 	{
         // FIXME: activerefId can be null?
 
-        Heap.removeAnyBSByName(activeRefId);
+        if (Heap.ETALON_TRACE_KEY.equals(activeRefId))
+            Heap.setMTMEtalon(null);
+        else
+            Heap.removeAnyBSByName(activeRefId);
 		Heap.traceClosed(activeRefId);
 		Heap.setCurrentTracePrimary();
 	}
