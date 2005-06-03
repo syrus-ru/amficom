@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.4 2005/05/24 15:43:43 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.5 2005/06/03 10:28:40 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/05/24 15:43:43 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/03 10:28:40 $
  * @module
  */
 public class AnalysisParameters
@@ -22,6 +22,8 @@ implements DataStreamable, Cloneable
 {
 	private double[] param;
 	private static DSReader reader;
+    private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
+        0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
 
 	public double getMinThreshold() {
 		return param[0];
@@ -58,6 +60,13 @@ implements DataStreamable, Cloneable
 	public void setNoiseFactor(double v) {
 		param[4] = v;
 	}
+
+    /**
+     * @return список рекомендуемых значений noiseFactor
+     */
+    public double[] getRecommendedNoiseFactors() {
+        return (double[])RECOMMENDED_NOISE_FACTORS.clone();
+    }
 
 	public AnalysisParameters(double minThreshold,
 			double minSplice,
