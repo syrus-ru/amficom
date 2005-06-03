@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.34 2005/06/03 16:43:00 arseniy Exp $
+ * $Id: KISReport.java,v 1.35 2005/06/03 16:48:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -31,12 +30,11 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/03 16:43:00 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/03 16:48:41 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -102,7 +100,7 @@ public class KISReport {
 			}
 
 			Result result = measurement.createResult(LoginManager.getUserId(), parameters);
-			((ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE)).insert(result);
+			StorableObjectPool.flush(result, true);
 			return result;
 		}
 		catch (ApplicationException ae) {
