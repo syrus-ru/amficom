@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.10 2005/06/02 14:44:03 bass Exp $
+ * $Id: ServerCore.java,v 1.11 2005/06/03 14:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/06/02 14:44:03 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/03 14:52:50 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -274,7 +274,7 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	private AMFICOMRemoteException processDefaultThrowable(final Throwable t) {
+	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable t) {
 		Log.debugException(t, Log.SEVERE);
 		return new AMFICOMRemoteException(
 				ErrorCode.ERROR_UNKNOWN,
