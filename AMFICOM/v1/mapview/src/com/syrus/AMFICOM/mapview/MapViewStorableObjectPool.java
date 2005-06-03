@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.20 2005/05/24 16:40:05 bass Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.21 2005/06/03 15:54:22 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/24 16:40:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/06/03 15:54:22 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -98,7 +98,6 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:
@@ -129,7 +128,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 			throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:

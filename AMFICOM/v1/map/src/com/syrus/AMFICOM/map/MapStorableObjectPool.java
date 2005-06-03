@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.24 2005/05/24 16:40:06 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.25 2005/06/03 15:52:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/24 16:40:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/06/03 15:52:38 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -145,7 +145,6 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
@@ -211,7 +210,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {				
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:

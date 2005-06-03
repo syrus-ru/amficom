@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.28 2005/05/25 13:01:02 bass Exp $
+ * $Id: EventStorableObjectPool.java,v 1.29 2005/06/03 15:57:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/25 13:01:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/06/03 15:57:04 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -104,7 +104,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
@@ -142,8 +141,6 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.22 2005/05/23 16:18:43 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.23 2005/06/03 15:55:06 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/05/23 16:18:43 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/06/03 15:55:06 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -192,7 +192,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @see StorableObjectPool#loadStorableObjects(Set)
 	 */
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:
@@ -301,7 +300,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
 			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:

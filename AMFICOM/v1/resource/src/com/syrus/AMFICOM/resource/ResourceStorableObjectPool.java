@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.26 2005/05/24 16:40:06 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.27 2005/06/03 15:56:30 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/05/24 16:40:06 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/06/03 15:56:30 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -94,7 +94,6 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	}
 	
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
@@ -125,7 +124,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
 			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
