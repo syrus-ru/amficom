@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.61 2005/06/01 18:50:42 bass Exp $
+ * $Id: StorableObject.java,v 1.62 2005/06/03 15:51:04 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/06/01 18:50:42 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/06/03 15:51:04 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -422,13 +422,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	}
 
 	/**
-	 * Code that invokes this method, should preliminarily call
-	 * {@link #hasSingleTypeEntities(Set)} with the same parameter and
-	 * ensure that return value is <code>true</code>, e.g.:
-	 *
-	 * <pre>
-	 * assert hasSingleTypeEntities(identifiables): &quot;Identifiables of different type should be treated separately...&quot;;
-	 * </pre>
+	 * This method checks:
+	 * 1) for non-null and non-empty set,
+	 * 2) for the same entity code of all elements in set (@see #hasSingleTypeEntities(Set)).
 	 *
 	 * @param identifiables non-null, non-empty set of storable objects or
 	 *        identifiers of the same type.
@@ -437,6 +433,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	public static short getEntityCodeOfIdentifiables(final Set identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
+		assert hasSingleTypeEntities(identifiables);
 
 		return ((Identifiable) identifiables.iterator().next()).getId().getMajor();
 	}
@@ -446,6 +443,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	public static short getEntityCodeOfIdentifiables(final Identifier_Transferable ids[]) {
 		assert ids != null && ids.length != 0;
+		assert hasSingleTypeEntities(ids);
 
 		return new Identifier(ids[0]).getMajor();
 	}

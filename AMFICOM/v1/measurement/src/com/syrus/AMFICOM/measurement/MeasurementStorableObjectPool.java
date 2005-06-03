@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.94 2005/05/25 13:01:05 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.95 2005/06/03 15:51:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/05/25 13:01:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.95 $, $Date: 2005/06/03 15:51:43 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -153,7 +153,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected java.util.Set loadStorableObjects(final java.util.Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
@@ -251,8 +250,6 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	protected void saveStorableObjects(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {

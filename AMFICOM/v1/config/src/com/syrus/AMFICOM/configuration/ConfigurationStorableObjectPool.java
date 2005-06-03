@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.86 2005/05/25 13:01:09 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.87 2005/06/03 15:51:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/05/25 13:01:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.87 $, $Date: 2005/06/03 15:51:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -152,7 +152,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
@@ -245,8 +244,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {

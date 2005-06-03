@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.31 2005/06/01 17:09:18 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.32 2005/06/03 15:51:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/01 17:09:18 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/03 15:51:13 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -115,7 +115,6 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.USER_ENTITY_CODE:
@@ -168,8 +167,6 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
-
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {

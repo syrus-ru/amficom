@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.96 2005/06/03 12:16:33 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.97 2005/06/03 15:51:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/06/03 12:16:33 $
+ * @version $Revision: 1.97 $, $Date: 2005/06/03 15:51:04 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -208,7 +208,6 @@ public abstract class StorableObjectPool {
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ObjectEntities.isEntityCodeValid(entityCode);
 
-		assert StorableObject.hasSingleTypeEntities(ids);
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 
 		final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
@@ -1060,7 +1059,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.96 $, $Date: 2005/06/03 12:16:33 $
+	 * @version $Revision: 1.97 $, $Date: 2005/06/03 15:51:04 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
