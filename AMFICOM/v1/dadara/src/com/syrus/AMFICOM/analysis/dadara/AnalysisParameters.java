@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.5 2005/06/03 10:28:40 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.6 2005/06/03 10:42:27 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/06/03 10:28:40 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/03 10:42:27 $
  * @module
  */
 public class AnalysisParameters
@@ -64,7 +64,7 @@ implements DataStreamable, Cloneable
     /**
      * @return список рекомендуемых значений noiseFactor
      */
-    public double[] getRecommendedNoiseFactors() {
+    public static double[] getRecommendedNoiseFactors() {
         return (double[])RECOMMENDED_NOISE_FACTORS.clone();
     }
 
