@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.27 2005/06/02 14:26:53 arseniy Exp $
+ * $Id: MCM.java,v 1.28 2005/06/03 20:37:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.administration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -27,16 +26,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/02 14:26:53 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/03 20:37:40 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -55,7 +52,7 @@ public class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	public MCM(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -74,7 +71,7 @@ public class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MCM(MCM_Transferable mt) throws CreateObjectException {
+	public MCM(final MCM_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		}
@@ -86,15 +83,15 @@ public class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	MCM(Identifier id,
-					Identifier creatorId,
-					long version,
-					Identifier domainId,
-					String name,
-					String description,
-					String hostname,
-					Identifier userId,
-					Identifier serverId) {
+	MCM(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final String hostname,
+			final Identifier userId,
+			final Identifier serverId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -114,7 +111,7 @@ public class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		MCM_Transferable mt = (MCM_Transferable)transferable;
 		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
 		this.name = mt.name;
@@ -135,23 +132,22 @@ public class MCM extends DomainMember implements Characterizable {
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator it = this.characteristics.iterator(); it.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)it.next()).getId().getTransferable();
+
+		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new MCM_Transferable(super.getHeaderTransferable(),
-									(Identifier_Transferable)super.domainId.getTransferable(),
-									this.name,
-									this.description,
-									this.hostname,
-									(Identifier_Transferable)this.userId.getTransferable(),
-									(Identifier_Transferable)this.serverId.getTransferable(),
-									charIds);
+				(Identifier_Transferable) super.domainId.getTransferable(),
+				this.name,
+				this.description,
+				this.hostname,
+				(Identifier_Transferable) this.userId.getTransferable(),
+				(Identifier_Transferable) this.serverId.getTransferable(),
+				charIds);
 	}
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
 	/**
@@ -174,9 +170,9 @@ public class MCM extends DomainMember implements Characterizable {
 		return this.hostname;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Identifier getUserId() {
@@ -187,17 +183,17 @@ public class MCM extends DomainMember implements Characterizable {
 		return this.serverId;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -216,35 +212,30 @@ public class MCM extends DomainMember implements Characterizable {
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	public static MCM createInstance(Identifier creatorId,
-									 Identifier domainId,
-									 String name,
-									 String description,
-									 String hostname,
-									 Identifier userId,
-									 Identifier serverId) throws CreateObjectException {
+	public static MCM createInstance(final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final String hostname,
+			final Identifier userId,
+			final Identifier serverId) throws CreateObjectException {
 		try {
 			MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
-								creatorId,
-								0L,
-								domainId,
-								name,
-								description,
-								hostname,
-								userId,
-								serverId);
+					creatorId,
+					0L,
+					domainId,
+					name,
+					description,
+					hostname,
+					userId,
+					serverId);
 			
 			assert mcm.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			mcm.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(mcm);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			mcm.markAsChanged();
 
 			return mcm;
 		}
@@ -256,17 +247,17 @@ public class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  Identifier domainId,
-											  String name,
-											  String description,
-											  String hostname,
-											  Identifier userId,
-											  Identifier serverId) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final String hostname,
+			final Identifier userId,
+			final Identifier serverId) {
 		super.setAttributes(created,												
 				modified,
 				creatorId,
@@ -292,23 +283,23 @@ public class MCM extends DomainMember implements Characterizable {
 		return dependencies;
 	}
 	
-	public void setHostName(String hostname) {
+	public void setHostName(final String hostname) {
 		this.hostname = hostname;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
-	public void setServerId(Identifier serverId) {
+	public void setServerId(final Identifier serverId) {
 		this.serverId = serverId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
-	public void setUserId(Identifier userId) {
+	public void setUserId(final Identifier userId) {
 		this.userId = userId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

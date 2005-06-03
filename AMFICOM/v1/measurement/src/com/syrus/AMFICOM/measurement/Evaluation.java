@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.58 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: Evaluation.java,v 1.59 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,10 +28,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.59 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,7 +46,7 @@ public class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Evaluation(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	public Evaluation(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
@@ -65,7 +63,7 @@ public class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
+	public Evaluation(final Evaluation_Transferable et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
 		}
@@ -77,13 +75,13 @@ public class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Evaluation(Identifier id,
-						 Identifier creatorId,
-						 long version,
-						 EvaluationType type,
-						 Identifier monitoredElementId,
-						 Measurement measurement,
-						 Set thresholdSet) {
+	Evaluation(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final EvaluationType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final Set thresholdSet) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -100,7 +98,7 @@ public class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Evaluation_Transferable et = (Evaluation_Transferable) transferable;
 		super.fromTransferable(et.header, null, new Identifier(et.monitored_element_id), null);
 
@@ -145,32 +143,32 @@ public class Evaluation extends Action {
 		return (Measurement) super.parentAction;
 	}
 	
-	public void setMeasurement(Measurement measurement) {
+	public void setMeasurement(final Measurement measurement) {
 		super.parentAction = measurement;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Set getThresholdSet() {
 		return this.thresholdSet;
 	}
 	
-	public void setThresholdSet(Set thresholdSet) {
+	public void setThresholdSet(final Set thresholdSet) {
 		this.thresholdSet = thresholdSet;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  EvaluationType type,
-											  Identifier monitoredElementId,
-											  Measurement measurement,
-											  Set thresholdSet) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final EvaluationType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final Set thresholdSet) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -192,11 +190,11 @@ public class Evaluation extends Action {
 	 * @return a newly generated instance
 	 * @throws CreateObjectException
 	 */
-	public static Evaluation createInstance(Identifier creatorId,
-											EvaluationType type,
-											Identifier monitoredElementId,
-											Measurement measurement,
-											Set thresholdSet) throws CreateObjectException {
+	public static Evaluation createInstance(final Identifier creatorId,
+			final EvaluationType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final Set thresholdSet) throws CreateObjectException {
 		try {
 			Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
 				creatorId,
@@ -207,13 +205,8 @@ public class Evaluation extends Action {
 				thresholdSet);
 
 			assert evaluation.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			evaluation.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(evaluation);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			evaluation.markAsChanged();
 
 			return evaluation;
 		}
@@ -222,15 +215,15 @@ public class Evaluation extends Action {
 		}
 	}
 
-	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
-		return Result.createInstance(resultCreatorId,
-				this,
-				ResultSort.RESULT_SORT_EVALUATION,
-				resultParameters);
+	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
+			throws CreateObjectException {
+		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_EVALUATION, resultParameters);
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	public java.util.Set getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;

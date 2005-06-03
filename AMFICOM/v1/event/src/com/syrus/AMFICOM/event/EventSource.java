@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.17 2005/06/02 14:27:29 arseniy Exp $
+ * $Id: EventSource.java,v 1.18 2005/06/03 20:38:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,17 +23,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/02 14:27:29 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/03 20:38:15 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -42,10 +40,10 @@ public final class EventSource extends StorableObject {
 
 	private Identifier sourceEntityId;
 
-	EventSource (Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	EventSource (final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		EventSourceDatabase database = (EventSourceDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
+		final EventSourceDatabase database = (EventSourceDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -54,14 +52,14 @@ public final class EventSource extends StorableObject {
 		}
 	}
 
-	EventSource(EventSource_Transferable est) {
+	EventSource(final EventSource_Transferable est) {
 		this.fromTransferable(est);
 	}
 
-	EventSource(Identifier id,
-			 Identifier creatorId,
-			 long version,
-			 Identifier sourceEntityId) {
+	EventSource(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Identifier sourceEntityId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -71,8 +69,8 @@ public final class EventSource extends StorableObject {
 		this.sourceEntityId = sourceEntityId;
 	}
 
-	public static EventSource createInstance(Identifier creatorId,
-			Identifier sourceEntityId) throws CreateObjectException {
+	public static EventSource createInstance(final Identifier creatorId,
+			final Identifier sourceEntityId) throws CreateObjectException {
 		if (creatorId == null || sourceEntityId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -83,13 +81,8 @@ public final class EventSource extends StorableObject {
 					sourceEntityId);
 
 			assert eventSource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			eventSource.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(eventSource);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			eventSource.markAsChanged();
 
 			return eventSource;
 		}
@@ -98,7 +91,7 @@ public final class EventSource extends StorableObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) {
+	protected void fromTransferable(final IDLEntity transferable) {
 		EventSource_Transferable est = (EventSource_Transferable) transferable;
 		try {
 			super.fromTransferable(est);
@@ -119,22 +112,22 @@ public final class EventSource extends StorableObject {
 		return this.sourceEntityId;
 	}
 
-	public void setSourceEntityId(Identifier sourceEntityId) {
+	public void setSourceEntityId(final Identifier sourceEntityId) {
 		this.sourceEntityId = sourceEntityId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																	long version,
-																	Identifier sourceEntityId) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier sourceEntityId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												version);
+				modified,
+				creatorId,
+				modifierId,
+				version);
 		this.sourceEntityId = sourceEntityId;
 	}
 

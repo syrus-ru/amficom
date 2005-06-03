@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.40 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.41 2005/06/03 20:38:45 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -34,7 +33,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
@@ -42,7 +40,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/03 20:38:45 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -84,7 +82,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	private transient boolean topological = true;
 
-	PhysicalLinkType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
@@ -96,7 +94,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		}
 	}
 
-	PhysicalLinkType(PhysicalLinkType_Transferable pltt) throws CreateObjectException {
+	PhysicalLinkType(final PhysicalLinkType_Transferable pltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(pltt);
 		}
@@ -152,13 +150,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 					bindingDimension);
 
 			assert physicalLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			physicalLinkType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(physicalLinkType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			physicalLinkType.markAsChanged();
 
 			return physicalLinkType;
 		}
@@ -167,7 +160,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		PhysicalLinkType_Transferable pltt = (PhysicalLinkType_Transferable) transferable;
 		super.fromTransferable(pltt.header, pltt.codename, pltt.description);
 
@@ -203,9 +196,9 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		this.description = description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.setDescription0(description);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public boolean isTopological() {
@@ -214,32 +207,32 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	public void setTopological(final boolean topological) {
 		this.topological = topological;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	protected void setName0(String name) {
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.setName0(name);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String codename,
-			String name,
-			String description,
-			int width,
-			int height) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String name,
+			final String description,
+			final int width,
+			final int height) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -260,20 +253,20 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		this.sort = PhysicalLinkTypeSort.fromString(codename);
 	}
 
-	protected void setBindingDimension0(IntDimension bindingDimension) {
+	protected void setBindingDimension0(final IntDimension bindingDimension) {
 		this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 	}
 
-	public void setBindingDimension(IntDimension bindingDimension) {
+	public void setBindingDimension(final IntDimension bindingDimension) {
 		this.setBindingDimension0(bindingDimension);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public IntDimension getBindingDimension() {
 		return new IntDimension(this.bindingDimension);
 	}
 
-	protected void setCodename0(String codename) {
+	protected void setCodename0(final String codename) {
 		super.setCodename0(codename);
 	}
 
@@ -281,15 +274,15 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		return  Collections.unmodifiableSet(this.characteristics);
 	}
 	
-	public void addCharacteristic(Characteristic characteristic){
+	public void addCharacteristic(final Characteristic characteristic){
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	public void removeCharacteristic(Characteristic characteristic)
+	public void removeCharacteristic(final Characteristic characteristic)
 	{
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -298,7 +291,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -315,7 +308,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		return this.sort;
 	}
 
-	public void setSort(PhysicalLinkTypeSort sort) {
+	public void setSort(final PhysicalLinkTypeSort sort) {
 		this.sort = sort;
 	}
 }

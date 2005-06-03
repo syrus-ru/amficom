@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.56 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.57 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -36,10 +34,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.57 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -56,7 +53,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 
 	private Set characteristics;
 
-	MeasurementPort(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	MeasurementPort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -70,7 +67,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		}
 	}
 
-	public MeasurementPort(MeasurementPort_Transferable mpt) throws CreateObjectException {
+	public MeasurementPort(final MeasurementPort_Transferable mpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mpt);
 		}
@@ -79,14 +76,14 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		}
 	}
 
-	MeasurementPort(Identifier id,
-							Identifier creatorId,
-							long version,
-							MeasurementPortType type,
-							String name,
-							String description,	
-							Identifier kisId,
-							Identifier portId) {
+	MeasurementPort(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final MeasurementPortType type,
+			final String name,
+			final String description,	
+			final Identifier kisId,
+			final Identifier portId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -111,34 +108,29 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	 * @param portId
 	 * @throws CreateObjectException
 	 */
-	public static MeasurementPort createInstance(	Identifier creatorId,
-																		MeasurementPortType type,
-																		String name,
-																		String description,	
-																		Identifier kisId,
-																		Identifier portId) throws CreateObjectException{
+	public static MeasurementPort createInstance(final Identifier creatorId,
+			final MeasurementPortType type,
+			final String name,
+			final String description,	
+			final Identifier kisId,
+			final Identifier portId) throws CreateObjectException{
 		if (creatorId == null || type == null || name == null || description == null ||
 				kisId == null || portId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			MeasurementPort measurementPort = new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
-									   creatorId,
-									   0L,
-									   type,
-									   name,
-									   description,
-									   kisId,
-									   portId);
+					creatorId,
+					0L,
+					type,
+					name,
+					description,
+					kisId,
+					portId);
 
 			assert measurementPort.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			measurementPort.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(measurementPort);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			measurementPort.markAsChanged();
 
 			return measurementPort;
 		}
@@ -147,7 +139,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		MeasurementPort_Transferable mpt = (MeasurementPort_Transferable) transferable;
 		super.fromTransferable(mpt.header);
 
@@ -165,18 +157,15 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new MeasurementPort_Transferable(super.getHeaderTransferable(),
-												(Identifier_Transferable)this.type.getId().getTransferable(),
-												this.name,
-												this.description,
-												(Identifier_Transferable)this.kisId.getTransferable(),
-												(Identifier_Transferable)this.portId.getTransferable(),
-												charIds);
+				(Identifier_Transferable)this.type.getId().getTransferable(),
+				this.name,
+				this.description,
+				(Identifier_Transferable)this.kisId.getTransferable(),
+				(Identifier_Transferable)this.portId.getTransferable(),
+				charIds);
 	}
 
 	public StorableObjectType getType() {
@@ -187,9 +176,9 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		return this.description;
 	}
 	
-	public void setDescription(String description){
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	public String getName() {
@@ -204,21 +193,21 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		return this.portId;
 	}
 
-	protected synchronized void setAttributes(Date created,
-											Date modified,
-											Identifier creatorId,
-											Identifier modifierId,
-											long version,
-											MeasurementPortType type,
-											String name,
-											String description,	
-											Identifier kisId,
-											Identifier portId) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final MeasurementPortType type,
+			final String name,
+			final String description,	
+			final Identifier kisId,
+			final Identifier portId) {
 		super.setAttributes(created,
-						modified,
-						creatorId,
-						modifierId,
-						version);
+				modified,
+				creatorId,
+				modifierId,
+				version);
 		this.type = type;
 		this.name = name;
 		this.description = description;
@@ -234,27 +223,27 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		return dependencies;
 	}
 
-	public void setName(String name) {
-		super.changed = true;
+	public void setName(final String name) {
 		this.name = name;
+		super.markAsChanged();
 	}
 	
-	public void setType(MeasurementPortType type) {
-		super.changed = true;
+	public void setType(final MeasurementPortType type) {
 		this.type = type;
+		super.markAsChanged();
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -270,7 +259,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -278,13 +267,13 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	 */
 	public void setKISId(Identifier kisId) {
 		this.kisId = kisId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param portId The portId to set.
 	 */
 	public void setPortId(Identifier portId) {
 		this.portId = portId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

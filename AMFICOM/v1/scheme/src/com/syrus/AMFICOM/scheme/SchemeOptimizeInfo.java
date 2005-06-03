@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.25 2005/05/24 13:25:02 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.26 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/24 13:25:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -218,7 +218,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 					rtuCreateProb, nodesSpliceProb,
 					nodesCutProb, survivorRate,
 					parentScheme);
-			schemeOptimizeInfo.changed = true;
+			schemeOptimizeInfo.markAsChanged();
 			return schemeOptimizeInfo;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -464,35 +464,35 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setIterations(final int iterations) {
 		if (this.iterations == iterations)
 			return;
 		this.iterations = iterations;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setLenMargin(final double lenMargin) {
 		if (this.lenMargin == lenMargin)
 			return;
 		this.lenMargin = lenMargin;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setMutationDegree(final double mutationDegree) {
 		if (this.mutationDegree == mutationDegree)
 			return;
 		this.mutationDegree = mutationDegree;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setMutationRate(final double mutationRate) {
 		if (this.mutationRate == mutationRate)
 			return;
 		this.mutationRate = mutationRate;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -504,28 +504,28 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setNodesCutProb(final double nodesCutProb) {
 		if (this.nodesCutProb == nodesCutProb)
 			return;
 		this.nodesCutProb = nodesCutProb;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setNodesSpliceProb(final double nodesSpliceProb) {
 		if (this.nodesSpliceProb == nodesSpliceProb)
 			return;
 		this.nodesSpliceProb = nodesSpliceProb;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setOptimizationMode(final int optimizationMode) {
 		if (this.optimizationMode == optimizationMode)
 			return;
 		this.optimizationMode = optimizationMode;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -543,28 +543,28 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		if (this.parentSchemeId.equals(newParentSchemeId))
 			return;
 		this.parentSchemeId = newParentSchemeId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setPrice(double price) {
 		if (this.price == price)
 			return;
 		this.price = price;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setRtuCreateProb(final double rtuCreateProb) {
 		if (this.rtuCreateProb == rtuCreateProb)
 			return;
 		this.rtuCreateProb = rtuCreateProb;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setRtuDeleteProb(final double rtuDeleteProb) {
 		if (this.rtuDeleteProb == rtuDeleteProb)
 			return;
 		this.rtuDeleteProb = rtuDeleteProb;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemeMonitoringSolutions(final Set schemeMonitoringSolutions) {
@@ -616,14 +616,14 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		if (this.survivorRate == survivorRate)
 			return;
 		this.survivorRate = survivorRate;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setWaveLength(double waveLength) {
 		if (this.waveLength == waveLength)
 			return;
 		this.waveLength = waveLength;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

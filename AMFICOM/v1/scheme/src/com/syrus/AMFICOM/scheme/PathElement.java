@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.28 2005/05/24 13:25:02 bass Exp $
+ * $Id: PathElement.java,v 1.29 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/05/24 13:25:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -309,7 +309,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 					0L, parentSchemePath,
 					startAbstractSchemePort,
 					endAbstractSchemePort);
-			pathElement.changed = true;
+			pathElement.markAsChanged();
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -338,7 +338,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
 					created, created, creatorId, creatorId,
 					0L, parentSchemePath, schemeCableThread);
-			pathElement.changed = true;
+			pathElement.markAsChanged();
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -367,7 +367,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
 					created, created, creatorId, creatorId,
 					0L, parentSchemePath, schemeLink);
-			pathElement.changed = true;
+			pathElement.markAsChanged();
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -709,7 +709,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.endAbstractSchemePortId.equals(newEndAbstractSchemePortId))
 			return;
 		this.endAbstractSchemePortId = newEndAbstractSchemePortId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -745,7 +745,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		for (final Iterator pathElementIterator = getParentSchemePath().getPathElements().tailSet(this).iterator(); pathElementIterator.hasNext();) {
 			final PathElement pathElement = (PathElement) pathElementIterator.next();
 			pathElement.parentSchemePathId = newParentSchemePathId;
-			pathElement.changed = true;
+			super.markAsChanged();
 			pathElement.sequentialNumber = parentSchemePathIsNull ? -1 : newSequentialNumber++;
 			if (parentSchemePathIsNull)
 				StorableObjectPool.delete(pathElement.id);
@@ -764,7 +764,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.schemeCableThreadId.equals(newSchemeCableThreadId))
 			return;
 		this.schemeCableThreadId = newSchemeCableThreadId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemeElement(final SchemeElement schemeElement) {
@@ -781,7 +781,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.schemeLinkId.equals(newSchemeLinkId))
 			return;
 		this.schemeLinkId = newSchemeLinkId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setStartAbstractSchemePort(final AbstractSchemePort startAbstractSchemePort) {
@@ -803,7 +803,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		if (this.startAbstractSchemePortId.equals(newStartAbstractSchemePortId))
 			return;
 		this.startAbstractSchemePortId = newStartAbstractSchemePortId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

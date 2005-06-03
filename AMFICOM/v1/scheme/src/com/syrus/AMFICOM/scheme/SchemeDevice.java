@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.30 2005/05/26 15:31:15 bass Exp $
+ * $Id: SchemeDevice.java,v 1.31 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  * #07 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -189,7 +189,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					null, null);
-			schemeDevice.changed = true;
+			schemeDevice.markAsChanged();
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -221,7 +221,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					parentSchemeProtoElement, null);
-			schemeDevice.changed = true;
+			schemeDevice.markAsChanged();
 			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
@@ -254,7 +254,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					null, parentSchemeElement);
-			schemeDevice.changed = true;
+			schemeDevice.markAsChanged();
 			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
@@ -270,7 +270,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	public void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -421,7 +421,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -485,7 +485,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -510,7 +510,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -522,7 +522,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -556,7 +556,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
 		}
 		this.parentSchemeElementId = newParentSchemeElementId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -590,7 +590,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
 		}
 		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemeCablePorts(final Set schemeCablePorts) {

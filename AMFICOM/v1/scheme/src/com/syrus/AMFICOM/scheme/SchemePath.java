@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.31 2005/05/26 15:31:14 bass Exp $
+ * $Id: SchemePath.java,v 1.32 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/26 15:31:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -155,7 +155,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 					0L, name, description,
 					transmissionPath,
 					parentSchemeMonitoringSolution);
-			schemePath.changed = true;
+			schemePath.markAsChanged();
 			return schemePath;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -170,7 +170,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -286,7 +286,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -339,7 +339,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -364,7 +364,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -376,7 +376,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
@@ -384,7 +384,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		if (this.parentSchemeMonitoringSolutionId.equals(newParentSchemeMonitoringSolutionId))
 			return;
 		this.parentSchemeMonitoringSolutionId = newParentSchemeMonitoringSolutionId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setPathElements(final SortedSet pathElements) {
@@ -413,7 +413,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		if (this.transmissionPathId.equals(newTransmissionPathId))
 			return;
 		this.transmissionPathId = newTransmissionPathId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

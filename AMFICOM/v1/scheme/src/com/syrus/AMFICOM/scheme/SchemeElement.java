@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.33 2005/05/26 15:31:15 bass Exp $
+ * $Id: SchemeElement.java,v 1.34 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -226,7 +226,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, parentScheme, null);
-			schemeElement.changed = true;
+			schemeElement.markAsChanged();
 			if (equipment != null || equipmentType != null)
 				schemeElement.equipmentTypeSet = true;
 			return schemeElement;
@@ -274,7 +274,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, null, parentSchemeElement);
-			schemeElement.changed = true;
+			schemeElement.markAsChanged();
 			if (equipment != null || equipmentType != null)
 				schemeElement.equipmentTypeSet = true;
 			return schemeElement;
@@ -695,7 +695,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			 */
 			this.equipmentTypeId = this.getEquipment().getType().getId();
 		this.equipmentId = newEquipmentId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -714,7 +714,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				return;
 			}
 			this.equipmentTypeId = newEquipmentTypeId;
-			this.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -726,7 +726,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		if (this.kisId.equals(newKisId))
 			return;
 		this.kisId = newKisId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -739,7 +739,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		if (this.label.equals(label))
 			return;
 		this.label = label;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -765,7 +765,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			}
 			super.parentSchemeId = parentScheme.getId();
 			this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
-			this.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -798,7 +798,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				return;
 		}
 		this.parentSchemeElementId = newParentSchemeElementId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setScheme(final Scheme scheme) {
@@ -816,7 +816,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		if (this.schemeCellId.equals(newSchemeCellId))
 			return;
 		this.schemeCellId = newSchemeCellId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemeDevices(final Set schemeDevices) {
@@ -882,7 +882,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		if (this.siteNodeId.equals(newSiteNodeId))
 			return;
 		this.siteNodeId = newSiteNodeId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -894,7 +894,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		if (this.symbolId.equals(newSymbolId))
 			return;
 		this.symbolId = newSymbolId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -906,7 +906,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		if (this.ugoCellId.equals(newUgoCellId))
 			return;
 		this.ugoCellId = newUgoCellId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

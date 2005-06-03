@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.39 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.40 2005/06/03 20:38:46 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -28,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -39,7 +36,6 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
@@ -47,7 +43,7 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: arseniy $
- * @version $Revision: 1.39 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/03 20:38:46 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -80,7 +76,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	 */
 	private transient boolean canBind = false;
 
-	TopologicalNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	TopologicalNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
@@ -92,7 +88,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		}
 	}
 
-	TopologicalNode(TopologicalNode_Transferable tnt) throws CreateObjectException {
+	TopologicalNode(final TopologicalNode_Transferable tnt) throws CreateObjectException {
 		super(tnt.header);
 		super.name = tnt.name;
 		super.description = tnt.description;
@@ -115,11 +111,11 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	TopologicalNode(final Identifier id,
 			final Identifier creatorId,
 			final long version,
-			String name,
-			String description,
-			double longitude,
-			double latitude,
-			boolean active) {
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final boolean active) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -137,12 +133,12 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	TopologicalNode(final Identifier id,
 			final Identifier creatorId,
 			final long version,
-			String name,
-			String description,
-			PhysicalLink physicalLink,
-			double longitude,
-			double latitude,
-			boolean active) {
+			final String name,
+			final String description,
+			final PhysicalLink physicalLink,
+			final double longitude,
+			final double latitude,
+			final boolean active) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -161,11 +157,11 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	}
 
 	protected static TopologicalNode createInstance0(
-			Identifier creatorId,
-			String name,
-			String description,
-			PhysicalLink physicalLink,
-			DoublePoint location)
+			final Identifier creatorId,
+			final String name,
+			final String description,
+			final PhysicalLink physicalLink,
+			final DoublePoint location)
 		throws CreateObjectException {
 
 		if (creatorId == null || name == null || description == null || location == null || physicalLink == null)
@@ -183,13 +179,8 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 					false);
 
 			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			topologicalNode.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(topologicalNode);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			topologicalNode.markAsChanged();
 
 			return topologicalNode;
 
@@ -200,11 +191,11 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	}
 
 	public static TopologicalNode createInstance(
-			Identifier creatorId,
-			String name,
-			String description,
-			PhysicalLink physicalLink,
-			DoublePoint location)
+			final Identifier creatorId,
+			final String name,
+			final String description,
+			final PhysicalLink physicalLink,
+			final DoublePoint location)
 		throws CreateObjectException {
 
 		return TopologicalNode.createInstance0(
@@ -227,10 +218,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 		return new TopologicalNode_Transferable(super.getHeaderTransferable(),
 				this.name,
 				this.description,
@@ -253,9 +241,9 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	 * @param active
 	 *          флаг активности
 	 */
-	public void setActive(boolean active) {
+	public void setActive(final boolean active) {
 		this.active = active;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -282,21 +270,21 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 //	return this.map.getNodeLink(this).getPhysicalLink();
 }
 
-	public void setPhysicalLink(PhysicalLink physicalLink) {
+	public void setPhysicalLink(final PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
 		// do not change version due to physical link is not dependence object
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			String description,
-			double longitude,
-			double latitude,
-			boolean active) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final boolean active) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -315,7 +303,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	 * @param canBind
 	 *          флаг овзможности привязки
 	 */
-	public void setCanBind(boolean canBind) {
+	public void setCanBind(final boolean canBind) {
 		this.canBind = canBind;
 	}
 
@@ -339,7 +327,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	/**
 	 * {@inheritDoc}
 	 */
-	public void revert(MapElementState state) {
+	public void revert(final MapElementState state) {
 		TopologicalNodeState mpnes = (TopologicalNodeState) state;
 
 		setName(mpnes.name);
@@ -374,7 +362,8 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		}
 	}
 
-	public static TopologicalNode createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+	public static TopologicalNode createInstance(final Identifier creatorId, final java.util.Map exportMap1)
+			throws CreateObjectException {
 		Identifier id1 = (Identifier) exportMap1.get(StorableObjectWrapper.COLUMN_ID);
 		String name1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_NAME);
 		String description1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
@@ -392,13 +381,8 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 			node1.setPhysicalLink(physicalLink1);
 
 			assert node1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			node1.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(node1);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			node1.markAsChanged();
 
 			return node1;
 		}
@@ -413,7 +397,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -432,7 +416,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		return xmlTopologicalNode;
 	}
 
-	public void fillXMLTransferable(XmlObject xmlObject) {
+	public void fillXMLTransferable(final XmlObject xmlObject) {
 		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject; 
 
 		com.syrus.amficom.general.xml.UID uid = xmlTopologicalNode.addNewUid();
@@ -443,9 +427,9 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	}
 
 	TopologicalNode(
-			Identifier creatorId, 
-			com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode, 
-			ClonedIdsPool clonedIdsPool) 
+			final Identifier creatorId, 
+			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode, 
+			final ClonedIdsPool clonedIdsPool) 
 		throws CreateObjectException, ApplicationException {
 
 		super(
@@ -465,23 +449,23 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		this.fromXMLTransferable(xmlTopologicalNode, clonedIdsPool);
 	}
 
-	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
 		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject;
 
 		this.active = xmlTopologicalNode.getActive();
 		super.location.setLocation(xmlTopologicalNode.getX(), xmlTopologicalNode.getY());
 	}
 
-	public static TopologicalNode createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException {
+	public static TopologicalNode createInstance(final Identifier creatorId,
+			final XmlObject xmlObject,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject;
 
 		try {
 			TopologicalNode topologicalNode = new TopologicalNode(creatorId, xmlTopologicalNode, clonedIdsPool);
-			topologicalNode.changed = true;
 			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			StorableObjectPool.putStorableObject(topologicalNode);
+			topologicalNode.markAsChanged();
 			return topologicalNode;
 		}
 		catch (Exception e) {

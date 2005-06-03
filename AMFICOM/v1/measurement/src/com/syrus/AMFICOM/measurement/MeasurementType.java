@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.75 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.76 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,18 +24,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.76 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -55,7 +52,7 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	MeasurementType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	MeasurementType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.inParameterTypeIds = new HashSet();
@@ -76,7 +73,7 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
+	public MeasurementType(final MeasurementType_Transferable mtt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mtt);
 		}
@@ -88,14 +85,14 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	MeasurementType(Identifier id,
-							  Identifier creatorId,
-							  long version,
-							  String codename,
-							  String description,
-							  java.util.Set inParameterTypeIds,
-							  java.util.Set outParameterTypeIds,
-							  java.util.Set measurementPortTypeIds) {
+	MeasurementType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final java.util.Set inParameterTypeIds,
+			final java.util.Set outParameterTypeIds,
+			final java.util.Set measurementPortTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -125,12 +122,12 @@ public class MeasurementType extends ActionType implements Namable {
 	 * @param measurementPortTypeIds
 	 * @throws CreateObjectException
 	 */
-	public static MeasurementType createInstance(Identifier creatorId,
-												 String codename,
-												 String description,
-												 java.util.Set inParameterTypeIds,
-												 java.util.Set outParameterTypeIds,
-												 java.util.Set measurementPortTypeIds) throws CreateObjectException {
+	public static MeasurementType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final java.util.Set inParameterTypeIds,
+			final java.util.Set outParameterTypeIds,
+			final java.util.Set measurementPortTypeIds) throws CreateObjectException {
 		try {
 			MeasurementType measurementType = new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
 					creatorId,
@@ -142,13 +139,8 @@ public class MeasurementType extends ActionType implements Namable {
 					measurementPortTypeIds);
 
 			assert measurementType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			measurementType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(measurementType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			measurementType.markAsChanged();
 
 			return measurementType;
 		}
@@ -160,7 +152,7 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		MeasurementType_Transferable mtt = (MeasurementType_Transferable) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
@@ -182,11 +174,11 @@ public class MeasurementType extends ActionType implements Namable {
 		Identifier_Transferable[] measPortTypeIds = Identifier.createTransferables(this.measurementPortTypeIds);
 
 		return new MeasurementType_Transferable(super.getHeaderTransferable(),
-												super.codename,
-												super.description != null ? super.description : "",
-												inParTypeIds,	
-												outParTypeIds,
-												measPortTypeIds);
+				super.codename,
+				super.description != null ? super.description : "",
+				inParTypeIds,
+				outParTypeIds,
+				measPortTypeIds);
 	}
 
 	/**
@@ -209,13 +201,13 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  String codename,
-											  String description) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -228,7 +220,7 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypeIds(Map parameterTypeIdsModeMap) {
+	protected synchronized void setParameterTypeIds(final Map parameterTypeIdsModeMap) {
 		this.setInParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_IN));
 		this.setOutParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_OUT));
 	}
@@ -246,7 +238,7 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypeIds0(java.util.Set inParameterTypeIds) {
+	protected void setInParameterTypeIds0(final java.util.Set inParameterTypeIds) {
 		this.inParameterTypeIds.clear();
 		if (inParameterTypeIds != null)
 			this.inParameterTypeIds.addAll(inParameterTypeIds);
@@ -258,15 +250,15 @@ public class MeasurementType extends ActionType implements Namable {
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypeIds(java.util.Set inParameterTypeIds) {
+	public void setInParameterTypeIds(final java.util.Set inParameterTypeIds) {
 		this.setInParameterTypeIds0(inParameterTypeIds);
-		super.changed = true;		
+		super.markAsChanged();		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypeIds0(java.util.Set outParameterTypeIds) {
+	protected void setOutParameterTypeIds0(final java.util.Set outParameterTypeIds) {
 		this.outParameterTypeIds.clear();
 		if (outParameterTypeIds != null)
 			this.outParameterTypeIds.addAll(outParameterTypeIds);
@@ -278,15 +270,15 @@ public class MeasurementType extends ActionType implements Namable {
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypeIds(java.util.Set outParameterTypeIds) {
+	public void setOutParameterTypeIds(final java.util.Set outParameterTypeIds) {
 		this.setOutParameterTypeIds0(outParameterTypeIds);
-		super.changed = true;		
+		super.markAsChanged();		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setMeasurementPortTypeIds0(java.util.Set measurementPortTypeIds) {
+	protected void setMeasurementPortTypeIds0(final java.util.Set measurementPortTypeIds) {
 		this.measurementPortTypeIds.clear();
 		if (measurementPortTypeIds != null)
 	     	this.measurementPortTypeIds.addAll(measurementPortTypeIds);
@@ -297,9 +289,9 @@ public class MeasurementType extends ActionType implements Namable {
 	 * @param measurementPortTypeIds
 	 * 		The measurementPortTypeIds to set
 	 */
-	public void setMeasurementPortTypeIds(java.util.Set measurementPortTypeIds) {
+	public void setMeasurementPortTypeIds(final java.util.Set measurementPortTypeIds) {
 		this.setMeasurementPortTypeIds0(measurementPortTypeIds);
-		super.changed = true;		
+		super.markAsChanged();		
 	}
 
 	public java.util.Set getMeasurementPortTypeIds() {
@@ -332,6 +324,6 @@ public class MeasurementType extends ActionType implements Namable {
 	}
 
 	public void setName(final String name) {
-		setDescription(name);
+		this.setDescription(name);
 	}
 }

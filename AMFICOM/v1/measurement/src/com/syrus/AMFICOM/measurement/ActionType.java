@@ -1,5 +1,5 @@
 /*
- * $Id: ActionType.java,v 1.11 2005/05/14 09:43:14 arseniy Exp $
+ * $Id: ActionType.java,v 1.12 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/14 09:43:14 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -31,14 +31,14 @@ public abstract class ActionType extends StorableObjectType {
 		// empty
 	}
 
-	public ActionType(Identifier id,	
-					  Date created,
-					  Date modified,
-					  Identifier creatorId,
-					  Identifier modifierId,
-					  long version,
-					  String codename,
-					  String description) {
+	public ActionType(final Identifier id,	
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description) {
 		super(id,
 			  created,
 			  modified,
@@ -49,20 +49,14 @@ public abstract class ActionType extends StorableObjectType {
 			  description);
 	}
 
-	protected synchronized void setAttributes(Date created,
-											Date modified,
-											Identifier creatorId,
-											Identifier modifierId,
-											long version,
-											String codename,
-											String description) {
-		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							codename,
-							description);
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
 	protected abstract void setParameterTypeIds(Map parameterTypeIdsModeMap);

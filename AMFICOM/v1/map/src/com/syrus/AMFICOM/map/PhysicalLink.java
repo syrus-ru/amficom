@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.59 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.60 2005/06/03 20:38:45 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -48,7 +47,6 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы,
@@ -59,7 +57,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: arseniy $
- * @version $Revision: 1.59 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.60 $, $Date: 2005/06/03 20:38:45 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -116,7 +114,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	protected transient List sortedNodes = new LinkedList();
 	protected transient boolean nodeLinksSorted = false;
 
-	PhysicalLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	PhysicalLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
@@ -128,7 +126,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	PhysicalLink(PhysicalLink_Transferable plt) throws CreateObjectException {
+	PhysicalLink(final PhysicalLink_Transferable plt) throws CreateObjectException {
 		try {
 			this.fromTransferable(plt);
 		}
@@ -245,13 +243,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					topToBottom);
 
 			assert physicalLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			physicalLink.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(physicalLink);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			physicalLink.markAsChanged();
 
 			return physicalLink;
 		}
@@ -260,7 +253,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		PhysicalLink_Transferable plt = (PhysicalLink_Transferable) transferable;
 		super.fromTransferable(plt.header);
 
@@ -317,9 +310,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		return this.physicalLinkType;
 	}
 
-	public void setType(StorableObjectType type) {
+	public void setType(final StorableObjectType type) {
 		this.physicalLinkType = (PhysicalLinkType) type;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getBuilding() {
@@ -330,80 +323,80 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.building = building;
 	}
 
-	public void setBuilding(String building) {
+	public void setBuilding(final String building) {
 		this.setBuilding0(building);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getCity() {
 		return this.city;
 	}
 
-	protected void setCity0(String city) {
+	protected void setCity0(final String city) {
 		this.city = city;
 	}
 
-	public void setCity(String city) {
+	public void setCity(final String city) {
 		this.setCity0(city);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getDescription() {
 		return this.description;
 	}
 
-	protected void setDescription0(String description) {
+	protected void setDescription0(final String description) {
 		this.description = description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.setDescription0(description);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public int getDimensionX() {
 		return this.dimensionX;
 	}
 
-	public void setDimensionX(int dimensionX) {
+	public void setDimensionX(final int dimensionX) {
 		this.dimensionX = dimensionX;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public int getDimensionY() {
 		return this.dimensionY;
 	}
 
-	public void setDimensionY(int dimensionY) {
+	public void setDimensionY(final int dimensionY) {
 		this.dimensionY = dimensionY;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public AbstractNode getEndNode() {
 		return this.endNode;
 	}
 
-	protected void setEndNode0(AbstractNode endNode) {
+	protected void setEndNode0(final AbstractNode endNode) {
 		this.endNode = endNode;
 		this.nodeLinksSorted = false;
 	}
 
-	public void setEndNode(AbstractNode endNode) {
+	public void setEndNode(final AbstractNode endNode) {
 		this.setEndNode0(endNode);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public boolean isLeftToRight() {
 		return this.leftToRight;
 	}
 
-	protected void setLeftToRight0(boolean leftToRight) {
+	protected void setLeftToRight0(final boolean leftToRight) {
 		this.leftToRight = leftToRight;
 	}
 
-	public void setLeftToRight(boolean leftToRight) {
+	public void setLeftToRight(final boolean leftToRight) {
 		this.setLeftToRight0(leftToRight);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
@@ -412,18 +405,18 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		return this.name;
 	}
 
-	public void setPhysicalLinkType(PhysicalLinkType physicalLinkType) {
+	public void setPhysicalLinkType(final PhysicalLinkType physicalLinkType) {
 		this.physicalLinkType = physicalLinkType;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	protected void setName0(String name) {
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.setName0(name);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public List getNodeLinks() {
@@ -454,67 +447,67 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
 		this.nodeLinksSorted = false;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public AbstractNode getStartNode() {
 		return this.startNode;
 	}
 
-	protected void setStartNode0(AbstractNode startNode) {
+	protected void setStartNode0(final AbstractNode startNode) {
 		this.startNode = startNode;
 		this.nodeLinksSorted = false;
 
 	}
 
-	public void setStartNode(AbstractNode startNode) {
+	public void setStartNode(final AbstractNode startNode) {
 		this.setStartNode0(startNode);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getStreet() {
 		return this.street;
 	}	
 
-	protected void setStreet0(String street) {
+	protected void setStreet0(final String street) {
 		this.street = street;
 	}
 
-	public void setStreet(String street) {
+	public void setStreet(final String street) {
 		this.setStreet0(street);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public boolean isTopToBottom() {
 		return this.topToBottom;
 	}
 
-	protected void setTopToBottom0(boolean topToBottom) {
+	protected void setTopToBottom0(final boolean topToBottom) {
 		this.topToBottom = topToBottom;
 	}
 
-	public void setTopToBottom(boolean topToBottom) {
+	public void setTopToBottom(final boolean topToBottom) {
 		this.setTopToBottom0(topToBottom);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			String description,
-			PhysicalLinkType physicalLinkType,
-			String city,
-			String street,
-			String building,
-			int dimensionX,
-			int dimensionY,
-			boolean leftToRight,
-			boolean topToBottom,
-			AbstractNode startNode,
-			AbstractNode endNode) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String name,
+			final String description,
+			final PhysicalLinkType physicalLinkType,
+			final String city,
+			final String street,
+			final String building,
+			final int dimensionX,
+			final int dimensionY,
+			final boolean leftToRight,
+			final boolean topToBottom,
+			final AbstractNode startNode,
+			final AbstractNode endNode) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -566,10 +559,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * @param nodeLink
 	 *          фрагмент линии
 	 */
-	public void removeNodeLink(NodeLink nodeLink) {
+	public void removeNodeLink(final NodeLink nodeLink) {
 		this.nodeLinks.remove(nodeLink);
 		this.nodeLinksSorted = false;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -579,10 +572,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * @param addNodeLink
 	 *          фрагмент линии
 	 */
-	public void addNodeLink(NodeLink addNodeLink) {
+	public void addNodeLink(final NodeLink addNodeLink) {
 		this.nodeLinks.add(addNodeLink);
 		this.nodeLinksSorted = false;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -591,7 +584,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public void clearNodeLinks() {
 		this.nodeLinks.clear();
 		this.nodeLinksSorted = false;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -603,7 +596,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *          узел
 	 * @return список фрагментов
 	 */
-	public java.util.List getNodeLinksAt(AbstractNode node) {
+	public java.util.List getNodeLinksAt(final AbstractNode node) {
 		LinkedList returnNodeLink = new LinkedList();
 		Iterator e = getNodeLinks().iterator();
 
@@ -714,7 +707,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * @return следующий фрагмент, или <code>null</code>, если nl - последний в
 	 *         списке
 	 */
-	public NodeLink nextNodeLink(NodeLink nodeLink) {
+	public NodeLink nextNodeLink(final NodeLink nodeLink) {
 		this.sortNodeLinks();
 		for(Iterator iter = this.nodeLinks.iterator(); iter.hasNext();) {
 			NodeLink bufNodeLink = (NodeLink )iter.next();
@@ -735,7 +728,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый в
 	 *         списке
 	 */
-	public NodeLink previousNodeLink(NodeLink nodeLink) {
+	public NodeLink previousNodeLink(final NodeLink nodeLink) {
 		this.sortNodeLinks();
 		NodeLink prevNodeLink = null;
 		for(Iterator iter = this.nodeLinks.iterator(); iter.hasNext();) {
@@ -757,7 +750,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setAlarmState(boolean alarmState) {
+	public void setAlarmState(final boolean alarmState) {
 		this.alarmState = alarmState;
 	}
 
@@ -771,7 +764,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(boolean removed) {
+	public void setRemoved(final boolean removed) {
 		this.removed = removed;
 	}
 
@@ -785,7 +778,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSelected(boolean selected) {
+	public void setSelected(final boolean selected) {
 		this.selected = selected;
 	}
 
@@ -796,7 +789,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *          узел
 	 * @return другой конечный узел
 	 */
-	public AbstractNode getOtherNode(AbstractNode node) {
+	public AbstractNode getOtherNode(final AbstractNode node) {
 		if (this.getEndNode().equals(node))
 			return getStartNode();
 		if (this.getStartNode().equals(node))
@@ -839,7 +832,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * {@inheritDoc}
 	 */
-	public void revert(MapElementState state) {
+	public void revert(final MapElementState state) {
 		PhysicalLinkState mples = (PhysicalLinkState) state;
 
 		this.setName(mples.name);
@@ -892,7 +885,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	public static PhysicalLink createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+	public static PhysicalLink createInstance(final Identifier creatorId, final java.util.Map exportMap1)
+			throws CreateObjectException {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
 		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
@@ -954,13 +948,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					true);
 
 			assert link1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			link1.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(link1);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			link1.markAsChanged();
 
 			return link1;
 		}
@@ -973,14 +962,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -989,7 +978,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -1051,7 +1040,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.fromXMLTransferable(xmlPhysicalLink, clonedIdsPool);
 	}
 
-	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
 		com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink )xmlObject; 
 
 		this.name = xmlPhysicalLink.getName();
@@ -1104,16 +1093,16 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.binding = new PhysicalLinkBinding(this.physicalLinkType.getBindingDimension());
 	}
 
-	public static PhysicalLink createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException {
+	public static PhysicalLink createInstance(final Identifier creatorId,
+			final XmlObject xmlObject,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink )xmlObject;
 
 		try {
 			PhysicalLink physicalLink = new PhysicalLink(creatorId, xmlPhysicalLink, clonedIdsPool);
-			physicalLink.changed = true;
 			assert physicalLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			StorableObjectPool.putStorableObject(physicalLink);
+			physicalLink.markAsChanged();
 			return physicalLink;
 		}
 		catch (Exception e) {

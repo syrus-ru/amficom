@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.7 2005/06/02 14:26:54 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.8 2005/06/03 20:37:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,17 +22,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/02 14:26:54 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/03 20:37:40 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -49,7 +47,7 @@ public class ServerProcess extends StorableObject {
 	 * @throws RetrieveObjectException
 	 * @throws ObjectNotFoundException
 	 */
-	ServerProcess(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	ServerProcess(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
@@ -66,7 +64,7 @@ public class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	ServerProcess(ServerProcess_Transferable spt) {
+	ServerProcess(final ServerProcess_Transferable spt) {
 		this.fromTransferable(spt);
 	}
 
@@ -80,13 +78,13 @@ public class ServerProcess extends StorableObject {
 	 * @param userId
 	 * @param description
 	 */
-	ServerProcess(Identifier id,
-			Identifier creatorId,
-			long version,
-			String codename,
-			Identifier serverId,
-			Identifier userId,
-			String description) {
+	ServerProcess(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final Identifier serverId,
+			final Identifier userId,
+			final String description) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -102,7 +100,7 @@ public class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) {
+	protected void fromTransferable(final IDLEntity transferable) {
 		ServerProcess_Transferable spt = (ServerProcess_Transferable) transferable;
 		try {
 			super.fromTransferable(spt.header);
@@ -132,11 +130,11 @@ public class ServerProcess extends StorableObject {
 				this.description);
 	}
 
-	public static ServerProcess createInstance(Identifier creatorId,
-			String codename,
-			Identifier serverId,
-			Identifier userId,
-			String description) throws CreateObjectException {
+	public static ServerProcess createInstance(final Identifier creatorId,
+			final String codename,
+			final Identifier serverId,
+			final Identifier userId,
+			final String description) throws CreateObjectException {
 		try {
 			ServerProcess serverProcess = new ServerProcess(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVERPROCESS_ENTITY_CODE),
 					creatorId,
@@ -147,13 +145,8 @@ public class ServerProcess extends StorableObject {
 					description);
 
 			assert serverProcess.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			serverProcess.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(serverProcess);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			serverProcess.markAsChanged();
 
 			return serverProcess;
 		}
@@ -167,15 +160,15 @@ public class ServerProcess extends StorableObject {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												String codename,
-												Identifier serverId,
-												Identifier userId,
-												String description) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final Identifier serverId,
+			final Identifier userId,
+			final String description) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -203,9 +196,9 @@ public class ServerProcess extends StorableObject {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

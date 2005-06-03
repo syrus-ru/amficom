@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.54 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: Link.java,v 1.55 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -28,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -36,10 +34,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.55 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -61,7 +58,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 
 	private Set characteristics;
 
-	Link(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	Link(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -75,7 +72,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		}
 	}
 
-	Link(Link_Transferable lt) throws CreateObjectException  {
+	Link(final Link_Transferable lt) throws CreateObjectException  {
 		try {
 			this.fromTransferable(lt);
 		}
@@ -84,19 +81,19 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		}
 	}
 
-	Link(Identifier id,
-					Identifier creatorId,
-					long version,
-					Identifier domainId,
-					String name,
-					String description,
-					AbstractLinkType type,
-					String inventoryNo,
-					String supplier,
-					String supplierCode,
-					int sort,
-					int color,
-					String mark) {
+	Link(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final AbstractLinkType type,
+			final String inventoryNo,
+			final String supplier,
+			final String supplierCode,
+			final int sort,
+			final int color,
+			final String mark) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -122,17 +119,17 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 	 * @throws CreateObjectException
 	 */
 
-	public static Link createInstance(Identifier creatorId,
-			Identifier domainId,
-			String name,
-			String description,
-			AbstractLinkType type,
-			String inventoryNo,
-			String supplier,
-			String supplierCode,
-			LinkSort sort,
-			int color,
-			String mark) throws CreateObjectException {
+	public static Link createInstance(final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final AbstractLinkType type,
+			final String inventoryNo,
+			final String supplier,
+			final String supplierCode,
+			final LinkSort sort,
+			final int color,
+			final String mark) throws CreateObjectException {
 		if (creatorId == null
 				|| domainId == null
 				|| name == null
@@ -161,13 +158,8 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 					mark);
 
 			assert link.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			link.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(link);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			link.markAsChanged();
 
 			return link;
 		}
@@ -176,7 +168,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Link_Transferable lt = (Link_Transferable) transferable;
 		super.fromTransferable(lt.header, new Identifier(lt.domain_id));
 
@@ -195,46 +187,43 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Link_Transferable(super.getHeaderTransferable(),
-									 (Identifier_Transferable)this.getDomainId().getTransferable(),
-									 this.name,
-									 this.description,
-									 (Identifier_Transferable)this.type.getId().getTransferable(),
-									 LinkSort.from_int(this.sort),
-									 this.inventoryNo,
-									 this.supplier,
-									 this.supplierCode,
-									 this.color,
-									 (this.mark != null) ? this.mark : "",
-									 charIds);
+				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				this.name,
+				this.description,
+				(Identifier_Transferable) this.type.getId().getTransferable(),
+				LinkSort.from_int(this.sort),
+				this.inventoryNo,
+				this.supplier,
+				this.supplierCode,
+				this.color,
+				(this.mark != null) ? this.mark : "",
+				charIds);
 	}
 
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												Identifier domainId,
-												String name,
-												String description,
-												AbstractLinkType type,
-												String inventoryNo,
-												String supplier,
-												String supplierCode,
-												int sort,
-												int color,
-												String mark) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final AbstractLinkType type,
+			final String inventoryNo,
+			final String supplier,
+			final String supplierCode,
+			final int sort,
+			final int color,
+			final String mark) {
 			super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							domainId);
+					modified,
+					creatorId,
+					modifierId,
+					version,
+					domainId);
 			this.name = name;
 			this.description = description;
 			this.type = type;
@@ -250,9 +239,9 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getInventoryNo() {
@@ -291,17 +280,17 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		return Collections.singleton(this.type);
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -317,56 +306,56 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * @param name The name to set.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param sort The sort to set.
 	 */
-	public void setSort(LinkSort sort) {
+	public void setSort(final LinkSort sort) {
 		this.sort = sort.value();
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param supplier The supplier to set.
 	 */
-	public void setSupplier(String supplier) {
+	public void setSupplier(final String supplier) {
 		this.supplier = supplier;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param supplierCode The supplierCode to set.
 	 */
-	public void setSupplierCode(String supplierCode) {
+	public void setSupplierCode(final String supplierCode) {
 		this.supplierCode = supplierCode;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param type The type to set.
 	 */
-	public void setType(AbstractLinkType type) {
+	public void setType(final AbstractLinkType type) {
 		this.type = type;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param color The color to set.
 	 */
-	public void setColor(int color) {
+	public void setColor(final int color) {
 		this.color = color;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param mark The mark to set.
 	 */
-	public void setMark(String mark) {
+	public void setMark(final String mark) {
 		this.mark = mark;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

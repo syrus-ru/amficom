@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.35 2005/06/02 14:26:37 arseniy Exp $
+ * $Id: Characteristic.java,v 1.36 2005/06/03 20:37:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,10 +16,9 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/02 14:26:37 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/03 20:37:26 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -41,7 +40,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * @throws ObjectNotFoundException
 	 * @throws RetrieveObjectException
 	 */
-	Characteristic(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	Characteristic(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
@@ -58,7 +57,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * @param ct
 	 * @throws CreateObjectException
 	 */
-	public Characteristic(Characteristic_Transferable ct) throws CreateObjectException {
+	public Characteristic(final Characteristic_Transferable ct) throws CreateObjectException {
 		try {
 			this.fromTransferable(ct);
 		}
@@ -70,16 +69,16 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Characteristic(Identifier id,
-			Identifier creatorId,
-			long version,
-			CharacteristicType type,
-			String name,
-			String description,
-			String value,
-			Identifier characterizableId,
-			boolean editable,
-			boolean visible) {
+	Characteristic(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final CharacteristicType type,
+			final String name,
+			final String description,
+			final String value,
+			final Identifier characterizableId,
+			final boolean editable,
+			final boolean visible) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -139,13 +138,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 					visible);
 
 			assert characteristic.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			characteristic.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(characteristic);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			characteristic.markAsChanged();
 
 			return characteristic;
 		}
@@ -157,12 +151,12 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Characteristic_Transferable ct = (Characteristic_Transferable) transferable;
 		
 		super.fromTransferable(ct.header);
 		
-		this.type = (CharacteristicType)StorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
+		this.type = (CharacteristicType) StorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
 		this.name = ct.name;
 		this.description = ct.description;
 		this.value = ct.value;
@@ -200,25 +194,25 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setEditable0(boolean editable) {
+	protected void setEditable0(final boolean editable) {
 		this.editable = editable;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setVisible0(boolean visible) {
+	protected void setVisible0(final boolean visible) {
 		this.visible = visible;
 	}
 	
-	public void setEditable(boolean editable) {
+	public void setEditable(final boolean editable) {
 		this.setEditable0(editable);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	public void setVisible(boolean visible) {
+	public void setVisible(final boolean visible) {
 		this.setVisible0(visible);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public StorableObjectType getType() {
@@ -228,13 +222,13 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setType0(CharacteristicType type) {
+	protected void setType0(final CharacteristicType type) {
 		this.type = type;
 	}
 
-	public void setType(CharacteristicType type) {
+	public void setType(final CharacteristicType type) {
 		this.setType0(type);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
@@ -244,13 +238,13 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setName0(String name) {
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 	
-	protected void setName(String name) {
+	protected void setName(final String name) {
 		this.setName0(name);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 
@@ -261,17 +255,22 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setDescription0(String description){
+	protected void setDescription0(final String description) {
 		this.description = description;
 	}
 
-	public void setDescription(String description){
+	public void setDescription(final String description) {
 		this.setDescription0(description);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getValue() {
 		return this.value;
+	}
+
+	public void setValue(final String value) {
+		super.markAsChanged();
+		this.value = value;
 	}
 
 	public Identifier getCharacterizableId() {
@@ -281,30 +280,30 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setCharacterizableId0(Identifier characterizableId) {
+	protected void setCharacterizableId0(final Identifier characterizableId) {
 		this.characterizableId = characterizableId;
 	}
 	
-	public void setCharacterizableId(Identifier characterizableId) {
+	public void setCharacterizableId(final Identifier characterizableId) {
 		this.setCharacterizableId0(characterizableId);
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			CharacteristicType type,
-			String name,
-			String description,
-			String value,
-			Identifier characterizableId,
-			boolean editable,
-			boolean visible) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final CharacteristicType type,
+			final String name,
+			final String description,
+			final String value,
+			final Identifier characterizableId,
+			final boolean editable,
+			final boolean visible) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -317,11 +316,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.characterizableId = characterizableId;
 		this.editable = editable;
 		this.visible = visible;
-	}
-
-	public void setValue(String value){
-		super.changed = true;
-		this.value = value;
 	}
 
 	/**

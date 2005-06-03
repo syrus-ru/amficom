@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.53 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.54 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -26,16 +25,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.54 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -50,7 +46,7 @@ public class MonitoredElement extends DomainMember {
 
 	private Set monitoredDomainMemberIds;
 
-	MonitoredElement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	MonitoredElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredDomainMemberIds = new HashSet();
@@ -64,19 +60,19 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
+	public MonitoredElement(final MonitoredElement_Transferable met) throws CreateObjectException {
 		this.fromTransferable(met);
 	}
 	
-	MonitoredElement(Identifier id,
-								 Identifier creatorId,
-								 long version,
-								 Identifier domainId,
-								 String name,
-								 Identifier measurementPortId,
-								 int sort,
-								 String localAddress,
-								 Set monitoredDomainMemberIds) {
+	MonitoredElement(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final Identifier measurementPortId,
+			final int sort,
+			final String localAddress,
+			final Set monitoredDomainMemberIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -102,13 +98,13 @@ public class MonitoredElement extends DomainMember {
 	 * @param localAddress
 	 * @throws CreateObjectException
 	 */
-	public static MonitoredElement createInstance(Identifier creatorId,
-												  Identifier domainId,
-												  String name,
-												  Identifier measurementPortId,
-												  MonitoredElementSort sort,
-												  String localAddress,
-												  Set monitoredDomainMemberIds) throws CreateObjectException {
+	public static MonitoredElement createInstance(final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final Identifier measurementPortId,
+			final MonitoredElementSort sort,
+			final String localAddress,
+			final Set monitoredDomainMemberIds) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || measurementPortId == null ||
 				localAddress == null || monitoredDomainMemberIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -125,13 +121,8 @@ public class MonitoredElement extends DomainMember {
 								monitoredDomainMemberIds);
 
 			assert monitoredElement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			monitoredElement.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(monitoredElement);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			monitoredElement.markAsChanged();
 
 			return monitoredElement;
 		}
@@ -140,7 +131,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		MonitoredElement_Transferable met = (MonitoredElement_Transferable) transferable;
 		super.fromTransferable(met.header, new Identifier(met.domain_id));
 		this.measurementPortId = new Identifier(met.measurement_port_id);
@@ -153,10 +144,8 @@ public class MonitoredElement extends DomainMember {
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] mdmIds = new Identifier_Transferable[this.monitoredDomainMemberIds.size()];
-		int i = 0;
-		for (Iterator it = this.monitoredDomainMemberIds.iterator(); it.hasNext();)
-			mdmIds[i++] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
+		Identifier_Transferable[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
+
 		return new MonitoredElement_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
 				this.name,
@@ -178,42 +167,42 @@ public class MonitoredElement extends DomainMember {
 		return this.localAddress;
 	}
 	
-	public void setLocalAddress(String localAddress){
-		super.changed = true;
+	public void setLocalAddress(final String localAddress) {
 		this.localAddress = localAddress;
+		super.markAsChanged();
 	}
 
 	public Set getMonitoredDomainMemberIds() {
 		return Collections.unmodifiableSet(this.monitoredDomainMemberIds);
 	}
 
-	protected synchronized void setMonitoredDomainMemberIds0(Set monitoredDomainMemberIds) {
+	protected synchronized void setMonitoredDomainMemberIds0(final Set monitoredDomainMemberIds) {
 		this.monitoredDomainMemberIds.clear();
 		if (monitoredDomainMemberIds != null)
 			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
 	}
 
-	protected synchronized void setMonitoredDomainMemberIds(Set monitoredDomainMemberIds) {
+	protected synchronized void setMonitoredDomainMemberIds(final Set monitoredDomainMemberIds) {
 		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	protected synchronized void setAttributes(Date created,
-											Date modified,
-											Identifier creatorId,
-											Identifier modifierId,
-											long version,
-											Identifier domainId,
-											String name,
-											Identifier measurementPortId,
-											int sort,
-											String localAddress) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final Identifier measurementPortId,
+			final int sort,
+			final String localAddress) {
 		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							domainId);
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				domainId);
 		this.name = name;
 		this.measurementPortId = measurementPortId;
 		this.sort = sort;
@@ -224,9 +213,9 @@ public class MonitoredElement extends DomainMember {
 		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Set getDependencies() {
@@ -238,15 +227,15 @@ public class MonitoredElement extends DomainMember {
 	/**
 	 * @param measurementPortId The measurementPortId to set.
 	 */
-	public void setMeasurementPortId(Identifier measurementPortId) {
+	public void setMeasurementPortId(final Identifier measurementPortId) {
 		this.measurementPortId = measurementPortId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param sort The sort to set.
 	 */
-	public void setSort(MonitoredElementSort sort) {
+	public void setSort(final MonitoredElementSort sort) {
 		this.sort = sort.value();
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

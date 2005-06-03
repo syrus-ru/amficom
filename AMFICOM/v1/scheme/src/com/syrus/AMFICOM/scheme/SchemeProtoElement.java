@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.36 2005/05/26 15:31:14 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.37 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/05/26 15:31:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -242,7 +242,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					0L, name, description, label,
 					equipmentType, symbol, ugoCell,
 					schemeCell, null, null);
-			schemeProtoElement.changed = true;
+			schemeProtoElement.markAsChanged();
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -287,7 +287,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					equipmentType, symbol, ugoCell,
 					schemeCell, null,
 					parentSchemeProtoElement);
-			schemeProtoElement.changed = true;
+			schemeProtoElement.markAsChanged();
 			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
@@ -333,7 +333,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					equipmentType, symbol, ugoCell,
 					schemeCell, parentSchemeProtoGroup,
 					null);
-			schemeProtoElement.changed = true;
+			schemeProtoElement.markAsChanged();
 			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
@@ -358,7 +358,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	public void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -685,7 +685,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -782,7 +782,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -807,7 +807,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -818,7 +818,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.equipmentTypeId.equals(newEquipmentTypeId))
 			return;
 		this.equipmentTypeId = newEquipmentTypeId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -831,7 +831,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.label.equals(label))
 			return;
 		this.label = label;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -843,7 +843,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -914,7 +914,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.parentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
 		}
 		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -958,7 +958,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
 		}
 		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -969,7 +969,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.schemeCellId.equals(newSchemeCellId))
 			return;
 		this.schemeCellId = newSchemeCellId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -1035,7 +1035,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.symbolId.equals(newSymbolId))
 			return;
 		this.symbolId = newSymbolId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -1047,7 +1047,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.ugoCellId.equals(newUgoCellId))
 			return;
 		this.ugoCellId = newUgoCellId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

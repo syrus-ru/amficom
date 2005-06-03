@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.18 2005/06/02 14:27:40 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.19 2005/06/03 20:38:27 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,11 +27,9 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
@@ -39,7 +37,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/06/02 14:27:40 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/03 20:38:27 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -92,13 +90,8 @@ public final class SchemeImageResource extends AbstractImageResource {
 					0L);
 
 			assert schemeImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			schemeImageResource.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(schemeImageResource);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			schemeImageResource.markAsChanged();
 
 			return schemeImageResource;
 		}
@@ -133,13 +126,13 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * entity version on every modification.
 	 */
 	public void setData(final List data) {
-		this.changed = true;
 		setData0(data);
+		super.markAsChanged();
 	}
 
 	public void setImage(final byte image[]) {
-		this.changed = true;
 		setImage0(image);
+		super.markAsChanged();
 	}
 
 	protected synchronized void setAttributes(final Date created,

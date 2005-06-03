@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.63 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: Port.java,v 1.64 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -28,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -37,10 +35,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.64 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -54,7 +51,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 
 	private Set characteristics;
 
-	Port(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Port(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -68,7 +65,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		}
 	}
 
-	Port(Port_Transferable pt) throws CreateObjectException {
+	Port(final Port_Transferable pt) throws CreateObjectException {
 		try {
 			this.fromTransferable(pt);
 		}
@@ -77,13 +74,13 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		}
 	}
 
-	Port(Identifier id,
-					 Identifier creatorId,
-					 long version,
-					 PortType type,
-					 String description,
-					 Identifier equipmentId,
-					 int sort) {
+	Port(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final PortType type,
+			final String description,
+			final Identifier equipmentId,
+			final int sort) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -107,11 +104,11 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	 * @param sort
 	 * @throws CreateObjectException
 	 */
-	public static Port createInstance(Identifier creatorId,
-										PortType type,
-										String description,
-										Identifier equipmentId,
-										PortSort sort) throws CreateObjectException {
+	public static Port createInstance(final Identifier creatorId,
+			final PortType type,
+			final String description,
+			final Identifier equipmentId,
+			final PortSort sort) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null ||
 				type == null || equipmentId == null || sort == null )
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -126,13 +123,8 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 						sort.value());
 
 			assert port.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			port.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(port);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			port.markAsChanged();
 
 			return port;
 		}
@@ -141,7 +133,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Port_Transferable pt = (Port_Transferable) transferable;
 		super.fromTransferable(pt.header);
 
@@ -159,11 +151,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Port_Transferable(super.getHeaderTransferable(),
 									 (Identifier_Transferable)this.type.getId().getTransferable(),
@@ -181,9 +169,9 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		return this.description;
 	}
 
-	public void setDescription(String description){
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Identifier getEquipmentId() {
@@ -196,21 +184,21 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	
 	public void setSort(final PortSort sort) {
 		this.sort = sort.value();
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null){
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -226,23 +214,23 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												PortType type,
-												String description,
-												Identifier equipmentId,
-												int sort) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final PortType type,
+			final String description,
+			final Identifier equipmentId,
+			final int sort) {
 		super.setAttributes(created,
-						modified,
-						creatorId,
-						modifierId,
-						version);
+				modified,
+				creatorId,
+				modifierId,
+				version);
 		this.type = type;
 		this.description = description;
 		this.equipmentId = equipmentId;
@@ -258,15 +246,15 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	/**
 	 * @param equipmentId The equipmentId to set.
 	 */
-	public void setEquipmentId(Identifier equipmentId) {
+	public void setEquipmentId(final Identifier equipmentId) {
 		this.equipmentId = equipmentId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param type The type to set.
 	 */
-	public void setType(PortType type) {
+	public void setType(final PortType type) {
 		this.type = type;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

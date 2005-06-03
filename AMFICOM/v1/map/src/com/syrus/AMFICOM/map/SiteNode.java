@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.40 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: SiteNode.java,v 1.41 2005/06/03 20:38:46 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -29,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -44,7 +41,6 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
-import com.syrus.util.Log;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -59,7 +55,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/03 20:38:46 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -93,7 +89,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	private String street;
 	private String building;
 
-	SiteNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	SiteNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
@@ -105,7 +101,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		}
 	}
 
-	SiteNode(SiteNode_Transferable snt) throws CreateObjectException {
+	SiteNode(final SiteNode_Transferable snt) throws CreateObjectException {
 		super(snt.header);
 		super.name = snt.name;
 		super.description = snt.description;
@@ -163,13 +159,13 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	}
 
 	public static SiteNode createInstance(final Identifier creatorId,
-			String name,
-			String description,
-			SiteNodeType siteNodeType,
-			DoublePoint location,
-			String city,
-			String street,
-			String building) throws CreateObjectException {
+			final String name,
+			final String description,
+			final SiteNodeType siteNodeType,
+			final DoublePoint location,
+			final String city,
+			final String street,
+			final String building) throws CreateObjectException {
 
 		if (creatorId == null
 				|| name == null
@@ -196,13 +192,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 					building);
 
 			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			siteNode.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(siteNode);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			siteNode.markAsChanged();
 
 			return siteNode;
 		}
@@ -233,9 +224,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 	public IDLEntity getTransferable() {
 		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new SiteNode_Transferable(super.getHeaderTransferable(),
 				this.name,
@@ -254,53 +243,53 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		return this.type;
 	}
 
-	public void setType(StorableObjectType type) {
+	public void setType(final StorableObjectType type) {
 		this.type = (SiteNodeType) type;
 		setImageId(this.type.getImageId());
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getBuilding() {
 		return this.building;
 	}
 
-	public void setBuilding(String building) {
+	public void setBuilding(final String building) {
 		this.building = building;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getCity() {
 		return this.city;
 	}
 
-	public void setCity(String city) {
+	public void setCity(final String city) {
 		this.city = city;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getStreet() {
 		return this.street;
 	}
 
-	public void setStreet(String street) {
+	public void setStreet(final String street) {
 		this.street = street;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			String description,
-			double longitude,
-			double latitude,
-			Identifier imageId,
-			SiteNodeType type,
-			String city,
-			String street,
-			String building) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final Identifier imageId,
+			final SiteNodeType type,
+			final String city,
+			final String street,
+			final String building) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -326,7 +315,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	/**
 	 * восстановить состояние
 	 */
-	public void revert(MapElementState state) {
+	public void revert(final MapElementState state) {
 		SiteNodeState msnes = (SiteNodeState) state;
 
 		setName(msnes.name);
@@ -371,7 +360,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		}
 	}
 
-	public static SiteNode createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+	public static SiteNode createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
 		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
@@ -438,13 +427,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			SiteNode siteNode = new SiteNode(id1, creatorId, 0L, imageId1, name1, description1, siteNodeType, x1, y1, city1, street1, building1);
 
 			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			siteNode.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(siteNode);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			siteNode.markAsChanged();
 
 			return siteNode;
 		}
@@ -459,7 +443,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -478,16 +462,16 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		return xmlSiteNode;
 	}
 
-	public void fillXMLTransferable(XmlObject xmlObject) {
+	public void fillXMLTransferable(final XmlObject xmlObject) {
 		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject; 
 
-		SiteNodeType type = (SiteNodeType )this.getType(); 
+		SiteNodeType siteNodeType = (SiteNodeType) this.getType(); 
 
 		com.syrus.amficom.general.xml.UID uid = xmlSiteNode.addNewUid();
 		uid.setStringValue(this.id.toString());
 		xmlSiteNode.setName(this.name);
 		xmlSiteNode.setDescription(this.description);
-		xmlSiteNode.setSitenodetypeuid(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forString(type.getSort().value()));
+		xmlSiteNode.setSitenodetypeuid(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forString(siteNodeType.getSort().value()));
 		xmlSiteNode.setX(this.location.getX());
 		xmlSiteNode.setY(this.location.getY());
 		xmlSiteNode.setCity(this.city);
@@ -496,9 +480,9 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	}
 
 	SiteNode(
-			Identifier creatorId, 
-			com.syrus.amficom.map.xml.SiteNode xmlSiteNode, 
-			ClonedIdsPool clonedIdsPool) 
+			final Identifier creatorId, 
+			final com.syrus.amficom.map.xml.SiteNode xmlSiteNode, 
+			final ClonedIdsPool clonedIdsPool) 
 		throws CreateObjectException, ApplicationException {
 
 		super(
@@ -521,7 +505,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		this.fromXMLTransferable(xmlSiteNode, clonedIdsPool);
 	}
 
-	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
 		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject;
 
 		this.name = xmlSiteNode.getName();
@@ -554,16 +538,15 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		this.imageId = this.type.getImageId();
 	}
 
-	public static SiteNode createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+	public static SiteNode createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException {
 
 		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject;
 
 		try {
 			SiteNode siteNode = new SiteNode(creatorId, xmlSiteNode, clonedIdsPool);
-			siteNode.changed = true;
 			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			StorableObjectPool.putStorableObject(siteNode);
+			siteNode.markAsChanged();
 			return siteNode;
 		}
 		catch (Exception e) {

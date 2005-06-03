@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.16 2005/06/02 14:27:40 arseniy Exp $
+ * $Id: BitmapImageResource.java,v 1.17 2005/06/03 20:38:27 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,20 +17,17 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.BitmapImageResourceData;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
-import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/06/02 14:27:40 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/03 20:38:27 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -83,13 +80,8 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 					image);
 
 			assert bitmapImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			bitmapImageResource.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(bitmapImageResource);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			bitmapImageResource.markAsChanged();
 
 			return bitmapImageResource;
 		}
@@ -122,13 +114,13 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	}
 
 	public void setCodename(final String codename) {
-		this.changed = true;
 		setCodename0(codename);
+		this.markAsChanged();
 	}
 
 	public void setImage(final byte image[]) {
-		this.changed = true;
 		setImage0(image);
+		this.markAsChanged();
 	}
 
 	protected synchronized void setAttributes(final Date created,

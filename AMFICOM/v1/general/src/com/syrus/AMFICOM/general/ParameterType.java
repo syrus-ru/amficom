@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.31 2005/06/02 14:26:37 arseniy Exp $
+ * $Id: ParameterType.java,v 1.32 2005/06/03 20:37:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -22,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/02 14:26:37 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/03 20:37:26 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -38,7 +37,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	ParameterType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
 		this.characteristics = new HashSet();
@@ -57,7 +56,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ParameterType(ParameterType_Transferable ptt) throws CreateObjectException {
+	public ParameterType(final ParameterType_Transferable ptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ptt);
 		}
@@ -69,13 +68,13 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	ParameterType(Identifier id,
-							Identifier creatorId,
-							long version,
-							String codename,
-							String description,
-							String name,
-							int dataType) {
+	ParameterType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int dataType) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -99,11 +98,11 @@ public final class ParameterType extends StorableObjectType implements Character
 	 * @param dataType {@link DataType}
 	 * @throws CreateObjectException
 	 */
-	public static ParameterType createInstance(Identifier creatorId,
-											   String codename,
-											   String description,
-											   String name,
-											   DataType dataType) throws CreateObjectException {
+	public static ParameterType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name,
+			final DataType dataType) throws CreateObjectException {
 		try {
 			ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 					creatorId,
@@ -112,16 +111,10 @@ public final class ParameterType extends StorableObjectType implements Character
 					description,
 					name,
 					dataType.value());
-			
+
 			assert parameterType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			
-			parameterType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(parameterType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			parameterType.markAsChanged();
 
 			return parameterType;
 		}
@@ -143,7 +136,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
 		try {
 			super.fromTransferable(ptt.header, ptt.codename, ptt.description);
@@ -167,18 +160,15 @@ public final class ParameterType extends StorableObjectType implements Character
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-	  	int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-		
+
+		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+
 		return new ParameterType_Transferable(super.getHeaderTransferable(),
-											  super.codename,
-											  super.description != null ? super.description : "",
-											  this.name,
-											  DataType.from_int(this.dataType),
-											  charIds);
+				super.codename,
+				super.description != null ? super.description : "",
+				this.name,
+				DataType.from_int(this.dataType),
+				charIds);
 	}
 
 	public String getName() {
@@ -188,7 +178,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setName0(String name) {
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 
@@ -196,9 +186,9 @@ public final class ParameterType extends StorableObjectType implements Character
 	 * client setter for name
 	 * @param name The name to set.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.setName0(name);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public DataType getDataType() {
@@ -208,27 +198,27 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setDataType0(DataType dataType) {
+	protected void setDataType0(final DataType dataType) {
 		this.dataType = dataType.value();
 	}
 
-	public void setDataType(DataType dataType) {
+	public void setDataType(final DataType dataType) {
 		this.setDataType0(dataType);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  String codename,
-											  String description,
-											  String name,
-											  int dataType) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int dataType) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -240,17 +230,17 @@ public final class ParameterType extends StorableObjectType implements Character
 		this.dataType = dataType;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -269,7 +259,7 @@ public final class ParameterType extends StorableObjectType implements Character
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.45 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: NodeLink.java,v 1.46 2005/06/03 20:38:45 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,16 +27,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
@@ -44,7 +42,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: arseniy $
- * @version $Revision: 1.45 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/03 20:38:45 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -79,7 +77,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
 
-	NodeLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	NodeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
@@ -91,7 +89,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		}
 	}
 
-	NodeLink(NodeLink_Transferable nlt) throws CreateObjectException {
+	NodeLink(final NodeLink_Transferable nlt) throws CreateObjectException {
 		try {
 			this.fromTransferable(nlt);
 		}
@@ -137,12 +135,12 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 				0.0D);
 	}
 
-	public static NodeLink createInstance(Identifier creatorId,
-			String name,
-			PhysicalLink physicalLink,
-			AbstractNode starNode,
-			AbstractNode endNode,
-			double length) throws CreateObjectException {
+	public static NodeLink createInstance(final Identifier creatorId,
+			final String name,
+			final PhysicalLink physicalLink,
+			final AbstractNode starNode,
+			final AbstractNode endNode,
+			final double length) throws CreateObjectException {
 		if (name == null || physicalLink == null || starNode == null || endNode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -157,13 +155,8 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 					length);
 
 			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			nodeLink.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(nodeLink);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			nodeLink.markAsChanged();
 
 			return nodeLink;
 		}
@@ -172,7 +165,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		NodeLink_Transferable nlt = (NodeLink_Transferable) transferable;
 		super.fromTransferable(nlt.header);
 
@@ -203,46 +196,46 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		return this.endNode;
 	}
 
-	protected void setEndNode0(AbstractNode endNode) {
+	protected void setEndNode0(final AbstractNode endNode) {
 		this.endNode = endNode;
 	}
 
-	public void setEndNode(AbstractNode endNode) {
+	public void setEndNode(final AbstractNode endNode) {
 		this.setEndNode0(endNode);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public double getLength() {
 		return this.length;
 	}
 
-	protected void setLength0(double length) {
+	protected void setLength0(final double length) {
 		this.length = length;
 	}
 
-	public void setLength(double length) {
+	public void setLength(final double length) {
 		this.setLength0(length);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	protected void setName0(String name) {
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.setName0(name);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public PhysicalLink getPhysicalLink() {
 		return this.physicalLink;
 	}
 
-	protected void setPhysicalLink0(PhysicalLink physicalLink) {
+	protected void setPhysicalLink0(final PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
 		if (getStartNode() instanceof TopologicalNode)
 			((TopologicalNode) getStartNode()).setPhysicalLink(physicalLink);
@@ -250,34 +243,34 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 			((TopologicalNode) getEndNode()).setPhysicalLink(physicalLink);
 	}
 
-	public void setPhysicalLink(PhysicalLink physicalLink) {
+	public void setPhysicalLink(final PhysicalLink physicalLink) {
 		this.setPhysicalLink0(physicalLink);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public AbstractNode getStartNode() {
 		return this.startNode;
 	}
 
-	protected void setStartNode0(AbstractNode startNode) {
+	protected void setStartNode0(final AbstractNode startNode) {
 		this.startNode = startNode;
 	}
 
-	public void setStartNode(AbstractNode startNode) {
+	public void setStartNode(final AbstractNode startNode) {
 		this.setStartNode0(startNode);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			PhysicalLink physicalLink,
-			AbstractNode startNode,
-			AbstractNode endNode,
-			double length) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String name,
+			final PhysicalLink physicalLink,
+			final AbstractNode startNode,
+			final AbstractNode endNode,
+			final double length) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.physicalLink = physicalLink;
@@ -294,7 +287,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	 * @return другой концевой узел. В случае, если node не является концевым для
 	 *         данного фрагмента, возвращается <code>null</code>.
 	 */
-	public AbstractNode getOtherNode(AbstractNode node) {
+	public AbstractNode getOtherNode(final AbstractNode node) {
 		if (this.getEndNode().equals(node))
 			return getStartNode();
 		if (this.getStartNode().equals(node))
@@ -312,14 +305,14 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSelected(boolean selected) {
+	public void setSelected(final boolean selected) {
 		this.selected = selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setAlarmState(boolean alarmState) {
+	public void setAlarmState(final boolean alarmState) {
 		this.alarmState = alarmState;
 	}
 
@@ -348,7 +341,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	/**
 	 * {@inheritDoc}
 	 */
-	public void revert(MapElementState state) {
+	public void revert(final MapElementState state) {
 		NodeLinkState mnles = (NodeLinkState) state;
 
 		this.setName(mnles.name);
@@ -373,7 +366,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(boolean removed) {
+	public void setRemoved(final boolean removed) {
 		this.removed = removed;
 	}
 
@@ -393,7 +386,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	 * @param length
 	 *          топологическая длина
 	 */
-	public void setLengthLt(double length) {
+	public void setLengthLt(final double length) {
 		this.setLength(length);
 	}
 
@@ -412,7 +405,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		}
 	}
 
-	public static NodeLink createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+	public static NodeLink createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
 		double length1 = Double.parseDouble((String) exportMap1.get(COLUMN_LENGTH));
@@ -436,13 +429,8 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 			physicalLink1.addNodeLink(nodeLink1);
 
 			assert nodeLink1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			nodeLink1.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(nodeLink1);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			nodeLink1.markAsChanged();
 
 			return nodeLink1;
 		}
@@ -455,14 +443,14 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		return  Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -471,7 +459,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -498,7 +486,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		return xmlNodeLink;
 	}
 
-	public void fillXMLTransferable(XmlObject xmlObject) {
+	public void fillXMLTransferable(final XmlObject xmlObject) {
 		com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink )xmlObject; 
 
 		com.syrus.amficom.general.xml.UID uid = xmlNodeLink.addNewUid();
@@ -536,7 +524,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		this.fromXMLTransferable(xmlNodeLink, clonedIdsPool);
 	}
 
-	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
 		com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink )xmlObject; 
 
 		this.length = xmlNodeLink.getLength();
@@ -557,7 +545,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		this.physicalLink.addNodeLink(this);
 	}
 
-	public static NodeLink createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+	public static NodeLink createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException {
 
 		com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink )xmlObject;
@@ -565,8 +553,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		try {
 			NodeLink nodeLink = new NodeLink(creatorId, xmlNodeLink, clonedIdsPool);
 			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			nodeLink.changed = true;
-			StorableObjectPool.putStorableObject(nodeLink);
+			nodeLink.markAsChanged();
 			return nodeLink;
 		}
 		catch (Exception e) {

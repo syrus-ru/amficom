@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.21 2005/05/23 10:01:26 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.22 2005/06/03 20:39:05 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/05/23 10:01:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/06/03 20:39:05 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -100,7 +100,7 @@ public abstract class AbstractSchemeElement extends
 	public final void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -162,7 +162,7 @@ public abstract class AbstractSchemeElement extends
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -171,7 +171,7 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public final void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -196,7 +196,7 @@ public abstract class AbstractSchemeElement extends
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -208,7 +208,7 @@ public abstract class AbstractSchemeElement extends
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -226,7 +226,7 @@ public abstract class AbstractSchemeElement extends
 		if (this.parentSchemeId.equals(newParentSchemeId))
 			return;
 		this.parentSchemeId = newParentSchemeId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

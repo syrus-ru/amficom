@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.45 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: Collector.java,v 1.46 2005/06/03 20:38:45 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -38,14 +37,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.45 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/03 20:38:45 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -76,12 +74,12 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
 
-	Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Collector(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.physicalLinks = new HashSet();
 		this.characteristics = new HashSet();
 
-		CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
+		final CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -90,7 +88,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		}
 	}
 
-	Collector(Collector_Transferable ct) throws CreateObjectException {
+	Collector(final Collector_Transferable ct) throws CreateObjectException {
 		try {
 			this.fromTransferable(ct);
 		}
@@ -117,7 +115,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		this.characteristics = new HashSet();
 	}
 
-	public static Collector createInstance(Identifier creatorId, Map map, String name, String description)
+	public static Collector createInstance(final Identifier creatorId, final Map map, final String name, final String description)
 			throws CreateObjectException {
 
 		if (creatorId == null || map == null || name == null || description == null)
@@ -131,13 +129,8 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 					description);
 
 			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			collector.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(collector);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			collector.markAsChanged();
 
 			return collector;
 		}
@@ -146,7 +139,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Collector_Transferable ct = (Collector_Transferable) transferable;
 		super.fromTransferable(ct.header);
 
@@ -178,50 +171,50 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		return this.description;
 	}
 
-	protected void setDescription0(String description) {
+	protected void setDescription0(final String description) {
 		this.description = description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.setDescription0(description);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	protected void setName0(String name) {
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.setName0(name);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public Set getPhysicalLinks() {
 		return Collections.unmodifiableSet(this.physicalLinks);
 	}
 
-	protected void setPhysicalLinks0(Set physicalLinks) {
+	protected void setPhysicalLinks0(final Set physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
 	}
 
-	public void setPhysicalLinks(Set physicalLinks) {
+	public void setPhysicalLinks(final Set physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			String description) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String name,
+			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
@@ -231,18 +224,18 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	 * Убрать линию из состава коллектора. Внимание! концевые точки линии не обновляются.
 	 * @param link линия
 	 */
-	public void removePhysicalLink(PhysicalLink link) {
+	public void removePhysicalLink(final PhysicalLink link) {
 		this.physicalLinks.remove(link);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * Добавить линию в состав коллектора. Внимание! концевые точки линии не обновляются.
 	 * @param link линия
 	 */
-	public void addPhysicalLink(PhysicalLink link) {
+	public void addPhysicalLink(final PhysicalLink link) {
 		this.physicalLinks.add(link);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -295,7 +288,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(boolean removed) {
+	public void setRemoved(final boolean removed) {
 		this.removed = removed;
 	}
 
@@ -309,14 +302,14 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSelected(boolean selected) {
+	public void setSelected(final boolean selected) {
 		this.selected = selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setAlarmState(boolean alarmState) {
+	public void setAlarmState(final boolean alarmState) {
 		this.alarmState = alarmState;
 	}
 
@@ -337,7 +330,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	/**
 	 * {@inheritDoc}
 	 */
-	public void revert(MapElementState state) {
+	public void revert(final MapElementState state) {
 		throw new UnsupportedOperationException("Not implemented; MapElementState: " + state);
 	}
 
@@ -362,7 +355,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		}
 	}
 
-	public static Collector createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+	public static Collector createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
 		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
@@ -373,19 +366,15 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 
 		try {
 			Collector collector = new Collector(id1, creatorId, 0L, name1, description1);
-			collector.changed = true;
 			for (Iterator it = physicalLinkIds1.iterator(); it.hasNext();) {
 				Identifier physicalLinkId = (Identifier) it.next();
 				PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
 				collector.addPhysicalLink(physicalLink);
 			}
+
 			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			try {
-				StorableObjectPool.putStorableObject(collector);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			collector.markAsChanged();
 
 			return collector;
 		}
@@ -398,14 +387,14 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setCharacteristics0(final Set characteristics) {
@@ -420,7 +409,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public XmlObject getXMLTransferable() {
@@ -429,7 +418,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		return xmlCollector;
 	}
 
-	public void fillXMLTransferable(XmlObject xmlObject) {
+	public void fillXMLTransferable(final XmlObject xmlObject) {
 		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
 
 		com.syrus.amficom.general.xml.UID uid = xmlCollector.addNewUid();
@@ -468,7 +457,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		this.fromXMLTransferable(xmlCollector, clonedIdsPool);
 	}
 
-	public void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
 		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
 
 		this.name = xmlCollector.getName();
@@ -487,16 +476,15 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		}
 	}
 
-	public static Collector createInstance(Identifier creatorId, XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
+	public static Collector createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException {
 
 		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject;
 
 		try {
 			Collector collector = new Collector(creatorId, xmlCollector, clonedIdsPool);
-			collector.changed = true;
 			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			StorableObjectPool.putStorableObject(collector);
+			collector.markAsChanged();
 			return collector;
 		}
 		catch (Exception e) {

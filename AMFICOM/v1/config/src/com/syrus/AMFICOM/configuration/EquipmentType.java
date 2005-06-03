@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.63 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.64 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -35,10 +33,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.64 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -52,7 +49,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 
 	private Set characteristics;
 
-	EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	EquipmentType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -66,7 +63,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		}
 	}
 
-	EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
+	EquipmentType(final EquipmentType_Transferable ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		}
@@ -75,14 +72,14 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		}
 	}
 
-	EquipmentType(Identifier id,
-							Identifier creatorId,
-							long version,
-							String codename,
-							String description,
-							String name,
-							String manufacturer,
-							String manufacturerCode) {
+	EquipmentType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final String manufacturer,
+			final String manufacturerCode) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -105,12 +102,12 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 	 * @param description
 	 * @throws CreateObjectException
 	 */
-	public static EquipmentType createInstance(Identifier creatorId,
-												 String codename,
-												 String description,
-												 String name,
-												 String manufacturer,
-												 String manufacturerCode) throws CreateObjectException {
+	public static EquipmentType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name,
+			final String manufacturer,
+			final String manufacturerCode) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || name == null
 								|| manufacturer == null || manufacturerCode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -126,13 +123,8 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 										manufacturerCode);
 
 			assert equipmentType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			equipmentType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(equipmentType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			equipmentType.markAsChanged();
 
 			return equipmentType;
 		}
@@ -141,7 +133,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		EquipmentType_Transferable ett = (EquipmentType_Transferable) transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 		this.name = ett.name;
@@ -154,37 +146,28 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new EquipmentType_Transferable(super.getHeaderTransferable(),
-										super.codename,
-										super.description != null ? super.description : "",
-										this.name != null ? this.name : "",
-										this.manufacturer != null ? this.manufacturer : "",
-										this.manufacturerCode != null ? this.manufacturerCode : "",
-										charIds);
+				super.codename,
+				super.description != null ? super.description : "",
+				this.name != null ? this.name : "",
+				this.manufacturer != null ? this.manufacturer : "",
+				this.manufacturerCode != null ? this.manufacturerCode : "",
+				charIds);
 	}
 
-	protected synchronized void setAttributes(Date created,
-											Date modified,
-											Identifier creatorId,
-											Identifier modifierId,
-											long version,
-											String codename,
-											String description,
-											String name,
-											String manufacturer,
-											String manufacturerCode) {
-		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							codename,
-							description);
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final String manufacturer,
+			final String manufacturerCode) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
@@ -194,26 +177,26 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		return this.name;
 	}
 
-	public void setName(String name) {
-		super.changed = true;
+	public void setName(final String name) {
 		this.name = name;
+		super.markAsChanged();
 	}
 
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -229,24 +212,24 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getManufacturer() {
 		return this.manufacturer;
 	}
 
-	public void setManufacturer(String manufacturer) {
+	public void setManufacturer(final String manufacturer) {
 		this.manufacturer = manufacturer;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getManufacturerCode() {
 		return this.manufacturerCode;
 	}
 
-	public void setManufacturerCode(String manufacturerCode) {
+	public void setManufacturerCode(final String manufacturerCode) {
 		this.manufacturerCode = manufacturerCode;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

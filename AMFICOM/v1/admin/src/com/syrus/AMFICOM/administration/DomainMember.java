@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.15 2005/05/11 06:34:12 arseniy Exp $
+ * $Id: DomainMember.java,v 1.16 2005/06/03 20:37:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/11 06:34:12 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/03 20:37:40 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -32,7 +32,7 @@ public abstract class DomainMember extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected DomainMember(Identifier id) {
+	protected DomainMember(final Identifier id) {
 		super(id);
 	}
 
@@ -63,7 +63,8 @@ public abstract class DomainMember extends StorableObject {
 	protected void fromTransferable(final StorableObject_Transferable header, final Identifier domainId1) {
 		try {
 			super.fromTransferable(header);
-		} catch (final ApplicationException ae) {
+		}
+		catch (final ApplicationException ae) {
 			/*
 			 * Never.
 			 */
@@ -98,7 +99,7 @@ public abstract class DomainMember extends StorableObject {
 	
 	public final void setDomainId(final Identifier domainId) {
 		this.setDomainId0(domainId);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -110,7 +111,10 @@ public abstract class DomainMember extends StorableObject {
 			final Identifier modifierId,
 			final long version,
 			final Identifier domainId) {
-		super.setAttributes(created, modified, creatorId, modifierId,
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
 				version);
 		this.domainId = domainId;
 	}

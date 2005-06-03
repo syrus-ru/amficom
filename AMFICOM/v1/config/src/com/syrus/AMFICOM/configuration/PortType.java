@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.56 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: PortType.java,v 1.57 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -28,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -36,10 +34,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.57 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -52,7 +49,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 
 	private Set characteristics;
 
-	PortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	PortType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -66,7 +63,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 		}
 	}
 
-	PortType(PortType_Transferable ptt) throws CreateObjectException {
+	PortType(final PortType_Transferable ptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ptt);
 		}
@@ -75,13 +72,13 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 		}
 	}
 
-	PortType(Identifier id,
-						 Identifier creatorId,
-						 long version,
-						 String codename,
-						 String description,
-						 String name,
-						 int sort) {
+	PortType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int sort) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -103,32 +100,27 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 	 * @param description
 	 * @throws CreateObjectException
 	 */
-	public static PortType createInstance(Identifier creatorId,
-											String codename,
-											String description,
-											String name,
-											PortTypeSort sort) throws CreateObjectException{
+	public static PortType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name,
+			final PortTypeSort sort) throws CreateObjectException{
 		if (creatorId == null || codename == null || name == null || description == null ||
 				sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE),
-								creatorId,
-								0L,
-								codename,
-								description,
-								name,
-								sort.value());
+					creatorId,
+					0L,
+					codename,
+					description,
+					name,
+					sort.value());
 
 			assert portType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			portType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(portType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			portType.markAsChanged();
 
 			return portType;
 		}
@@ -137,7 +129,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		PortType_Transferable ptt = (PortType_Transferable) transferable;
 		super.fromTransferable(ptt.header, ptt.codename, ptt.description);
 		this.name = ptt.name;
@@ -148,28 +140,25 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-				charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new PortType_Transferable(super.getHeaderTransferable(),
-									 super.codename,
-									 super.description != null ? super.description : "",
-									 this.name != null ? this.name : "",
-									 PortTypeSort.from_int(this.sort),
-									 charIds);
+				super.codename,
+				super.description != null ? super.description : "",
+				this.name != null ? this.name : "",
+				PortTypeSort.from_int(this.sort),
+				charIds);
 	}
 
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												String codename,
-												String description,
-												String name,
-												int sort) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int sort) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -178,10 +167,10 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 				codename,
 				description);
 		this.name = name;
-				this.sort = sort;
+		this.sort = sort;
 	}
 
-	public String getName(){
+	public String getName() {
 		return this.name;
 	}
 
@@ -189,30 +178,30 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 			return PortTypeSort.from_int(this.sort);
 	}
 
-	public void setSort(PortTypeSort sort) {
+	public void setSort(final PortTypeSort sort) {
 		this.sort = sort.value();
 	}
 
 	public void setName(String name) {
-		super.changed = true;
 		this.name = name;
+		super.markAsChanged();
 	}
 
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -228,6 +217,6 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

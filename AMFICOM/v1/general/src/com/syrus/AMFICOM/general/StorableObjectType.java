@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.20 2005/05/27 12:59:36 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.21 2005/06/03 20:37:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/27 12:59:36 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/03 20:37:26 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -87,7 +87,7 @@ public abstract class StorableObjectType extends StorableObject {
 
 	public void setCodename(final String codename) {
 		this.setCodename0(codename);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getDescription() {
@@ -103,7 +103,7 @@ public abstract class StorableObjectType extends StorableObject {
 
 	public void setDescription(final String description) {
 		this.setDescription0(description);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

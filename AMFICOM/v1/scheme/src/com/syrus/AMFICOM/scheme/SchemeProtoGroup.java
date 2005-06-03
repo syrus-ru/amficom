@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.30 2005/05/24 13:25:02 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.31 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/05/24 13:25:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -158,7 +158,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 					created, created, creatorId, creatorId,
 					0L, name, description, symbol,
 					parentSchemeProtoGroup);
-			schemeProtoGroup.changed = true;
+			schemeProtoGroup.markAsChanged();
 			return schemeProtoGroup;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -485,7 +485,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -497,7 +497,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -527,7 +527,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
 			return;
 		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -586,7 +586,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		if (this.symbolId.equals(newSymbolId))
 			return;
 		this.symbolId = newSymbolId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

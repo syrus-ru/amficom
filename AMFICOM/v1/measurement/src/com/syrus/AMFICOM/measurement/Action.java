@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.28 2005/05/18 11:34:41 bass Exp $
+ * $Id: Action.java,v 1.29 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/05/18 11:34:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/06/03 20:38:04 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -37,7 +37,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @param id
 	 */	
-	Action(Identifier id) {
+	Action(final Identifier id) {
 		super(id);
 	}
 
@@ -51,15 +51,15 @@ public abstract class Action extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Action(Identifier id,
-			  Date created,
-			  Date modified,
-			  Identifier creatorId,
-			  Identifier modifierId,
-			  long version,
-			  ActionType type,
-			  Identifier monitoredElementId,
-			  Action parentAction) {
+	Action(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final ActionType type,
+			final Identifier monitoredElementId,
+			final Action parentAction) {
 		super(id,
 				created,
 				modified,
@@ -75,8 +75,10 @@ public abstract class Action extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable, ActionType type1, Identifier monitoredElementId1, Action parentAction1)
-			throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable,
+			final ActionType type1,
+			final Identifier monitoredElementId1,
+			final Action parentAction1) throws ApplicationException {
 		super.fromTransferable(transferable);
 		this.type = type1;
 		this.monitoredElementId = monitoredElementId1;
@@ -91,39 +93,41 @@ public abstract class Action extends StorableObject implements TypedObject {
 		/* XXX : fix checking parentAction w/o check id for concrete impementation as measurement or modeling
 		 * which have null parent action */	
 		short entityCode = this.id.getMajor();
-		return super.isValid() && this.type != null && this.monitoredElementId != null &&
-			(entityCode == ObjectEntities.MEASUREMENT_ENTITY_CODE || entityCode == ObjectEntities.MODELING_ENTITY_CODE || this.parentAction != null);
+		return super.isValid()
+				&& this.type != null
+				&& this.monitoredElementId != null
+				&& (entityCode == ObjectEntities.MEASUREMENT_ENTITY_CODE || entityCode == ObjectEntities.MODELING_ENTITY_CODE || this.parentAction != null);
 	}
 
 	public StorableObjectType getType() {
 		return this.type;
 	}
 	
-	public void setType(ActionType type) {
+	public void setType(final ActionType type) {
 		this.type = type;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Identifier getMonitoredElementId() {
 		return this.monitoredElementId;
 	}
 	
-	public void setMonitoredElementId(Identifier monitoredElementId) {
+	public void setMonitoredElementId(final Identifier monitoredElementId) {
 		this.monitoredElementId = monitoredElementId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  ActionType type,
-											  Identifier monitoredElementId,
-											  Action parentAction) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final ActionType type,
+			final Identifier monitoredElementId,
+			final Action parentAction) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -135,7 +139,8 @@ public abstract class Action extends StorableObject implements TypedObject {
 		this.parentAction = parentAction;
 	}
 
-	public abstract Result createResult(Identifier resultCreatorId, SetParameter[] parameters) throws CreateObjectException;
+	public abstract Result createResult(final Identifier resultCreatorId, final SetParameter[] parameters)
+			throws CreateObjectException;
 
 	/**
 	 * @return Returns the parentAction.

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.27 2005/05/26 15:31:15 bass Exp $
+ * $Id: SchemePort.java,v 1.28 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -157,7 +157,7 @@ public final class SchemePort extends AbstractSchemePort {
 					0L, name, description, directionType,
 					portType, port, measurementPort,
 					parentSchemeDevice);
-			schemePort.changed = true;
+			schemePort.markAsChanged();
 			if (port != null || portType != null)
 				schemePort.portTypeSet = true;
 			return schemePort;

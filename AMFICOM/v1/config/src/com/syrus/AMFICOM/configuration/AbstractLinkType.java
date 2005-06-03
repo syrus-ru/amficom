@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.13 2005/05/18 11:27:14 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.14 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectType;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/18 11:27:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/03 20:37:53 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public abstract class AbstractLinkType extends StorableObjectType implements Namable {
@@ -31,22 +31,15 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 		super();
 	}
 
-	protected AbstractLinkType(Identifier id,
-			Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String codename,
-			String description) {
-		super(id,
-			created,
-			modified,
-			creatorId,
-			modifierId,
-			version,
-			codename,
-			description);		
+	protected AbstractLinkType(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description) {
+		super(id, created, modified, creatorId, modifierId, version, codename, description);		
 	}
 
 	public String getCodename() {
@@ -57,9 +50,9 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 		return super.description;
 	}
 	
-	public void setDescription(final String description){
-		this.changed = true;
+	public void setDescription(final String description) {
 		setDescription0(description);
+		super.markAsChanged();
 	}	
 
 	protected void setDescription0(final String description) {
@@ -68,14 +61,17 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 
 	public abstract Identifier getImageId();
 
-    public abstract String getManufacturer();
-    public abstract void setManufacturer(String manufacturer);
+	public abstract String getManufacturer();
 
-    public abstract String getManufacturerCode();
-    public abstract void setManufacturerCode(String manufacturerCode);
+	public abstract void setManufacturer(final String manufacturer);
 
-    public abstract LinkTypeSort getSort();
+	public abstract String getManufacturerCode();
 
-    public abstract String getName();
-    public abstract void setName(String Name);
+	public abstract void setManufacturerCode(final String manufacturerCode);
+
+	public abstract LinkTypeSort getSort();
+
+	public abstract String getName();
+
+	public abstract void setName(final String Name);
 }

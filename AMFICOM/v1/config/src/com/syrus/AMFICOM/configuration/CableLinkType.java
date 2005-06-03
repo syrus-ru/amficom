@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.40 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.41 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -37,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -53,7 +51,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 	private Set characteristics;
 
-	CableLinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	CableLinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -67,7 +65,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	CableLinkType(CableLinkType_Transferable cltt) throws CreateObjectException {
+	CableLinkType(final CableLinkType_Transferable cltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cltt);
 		}
@@ -76,16 +74,16 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	CableLinkType(Identifier id,
-							Identifier creatorId,
-							long version,
-							String codename,
-							String description,
-							String name,
-							int sort,
-							String manufacturer,
-							String manufacturerCode,
-							Identifier imageId) {
+	CableLinkType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int sort,
+			final String manufacturer,
+			final String manufacturerCode,
+			final Identifier imageId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -107,14 +105,14 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	 * create new instance for client
 	 * @throws CreateObjectException
 	 */
-	public static CableLinkType createInstance(Identifier creatorId,
-			String codename,
-			String description,
-			String name,
-			LinkTypeSort sort,
-			String manufacturer,
-			String manufacturerCode,
-			Identifier imageId) throws CreateObjectException {
+	public static CableLinkType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name,
+			final LinkTypeSort sort,
+			final String manufacturer,
+			final String manufacturerCode,
+			final Identifier imageId) throws CreateObjectException {
 		if (creatorId == null
 				|| codename == null
 				|| description == null
@@ -138,13 +136,8 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 					imageId);
 
 			assert cableLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			cableLinkType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(cableLinkType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			cableLinkType.markAsChanged();
 
 			return cableLinkType;
 		}
@@ -153,7 +146,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		CableLinkType_Transferable cltt = (CableLinkType_Transferable) transferable;
 		super.fromTransferable(cltt.header, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();
@@ -168,34 +161,31 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 	
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new CableLinkType_Transferable(super.getHeaderTransferable(),
-																		 super.codename,
-																		 super.description != null ? super.description : "",
-																		 this.name != null ? this.name : "",
-																		 LinkTypeSort.from_int(this.sort),
-																		 this.manufacturer,
-																		 this.manufacturerCode,
-																		 (Identifier_Transferable) this.imageId.getTransferable(),
-																		 charIds);
+				super.codename,
+				super.description != null ? super.description : "",
+				this.name != null ? this.name : "",
+				LinkTypeSort.from_int(this.sort),
+				this.manufacturer,
+				this.manufacturerCode,
+				(Identifier_Transferable) this.imageId.getTransferable(),
+				charIds);
 	}
 
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												String codename,
-												String description,
-												String name,
-												int sort,
-												String manufacturer,
-												String manufacturerCode,
-												Identifier imageId) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int sort,
+			final String manufacturer,
+			final String manufacturerCode,
+			final Identifier imageId) {
 			super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 			this.name = name;
 			this.sort = sort;
@@ -208,9 +198,9 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		return this.imageId;
 	}
 
-	public void setImageId(Identifier imageId) {
+	public void setImageId(final Identifier imageId) {
 		this.imageId = imageId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	
@@ -218,36 +208,36 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		return this.manufacturer;
 	}
 
-	public void setManufacturer(String manufacturer) {
-		super.changed = true;
+	public void setManufacturer(final String manufacturer) {
 		this.manufacturer = manufacturer;
+		super.markAsChanged();
 	}
 
 	public String getManufacturerCode() {
 		return this.manufacturerCode;
 	}
 
-	public void setManufacturerCode(String manufacturerCode) {
-		super.changed = true;
+	public void setManufacturerCode(final String manufacturerCode) {
 		this.manufacturerCode = manufacturerCode;
+		super.markAsChanged();
 	}
 
 	public LinkTypeSort getSort() {
 		return LinkTypeSort.from_int(this.sort);
 	}
 	
-	public void setSort(LinkTypeSort sort) {
+	public void setSort(final LinkTypeSort sort) {
 		this.sort = sort.value();
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	public void setName(String name) {
-		super.changed = true;
+	public void setName(final String name) {
 		this.name = name;
+		super.markAsChanged();
 	}
 
 	public Set getCableThreadTypes() {
@@ -267,17 +257,17 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		return Collections.EMPTY_SET;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -293,6 +283,6 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

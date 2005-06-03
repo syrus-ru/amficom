@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.70 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: Set.java,v 1.71 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,21 +23,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.71 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -61,7 +58,7 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Set(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredElementIds = new HashSet();
@@ -79,7 +76,7 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set(Set_Transferable st) throws CreateObjectException {
+	public Set(final Set_Transferable st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
 		}
@@ -92,13 +89,13 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Set(Identifier id,
-				  Identifier creatorId,
-				  long version,
-				  int sort,
-				  String description,
-				  SetParameter[] parameters,
-				  java.util.Set monitoredElementIds) {
+	Set(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final int sort,
+			final String description,
+			final SetParameter[] parameters,
+			final java.util.Set monitoredElementIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -122,11 +119,11 @@ public final class Set extends StorableObject {
 	 * @param monitoredElementIds
 	 * @throws CreateObjectException
 	 */
-	public static Set createInstance(Identifier creatorId,
-			SetSort sort,
-			String description,
-			SetParameter[] parameters,
-			java.util.Set monitoredElementIds) throws CreateObjectException {
+	public static Set createInstance(final Identifier creatorId,
+			final SetSort sort,
+			final String description,
+			final SetParameter[] parameters,
+			final java.util.Set monitoredElementIds) throws CreateObjectException {
 
 		try {
 			Set set = new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
@@ -138,13 +135,8 @@ public final class Set extends StorableObject {
 					monitoredElementIds);
 
 			assert set.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			set.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(set);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			set.markAsChanged();
 
 			return set;
 		}
@@ -158,7 +150,7 @@ public final class Set extends StorableObject {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Set_Transferable st = (Set_Transferable)transferable;
 		super.fromTransferable(st.header);
 		this.sort = st.sort.value();
@@ -199,15 +191,19 @@ public final class Set extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		boolean valid = super.isValid() && this.description != null && this.parameters != null && this.monitoredElementIds != null && !this.monitoredElementIds.isEmpty();
+		boolean valid = super.isValid()
+				&& this.description != null
+				&& this.parameters != null
+				&& this.monitoredElementIds != null
+				&& !this.monitoredElementIds.isEmpty();
 		if (!valid)
 			return valid;
-		
-		for(int i=0;i<this.parameters.length;i++) {
+
+		for (int i = 0; i < this.parameters.length; i++) {
 			valid &= this.parameters[i] != null && this.parameters[i].isValid();
 			if (!valid)
 				break;
-		}		
+		}
 		return valid;
 	}
 
@@ -234,13 +230,13 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  int sort,
-											  String description) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final int sort,
+			final String description) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -253,58 +249,59 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameters0(SetParameter[] parameters) {
+	protected synchronized void setParameters0(final SetParameter[] parameters) {
 		this.parameters = parameters;
 	}
 
-	public void setParameters(SetParameter[] parameters) {
+	public void setParameters(final SetParameter[] parameters) {
 		this.setParameters0(parameters);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
+	public boolean isAttachedToMonitoredElement(final Identifier monitoredElementId) {
 		return this.monitoredElementIds.contains(monitoredElementId);
 	}
 
-	public void attachToMonitoredElement(Identifier monitoredElementId) {
+	public void attachToMonitoredElement(final Identifier monitoredElementId) {
 		if (monitoredElementId != null && !this.isAttachedToMonitoredElement(monitoredElementId)) {
 			this.monitoredElementIds.add(monitoredElementId);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void detachFromMonitoredElement(Identifier monitoredElementId) {
+	public void detachFromMonitoredElement(final Identifier monitoredElementId) {
 		if (monitoredElementId != null && this.isAttachedToMonitoredElement(monitoredElementId)) {
 			this.monitoredElementIds.remove(monitoredElementId);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	protected synchronized void setMonitoredElementIds0(java.util.Set monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(final java.util.Set monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 	     	this.monitoredElementIds.addAll(monitoredElementIds);
 	}
-	
-	protected synchronized void setMonitoredElementIds(java.util.Set monitoredElementIds) {
+
+	protected synchronized void setMonitoredElementIds(final java.util.Set monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
 	}
-	
+
 	/**
 	 * @param description The description to set.
 	 */
-	public void setDescription(String description) {
-		super.changed = true;
+	public void setDescription(final String description) {
 		this.description = description;
+		super.markAsChanged();
 	}
+
 	/**
 	 * @param sort The sort to set.
 	 */
-	public void setSort(SetSort sort) {
-		super.changed = true;
+	public void setSort(final SetSort sort) {
 		this.sort = sort.value();
+		super.markAsChanged();
 	}
-	
+
 	public boolean equals(Object obj) {
 		boolean equals = (obj==this);
 		if ((!equals)&&(obj instanceof Set)){
@@ -322,8 +319,7 @@ public final class Set extends StorableObject {
 		}
 		return equals;
 	}
-	
-	
+
 	public int hashCode() {
 		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 		hashCodeGenerator.addObject(this.id);
@@ -338,25 +334,24 @@ public final class Set extends StorableObject {
 		int result = hashCodeGenerator.getResult();
 		hashCodeGenerator = null;
 		return result;
-
 	}
-	
-	
+
 	public String toString() {
 		StringBuffer buffer = new StringBuffer(getClass().getName());
 		buffer.append(EOSL);
-		buffer.append(ID+this.id+EOSL
-					 + ID_CREATED + this.created.toString()+EOSL	
-					 + ID_CREATOR_ID + this.creatorId.toString()+EOSL
-					 + ID_MODIFIED + this.modified.toString()+EOSL		
-					 + ID_MODIFIER_ID + this.modifierId.toString()+EOSL);
-		if (this.monitoredElementIds==null){
+		buffer.append(ID + this.id + EOSL
+				+ ID_CREATED + this.created.toString() + EOSL
+				+ ID_CREATOR_ID + this.creatorId.toString() + EOSL
+				+ ID_MODIFIED + this.modified.toString() + EOSL
+				+ ID_MODIFIER_ID + this.modifierId.toString() + EOSL);
+		if (this.monitoredElementIds == null) {
 			buffer.append(ID_MONITORED_ELEMENTS_IDS);
 			buffer.append(NULL);
 			buffer.append(EOSL);
-		}else{
-			for(Iterator it=this.monitoredElementIds.iterator();it.hasNext();){
-				Identifier id1 = (Identifier)it.next();
+		}
+		else {
+			for (Iterator it = this.monitoredElementIds.iterator(); it.hasNext();) {
+				Identifier id1 = (Identifier) it.next();
 				buffer.append(ID_MONITORED_ELEMENTS_IDS);
 				buffer.append(id1.toString());
 				buffer.append(EOSL);
@@ -365,30 +360,31 @@ public final class Set extends StorableObject {
 		buffer.append(ID_SORT);
 		buffer.append(this.sort);
 		buffer.append(EOSL);
-		if (this.parameters==null){
+		if (this.parameters == null) {
 			buffer.append(ID_PARAMETERS);
 			buffer.append(NULL);
 			buffer.append(EOSL);
-		}else{
-			for(int i=0;i<this.parameters.length;i++){
+		}
+		else {
+			for (int i = 0; i < this.parameters.length; i++) {
 				SetParameter param = this.parameters[i];
 				buffer.append(ID_PARAMETERS);
 				buffer.append(OPEN_BLOCK);
 				buffer.append(param.toString());
-				buffer.append(CLOSE_BLOCK);			
+				buffer.append(CLOSE_BLOCK);
 			}
 		}
-					 			
+
 		return buffer.toString();
-	}	
-	
+	}
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public java.util.Set getDependencies() {		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		java.util.Set dependencies = new HashSet();
+
+		final java.util.Set dependencies = new HashSet();
 
 		if (this.monitoredElementIds != null)
 			dependencies.addAll(this.monitoredElementIds);
@@ -398,5 +394,5 @@ public final class Set extends StorableObject {
 
 		return dependencies;
 	}
-	
+
 }

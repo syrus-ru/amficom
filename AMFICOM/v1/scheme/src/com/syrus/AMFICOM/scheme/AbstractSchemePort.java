@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.25 2005/05/23 10:01:26 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.26 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/23 10:01:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -123,7 +123,7 @@ public abstract class AbstractSchemePort extends
 	public final void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
@@ -226,7 +226,7 @@ public abstract class AbstractSchemePort extends
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -282,12 +282,12 @@ public abstract class AbstractSchemePort extends
 		if (this.directionType.value() == directionType.value())
 			return;
 		this.directionType = directionType;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public final void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -312,7 +312,7 @@ public abstract class AbstractSchemePort extends
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -323,7 +323,7 @@ public abstract class AbstractSchemePort extends
 		if (this.measurementPortId.equals(newMeasurementPortId))
 			return;
 		this.measurementPortId = newMeasurementPortId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -335,7 +335,7 @@ public abstract class AbstractSchemePort extends
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -353,7 +353,7 @@ public abstract class AbstractSchemePort extends
 		if (this.parentSchemeDeviceId.equals(newParentSchemeDeviceId))
 			return;
 		this.parentSchemeDeviceId = newParentSchemeDeviceId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -385,7 +385,7 @@ public abstract class AbstractSchemePort extends
 			 */
 			this.portTypeId = this.getPort().getType().getId();
 		this.portId = newPortId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -404,7 +404,7 @@ public abstract class AbstractSchemePort extends
 				return;
 			}
 			this.portTypeId = newPortTypeId;
-			this.changed = true;
+			super.markAsChanged();
 		}
 	}
 

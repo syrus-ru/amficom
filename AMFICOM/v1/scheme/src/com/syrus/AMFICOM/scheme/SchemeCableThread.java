@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.32 2005/05/26 15:31:15 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.33 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -174,7 +174,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 					0L, name, description, cableThreadType,
 					link, sourceSchemePort,
 					targetSchemePort, parentSchemeCableLink);
-			schemeCableThread.changed = true;
+			schemeCableThread.markAsChanged();
 			return schemeCableThread;
 		} catch (final IdentifierGenerationException ioee) {
 			throw new CreateObjectException(
@@ -189,7 +189,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	public void addCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public Object clone() {
@@ -348,7 +348,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -407,7 +407,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (this.cableThreadTypeId.equals(newCableThreadTypeId))
 			return;
 		this.cableThreadTypeId = newCableThreadTypeId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -416,7 +416,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -441,7 +441,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setLink(final Link link) {
@@ -449,7 +449,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (this.linkId.equals(newLinkId))
 			return;
 		this.linkId = newLinkId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -461,7 +461,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -479,7 +479,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (this.parentSchemeCableLinkId.equals(newParentSchemeCableLinkId))
 			return;
 		this.parentSchemeCableLinkId = newParentSchemeCableLinkId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
@@ -493,7 +493,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (this.sourceSchemePortId.equals(newSourceSchemePortId))
 			return;
 		this.sourceSchemePortId = newSourceSchemePortId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setTargetSchemePort(final SchemePort targetSchemePort) {
@@ -507,7 +507,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (this.targetSchemePortId.equals(newTargetSchemePortId))
 			return;
 		this.targetSchemePortId = newTargetSchemePortId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

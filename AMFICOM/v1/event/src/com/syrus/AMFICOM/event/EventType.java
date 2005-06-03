@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.27 2005/06/02 14:27:29 arseniy Exp $
+ * $Id: EventType.java,v 1.28 2005/06/03 20:38:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,18 +29,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/02 14:27:29 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/03 20:38:15 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -54,13 +51,13 @@ public final class EventType extends StorableObjectType {
 	private Map userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
 //	private Set userIds;
 
-	EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	EventType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.parameterTypeIds = new HashSet();
 		this.userAlertKindsMap = new HashMap();
 
-		EventTypeDatabase database = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
+		final EventTypeDatabase database = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -71,7 +68,7 @@ public final class EventType extends StorableObjectType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	EventType(EventType_Transferable ett) throws CreateObjectException {
+	EventType(final EventType_Transferable ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		}
@@ -131,13 +128,8 @@ public final class EventType extends StorableObjectType {
 					userAlertKindsMap);
 
 			assert eventType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			eventType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(eventType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			eventType.markAsChanged();
 
 			return eventType;
 		}
@@ -170,7 +162,7 @@ public final class EventType extends StorableObjectType {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		Identifier_Transferable[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
+		final Identifier_Transferable[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
 
 		final ETUserAlertKinds[] userAlertKindsT = new ETUserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
@@ -186,11 +178,12 @@ public final class EventType extends StorableObjectType {
 			userAlertKindsT[i] = new ETUserAlertKinds((Identifier_Transferable) userId.getTransferable(), alertKindsT);
 		}
 
-		return new EventType_Transferable(super.getHeaderTransferable(),
-										super.codename,
-										super.description != null ? super.description : "",
-										parTypeIdsT,
-										userAlertKindsT);
+		return new EventType_Transferable(
+				super.getHeaderTransferable(),
+				super.codename,
+				super.description != null ? super.description : "",
+				parTypeIdsT,
+				userAlertKindsT);
 	}
 
   /**
@@ -209,13 +202,7 @@ public final class EventType extends StorableObjectType {
 			final long version,
 			final String codename,
 			final String description) {
-		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							codename,
-							description);
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
   public Set getParameterTypeIds() {
@@ -236,7 +223,7 @@ public final class EventType extends StorableObjectType {
 	 */
 	public void setParameterTypeIds(final Set parameterTypeIds) {
 		this.setParameterTypeIds0(parameterTypeIds);
-		this.changed = true;
+		this.markAsChanged();
 	}
 
 	public Set getAlertedUserIds() {
@@ -268,7 +255,7 @@ public final class EventType extends StorableObjectType {
 			this.userAlertKindsMap.put(userId, userAlertKinds);
 		}
 		userAlertKinds.add(alertKind);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void removeAlertKindFromUser(final Identifier userId, final AlertKind alertKind) {
@@ -280,7 +267,7 @@ public final class EventType extends StorableObjectType {
 			userAlertKinds.remove(alertKind);
 			if (userAlertKinds.isEmpty())
 				this.userAlertKindsMap.remove(userId);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -288,7 +275,7 @@ public final class EventType extends StorableObjectType {
 		assert (userId != null) : "User id is NULL";
 
 		if (this.userAlertKindsMap.remove(userId) != null)
-			super.changed = true;
+			super.markAsChanged();
 	}
 
 	public Set getDependencies() {

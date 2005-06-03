@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.31 2005/05/26 15:31:15 bass Exp $
+ * $Id: SchemeLink.java,v 1.32 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/26 15:31:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -229,7 +229,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 					opticalLength, linkType, link,
 					siteNode, sourceSchemePort,
 					targetSchemePort, null, null, null);
-			schemeLink.changed = true;
+			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
@@ -278,7 +278,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 					siteNode, sourceSchemePort,
 					targetSchemePort, parentScheme, null,
 					null);
-			schemeLink.changed = true;
+			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
@@ -327,7 +327,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 					siteNode, sourceSchemePort,
 					targetSchemePort, null, parentSchemeElement,
 					null);
-			schemeLink.changed = true;
+			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
@@ -376,7 +376,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 					siteNode, sourceSchemePort,
 					targetSchemePort, null, null,
 					parentSchemeProtoElement);
-			schemeLink.changed = true;
+			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
@@ -639,7 +639,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
 			}
 			super.parentSchemeId = parentScheme.getId();
-			this.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -686,7 +686,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
 		}
 		this.parentSchemeElementId = newParentSchemeElementId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
@@ -732,7 +732,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				return;
 		}
 		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSiteNode(final SiteNode siteNode) {
@@ -740,7 +740,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		if (this.siteNodeId.equals(newSiteNodeId))
 			return;
 		this.siteNodeId = newSiteNodeId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

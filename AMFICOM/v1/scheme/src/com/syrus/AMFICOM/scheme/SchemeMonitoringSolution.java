@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.29 2005/05/24 13:25:02 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.30 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 /**
  * #06 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/05/24 13:25:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -147,7 +147,7 @@ public final class SchemeMonitoringSolution extends
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, price, parentSchemeOptimizeInfo);
-			schemeMonitoringSolution.changed = true;
+			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -280,7 +280,7 @@ public final class SchemeMonitoringSolution extends
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -292,7 +292,7 @@ public final class SchemeMonitoringSolution extends
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
@@ -300,14 +300,14 @@ public final class SchemeMonitoringSolution extends
 		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId))
 			return;
 		this.parentSchemeOptimizeInfoId = newParentSchemeOptimizeInfoId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setPrice(final int price) {
 		if (this.price == price)
 			return;
 		this.price = price;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemePaths(final Set schemePaths) {

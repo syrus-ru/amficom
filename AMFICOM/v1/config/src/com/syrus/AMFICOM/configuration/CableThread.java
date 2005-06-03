@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.25 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: CableThread.java,v 1.26 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -31,10 +30,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -46,7 +44,7 @@ public class CableThread extends DomainMember implements TypedObject {
 	private String description;
 	private CableThreadType type;
 
-	public CableThread(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	public CableThread(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		CableThreadDatabase database = (CableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_ENTITY_CODE);
@@ -58,7 +56,7 @@ public class CableThread extends DomainMember implements TypedObject {
 		}
 	}
 
-	public CableThread(CableThread_Transferable ctt) throws CreateObjectException {
+	public CableThread(final CableThread_Transferable ctt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ctt);
 		}
@@ -67,13 +65,13 @@ public class CableThread extends DomainMember implements TypedObject {
 		}
 	}
 
-	protected CableThread(Identifier id,
-						Identifier creatorId,
-						long version,
-						Identifier domainId,
-						String name,
-						String description,
-						CableThreadType type) {
+	protected CableThread(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final CableThreadType type) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -86,31 +84,26 @@ public class CableThread extends DomainMember implements TypedObject {
 		this.type = type;
 	}
 
-	public static CableThread createInstance(Identifier creatorId,
-							Identifier domainId,
-							String name,
-							String description,
-							CableThreadType type) throws CreateObjectException {
+	public static CableThread createInstance(final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final CableThreadType type) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || description == null || type == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
 			CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_ENTITY_CODE),
-											creatorId,
-											0L,
-											domainId,
-											name,
-											description,
-											type);
+					creatorId,
+					0L,
+					domainId,
+					name,
+					description,
+					type);
 
 			assert cableThread.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			cableThread.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(cableThread);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			cableThread.markAsChanged();
 
 			return cableThread;
 		}
@@ -119,7 +112,7 @@ public class CableThread extends DomainMember implements TypedObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		CableThread_Transferable ctt = (CableThread_Transferable) transferable;
 		super.fromTransferable(ctt.header, new Identifier(ctt.domain_id));
 
@@ -136,15 +129,15 @@ public class CableThread extends DomainMember implements TypedObject {
 				(Identifier_Transferable) this.type.getId().getTransferable());
 	}
 
-	protected synchronized void setAttributes(Date created,
-					Date modified,
-					Identifier creatorId,
-					Identifier modifierId,
-					long version,
-					Identifier domainId,
-					String name,
-					String description,
-					CableThreadType type) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final CableThreadType type) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
@@ -155,9 +148,9 @@ public class CableThread extends DomainMember implements TypedObject {
 		return this.description;
 	}
 
-	public void setDescription(String description){
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
@@ -174,15 +167,15 @@ public class CableThread extends DomainMember implements TypedObject {
 	/**
 	 * @param name The name to set.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param type The type to set.
 	 */
-	public void setType(CableThreadType type) {
+	public void setType(final CableThreadType type) {
 		this.type = type;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

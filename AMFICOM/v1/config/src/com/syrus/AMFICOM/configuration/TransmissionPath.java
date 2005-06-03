@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.66 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.67 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -28,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -36,9 +34,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 /**
- * @version $Revision: 1.66 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.67 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -55,7 +52,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 
 	private Set characteristics;
 
-	TransmissionPath(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	TransmissionPath(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -69,7 +66,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		}
 	}
 
-	TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
+	TransmissionPath(final TransmissionPath_Transferable tpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tpt);
 		}
@@ -78,15 +75,15 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		}
 	}
 
-	TransmissionPath(Identifier id,
-			Identifier creatorId,
-			long version,
-			Identifier domainId,
-			String name,
-			String description,
-			TransmissionPathType type,
-			Identifier startPortId,
-			Identifier finishPortId) {
+	TransmissionPath(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final TransmissionPathType type,
+			final Identifier startPortId,
+			final Identifier finishPortId) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version, domainId);
 		this.name = name;
 		this.description = description;
@@ -108,13 +105,13 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	 * @param finishPortId
 	 * @throws CreateObjectException
 	 */
-	public static TransmissionPath createInstance(Identifier creatorId,
-																		Identifier domainId,
-																		String name,
-																		String description,
-																		TransmissionPathType type,
-																		Identifier startPortId,
-																		Identifier finishPortId) throws CreateObjectException {
+	public static TransmissionPath createInstance(final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final TransmissionPathType type,
+			final Identifier startPortId,
+			final Identifier finishPortId) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || description == null ||
 				type == null || startPortId == null || finishPortId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -131,13 +128,8 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 					finishPortId);
 
 			assert transmissionPath.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			transmissionPath.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(transmissionPath);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			transmissionPath.markAsChanged();
 
 			return transmissionPath;
 		}
@@ -146,7 +138,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		TransmissionPath_Transferable tpt = (TransmissionPath_Transferable) transferable;
 		super.fromTransferable(tpt.header, new Identifier(tpt.domain_id));
 
@@ -161,10 +153,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
@@ -188,9 +177,9 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Identifier getFinishPortId() {
@@ -201,23 +190,18 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		return this.startPortId;
 	}
 
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												Identifier domainId,
-												String name,
-												String description,
-												TransmissionPathType type,
-												Identifier startPortId,
-												Identifier finishPortId) {
-		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							domainId);
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final TransmissionPathType type,
+			final Identifier startPortId,
+			final Identifier finishPortId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
 		this.type = type;
@@ -232,17 +216,17 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		return dependencies;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -258,36 +242,36 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}	
 	
 	/**
 	 * @param finishPortId The finishPortId to set.
 	 */
-	public void setFinishPortId(Identifier finishPortId) {
+	public void setFinishPortId(final Identifier finishPortId) {
 		this.finishPortId = finishPortId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param name The name to set.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param startPortId The startPortId to set.
 	 */
-	public void setStartPortId(Identifier startPortId) {
+	public void setStartPortId(final Identifier startPortId) {
 		this.startPortId = startPortId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param type The type to set.
 	 */
-	public void setType(TransmissionPathType type) {
+	public void setType(final TransmissionPathType type) {
 		this.type = type;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

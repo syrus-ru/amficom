@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.49 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.50 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -35,10 +33,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.50 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -51,7 +48,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 	private Set characteristics;
 
-	TransmissionPathType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	TransmissionPathType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -65,7 +62,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		}
 	}
 
-	TransmissionPathType(TransmissionPathType_Transferable tptt) throws CreateObjectException {
+	TransmissionPathType(final TransmissionPathType_Transferable tptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tptt);
 		}
@@ -74,14 +71,20 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		}
 	}
 
-	TransmissionPathType(Identifier id,
-			Identifier creatorId,
-			long version,
-			String codename,
-			String description,
-			String name) {
-		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
-				version, codename, description);
+	TransmissionPathType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 		this.name = name;
 		this.characteristics = new HashSet();
 	}
@@ -94,8 +97,10 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	 * @param description
 	 * @throws CreateObjectException
 	 */
-	public static TransmissionPathType createInstance(Identifier creatorId, String codename, String description, String name)
-			throws CreateObjectException {
+	public static TransmissionPathType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name) throws CreateObjectException {
 		if (creatorId == null || codename == null || name == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -108,13 +113,8 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 					name);
 
 			assert transmissionPathType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			transmissionPathType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(transmissionPathType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			transmissionPathType.markAsChanged();
 
 			return transmissionPathType;
 		}
@@ -123,7 +123,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		TransmissionPathType_Transferable tptt = (TransmissionPathType_Transferable) transferable;
 		super.fromTransferable(tptt.header, tptt.codename, tptt.description);
 		this.name = tptt.name;
@@ -134,34 +134,32 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new TransmissionPathType_Transferable(super.getHeaderTransferable(), super.codename,
-														super.description != null ? super.description
-																: "", this.name != null ? this.name
-																: "", charIds);
+		return new TransmissionPathType_Transferable(super.getHeaderTransferable(),
+				super.codename,
+				super.description != null ? super.description : "",
+				this.name != null ? this.name : "",
+				charIds);
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	public void setName(String name) {
-		super.changed = true;
+	public void setName(final String name) {
 		this.name = name;
+		super.markAsChanged();
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												String codename,
-												String description,
-												String name) {
+	protected synchronized void setAttributes(final 	Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 	}
@@ -170,17 +168,17 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		return Collections.EMPTY_SET;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -196,6 +194,6 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

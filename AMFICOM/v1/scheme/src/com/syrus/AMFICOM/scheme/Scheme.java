@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.31 2005/05/24 13:25:02 bass Exp $
+ * $Id: Scheme.java,v 1.32 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/05/24 13:25:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -217,7 +217,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 					ugoCell, schemeCell,
 					currentSchemeMonitoringSolution,
 					parentSchemeElement);
-			scheme.changed = true;
+			scheme.markAsChanged();
 			return scheme;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -566,7 +566,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.currentSchemeMonitoringSolutionId.equals(newCurrentSchemeMonitoringSolutionId))
 			return;
 		this.currentSchemeMonitoringSolutionId = newCurrentSchemeMonitoringSolutionId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -578,14 +578,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.description.equals(description))
 			return;
 		this.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setHeight(final int height) {
 		if (this.height == height)
 			return;
 		this.height = height;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -598,7 +598,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.label.equals(label))
 			return;
 		this.label = label;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setMap(final Map map) {
@@ -606,7 +606,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.mapId.equals(newMapId))
 			return;
 		this.mapId = newMapId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -618,7 +618,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.name.equals(name))
 			return;
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
@@ -626,7 +626,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.parentSchemeElementId.equals(newParentSchemeElementId))
 			return;
 		this.parentSchemeElementId = newParentSchemeElementId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemeCableLinks(final Set schemeCableLinks) {
@@ -653,7 +653,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.schemeCellId.equals(newSchemeCellId))
 			return;
 		this.schemeCellId = newSchemeCellId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemeElements(final Set schemeElements) {
@@ -680,7 +680,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.kind.value() == kind.value())
 			return;
 		this.kind = kind;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSchemeLinks(final Set schemeLinks) {
@@ -722,7 +722,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.symbolId.equals(newSymbolId))
 			return;
 		this.symbolId = newSymbolId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -734,14 +734,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		if (this.ugoCellId.equals(newUgoCellId))
 			return;
 		this.ugoCellId = newUgoCellId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setWidth(final int width) {
 		if (this.width == width)
 			return;
 		this.width = width;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

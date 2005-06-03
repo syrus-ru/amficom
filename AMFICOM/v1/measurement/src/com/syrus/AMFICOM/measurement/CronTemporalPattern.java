@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.8 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.9 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,18 +30,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -447,7 +444,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		 * @param endPeriod
 		 *                The endPeriod to set.
 		 */
-		public void setEndPeriod(long endPeriod) {
+		public void setEndPeriod(final long endPeriod) {
 			this.endPeriod = endPeriod;
 		}
 
@@ -455,7 +452,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		 * @param startPeriod
 		 *                The startPeriod to set.
 		 */
-		public void setStartPeriod(long startPeriod) {
+		public void setStartPeriod(final long startPeriod) {
 			this.startPeriod = startPeriod;
 		}
 
@@ -463,7 +460,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		 * @param template
 		 *                The template to set.
 		 */
-		public void setTemplate(String template) {
+		public void setTemplate(final String template) {
 			removeAll();
 			this.timeLineDescription = null;
 			this.template = template;
@@ -482,7 +479,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		 *                maximal value for expression type
 		 * @return a host of values
 		 */
-		private TimeValue parseExpression(String name, String exp, int min, int max) {
+		private TimeValue parseExpression(final String name, final String exp, final int min, final int max) {
 			TimeValue timeValue = new TimeValue(name);
 			boolean[] indices = new boolean[max + 1];
 			for (int i = 0; i < indices.length; i++)
@@ -651,11 +648,11 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		public String	pluralName;
 		public int[]	starts;
 
-		public TimeValue(String name) {
+		public TimeValue(final String name) {
 			this.name = name;
 		}
 
-		public TimeValue(String name, String pluralName) {
+		public TimeValue(final String name, final String pluralName) {
 			this.name = name;
 			this.pluralName = pluralName;
 		}
@@ -791,10 +788,10 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	 */
 	private java.util.Set			templates;
 
-	CronTemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	CronTemporalPattern(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE);
+		final CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -803,7 +800,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		}
 	}
 
-	public CronTemporalPattern(CronTemporalPattern_Transferable ctpt) throws CreateObjectException {
+	public CronTemporalPattern(final CronTemporalPattern_Transferable ctpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ctpt);
 		}
@@ -812,7 +809,11 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		}
 	}
 
-	CronTemporalPattern(Identifier id, Identifier creatorId, long version, String description, String[] cronStrings) {
+	CronTemporalPattern(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String description,
+			final String[] cronStrings) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -823,10 +824,13 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		this.description = description;
 		this.cronStrings = cronStrings;
 		this.setTemplates0(cronStrings);
-		this.changed = false;
 	}
 
-	private CronTemporalPattern(Identifier id, Identifier creatorId, long version, String description, java.util.Set cronString) {
+	private CronTemporalPattern(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String description,
+			final java.util.Set cronString) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -835,7 +839,6 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			version);
 		this.description = description;		
 		this.setTemplates0((String[]) cronString.toArray(new String[cronString.size()]));
-		this.changed = false;
 	}
 
 	/**
@@ -845,8 +848,9 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	 * @param cronString
 	 * @throws CreateObjectException
 	 */
-	public static CronTemporalPattern createInstance(Identifier creatorId, String description, java.util.Set cronString)
-			throws CreateObjectException {
+	public static CronTemporalPattern createInstance(final Identifier creatorId,
+			final String description,
+			final java.util.Set cronString) throws CreateObjectException {
 		if (creatorId == null || description == null || cronString == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -858,13 +862,8 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 					cronString);
 
 			assert cronTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			cronTemporalPattern.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(cronTemporalPattern);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			cronTemporalPattern.markAsChanged();
 
 			return cronTemporalPattern;
 		}
@@ -873,26 +872,31 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		}
 	}
 
-	public static CronTemporalPattern createInstance(Identifier creatorId, String description, String[] cronStrings)
-			throws CreateObjectException {
+	public static CronTemporalPattern createInstance(final Identifier creatorId,
+			final String description,
+			final String[] cronStrings) throws CreateObjectException {
 		if (creatorId == null || description == null || cronStrings == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CronTemporalPattern temporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
+			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
 					creatorId,
 					0L,
 					description,
 					cronStrings);
-			temporalPattern.changed = true;
-			return temporalPattern;
+
+			assert cronTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			cronTemporalPattern.markAsChanged();
+
+			return cronTemporalPattern;
 		}
 		catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 	
-	public static String getCronStringsDescription(String[] cronStrings){
+	public static String getCronStringsDescription(final String[] cronStrings) {
 		String desc = null;
 		CronTemporalPattern pattern = new CronTemporalPattern(null, null, 0L, null, cronStrings);
 		desc = pattern.toString();
@@ -921,28 +925,26 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		CronTemporalPattern_Transferable ctpt = (CronTemporalPattern_Transferable)transferable;
 		super.fromTransferable(ctpt.header);
 
 		this.description = ctpt.description;
 		this.setTemplates0(ctpt.cron_strings);
 
-		this.changed = false;
 	}
 	
 	public IDLEntity getTransferable() {
-		return new CronTemporalPattern_Transferable(super.getHeaderTransferable(),
-							this.description, getCronStrings());
+		return new CronTemporalPattern_Transferable(super.getHeaderTransferable(), this.description, getCronStrings());
 	}
 
-	protected synchronized void setAttributes(	Date created,
-							Date modified,
-							Identifier creatorId,
-							Identifier modifierId,
-							long version,
-							String description,
-							String[] cronStrings) {
+	protected synchronized void setAttributes(	final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String description,
+			final String[] cronStrings) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.description = description;
 		this.cronStrings = cronStrings;
@@ -992,7 +994,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	
 	}
 
-	private void setTemplates0(String[] cronStringArray) {
+	private void setTemplates0(final String[] cronStringArray) {
 		if (this.times == null)
 			this.times = new TreeSet();
 		else
@@ -1014,15 +1016,21 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	public void removeAll() {
-		super.changed = true;
-		if (this.times != null)
+		boolean removed = false;
+		if (this.times != null) {
 			this.times.clear();
-		if (this.templates != null)
+			removed = true;
+		}
+		if (this.templates != null) {
 			this.templates.clear();
+			removed = true;
+		}
+
+		if (removed)
+			super.markAsChanged();
 	}
 
 	public void addTemplate(String template) {
-		super.changed = true;		
 		if (this.times == null)
 			this.times = new TreeSet();
 		else
@@ -1034,6 +1042,8 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			timeLine.setTemplate(template);
 			this.templates.add(timeLine);
 		}
+
+		super.markAsChanged();
 		//setType(TIMESTAMPTYPE_PERIODIC);
 	}
 
@@ -1047,16 +1057,17 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		}
 
 		this.times.clear();
-		super.changed = true;		
+
+		super.markAsChanged();
 	}
 
 	/**
 	 * @param description
 	 *                The description to set.
 	 */
-	public void setDescription(String description) {
-		super.changed = true;		
+	public void setDescription(final String description) {
 		this.description = description;
+		super.markAsChanged();
 	}
 
 	public boolean equals(Object obj) {

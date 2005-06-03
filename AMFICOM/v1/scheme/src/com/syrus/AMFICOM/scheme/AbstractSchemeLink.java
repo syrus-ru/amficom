@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.17 2005/05/30 12:13:37 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.18 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/05/30 12:13:37 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -245,7 +245,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			 */
 			this.abstractLinkTypeId = this.getLink().getType().getId();
 		this.linkId = newLinkId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -266,7 +266,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 				return;
 			}
 			this.abstractLinkTypeId = newAbstractLinkTypeId;
-			this.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -277,7 +277,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		if (this.opticalLength == opticalLength)
 			return;
 		this.opticalLength = opticalLength;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -287,7 +287,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		if (this.physicalLength == physicalLength)
 			return;
 		this.physicalLength = physicalLength;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -306,7 +306,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		if (this.sourceAbstractSchemePortId.equals(newSourceAbstractSchemePortId))
 			return;
 		this.sourceAbstractSchemePortId = newSourceAbstractSchemePortId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -325,7 +325,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		if (this.targetAbstractSchemePortId.equals(newTargetAbstractSchemePortId))
 			return;
 		this.targetAbstractSchemePortId = newTargetAbstractSchemePortId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	synchronized void setAttributes(final Date created, final Date modified,

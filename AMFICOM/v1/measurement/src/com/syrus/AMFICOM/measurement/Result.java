@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.57 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: Result.java,v 1.58 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -34,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.58 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -51,7 +50,7 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Result(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Result(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		ResultDatabase database = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
@@ -68,7 +67,7 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Result(Result_Transferable rt) throws CreateObjectException {
+	public Result(final Result_Transferable rt) throws CreateObjectException {
 		try {
 			this.fromTransferable(rt);
 		}
@@ -80,12 +79,12 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Result(Identifier id,
-					 Identifier creatorId,
-					 long version,
-					 Action action,
-					 int sort,
-					 SetParameter[] parameters) {
+	Result(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Action action,
+			final int sort,
+			final SetParameter[] parameters) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -100,7 +99,7 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Result_Transferable rt = (Result_Transferable) transferable;
 		super.fromTransferable(rt.header);
 
@@ -161,12 +160,12 @@ public class Result extends StorableObject {
 		boolean valid = super.isValid() && this.action != null && this.parameters != null;
 		if (!valid)
 			return valid;
-		
-		for(int i=0;i<this.parameters.length;i++) {
+
+		for (int i = 0; i < this.parameters.length; i++) {
 			valid &= this.parameters[i] != null && this.parameters[i].isValid();
 			if (!valid)
 				break;
-		}		
+		}
 		return valid;
 	}
 
@@ -178,18 +177,18 @@ public class Result extends StorableObject {
 		return this.action;
 	}
 	
-	public void setAction(Action action) {
+	public void setAction(final Action action) {
 		this.action = action;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public ResultSort getSort() {
 		return ResultSort.from_int(this.sort);
 	}
 	
-	public void setSort(ResultSort sort) {
+	public void setSort(final ResultSort sort) {
 		this.sort = sort.value();
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public SetParameter[] getParameters() {
@@ -199,13 +198,13 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  Action action,
-											  int sort) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Action action,
+			final int sort) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -218,10 +217,10 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected static Result createInstance(Identifier creatorId,
-										   Action action,
-										   ResultSort sort,
-										   SetParameter[] parameters) throws CreateObjectException {
+	protected static Result createInstance(final Identifier creatorId,
+			final Action action,
+			final ResultSort sort,
+			final SetParameter[] parameters) throws CreateObjectException {
 		try {
 			Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
 				creatorId,
@@ -231,13 +230,8 @@ public class Result extends StorableObject {
 				parameters);
 
 			assert result.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			result.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(result);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			result.markAsChanged();
 
 			return result;
 		}
@@ -249,13 +243,13 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameters0(SetParameter[] parameters) {
+	protected synchronized void setParameters0(final SetParameter[] parameters) {
 		this.parameters = parameters;
 	}
 
-	public void setParameters(SetParameter[] parameters) {
+	public void setParameters(final SetParameter[] parameters) {
 		this.setParameters0(parameters);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

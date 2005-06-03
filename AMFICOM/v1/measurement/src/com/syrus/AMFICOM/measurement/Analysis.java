@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.61 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: Analysis.java,v 1.62 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,10 +28,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.62 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -49,7 +47,7 @@ public class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Analysis(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	public Analysis(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
@@ -65,7 +63,7 @@ public class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Analysis(Analysis_Transferable at) throws CreateObjectException {
+	public Analysis(final Analysis_Transferable at) throws CreateObjectException {
 		try {
 			this.fromTransferable(at);
 		} catch (ApplicationException ae) {
@@ -76,14 +74,14 @@ public class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Analysis(Identifier id,
-					   Identifier creatorId,
-					   long version,
-					   AnalysisType type,
-					   Identifier monitoredElementId,
-					   Measurement measurement,
-					   String name,
-					   Set criteriaSet) {
+	Analysis(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final AnalysisType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final String name,
+			final Set criteriaSet) {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -101,7 +99,7 @@ public class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Analysis_Transferable at = (Analysis_Transferable) transferable;
 		super.fromTransferable(at.header, null, new Identifier(at.monitored_element_id), null);
 
@@ -147,7 +145,7 @@ public class Analysis extends Action {
 	
 	public void setMeasurement(final Measurement measurement) {
 		super.parentAction = measurement;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getName() {
@@ -156,12 +154,12 @@ public class Analysis extends Action {
 
 	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setCriteriaSet(final Set criteriaSet) {
 		this.criteriaSet = criteriaSet;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	public Set getCriteriaSet() {
@@ -171,16 +169,16 @@ public class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			AnalysisType type,
-			Identifier monitoredElementId,
-			Measurement measurement,
-			String name,
-			Set criteriaSet) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final AnalysisType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final String name,
+			final Set criteriaSet) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -204,12 +202,12 @@ public class Analysis extends Action {
 	 * @return a newly generated instance
 	 * @throws CreateObjectException
 	 */
-	public static Analysis createInstance(Identifier creatorId,
-										  AnalysisType type,
-										  Identifier monitoredElementId,
-										  Measurement measurement,
-										  String name,
-										  Set criteriaSet) throws CreateObjectException {
+	public static Analysis createInstance(final Identifier creatorId,
+			final AnalysisType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final String name,
+			final Set criteriaSet) throws CreateObjectException {
 		try {
 			Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
 				creatorId,
@@ -221,13 +219,8 @@ public class Analysis extends Action {
 				criteriaSet);
 
 			assert analysis.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			analysis.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(analysis);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			analysis.markAsChanged();
 
 			return analysis;
 		}
@@ -236,15 +229,15 @@ public class Analysis extends Action {
 		}
 	}
 
-	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
-		return Result.createInstance(resultCreatorId,
-				this,
-				ResultSort.RESULT_SORT_ANALYSIS,
-				resultParameters);
+	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
+			throws CreateObjectException {
+		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_ANALYSIS, resultParameters);
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	public java.util.Set getDependencies() {
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.68 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.69 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,17 +24,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -57,7 +54,7 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	EvaluationType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	EvaluationType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.inParameterTypeIds = new HashSet();
@@ -81,7 +78,7 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
+	public EvaluationType(final EvaluationType_Transferable ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		}
@@ -93,16 +90,16 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	EvaluationType(Identifier id,
-							 Identifier creatorId,
-							 long version,
-							 String codename,
-							 String description,
-							 java.util.Set inParameterTypeIds,
-							 java.util.Set thresholdParameterTypeIds,
-							 java.util.Set etalonParameterTypeIds,
-							 java.util.Set outParameterTypeIds,
-						   java.util.Set measurementTypeIds) {
+	EvaluationType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final java.util.Set inParameterTypeIds,
+			final java.util.Set thresholdParameterTypeIds,
+			final java.util.Set etalonParameterTypeIds,
+			final java.util.Set outParameterTypeIds,
+			final java.util.Set measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -142,14 +139,14 @@ public class EvaluationType extends ActionType {
 	 * @param measurementTypeIds
 	 * @throws CreateObjectException
 	 */
-	public static EvaluationType createInstance(Identifier creatorId,
-			String codename,
-			String description,
-			java.util.Set inParameterTypeIds,
-			java.util.Set thresholdParameterTypeIds,
-			java.util.Set etalonParameterTypeIds,
-			java.util.Set outParameterTypeIds,
-			java.util.Set measurementTypeIds) throws CreateObjectException {
+	public static EvaluationType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final java.util.Set inParameterTypeIds,
+			final java.util.Set thresholdParameterTypeIds,
+			final java.util.Set etalonParameterTypeIds,
+			final java.util.Set outParameterTypeIds,
+			final java.util.Set measurementTypeIds) throws CreateObjectException {
 		try {
 			EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
 					creatorId,
@@ -163,13 +160,8 @@ public class EvaluationType extends ActionType {
 					measurementTypeIds);
 
 			assert evaluationType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			evaluationType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(evaluationType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			evaluationType.markAsChanged();
 
 			return evaluationType;
 		}
@@ -181,7 +173,7 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		EvaluationType_Transferable ett = (EvaluationType_Transferable)transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 
@@ -209,13 +201,13 @@ public class EvaluationType extends ActionType {
 		Identifier_Transferable[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		return new EvaluationType_Transferable(super.getHeaderTransferable(),
-											   super.codename,
-											   super.description != null ? super.description : "",
-											   inParTypeIds,
-											   thresholdParTypeIds,
-											   etalonParTypeIds,
-											   outParTypeIds,
-											   measTypIds);
+				super.codename,
+				super.description != null ? super.description : "",
+				inParTypeIds,
+				thresholdParTypeIds,
+				etalonParTypeIds,
+				outParTypeIds,
+				measTypIds);
 	}
 	
 	/* (non-Javadoc)
@@ -255,13 +247,13 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  String codename,
-											  String description) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -274,7 +266,7 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypeIds(Map parameterTypeIdsModeMap) {
+	protected synchronized void setParameterTypeIds(final Map parameterTypeIdsModeMap) {
 		this.setInParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_IN));
 		this.setThresholdParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_THRESHOLD));
 		this.setEtalonParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_ETALON));
@@ -296,7 +288,7 @@ public class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypeIds0(java.util.Set inParameterTypeIds) {
+	protected void setInParameterTypeIds0(final java.util.Set inParameterTypeIds) {
 		this.inParameterTypeIds.clear();
 		if (inParameterTypeIds != null)
 			this.inParameterTypeIds.addAll(inParameterTypeIds);
@@ -308,15 +300,15 @@ public class EvaluationType extends ActionType {
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypeIds(java.util.Set inParameterTypeIds) {
+	public void setInParameterTypeIds(final java.util.Set inParameterTypeIds) {
 		this.setInParameterTypeIds0(inParameterTypeIds);
-		super.changed = true;		
+		super.markAsChanged();		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setThresholdParameterTypeIds0(java.util.Set thresholdParameterTypeIds) {
+	protected void setThresholdParameterTypeIds0(final java.util.Set thresholdParameterTypeIds) {
 		this.thresholdParameterTypeIds.clear();
 		if (thresholdParameterTypeIds != null)
 			this.thresholdParameterTypeIds.addAll(thresholdParameterTypeIds);
@@ -328,15 +320,15 @@ public class EvaluationType extends ActionType {
 	 * @param thresholdParameterTypeIds
 	 *            The thresholdParameterTypeIds to set.
 	 */
-	public void setThresholdParameterTypeIds(java.util.Set thresholdParameterTypeIds) {
+	public void setThresholdParameterTypeIds(final java.util.Set thresholdParameterTypeIds) {
 		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setEtalonParameterTypeIds0(java.util.Set etalonParameterTypeIds) {
+	protected void setEtalonParameterTypeIds0(final java.util.Set etalonParameterTypeIds) {
 		this.etalonParameterTypeIds.clear();
 		if (etalonParameterTypeIds != null)
 			this.etalonParameterTypeIds.addAll(etalonParameterTypeIds);
@@ -348,15 +340,15 @@ public class EvaluationType extends ActionType {
 	 * @param etalonParameterTypeIds
 	 *            The etalonParameterTypeIds to set.
 	 */
-	public void setEtalonParameterTypeIds(java.util.Set etalonParameterTypeIds) {
+	public void setEtalonParameterTypeIds(final java.util.Set etalonParameterTypeIds) {
 		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypeIds0(java.util.Set outParameterTypeIds) {
+	protected void setOutParameterTypeIds0(final java.util.Set outParameterTypeIds) {
 		this.outParameterTypeIds.clear();
 		if (outParameterTypeIds != null)
 			this.outParameterTypeIds.addAll(outParameterTypeIds);
@@ -368,15 +360,15 @@ public class EvaluationType extends ActionType {
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypeIds(java.util.Set outParameterTypeIds) {
+	public void setOutParameterTypeIds(final java.util.Set outParameterTypeIds) {
 		this.setOutParameterTypeIds0(outParameterTypeIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setMeasurementTypeIds0(java.util.Set measurementTypeIds) {
+	protected void setMeasurementTypeIds0(final java.util.Set measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
@@ -386,9 +378,9 @@ public class EvaluationType extends ActionType {
 	 * client setter for measurementTypeIds
 	 * @param measurementTypeIds
 	 */
-	public void setMeasurementTypeIds(java.util.Set measurementTypeIds) {
+	public void setMeasurementTypeIds(final java.util.Set measurementTypeIds) {
 		this.setMeasurementTypeIds0(measurementTypeIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

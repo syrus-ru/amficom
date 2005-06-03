@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.25 2005/06/02 14:27:29 arseniy Exp $
+ * $Id: Event.java,v 1.26 2005/06/03 20:38:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -35,10 +34,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/02 14:27:29 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/03 20:38:15 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -54,12 +52,12 @@ public final class Event extends StorableObject implements TypedObject {
 	private Set eventParameters;	//Set <EventParameter>
 	private Set eventSourceIds; //Set <Identifier>
 
-	Event(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Event(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.eventParameters = new HashSet();
 		this.eventSourceIds = new HashSet();
 
-		EventDatabase database = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
+		final EventDatabase database = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -70,7 +68,7 @@ public final class Event extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public Event(Event_Transferable et) throws CreateObjectException {
+	public Event(final Event_Transferable et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
 		}
@@ -79,13 +77,13 @@ public final class Event extends StorableObject implements TypedObject {
 		}
 	}
 
-	Event(Identifier id,
-					   Identifier creatorId,
-					   long version,
-					   EventType type,
-						 String description,
-						 Set eventParameters,
-						 Set eventSourceIds) {
+	Event(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final EventType type,
+			final String description,
+			final Set eventParameters,
+			final Set eventSourceIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -111,7 +109,7 @@ public final class Event extends StorableObject implements TypedObject {
 	 * @return new instance
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
-	public static Event createInstance(Identifier creatorId,
+	public static Event createInstance(final Identifier creatorId,
 		EventType type,
 		String description,
 		Set eventParameters,
@@ -121,21 +119,16 @@ public final class Event extends StorableObject implements TypedObject {
 
 		try {
 			Event event = new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_ENTITY_CODE),
-											creatorId,
-											0L,
-											type,
-											description,
-											eventParameters,
-											eventSourceIds);
+					creatorId,
+					0L,
+					type,
+					description,
+					eventParameters,
+					eventSourceIds);
 
 			assert event.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			event.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(event);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			event.markAsChanged();
 
 			return event;
 		}
@@ -144,7 +137,7 @@ public final class Event extends StorableObject implements TypedObject {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Event_Transferable et = (Event_Transferable) transferable;
 
 		super.fromTransferable(et.header);
@@ -207,13 +200,13 @@ public final class Event extends StorableObject implements TypedObject {
 				&& this.eventSourceIds != null && this.eventSourceIds != Collections.EMPTY_SET;
 	}
 
-	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																  long version,
-																	EventType type,
-																	String description) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final EventType type,
+			final String description) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -223,13 +216,13 @@ public final class Event extends StorableObject implements TypedObject {
 		this.description = description;
 	}
 
-	protected synchronized void setEventParameters0(Set eventParameters) {
+	protected synchronized void setEventParameters0(final Set eventParameters) {
 		this.eventParameters.clear();
 		if (eventParameters != null)
 			this.eventParameters.addAll(eventParameters);
 	}
 
-	protected synchronized void setEventSourceIds0(Set eventSourceIds) {
+	protected synchronized void setEventSourceIds0(final Set eventSourceIds) {
 		this.eventSourceIds.clear();
 		if (eventSourceIds != null)
 			this.eventSourceIds.addAll(eventSourceIds);
@@ -239,36 +232,36 @@ public final class Event extends StorableObject implements TypedObject {
 	 * Set new type
 	 * @param type
 	 */
-	public void setType(EventType type) {
+	public void setType(final EventType type) {
 		this.type = type;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * Set new description
 	 * @param description
 	 */
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * Set new array of event parameters
 	 * @param eventParameters
 	 */
-	public void setEventParameters(Set eventParameters) {
+	public void setEventParameters(final Set eventParameters) {
 		this.setEventParameters0(eventParameters);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * Set new list of event sources ids
 	 * @param eventSourceIds
 	 */
-	public void setEventSourceIds(Set eventSourceIds) {
+	public void setEventSourceIds(final Set eventSourceIds) {
 		this.setEventSourceIds0(eventSourceIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Set getDependencies() {

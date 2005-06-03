@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.49 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: LinkType.java,v 1.50 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -28,16 +27,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.50 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -57,7 +54,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 
 	private Set characteristics;
 
-	LinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	LinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet();
@@ -70,7 +67,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		}
 	}
 
-	LinkType(LinkType_Transferable ltt) throws CreateObjectException {
+	LinkType(final LinkType_Transferable ltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ltt);
 		}
@@ -79,16 +76,16 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		}
 	}
 
-	LinkType(Identifier id,
-						Identifier creatorId,
-						long version,
-						String codename,
-						String description,
-						String name,
-						int sort,
-						String manufacturer,
-						String manufacturerCode,
-						Identifier imageId) {
+	LinkType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int sort,
+			final String manufacturer,
+			final String manufacturerCode,
+			final Identifier imageId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -109,14 +106,14 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	 * create new instance for client
 	 * @throws CreateObjectException
 	 */
-	public static LinkType createInstance(Identifier creatorId,
-										String codename,
-										String description,
-										String name,
-										LinkTypeSort sort,
-										String manufacturer,
-										String manufacturerCode,
-										Identifier imageId) throws CreateObjectException {
+	public static LinkType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final String name,
+			final LinkTypeSort sort,
+			final String manufacturer,
+			final String manufacturerCode,
+			final Identifier imageId) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null || name == null ||
 				sort == null || manufacturer == null || manufacturerCode == null || imageId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -134,13 +131,8 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 						imageId);
 
 			assert linkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			linkType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(linkType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			linkType.markAsChanged();
 
 			return linkType;
 		}
@@ -149,7 +141,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		LinkType_Transferable ltt = (LinkType_Transferable) transferable;
 		super.fromTransferable(ltt.header, ltt.codename, ltt.description);
 
@@ -165,39 +157,30 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-				charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new LinkType_Transferable(super.getHeaderTransferable(),
-								 super.codename,
-								 super.description != null ? super.description : "",
-								 this.name != null ? this.name : "",
-								 LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
-								 (Identifier_Transferable) this.imageId.getTransferable(),
-								 charIds);
+				super.codename,
+				super.description != null ? super.description : "",
+				this.name != null ? this.name : "",
+				LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
+				(Identifier_Transferable) this.imageId.getTransferable(),
+				charIds);
 	}
 
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												String codename,
-												String description,
-												String name,
-												int sort,
-												String manufacturer,
-												String manufacturerCode,
-												Identifier imageId) {
-		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							codename,
-							description);
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description,
+			final String name,
+			final int sort,
+			final String manufacturer,
+			final String manufacturerCode,
+			final Identifier imageId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.sort = sort;
 		this.manufacturer = manufacturer;
@@ -213,16 +196,18 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		return this.manufacturer;
 	}
 
-	public void setManufacturer(String manufacturer) {
+	public void setManufacturer(final String manufacturer) {
 		this.manufacturer = manufacturer;
+		super.markAsChanged();
 	}
 
 	public String getManufacturerCode() {
 		return this.manufacturerCode;
 	}
 
-	public void setManufacturerCode(String manufacturerCode) {
+	public void setManufacturerCode(final String manufacturerCode) {
 		this.manufacturerCode = manufacturerCode;
+		super.markAsChanged();
 	}
 
 	public LinkTypeSort getSort() {
@@ -233,26 +218,26 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		return this.name;
 	}
 
-	public void setName(String name) {
-		super.changed = true;
-		this.name = name;
+	public void setName(final String name) {
+		this.name= name;
+		super.markAsChanged();
 	}
 
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -268,21 +253,21 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
 	 * @param imageId The imageId to set.
 	 */
-	public void setImageId(Identifier imageId) {
+	public void setImageId(final Identifier imageId) {
 		this.imageId = imageId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param sort The sort to set.
 	 */
-	public void setSort(LinkTypeSort sort) {
+	public void setSort(final LinkTypeSort sort) {
 		this.sort = sort.value();
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

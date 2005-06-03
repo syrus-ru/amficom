@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.122 2005/06/03 19:07:21 arseniy Exp $
+ * $Id: Test.java,v 1.123 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -47,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.122 $, $Date: 2005/06/03 19:07:21 $
+ * @version $Revision: 1.123 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -80,7 +79,7 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Test(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.measurementSetupIds = new HashSet();
 
@@ -97,7 +96,7 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Measurement createMeasurement(Identifier measurementCreatorId, Date startTime) throws CreateObjectException {
+	public Measurement createMeasurement(final Identifier measurementCreatorId, final Date startTime) throws CreateObjectException {
 		if (this.status != TestStatus._TEST_STATUS_PROCESSING)
 			throw new CreateObjectException("Status of test '" + this.id + "' is " + this.status
 					+ ", not " + TestStatus._TEST_STATUS_PROCESSING + " (PROCESSING)");
@@ -108,9 +107,9 @@ public class Test extends StorableObject {
 					(MeasurementType) StorableObjectPool.getStorableObject(this.measurementTypeId, true),
 					this.monitoredElement.getId(),
 					LangModelMeasurement.getString("created by Test") + ":'"
-					+ this.getDescription() + "' "
-					+ LangModelMeasurement.getString("at.time")
-					+ " " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
+						+ this.getDescription()
+						+ "' " + LangModelMeasurement.getString("at.time")
+						+ " " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
 					this.mainMeasurementSetup,
 					startTime,
 					this.monitoredElement.getLocalAddress(),
@@ -122,7 +121,8 @@ public class Test extends StorableObject {
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = measurementCreatorId;
 		this.numberOfMeasurements++;
-		super.changed = true;
+
+		super.markAsChanged();
 
 		return measurement;
 	}	
@@ -130,21 +130,21 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Test(Identifier id,
-					 Identifier creatorId,
-					 long version,
-					 Date startTime,
-					 Date endTime,
-					 Identifier temporalPatternId,
-					 int temporalType,
-					 Identifier measurementTypeId,
-					 Identifier analysisTypeId,
-					 Identifier evaluationTypeId,
-					 Identifier groupTestId,
-					 MonitoredElement monitoredElement,
-					 int returnType,
-					 String description,
-					 java.util.Set measurementSetupIds) {
+	Test(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Date startTime,
+			final Date endTime,
+			final Identifier temporalPatternId,
+			final int temporalType,
+			final Identifier measurementTypeId,
+			final Identifier analysisTypeId,
+			final Identifier evaluationTypeId,
+			final Identifier groupTestId,
+			final MonitoredElement monitoredElement,
+			final int returnType,
+			final String description,
+			final java.util.Set measurementSetupIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -154,10 +154,7 @@ public class Test extends StorableObject {
 
 		this.temporalType = temporalType;
 		if (startTime != null)
-				this.timeStamps = new TestTimeStamps(this.temporalType,
-													 startTime,
-													 endTime,
-													 temporalPatternId);
+			this.timeStamps = new TestTimeStamps(this.temporalType, startTime, endTime, temporalPatternId);
 		this.measurementTypeId = measurementTypeId;
 		this.analysisTypeId = analysisTypeId;
 		this.evaluationTypeId = evaluationTypeId;
@@ -187,19 +184,19 @@ public class Test extends StorableObject {
 	 * @param measurementSetupIds
 	 * @throws CreateObjectException
 	 */
-	public static Test createInstance(Identifier creatorId,
-			Date startTime,
-			Date endTime,
-			Identifier temporalPatternId,
-			TestTemporalType temporalType,
-			Identifier measurementTypeId,
-			Identifier analysisTypeId,
-			Identifier evaluationTypeId,
-			Identifier groupTestId,
-			MonitoredElement monitoredElement,
-			TestReturnType returnType,
-			String description,
-			java.util.Set measurementSetupIds) throws CreateObjectException {
+	public static Test createInstance(final Identifier creatorId,
+			final Date startTime,
+			final Date endTime,
+			final Identifier temporalPatternId,
+			final TestTemporalType temporalType,
+			final Identifier measurementTypeId,
+			final Identifier analysisTypeId,
+			final Identifier evaluationTypeId,
+			final Identifier groupTestId,
+			final MonitoredElement monitoredElement,
+			final TestReturnType returnType,
+			final String description,
+			final java.util.Set measurementSetupIds) throws CreateObjectException {
 		try {
 			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
 					creatorId,
@@ -218,13 +215,8 @@ public class Test extends StorableObject {
 					measurementSetupIds);
 
 			assert test.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			test.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(test);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			test.markAsChanged();
 
 			return test;
 		}
@@ -237,7 +229,7 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Test(Test_Transferable tt) throws CreateObjectException {
+	public Test(final Test_Transferable tt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tt);
 		}
@@ -249,8 +241,8 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public void fromTransferable(IDLEntity transferable) throws ApplicationException {
-		Test_Transferable tt = (Test_Transferable)transferable;
+	public void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+		final Test_Transferable tt = (Test_Transferable)transferable;
 		super.fromTransferable(tt.header);
 		this.temporalType = tt.temporal_type.value();
 		this.timeStamps = new TestTimeStamps(tt.time_stamps);
@@ -292,13 +284,13 @@ public class Test extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		Log.debugMessage("Test.isValid | super.isValid():" + super.isValid(), Log.FINEST);
-		Log.debugMessage("Test.isValid | this.timeStamps != null && this.timeStamps.isValid(): " +  (this.timeStamps != null && this.timeStamps.isValid()), Log.FINEST);
-		Log.debugMessage("Test.isValid | this.measurementTypeId != null " + (this.measurementTypeId != null), Log.FINEST);
-		Log.debugMessage("Test.isValid | this.monitoredElement != null " + (this.monitoredElement != null), Log.FINEST);
-		Log.debugMessage("Test.isValid | this.description != null " + (this.description != null), Log.FINEST);
-		Log.debugMessage("Test.isValid | this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() " + (this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty()), Log.FINEST);
-		Log.debugMessage("Test.isValid | this.mainMeasurementSetup != null " + (this.mainMeasurementSetup != null), Log.FINEST);
+		Log.debugMessage("Test.isValid | For '" + this.id + "' super.isValid():" + super.isValid(), Log.FINEST);
+		Log.debugMessage("Test.isValid | For '" + this.id + "' this.timeStamps != null && this.timeStamps.isValid(): " +  (this.timeStamps != null && this.timeStamps.isValid()), Log.FINEST);
+		Log.debugMessage("Test.isValid | For '" + this.id + "' this.measurementTypeId != null " + (this.measurementTypeId != null), Log.FINEST);
+		Log.debugMessage("Test.isValid | For '" + this.id + "' this.monitoredElement != null " + (this.monitoredElement != null), Log.FINEST);
+		Log.debugMessage("Test.isValid | For '" + this.id + "' this.description != null " + (this.description != null), Log.FINEST);
+		Log.debugMessage("Test.isValid | For '" + this.id + "' this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() " + (this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty()), Log.FINEST);
+		Log.debugMessage("Test.isValid | For '" + this.id + "' this.mainMeasurementSetup != null " + (this.mainMeasurementSetup != null), Log.FINEST);
 		return super.isValid() && this.timeStamps != null && this.timeStamps.isValid() && this.measurementTypeId != null && this.monitoredElement != null
 			&& this.description != null && this.measurementSetupIds != null
 			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
@@ -321,9 +313,9 @@ public class Test extends StorableObject {
 		return this.timeStamps.endTime;
 	}
 	
-	public void setEndTime(Date endTime) {
+	public void setEndTime(final Date endTime) {
 		this.timeStamps.endTime = endTime;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Identifier getEvaluationTypeId() {
@@ -354,9 +346,9 @@ public class Test extends StorableObject {
 		return this.timeStamps.startTime;
 	}
 	
-	public void setStartTime(Date startTime) {
+	public void setStartTime(final Date startTime) {
 		this.timeStamps.startTime = startTime;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public TestStatus getStatus() {
@@ -388,8 +380,9 @@ public class Test extends StorableObject {
 				msIdsT);
 	}
 
-	public java.util.Set retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+	public java.util.Set retrieveMeasurementsOrderByStartTime(final MeasurementStatus measurementStatus)
+			throws RetrieveObjectException, ObjectNotFoundException {
+		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return (java.util.Set) database.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
 		}
@@ -399,7 +392,7 @@ public class Test extends StorableObject {
 	}
 	
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 		}
@@ -408,8 +401,8 @@ public class Test extends StorableObject {
 		}
 	}
 
-	public int retrieveNumberOfResults(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+	public int retrieveNumberOfResults(final ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
+		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
 		try {
 			return ((Integer) database.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
 		}
@@ -421,79 +414,79 @@ public class Test extends StorableObject {
 	/**
 	 * @param analysisTypeId The analysisTypeId to set.
 	 */
-	public void setAnalysisTypeId(Identifier analysisTypeId) {
-		super.changed = true;
+	public void setAnalysisTypeId(final Identifier analysisTypeId) {
 		this.analysisTypeId = analysisTypeId;
+		super.markAsChanged();
 	}
 	/**
 	 * @param description The description to set.
 	 */
-	public void setDescription(String description) {
-		super.changed = true;
+	public void setDescription(final String description) {
 		this.description = description;
+		super.markAsChanged();
 	}
 
 	/**
 	 * @param evaluationTypeId The evaluationTypeId to set.
 	 */
-	public void setEvaluationTypeId(Identifier evaluationTypeId) {
-		super.changed = true;
+	public void setEvaluationTypeId(final Identifier evaluationTypeId) {
 		this.evaluationTypeId = evaluationTypeId;
+		super.markAsChanged();
 	}
 
 	/**
 	 * @param measurementTypeId The measurementTypeId to set.
 	 */
-	public void setMeasurementTypeId(Identifier measurementTypeId) {
-		super.changed = true;
+	public void setMeasurementTypeId(final Identifier measurementTypeId) {
 		this.measurementTypeId = measurementTypeId;
+		super.markAsChanged();
 	}
 	/**
 	 * @param monitoredElement The monitoredElement to set.
 	 */
-	public void setMonitoredElement(MonitoredElement monitoredElement) {
-		super.changed = true;
+	public void setMonitoredElement(final MonitoredElement monitoredElement) {
 		this.monitoredElement = monitoredElement;
+		super.markAsChanged();
 	}
 
 	/**
 	 * @param returnType The returnType to set.
 	 */
-	public void setReturnType(TestReturnType returnType) {
-		super.changed = true;
+	public void setReturnType(final TestReturnType returnType) {
 		this.returnType = returnType.value();
+		super.markAsChanged();
 	}
 
 	/**
 	 * @param status The status to set.
 	 */
-	public void setStatus(TestStatus status) {
-		super.changed = true;
+	public void setStatus(final TestStatus status) {
 		this.status = status.value();
+		super.markAsChanged();
 	}
 
 	public Identifier getGroupTestId() {
 		return this.groupTestId;
 	}
 	
-	public void setGroupTestId(Identifier groupTestId) {
+	public void setGroupTestId(final Identifier groupTestId) {
 		this.groupTestId = groupTestId;
-		this.changed = true;
+		this.markAsChanged();
 	}
 	
 	/**
 	 * @param temporalPatternId The temporalPatternId to set.
 	 */
-	public void setTemporalPatternId(Identifier temporalPatternId) {
-		super.changed = true;
+	public void setTemporalPatternId(final Identifier temporalPatternId) {
 		this.timeStamps.temporalPatternId = temporalPatternId;
+		super.markAsChanged();
 	}
 	/**
 	 * @param temporalType The temporalType to set.
 	 */
-	public void setTemporalType(TestTemporalType temporalType) {
-		super.changed = true;
+	public void setTemporalType(final TestTemporalType temporalType) {
 		this.temporalType = temporalType.value();
+		super.markAsChanged();
 	}
 
 	public int getNumberOfMeasurements() {
@@ -503,24 +496,24 @@ public class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public synchronized void setAttributes(Date created,
-										   Date modified,
-										   Identifier creatorId,
-										   Identifier modifierId,
-										   long version,
-										   int temporalType,
-										   Date startTime,
-										   Date endTime,
-										   Identifier temporalPatternId,
-										   Identifier measurementTypeId,
-										   Identifier analysisTypeId,
-										   Identifier evaluationTypeId,
-										   Identifier groupTestId,
-										   int status,
-										   MonitoredElement monitoredElement,
-										   int returnType,
-										   String description,
-										   int numberOfMeasurements) {
+	public synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final int temporalType,
+			final Date startTime,
+			final Date endTime,
+			final Identifier temporalPatternId,
+			final Identifier measurementTypeId,
+			final Identifier analysisTypeId,
+			final Identifier evaluationTypeId,
+			final Identifier groupTestId,
+			final int status,
+			final MonitoredElement monitoredElement,
+			final int returnType,
+			final String description,
+			final int numberOfMeasurements) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -563,7 +556,7 @@ public class Test extends StorableObject {
 
 	public void setMeasurementSetupIds(java.util.Set measurementSetupIds) {
 		this.setMeasurementSetupIds0(measurementSetupIds);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Identifier getKISId() {

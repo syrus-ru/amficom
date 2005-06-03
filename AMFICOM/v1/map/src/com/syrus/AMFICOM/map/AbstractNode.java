@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.22 2005/05/18 11:48:20 bass Exp $
+ * $Id: AbstractNode.java,v 1.23 2005/06/03 20:38:45 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,6 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -22,13 +15,20 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/06/03 20:38:45 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -79,15 +79,15 @@ public abstract class AbstractNode
 		this.characteristics = new HashSet();
 	}
 
-	AbstractNode(Identifier id,
-			Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			String desription,
-			DoublePoint location) {
+	AbstractNode(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String name,
+			final String desription,
+			final DoublePoint location) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = desription;
@@ -95,7 +95,7 @@ public abstract class AbstractNode
 		this.characteristics = new HashSet();
 	}
 
-	AbstractNode(StorableObject_Transferable transferable) throws CreateObjectException {
+	AbstractNode(final StorableObject_Transferable transferable) throws CreateObjectException {
 		try {
 			this.fromTransferable(transferable);
 		}
@@ -104,7 +104,7 @@ public abstract class AbstractNode
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
 		super.fromTransferable(sot);
 		this.characteristics = new HashSet();
@@ -114,9 +114,9 @@ public abstract class AbstractNode
 		return this.imageId;
 	}
 	
-	public void setImageId(Identifier imageId) {
+	public void setImageId(final Identifier imageId) {
 		this.imageId = imageId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 	
 	public Set getCharacteristics() {
@@ -126,13 +126,13 @@ public abstract class AbstractNode
 	public void addCharacteristic(Characteristic ch)
 	{
 		this.characteristics.add(ch);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	public void removeCharacteristic(Characteristic ch)
+	public void removeCharacteristic(final Characteristic ch)
 	{
 		this.characteristics.remove(ch);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -149,11 +149,11 @@ public abstract class AbstractNode
 		return this.location.getX();
 	}
 	
-	protected void setLongitude(double longitude) {
+	protected void setLongitude(final double longitude) {
 		this.location.setLocation(longitude, this.location.getY());
 	}
 
-	protected void setLatitude(double latitude) {
+	protected void setLatitude(final double latitude) {
 		this.location.setLocation(this.location.getX(), latitude);
 	}
 
@@ -162,26 +162,26 @@ public abstract class AbstractNode
 		return this.description;
 	}
 	
-	protected void setDescription0(String description) {
+	protected void setDescription0(final String description) {
 		this.description = description;
 	}
 	
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.setDescription0(description);
-		this.changed = true;
+		super.markAsChanged();
 	}
 	
 	public String getName() {
 		return this.name;
 	}
 	
-	protected void setName0(String name) {
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 	
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.setName0(name);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setCharacteristics0(final Set characteristics) {
@@ -192,17 +192,17 @@ public abstract class AbstractNode
 	
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	public DoublePoint getLocation(){
+	public DoublePoint getLocation() {
 		return (DoublePoint)this.location.clone();
 	}
 
-	public void setLocation(DoublePoint location)
+	public void setLocation(final DoublePoint location)
 	{
 		this.location.setLocation(location.getX(), location.getY());
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -216,7 +216,7 @@ public abstract class AbstractNode
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSelected(boolean selected)
+	public void setSelected(final boolean selected)
 	{
 		this.selected = selected;
 	}
@@ -224,7 +224,7 @@ public abstract class AbstractNode
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setAlarmState(boolean alarmState)
+	public void setAlarmState(final boolean alarmState)
 	{
 		this.alarmState = alarmState;
 	}
@@ -248,7 +248,7 @@ public abstract class AbstractNode
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(boolean removed)
+	public void setRemoved(final boolean removed)
 	{
 		this.removed = removed;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.70 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: Measurement.java,v 1.71 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -34,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.71 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -60,7 +59,7 @@ public class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Measurement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	public Measurement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
@@ -77,7 +76,7 @@ public class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
+	public Measurement(final Measurement_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		}
@@ -89,16 +88,16 @@ public class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Measurement(Identifier id,
-							Identifier creatorId,
-							long version,
-							MeasurementType type,
-							Identifier monitoredElementId,
-							String name,
-							MeasurementSetup setup,
-							Date startTime,
-							String localAddress,
-							Identifier testId) {
+	Measurement(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final MeasurementType type,
+			final Identifier monitoredElementId,
+			final String name,
+			final MeasurementSetup setup,
+			final Date startTime,
+			final String localAddress,
+			final Identifier testId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -121,7 +120,7 @@ public class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Measurement_Transferable mt = (Measurement_Transferable) transferable;
 		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
 
@@ -164,7 +163,12 @@ public class Measurement extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.name != null && this.setup != null && this.startTime != null && this.localAddress != null && this.testId != null;
+		return super.isValid()
+				&& this.name != null
+				&& this.setup != null
+				&& this.startTime != null
+				&& this.localAddress != null
+				&& this.testId != null;
 	}
 	
 	public short getEntityCode() {
@@ -175,18 +179,18 @@ public class Measurement extends Action {
 		return this.setup;
 	}
 	
-	public void setSetup(MeasurementSetup setup) {
+	public void setSetup(final MeasurementSetup setup) {
 		this.setup = setup;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Date getStartTime() {
 		return this.startTime;
 	}
 	
-	public void setStartTime(Date startTime) {
+	public void setStartTime(final Date startTime) {
 		this.startTime = startTime;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public long getDuration() {
@@ -208,20 +212,20 @@ public class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  MeasurementType type,
-											  Identifier monitoredElementId,
-											  String name,
-											  MeasurementSetup setup,
-											  Date startTime,
-											  long duration,
-											  int status,
-											  String localAddress,
-											  Identifier testId) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final MeasurementType type,
+			final Identifier monitoredElementId,
+			final String name,
+			final MeasurementSetup setup,
+			final Date startTime,
+			final long duration,
+			final int status,
+			final String localAddress,
+			final Identifier testId) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -252,35 +256,30 @@ public class Measurement extends Action {
 	 * @return a newly generated instance
 	 * @throws CreateObjectException
 	 */
-	protected static Measurement createInstance(Identifier creatorId,
-												MeasurementType type,
-												Identifier monitoredElementId,
-												String name,
-												MeasurementSetup setup,
-												Date startTime,
-												String localAddress,
-												Identifier testId) throws CreateObjectException {
+	protected static Measurement createInstance(final Identifier creatorId,
+			final MeasurementType type,
+			final Identifier monitoredElementId,
+			final String name,
+			final MeasurementSetup setup,
+			final Date startTime,
+			final String localAddress,
+			final Identifier testId) throws CreateObjectException {
 
 		try {
 			Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
-										creatorId,
-										0L,
-										type,
-										monitoredElementId,
-										name,
-										setup,
-										startTime,
-										localAddress,
-										testId);
+					creatorId,
+					0L,
+					type,
+					monitoredElementId,
+					name,
+					setup,
+					startTime,
+					localAddress,
+					testId);
 
 			assert measurement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			measurement.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(measurement);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			measurement.markAsChanged();
 
 			return measurement;
 		}
@@ -289,20 +288,18 @@ public class Measurement extends Action {
 		}
 	}
 
-	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
-		return Result.createInstance(resultCreatorId,
-				this,
-				ResultSort.RESULT_SORT_MEASUREMENT,
-				resultParameters);
+	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
+			throws CreateObjectException {
+		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_MEASUREMENT, resultParameters);
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public java.util.Set getResults() {
@@ -331,22 +328,22 @@ public class Measurement extends Action {
 	/**
 	 * @param localAddress The localAddress to set.
 	 */
-	public void setLocalAddress(String localAddress) {
+	public void setLocalAddress(final String localAddress) {
 		this.localAddress = localAddress;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param status The status to set.
 	 */
-	public void setStatus(MeasurementStatus status) {
+	public void setStatus(final MeasurementStatus status) {
 		this.status = status.value();
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param testId The testId to set.
 	 */
-	public void setTestId(Identifier testId) {
+	public void setTestId(final Identifier testId) {
 		this.testId = testId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

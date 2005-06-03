@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.42 2005/06/02 14:27:15 arseniy Exp $
+ * $Id: Modeling.java,v 1.43 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,10 +28,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
@@ -50,7 +48,7 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Modeling(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Modeling(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		ModelingDatabase database = (ModelingDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_ENTITY_CODE);
@@ -67,7 +65,7 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Modeling(Modeling_Transferable mt) throws CreateObjectException {
+	Modeling(final Modeling_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		}
@@ -79,13 +77,13 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Modeling(Identifier id,
-					   Identifier creatorId,
-					   long version,
-					   ModelingType type,
-					   Identifier monitoredElementId,
-					   String name,
-					   Set argumentSet) {
+	Modeling(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final ModelingType type,
+			final Identifier monitoredElementId,
+			final String name,
+			final Set argumentSet) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -102,7 +100,7 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Modeling_Transferable mt = (Modeling_Transferable) transferable;
 		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
 
@@ -143,23 +141,23 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												ModelingType type,
-												Identifier monitoredElementId,
-												String name,
-												Set argumentSet) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final ModelingType type,
+			final Identifier monitoredElementId,
+			final String name,
+			final Set argumentSet) {
 		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							type,
-							monitoredElementId,
-							null);
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				type,
+				monitoredElementId,
+				null);
 		this.name = name;
 		this.argumentSet = argumentSet;
 	}
@@ -174,28 +172,23 @@ public class Modeling extends Action {
 	 * @return a newly generated instance
 	 * @throws CreateObjectException
 	 */
-	public static Modeling createInstance(Identifier creatorId,
-															ModelingType type,
-															Identifier monitoredElementId,
-															String name,
-															Set argumentSet) throws CreateObjectException{
+	public static Modeling createInstance(final Identifier creatorId,
+			final ModelingType type,
+			final Identifier monitoredElementId,
+			final String name,
+			final Set argumentSet) throws CreateObjectException{
 		try {
 			Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
-										creatorId,
-										0L,
-										type,
-										monitoredElementId,
-										name,
-										argumentSet);
+					creatorId,
+					0L,
+					type,
+					monitoredElementId,
+					name,
+					argumentSet);
 
 			assert modeling.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			modeling.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(modeling);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			modeling.markAsChanged();
 
 			return modeling;
 		}
@@ -204,15 +197,15 @@ public class Modeling extends Action {
 		}
 	}
 
-	public Result createResult(Identifier resultCreatorId, SetParameter[] resultParameters) throws CreateObjectException {
-		return Result.createInstance(resultCreatorId,
-				this,
-				ResultSort.RESULT_SORT_MODELING,
-				resultParameters);
+	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
+			throws CreateObjectException {
+		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_MODELING, resultParameters);
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	public java.util.Set getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -233,15 +226,15 @@ public class Modeling extends Action {
 	/**
 	 * @param argumentSet The argumentSet to set.
 	 */
-	public void setArgumentSet(Set argumentSet) {
+	public void setArgumentSet(final Set argumentSet) {
 		this.argumentSet = argumentSet;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	/**
 	 * @param name The name to set.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

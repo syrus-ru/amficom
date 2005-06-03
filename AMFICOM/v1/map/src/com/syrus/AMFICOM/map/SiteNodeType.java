@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.35 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.36 2005/06/03 20:38:46 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -34,7 +33,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -43,7 +41,7 @@ import com.syrus.util.Log;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/03 20:38:46 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -70,10 +68,10 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 
 	private transient SiteNodeTypeSort sort;
 
-	SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	SiteNodeType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+		final SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -82,7 +80,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		}
 	}
 
-	SiteNodeType(SiteNodeType_Transferable sntt) throws CreateObjectException {
+	SiteNodeType(final SiteNodeType_Transferable sntt) throws CreateObjectException {
 		try {
 			this.fromTransferable(sntt);
 		}
@@ -139,13 +137,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 					isTopological);
 
 			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			siteNodeType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(siteNodeType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			siteNodeType.markAsChanged();
 
 			return siteNodeType;
 		}
@@ -154,7 +147,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		SiteNodeType_Transferable sntt = (SiteNodeType_Transferable) transferable;
 		super.fromTransferable(sntt.header, sntt.codename, sntt.description);
 
@@ -202,34 +195,34 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 
 	public void setDescription(final String description) {
 		super.description = description;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setImageId(final Identifier imageId) {
 		this.imageId = imageId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setName(final String name) {
 		this.name = name;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setTopological(final boolean topological) {
 		this.topological = topological;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String codename,
-			String name,
-			String description,
-			Identifier imageId,
-			boolean topological) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String name,
+			final String description,
+			final Identifier imageId,
+			final boolean topological) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.imageId = imageId;
@@ -239,7 +232,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		this.sort = SiteNodeTypeSort.fromString(codename);
 	}
 
-	public void setCodename(String codename) {
+	public void setCodename(final String codename) {
 		super.setCodename(codename);
 		//@todo retreive from transferable!
 		this.sort = SiteNodeTypeSort.fromString(codename);
@@ -249,14 +242,14 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		this.characteristics.add(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		this.characteristics.remove(characteristic);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -265,7 +258,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -282,7 +275,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		return this.sort;
 	}
 
-	public void setSort(SiteNodeTypeSort sort) {
+	public void setSort(final SiteNodeTypeSort sort) {
 		this.sort = sort;
 	}
 }

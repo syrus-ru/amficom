@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.25 2005/05/24 13:25:02 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.26 2005/06/03 20:39:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/05/24 13:25:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/06/03 20:39:06 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -186,7 +186,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 					sequentialNumber, physicalLink,
 					startSiteNode, endSiteNode,
 					parentSchemeCableLink);
-			cableChannelingItem.changed = true;
+			cableChannelingItem.markAsChanged();
 			return cableChannelingItem;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -365,14 +365,14 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		if (this.endSiteNodeId.equals(newEndSiteNodeId))
 			return;
 		this.endSiteNodeId = newEndSiteNodeId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setEndSpare(final double endSpare) {
 		if (this.endSpare == endSpare)
 			return;
 		this.endSpare = endSpare;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -390,7 +390,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		if (this.parentSchemeCableLinkId.equals(newParentSchemeCableLinkId))
 			return;
 		this.parentSchemeCableLinkId = newParentSchemeCableLinkId;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -401,28 +401,28 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		if (this.physicalLinkId.equals(newPhysicalLinkId))
 			return;
 		this.physicalLinkId = newPhysicalLinkId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setPlaceY(final int placeY) {
 		if (this.placeY == placeY)
 			return;
 		this.placeY = placeY;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setRowX(final int rowX) {
 		if (this.rowX == rowX)
 			return;
 		this.rowX = rowX;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setSequentialNumber(final int sequentialNumber) {
 		if (this.sequentialNumber == sequentialNumber)
 			return;
 		this.sequentialNumber = sequentialNumber;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**
@@ -439,14 +439,14 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		if (this.startSiteNodeId.equals(newStartSiteNodeId))
 			return;
 		this.startSiteNodeId = newStartSiteNodeId;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setStartSpare(final double startSpare) {
 		if (this.startSpare == startSpare)
 			return;
 		this.startSpare = startSpare;
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.30 2005/06/02 14:26:53 arseniy Exp $
+ * $Id: Server.java,v 1.31 2005/06/03 20:37:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.administration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -28,16 +27,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/02 14:26:53 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/03 20:37:40 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -54,7 +51,7 @@ public class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Server(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	public Server(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 		this.characteristics = new LinkedHashSet();
 
@@ -72,7 +69,7 @@ public class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Server(Server_Transferable st) throws CreateObjectException {
+	public Server(final Server_Transferable st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
 		}
@@ -84,13 +81,13 @@ public class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Server(Identifier id,
-								 Identifier creatorId,
-								 long version,
-								 Identifier domainId,
-								 String name,
-								 String description,
-								 String hostname) {
+	Server(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final String hostname) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -108,7 +105,7 @@ public class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Server_Transferable st = (Server_Transferable) transferable;
 		super.fromTransferable(st.header, new Identifier(st.domain_id));
 		this.name = st.name;
@@ -128,22 +125,20 @@ public class Server extends DomainMember implements Characterizable {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		int i = 0;
-
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Server_Transferable(super.getHeaderTransferable(),
-									   (Identifier_Transferable)super.domainId.getTransferable(),
-									   this.name,
-									   this.description,
-										 this.hostname,
-									   charIds);
+				(Identifier_Transferable) super.domainId.getTransferable(),
+				this.name,
+				this.description,
+				this.hostname,
+				charIds);
 	}
 
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	protected boolean isValid() {
 		return super.isValid()
@@ -165,22 +160,22 @@ public class Server extends DomainMember implements Characterizable {
 		return this.hostname;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	public void addCharacteristic(Characteristic characteristic) {
+	public void addCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.add(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
-	public void removeCharacteristic(Characteristic characteristic) {
+	public void removeCharacteristic(final Characteristic characteristic) {
 		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
-			super.changed = true;
+			super.markAsChanged();
 		}
 	}
 
@@ -191,22 +186,22 @@ public class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public void setCharacteristics0(Set characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(Set characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	public static Server createInstance(Identifier creatorId,
-										Identifier domainId,
-										String name,
-										String description,
-										String hostname) throws CreateObjectException {
+	public static Server createInstance(final Identifier creatorId,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final String hostname) throws CreateObjectException {
 		try {
 			Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
 						creatorId,
@@ -217,13 +212,8 @@ public class Server extends DomainMember implements Characterizable {
 						hostname);
 
 			assert server.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			server.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(server);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			server.markAsChanged();
 
 			return server;
 		}
@@ -235,15 +225,15 @@ public class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  Identifier domainId,
-											  String name,
-											  String description,
-											  String hostname) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final String hostname) {
 		super.setAttributes(created,
 					modified,
 					creatorId,
@@ -264,13 +254,13 @@ public class Server extends DomainMember implements Characterizable {
 		return Collections.EMPTY_SET;
 	}
 
-	public void setHostName(String hostname) {
+	public void setHostName(final String hostname) {
 		this.hostname = hostname;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 }

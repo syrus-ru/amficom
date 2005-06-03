@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.6 2005/06/02 14:27:15 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.7 2005/06/03 20:38:04 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,16 +20,13 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/02 14:27:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/03 20:38:04 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -53,7 +50,7 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	PeriodicalTemporalPattern(Identifier id, Identifier creatorId, long version, long period) {
+	PeriodicalTemporalPattern(final Identifier id, final Identifier creatorId, final long version, final long period) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -61,13 +58,12 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 			creatorId,
 			version);
 		this.period = period;
-		this.changed = false;
 	}	
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public PeriodicalTemporalPattern(PeriodicalTemporalPattern_Transferable itpt) throws CreateObjectException {
+	public PeriodicalTemporalPattern(final PeriodicalTemporalPattern_Transferable itpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(itpt);
 		}
@@ -79,11 +75,10 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		PeriodicalTemporalPattern_Transferable ptpt = (PeriodicalTemporalPattern_Transferable)transferable;
 		super.fromTransferable(ptpt.header);
-		this.period = ptpt.period;		
-		this.changed = false;	
+		this.period = ptpt.period;
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}	
@@ -93,7 +88,8 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	 * @param creatorId creator id
 	 * @param period period in milliseconds
 	 */
-	public static PeriodicalTemporalPattern createInstance(Identifier creatorId, long period) throws CreateObjectException {
+	public static PeriodicalTemporalPattern createInstance(final Identifier creatorId, final long period)
+			throws CreateObjectException {
 
 		try {
 			PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE),
@@ -102,13 +98,8 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 					period);
 
 			assert periodicalTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			periodicalTemporalPattern.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(periodicalTemporalPattern);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			periodicalTemporalPattern.markAsChanged();
 
 			return periodicalTemporalPattern;
 		}
@@ -193,23 +184,23 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 		return buffer.toString();
 	}
 	
-	public void setPeriod(long period) {
+	public void setPeriod(final long period) {
 		if (super.times != null) {
 			super.times.clear();
 		}
 		this.period = period;
-		super.changed = true;
+		super.markAsChanged();
 	}
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			long period) {
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final long period) {
 		super.setAttributes(created,
 				modified,
 				creatorId,

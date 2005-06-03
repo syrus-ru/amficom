@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.39 2005/06/02 14:28:23 arseniy Exp $
+ * $Id: Mark.java,v 1.40 2005/06/03 20:38:45 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -28,14 +27,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
-import com.syrus.util.Log;
 
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется
@@ -45,7 +42,7 @@ import com.syrus.util.Log;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: arseniy $
- * @version $Revision: 1.39 $, $Date: 2005/06/02 14:28:23 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/03 20:38:45 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -85,7 +82,7 @@ public class Mark extends AbstractNode {
 	protected transient NodeLink nodeLink;
 	protected transient AbstractNode startNode;
 
-	Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	Mark(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
@@ -97,7 +94,7 @@ public class Mark extends AbstractNode {
 		}
 	}
 
-	Mark(Mark_Transferable mt) throws CreateObjectException {
+	Mark(final Mark_Transferable mt) throws CreateObjectException {
 		super(mt.header);
 		super.name = mt.name;
 		super.description = mt.description;
@@ -204,13 +201,8 @@ public class Mark extends AbstractNode {
 					building);
 
 			assert mark.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			mark.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(mark);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			mark.markAsChanged();
 
 			return mark;
 		}
@@ -224,10 +216,7 @@ public class Mark extends AbstractNode {
 	}
 
 	public IDLEntity getTransferable() {
-		int i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Mark_Transferable(super.getHeaderTransferable(),
 				this.name,
@@ -246,81 +235,81 @@ public class Mark extends AbstractNode {
 		return this.building;
 	}
 
-	protected void setBuilding0(String building) {
+	protected void setBuilding0(final String building) {
 		this.building = building;
 	}
 
-	public void setBuilding(String building) {
+	public void setBuilding(final String building) {
 		this.setBuilding0(building);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getCity() {
 		return this.city;
 	}
 
-	protected void setCity0(String city) {
+	protected void setCity0(final String city) {
 		this.city = city;
 	}
 
-	public void setCity(String city) {
+	public void setCity(final String city) {
 		this.setCity0(city);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public double getDistance() {
 		return this.distance;
 	}
 
-	protected void setDistance0(double distance) {
+	protected void setDistance0(final double distance) {
 		this.distance = distance;
 	}
 
-	public void setDistance(double distance) {
+	public void setDistance(final double distance) {
 		this.setDistance0(distance);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public PhysicalLink getPhysicalLink() {
 		return this.physicalLink;
 	}
 
-	protected void setPhysicalLink0(PhysicalLink physicalLink) {
+	protected void setPhysicalLink0(final PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
 	}
 
-	public void setPhysicalLink(PhysicalLink physicalLink) {
+	public void setPhysicalLink(final PhysicalLink physicalLink) {
 		this.setPhysicalLink0(physicalLink);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	public String getStreet() {
 		return this.street;
 	}
 
-	protected void setStreet0(String street) {
+	protected void setStreet0(final String street) {
 		this.street = street;
 	}
 
-	public void setStreet(String street) {
+	public void setStreet(final String street) {
 		this.setStreet0(street);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(Date created,
-			Date modified,
-			Identifier creatorId,
-			Identifier modifierId,
-			long version,
-			String name,
-			String description,
-			double longitude,
-			double latitude,
-			PhysicalLink physicalLink,
-			double distance,
-			String city,
-			String street,
-			String building) {
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final PhysicalLink physicalLink,
+			final double distance,
+			final String city,
+			final String street,
+			final String building) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -342,7 +331,7 @@ public class Mark extends AbstractNode {
 	 * @param nodeLink
 	 *          фрагмент линии
 	 */
-	public void setNodeLink(NodeLink nodeLink) {
+	public void setNodeLink(final NodeLink nodeLink) {
 		this.nodeLink = nodeLink;
 	}
 
@@ -361,7 +350,7 @@ public class Mark extends AbstractNode {
 	 * @param startNode
 	 *          узел
 	 */
-	public void setStartNode(AbstractNode startNode) {
+	public void setStartNode(final AbstractNode startNode) {
 		this.startNode = startNode;
 	}
 
@@ -384,7 +373,7 @@ public class Mark extends AbstractNode {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setLocation(DoublePoint location) {
+	public void setLocation(final DoublePoint location) {
 		super.setLocation(location);
 		setDistance(this.getFromStartLengthLt());
 	}
@@ -440,7 +429,7 @@ public class Mark extends AbstractNode {
 	 * @param sizeInDoubleLt
 	 *          дистанция
 	 */
-	public void setSizeInDoubleLt(double sizeInDoubleLt) {
+	public void setSizeInDoubleLt(final double sizeInDoubleLt) {
 		this.sizeInDoubleLt = sizeInDoubleLt;
 	}
 
@@ -464,7 +453,7 @@ public class Mark extends AbstractNode {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void revert(MapElementState state) {
+	public void revert(final MapElementState state) {
 		NodeState mnes = (NodeState) state;
 		setName(mnes.name);
 		setDescription(mnes.description);
@@ -494,7 +483,7 @@ public class Mark extends AbstractNode {
 		}
 	}
 
-	public static Mark createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+	public static Mark createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
 		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
@@ -533,13 +522,8 @@ public class Mark extends AbstractNode {
 					building1);
 			
 			assert mark.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			mark.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(mark);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			mark.markAsChanged();
 			
 			return mark;
 		}
@@ -554,7 +538,7 @@ public class Mark extends AbstractNode {
 	 */
 	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
-		this.changed = true;
+		super.markAsChanged();
 	}
 
 	/**

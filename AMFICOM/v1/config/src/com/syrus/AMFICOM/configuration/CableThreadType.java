@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.37 2005/06/02 14:27:03 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.38 2005/06/03 20:37:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -32,7 +31,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
  * <code>CableThreadType</code>, among other fields, contain references to
@@ -40,7 +38,7 @@ import com.syrus.util.Log;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.37 $, $Date: 2005/06/02 14:27:03 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/03 20:37:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -69,8 +67,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		}
 	}
 
-	CableThreadType(final CableThreadType_Transferable cttt)
-			throws CreateObjectException {
+	CableThreadType(final CableThreadType_Transferable cttt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cttt);
 		}
@@ -132,13 +129,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 					cableLinkType);
 
 			assert cableThreadType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			cableThreadType.changed = true;
-			try {
-				StorableObjectPool.putStorableObject(cableThreadType);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
+
+			cableThreadType.markAsChanged();
 
 			return cableThreadType;
 		}
@@ -147,7 +139,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		}
 	}
 
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		CableThreadType_Transferable cttt = (CableThreadType_Transferable) transferable;
 		super.fromTransferable(cttt.header, cttt.codename, cttt.description);
 		this.name = cttt.name;
@@ -201,7 +193,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 	public void setColor(final int color) {
 		this.color = color;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public int getColor() {
@@ -215,19 +207,19 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	public void setName(final String name) {
 		assert name != null;
 		this.name = name;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setLinkType(final LinkType linkType) {
 		assert linkType != null;
 		this.linkType = linkType;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public void setCableLinkType(final CableLinkType cableLinkType) {
 		assert cableLinkType != null;
 		this.cableLinkType = cableLinkType;
-		super.changed = true;
+		super.markAsChanged();
 	}
 
 	public Set getDependencies() {
