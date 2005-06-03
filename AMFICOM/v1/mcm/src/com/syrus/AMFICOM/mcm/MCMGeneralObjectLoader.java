@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.23 2005/06/01 20:54:59 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.24 2005/06/03 16:13:46 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralObjectLoader;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -26,19 +26,19 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/06/01 20:54:59 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/03 16:13:46 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObjectLoader {
 
 	public MCMGeneralObjectLoader(final MCMServantManager mcmServantManager) {
-		super(mcmServantManager, new DatabaseGeneralObjectLoader());
+		super(mcmServantManager);
 	}
 
 	/* Load multiple objects*/
 
-	public Set loadParameterTypes(Set ids) throws ApplicationException {
+	public Set loadParameterTypes(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
@@ -48,7 +48,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		});
 	}
 
-	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
+	public Set loadCharacteristicTypes(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
@@ -58,7 +58,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		});
 	}
 
-	public Set loadCharacteristics(Set ids) throws ApplicationException {
+	public Set loadCharacteristics(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ids, ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
@@ -72,7 +72,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 
 	/* Load multiple objects nut ids by condition*/
 
-	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadParameterTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids,
 				condition,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
@@ -86,29 +86,33 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 				});
 	}
 
-	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
-	}
-
-	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
-	}
-
 
 
 	/*
 	 * MCM do not need in all below methods
 	 * */
 
-	public void saveParameterTypes(Set objects, boolean force) {
-		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	public Set loadCharacteristicTypesButIds(final StorableObjectCondition condition, final Set ids) {
+		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
+		return null;
 	}
 
-	public void saveCharacteristicTypes(Set objects, boolean force) {
-		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	public Set loadCharacteristicsButIds(final StorableObjectCondition condition, final Set ids) {
+		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
+		return null;
 	}
 
-	public void saveCharacteristics(Set objects, boolean force) {
-		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+
+
+	public void saveParameterTypes(final Set objects, boolean force) {
+		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
+	}
+
+	public void saveCharacteristicTypes(final Set objects, boolean force) {
+		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
+	}
+
+	public void saveCharacteristics(final Set objects, boolean force) {
+		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 }
