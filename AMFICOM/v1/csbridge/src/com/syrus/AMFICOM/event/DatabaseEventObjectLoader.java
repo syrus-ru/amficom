@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.8 2005/05/26 19:13:24 bass Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.9 2005/06/03 15:23:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/26 19:13:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/06/03 15:23:58 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements EventObjectLoader {
@@ -23,42 +23,42 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Load multiple objects*/
 
 	public Set loadEventTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids);
+		return loadStorableObjects(ids);
 	}
 
 	public Set loadEvents(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids);
+		return loadStorableObjects(ids);
 	}
 
 	public Set loadEventSources(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids);
+		return loadStorableObjects(ids);
 	}
 
 	/* Load multiple objects but ids*/
 
 	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIds(condition, ids);
 	}
 
 	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIds(condition, ids);
 	}
 
 	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIds(condition, ids);
 	}
 
 	/* Save multiple objects*/
 
 	public void saveEventTypes(Set objects, boolean force) throws ApplicationException {
-		super.saveStorableObjects(objects, force);
+		saveStorableObjects(objects, force);
 	}
 
 	public void saveEvents(Set objects, boolean force) throws ApplicationException {
-		super.saveStorableObjects(objects, force);
+		saveStorableObjects(objects, force);
 	}
 
 	public void saveEventSources(Set objects, boolean force) throws ApplicationException {
-		super.saveStorableObjects(objects, force);
+		saveStorableObjects(objects, force);
 	}
 }

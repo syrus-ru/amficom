@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.9 2005/06/01 21:03:22 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.10 2005/06/03 15:23:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/01 21:03:22 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/03 15:23:58 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -30,8 +30,26 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		userId = userId1;
 	}
 
-	/**@deprecated*/
-	protected final Set retrieveFromDatabase(final StorableObjectDatabase database, final Set ids) throws RetrieveObjectException {
+	public static final Set loadStorableObjects(final Set ids) throws RetrieveObjectException {
+		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (ids.isEmpty())
+			return Collections.EMPTY_SET;
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(ids));
+		return retrieveFromDatabase(database, ids);
+	}
+
+	public static final Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert StorableObject.hasSingleTypeEntities(ids);
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		return retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+	}
+
+	private static final Set retrieveFromDatabase(final StorableObjectDatabase database, final Set ids) throws RetrieveObjectException {
 		try {
 			return database.retrieveByIdsByCondition(ids, null);
 		}
@@ -41,8 +59,7 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		}
 	}
 
-	/**@deprecated*/
-	protected final Set retrieveFromDatabaseButIdsByCondition(final StorableObjectDatabase database,
+	private static final Set retrieveFromDatabaseButIdsByCondition(final StorableObjectDatabase database,
 			final Set ids,
 			final StorableObjectCondition condition)
 			throws RetrieveObjectException {
@@ -55,39 +72,39 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		}
 	}
 
-	/**@deprecated*/
-	public final Set createLoadIds(final Set ids, final Set butIdentifiables) {
-		Identifier id;
-		Set loadIds = new HashSet(ids);
-		for (Iterator it = butIdentifiables.iterator(); it.hasNext();) {
-			id = ((Identifiable) it.next()).getId();
-			loadIds.remove(id);
-		}
-		return loadIds;
-	}
-
-	/**@deprecated*/
-	public final Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butIdentifiables) {
-		return Identifier.createTransferables(this.createLoadIds(ids, butIdentifiables));
-	}
-
-	/**@deprecated*/
-	public final Set createLoadButIds(final Set butIds, final Set alsoButIdentifiables) {
-		Identifier id;
-		Set loadButIds = new HashSet(butIds);
-		for (Iterator it = alsoButIdentifiables.iterator(); it.hasNext();) {
-			id = ((Identifiable) it.next()).getId();
-			loadButIds.add(id);
-		}
-		return loadButIds;
-	}
-
-	/**@deprecated*/
-	public final Identifier_Transferable[] createLoadButIdsTransferable(final Set butIds, final Set alsoButIdentifiables) {
-		return Identifier.createTransferables(this.createLoadButIds(butIds, alsoButIdentifiables));
+	public static final void saveStorableObjects(final Set storableObjects, boolean force)
+			throws UpdateObjectException, VersionCollisionException {
+		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (storableObjects.isEmpty())
+			return;
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(storableObjects));
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		database.update(storableObjects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	/**
+	 * @todo make final
+	 * Would be <code>final</code> unless overridden in
+	 * <code>*Server*ObjectLoader</code>.
+	 *
+	 * @param storableObjects
+	 * @throws ApplicationException
+	 */
+	public Set refresh(final Set storableObjects) throws ApplicationException {
+		if (storableObjects.isEmpty())
+			return Collections.EMPTY_SET;
+
+		assert StorableObject.hasSingleTypeEntities(storableObjects);
+
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		return database.refresh(storableObjects);
+	}
+
+	/**
+	 * @todo make final
 	 * Would be <code>final</code> unless overridden in
 	 * <code>MServerMeasurementObjectLoader</code>.
 	 *
@@ -120,52 +137,36 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		}
 	}
 
-	/**
-	 * Would be <code>final</code> unless overridden in
-	 * <code>*Server*ObjectLoader</code>.
-	 *
-	 * @param storableObjects
-	 * @throws ApplicationException
-	 */
-	public Set refresh(final Set storableObjects) throws ApplicationException {
-		if (storableObjects.isEmpty())
-			return Collections.EMPTY_SET;
 
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
-
-		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-		return database.refresh(storableObjects);
+	/**@deprecated*/
+	public final Set createLoadIds(final Set ids, final Set butIdentifiables) {
+		Identifier id;
+		Set loadIds = new HashSet(ids);
+		for (Iterator it = butIdentifiables.iterator(); it.hasNext();) {
+			id = ((Identifiable) it.next()).getId();
+			loadIds.remove(id);
+		}
+		return loadIds;
 	}
 
-	public final Set loadStorableObjects(final Set ids) throws RetrieveObjectException {
-		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
-		if (ids.isEmpty())
-			return Collections.EMPTY_SET;
-		assert StorableObject.hasSingleTypeEntities(ids);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(ids));
-		return this.retrieveFromDatabase(database, ids);
+	/**@deprecated*/
+	public final Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butIdentifiables) {
+		return Identifier.createTransferables(this.createLoadIds(ids, butIdentifiables));
 	}
 
-	public final Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
-		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert StorableObject.hasSingleTypeEntities(ids);
-		final short entityCode = condition.getEntityCode().shortValue();
-		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-		return this.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+	/**@deprecated*/
+	public final Set createLoadButIds(final Set butIds, final Set alsoButIdentifiables) {
+		Identifier id;
+		Set loadButIds = new HashSet(butIds);
+		for (Iterator it = alsoButIdentifiables.iterator(); it.hasNext();) {
+			id = ((Identifiable) it.next()).getId();
+			loadButIds.add(id);
+		}
+		return loadButIds;
 	}
 
-	public final void saveStorableObjects(final Set storableObjects, boolean force)
-			throws UpdateObjectException, VersionCollisionException {
-		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (storableObjects.isEmpty())
-			return;
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(storableObjects));
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-		database.update(storableObjects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+	/**@deprecated*/
+	public final Identifier_Transferable[] createLoadButIdsTransferable(final Set butIds, final Set alsoButIdentifiables) {
+		return Identifier.createTransferables(this.createLoadButIds(butIds, alsoButIdentifiables));
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.20 2005/06/03 11:06:45 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.21 2005/06/03 15:23:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/03 11:06:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -54,7 +54,10 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 		}
 	}
 
-	public final Set refresh(final Set storableObjects) throws ApplicationException {
+	/**
+	 * Overridden in <code>MCMObjectLoader</code>.
+	 */
+	public Set refresh(final Set storableObjects) throws ApplicationException {
 		try {
 			return Identifier.fromTransferables(
 					this.serverConnectionManager.getServerReference().transmitRefreshedStorableObjects(
@@ -70,8 +73,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.20 $, $Date: 2005/06/03 11:06:45 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitProcedure {
@@ -84,8 +87,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.20 $, $Date: 2005/06/03 11:06:45 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -100,8 +103,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.20 $, $Date: 2005/06/03 11:06:45 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
