@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.62 2005/06/03 15:51:04 arseniy Exp $
+ * $Id: StorableObject.java,v 1.63 2005/06/03 20:35:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/06/03 15:51:04 $
+ * @version $Revision: 1.63 $, $Date: 2005/06/03 20:35:37 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -44,7 +44,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	protected Identifier modifierId;
 	protected long version;
 
-	protected boolean changed;
+	private boolean changed;
 
 	private Date savedModified;
 	private Identifier savedModifierId;
@@ -104,7 +104,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws ApplicationException
 	 */
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
 		this.id = new Identifier(sot.id);
 		this.created = new Date(sot.created);
@@ -198,6 +198,24 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	public final boolean isChanged() {
 		return this.changed;
+	}
+
+	/**
+	 * This method is called in:
+	 * 1) all setters of a StorableObject
+	 * 2) static method createInstance of StorableObject
+	 * i. e., in all methods, which change state of an object.
+	 * Subsequent call to StorableObjectPool.flush will save this changed object.
+	 *
+	 */
+	protected final void markAsChanged() {
+		this.changed = true;
+		try {
+			StorableObjectPool.putStorableObject(this);
+		}
+		catch (IllegalObjectEntityException ioee) {
+			assert false : ioee.getMessage();
+		}
 	}
 
 	protected final void setUpdated(Identifier modifierId) {
