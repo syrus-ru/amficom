@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -71,12 +70,6 @@ public class Transceiver extends SleepButWorkThread {
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
-			try {
-				StorableObjectPool.putStorableObject(measurement);
-			}
-			catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
 		}
 		else
 			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
@@ -98,7 +91,6 @@ public class Transceiver extends SleepButWorkThread {
 						this.scheduledMeasurements.remove(measurement);
 
 						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
-						StorableObjectPool.putStorableObject(measurement);
 					}
 					catch (ApplicationException ae) {
 						Log.errorException(ae);
@@ -135,7 +127,6 @@ public class Transceiver extends SleepButWorkThread {
 							Log.debugMessage("Transceiver.run | Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
 							this.scheduledMeasurements.remove(measurement);
 							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
-							StorableObjectPool.putStorableObject(measurement);
 							StorableObjectPool.flush(measurementId, true);
 							super.clearFalls();
 						}

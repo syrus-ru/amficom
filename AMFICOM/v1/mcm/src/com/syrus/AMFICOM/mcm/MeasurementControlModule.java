@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.95 2005/06/01 20:57:04 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.96 2005/06/03 20:56:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/06/01 20:57:04 $
+ * @version $Revision: 1.96 $, $Date: 2005/06/03 20:56:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -466,8 +466,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void prepareTestToExecute(Test test) {
 		test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
 		try {
-			StorableObjectPool.putStorableObject(test);
-
 			if (test.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL)
 				StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 
@@ -512,7 +510,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.putStorableObject(test);
 				StorableObjectPool.flush(test.getId(), true);
 			}
 			catch (ApplicationException ae) {

@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.51 2005/05/23 08:28:54 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.52 2005/06/03 20:56:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/05/23 08:28:54 $
+ * @version $Revision: 1.52 $, $Date: 2005/06/03 20:56:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -109,7 +109,6 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			lastMeasurement = this.test.retrieveLastMeasurement();
 			Log.debugMessage("TestProcessor.startWithProcessingTest | Last measurement for test '" + this.test.getId()
 					+ "' -- '" + lastMeasurement.getId() + "'", Log.DEBUGLEVEL08);
-			StorableObjectPool.putStorableObject(lastMeasurement);
 		}
 		catch (ApplicationException ae) {
 			if (ae instanceof ObjectNotFoundException) {
@@ -207,8 +206,6 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.transceiver.addMeasurement(measurement, this);
 		this.currentMeasurementStartTime = startTime.getTime();
 		try {
-			StorableObjectPool.putStorableObject(this.test);
-			StorableObjectPool.putStorableObject(measurement);
 			StorableObjectPool.flushGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, true);
 		}
 		catch (ApplicationException ae) {
@@ -275,7 +272,6 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	private final void updateMyTestStatus(TestStatus status) {
 		this.test.setStatus(status);
 		try {
-			StorableObjectPool.putStorableObject(this.test);
 			StorableObjectPool.flush(this.test.getId(), true);
 		}
 		catch (ApplicationException ae) {
