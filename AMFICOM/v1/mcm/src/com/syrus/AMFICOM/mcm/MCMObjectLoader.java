@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.2 2005/06/02 14:44:03 bass Exp $
+ * $Id: MCMObjectLoader.java,v 1.3 2005/06/03 16:14:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,17 +22,14 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/02 14:44:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/03 16:14:16 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 abstract class MCMObjectLoader extends CORBAObjectLoader {
-	//TODO Make all methods static in DatabaseObjectLoader and thus remove this field
-	DatabaseObjectLoader databaseObjectLoader;
 
-	public MCMObjectLoader(final MCMServantManager mcmServantManager, final DatabaseObjectLoader databaseObjectLoader) {
+	public MCMObjectLoader(final MCMServantManager mcmServantManager) {
 		super(mcmServantManager);
-		this.databaseObjectLoader = databaseObjectLoader;
 	}
 
 	private final Set createLoadIds(final Set ids, final Set butIdentifiables) {
@@ -57,7 +54,7 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 
 	protected Set loadStorableObjects(final Set ids, final short entityCode, final TransmitProcedure transmitProcedure)
 			throws ApplicationException {
-		final Set objects = this.databaseObjectLoader.loadStorableObjects(ids);
+		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 		final Set loadIds = this.createLoadIds(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
@@ -81,7 +78,7 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 			final StorableObjectCondition condition,
 			final short entityCode,
 			final TransmitButIdsConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
-		final Set objects = this.databaseObjectLoader.loadStorableObjectsButIds(condition, ids);
+		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
 		final Set loadButIds = this.createLoadButIds(ids, objects);
 
 		final Set loadedObjects = super.loadStorableObjectsButIdsCondition(loadButIds,
@@ -113,12 +110,24 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 			final boolean force,
 			final ReceiveProcedure receiveProcedure)
 			throws ApplicationException {
-		this.databaseObjectLoader.saveStorableObjects(storableObjects, force);
+		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
 
 		super.saveStorableObjects(storableObjects, entityCode, receiveProcedure);
 	}
 
+	/**
+	 * Currently not need to implement this method
+	 * @todo Using this method load objects, changed on server relatively to MCM
+	 */
+	public Set refresh(final Set storableObjects) throws ApplicationException {
+		assert false : storableObjects;
+		return null;
+	}
+
+	/**
+	 * Currently not need to implement this method
+	 */
 	public void delete(Set identifiables) {
-		this.databaseObjectLoader.delete(identifiables);
+		assert false : identifiables;
 	}
 }
