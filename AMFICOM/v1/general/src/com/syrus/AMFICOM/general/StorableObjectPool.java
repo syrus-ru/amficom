@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.93 2005/06/01 18:50:42 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.94 2005/06/03 10:07:25 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/06/01 18:50:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.94 $, $Date: 2005/06/03 10:07:25 $
+ * @author $Author: max $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -1051,8 +1051,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.93 $, $Date: 2005/06/01 18:50:42 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.94 $, $Date: 2005/06/03 10:07:25 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
@@ -1160,7 +1160,7 @@ public abstract class StorableObjectPool {
 		for (final TShortObjectIterator entityCodeIterator = this.objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			LRUMapSaver.save((LRUMap) this.objectPoolMap.get(entityCode), ObjectEntities.codeToString(entityCode));
+			LRUMapSaver.save((LRUMap) this.objectPoolMap.get(entityCode), ObjectEntities.codeToString(entityCode), true);
 		}
 	}
 
