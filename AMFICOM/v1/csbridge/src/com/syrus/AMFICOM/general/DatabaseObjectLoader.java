@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.10 2005/06/03 15:23:58 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.11 2005/06/03 16:15:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/03 15:23:58 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/03 16:15:38 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -34,14 +34,13 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty())
 			return Collections.EMPTY_SET;
-		assert StorableObject.hasSingleTypeEntities(ids);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(ids));
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 		return retrieveFromDatabase(database, ids);
 	}
 
 	public static final Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert StorableObject.hasSingleTypeEntities(ids);
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
@@ -77,8 +76,8 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (storableObjects.isEmpty())
 			return;
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(StorableObject.getEntityCodeOfIdentifiables(storableObjects));
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		database.update(storableObjects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -94,8 +93,6 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 	public Set refresh(final Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
-
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
