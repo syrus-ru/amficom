@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.3 2005/05/16 15:56:28 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.4 2005/06/03 09:01:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,12 +10,14 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/16 15:56:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/03 09:01:44 $
  * @author $Author: arseniy $
  * @module generalclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
+	//TODO enum SessionKind
 	public static final int SESSION_KIND_MEASUREMENT = 1;
+	public static final int SESSION_KIND_MAPSCHEME = 2;
 	//Other kinds -- Map, Scheme, Resources, etc.
 
 	private static ClientSessionEnvironment instance;
@@ -35,6 +37,9 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 			case SESSION_KIND_MEASUREMENT:
 				createMeasurementSession(loginRestorer);
 				break;
+			case SESSION_KIND_MAPSCHEME:
+				createMapSchemeSession(loginRestorer);
+				break;
 			default:
 				Log.errorMessage("Unknown kind of session -- " + sessionKind);
 		}
@@ -45,9 +50,15 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	private static void createMeasurementSession(LoginRestorer loginRestorer) throws CommunicationException {
-		MClientServantManager clientServantManager = MClientServantManager.create();
-		ClientPoolContext clientPoolContext = new MClientPoolContext(clientServantManager);
-		instance = new ClientSessionEnvironment(clientServantManager, clientPoolContext, loginRestorer);
+		MClientServantManager mClientServantManager = MClientServantManager.create();
+		ClientPoolContext clientPoolContext = new MClientPoolContext(mClientServantManager);
+		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, loginRestorer);
+	}
+
+	private static void createMapSchemeSession(LoginRestorer loginRestorer) throws CommunicationException {
+		MSHClientServantManager mshClientServantManager = MSHClientServantManager.create();
+		ClientPoolContext clientPoolContext = new MSHClientPoolContext(mshClientServantManager);
+		instance = new ClientSessionEnvironment(mshClientServantManager, clientPoolContext, loginRestorer);
 	}
 
 	public static ClientSessionEnvironment getInstance() {
