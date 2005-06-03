@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.util.Iterator;
 
 import javax.swing.*;
@@ -16,19 +17,25 @@ import com.syrus.AMFICOM.analysis.*;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends JInternalFrame
 implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
-    CurrentEventChangeListener
+    CurrentEventChangeListener, PropertyChangeListener
 {
+	ApplicationContext aContext;
 	private WrapperedTableModel tModel;
 	WrapperedTable jTable;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
+	private boolean primaryShown = false;
+	private boolean etalonShown = false;
+	private boolean primaryOpened = false;
+	private boolean etalonOpened = false;
 
     protected static class TableView {
         public static final int COMP = 10;
@@ -105,7 +112,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
     protected TableView view; // State
 
-	public EventsFrame()
+	public EventsFrame(ApplicationContext aContext)
 	{
 		super();
 
@@ -118,11 +125,14 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 			e.printStackTrace();
 		}
 
-		this.initModule();
+		this.initModule(aContext);
 	}
 
-	private void initModule()
+	private void initModule(ApplicationContext aContext1)
 	{
+		this.aContext = aContext1;
+		this.aContext.getDispatcher().addPropertyChangeListener(RefUpdateEvent.typ, this);
+		
         view = new TableView(TableView.PRIM); // @todo: автоматически переключать виды
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
@@ -210,6 +220,22 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent ev = (RefUpdateEvent)evt;
+			if (ev.traceChanged()) {
+				TraceResource tr = (TraceResource)evt.getNewValue();
+				if (tr.getId().equals(Heap.PRIMARY_TRACE_KEY)) {
+					primaryShown = tr.isShown();
+					updateEventsModel();
+				} else if (tr.getId().equals(Heap.ETALON_TRACE_KEY)) {
+					etalonShown = tr.isShown();
+					updateEventsModel();
+				}
+			}
+		}
 	}
 	
 	private JPopupMenu createPopupMenu() {
@@ -337,6 +363,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 
 		int nRows = view.nRows(Heap.getEventList());
+		
+		System.out.println("View is " + view.viewMode);
 
     CompositeEventList eList = Heap.getEventList();
     CompositeEventList.Walker w = eList.new Walker();
@@ -428,7 +456,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 	public void etalonMTMCUpdated()
 	{
-        setTableModel();
+		etalonOpened = true;
+		updateEventsModel();
         updateTableModel();
         updateColors();
         updateCompDebug();
@@ -436,7 +465,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 	public void etalonMTMRemoved()
 	{
-        setTableModel();
+		etalonOpened = false;
+		updateEventsModel();
         updateTableModel();
         updateColors();
 	}
@@ -450,7 +480,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         updateColors();
         if (Heap.getRefAnalysisPrimary() != null)
         {
-            setTableModel();
+        	primaryOpened = true;
+        	updateEventsModel();
             CommonUIUtilities.arrangeTableColumns(this.jTable);
             updateTableModel();
             updateCompDebug();
@@ -466,10 +497,32 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     }
 
     public void primaryRefAnalysisRemoved() {
+    	primaryOpened = false;
     	clearTable();
     	
         this.jTable.revalidate();
         this.jTable.repaint();
         setVisible(false);
+    }
+    
+    private void updateEventsModel() {
+    	boolean showPrimary = primaryOpened && primaryShown;
+    	boolean showEtalon = etalonOpened && etalonShown;
+    	
+    	if (showPrimary && showEtalon) {
+    		if (view.viewMode != TableView.COMP)
+    			view = new TableView(TableView.COMP);
+    	}
+    	else if (showPrimary) {
+    		if (view.viewMode != TableView.PRIM)
+    			view = new TableView(TableView.PRIM);
+    	}
+    	else if (showEtalon) {
+    		if (view.viewMode != TableView.ETAL)
+    			view = new TableView(TableView.ETAL);
+    	}
+    	else 
+    		return;
+    	setTableModel();
     }
 }
