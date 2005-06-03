@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.46 2005/05/24 15:02:47 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.47 2005/06/03 21:15:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,9 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -44,7 +46,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/05/24 15:02:47 $
+ * @version $Revision: 1.47 $, $Date: 2005/06/03 21:15:38 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -67,8 +69,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	/* Load multiple objects*/
 
 	public Set loadMeasurements(Set ids) throws RetrieveObjectException {
-		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
+		Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
@@ -77,7 +78,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 		try {
 			MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-			Measurement_Transferable[] transferables = mServerRef.transmitMeasurements(loadIdsT);
+			Measurement_Transferable[] transferables = mServerRef.transmitMeasurements(loadIdsT, LoginManager.getSessionKeyTransferable());
 			for (int i = 0; i < transferables.length; i++) {
 				try {
 					loadedObjects.add(new Measurement(transferables[i]));
@@ -101,6 +102,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			objects.addAll(loadedObjects);
 
 			try {
+				final StorableObjectDatabase database = DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 				database.insert(loadedObjects);
 			}
 			catch (ApplicationException ae) {
@@ -112,8 +114,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadAnalyses(Set ids) throws RetrieveObjectException {
-		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
+		Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
@@ -122,7 +123,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 		try {
 			MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-			Analysis_Transferable[] transferables = mServerRef.transmitAnalyses(loadIdsT);
+			Analysis_Transferable[] transferables = mServerRef.transmitAnalyses(loadIdsT, LoginManager.getSessionKeyTransferable());
 			for (int i = 0; i < transferables.length; i++) {
 				try {
 					loadedObjects.add(new Analysis(transferables[i]));
@@ -146,6 +147,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			objects.addAll(loadedObjects);
 
 			try {
+				final StorableObjectDatabase database = DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 				database.insert(loadedObjects);
 			}
 			catch (ApplicationException ae) {
@@ -157,8 +159,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadEvaluations(Set ids) throws RetrieveObjectException {
-		EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabase(database, ids);
+		Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 		Identifier_Transferable[] loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		if (loadIdsT.length == 0)
 			return objects;
@@ -167,7 +168,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 		try {
 			MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-			Evaluation_Transferable[] transferables = mServerRef.transmitEvaluations(loadIdsT);
+			Evaluation_Transferable[] transferables = mServerRef.transmitEvaluations(loadIdsT, LoginManager.getSessionKeyTransferable());
 			for (int i = 0; i < transferables.length; i++) {
 				try {
 					loadedObjects.add(new Evaluation(transferables[i]));
@@ -191,6 +192,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			objects.addAll(loadedObjects);
 
 			try {
+				final StorableObjectDatabase database = DatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
 				database.insert(loadedObjects);
 			}
 			catch (ApplicationException ae) {
@@ -206,8 +208,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+		Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
@@ -215,7 +216,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 		try {
 			MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-			Measurement_Transferable[] transferables = mServerRef.transmitMeasurementsButIdsByCondition(loadButIdsT, conditionT);
+			Measurement_Transferable[] transferables = mServerRef.transmitMeasurementsButIdsByCondition(loadButIdsT,
+					conditionT,
+					LoginManager.getSessionKeyTransferable());
 			for (int i = 0; i < transferables.length; i++) {
 				try {
 					loadedObjects.add(new Measurement(transferables[i]));
@@ -239,6 +242,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			objects.addAll(loadedObjects);
 
 			try {
+				final StorableObjectDatabase database = DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 				database.insert(loadedObjects);
 			}
 			catch (ApplicationException ae) {
@@ -250,8 +254,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+		Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
@@ -259,7 +262,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 		try {
 			MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-			Analysis_Transferable[] transferables = mServerRef.transmitAnalysesButIdsByCondition(loadButIdsT, conditionT);
+			Analysis_Transferable[] transferables = mServerRef.transmitAnalysesButIdsByCondition(loadButIdsT,
+					conditionT,
+					LoginManager.getSessionKeyTransferable());
 			for (int i = 0; i < transferables.length; i++) {
 				try {
 					loadedObjects.add(new Analysis(transferables[i]));
@@ -283,6 +288,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			objects.addAll(loadedObjects);
 
 			try {
+				final StorableObjectDatabase database = DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
 				database.insert(loadedObjects);
 			}
 			catch (ApplicationException ae) {
@@ -294,8 +300,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
-		EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
-		Set objects = super.retrieveFromDatabaseButIdsByCondition(database, ids, condition);
+		Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
@@ -303,7 +308,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 		try {
 			MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-			Evaluation_Transferable[] transferables = mServerRef.transmitEvaluationsButIdsByCondition(loadButIdsT, conditionT);
+			Evaluation_Transferable[] transferables = mServerRef.transmitEvaluationsButIdsByCondition(loadButIdsT,
+					conditionT,
+					LoginManager.getSessionKeyTransferable());
 			for (int i = 0; i < transferables.length; i++) {
 				try {
 					loadedObjects.add(new Evaluation(transferables[i]));
@@ -327,6 +334,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			objects.addAll(loadedObjects);
 
 			try {
+				final StorableObjectDatabase database = DatabaseContext.getDatabase(ObjectEntities.EVALUATION_ENTITY_CODE);
 				database.insert(loadedObjects);
 			}
 			catch (ApplicationException ae) {
@@ -370,48 +378,48 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		}
 
 	}
-
-	public void delete(Set identifiables) {
-		if (identifiables == null || identifiables.isEmpty()) {
-			return;
-		}
-
-		Set nonTestIdentifiers = null;
-		Set testIdentifiers = null;
-		for (Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
-			if (id.getMajor() == ObjectEntities.TEST_ENTITY_CODE) {
-				if (testIdentifiers == null) {
-					testIdentifiers = new HashSet();
-				}
-				testIdentifiers.add(id);
-			}
-			else {
-				if (nonTestIdentifiers == null) {
-					nonTestIdentifiers = new HashSet();
-				}
-				nonTestIdentifiers.add(id);
-			}
-		}
-
-		if (nonTestIdentifiers != null) {
-			super.delete(nonTestIdentifiers);
-		}
-
-		if (testIdentifiers != null) {
-			try {
-				MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
-				mServerRef.deleteTests(Identifier.createTransferables(testIdentifiers));
-			}
-			catch (CommunicationException ce) {
-				Log.errorException(ce);
-			}
-			catch (AMFICOMRemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-	}
+//
+//	public void delete(Set identifiables) {
+//		if (identifiables == null || identifiables.isEmpty()) {
+//			return;
+//		}
+//
+//		Set nonTestIdentifiers = null;
+//		Set testIdentifiers = null;
+//		for (Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
+//			Identifier id = (Identifier) it.next();
+//			if (id.getMajor() == ObjectEntities.TEST_ENTITY_CODE) {
+//				if (testIdentifiers == null) {
+//					testIdentifiers = new HashSet();
+//				}
+//				testIdentifiers.add(id);
+//			}
+//			else {
+//				if (nonTestIdentifiers == null) {
+//					nonTestIdentifiers = new HashSet();
+//				}
+//				nonTestIdentifiers.add(id);
+//			}
+//		}
+//
+//		if (nonTestIdentifiers != null) {
+//			super.delete(nonTestIdentifiers);
+//		}
+//
+//		if (testIdentifiers != null) {
+//			try {
+//				MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
+//				mServerRef.deleteTests(Identifier.createTransferables(testIdentifiers));
+//			}
+//			catch (CommunicationException ce) {
+//				Log.errorException(ce);
+//			}
+//			catch (AMFICOMRemoteException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//		}
+//	}
 
 }
