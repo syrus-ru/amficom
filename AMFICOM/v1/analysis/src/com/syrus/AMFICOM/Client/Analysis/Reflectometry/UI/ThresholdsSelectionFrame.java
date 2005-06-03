@@ -70,7 +70,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	JButton previuosEventButton;
 	JButton nextEventButton;
 	
-	private ThresholdTableModel tModelEmpty;
+	private ThresholdTableModel tModel;
 
 	public ThresholdsSelectionFrame(Dispatcher dispatcher)
 	{
@@ -107,7 +107,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
 
-		this.tModelEmpty = new ThresholdTableModel(
+		this.tModel = new ThresholdTableModel(
 			new String[] { LangModelAnalyse.getString("thresholdsKey") },
 			new String[] {
 					LangModelAnalyse.getString("thresholdsUpWarning"),
@@ -117,7 +117,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			new int[] { },
 			null
 		);
-		this.jTable = new ATable(this.tModelEmpty);
+		this.jTable = new ATable(this.tModel);
 		
 		analysisInitialButton = new JButton();
 		analysisInitialButton.setMargin(UIManager.getInsets(
@@ -414,20 +414,16 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 				((Double[] )pData[k])[i] = new Double(
                         MathRef.round_4(te[i].getValue(k)));
 		}
-
-		ThresholdTableModel tModel = new ThresholdTableModel(
-			pColumns,
-			new String[] {
-					LangModelAnalyse.getString("thresholdsUpWarning"),
-					LangModelAnalyse.getString("thresholdsUpAlarm"),
-					LangModelAnalyse.getString("thresholdsDownWarning"),
-					LangModelAnalyse.getString("thresholdsDownAlarm")
-			},
-			new int[]    { 1, 2, 3, 4, 5 },
-			pData);
-
+		
+		tModel.setColumns(pColumns);
 		tModel.updateData(pData);
-		this.jTable.setModel(tModel);
+		
+		int n = te.length + 1;
+		jTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+		for (int i = 1; i < n; i++) {
+			jTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+		}
+			
 	}
 
 	class ThresholdTableModel extends AbstractTableModel {
@@ -442,10 +438,16 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			this.rows = rows;
 			this.editable = editable;
 		}
+		
+		public void setColumns(String[] columns) {
+			this.columns = columns;
+			super.fireTableStructureChanged();
+		}
 
 		public void updateData(Object[][] pData)
 		{
 			values = pData;
+			super.fireTableDataChanged();
 		}
 
 		public void setValueAt(Object value, int row, int col) {
@@ -511,7 +513,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 	public void bsHashRemovedAll()
 	{
-		this.jTable.setModel(this.tModelEmpty);
+		this.jTable.setModel(this.tModel);
 		analysisInitialButton.setEnabled(false);
 		increaseThreshButton.setEnabled(false);
 		decreaseThreshButton.setEnabled(false);
