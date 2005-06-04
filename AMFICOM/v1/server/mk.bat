@@ -1,1 +1,0 @@
-nmake /f makeserver %1

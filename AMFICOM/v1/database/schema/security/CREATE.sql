@@ -1,2 +1,0 @@
-@@shadow.sql
-@@userlogin.sql
