@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.41 2005/06/03 20:38:46 arseniy Exp $
+ * $Id: SiteNode.java,v 1.42 2005/06/04 16:56:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: arseniy $
- * @version $Revision: 1.41 $, $Date: 2005/06/03 20:38:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/06/04 16:56:22 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {

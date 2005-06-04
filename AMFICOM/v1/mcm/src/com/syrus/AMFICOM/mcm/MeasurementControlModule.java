@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.96 2005/06/03 20:56:57 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.97 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/06/03 20:56:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.97 $, $Date: 2005/06/04 16:56:18 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 

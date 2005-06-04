@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.4 2005/04/12 16:58:34 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.5 2005/06/04 16:56:23 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/12 16:58:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:23 $
+ * @author $Author: bass $
  * @module resource_v1
  */
-public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
+final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 
 	DatabaseTypicalConditionImpl(TypicalCondition typicalCondition){
 		super(typicalCondition);

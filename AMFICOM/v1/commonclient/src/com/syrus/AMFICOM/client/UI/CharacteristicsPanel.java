@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.4 2005/05/26 15:31:13 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.5 2005/06/04 16:56:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,13 +60,13 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 15:31:13 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:24 $
  * @module commonclient_v1
  */
 

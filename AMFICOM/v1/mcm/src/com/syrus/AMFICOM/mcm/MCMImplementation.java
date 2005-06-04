@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.35 2005/05/26 13:03:00 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.36 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,10 +23,10 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/05/26 13:03:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/06/04 16:56:18 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 

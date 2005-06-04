@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.21 2005/06/03 15:23:58 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.22 2005/06/04 16:56:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,16 +16,16 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -73,8 +73,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitProcedure {
@@ -87,8 +87,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -103,8 +103,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.21 $, $Date: 2005/06/03 15:23:58 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -206,7 +206,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final Identifier_Transferable ids1[] = Identifier.createTransferables(ids);
 		final SessionKey_Transferable sessionKey = LoginManager.getSessionKeyTransferable();
-		final StorableObjectCondition_Transferable condition1 = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		final StorableObjectCondition_Transferable condition1 = (StorableObjectCondition_Transferable) condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {

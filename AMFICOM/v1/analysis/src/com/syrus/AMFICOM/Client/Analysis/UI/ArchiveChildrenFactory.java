@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.9 2005/05/25 15:15:09 stas Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.10 2005/06/04 16:56:23 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/25 15:15:09 $
- * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/06/04 16:56:23 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */

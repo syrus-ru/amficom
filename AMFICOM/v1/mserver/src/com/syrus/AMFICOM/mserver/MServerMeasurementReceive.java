@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.11 2005/06/01 20:58:09 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.12 2005/06/04 16:56:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,11 +23,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/01 20:58:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/06/04 16:56:21 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends ServerCore implements MServerOperations {

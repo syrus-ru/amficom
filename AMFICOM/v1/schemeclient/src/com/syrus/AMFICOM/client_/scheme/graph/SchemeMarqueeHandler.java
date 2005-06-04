@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.5 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.6 2005/06/04 16:56:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,14 +23,14 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/04 16:56:20 $
  * @module schemeclient_v1
  */
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.21 2005/05/18 11:07:38 bass Exp $
+ * $Id: TypicalCondition.java,v 1.22 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.TypicalSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.TypicalSort;
 import com.syrus.util.Log;
 
 /**
@@ -120,7 +121,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.21 $, $Date: 2005/05/18 11:07:38 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:18 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -622,6 +623,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	            			final String key) {
 		this(firstDate, secondDate, operation, new Short(entityCode), key);
 	}
+
 	/**
 	 * @param firstDate
 	 *            start date range
@@ -892,15 +894,15 @@ public class TypicalCondition implements StorableObjectCondition {
 		this.delegate.entityCode = entityCode;
 	}
 
-	public String getKey() {
+	public final String getKey() {
 		return this.delegate.key;
 	}
 
-	public void setKey(final String key) {
+	public final void setKey(final String key) {
 		this.delegate.key = key;
 	}
 
-	public IDLEntity getTransferable() {
+	public final IDLEntity getTransferable() {
 		TypicalCondition_Transferable transferable = new TypicalCondition_Transferable();
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
@@ -932,7 +934,10 @@ public class TypicalCondition implements StorableObjectCondition {
 		transferable.entity_code = this.delegate.entityCode.shortValue();
 		transferable.type = TypicalSort.from_int(this.delegate.type);
 		transferable.operation = OperationSort.from_int(this.delegate.operation);
-		return transferable;
+
+		final StorableObjectCondition_Transferable condition = new StorableObjectCondition_Transferable();
+		condition.typicalCondition(transferable);
+		return condition;
 	}
 
 	/**
@@ -940,7 +945,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 *
 	 * @param object
 	 */
-	protected boolean parseCondition(Object object) {
+	protected final boolean parseCondition(Object object) {
 		boolean result = false;
 		switch (this.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
@@ -1135,83 +1140,83 @@ public class TypicalCondition implements StorableObjectCondition {
 		return result;
 	}
 
-	public double getFirstDouble() {
+	public final double getFirstDouble() {
 		return this.delegate.firstDouble;
 	}
 
-	public void setFirstDouble(double firstDouble) {
+	public final void setFirstDouble(double firstDouble) {
 		this.delegate.firstDouble = firstDouble;
 	}
 
-	public int getFirstInt() {
+	public final int getFirstInt() {
 		return this.delegate.firstInt;
 	}
 
-	public void setFirstInt(int firstInt) {
+	public final void setFirstInt(int firstInt) {
 		this.delegate.firstInt = firstInt;
 	}
 
-	public long getFirstLong() {
+	public final long getFirstLong() {
 		return this.delegate.firstLong;
 	}
 
-	public void setFirstLong(long firstLong) {
+	public final void setFirstLong(long firstLong) {
 		this.delegate.firstLong = firstLong;
 	}
 
-	public OperationSort getOperation() {
+	public final OperationSort getOperation() {
 		return OperationSort.from_int(this.delegate.operation);
 	}
 
-	public void setOperation(OperationSort operation) {
+	public final void setOperation(OperationSort operation) {
 		this.delegate.operation = operation.value();
 	}
 
-	public Object getOtherValue() {
+	public final Object getOtherValue() {
 		return this.delegate.otherValue;
 	}
 
-	public void setOtherValue(Object otherValue) {
+	public final void setOtherValue(Object otherValue) {
 		this.delegate.otherValue = otherValue;
 	}
 
-	public double getSecondDouble() {
+	public final double getSecondDouble() {
 		return this.delegate.secondDouble;
 	}
 
-	public void setSecondDouble(double secondDouble) {
+	public final void setSecondDouble(double secondDouble) {
 		this.delegate.secondDouble = secondDouble;
 	}
 
-	public int getSecondInt() {
+	public final int getSecondInt() {
 		return this.delegate.secondInt;
 	}
 
-	public void setSecondInt(int secondInt) {
+	public final void setSecondInt(int secondInt) {
 		this.delegate.secondInt = secondInt;
 	}
 
-	public long getSecondLong() {
+	public final long getSecondLong() {
 		return this.delegate.secondLong;
 	}
 
-	public void setSecondLong(long secondLong) {
+	public final void setSecondLong(long secondLong) {
 		this.delegate.secondLong = secondLong;
 	}
 
-	public TypicalSort getType() {
+	public final TypicalSort getType() {
 		return TypicalSort.from_int(this.delegate.type);
 	}
 
-	public void setType(TypicalSort type) {
+	public final void setType(TypicalSort type) {
 		this.delegate.type = type.value();
 	}
 
-	public Object getValue() {
+	public final Object getValue() {
 		return this.delegate.value;
 	}
 
-	public void setValue(Object value) {
+	public final void setValue(Object value) {
 		this.delegate.value = value;
 	}
 }

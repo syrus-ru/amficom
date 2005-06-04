@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.4 2005/04/12 16:37:41 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.5 2005/06/04 16:56:18 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,16 +10,16 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.TypicalSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.TypicalSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/12 16:37:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:18 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {

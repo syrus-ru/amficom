@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.11 2005/06/03 14:52:50 bass Exp $
+ * $Id: ServerCore.java,v 1.12 2005/06/04 16:56:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,19 +18,19 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/06/03 14:52:50 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/04 16:56:20 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.

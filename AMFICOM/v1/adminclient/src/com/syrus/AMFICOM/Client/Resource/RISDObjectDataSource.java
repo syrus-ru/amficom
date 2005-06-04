@@ -1,5 +1,5 @@
 /*-
- * $Id: RISDObjectDataSource.java,v 1.6 2005/05/04 10:51:58 bass Exp $
+ * $Id: RISDObjectDataSource.java,v 1.7 2005/06/04 16:56:21 bass Exp $
  * Copyright © 2004 Syrus Systems.
  * 
  * Научно-технический центр.
@@ -24,12 +24,12 @@ import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.ServerSeq_TransferableHolder;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/04 10:51:58 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/04 16:56:21 $
  * @module admin_v1
  */
 public class RISDObjectDataSource extends RISDDataSource {
@@ -70,7 +70,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			ex.printStackTrace();
 			return;
 		}
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed GetObjects! status = "
 					+ ecode);
 			return;
@@ -146,7 +146,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed SaveDomain! status = "
 					+ ecode);
 			return;
@@ -188,7 +188,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed SaveCategory! status = "
 					+ ecode);
 			return;
@@ -231,7 +231,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed SaveUser! status = "
 							+ ecode);
@@ -274,7 +274,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed SaveGroup! status = "
 					+ ecode);
 			return;
@@ -315,7 +315,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed SaveOperatorProfile! status = "
 							+ ecode);
@@ -354,7 +354,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed SaveExec! status = "
 							+ ecode);
@@ -383,7 +383,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed Removedomain_idss! status = "
 							+ ecode);
@@ -412,7 +412,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed Removeuser_idss! status = "
 					+ ecode);
 			return;
@@ -440,7 +440,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed Removegroup_idss! status = "
 					+ ecode);
 			return;
@@ -469,7 +469,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out
 					.println("Failed Removeoperator_profile_idss! status = "
 							+ ecode);
@@ -510,7 +510,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			ex.printStackTrace();
 			return;
 		}
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed GetAdminObjects! status = "
 					+ ecode);
 			return;
@@ -579,7 +579,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed Saveserver! status = "
 					+ ecode);
 			return;
@@ -614,7 +614,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed Saveclient! status = "
 					+ ecode);
 			return;
@@ -649,7 +649,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed Saveagent! status = "
 					+ ecode);
 			return;
@@ -675,7 +675,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed Removeserver! status = "
 					+ ecode);
 			return;
@@ -701,7 +701,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed RemoveClient! status = "
 					+ ecode);
 			return;
@@ -727,7 +727,7 @@ public class RISDObjectDataSource extends RISDDataSource {
 			return;
 		}
 
-		if (ecode != ErrorCode._ERROR_NO_ERROR) {
+		if (ecode != com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage._ERROR_NO_ERROR) {
 			System.out.println("Failed Removeagent! status = "
 					+ ecode);
 			return;

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.28 2005/06/03 20:37:26 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.29 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,14 +14,14 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/03 20:37:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/06/04 16:56:18 $
+ * @author $Author: bass $
  * @module general_v1
  */
 

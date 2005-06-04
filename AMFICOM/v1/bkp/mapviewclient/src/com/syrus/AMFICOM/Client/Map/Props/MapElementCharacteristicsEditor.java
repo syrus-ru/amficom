@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.10 2005/05/30 12:19:02 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.11 2005/06/04 16:56:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,13 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.Selection;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/05/30 12:19:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/04 16:56:22 $
  * @module mapviewclient_v1
  */
 

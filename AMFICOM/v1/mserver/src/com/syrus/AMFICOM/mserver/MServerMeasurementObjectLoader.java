@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.30 2005/05/24 14:59:12 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.31 2005/06/04 16:56:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/24 14:59:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/06/04 16:56:21 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
@@ -369,7 +369,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 		Set loadedObjects = new HashSet();
 		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 
 		Set mcmIds = MeasurementServer.getMCMIds();
 		Identifier mcmId1;
@@ -445,7 +445,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 		Set loadedObjects = new HashSet();
 		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 
 		Set mcmIds = MeasurementServer.getMCMIds();
 		Identifier mcmId1;
@@ -520,7 +520,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 		Set loadedObjects = new HashSet();
 		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 
 		Set mcmIds = MeasurementServer.getMCMIds();
 		Identifier mcmId1;

@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.4 2005/05/18 12:03:14 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.5 2005/06/04 16:56:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.TypicalSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.TypicalSort;
 
 import java.util.Date;
 import java.util.Set;
@@ -19,7 +19,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:03:14 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:39 $
  * @module scheme_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {

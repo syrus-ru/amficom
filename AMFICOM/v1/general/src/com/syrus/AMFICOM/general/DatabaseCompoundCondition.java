@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.6 2005/04/12 16:48:32 arseniy Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.7 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/12 16:48:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/04 16:56:18 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class DatabaseCompoundCondition implements DatabaseStorableObjectCondition {

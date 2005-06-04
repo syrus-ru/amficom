@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.13 2005/05/18 13:29:31 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.14 2005/06/04 16:56:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.ShadowDatabase;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/18 13:29:31 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/04 16:56:23 $
  * @author $Author: bass $
  * @module leserver_v1
  */

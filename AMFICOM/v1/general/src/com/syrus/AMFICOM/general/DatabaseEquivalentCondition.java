@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseEquivalentCondition.java,v 1.3 2005/04/13 12:20:24 arseniy Exp $
+* $Id: DatabaseEquivalentCondition.java,v 1.4 2005/06/04 16:56:18 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/13 12:20:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/06/04 16:56:18 $
+ * @author $Author: bass $
  * @module general_v1
  */
-class DatabaseEquivalentCondition implements DatabaseStorableObjectCondition {
+final class DatabaseEquivalentCondition implements DatabaseStorableObjectCondition {
 
 	private EquivalentCondition delegate;
 

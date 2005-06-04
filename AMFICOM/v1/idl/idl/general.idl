@@ -1,9 +1,9 @@
-/*
- * $Id: general.idl,v 1.87 2005/06/01 15:45:52 arseniy Exp $
+/*-
+ * $Id: general.idl,v 1.88 2005/06/04 16:56:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 #ifndef GENERAL_IDL
@@ -20,11 +20,9 @@ module corba {
 	typedef wstring<128> WString128;
 
 //////////////////// SecurityKey ///////////////////
-	struct SessionKey_Transferable {
+	typedef struct SessionKey_Transferable {
 		WString128 session_code;
-	};
-
-	typedef SessionKey_Transferable SessionKey;
+	} SessionKey;
 };
 };
 
@@ -37,28 +35,26 @@ module corba {
 	typedef wstring<128> WString128;
 	typedef wstring<256> WString256;
 
-	struct Identifier_Transferable {
+	typedef struct Identifier_Transferable {
 #ifdef NUMERIC_IDENTIFIER
 		short major;
 		long long minor;
 #else // NUMERIC_IDENTIFIER
 		wstring identifier_string;
 #endif // NUMERIC_IDENTIFIER
-	};
+	} Identifier;
 
-	typedef Identifier_Transferable Identifier;
 	typedef sequence<Identifier> IdentifierSeq;
 
-	struct StorableObject_Transferable {
+	typedef struct StorableObject_Transferable {
 		Identifier id;
 		long long created;
 		long long modified;
 		Identifier creator_id;
 		Identifier modifier_id;
 		long long version;
-	};
+	} StorableObject;
 
-	typedef StorableObject_Transferable StorableObject;
 	typedef sequence<StorableObject> StorableObjectSeq;
 
 	enum DataType {
@@ -71,34 +67,30 @@ module corba {
 		DATA_TYPE_BOOLEAN
 	};
 
-	enum ErrorCode {
-		ERROR_LOGIN_NOT_FOUND,
-		ERROR_ILLEGAL_DATA,
-		ERROR_ILLEGAL_OBJECT_ENTITY,
-		ERROR_SAVE,
-		ERROR_NOT_FOUND,
-		ERROR_RETRIEVE,
-		ERROR_UPDATE,
-		ERROR_DELETE,
-		ERROR_VERSION_COLLISION,
-		ERROR_ILLEGAL_LOGIN,
-		ERROR_ILLEGAL_PASSWORD,
-		ERROR_NO_DOMAINS_AVAILABLE,
-		ERROR_NOT_LOGGED_IN,
-		ERROR_ALREADY_LOGGED,
-		ERROR_ACCESS_VALIDATION,
-		ERROR_UNKNOWN
-	};
-
-	enum CompletionStatus {
-		COMPLETED_YES,
-		COMPLETED_NO,
-		COMPLETED_PARTIALLY
-	};
-
 	exception AMFICOMRemoteException {
-		ErrorCode error_code;
-		CompletionStatus completion_status;
+		enum ErrorCode {
+			ERROR_LOGIN_NOT_FOUND,
+			ERROR_ILLEGAL_DATA,
+			ERROR_ILLEGAL_OBJECT_ENTITY,
+			ERROR_SAVE,
+			ERROR_NOT_FOUND,
+			ERROR_RETRIEVE,
+			ERROR_UPDATE,
+			ERROR_DELETE,
+			ERROR_VERSION_COLLISION,
+			ERROR_ILLEGAL_LOGIN,
+			ERROR_ILLEGAL_PASSWORD,
+			ERROR_NO_DOMAINS_AVAILABLE,
+			ERROR_NOT_LOGGED_IN,
+			ERROR_ALREADY_LOGGED,
+			ERROR_ACCESS_VALIDATION,
+			ERROR_UNKNOWN
+		} error_code;
+		enum CompletionStatus {
+			COMPLETED_YES,
+			COMPLETED_NO,
+			COMPLETED_PARTIALLY
+		} completion_status;
 		wstring message;
 	};
 /*
@@ -111,7 +103,7 @@ module corba {
 
 ////////////////////// ParameterType //////////////////////
 
-	struct ParameterType_Transferable {
+	typedef struct ParameterType_Transferable {
 		StorableObject header;
 
 		WString32 codename;
@@ -119,36 +111,33 @@ module corba {
 
 		WString128 name;
 		DataType data_type;
-		
-		IdentifierSeq characteristic_ids;
-	};
 
-	typedef ParameterType_Transferable ParameterType;
+		IdentifierSeq characteristic_ids;
+	} ParameterType;
+
 	typedef sequence<ParameterType> ParameterTypeSeq;
 
 //////////////////// CharacteristicType ///////////////////
-	enum CharacteristicTypeSort {
-		CHARACTERISTICTYPESORT_OPTICAL,
-		CHARACTERISTICTYPESORT_ELECTRICAL,
-		CHARACTERISTICTYPESORT_OPERATIONAL,
-		CHARACTERISTICTYPESORT_INTERFACE,
-		CHARACTERISTICTYPESORT_VISUAL
-	};
 
-	struct CharacteristicType_Transferable {
+	typedef struct CharacteristicType_Transferable {
 		StorableObject header;
 
 		WString32 codename;
 		WString256 description;
 		DataType data_type;
-		CharacteristicTypeSort sort;
-	};
+		enum CharacteristicTypeSort {
+			CHARACTERISTICTYPESORT_OPTICAL,
+			CHARACTERISTICTYPESORT_ELECTRICAL,
+			CHARACTERISTICTYPESORT_OPERATIONAL,
+			CHARACTERISTICTYPESORT_INTERFACE,
+			CHARACTERISTICTYPESORT_VISUAL
+		} sort;
+	} CharacteristicType;
 
-	typedef CharacteristicType_Transferable CharacteristicType;
 	typedef sequence<CharacteristicType> CharacteristicTypeSeq;
 
 ////////////////////// Characteristic /////////////////////
-	struct Characteristic_Transferable {
+	typedef struct Characteristic_Transferable {
 		StorableObject header;
 
 		Identifier type_id;
@@ -158,10 +147,9 @@ module corba {
 		Identifier characterizable_id;
 		boolean is_editable;
 		boolean is_visible;
-		
-	};
 
-	typedef Characteristic_Transferable Characteristic;
+	} Characteristic;
+
 	typedef sequence<Characteristic> CharacteristicSeq;
 
 ///////////////////////// Verifiable //////////////////////////
@@ -193,83 +181,54 @@ module corba {
 
 ///////////////////////////// Condition ////////////////////////
 
-	struct LinkedIdsCondition_Transferable {
-		short entity_code;
-		short linked_entity_code;
-		IdentifierSeq linked_ids;
-	};
-
-	typedef LinkedIdsCondition_Transferable LinkedIdsCondition;
-
-	enum TypicalSort {
-		TYPE_NUMBER_INT,
-		TYPE_NUMBER_LONG,
-		TYPE_NUMBER_DOUBLE,
-		TYPE_STRING,
-		TYPE_DATE
-	};
-
-	enum OperationSort {
-		OPERATION_EQUALS,
-		OPERATION_GREAT,
-		OPERATION_LESS,
-		OPERATION_GREAT_EQUALS,
-		OPERATION_LESS_EQUALS,
-		OPERATION_IN_RANGE,
-		OPERATION_SUBSTRING,
-		OPERATION_REGEXP,
-		OPERATION_CI_REGEXP
-	};
-	
-	
-	struct TypicalCondition_Transferable {
-		short	entity_code;
-		WString256 key;
-		WString256 value;
-		WString256 otherValue;		
-		TypicalSort type;		
-		OperationSort operation; 
-	};
-
-	typedef TypicalCondition_Transferable TypicalCondition;
-
-	struct EquivalentCondition_Transferable {
-		short	entity_code;
-	};
-
-	typedef EquivalentCondition_Transferable EquivalentCondition;
-
-	struct CompoundCondition_Transferable {
-		enum CompoundConditionSort {
-			AND,
-			OR} sort;
-		/**
-		 * <code>innerConditions</code> must be an array containing 
-		 * instances of {@link StorableObjectCondition_Transferable}.
-		 */
-		::CORBA::AnySeq innerConditions;
-	};
-
-	typedef CompoundCondition_Transferable CompoundCondition;
-
-	union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
+	typedef union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
 			LINKED_IDS,
 			COMPOUND,
 			TYPICAL,
 			EQUIVALENT}) {
 		case LINKED_IDS:
-			LinkedIdsCondition linkedIdsCondition;
+			struct LinkedIdsCondition_Transferable {
+				short entity_code;
+				short linked_entity_code;
+				IdentifierSeq linked_ids;
+			} linkedIdsCondition;
 		case COMPOUND:
-			CompoundCondition compoundCondition;
+			struct CompoundCondition_Transferable {
+				enum CompoundConditionSort {
+					AND,
+					OR} sort;
+				sequence<StorableObjectCondition_Transferable> innerConditions;
+			} compoundCondition;
 		case TYPICAL:
-			TypicalCondition typicalCondition;
+			struct TypicalCondition_Transferable {
+				short entity_code;
+				WString256 key;
+				WString256 value;
+				WString256 otherValue;
+				enum TypicalSort {
+					TYPE_NUMBER_INT,
+					TYPE_NUMBER_LONG,
+					TYPE_NUMBER_DOUBLE,
+					TYPE_STRING,
+					TYPE_DATE
+				} type;
+				enum OperationSort {
+					OPERATION_EQUALS,
+					OPERATION_GREAT,
+					OPERATION_LESS,
+					OPERATION_GREAT_EQUALS,
+					OPERATION_LESS_EQUALS,
+					OPERATION_IN_RANGE,
+					OPERATION_SUBSTRING,
+					OPERATION_REGEXP,
+					OPERATION_CI_REGEXP
+				} operation;
+			} typicalCondition;
 		case EQUIVALENT:
-			EquivalentCondition equialentCondition;
-		
-	};
-
-	typedef StorableObjectCondition_Transferable StorableObjectCondition;
-
+			struct EquivalentCondition_Transferable {
+				short entity_code;
+			} equivalentCondition;
+	} StorableObjectCondition;
 };
 };
 

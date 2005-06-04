@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.105 2005/05/23 09:01:04 bass Exp $
+ * $Id: CMServerImpl.java,v 1.106 2005/06/04 16:56:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,14 @@ package com.syrus.AMFICOM.cmserver;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/05/23 09:01:04 $
+ * @version $Revision: 1.106 $, $Date: 2005/06/04 16:56:19 $
  * @author $Author: bass $
  * @module cmserver_v1
  */

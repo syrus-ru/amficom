@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.11 2005/05/18 12:42:50 bass Exp $
+ * $Id: FilterController.java,v 1.12 2005/06/04 16:56:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.util.Log;
 
 import java.awt.event.ActionEvent;
@@ -40,7 +40,7 @@ import javax.swing.event.PopupMenuListener;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/18 12:42:50 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/04 16:56:22 $
  * @author $Author: bass $
  * @module filter_v1
  */

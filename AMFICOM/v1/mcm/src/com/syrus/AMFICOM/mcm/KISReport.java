@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.35 2005/06/03 16:48:41 arseniy Exp $
+ * $Id: KISReport.java,v 1.36 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,16 +26,16 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/03 16:48:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/06/04 16:56:18 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 

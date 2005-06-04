@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.50 2005/06/01 13:29:33 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.51 2005/06/04 16:56:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/06/01 13:29:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/06/04 16:56:21 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 

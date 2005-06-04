@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.23 2005/05/18 11:07:38 bass Exp $
+ * $Id: CompoundCondition.java,v 1.24 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,27 +14,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.omg.CORBA.Any;
-import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.util.corba.JavaSoftORBUtil;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.23 $, $Date: 2005/05/18 11:07:38 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/04 16:56:18 $
  * @author $Author: bass $
  * @module general_v1
  */
 public final class CompoundCondition implements StorableObjectCondition {
-
-	private static final ORB ORB_INSTANCE = JavaSoftORBUtil.getInstance().getORB();
-
 	private int operation;
 
 	/**
@@ -106,20 +100,20 @@ public final class CompoundCondition implements StorableObjectCondition {
 
 	public CompoundCondition(CompoundCondition_Transferable transferable) throws IllegalDataException {
 		this.operation = transferable.sort.value();
-		Any[] anies = transferable.innerConditions;
-		if (anies.length <= 1)
-			throw new IllegalDataException("Unable to create CompoundCondition for " + anies.length + "  condition");
-		this.conditions = new HashSet(anies.length);
+		final StorableObjectCondition_Transferable innerConditions[] = transferable.innerConditions;
+		if (innerConditions.length <= 1)
+			throw new IllegalDataException("Unable to create CompoundCondition for " + innerConditions.length + "  condition");
+		this.conditions = new HashSet(innerConditions.length);
 		short code = ObjectEntities.UNKNOWN_ENTITY_CODE;
-		for (int i = 0; i < anies.length; i++) {
-			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition((StorableObjectCondition_Transferable) anies[i].extract_Value());
+		for (int i = 0; i < innerConditions.length; i++) {
+			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(innerConditions[i]);
 			this.conditions.add(condition);
 			if (code == ObjectEntities.UNKNOWN_ENTITY_CODE) {
 				this.entityCode = condition.getEntityCode();
 				code = this.entityCode.shortValue();
-			} else
-				if (code != condition.getEntityCode().shortValue())
-					throw new IllegalDataException("Unable to create CompoundCondition for conditions for different entities");
+			} else if (code != condition.getEntityCode().shortValue()) {
+				throw new IllegalDataException("Unable to create CompoundCondition for conditions for different entities");
+			}
 		}
 		
 		if (this.entityCode.shortValue() == ObjectEntities.UNKNOWN_ENTITY_CODE)
@@ -169,17 +163,18 @@ public final class CompoundCondition implements StorableObjectCondition {
 	}
 
 	public IDLEntity getTransferable() {
-		CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
+		final CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
 		transferable.sort = CompoundConditionSort.from_int(this.operation);
-		transferable.innerConditions = new org.omg.CORBA.Any[this.conditions.size()];
+		transferable.innerConditions = new StorableObjectCondition_Transferable[this.conditions.size()];
 		int i = 0;
-		for (Iterator it = this.conditions.iterator(); it.hasNext(); i++) {
-			StorableObjectCondition condition = (StorableObjectCondition) it.next();
-			Any any = ORB_INSTANCE.create_any();
-			any.insert_Value(StorableObjectConditionBuilder.getConditionTransferable(condition));
-			transferable.innerConditions[i] = any;
+		for (final Iterator storableObjectConditionIterator = this.conditions.iterator(); storableObjectConditionIterator.hasNext(); i++) {
+			final StorableObjectCondition storableObjectCondition = (StorableObjectCondition) storableObjectConditionIterator.next();
+			transferable.innerConditions[i] = (StorableObjectCondition_Transferable) storableObjectCondition.getTransferable();
 		}
-		return transferable;
+		
+		final StorableObjectCondition_Transferable condition = new StorableObjectCondition_Transferable();
+		condition.compoundCondition(transferable);
+		return condition;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.18 2005/05/30 12:19:02 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.19 2005/06/04 16:56:22 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,15 +27,15 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/05/30 12:19:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/06/04 16:56:22 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController

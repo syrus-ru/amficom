@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.6 2005/05/26 07:40:50 stas Exp $
+ * $Id: AddPropFrame.java,v 1.7 2005/06/04 16:56:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,23 +35,14 @@ import javax.swing.JTextField;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/05/26 07:40:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/04 16:56:20 $
  * @module schemeclient_v1
  */
 

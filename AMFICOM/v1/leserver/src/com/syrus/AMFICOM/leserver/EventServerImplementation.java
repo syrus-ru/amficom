@@ -1,5 +1,5 @@
 /*
- * $Id: EventServerImplementation.java,v 1.4 2005/05/30 14:52:00 arseniy Exp $
+ * $Id: EventServerImplementation.java,v 1.5 2005/06/04 16:56:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,13 +19,13 @@ import com.syrus.AMFICOM.event.corba.Event_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/30 14:52:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:23 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public class EventServerImplementation extends EventServerPOA {

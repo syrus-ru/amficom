@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.60 2005/06/03 20:38:45 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.61 2005/06/04 16:56:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
 /**
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/06/03 20:38:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/06/04 16:56:22 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient

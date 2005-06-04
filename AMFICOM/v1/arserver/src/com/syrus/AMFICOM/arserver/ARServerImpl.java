@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.19 2005/05/27 16:24:43 bass Exp $
+ * $Id: ARServerImpl.java,v 1.20 2005/06/04 16:56:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,18 +15,18 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/27 16:24:43 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/04 16:56:20 $
  * @author $Author: bass $
  * @module arserver_v1
  */

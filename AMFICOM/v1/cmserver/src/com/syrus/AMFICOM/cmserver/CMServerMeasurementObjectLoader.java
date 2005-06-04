@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.47 2005/06/03 21:15:38 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.48 2005/06/04 16:56:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/06/03 21:15:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/06/04 16:56:19 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -210,7 +210,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 
 		Set loadedObjects = new HashSet();
 
@@ -256,7 +256,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 
 		Set loadedObjects = new HashSet();
 
@@ -302,7 +302,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
 		Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
 		Identifier_Transferable[] loadButIdsT = super.createLoadButIdsTransferable(ids, objects);
-		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+		StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 
 		Set loadedObjects = new HashSet();
 

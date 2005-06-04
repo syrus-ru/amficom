@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.9 2005/05/18 12:52:58 bass Exp $
+ * $Id: LoginManager.java,v 1.10 2005/06/04 16:56:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,16 +13,16 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/18 12:52:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/04 16:56:20 $
  * @author $Author: bass $
  * @module csbridge_v1
  */

@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerImpl.java,v 1.19 2005/06/03 14:53:14 bass Exp $
+ * $Id: MSHServerImpl.java,v 1.20 2005/06/04 16:56:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,9 @@ package com.syrus.AMFICOM.mshserver;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.AMFICOM.map.corba.RenderedImage_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalImageQuery_Transferable;
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/03 14:53:14 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/04 16:56:17 $
  * @author $Author: bass $
  * @module mshserver_1
  */

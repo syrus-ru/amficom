@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.30 2005/05/18 11:07:39 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.31 2005/06/04 16:56:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.LinkedIdsCondition_Transferable;
 import com.syrus.util.Log;
 
 import java.lang.reflect.Constructor;
@@ -67,7 +68,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/05/18 11:07:39 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/04 16:56:18 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -303,7 +304,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		}
 	}
 
-	public short getLinkedEntityCode() {
+	public final short getLinkedEntityCode() {
 		return this.delegate.linkedEntityCode;
 	}
 
@@ -325,9 +326,13 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		for (Iterator it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
 			linkedIdTransferable[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
 
-		return new LinkedIdsCondition_Transferable(this.delegate.entityCode.shortValue(),
+		final LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable(this.delegate.entityCode.shortValue(),
 				this.delegate.linkedEntityCode,
 				linkedIdTransferable);
+
+		final StorableObjectCondition_Transferable condition = new StorableObjectCondition_Transferable();
+		condition.linkedIdsCondition(transferable);
+		return condition;
 	}
 
 	/**
@@ -362,7 +367,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.setEntityCode(entityCode);
 	}
 
-	public void setLinkedIds(Set linkedIds) {
+	public final void setLinkedIds(Set linkedIds) {
 		try {
 			this.delegate.linkedEntityCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		}
@@ -373,15 +378,15 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.linkedIds = linkedIds;
 	}
 
-	public Set getLinkedIds() {
+	public final Set getLinkedIds() {
 		return this.delegate.linkedIds;
 	}
 
-	public void setLinkedId(final Identifier linkedId) {
+	public final void setLinkedId(final Identifier linkedId) {
 		this.setLinkedIds(Collections.singleton(linkedId));
 	}
 
-	protected Map sort(Set linkIds) {
+	protected final Map sort(Set linkIds) {
 		Map codeIdsMap = new HashMap();
 		for (Iterator it = linkIds.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -396,7 +401,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return codeIdsMap;
 	}
 
-	protected boolean conditionTest(Set params) {
+	protected final boolean conditionTest(Set params) {
 		if (params != null) {
 			for (Iterator it = params.iterator(); it.hasNext();) {
 				Object object = it.next();
@@ -425,7 +430,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return false;
 	}
 
-	protected boolean conditionTest(final Identifier paramId) {
+	protected final boolean conditionTest(final Identifier paramId) {
 		if (paramId != null && !paramId.isVoid()) {
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 				final Identifier id = (Identifier) it.next();

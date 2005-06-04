@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkCharacteristicsPanel.java,v 1.3 2005/05/26 15:31:13 bass Exp $
+ * $Id: SchemeLinkCharacteristicsPanel.java,v 1.4 2005/06/04 16:56:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 15:31:13 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/04 16:56:20 $
  * @module schemeclient_v1
  */
 
