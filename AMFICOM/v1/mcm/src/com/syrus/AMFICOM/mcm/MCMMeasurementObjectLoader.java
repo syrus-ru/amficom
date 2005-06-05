@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.54 2005/06/03 16:13:46 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.55 2005/06/05 18:41:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/06/03 16:13:46 $
+ * @version $Revision: 1.55 $, $Date: 2005/06/05 18:41:31 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -83,7 +83,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadMeasurementSetups(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -199,7 +199,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	public java.util.Set loadMeasurementSetupsButIds(final StorableObjectCondition condition, final java.util.Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids,
 				condition,
-				ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE,
+				ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE,
 				new TransmitButIdsConditionProcedure() {
 					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							Identifier_Transferable[] idsT,

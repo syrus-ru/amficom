@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.41 2005/06/03 16:13:46 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.42 2005/06/05 18:41:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/03 16:13:46 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/05 18:41:30 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -72,7 +72,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 	}
 
 	public Set loadMonitoredElements(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ids, ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
