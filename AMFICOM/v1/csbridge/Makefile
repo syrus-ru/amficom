@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.12 2005/06/05 18:52:29 arseniy Exp $
+# $Id: Makefile,v 1.13 2005/06/05 18:53:52 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -42,7 +42,8 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/event \
 		-C $(CLASSDIR) com/syrus/AMFICOM/resource \
 		-C $(CLASSDIR) com/syrus/AMFICOM/map \
-		-C $(CLASSDIR) com/syrus/AMFICOM/scheme
+		-C $(CLASSDIR) com/syrus/AMFICOM/scheme \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mapview
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
