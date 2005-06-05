@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.25 2005/06/05 18:31:27 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.26 2005/06/05 18:40:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/05 18:31:27 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/05 18:40:16 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -108,7 +108,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+					case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
 									ObjectEntities.MSMELINK_ENTITY);
@@ -156,13 +156,13 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case ObjectEntities.TEST_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+					case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 						return super.getQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
 					case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 						return super.getLinkedQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID,
-								ObjectEntities.MONITORED_ELEMENT_ENTITY);
+								ObjectEntities.MONITOREDELEMENT_ENTITY);
 					case ObjectEntities.MCM_ENTITY_CODE:
 						stringBuffer = new StringBuffer();
 						stringBuffer.append(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
@@ -171,7 +171,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						stringBuffer.append(StorableObjectDatabase.SQL_SELECT);
 						stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_FROM);
-						stringBuffer.append(ObjectEntities.MONITORED_ELEMENT_ENTITY);
+						stringBuffer.append(ObjectEntities.MONITOREDELEMENT_ENTITY);
 						stringBuffer.append(StorableObjectDatabase.SQL_WHERE);
 						stringBuffer.append(MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_IN);

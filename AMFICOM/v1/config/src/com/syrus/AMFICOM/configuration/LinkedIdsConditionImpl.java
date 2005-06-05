@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.21 2005/05/23 18:45:20 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/06/05 18:39:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/05/23 18:45:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/06/05 18:39:59 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -114,7 +114,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 				MonitoredElement monitoredElement = (MonitoredElement) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.DOMAIN_ENTITY_CODE:
@@ -191,7 +191,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
 			case ObjectEntities.KIS_ENTITY_CODE:
-			case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 			case ObjectEntities.PORT_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				this.entityCode = entityCode;

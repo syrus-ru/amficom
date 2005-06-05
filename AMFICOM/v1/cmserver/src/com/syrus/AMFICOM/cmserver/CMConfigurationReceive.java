@@ -1,5 +1,5 @@
 /*-
- * $Id: CMConfigurationReceive.java,v 1.24 2005/05/25 13:01:03 bass Exp $
+ * $Id: CMConfigurationReceive.java,v 1.25 2005/06/05 18:42:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/25 13:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/06/05 18:42:07 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationReceive extends CMAdministrationReceive {
@@ -137,7 +137,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveLinks(

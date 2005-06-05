@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.87 2005/06/03 15:51:24 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.88 2005/06/05 18:39:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/06/03 15:51:24 $
+ * @version $Revision: 1.88 $, $Date: 2005/06/05 18:39:59 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -72,7 +72,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.TRANSPATH_ENTITY_CODE, new TransmissionPathFactory());
 		registerFactory(ObjectEntities.KIS_ENTITY_CODE, new KisFactory());
 		registerFactory(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, new MeasurementPortFactory());
-		registerFactory(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new MonitoredElementFactory());
+		registerFactory(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, new MonitoredElementFactory());
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
@@ -95,7 +95,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, size);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
@@ -118,7 +118,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, TRANSPATH_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass, final int size) {
@@ -180,7 +180,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				return cObjectLoader.loadLinks(ids);
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				return cObjectLoader.loadMeasurementPorts(ids);
-			case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 				return cObjectLoader.loadMonitoredElements(ids);
 			default:
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
@@ -231,7 +231,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 					loadedCollection = cObjectLoader.loadMeasurementPortsButIds(condition, ids);
 					break;
-				case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+				case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 					loadedCollection = cObjectLoader.loadMonitoredElementsButIds(condition, ids);
 					break;
 			default:				
@@ -280,7 +280,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				cObjectLoader.saveMeasurementPorts(storableObjects, force);
 				break;
-			case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 				cObjectLoader.saveMonitoredElements(storableObjects, force);
 				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:

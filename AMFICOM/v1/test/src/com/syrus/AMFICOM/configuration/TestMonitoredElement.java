@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.4 2005/06/05 18:40:41 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/05 18:40:41 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -73,7 +73,7 @@ public class TestMonitoredElement extends CommonTest {
 
 		this.checkMonitoredElement(monitoredElement1);
 
-		StorableObjectPool.flush(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, false);
 	}
 
 	private void checkMonitoredElement(MonitoredElement monitoredElement) {

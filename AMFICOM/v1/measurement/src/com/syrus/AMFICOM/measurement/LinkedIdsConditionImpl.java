@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.42 2005/06/05 18:30:20 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.43 2005/06/05 18:40:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/05 18:30:20 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/05 18:40:16 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -162,7 +162,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
 				MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+					case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 						Set params = new HashSet();
 						params.addAll(measurementSetup.getMonitoredElementIds());
 						condition = super.conditionTest(params);
@@ -199,7 +199,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.TEST_ENTITY_CODE:
 				Test test = (Test) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE:
+					case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
 						condition = super.conditionTest(test.getMonitoredElement().getId());
 						break;
 					case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:

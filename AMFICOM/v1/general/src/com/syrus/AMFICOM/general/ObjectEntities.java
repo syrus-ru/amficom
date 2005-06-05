@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.68 2005/06/05 18:31:13 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.69 2005/06/05 18:39:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/05 18:31:13 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/05 18:39:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -80,7 +80,7 @@ public final class ObjectEntities {
 	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";
 	public static final String KIS_ENTITY = "KIS";
 	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
-	public static final String MONITORED_ELEMENT_ENTITY = "MonitoredElement";
+	public static final String MONITOREDELEMENT_ENTITY = "MonitoredElement";
 	public static final String LINK_ENTITY = "Link";
 	public static final String CABLETHREAD_ENTITY = "CableThread";
 
@@ -208,7 +208,7 @@ public final class ObjectEntities {
 	public static final short TRANSPATH_ENTITY_CODE = 0x0183;
 	public static final short KIS_ENTITY_CODE = 0x0184;
 	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x0185;
-	public static final short MONITORED_ELEMENT_ENTITY_CODE = 0x0186;
+	public static final short MONITOREDELEMENT_ENTITY_CODE = 0x0186;
 	public static final short LINK_ENTITY_CODE = 0x0187;
 	public static final short CABLETHREAD_ENTITY_CODE = 0x0188;
 
@@ -377,7 +377,7 @@ public final class ObjectEntities {
 		registerEntity(KIS_ENTITY_CODE, KIS_ENTITY);
 //		registerEntity(KISTYPE_ENTITY_CODE, KISTYPE_ENTITY);
 		registerEntity(MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_ENTITY);
-		registerEntity(MONITORED_ELEMENT_ENTITY_CODE, MONITORED_ELEMENT_ENTITY);
+		registerEntity(MONITOREDELEMENT_ENTITY_CODE, MONITOREDELEMENT_ENTITY);
 		registerEntity(LINK_ENTITY_CODE, LINK_ENTITY);
 		registerEntity(CABLETHREAD_ENTITY_CODE, CABLETHREAD_ENTITY);
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAConfigurationObjectLoader.java,v 1.17 2005/06/03 10:49:19 bass Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.18 2005/06/05 18:42:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/03 10:49:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/06/05 18:42:16 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader implements ConfigurationObjectLoader {
@@ -196,7 +196,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMonitoredElements(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ids, ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -388,7 +388,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -571,7 +571,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveMonitoredElements(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(storableObjects, ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
