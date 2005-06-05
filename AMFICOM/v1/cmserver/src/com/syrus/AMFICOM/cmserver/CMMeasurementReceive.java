@@ -1,5 +1,5 @@
 /*-
- * $Id: CMMeasurementReceive.java,v 1.19 2005/05/25 13:01:03 bass Exp $
+ * $Id: CMMeasurementReceive.java,v 1.20 2005/06/05 18:32:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/05/25 13:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/06/05 18:32:30 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementReceive extends CMConfigurationReceive {
@@ -105,7 +105,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveResults(

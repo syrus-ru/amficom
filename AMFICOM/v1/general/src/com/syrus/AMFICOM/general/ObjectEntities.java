@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.67 2005/05/27 15:31:38 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.68 2005/06/05 18:31:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/05/27 15:31:38 $
+ * @version $Revision: 1.68 $, $Date: 2005/06/05 18:31:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -88,7 +88,7 @@ public final class ObjectEntities {
 	public static final String SET_ENTITY = "Set";
 	public static final String SETPARAMETER_ENTITY = "SetParameter";
 	public static final String SETMELINK_ENTITY = "SetMELink";
-	public static final String MEASUREMENT_SETUP_ENTITY = "MeasurementSetup";
+	public static final String MEASUREMENTSETUP_ENTITY = "MeasurementSetup";
 	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink";
 	public static final String MSMTLINK_ENTITY = "MeasurementSetupMTLink";
 	public static final String MEASUREMENT_ENTITY = "Measurement";
@@ -231,7 +231,7 @@ public final class ObjectEntities {
 
 	public static final short SET_ENTITY_CODE = MEASUREMENT_MIN_ENTITY_CODE;
 	public static final short SETPARAMETER_ENTITY_CODE = 0x0202;
-	public static final short MEASUREMENT_SETUP_ENTITY_CODE = 0x0203;
+	public static final short MEASUREMENTSETUP_ENTITY_CODE = 0x0203;
 	public static final short MEASUREMENT_ENTITY_CODE = 0x0204;
 	public static final short ANALYSIS_ENTITY_CODE = 0x0205;
 	public static final short EVALUATION_ENTITY_CODE = 0x0206;
@@ -383,7 +383,7 @@ public final class ObjectEntities {
 
 		registerEntity(SET_ENTITY_CODE, SET_ENTITY);
 		registerEntity(SETPARAMETER_ENTITY_CODE, SETPARAMETER_ENTITY);
-		registerEntity(MEASUREMENT_SETUP_ENTITY_CODE, MEASUREMENT_SETUP_ENTITY);
+		registerEntity(MEASUREMENTSETUP_ENTITY_CODE, MEASUREMENTSETUP_ENTITY);
 		registerEntity(MEASUREMENT_ENTITY_CODE, MEASUREMENT_ENTITY);
 		registerEntity(ANALYSIS_ENTITY_CODE, ANALYSIS_ENTITY);
 		registerEntity(EVALUATION_ENTITY_CODE, EVALUATION_ENTITY);
