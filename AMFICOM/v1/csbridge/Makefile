@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.11 2005/06/01 20:53:28 arseniy Exp $
+# $Id: Makefile,v 1.12 2005/06/05 18:52:29 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -29,7 +29,8 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
 
 
 $(LIBNAME): .mach
