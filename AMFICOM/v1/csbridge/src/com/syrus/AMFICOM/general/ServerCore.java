@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.12 2005/06/04 16:56:20 bass Exp $
+ * $Id: ServerCore.java,v 1.13 2005/06/05 21:08:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/06/04 16:56:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/06/05 21:08:05 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -40,31 +40,31 @@ public abstract class ServerCore implements CommonServer {
 
 	/**
 	 * @param sessionKey an "in" parameter.
-	 * @param userId an "out" parameter.
-	 * @param domainId an "out" parameter.
+	 * @param userIdH an "out" parameter.
+	 * @param domainIdH an "out" parameter.
 	 * @throws AMFICOMRemoteException
 	 * @todo Move method body here (declaring method itself as final)
 	 */
-	protected abstract void validateAccess(final SessionKey_Transferable sessionKey,
-			final Identifier_TransferableHolder userId,
-			final Identifier_TransferableHolder domainId)
+	protected abstract void validateAccess(final SessionKey_Transferable sessionKeyT,
+			final Identifier_TransferableHolder userIdH,
+			final Identifier_TransferableHolder domainIdH)
 			throws AMFICOMRemoteException;
 
 	/**
-	 * @param ids
+	 * @param idsT
 	 * @param sessionKey
 	 * @throws AMFICOMRemoteException
 	 */
-	public final void delete(final Identifier_Transferable ids[],
-			final SessionKey_Transferable sessionKey)
+	public final void delete(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
-			this.validateAccess(sessionKey,
+			this.validateAccess(sessionKeyT,
 					new Identifier_TransferableHolder(),
 					new Identifier_TransferableHolder());
 	
 			Log.debugMessage("ServerCore.delete() | Trying to delete... ", Log.INFO);
-			StorableObjectPool.delete(Identifier.fromTransferables(ids));
+			StorableObjectPool.delete(Identifier.fromTransferables(idsT));
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
 		} catch (final Throwable t) {
@@ -124,109 +124,113 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	protected final IDLEntity[] transmitStorableObjects(
-			final Identifier_Transferable ids[],
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
+	protected final IDLEntity[] transmitStorableObjects(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
-			assert ids != null
-					&& sessionKey != null: ErrorMessages.NON_NULL_EXPECTED;
-			final int length = ids.length;
+			assert idsT != null && sessionKeyT != null: ErrorMessages.NON_NULL_EXPECTED;
+			final int length = idsT.length;
 			assert length != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-			assert StorableObject.hasSingleTypeEntities(ids);
+			assert StorableObject.hasSingleTypeEntities(idsT);
 	
-			final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-			final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-			this.validateAccess(sessionKey, userId, domainId);
-			Log.debugMessage("ServerCore.transmitStorableObjects() | "
-					+ length
-					+ " storable object(s) of type: "
-					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(ids))
-					+ " requested",
-					Log.FINEST);
-			final Set storableObjects = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(ids), true);
-			final IDLEntity transferables[] = new IDLEntity[storableObjects.size()];
+			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
+			final Identifier_TransferableHolder domainIdH = new Identifier_TransferableHolder();
+			this.validateAccess(sessionKeyT, userIdH, domainIdH);
+
+			Log.debugMessage("ServerCore.transmitStorableObjects() | Requested " + length + " storable object(s) of type: "
+					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)), Log.FINEST);
+
+			final Set storableObjects = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(idsT), true);
+			final IDLEntity[] transferables = new IDLEntity[storableObjects.size()];
 			int i = 0;
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++)
 				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable();
 			return transferables;
-		} catch (final ApplicationException ae) {
+		}
+		catch (final ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
-		} catch (final AMFICOMRemoteException are) {
+		}
+		catch (final AMFICOMRemoteException are) {
 			throw are;
-		} catch (final Throwable t) {
+		}
+		catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
 	}
 
-	protected final IDLEntity[] transmitStorableObjectsButIdsCondition(
-			final Identifier_Transferable ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
-			throws AMFICOMRemoteException {
+	protected final IDLEntity[] transmitStorableObjectsButIdsCondition(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT,
+			final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
 		try {
-			assert ids != null
-					&& sessionKey != null
-					&& storableObjectCondition != null: ErrorMessages.NON_NULL_EXPECTED;
+			assert idsT != null && sessionKeyT != null && conditionT != null : ErrorMessages.NON_NULL_EXPECTED;
 
-			final StorableObjectCondition storableObjectCondition2 = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition);
-			final short entityCode = storableObjectCondition2.getEntityCode().shortValue();
+			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
+			final short entityCode = condition.getEntityCode().shortValue();
 
-			assert StorableObject.hasSingleTypeEntities(ids);
-			assert ids.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
+			assert StorableObject.hasSingleTypeEntities(idsT);
+			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
 			assert ObjectEntities.isEntityCodeValid(entityCode);
 
 			final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
 			final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-			this.validateAccess(sessionKey, userId, domainId);
-			Log.debugMessage("ServerCore.transmitStorableObjectsButIdsCondition() | Storable object(s) of type: "
-					+ ObjectEntities.codeToString(entityCode)
-					+ " requested",
-					Log.FINEST);
+			this.validateAccess(sessionKeyT, userId, domainId);
+			Log.debugMessage("ServerCore.transmitStorableObjectsButIdsCondition() | Requested storable object(s) of type: "
+					+ ObjectEntities.codeToString(entityCode), Log.FINEST);
 
-			final Set storableObjects = StorableObjectPool.getStorableObjectsByConditionButIds(Identifier.fromTransferables(ids), storableObjectCondition2, true);
-			final IDLEntity transferables[] = new IDLEntity[storableObjects.size()];
+			final Set storableObjects = StorableObjectPool.getStorableObjectsByConditionButIds(Identifier.fromTransferables(idsT),
+					condition,
+					true);
+			final IDLEntity[] transferables = new IDLEntity[storableObjects.size()];
 			int i = 0;
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++)
 				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable();
 			return transferables;
-		} catch (final ApplicationException ae) {
+		}
+		catch (final ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
-		} catch (final AMFICOMRemoteException are) {
+		}
+		catch (final AMFICOMRemoteException are) {
 			throw are;
-		} catch (final Throwable t) {
+		}
+		catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
 	}
 
-	protected final StorableObject_Transferable[] receiveStorableObjects(
-			final short entityCode,
-			final IDLEntity transferables[],
+	protected final StorableObject_Transferable[] receiveStorableObjects(final short entityCode,
+			final IDLEntity[] transferables,
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
-			throws AMFICOMRemoteException {
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
-			final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-			final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
-			this.validateAccess(sessionKey, userId, domainId);
+			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
+			final Identifier_TransferableHolder domainIdH = new Identifier_TransferableHolder();
+			this.validateAccess(sessionKeyT, userIdH, domainIdH);
 
 			final Set storableObjects = new HashSet(transferables.length);
-			for (int i = 0; i < transferables.length; i++)
+			for (int i = 0; i < transferables.length; i++) {
 				try {
 					storableObjects.add(StorableObjectPool.fromTransferable(entityCode, transferables[i]));
-				} catch (final ApplicationException ae) {
+				}
+				catch (final ApplicationException ae) {
 					Log.debugException(ae, Log.SEVERE);
 				}
+			}
 
-			DatabaseContext.getDatabase(entityCode).update(storableObjects, new Identifier(userId.value), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+			database.update(storableObjects,
+					new Identifier(userIdH.value),
+					force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(storableObjects);
-		} catch (final VersionCollisionException vce) {
+		}
+		catch (final VersionCollisionException vce) {
 			throw this.processDefaultApplicationException(vce, ErrorCode.ERROR_VERSION_COLLISION);
-		} catch (final UpdateObjectException uoe) {
+		}
+		catch (final UpdateObjectException uoe) {
 			throw this.processDefaultApplicationException(uoe, ErrorCode.ERROR_UPDATE);
-		} catch (final AMFICOMRemoteException are) {
+		}
+		catch (final AMFICOMRemoteException are) {
 			throw are;
-		} catch (final Throwable t) {
+		}
+		catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
 	}
@@ -241,9 +245,9 @@ public abstract class ServerCore implements CommonServer {
 	 */
 	public final Identifier_Transferable[] transmitRefreshedStorableObjects(
 			final StorableObject_Transferable headers[],
-			final SessionKey_Transferable sessionKey)
+			final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		this.validateAccess(sessionKey,
+		this.validateAccess(sessionKeyT,
 				new Identifier_TransferableHolder(),
 				new Identifier_TransferableHolder());
 

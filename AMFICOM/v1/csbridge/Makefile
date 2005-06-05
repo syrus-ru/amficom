@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.13 2005/06/05 18:53:52 arseniy Exp $
+# $Id: Makefile,v 1.14 2005/06/05 21:08:05 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -65,14 +65,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) -r \
-		$(CLASSDIR)/com/syrus/AMFICOM/general \
-		$(CLASSDIR)/com/syrus/AMFICOM/administration \
-		$(CLASSDIR)/com/syrus/AMFICOM/configuration \
-		$(CLASSDIR)/com/syrus/AMFICOM/measurement \
-		$(CLASSDIR)/com/syrus/AMFICOM/map \
-		$(CLASSDIR)/com/syrus/AMFICOM/mapview \
-		$(CLASSDIR)/com/syrus/AMFICOM/scheme
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba

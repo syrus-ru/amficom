@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.106 2005/06/04 16:56:19 bass Exp $
+ * $Id: CMServerImpl.java,v 1.107 2005/06/05 21:05:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/06/04 16:56:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.107 $, $Date: 2005/06/05 21:05:38 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -35,16 +35,16 @@ public class CMServerImpl extends CMMeasurementTransmit {
 	 */
 	protected void validateAccess(final SessionKey_Transferable sessionKey,
 			final Identifier_TransferableHolder userId,
-			final Identifier_TransferableHolder domainId)
-			throws AMFICOMRemoteException {
+			final Identifier_TransferableHolder domainId) throws AMFICOMRemoteException {
 		try {
-			CMServerSessionEnvironment.getInstance()
-					.getCMServerServantManager()
-					.getLoginServerReference()
-					.validateAccess(sessionKey, userId, domainId);
-		} catch (final CommunicationException ce) {
+			CMServerSessionEnvironment.getInstance().getCMServerServantManager().getLoginServerReference().validateAccess(sessionKey,
+					userId,
+					domainId);
+		}
+		catch (final CommunicationException ce) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (final Throwable t) {
+		}
+		catch (final Throwable t) {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
 		}
