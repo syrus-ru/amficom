@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.29 2005/06/04 16:56:18 bass Exp $
+ * $Id: CharacteristicType.java,v 1.30 2005/06/06 10:30:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.Ch
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/04 16:56:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/06/06 10:30:18 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -132,7 +132,7 @@ public final class CharacteristicType extends StorableObjectType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public IDLEntity getTransferable() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL + ", id: '" + this.id + "'";
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
