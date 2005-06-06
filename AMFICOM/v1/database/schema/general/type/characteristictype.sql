@@ -9,6 +9,7 @@ CREATE TABLE CharacteristicType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
 --
+ name VARCHAR2(128) NOT NULL,
  data_type NUMBER(2) NOT NULL,
  sort NUMBER(2) NOT NULL,
 --
