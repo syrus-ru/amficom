@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.4 2005/06/06 12:44:32 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.5 2005/06/06 15:18:33 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -29,7 +29,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:44:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/06 15:18:33 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -491,9 +491,13 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                         {
                             double unitBegin;
                             double unitEnd;
-                            if (ete.getEventType()
+                            if (ete.getEventType() // с началом коннектора строже
                                     == SimpleReflectogramEvent.CONNECTOR) {
                                 unitBegin = 1;      // 1 unit ~ 1 point
+                                unitEnd = len / 5.0;
+                            } else if (ete.getEventType() // с н/ид - не строго
+                                    == SimpleReflectogramEvent.NOTIDENTIFIED) {
+                                unitBegin = len / 5.0;
                                 unitEnd = len / 5.0;
                             } else {
                                 unitBegin = len / 10.0;
@@ -531,8 +535,15 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                         + " Bkm=" + re[k].getBegin()*dxkm
                                         + " BEkm=" + ete.getBegin()*dxkm);
                             }
-                            double beginRoughness =
-                                Math.abs(dBeginS) / (dBMax - dBMin);
+
+                            // если пределы колебаний указаны явно, полностью
+                            // игнорируем все колебания внутри этого предела
+                            if (ete.hasBeginMin() && dBeginS >= dBMin && dBeginS < 0)
+                                    dBeginS = 0;
+                            if (ete.hasBeginMax() && dBeginS <= dBMax && dBeginS > 0)
+                                    dBeginS = 0;
+
+                            double beginRoughness = Math.abs(dBeginS) / (dBMax - dBMin);
                             // 0.5 / ( 1/x + 1/sqrt(x) ) == 1 * x / (1 + sqrt(x))
                             // имеет асимпотики - лин. в нуле, sqrt на +inf
                             beginRoughness *= 1.0 / (1.0 + Math.sqrt(beginRoughness));
@@ -563,6 +574,14 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                         + " Ekm=" + re[k].getEnd()*dxkm
                                         + " EEkm=" + ete.getEnd()*dxkm);
                             }
+
+                            // если пределы колебаний указаны явно, полностью
+                            // игнорируем все колебания внутри этого предела
+                            if (ete.hasEndMin() && dEndS >= dEMin && dEndS < 0)
+                                    dEndS = 0;
+                            if (ete.hasEndMax() && dEndS <= dEMax && dEndS > 0)
+                                    dEndS = 0;
+
                             double endRoughness =
                                 Math.abs(dEndS) / (dEMax - dEMin);
                             endRoughness *= 1.0 / (1.0 + Math.sqrt(endRoughness));
