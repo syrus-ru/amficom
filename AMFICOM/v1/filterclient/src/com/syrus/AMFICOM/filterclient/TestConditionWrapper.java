@@ -1,5 +1,5 @@
 /*
- * $Id: TestConditionWrapper.java,v 1.6 2005/05/24 13:45:42 max Exp $
+ * $Id: TestConditionWrapper.java,v 1.7 2005/06/06 11:52:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/24 13:45:42 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/06/06 11:52:43 $
+ * @author $Author: bob $
  * @module filterclient_v1
  */
 public class TestConditionWrapper implements ConditionWrapper {
@@ -36,7 +36,7 @@ public class TestConditionWrapper implements ConditionWrapper {
 		keys.add(new ConditionKey(TestWrapper.COLUMN_STATUS, STATUS, testStatusNames));
 		keys.add(new ConditionKey(TestWrapper.COLUMN_START_TIME, START_TIME, ConditionWrapper.DATE));
 		keys.add(new ConditionKey(TestWrapper.COLUMN_END_TIME, END_TIME, ConditionWrapper.DATE));
-		keys.add(new ConditionKey(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE));
+		keys.add(new ConditionKey(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE));
 		keys.add(new ConditionKey(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE));
 		keys.add(new ConditionKey(ObjectEntities.MCM_ENTITY_CODE));		
 	}

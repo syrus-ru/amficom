@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupConditionWrapper.java,v 1.2 2005/05/24 13:45:42 max Exp $
+ * $Id: MeasurementSetupConditionWrapper.java,v 1.3 2005/06/06 11:52:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,13 +21,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/24 13:45:42 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 11:52:43 $
+ * @author $Author: bob $
  * @module filterclient_v1
  */
 public class MeasurementSetupConditionWrapper {
 	
-	private static short entityCode = ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE;
+	private static short entityCode = ObjectEntities.MONITOREDELEMENT_ENTITY_CODE;
 	
 	private ArrayList monitoredElements; 
 	
