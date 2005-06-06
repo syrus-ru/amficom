@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 
-public final class MapCablePathBindPanel {}
+public final class MapCablePathBindPanel {
+	// @todo remove this class after checking that CablePathAddEditor works properly
+}
 //
 //		extends JPanel 
 //		implements ObjectResourcePropertiesPane, MapPropertiesPane

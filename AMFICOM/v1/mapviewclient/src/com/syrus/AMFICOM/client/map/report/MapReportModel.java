@@ -16,7 +16,9 @@ import com.syrus.AMFICOM.Client.General.Report.ImagePanel;
 import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
 */
 
-public class MapReportModel {}
+public class MapReportModel {
+	// @todo wait for reportbuilder classes from generalclient
+}
 //extends APOReportModel
 //{
 //	public String getName()

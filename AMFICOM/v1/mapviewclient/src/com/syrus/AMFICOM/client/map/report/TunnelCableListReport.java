@@ -18,7 +18,9 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 */
-public class TunnelCableListReport {}
+public class TunnelCableListReport {
+	// @todo wait for reportbuilder classes from generalclient
+}
 //extends ReportData
 //{
 //	public TunnelCableListReport(ObjectsReport report, int divisionsNumber)

@@ -22,7 +22,9 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 */
-public class CableLayoutReport {}
+public class CableLayoutReport {
+	// @todo wait for reportbuilder classes from generalclient
+}
 //extends ReportData
 //{
 //	public CableLayoutReport(ObjectsReport report, int divisionsNumber)

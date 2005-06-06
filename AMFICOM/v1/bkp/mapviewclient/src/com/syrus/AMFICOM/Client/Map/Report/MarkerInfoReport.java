@@ -23,7 +23,9 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.Marker;
 */
-public class MarkerInfoReport{}
+public class MarkerInfoReport{
+	// @todo wait for reportbuilder classes from generalclient
+}
 //extends ReportData {
 //	public MarkerInfoReport(ObjectsReport report, int divisionsNumber)
 //			throws CreateReportException {
