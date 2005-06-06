@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRun.java,v 1.4 2005/05/27 15:14:57 krupenn Exp $
+ * $Id: MapEditorRun.java,v 1.5 2005/06/06 10:11:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.Client.Map.Editor;
 
 import com.syrus.AMFICOM.Client.General.Model.DefaultMapEditorApplicationModelFactory;
+import com.syrus.util.Application;
 
 /**
  * Запуск приложения "Редактор топологических схем" 
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/05/27 15:14:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/06 10:11:37 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -25,6 +26,7 @@ public class MapEditorRun {
 	}
 
 	public static void main(String[] args) {
+		Application.init("mapviewclient");
 		new MapEditor(new DefaultMapEditorApplicationModelFactory());
 	}
 }
