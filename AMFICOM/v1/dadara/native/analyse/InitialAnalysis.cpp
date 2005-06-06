@@ -1173,10 +1173,24 @@ int InitialAnalysis::getLastPoint()
 //------------------------------------------------------------------------------------------------------------
 // f- исходная ф-ция,
 // f_wlet - вейвлет-образ
-void InitialAnalysis::performTransformationAndCenter(double* f, int begin, int end, double* f_wlet, int scale, double norma)
+void InitialAnalysis::performTransformationAndCenter(double* data, int begin, int end, double* f_wlet, int scale, double norma)
 {	// transform
-	performTransformationOnly(f, begin, end, f_wlet, scale, norma);
+	performTransformationOnly(data, begin, end, f_wlet, scale, norma);
 	centerWletImageOnly(f_wlet, scale, begin, end, norma);
+#ifdef DEBUG_INITIAL_ANALYSIS
+#if 0 // FIXME: slow debug code
+	int i;
+	char sbuf[64];
+	sprintf(sbuf, "wt-%d-%d-%d", scale, begin, end);
+	FILE *fp = fopen(sbuf, "w");
+	if (fp) {
+		for (i = begin; i < end; i++) {
+			fprintf(fp, "%d %g\n", i, f_wlet[i]);
+		}
+		fclose(fp);
+	}
+#endif
+#endif
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1)
@@ -1192,20 +1206,6 @@ void InitialAnalysis::performTransformationOnly(double* data, int begin, int end
 	assert(begin >= 0);
 	assert(end <= lastPoint + 1);
 	wavelet.transform(freq, data, lastPoint + 1, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
-#ifdef DEBUG_INITIAL_ANALYSIS
-#if 0 // FIXME: slow debug code
-	int i;
-	char sbuf[64];
-	sprintf(sbuf, "wt-%d-%d-%d", freq, begin, end);
-	FILE *fp = fopen(sbuf, "w");
-	if (fp) {
-		for (i = begin; i < end; i++) {
-			fprintf(fp, "%d %g\n", i, f_wlet[i]);
-		}
-		fclose(fp);
-	}
-#endif
-#endif
 }
 //------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getMinScale() {
