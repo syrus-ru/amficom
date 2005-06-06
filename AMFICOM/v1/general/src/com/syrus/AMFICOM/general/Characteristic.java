@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.36 2005/06/03 20:37:26 arseniy Exp $
+ * $Id: Characteristic.java,v 1.37 2005/06/06 10:49:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/03 20:37:26 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/06 10:49:42 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -102,14 +102,19 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && !(this.type == null || this.name == null || this.description == null ||
-				this.value == null || this.characterizableId == null);		
+		return super.isValid()
+				&& this.type != null
+				|| this.name != null
+				|| this.value != null
+				|| this.characterizableId != null;
 	}
 
 	/**
 	 * create new instance for client
+	 * 
 	 * @param creatorId
-	 * @param type see {@link CharacteristicType}
+	 * @param type
+	 *          see {@link CharacteristicType}
 	 * @param name
 	 * @param description
 	 * @param value
