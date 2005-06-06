@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.4 2005/05/27 15:14:54 krupenn Exp $
+ * $Id: MapConnection.java,v 1.5 2005/06/06 07:13:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,12 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/27 15:14:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/06 07:13:26 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
-public abstract class MapConnection
-{
+public abstract class MapConnection {
 	public abstract boolean connect() throws MapConnectionException;
 
 	public abstract boolean release() throws MapConnectionException;
@@ -42,32 +41,24 @@ public abstract class MapConnection
 	public abstract List getAvailableViews() throws MapDataException;
 
 	public static MapConnection create(String connectionClass)
-			throws MapConnectionException
-	{
+			throws MapConnectionException {
 		Environment.log(
 				Environment.LOG_LEVEL_FINER,
 				"method call MapConnection.create()");
 
 		MapConnection connection = null;
-		try
-		{
+		try {
 			connection = (MapConnection )Class.forName(connectionClass)
 					.newInstance();
-		}
-		catch(ClassNotFoundException cnfe)
-		{
+		} catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 			throw new MapConnectionException(
 					"MapConnection.create() throws ClassNotFoundException");
-		}
-		catch(InstantiationException ie)
-		{
+		} catch(InstantiationException ie) {
 			ie.printStackTrace();
 			throw new MapConnectionException(
 					"MapConnection.create() throws InstantiationException");
-		}
-		catch(IllegalAccessException iae)
-		{
+		} catch(IllegalAccessException iae) {
 			iae.printStackTrace();
 			throw new MapConnectionException(
 					"MapConnection.create() throws IllegalAccessException");
