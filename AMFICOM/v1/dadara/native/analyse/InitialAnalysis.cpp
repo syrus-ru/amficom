@@ -190,7 +190,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
     shiftThresholds(scaleB);// сдвинуть пороги
 
-#if 0
+#ifdef DEBUG_INITIAL_ANALYSIS
 	{	// FIXME: debug dump
 		FILE *f = fopen ("noise2.tmp", "w");
 		if (f) {
@@ -215,7 +215,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 		ArrList newSpl;
 		performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scale, getWLetNorma(scale));
 
-#if 0
+#ifdef DEBUG_INITIAL_ANALYSIS
 	{	// FIXME: debug dump
 		FILE *f;
 		f = fopen ("noiserq.dat", "r");
@@ -313,7 +313,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 			}
 		}
 		newSpl.disposeAll();
-#if 0
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
 		{
 			int i;
 			fprintf(stderr, "accSpl dump at scale %d: Total %d splices\n", scale, accSpl.getLength());
