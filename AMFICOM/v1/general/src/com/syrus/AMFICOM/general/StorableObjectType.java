@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.21 2005/06/03 20:37:26 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.22 2005/06/06 10:30:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/03 20:37:26 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/06 10:30:34 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -71,7 +71,7 @@ public abstract class StorableObjectType extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		return super.isValid() && this.codename != null && this.codename.length() != 0 && this.description != null;
+		return super.isValid() && this.codename != null && this.codename.length() != 0;
 	}
 	
 	public String getCodename() {
