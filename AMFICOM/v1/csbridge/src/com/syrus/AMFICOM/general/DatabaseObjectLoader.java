@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.11 2005/06/03 16:15:38 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.12 2005/06/06 14:33:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,17 +16,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/03 16:15:38 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/06 14:33:48 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class DatabaseObjectLoader extends ObjectLoader {
 	protected static Identifier userId;
 
-	public static void init(Identifier userId1) {
+	public static void init(final Identifier userId1) {
 		userId = userId1;
 	}
 
@@ -134,36 +132,4 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		}
 	}
 
-
-	/**@deprecated*/
-	public final Set createLoadIds(final Set ids, final Set butIdentifiables) {
-		Identifier id;
-		Set loadIds = new HashSet(ids);
-		for (Iterator it = butIdentifiables.iterator(); it.hasNext();) {
-			id = ((Identifiable) it.next()).getId();
-			loadIds.remove(id);
-		}
-		return loadIds;
-	}
-
-	/**@deprecated*/
-	public final Identifier_Transferable[] createLoadIdsTransferable(final Set ids, final Set butIdentifiables) {
-		return Identifier.createTransferables(this.createLoadIds(ids, butIdentifiables));
-	}
-
-	/**@deprecated*/
-	public final Set createLoadButIds(final Set butIds, final Set alsoButIdentifiables) {
-		Identifier id;
-		Set loadButIds = new HashSet(butIds);
-		for (Iterator it = alsoButIdentifiables.iterator(); it.hasNext();) {
-			id = ((Identifiable) it.next()).getId();
-			loadButIds.add(id);
-		}
-		return loadButIds;
-	}
-
-	/**@deprecated*/
-	public final Identifier_Transferable[] createLoadButIdsTransferable(final Set butIds, final Set alsoButIdentifiables) {
-		return Identifier.createTransferables(this.createLoadButIds(butIds, alsoButIdentifiables));
-	}
 }
