@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.8 2005/05/30 12:19:03 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.9 2005/06/06 12:20:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -22,12 +22,12 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
- * @version $Revision: 1.8 $, $Date: 2005/05/30 12:19:03 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/06 12:20:36 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

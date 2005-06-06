@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.70 2005/06/01 11:33:50 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.71 2005/06/06 12:20:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -31,23 +31,23 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MoveNodeCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
+import com.syrus.AMFICOM.client.map.command.action.MoveNodeCommand;
+import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.client.map.controllers.AbstractNodeController;
+import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.map.controllers.MapElementController;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.controllers.MarkerController;
+import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandList;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -79,7 +79,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.70 $, $Date: 2005/06/01 11:33:50 $
+ * @version $Revision: 1.71 $, $Date: 2005/06/06 12:20:29 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1817,7 +1817,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public MapViewController getMapViewController()
 	{
-		return com.syrus.AMFICOM.Client.Map.Controllers.MapViewController.getInstance(this);
+		return MapViewController.getInstance(this);
 	}
 
 	/**

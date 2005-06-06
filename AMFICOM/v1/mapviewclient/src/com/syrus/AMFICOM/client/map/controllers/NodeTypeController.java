@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.20 2005/06/04 16:56:22 bass Exp $
+ * $Id: NodeTypeController.java,v 1.21 2005/06/06 12:20:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,7 +7,7 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Controllers;
+package com.syrus.AMFICOM.client.map.controllers;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/06/04 16:56:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/06/06 12:20:32 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {

@@ -1,27 +1,27 @@
 /**
- * $Id: MapModeCommand.java,v 1.14 2005/05/27 15:14:56 krupenn Exp $ 
+ * $Id: MapModeCommand.java,v 1.15 2005/06/06 12:20:31 krupenn Exp $ 
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный 
  * Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Navigate;
+package com.syrus.AMFICOM.client.map.command.navigate;
 
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 /**
  * Команда переключения режима работы с картой - режимы фрагмента, линии, пути
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class MapModeCommand extends MapNavigateCommand {

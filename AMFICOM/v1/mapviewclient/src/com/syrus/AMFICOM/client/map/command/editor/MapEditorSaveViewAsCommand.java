@@ -1,9 +1,9 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.12 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.13 2005/06/06 12:20:31 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.util.Iterator;
 
@@ -11,10 +11,10 @@ import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewSaveAsCommand;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewSaveAsCommand;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * команду MapSaveAsCommand
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  * @see MapViewSaveAsCommand
  */

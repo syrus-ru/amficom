@@ -1,11 +1,11 @@
 /*
- * $Id: MapStatusBar.java,v 1.5 2005/06/06 07:19:30 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.6 2005/06/06 12:20:36 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -21,14 +21,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/06/06 07:19:30 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:36 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel {

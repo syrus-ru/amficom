@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Report;
+package com.syrus.AMFICOM.client.map.report;
 /*
 import java.util.Iterator;
 

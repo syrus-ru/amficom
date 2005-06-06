@@ -1,19 +1,19 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.5 2005/05/27 15:14:57 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.6 2005/06/06 12:20:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.Operations;
+package com.syrus.AMFICOM.client.map.operations;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.mapview.MapView;
 
 import java.awt.BorderLayout;
@@ -33,7 +33,7 @@ import javax.swing.JTabbedPane;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

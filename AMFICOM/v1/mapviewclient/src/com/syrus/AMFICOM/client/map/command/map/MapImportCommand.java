@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.26 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.27 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.Command.Map;
+package com.syrus.AMFICOM.client.map.command.map;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,14 +25,14 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Command.ImportCommand;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.command.ImportCommand;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -65,7 +65,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand {

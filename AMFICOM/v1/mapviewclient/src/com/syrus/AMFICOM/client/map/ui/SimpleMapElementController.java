@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

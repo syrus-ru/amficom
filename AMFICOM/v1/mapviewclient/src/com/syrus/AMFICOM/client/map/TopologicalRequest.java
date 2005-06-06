@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import javax.swing.ImageIcon;
 
@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * —труктура запроса изображени€ с сервера
- * @version $Revision: 1.1 $, $Date: 2005/06/06 07:12:43 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/06 12:20:29 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

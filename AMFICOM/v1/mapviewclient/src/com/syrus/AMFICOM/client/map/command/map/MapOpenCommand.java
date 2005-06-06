@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.21 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.22 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,14 +7,14 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Map;
+package com.syrus.AMFICOM.client.map.command.map;
 
 import java.util.Collection;
 
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.UI.MapTableController;
+import com.syrus.AMFICOM.client.map.ui.MapTableController;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * открыть карту. карта открывается в новом виде
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class MapOpenCommand extends AbstractCommand {

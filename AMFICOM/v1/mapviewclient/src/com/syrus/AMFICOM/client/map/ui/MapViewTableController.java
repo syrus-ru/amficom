@@ -2,7 +2,7 @@
  * TestResourceController.java Created on 20.08.2004 10:38:55
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;

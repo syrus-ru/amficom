@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.15 2005/06/06 07:15:29 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.16 2005/06/06 12:20:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,13 +7,13 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Editor;
+package com.syrus.AMFICOM.client.map.editor;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 import java.awt.event.ActionEvent;
@@ -26,7 +26,7 @@ import javax.swing.JMenuItem;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.15 $, $Date: 2005/06/06 07:15:29 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/06 12:20:33 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */

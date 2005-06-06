@@ -1,19 +1,19 @@
 /**
- * $Id: ViewMapAllCommand.java,v 1.12 2005/05/27 15:14:55 krupenn Exp $ Syrus
+ * $Id: ViewMapAllCommand.java,v 1.13 2005/06/06 12:20:31 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.beans.PropertyChangeEvent;
 
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Map.Editor.MapEditorWindowArranger;
+import com.syrus.AMFICOM.client.map.editor.MapEditorWindowArranger;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 
 import javax.swing.JDesktopPane;
 
@@ -21,7 +21,7 @@ import javax.swing.JDesktopPane;
  * отобразить стандартный набор окон модуля "Редактор топологических схем"
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class ViewMapAllCommand extends AbstractCommand {

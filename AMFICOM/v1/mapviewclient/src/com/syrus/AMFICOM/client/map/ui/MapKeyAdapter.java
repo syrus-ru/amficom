@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.5 2005/02/18 12:19:47 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.6 2005/06/06 12:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,12 +9,12 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapState;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -23,7 +23,7 @@ import java.awt.event.KeyEvent;
  * обработчик событий клавиатуры в окне карты. Используется для изменения 
  * режима обработки действий (SHIFT, ALT, CTRL) и для удаления выбранных 
  * элементов (DEL)
- * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:47 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:35 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

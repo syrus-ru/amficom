@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.21 2005/05/27 15:14:59 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.22 2005/06/06 12:20:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,19 +9,19 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.Strategy;
+package com.syrus.AMFICOM.client.map.strategy;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindPhysicalNodeToSiteCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.client.map.command.action.BindPhysicalNodeToSiteCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.MoveFixedDistanceCommand;
+import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -37,7 +37,7 @@ import java.util.Iterator;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/05/27 15:14:59 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/06 12:20:34 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 
@@ -140,7 +140,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 					this.command = new MoveSelectionCommandBundle(super.logicalNetLayer.getStartPoint());
 					((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
 				}
-				this.command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
+				this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 			}
 			this.node.setCanBind(false);
 			for (Iterator it = super.logicalNetLayer.getMapView().getMap().getAllSiteNodes().iterator();it.hasNext();)

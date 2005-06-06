@@ -1,26 +1,26 @@
 /*
- * $Id: MapEditorNewViewCommand.java,v 1.15 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapEditorNewViewCommand.java,v 1.16 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewCloseCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.15 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/06 12:20:31 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand

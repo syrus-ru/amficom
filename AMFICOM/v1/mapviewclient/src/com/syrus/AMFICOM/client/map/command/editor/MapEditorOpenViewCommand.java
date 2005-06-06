@@ -1,24 +1,24 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.19 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.20 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewOpenCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.19 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/06 12:20:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand

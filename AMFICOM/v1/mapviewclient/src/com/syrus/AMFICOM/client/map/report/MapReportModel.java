@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Report;
+package com.syrus.AMFICOM.client.map.report;
 /*
 import java.awt.Image;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import javax.swing.JComponent;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;

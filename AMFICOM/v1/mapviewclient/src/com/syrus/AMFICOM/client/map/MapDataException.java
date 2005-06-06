@@ -1,5 +1,5 @@
 /**
- * $Id: MapDataException.java,v 1.1 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: MapDataException.java,v 1.2 2005/06/06 12:20:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,11 +7,11 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 /**
  * 
- * @version $Revision: 1.1 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/06 12:20:29 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

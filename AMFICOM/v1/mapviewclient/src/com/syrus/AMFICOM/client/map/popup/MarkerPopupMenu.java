@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Popup;
+package com.syrus.AMFICOM.client.map.popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,9 +6,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.mapview.Marker;
 
 public final class MarkerPopupMenu extends MapPopupMenu {

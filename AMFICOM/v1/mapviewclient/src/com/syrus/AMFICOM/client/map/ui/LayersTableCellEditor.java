@@ -1,9 +1,9 @@
 /*
- * $Id: LayersTableCellEditor.java,v 1.2 2005/05/27 15:14:59 krupenn Exp $ Copyright © 2005 Syrus Systems. Dept. of Science & Technology. Project:
+ * $Id: LayersTableCellEditor.java,v 1.3 2005/06/06 12:20:35 krupenn Exp $ Copyright © 2005 Syrus Systems. Dept. of Science & Technology. Project:
  * AMFICOM.
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Component;
 
@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/27 15:14:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:35 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

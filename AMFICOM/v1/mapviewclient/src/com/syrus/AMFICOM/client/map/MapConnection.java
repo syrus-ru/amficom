@@ -1,18 +1,18 @@
 /**
- * $Id: MapConnection.java,v 1.5 2005/06/06 07:13:26 krupenn Exp $
+ * $Id: MapConnection.java,v 1.6 2005/06/06 12:20:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ 
  */
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import java.util.List;
 
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/06 07:13:26 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:29 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

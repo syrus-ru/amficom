@@ -1,15 +1,15 @@
-package com.syrus.AMFICOM.Client.Map.Command;
+package com.syrus.AMFICOM.client.map.command;
 
 import java.awt.Component;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapAdditionalPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapCharacteristicPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
+import com.syrus.AMFICOM.client.map.operations.ControlsFrame;
+import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 public abstract class MapDesktopCommand {
 	public static MapGeneralPropertiesFrame findMapGeneralPropertiesFrame(

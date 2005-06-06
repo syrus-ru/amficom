@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.30 2005/06/06 07:20:17 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.31 2005/06/06 12:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.AWTException;
 import java.awt.Cursor;
@@ -26,19 +26,19 @@ import javax.swing.SwingUtilities;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
-import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
-import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
-import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.controllers.MapElementController;
+import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
+import com.syrus.AMFICOM.client.map.popup.MapPopupMenu;
+import com.syrus.AMFICOM.client.map.popup.MapPopupMenuManager;
+import com.syrus.AMFICOM.client.map.strategy.MapStrategy;
+import com.syrus.AMFICOM.client.map.strategy.MapStrategyManager;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.30 $, $Date: 2005/06/06 07:20:17 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/06 12:20:35 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

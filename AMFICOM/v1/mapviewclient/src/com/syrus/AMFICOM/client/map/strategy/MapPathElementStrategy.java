@@ -1,5 +1,5 @@
 /**
- * $Id: MapPathElementStrategy.java,v 1.16 2005/05/27 15:14:58 krupenn Exp $
+ * $Id: MapPathElementStrategy.java,v 1.17 2005/06/06 12:20:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,11 +9,11 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.Strategy;
+package com.syrus.AMFICOM.client.map.strategy;
 
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
@@ -23,7 +23,7 @@ import java.awt.Point;
 /**
  * Стратегия управления измерительным путем.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/05/27 15:14:58 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/06 12:20:34 $
  * @module mapviewclient_v1
  */
 public final class MapPathElementStrategy extends AbstractMapStrategy 

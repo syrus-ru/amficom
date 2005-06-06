@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Command.Map;
+package com.syrus.AMFICOM.client.map.command.map;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;

@@ -1,11 +1,11 @@
 /**
- * $Id: LayersDialog.java,v 1.2 2005/05/27 15:14:59 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.3 2005/06/06 12:20:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -26,10 +26,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 

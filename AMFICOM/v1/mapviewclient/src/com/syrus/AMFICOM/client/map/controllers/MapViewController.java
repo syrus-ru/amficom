@@ -1,12 +1,12 @@
 /**
- * $Id: MapViewController.java,v 1.25 2005/05/27 15:14:56 krupenn Exp $
+ * $Id: MapViewController.java,v 1.26 2005/06/06 12:20:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.Controllers;
+package com.syrus.AMFICOM.client.map.controllers;
 
 import java.awt.Graphics;
 import java.awt.Point;
@@ -16,16 +16,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemePathCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveNodeCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.client.map.command.action.PlaceSchemePathCommand;
+import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
+import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeElementCommand;
+import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/06 12:20:32 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {

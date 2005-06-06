@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Props;
+package com.syrus.AMFICOM.client.map.props;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

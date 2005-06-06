@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Props;
+package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -21,12 +21,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveUnboundLinkCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

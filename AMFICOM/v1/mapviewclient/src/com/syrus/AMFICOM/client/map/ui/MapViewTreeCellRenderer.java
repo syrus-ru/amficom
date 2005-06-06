@@ -1,11 +1,11 @@
 /**
- * $Id: MapViewTreeCellRenderer.java,v 1.2 2005/05/30 12:19:02 krupenn Exp $
+ * $Id: MapViewTreeCellRenderer.java,v 1.3 2005/06/06 12:20:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Color;
 import java.awt.Component;

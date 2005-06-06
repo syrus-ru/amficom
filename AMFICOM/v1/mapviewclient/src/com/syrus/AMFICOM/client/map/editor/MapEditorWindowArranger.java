@@ -1,29 +1,29 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.10 2005/05/27 15:14:57 krupenn Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.11 2005/06/06 12:20:33 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.Client.Map.Editor;
+package com.syrus.AMFICOM.client.map.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Operations.ControlsFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapAdditionalPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapCharacteristicPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.operations.ControlsFrame;
+import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/05/27 15:14:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/06 12:20:33 $
  * @module mapviewclient_v1
  */
 

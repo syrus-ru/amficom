@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Popup;
+package com.syrus.AMFICOM.client.map.popup;
 
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Report;
+package com.syrus.AMFICOM.client.map.report;
 /*
 import javax.swing.table.TableColumn;
 
@@ -7,9 +7,9 @@ import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Collector;

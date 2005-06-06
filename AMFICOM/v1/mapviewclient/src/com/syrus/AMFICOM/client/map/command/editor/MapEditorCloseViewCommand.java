@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseViewCommand.java,v 1.14 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapEditorCloseViewCommand.java,v 1.15 2005/06/06 12:20:30 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -8,18 +8,18 @@
  * ѕлатформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewCloseCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Command;
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand дл€ закрыти€ карты, после чего
  * генерирует событие закрыти€
  * 
- * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/06 12:20:30 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.Client.Map.Command.Map.MapCloseCommand

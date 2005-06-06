@@ -1,11 +1,11 @@
 /**
- * $Id: MapPopupMenu.java,v 1.38 2005/05/27 15:14:57 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.39 2005/06/06 12:20:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
-package com.syrus.AMFICOM.Client.Map.Popup;
+package com.syrus.AMFICOM.client.map.popup;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -20,21 +20,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateCablePathCablingCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateUnboundLinkCablingCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.Client.Map.Props.MapVisualManager;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.CreateCollectorCommandAtomic;
+import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
+import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
+import com.syrus.AMFICOM.client.map.command.action.GenerateCablePathCablingCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.GenerateUnboundLinkCablingCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.InsertSiteCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.MapElementStateChangeCommand;
+import com.syrus.AMFICOM.client.map.command.action.RemoveCollectorCommandAtomic;
+import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.38 $, $Date: 2005/05/27 15:14:57 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/06 12:20:33 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {

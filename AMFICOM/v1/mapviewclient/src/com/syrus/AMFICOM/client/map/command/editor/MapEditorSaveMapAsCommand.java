@@ -1,17 +1,17 @@
 /*
- * $Id: MapEditorSaveMapAsCommand.java,v 1.7 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapEditorSaveMapAsCommand.java,v 1.8 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapSaveAsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.command.map.MapSaveAsCommand;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -23,7 +23,7 @@ import javax.swing.JDesktopPane;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.7 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/06 12:20:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand

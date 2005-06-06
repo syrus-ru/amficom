@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.43 2005/06/01 11:35:16 krupenn Exp $
+ * $Id: MapFrame.java,v 1.44 2005/06/06 12:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
@@ -28,29 +28,29 @@ import javax.swing.event.InternalFrameEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.MapConnection;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.HandPanCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.MapModeCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.MeasureDistanceCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.MoveFixedCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.MoveToCenterCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.ShowNodesCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomBoxCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomInCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomOutCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomToPointCommand;
+import com.syrus.AMFICOM.client.map.MapConnection;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.command.navigate.CenterSelectionCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.HandPanCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.MapModeCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.MeasureDistanceCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.MoveFixedCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.MoveToCenterCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.ShowNodesCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.ZoomBoxCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.ZoomInCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.ZoomOutCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.ZoomToPointCommand;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -75,7 +75,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.43 $, $Date: 2005/06/01 11:35:16 $
+ * @version $Revision: 1.44 $, $Date: 2005/06/06 12:20:35 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

@@ -1,12 +1,12 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.8 2005/05/27 15:14:57 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.9 2005/06/06 12:20:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.Operations;
+package com.syrus.AMFICOM.client.map.operations;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -33,9 +33,9 @@ import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client.map.command.navigate.CenterSelectionCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.8 $, $Date: 2005/05/27 15:14:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/06 12:20:33 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

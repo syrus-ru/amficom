@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.13 2005/05/27 15:14:57 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.14 2005/06/06 12:20:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,13 +7,13 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Editor;
+package com.syrus.AMFICOM.client.map.editor;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 import java.awt.Dimension;
@@ -30,7 +30,7 @@ import java.awt.event.ActionListener;
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/05/27 15:14:57 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/06 12:20:33 $
  * @module mapviewclient_v1
  */
 public class MapEditorToolBar extends JToolBar implements ApplicationModelListener {

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.11 2005/03/18 10:37:35 peskovsky Exp $
+ * $Id: MapElementLabel.java,v 1.12 2005/06/06 12:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,11 +9,11 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Popup.ProtoPopupMenu;
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.popup.ProtoPopupMenu;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.Color;
@@ -44,8 +44,8 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/03/18 10:37:35 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.12 $, $Date: 2005/06/06 12:20:35 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapElementLabel extends JLabel

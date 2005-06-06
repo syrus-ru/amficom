@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.5 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.6 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Map;
+package com.syrus.AMFICOM.client.map.command.map;
 
 import java.util.Collection;
 
@@ -17,11 +17,11 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-import com.syrus.AMFICOM.Client.Map.UI.ExternalMapElementChooserDialog;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapTableController;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
+import com.syrus.AMFICOM.client.map.ui.ExternalMapElementChooserDialog;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.MapTableController;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class MapAddExternalNodeCommand extends AbstractCommand

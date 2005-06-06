@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Props;
+package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,10 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
-import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.controllers.MarkerController;
+import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
@@ -107,7 +107,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 			this.distanceTextField.setText("");
 		}
 		else {
-			MarkerController markerController = (MarkerController)com.syrus.AMFICOM.Client.Map.Controllers.MarkerController.getInstance();
+			MarkerController markerController = (MarkerController)MarkerController.getInstance();
 
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.marker.getName());

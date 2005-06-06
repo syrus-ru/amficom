@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.20 2005/06/06 10:21:39 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.21 2005/06/06 12:20:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,15 +7,15 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Controllers;
+package com.syrus.AMFICOM.client.map.controllers;
 
 import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.UI.LineComboBox;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.ui.LineComboBox;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/06/06 10:21:39 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/06 12:20:32 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController

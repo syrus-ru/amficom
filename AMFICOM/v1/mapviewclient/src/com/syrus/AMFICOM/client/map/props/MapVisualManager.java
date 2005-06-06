@@ -1,11 +1,11 @@
 /**
- * $Id: MapVisualManager.java,v 1.3 2005/05/27 15:14:58 krupenn Exp $
+ * $Id: MapVisualManager.java,v 1.4 2005/06/06 12:20:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map.Props;
+package com.syrus.AMFICOM.client.map.props;
 
 import java.util.HashMap;
 
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/27 15:14:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 12:20:33 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

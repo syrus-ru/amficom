@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.8 2005/05/27 15:14:56 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.9 2005/06/06 12:20:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,12 +7,12 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Controllers;
+package com.syrus.AMFICOM.client.map.controllers;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -27,7 +27,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/06 12:20:32 $
  * @module mapviewclient_v1
  */
 public final class AlarmMarkerController extends MarkerController {

@@ -1,10 +1,10 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.6 2005/04/28 13:17:45 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.7 2005/06/06 12:20:29 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import com.syrus.AMFICOM.map.DoublePoint;
 
@@ -14,7 +14,7 @@ import java.awt.Point;
  * Конвертер географических и экранных координат для отображения элементов карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/04/28 13:17:45 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:29 $
  * @module maviewclient_v1
  */
 public interface MapCoordinatesConverter

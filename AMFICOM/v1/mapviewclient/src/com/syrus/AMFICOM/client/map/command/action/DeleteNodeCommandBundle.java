@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.25 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.26 2005/06/06 12:20:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,17 +9,17 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Action;
+package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/06 12:20:30 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle

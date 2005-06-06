@@ -1,20 +1,20 @@
 /**
- * $Id: MapNavigateCommand.java,v 1.2 2005/05/27 15:14:56 krupenn Exp $ 
+ * $Id: MapNavigateCommand.java,v 1.3 2005/06/06 12:20:31 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный 
  * Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Navigate;
+package com.syrus.AMFICOM.client.map.command.navigate;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class MapNavigateCommand extends AbstractCommand {

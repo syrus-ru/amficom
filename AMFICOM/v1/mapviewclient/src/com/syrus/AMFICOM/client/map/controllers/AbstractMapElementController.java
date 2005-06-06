@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapElementController.java,v 1.2 2005/05/27 15:14:56 krupenn Exp $
+ * $Id: AbstractMapElementController.java,v 1.3 2005/06/06 12:20:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,14 +7,14 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Controllers;
+package com.syrus.AMFICOM.client.map.controllers;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 
 /**
  * Контроллер элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:32 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractMapElementController implements

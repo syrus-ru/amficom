@@ -1,12 +1,12 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.39 2005/06/06 07:14:46 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.40 2005/06/06 12:20:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
 
-package com.syrus.AMFICOM.Client.Map.Editor;
+package com.syrus.AMFICOM.client.map.editor;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -33,38 +33,36 @@ import javax.swing.JViewport;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseMapCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseViewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorNewMapCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorNewViewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorOpenMapCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorOpenViewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveMapAsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveMapCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveViewAsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorSaveViewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewAdditionalPropertiesCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewCharacteristicsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewGeneralPropertiesCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapAllCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapControlsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapViewNavigatorCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.CreateMapReportCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddExternalNodeCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddMapCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapRemoveMapCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapAdditionalPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapCharacteristicPropertiesFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapGeneralPropertiesFrame;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseViewCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorNewMapCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorNewViewCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorOpenMapCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorOpenViewCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveMapAsCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveMapCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveViewAsCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveViewCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewAdditionalPropertiesCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewCharacteristicsCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewGeneralPropertiesCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapAllCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapControlsCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapViewNavigatorCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapWindowCommand;
+import com.syrus.AMFICOM.client.map.command.map.CreateMapReportCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapAddExternalNodeCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapAddMapCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapExportCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapImportCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapRemoveMapCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewAddSchemeCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewRemoveSchemeCommand;
+import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client.UI.StatusBarModel;
@@ -78,6 +76,8 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ExitCommand;
 import com.syrus.AMFICOM.client.model.HelpAboutCommand;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
 import com.syrus.AMFICOM.client.model.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.client.model.SessionCloseCommand;
@@ -96,7 +96,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.39 $, $Date: 2005/06/06 07:14:46 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/06 12:20:33 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */

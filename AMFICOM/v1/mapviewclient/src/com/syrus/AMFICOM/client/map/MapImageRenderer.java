@@ -1,11 +1,11 @@
 /**
- * $Id: MapImageRenderer.java,v 1.1 2005/06/06 07:12:43 krupenn Exp $
+ * $Id: MapImageRenderer.java,v 1.2 2005/06/06 12:20:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/06 07:12:43 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/06 12:20:29 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

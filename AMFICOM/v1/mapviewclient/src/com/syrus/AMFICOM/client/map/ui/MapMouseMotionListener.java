@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.14 2005/06/06 07:20:17 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.15 2005/06/06 12:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -23,13 +23,13 @@ import javax.swing.SwingConstants;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.strategy.MapStrategy;
+import com.syrus.AMFICOM.client.map.strategy.MapStrategyManager;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.MapElement;
 
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.14 $, $Date: 2005/06/06 07:20:17 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/06 12:20:35 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

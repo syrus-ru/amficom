@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.19 2005/05/27 15:14:56 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.20 2005/06/06 12:20:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,7 +7,7 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Controllers;
+package com.syrus.AMFICOM.client.map.controllers;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -18,8 +18,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/06 12:20:32 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController {

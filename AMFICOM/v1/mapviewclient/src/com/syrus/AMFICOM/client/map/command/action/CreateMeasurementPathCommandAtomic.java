@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.14 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.15 2005/06/06 12:20:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Action;
+package com.syrus.AMFICOM.client.map.command.action;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/06 12:20:30 $
  * @module mapviewclient_v1
  */
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand

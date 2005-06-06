@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.general.Identifier;
@@ -9,7 +9,7 @@ import com.syrus.util.Wrapper;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/05/30 12:19:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:36 $
  * @module mapviewclient_v1
  */
 public class MapViewChooserDialog extends WrapperedTableChooserDialog 

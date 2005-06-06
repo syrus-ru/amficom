@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.19 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.20 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,7 +7,7 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.awt.Dimension;
 
@@ -15,18 +15,18 @@ import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends AbstractCommand {

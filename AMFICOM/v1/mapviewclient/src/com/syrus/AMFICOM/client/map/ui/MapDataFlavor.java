@@ -1,5 +1,5 @@
 /**
- * $Id: MapDataFlavor.java,v 1.2 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapDataFlavor.java,v 1.3 2005/06/06 12:20:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,13 +7,13 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.datatransfer.DataFlavor;
 
 /**
  * Формат данных для переноса элементов карты для операций drag / drop
- * @version $Revision: 1.2 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:35 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

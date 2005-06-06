@@ -1,17 +1,17 @@
 /**
- * $Id: ViewCharacteristicsCommand.java,v 1.3 2005/05/27 15:14:55 krupenn Exp $
+ * $Id: ViewCharacteristicsCommand.java,v 1.4 2005/06/06 12:20:31 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Editor;
+package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.awt.Dimension;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapCharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.model.Command;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/05/27 15:14:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class ViewCharacteristicsCommand extends AbstractCommand {

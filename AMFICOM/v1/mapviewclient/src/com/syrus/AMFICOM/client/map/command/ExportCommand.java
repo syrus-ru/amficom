@@ -1,11 +1,11 @@
 /*
- * $Id: ExportCommand.java,v 1.4 2005/05/27 15:14:54 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.5 2005/06/06 12:20:29 krupenn Exp $
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.Command;
+package com.syrus.AMFICOM.client.map.command;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * 
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

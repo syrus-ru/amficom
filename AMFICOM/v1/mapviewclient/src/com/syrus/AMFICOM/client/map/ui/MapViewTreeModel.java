@@ -1,11 +1,11 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.14 2005/05/30 12:19:02 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.15 2005/06/06 12:20:36 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/05/30 12:19:02 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/06 12:20:36 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

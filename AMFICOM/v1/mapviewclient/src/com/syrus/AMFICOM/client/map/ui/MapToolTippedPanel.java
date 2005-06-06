@@ -1,12 +1,12 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.6 2005/05/30 12:19:02 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.7 2005/06/06 12:20:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
 */
 
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Container;
 import java.awt.GraphicsConfiguration;
@@ -18,8 +18,8 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 
-import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * @version $Revision: 1.6 $, $Date: 2005/05/30 12:19:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:36 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -111,7 +111,7 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/05/30 12:19:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:36 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

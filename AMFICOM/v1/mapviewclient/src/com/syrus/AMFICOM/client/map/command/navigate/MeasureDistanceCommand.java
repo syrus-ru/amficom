@@ -1,5 +1,5 @@
 /**
- * $Id: MeasureDistanceCommand.java,v 1.7 2005/05/27 15:14:56 krupenn Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.8 2005/06/06 12:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,19 +7,19 @@
  *         Интеллектуальный Комплекс Объектного Мониторинга
  */
 
-package com.syrus.AMFICOM.Client.Map.Command.Navigate;
+package com.syrus.AMFICOM.client.map.command.navigate;
 
 import java.awt.Cursor;
 
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 
 /**
  * Команда включения/выключения масштабирования по выбранной области
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/06 12:20:31 $
  * @module mapviewclient_v1
  */
 public class MeasureDistanceCommand extends MapNavigateCommand {

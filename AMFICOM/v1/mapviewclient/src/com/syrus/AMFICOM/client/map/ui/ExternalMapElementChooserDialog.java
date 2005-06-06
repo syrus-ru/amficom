@@ -1,11 +1,11 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.5 2005/05/27 15:14:59 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.6 2005/06/06 12:20:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

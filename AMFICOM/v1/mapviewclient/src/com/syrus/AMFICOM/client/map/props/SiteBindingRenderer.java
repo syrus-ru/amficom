@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Props;
+package com.syrus.AMFICOM.client.map.props;
 
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.*;

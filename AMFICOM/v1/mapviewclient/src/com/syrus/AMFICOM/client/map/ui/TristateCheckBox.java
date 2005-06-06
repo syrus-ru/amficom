@@ -1,10 +1,10 @@
 /**
- * $Id: TristateCheckBox.java,v 1.1 2005/05/25 16:14:33 krupenn Exp $ 
+ * $Id: TristateCheckBox.java,v 1.2 2005/06/06 12:20:36 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;

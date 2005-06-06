@@ -1,21 +1,21 @@
 /**
- * $Id: MapStrategy.java,v 1.9 2005/03/02 12:35:40 krupenn Exp $
+ * $Id: MapStrategy.java,v 1.10 2005/06/06 12:20:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map.Strategy;
+package com.syrus.AMFICOM.client.map.strategy;
 
 import java.awt.event.MouseEvent;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/02 12:35:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/06 12:20:34 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

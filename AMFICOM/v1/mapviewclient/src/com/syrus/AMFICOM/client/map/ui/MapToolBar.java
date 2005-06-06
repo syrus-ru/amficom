@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.22 2005/06/06 07:20:04 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.23 2005/06/06 12:20:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,7 +7,7 @@
  *
  * Платформа: java 1.4.1
 */
-package com.syrus.AMFICOM.Client.Map.UI;
+package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,13 +34,13 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.22 $, $Date: 2005/06/06 07:20:04 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/06 12:20:36 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

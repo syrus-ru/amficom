@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.17 2005/05/31 16:07:00 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.18 2005/06/06 12:20:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,7 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/05/31 16:07:00 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/06 12:20:29 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
