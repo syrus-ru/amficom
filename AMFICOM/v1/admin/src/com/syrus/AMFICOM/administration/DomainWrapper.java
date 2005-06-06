@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.5 2005/04/11 11:48:27 bob Exp $
+ * $Id: DomainWrapper.java,v 1.6 2005/06/06 13:21:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/11 11:48:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 13:21:28 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -49,7 +49,8 @@ public class DomainWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Domain) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Domain) {
 			Domain domain = (Domain) object;
 			if (key.equals(COLUMN_NAME))
 				return domain.getName();
