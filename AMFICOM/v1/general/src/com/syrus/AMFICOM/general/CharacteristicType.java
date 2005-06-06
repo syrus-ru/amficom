@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.31 2005/06/06 12:22:32 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.32 2005/06/06 12:31:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.Ch
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/06 12:22:32 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/06 12:31:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -202,6 +202,10 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 		this.sort = sort;
 	}
 
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.name != null && this.name.length() != 0;
+	}
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
