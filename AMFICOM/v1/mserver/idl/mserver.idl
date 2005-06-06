@@ -140,6 +140,10 @@ module corba {
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
+		measurement::corba::TestSeq_Transferable transmitTests(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
 		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatterns(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);

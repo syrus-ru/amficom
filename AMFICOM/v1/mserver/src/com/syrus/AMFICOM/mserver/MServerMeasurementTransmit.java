@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.7 2005/06/06 14:43:06 arseniy Exp $
+ * $Id: MServerMeasurementTransmit.java,v 1.8 2005/06/06 14:54:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,10 +23,11 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/06 14:43:06 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/06 14:54:12 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -105,6 +106,15 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final Set_Transferable[] ret = new Set_Transferable[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
+	public Test_Transferable[] transmitTests(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+			throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final Test_Transferable[] ret = new Test_Transferable[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}
