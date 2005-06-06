@@ -699,14 +699,17 @@ void InitialAnalysis::correctSpliceCoords(double* f_wlet /*TEMP space*/, int wle
     if( !(ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
 return;
 	//prf_b("correctSpliceCoords: enter");
-	const double level_factor = 0.1; // уровень от максимума сигнала , при ктором считаем, что сигнал есть
+	const double level_factor = 0.15; // уровень от максимума сигнала , при ктором считаем, что сигнал есть
 	const double noise_factor = 0.5;  // 0 , если мы не учитываем шум в пределах событий
     const double angle_factor = 1.5; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
 	const double factor = 1.2; // множитель геометрической прогрессии
 	const int nscale = 20; // количество разных масштабов
 	int width = wlet_width; // frame-width: ширина окна (относительно границы события), в котором мы проводим дополнительный анализ
 	int w_l = ev.begin, w_r = ev.end; // w_l - wavelet_left: границы вейвлет-образа на текущем масштабе
-    int left_cross = (int)(w_l+width*angle_factor), right_cross = (int)(w_r-width*angle_factor); // точки пересечения световым конусом оси ОХ (по сути эквивалентно запоминанию масштаба, при котором это произошло, потому что точка X, где вейвлет пересёк порог, запоминается отдельно)
+
+	// для первого масштаба не ограничиваемся "световым конусом", т.к. начальные w_l, w_r не соответствуют нашему здешнему критерию
+    //int left_cross = (int)(w_l+width*angle_factor), right_cross = (int)(w_r-width*angle_factor); // точки пересечения световым конусом оси ОХ (по сути эквивалентно запоминанию масштаба, при котором это произошло, потому что точка X, где вейвлет пересёк порог, запоминается отдельно)
+    int left_cross = (int)(w_r+width*angle_factor), right_cross = (int)(w_l-width*angle_factor);
 
 	int i;
 #ifdef debug_lines
@@ -718,8 +721,8 @@ return;
 	assert(w_r <= lastPoint);
 
     // анализируем при разныех масштабах
-	for(int step=0; step<=nscale; step++)
-    {   width = (int)(width/factor);//(int )(wlet_width/pow(factor,step) +0.5);// чтобы не накапливать ошибки
+	for(int step=0; step<=nscale; step++, width = (int)(width/factor))
+    {   //width = (int)(width/factor);//(int )(wlet_width/pow(factor,step) +0.5);// чтобы не накапливать ошибки
     	if(width<=1)
     break;
 	    double wn = getWLetNorma(width);
@@ -748,7 +751,7 @@ return;
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
 		// XXX: но только если на этом масштабе сигнал/шум достаточно велик
 		if (level_factor * fabs(f_max) > fabs(df_left) * 2)
-          for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
+          for(i=w_l; i<i_max && i+width*angle_factor<=left_cross; i++)
         {	//if(fabs(f_wlet[i])>= minimalThreshold+noise[i]*noise_factor+df_left)
 	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max))// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
         	{	w_l=i-BUGGY_SHIFT;//w_l=i;
@@ -760,7 +763,7 @@ return;
    		// ищем пересечение справа
 		// XXX: но только если на этом масштабе сигнал/шум достаточно велик
 		if (level_factor * fabs(f_max) > fabs(df_right) * 2)
-          for(int j=w_r; j>w_l && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повёрнутой на 45 СК
+          for(int j=w_r; j>i_max && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повёрнутой на 45 СК
         {	//if(fabs(f_wlet[j])>=minimalThreshold+noise[j]*noise_factor+df_right)
             if(fabs(f_wlet[j])>= level_factor*fabs(f_max))// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
         	{	w_r=j+BUGGY_SHIFT;//w_r=j;
