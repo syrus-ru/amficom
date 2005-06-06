@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.1.2.4 2005/06/03 10:27:24 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.1.2.5 2005/06/06 07:24:55 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Robot;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.4 $, $Date: 2005/06/03 10:27:24 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2005/06/06 07:24:55 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache
@@ -42,7 +43,7 @@ public class TopologicalImageCache
 	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
 	 * в процентах от габарита окна карты
 	 */
-	private static final double BORDER_AREA_SIZE = 0.02;
+	private static final double BORDER_AREA_SIZE = 0.1;
 	
 	/**
 	 * Пороговая длина радиус-вектора от точки входа в активную область. Если
@@ -163,7 +164,47 @@ public class TopologicalImageCache
 	 */
 	private Robot robot = null;
 	
-	private Cursor[][] cursors = new Cursor[3][3];
+  private static Cursor[][] cursors = new Cursor[3][3];
+
+  private static final String NORTHWEST = "northwest";
+  static {
+          Toolkit toolkit = Toolkit.getDefaultToolkit();
+          Point hotSpot = new Point(0, 0);
+          cursors[0][0] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/gonorthwest.gif"),
+                          hotSpot,
+                          NORTHWEST);
+          cursors[1][0] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/gowest.gif"),
+                          hotSpot,
+                          NORTHWEST);
+          cursors[2][0] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/gosouthwest.gif"),
+                          hotSpot,
+                          NORTHWEST);
+          cursors[0][1] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/gonorth.gif"),
+                          hotSpot,
+                          NORTHWEST);
+          cursors[1][1] = Cursor.getDefaultCursor();
+          cursors[2][1] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/gosouth.gif"),
+                          hotSpot,
+                          NORTHWEST);
+          cursors[0][2] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/gonortheast.gif"),
+                          hotSpot,
+                          NORTHWEST);
+          cursors[1][2] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/goeast.gif"),
+                          hotSpot,
+                          NORTHWEST);             
+          cursors[2][2] = toolkit.createCustomCursor(
+                          toolkit.createImage("images/cursors/gosoutheast.gif"),
+                          hotSpot,
+                          NORTHWEST);
+  }
+
 	
 	public TopologicalImageCache(LogicalNetLayer miLayer, MapImageLoader loader)
 			throws MapConnectionException, MapDataException
@@ -182,16 +223,16 @@ public class TopologicalImageCache
 			throw new MapDataException("TIC - Constructor - Can't create robot");
 		}
 		
-		//Создаём курсоры-стрелки
-		this.cursors[0][0] = new Cursor(Cursor.NW_RESIZE_CURSOR);
-		this.cursors[0][1] = new Cursor(Cursor.N_RESIZE_CURSOR);
-		this.cursors[0][2] = new Cursor(Cursor.NE_RESIZE_CURSOR);
-		this.cursors[1][0] = new Cursor(Cursor.W_RESIZE_CURSOR);
-		this.cursors[1][1] = new Cursor(Cursor.HAND_CURSOR);
-		this.cursors[1][2] = new Cursor(Cursor.E_RESIZE_CURSOR);
-		this.cursors[2][0] = new Cursor(Cursor.SW_RESIZE_CURSOR);
-		this.cursors[2][1] = new Cursor(Cursor.S_RESIZE_CURSOR);		
-		this.cursors[2][2] = new Cursor(Cursor.SE_RESIZE_CURSOR);
+//		//Создаём курсоры-стрелки
+//		this.cursors[0][0] = new Cursor(Cursor.NW_RESIZE_CURSOR);
+//		this.cursors[0][1] = new Cursor(Cursor.N_RESIZE_CURSOR);
+//		this.cursors[0][2] = new Cursor(Cursor.NE_RESIZE_CURSOR);
+//		this.cursors[1][0] = new Cursor(Cursor.W_RESIZE_CURSOR);
+//		this.cursors[1][1] = new Cursor(Cursor.HAND_CURSOR);
+//		this.cursors[1][2] = new Cursor(Cursor.E_RESIZE_CURSOR);
+//		this.cursors[2][0] = new Cursor(Cursor.SW_RESIZE_CURSOR);
+//		this.cursors[2][1] = new Cursor(Cursor.S_RESIZE_CURSOR);		
+//		this.cursors[2][2] = new Cursor(Cursor.SE_RESIZE_CURSOR);
 		
 		this.sizeChanged();
 		this.loadingThread = new LoadingThread(loader);
