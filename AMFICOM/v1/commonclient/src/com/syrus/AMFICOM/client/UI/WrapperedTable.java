@@ -23,13 +23,14 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/01 06:22:48 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 14:52:47 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class WrapperedTable extends ATable {
 
 	private static final long	serialVersionUID	= -437251205606073016L;
+	boolean allowSorting = true;
 
 	public WrapperedTable(final Wrapper controller, final List objectResourceList, final String[] keys) {
 		this(new WrapperedTableModel(controller, objectResourceList, keys));
@@ -84,6 +85,14 @@ public class WrapperedTable extends ATable {
 			}
 		}
 	}
+	
+	public void setAllowSorting(boolean allowSorting) {
+		this.allowSorting = allowSorting;
+	}
+	
+	public boolean isAllowSorting() {
+		return this.allowSorting;
+	}
 
 	private void updateModel() {
 		WrapperedTableModel model = (WrapperedTableModel) getModel();
@@ -132,6 +141,10 @@ public class WrapperedTable extends ATable {
 		this.getTableHeader().addMouseListener(new MouseAdapter() {
 
 			public void mouseClicked(MouseEvent evt) {
+				if (!WrapperedTable.this.allowSorting) {
+					return;
+				}
+				
 				JTableHeader header = (JTableHeader) evt.getSource();
 				JTable table = header.getTable();
 				TableColumnModel colModel = table.getColumnModel();

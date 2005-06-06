@@ -14,7 +14,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/25 07:53:35 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 14:52:47 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -130,6 +130,12 @@ public class WrapperedTableModel extends AbstractTableModel {
 	                              	final int columnIndex) {
 		final String key = this.keys[columnIndex];
 		return this.wrapper.isEditable(key);
+	}
+	
+	public void setKeys(final String[] keys) {
+		this.keys = keys;
+		this.ascendings = new boolean[this.keys.length];
+		super.fireTableStructureChanged();
 	}
 
 	public void setValues(final List list) {

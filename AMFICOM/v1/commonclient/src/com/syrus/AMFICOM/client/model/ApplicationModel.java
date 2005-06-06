@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.2 2005/05/31 12:20:43 bob Exp $
+ * $Id: ApplicationModel.java,v 1.3 2005/06/06 14:52:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * производить с системой
  * 
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/05/31 12:20:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
  * @module generalclient_v1
  */
 public class ApplicationModel {
@@ -37,6 +37,28 @@ public class ApplicationModel {
 	private List					listenerList	= new LinkedList();
 
 	private static ApplicationModel	instance;
+
+	public static final String	MENU_SESSION					= "menuSession";
+
+	public static final String	MENU_SESSION_NEW				= "menuSessionNew";
+
+	public static final String	MENU_SESSION_CLOSE				= "menuSessionClose";
+
+	public static final String	MENU_SESSION_OPTIONS			= "menuSessionOptions";
+
+	public static final String	MENU_SESSION_CONNECTION			= "menuSessionConnection";
+
+	public static final String	MENU_SESSION_CHANGE_PASSWORD	= "menuSessionChangePassword";
+
+	public static final String	MENU_SESSION_DOMAIN				= "menuSessionDomain";
+
+	public static final String	MENU_VIEW_ARRANGE				= "menuViewArrange";
+
+	public static final String	MENU_EXIT						= "menuExit";
+
+	public static final String	MENU_HELP						= "menuHelp";
+
+	public static final String	MENU_HELP_ABOUT					= "menuHelpAbout";
 
 	/**
 	 * To obtain a shared instance, use {@link #getInstance()}.
@@ -329,7 +351,7 @@ public class ApplicationModel {
 	 * параметров нет, так как элемент определяется идентификатором
 	 * 
 	 * @author $Author: bob $
-	 * @version $Revision: 1.2 $, $Date: 2005/05/31 12:20:43 $
+	 * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry {

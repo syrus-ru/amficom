@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.3 2005/06/01 10:01:33 bob Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.4 2005/06/06 14:52:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,27 +22,12 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/01 10:01:33 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 14:52:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
 public abstract class AbstractMainMenuBar extends JMenuBar {
-
-	public static final String	MENU_SESSION					= "menuSession";
-	public static final String	MENU_SESSION_NEW				= "menuSessionNew";
-	public static final String	MENU_SESSION_CLOSE				= "menuSessionClose";
-	public static final String	MENU_SESSION_OPTIONS			= "menuSessionOptions";
-	public static final String	MENU_SESSION_CONNECTION			= "menuSessionConnection";
-	public static final String	MENU_SESSION_CHANGE_PASSWORD	= "menuSessionChangePassword";
-	public static final String	MENU_SESSION_DOMAIN				= "menuSessionDomain";
-
-	public static final String	MENU_VIEW_ARRANGE				= "menuViewArrange";
-
-	public static final String	MENU_EXIT						= "menuExit";
-
-	public static final String	MENU_HELP						= "menuHelp";
-	public static final String	MENU_HELP_ABOUT					= "menuHelpAbout";
 
 	protected List				applicationModelListeners;
 	protected ApplicationModel	applicationModel;
@@ -72,42 +57,42 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 	private void createMenuItems() {
 		final JMenu menuSession = new JMenu();
 
-		menuSession.setText(LangModel.getString("menuSession"));
-		menuSession.setName(MENU_SESSION);
+		menuSession.setText(LangModel.getString(ApplicationModel.MENU_SESSION));
+		menuSession.setName(ApplicationModel.MENU_SESSION);
 
 		final JMenuItem menuSessionNew = new JMenuItem();
-		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
-		menuSessionNew.setName(MENU_SESSION_NEW);
+		menuSessionNew.setText(LangModel.getString(ApplicationModel.MENU_SESSION_NEW));
+		menuSessionNew.setName(ApplicationModel.MENU_SESSION_NEW);
 		menuSessionNew.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionClose = new JMenuItem();
-		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
-		menuSessionClose.setName(MENU_SESSION_CLOSE);
+		menuSessionClose.setText(LangModel.getString(ApplicationModel.MENU_SESSION_CLOSE));
+		menuSessionClose.setName(ApplicationModel.MENU_SESSION_CLOSE);
 		menuSessionClose.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionOptions = new JMenuItem();
-		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
-		menuSessionOptions.setName(MENU_SESSION_OPTIONS);
+		menuSessionOptions.setText(LangModel.getString(ApplicationModel.MENU_SESSION_OPTIONS));
+		menuSessionOptions.setName(ApplicationModel.MENU_SESSION_OPTIONS);
 		menuSessionOptions.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionConnection = new JMenuItem();
-		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
-		menuSessionConnection.setName(MENU_SESSION_CONNECTION);
+		menuSessionConnection.setText(LangModel.getString(ApplicationModel.MENU_SESSION_CONNECTION));
+		menuSessionConnection.setName(ApplicationModel.MENU_SESSION_CONNECTION);
 		menuSessionConnection.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionChangePassword = new JMenuItem();
-		menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
-		menuSessionChangePassword.setName(MENU_SESSION_CHANGE_PASSWORD);
+		menuSessionChangePassword.setText(LangModel.getString(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
+		menuSessionChangePassword.setName(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
 		menuSessionChangePassword.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionDomain = new JMenuItem();
-		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
-		menuSessionDomain.setName(MENU_SESSION_DOMAIN);
+		menuSessionDomain.setText(LangModel.getString(ApplicationModel.MENU_SESSION_DOMAIN));
+		menuSessionDomain.setName(ApplicationModel.MENU_SESSION_DOMAIN);
 		menuSessionDomain.addActionListener(this.actionAdapter);
 
 		JMenuItem menuExit = new JMenuItem();
-		menuExit.setText(LangModel.getString("menuExit"));
-		menuExit.setName(MENU_EXIT);
+		menuExit.setText(LangModel.getString(ApplicationModel.MENU_EXIT));
+		menuExit.setName(ApplicationModel.MENU_EXIT);
 		menuExit.addActionListener(this.actionAdapter);
 
 		menuSession.add(menuSessionNew);
@@ -126,10 +111,10 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 		this.addMenuItems();
 
 		final JMenu menuHelp = new JMenu(LangModel.getString("Help"));
-		menuHelp.setName(MENU_HELP);
+		menuHelp.setName(ApplicationModel.MENU_HELP);
 
 		final JMenuItem menuHelpAboutItem = new JMenuItem(LangModel.getString("About_program"));
-		menuHelpAboutItem.setName(MENU_HELP_ABOUT);
+		menuHelpAboutItem.setName(ApplicationModel.MENU_HELP_ABOUT);
 		menuHelpAboutItem.addActionListener(this.actionAdapter);
 		menuHelp.add(menuHelpAboutItem);
 
@@ -146,25 +131,25 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 			}
 
 			private void modelChanged() {
-				menuSession.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(MENU_SESSION));
-				menuSession.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(MENU_SESSION));
-				menuSessionNew.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(MENU_SESSION_NEW));
-				menuSessionNew.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(MENU_SESSION_NEW));
-				menuSessionClose.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(MENU_SESSION_CLOSE));
-				menuSessionClose.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(MENU_SESSION_CLOSE));
-				menuSessionOptions.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(MENU_SESSION_OPTIONS));
-				menuSessionOptions.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(MENU_SESSION_OPTIONS));
-				menuSessionConnection.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(MENU_SESSION_CONNECTION));
-				menuSessionConnection.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(MENU_SESSION_CONNECTION));
+				menuSession.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION));
+				menuSession.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION));
+				menuSessionNew.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_NEW));
+				menuSessionNew.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_NEW));
+				menuSessionClose.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_CLOSE));
+				menuSessionClose.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_CLOSE));
+				menuSessionOptions.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_OPTIONS));
+				menuSessionOptions.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_OPTIONS));
+				menuSessionConnection.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_CONNECTION));
+				menuSessionConnection.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_CONNECTION));
 				menuSessionChangePassword.setVisible(AbstractMainMenuBar.this.applicationModel
-						.isVisible(MENU_SESSION_CHANGE_PASSWORD));
+						.isVisible(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
 				menuSessionChangePassword.setEnabled(AbstractMainMenuBar.this.applicationModel
-						.isEnabled(MENU_SESSION_CHANGE_PASSWORD));
-				menuSessionDomain.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(MENU_SESSION_DOMAIN));
-				menuSessionDomain.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(MENU_SESSION_DOMAIN));
+						.isEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
+				menuSessionDomain.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_DOMAIN));
+				menuSessionDomain.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_DOMAIN));
 
-				menuHelpAboutItem.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(MENU_HELP_ABOUT));
-				menuHelpAboutItem.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(MENU_HELP_ABOUT));
+				menuHelpAboutItem.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_HELP_ABOUT));
+				menuHelpAboutItem.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_HELP_ABOUT));
 			}
 		});
 	}

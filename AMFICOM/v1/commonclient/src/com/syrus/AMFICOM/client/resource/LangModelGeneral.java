@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelGeneral.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: LangModelGeneral.java,v 1.2 2005/06/06 14:52:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import java.util.ResourceBundle;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/06 14:52:47 $
  * @module commonclient_v1
  */
 
 public class LangModelGeneral {
-	private static final String BUNDLE_NAME			= "com.syrus.AMFICOM.resource.general";
+	private static final String BUNDLE_NAME			= "com.syrus.AMFICOM.client.resource.general";
 
 	private static final ResourceBundle	RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

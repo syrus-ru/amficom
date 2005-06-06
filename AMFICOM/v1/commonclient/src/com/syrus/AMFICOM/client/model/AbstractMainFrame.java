@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.2 2005/06/01 09:54:36 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.3 2005/06/06 14:52:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/01 09:54:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -201,31 +201,31 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	public void setConnectionClosed() {
 		Log.debugMessage("AbstractMainFrame.setConnectionClosed | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_OPTIONS, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_VIEW_ARRANGE, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
 		aModel.fireModelChanged("");
 	}
 
 	public void setConnectionFailed() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_OPTIONS, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
 		aModel.fireModelChanged("");
 	}
 
 	public void setConnectionOpened() {
 		Log.debugMessage("AbstractMainFrame.setConnectionOpened | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CONNECTION, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_VIEW_ARRANGE, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CONNECTION, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
 		aModel.fireModelChanged("");
 	}
 
@@ -237,9 +237,9 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 
 	public void setDomainSelected() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_OPTIONS, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CHANGE_PASSWORD, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
 
 		aModel.fireModelChanged("");
 
@@ -273,11 +273,11 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 
 	public void setSessionClosed() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_OPTIONS, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_DOMAIN, false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
 
 		aModel.fireModelChanged("");
 
@@ -295,8 +295,8 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 				.getString("Loding_DB_finished")));
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_DOMAIN, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
 		aModel.fireModelChanged("");
 		Identifier domainId = LoginManager.getDomainId();
 		if (domainId != null && !domainId.isVoid()) {
@@ -312,7 +312,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			this.aContext.getApplicationModel().getCommand(AbstractMainMenuBar.MENU_EXIT).execute();
+			this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 			return;
 		}
 		super.processWindowEvent(e);
@@ -353,23 +353,23 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		Dispatcher dispatcher1 = Environment.getDispatcher();
 		dispatcher1.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
-		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1));
-		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1));
-		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
-		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1,
+		aModel.setCommand(ApplicationModel.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1,
 																									this.aContext));
-		aModel.setCommand(AbstractMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,
+		aModel.setCommand(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD,
 			new SessionChangePasswordCommand(dispatcher1, this.aContext));
 		aModel
-				.setCommand(AbstractMainMenuBar.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher1,
+				.setCommand(ApplicationModel.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher1,
 																								this.aContext));
-		aModel.setCommand(AbstractMainMenuBar.MENU_EXIT, new ExitCommand(this));
+		aModel.setCommand(ApplicationModel.MENU_EXIT, new ExitCommand(this));
 
 //		this.setWindowArranger(this.windowArranger);
 //		if (this.windowArranger != null) {
 //			aModel.setCommand(AbstractMainMenuBar.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(this.windowArranger));
 //		}
-		aModel.setCommand(AbstractMainMenuBar.MENU_HELP_ABOUT, new HelpAboutCommand(this));
+		aModel.setCommand(ApplicationModel.MENU_HELP_ABOUT, new HelpAboutCommand(this));
 
 		setDefaultModel(aModel);
 
@@ -379,19 +379,19 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 
 	protected void setDefaultModel(ApplicationModel aModel) {
 		aModel.setAllItemsEnabled(false);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_NEW, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_SESSION_CONNECTION, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_VIEW_ARRANGE, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CONNECTION, true);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
 		
-		aModel.setEnabled(AbstractMainMenuBar.MENU_HELP, true);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_HELP_ABOUT, true);
+		aModel.setEnabled(ApplicationModel.MENU_HELP, true);
+		aModel.setEnabled(ApplicationModel.MENU_HELP_ABOUT, true);
 	}
 
 	public void setWindowArranger(WindowArranger windowArranger) {
 		if (windowArranger != null) {
 			ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setCommand(AbstractMainMenuBar.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(windowArranger));
+			aModel.setCommand(ApplicationModel.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(windowArranger));
 			this.windowArranger = windowArranger;
 		}
 	}

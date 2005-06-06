@@ -20,11 +20,11 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/30 15:35:12 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
-public class WrapperedPropertyTable extends JTable {
+public class WrapperedPropertyTable extends ATable {
 
 	private TableCellEditor		defaultTextFieldEditor;
 	protected TableCellEditor[][]	cellEditors;

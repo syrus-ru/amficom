@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.5 2005/06/01 09:54:26 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.6 2005/06/06 14:52:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/01 09:54:26 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 14:52:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -42,7 +42,7 @@ public abstract class AbstractMainToolBar extends JToolBar {
 		this.sessionOpen = new JButton();
 		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
 		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		this.sessionOpen.setName(AbstractMainMenuBar.MENU_SESSION_NEW);
+		this.sessionOpen.setName(ApplicationModel.MENU_SESSION_NEW);
 		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.actionListener = new ActionListener() {
 
@@ -75,9 +75,9 @@ public abstract class AbstractMainToolBar extends JToolBar {
 
 			public void modelChanged(String elementName) {
 				AbstractMainToolBar.this.sessionOpen.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(
-					AbstractMainMenuBar.MENU_SESSION_NEW));
+					ApplicationModel.MENU_SESSION_NEW));
 				AbstractMainToolBar.this.sessionOpen.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(
-					AbstractMainMenuBar.MENU_SESSION_NEW));
+					ApplicationModel.MENU_SESSION_NEW));
 			}
 		});
 
