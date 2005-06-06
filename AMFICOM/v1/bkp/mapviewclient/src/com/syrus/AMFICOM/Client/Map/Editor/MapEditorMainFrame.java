@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.38 2005/05/27 15:14:57 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.39 2005/06/06 07:14:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -96,7 +96,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.38 $, $Date: 2005/05/27 15:14:57 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/06 07:14:46 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -450,11 +450,11 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.fireModelChanged();
 
-		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
-            this.internalDispatcher.firePropertyChange(new ContextChangeEvent(
-					this,
-					ContextChangeEvent.SESSION_OPENED_EVENT), true);
-		}
+//		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
+//            this.internalDispatcher.firePropertyChange(new ContextChangeEvent(
+//					this,
+//					ContextChangeEvent.SESSION_OPENED_EVENT), true);
+//		}
 	}
 
 	public void setContext(ApplicationContext aContext)
