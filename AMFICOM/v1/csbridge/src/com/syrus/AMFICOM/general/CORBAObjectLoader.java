@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.22 2005/06/04 16:56:20 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.23 2005/06/06 14:35:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/06/06 14:35:26 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -73,8 +73,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.23 $, $Date: 2005/06/06 14:35:26 $
 	 * @module csbridge_v1
 	 */
 	protected interface TransmitProcedure {
@@ -87,8 +87,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.23 $, $Date: 2005/06/06 14:35:26 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsCondition(Set, StorableObjectCondition, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -103,8 +103,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:20 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.23 $, $Date: 2005/06/06 14:35:26 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -123,9 +123,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	 * @param transmitProcedure
 	 * @throws ApplicationException
 	 */
-	protected Set loadStorableObjects(final Set ids,
-			final short entityCode,
-			final TransmitProcedure transmitProcedure)
+	protected Set loadStorableObjects(final Set ids, final short entityCode, final TransmitProcedure transmitProcedure)
 			throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final Identifier_Transferable ids1[] = Identifier.createTransferables(ids);
@@ -135,7 +133,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 			try {
 				final IDLEntity transferables[] = transmitProcedure.transmitStorableObjects(server, ids1, sessionKey);
 				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
-			} catch (final AMFICOMRemoteException are) {
+			}
+			catch (final AMFICOMRemoteException are) {
 				switch (are.error_code.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {

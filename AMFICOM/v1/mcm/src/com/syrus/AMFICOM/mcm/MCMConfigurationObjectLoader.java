@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.42 2005/06/05 18:41:30 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.43 2005/06/06 14:39:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/05 18:41:30 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/06 14:39:58 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -84,7 +84,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 
 
 
-	/* Load multiple objects but ids*/
+	/* Load multiple objects but ids by condition*/
 
 	public Set loadKISsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsCondition(ids,
