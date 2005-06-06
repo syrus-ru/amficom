@@ -1,26 +1,25 @@
 /**
- * $Id: OfxConnection.java,v 1.8 2005/05/30 15:42:33 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.9 2005/06/06 13:04:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
 
-package com.syrus.AMFICOM.Client.Map.ObjectFX;
-
-import com.ofx.base.SxEnvironment;
-import com.ofx.component.swing.JMapViewer;
-
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.Client.Map.MapConnection;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
+package com.syrus.AMFICOM.client.map.objectfx;
 
 import java.util.List;
 
+import com.ofx.base.SxEnvironment;
+import com.ofx.component.swing.JMapViewer;
+import com.syrus.AMFICOM.client.map.MapConnection;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.model.Environment;
+
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.8 $, $Date: 2005/05/30 15:42:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/06 13:04:56 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */

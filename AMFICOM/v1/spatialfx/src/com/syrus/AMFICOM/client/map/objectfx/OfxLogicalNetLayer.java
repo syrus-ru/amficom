@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.8 2005/05/31 16:11:45 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.9 2005/06/06 13:04:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,10 +8,8 @@
  * Платформа: java 1.4.1
 */
 
-package com.syrus.AMFICOM.Client.Map.ObjectFX;
+package com.syrus.AMFICOM.client.map.objectfx;
 
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -31,11 +29,13 @@ import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.query.SxQueryResultInterface;
 import com.ofx.repository.SxSpatialObject;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/05/31 16:11:45 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/06 13:04:56 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */

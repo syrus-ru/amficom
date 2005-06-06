@@ -1,8 +1,7 @@
-package com.syrus.AMFICOM.Client.Map.ObjectFX;
+package com.syrus.AMFICOM.client.map.objectfx;
 
 import com.ofx.repository.SxSpatialObject;
-
-import com.syrus.AMFICOM.Client.Map.SpatialObject;
+import com.syrus.AMFICOM.client.map.SpatialObject;
 
 public class OfxSpatialObject implements SpatialObject
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.6 2005/05/30 15:42:33 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.7 2005/06/06 13:04:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,32 +9,13 @@
  * Платформа: java 1.4.1
  */
 
-package com.syrus.AMFICOM.Client.Map.ObjectFX;
-
-import com.ofx.component.swing.JMapViewer;
-import com.ofx.mapViewer.SxMapLayerInterface;
-import com.ofx.mapViewer.SxMapViewer;
-import com.ofx.mapViewer.SxMarkerLayer;
-
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnection;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
-import com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener;
-import com.syrus.AMFICOM.Client.Map.UI.MapKeyAdapter;
-import com.syrus.AMFICOM.Client.Map.UI.MapMouseListener;
-import com.syrus.AMFICOM.Client.Map.UI.MapMouseMotionListener;
-import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
+package com.syrus.AMFICOM.client.map.objectfx;
 
 import java.awt.BorderLayout;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,9 +25,26 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
+import com.ofx.component.swing.JMapViewer;
+import com.ofx.mapViewer.SxMapLayerInterface;
+import com.ofx.mapViewer.SxMapViewer;
+import com.ofx.mapViewer.SxMarkerLayer;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnection;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.ui.MapDropTargetListener;
+import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
+import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
+import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
+import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
+import com.syrus.AMFICOM.client.model.Environment;
+
 /**
  * 
- * @version $Revision: 1.6 $, $Date: 2005/05/30 15:42:33 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/06 13:04:56 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */

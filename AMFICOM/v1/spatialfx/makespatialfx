@@ -24,7 +24,7 @@ impl:
 	$(COMPILER) -d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		$(SRC)\com\syrus\AMFICOM\Client\Map\ObjectFX\*.java
+		$(SRC)\com\syrus\AMFICOM\client\map\objectfx\*.java
 
 javadoc:
 	$(JAVADOCGENERATOR) com

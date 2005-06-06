@@ -1,4 +1,8 @@
-package com.syrus.AMFICOM.Client.Map.ObjectFX;
+package com.syrus.AMFICOM.client.map.objectfx;
+
+import java.awt.Component;
+
+import javax.swing.JPanel;
 
 import com.ofx.component.SxSymbolCanvas;
 import com.ofx.mapViewer.SxHighlightBin;
@@ -7,12 +11,7 @@ import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.mapViewer.SxRendererInterface;
 import com.ofx.repository.SxClass;
 import com.ofx.repository.SxSymbology;
-
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
-
-import java.awt.Component;
-
-import javax.swing.JPanel;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
 
 public class OfxSpatialLayer implements SpatialLayer 
 {
