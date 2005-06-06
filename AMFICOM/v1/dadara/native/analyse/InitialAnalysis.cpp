@@ -748,7 +748,7 @@ return;
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
         for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
         {	//if(fabs(f_wlet[i])>= minimalThreshold+noise[i]*noise_factor+df_left)
-	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_left)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
+	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_left)/(0.5) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
         	{	w_l=i-BUGGY_SHIFT;//w_l=i;
             	w_lr_ch = true;
 	            if(w_l+width*angle_factor<left_cross){ left_cross = (int)(w_l+width*angle_factor);}
@@ -758,7 +758,7 @@ return;
    		// ищем пересечение справа
         for(int j=w_r; j>w_l && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повёрнутой на 45 СК
         {	//if(fabs(f_wlet[j])>=minimalThreshold+noise[j]*noise_factor+df_right)
-            if(fabs(f_wlet[j])>= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_right)/(0.5*level_factor) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
+            if(fabs(f_wlet[j])>= level_factor*fabs(f_max) && fabs(f_wlet[i]) > fabs(df_right)/(0.5) )// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
         	{	w_r=j+BUGGY_SHIFT;//w_r=j;
                 w_lr_ch = true;
 	            if(w_r-width*angle_factor>right_cross)
