@@ -1,5 +1,5 @@
 /**
- * $Id: LangModelMap.java,v 1.1 2005/06/06 12:52:01 krupenn Exp $
+ * $Id: LangModelMap.java,v 1.2 2005/06/06 13:32:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,14 +19,14 @@ import java.util.ResourceBundle;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/06/06 12:52:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/06 13:32:52 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
 public final class LangModelMap
 {
 	private static final String BUNDLE_NAME = 
-			"com.syrus.AMFICOM.Client.General.Lang.map";
+			"com.syrus.AMFICOM.client.resource.map";
 	private static final ResourceBundle RESOURCE_BUNDLE = 
 			ResourceBundle.getBundle(BUNDLE_NAME);
 

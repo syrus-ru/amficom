@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.19 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.20 2005/06/06 13:33:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/06 13:33:53 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -83,12 +83,12 @@ public final class MapPropertiesManager
 	public static final double DEFAULT_ZOOM = 1.0D;
 
 	protected static final String OFX_TYPE = "ofx";
-	protected static final String OFX_CONNECTION = "com.syrus.AMFICOM.Client.Map.ObjectFX.OfxConnection";
-	protected static final String OFX_VIEWER = "com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer";
+	protected static final String OFX_CONNECTION = "com.syrus.AMFICOM.client.map.objectfx.OfxConnection";
+	protected static final String OFX_VIEWER = "com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer";
 
 	protected static final String MAPINFO_TYPE = "mapinfo";
-	protected static final String MAPINFO_CONNECTION = "com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoConnection";
-	protected static final String MAPINFO_VIEWER = "com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer";
+	protected static final String MAPINFO_CONNECTION = "com.syrus.AMFICOM.client.map.mapinfo.MapInfoConnection";
+	protected static final String MAPINFO_VIEWER = "com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer";
 
 	/* values read from inifile. */
 	protected static String mapType = OFX_TYPE;
