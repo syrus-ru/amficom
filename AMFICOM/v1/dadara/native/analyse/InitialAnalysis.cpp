@@ -728,7 +728,7 @@ return;
 		// сначала ищём положение экстремума при данном масштабе
         int i_max = w_l;
         double f_max = f_wlet[i_max];
-        for(i=w_l; i<w_r; i++)
+        for(i=w_l; i<w_r; i++) // saa: <=w_r ?
         {	if( fabs(f_wlet[i])>fabs(f_max) ) // поскольку образ в пределах одного события знакопостояный, то можем работать с модулями
         	{	i_max = i; f_max = f_wlet[i_max];
             }
@@ -1183,11 +1183,25 @@ void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, 
     }
 }
 //------------------------------------------------------------------------------------------------------------
-void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
+void InitialAnalysis::performTransformationOnly(double* data, int begin, int end, double* f_wlet, int freq, double norma)
 {	//int len = end - begin;
 	assert(begin >= 0);
 	assert(end <= lastPoint + 1);
-	wavelet.transform(freq, f, lastPoint + 1, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
+	wavelet.transform(freq, data, lastPoint + 1, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
+#ifdef DEBUG_INITIAL_ANALYSIS
+#if 0 // FIXME: slow debug code
+	int i;
+	char sbuf[64];
+	sprintf(sbuf, "wt-%d-%d-%d", freq, begin, end);
+	FILE *fp = fopen(sbuf, "w");
+	if (fp) {
+		for (i = begin; i < end; i++) {
+			fprintf(fp, "%d %g\n", i, f_wlet[i]);
+		}
+		fclose(fp);
+	}
+#endif
+#endif
 }
 //------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getMinScale() {
