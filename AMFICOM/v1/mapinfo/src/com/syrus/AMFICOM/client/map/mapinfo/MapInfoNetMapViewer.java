@@ -14,7 +14,6 @@ import javax.swing.ToolTipManager;
 
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
@@ -27,6 +26,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapKeyAdapter;
 import com.syrus.AMFICOM.Client.Map.UI.MapMouseListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapMouseMotionListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
+import com.syrus.AMFICOM.client.model.Environment;
 
 public class MapInfoNetMapViewer extends NetMapViewer
 {

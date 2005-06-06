@@ -15,7 +15,6 @@ import java.util.List;
 
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.util.DoubleRect;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.Logger;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -26,6 +25,7 @@ import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import com.syrus.AMFICOM.Client.Map.TopologicalImageCache;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer
@@ -323,7 +323,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			Dispatcher disp = this.aContext.getDispatcher();
 			if(disp != null) {
 				Double p = new Double(getScale());
-				disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
 			}
 		}
 		this.imageCache.setScale(z);			
@@ -379,7 +379,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			Dispatcher disp = this.aContext.getDispatcher();
 			if(disp != null) {
 				Double p = new Double(getScale());
-				disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
+				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
 			}
 		}
 		this.imageCache.setScale(this.getScale());

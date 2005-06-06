@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoServletMapImageLoader.java,v 1.1.2.1 2005/06/02 12:14:04 peskovsky Exp $
+ * $Id: MapInfoServletMapImageLoader.java,v 1.1.2.2 2005/06/06 12:16:29 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.TopologicalRequest;
+import com.syrus.AMFICOM.general.LoginManager;
 
 public class MapInfoServletMapImageLoader implements MapImageLoader
 {
@@ -66,7 +67,7 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 				this.uriString +
 				"?" + ServletCommandNames.COMMAND_NAME + "=" + ServletCommandNames.CN_CANCEL_RENDERING +
 				"&" + ServletCommandNames.USER_ID +
-				this.logicalNetLayer.getContext().getSessionInterface().getAccessIdentity().sess_id);
+				LoginManager.getSessionKey().hashCode());
 
 		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 				" TIC - loadingthread - stopping rendering at server");
@@ -200,7 +201,7 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 	{
 		String result = "";
 		result += "?" + ServletCommandNames.USER_ID + "="
-		    + this.logicalNetLayer.getContext().getSessionInterface().getAccessIdentity().sess_id;
+		    + LoginManager.getSessionKey().hashCode();
 		
 		result += "&" + ServletCommandNames.COMMAND_NAME + "="
 		+ ServletCommandNames.CN_START_RENDER_IMAGE;

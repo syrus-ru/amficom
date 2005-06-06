@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoCorbaMapImageLoader.java,v 1.1.2.1 2005/06/02 12:14:04 peskovsky Exp $
+ * $Id: MapInfoCorbaMapImageLoader.java,v 1.1.2.2 2005/06/06 12:16:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,12 @@ import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.TopologicalRequest;
 
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.1 $, $Date: 2005/06/02 12:14:04 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2005/06/06 12:16:29 $
  * @module mapinfo_v1
  */
 public class MapInfoCorbaMapImageLoader
@@ -111,8 +112,7 @@ public class MapInfoCorbaMapImageLoader
                 request.getTopoScale(),
                 this.layerVisibilities,
                 this.labelVisibilities,
-                this.logicalNetLayer.getContext().getSessionInterface().getAccessIdentity().sess_id,
-                ServletCommandNames.CN_START_RENDER_IMAGE);
+                LoginManager.getSessionKey().hashCode());
 
 //        //Пока используем как заглушку локальный рендерер
 //        this.renderer.setRenderingParameters(
