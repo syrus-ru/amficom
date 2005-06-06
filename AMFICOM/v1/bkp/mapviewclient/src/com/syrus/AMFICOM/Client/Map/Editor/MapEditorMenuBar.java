@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.14 2005/05/27 15:14:57 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.15 2005/06/06 07:15:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import javax.swing.JMenuItem;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.14 $, $Date: 2005/05/27 15:14:57 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/06 07:15:29 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -216,37 +216,37 @@ public class MapEditorMenuBar extends JMenuBar implements ApplicationModelListen
 		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		this.menuMapViewRemoveScheme.addActionListener(actionAdapter);
 
-		this.menuReport.setText(LangModelGeneral.getString("label_report"));
+//		this.menuReport.setText(LangModelGeneral.getString("label_report"));
 		this.menuReport.setName(MapEditorApplicationModel.ITEM_REPORT);
-		this.menuReportCreate.setText(LangModelGeneral.getString("label_reportForTemplate"));
+//		this.menuReportCreate.setText(LangModelGeneral.getString("label_reportForTemplate"));
 		this.menuReportCreate.setName(MapEditorApplicationModel.ITEM_REPORT_CREATE);
 		this.menuReportCreate.addActionListener(actionAdapter);
 		this.menuReport.add(this.menuReportCreate);
 
 		this.menuHelp.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP));
 		this.menuHelp.setName(MapEditorApplicationModel.ITEM_HELP);
-		this.menuHelpContents.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_CONTENTS));
+//		this.menuHelpContents.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_CONTENTS));
 		this.menuHelpContents.setName(MapEditorApplicationModel.ITEM_HELP_CONTENTS);
 		this.menuHelpContents.addActionListener(actionAdapter);
-		this.menuHelpFind.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
+//		this.menuHelpFind.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
 		this.menuHelpFind.setName(MapEditorApplicationModel.ITEM_HELP_FIND);
 		this.menuHelpFind.addActionListener(actionAdapter);
-		this.menuHelpTips.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
+//		this.menuHelpTips.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_FIND));
 		this.menuHelpTips.setName(MapEditorApplicationModel.ITEM_HELP_FIND);
 		this.menuHelpTips.addActionListener(actionAdapter);
-		this.menuHelpStart.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_START));
+//		this.menuHelpStart.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_START));
 		this.menuHelpStart.setName(MapEditorApplicationModel.ITEM_HELP_START);
 		this.menuHelpStart.addActionListener(actionAdapter);
-		this.menuHelpCourse.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_COURSE));
+//		this.menuHelpCourse.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_COURSE));
 		this.menuHelpCourse.setName(MapEditorApplicationModel.ITEM_HELP_COURSE);
 		this.menuHelpCourse.addActionListener(actionAdapter);
-		this.menuHelpHelp.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_HELP));
+//		this.menuHelpHelp.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_HELP));
 		this.menuHelpHelp.setName(MapEditorApplicationModel.ITEM_HELP_HELP);
 		this.menuHelpHelp.addActionListener(actionAdapter);
-		this.menuHelpSupport.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_SUPPORT));
+//		this.menuHelpSupport.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_SUPPORT));
 		this.menuHelpSupport.setName(MapEditorApplicationModel.ITEM_HELP_SUPPORT);
 		this.menuHelpSupport.addActionListener(actionAdapter);
-		this.menuHelpLicense.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_LICENSE));
+//		this.menuHelpLicense.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_LICENSE));
 		this.menuHelpLicense.setName(MapEditorApplicationModel.ITEM_HELP_LICENSE);
 		this.menuHelpLicense.addActionListener(actionAdapter);
 		this.menuHelpAbout.setText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_HELP_ABOUT));
