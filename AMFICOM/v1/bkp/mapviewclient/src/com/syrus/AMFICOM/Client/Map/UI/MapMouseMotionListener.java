@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.13 2005/05/31 16:10:25 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.14 2005/06/06 07:20:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,19 +11,27 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.SwingConstants;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.MapElement;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
 /**
  * Обработчик перемещения мыши в окне карты. При обработке смотрится состояние
@@ -31,12 +39,14 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.13 $, $Date: 2005/05/31 16:10:25 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/06 07:20:17 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapMouseMotionListener implements MouseMotionListener
 {
+	private static final int IMG_SIZE = 16;
+
 	LogicalNetLayer logicalNetLayer;
 
 	public MapMouseMotionListener(LogicalNetLayer logicalNetLayer)
@@ -162,7 +172,81 @@ public final class MapMouseMotionListener implements MouseMotionListener
 					e2.printStackTrace();
 				}
 		}
+		
+		if(mapState.getActionMode() == MapState.NULL_ACTION_MODE)
+		if(MapPropertiesManager.isDescreteNavigation()) {
+			Dimension imageSize = this.logicalNetLayer.getMapViewer()
+					.getVisualComponent().getSize();
+			int mouseX = me.getPoint().x;
+			int mouseY = me.getPoint().y;
+
+			int cursorX =
+				(mouseX < imageSize.width * BORDER_AREA_SIZE_COEFICIENT) 
+				? 0
+				: (mouseX < imageSize.width * (1 - BORDER_AREA_SIZE_COEFICIENT)) 
+				? 1
+				:2;
+			int cursorY =
+				(mouseY < imageSize.height * BORDER_AREA_SIZE_COEFICIENT) 
+				? 0
+				: (mouseY < imageSize.height * (1 - BORDER_AREA_SIZE_COEFICIENT)) 
+				? 1
+				: 2;
+
+			this.logicalNetLayer.setCursor(cursors[cursorX][cursorY]);
+
+		}
 
 		mapState.setMouseMode(MapState.MOUSE_NONE);
+	}
+	/**
+	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
+	 * в процентах от габарита окна карты
+	 */
+	public static final double BORDER_AREA_SIZE_COEFICIENT = 0.1;
+
+	private static Cursor[][] cursors = new Cursor[3][3];
+
+//	.getScaledInstance(
+//			MapMouseMotionListener.IMG_SIZE,
+//			MapMouseMotionListener.IMG_SIZE,
+//			Image.SCALE_SMOOTH)
+	private static final String NORTHWEST = "northwest";
+	static {
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Point hotSpot = new Point(0, 0);
+		cursors[0][0] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/gonorthwest.gif"),
+				hotSpot,
+				NORTHWEST);
+		cursors[0][1] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/gowest.gif"),
+				hotSpot,
+				NORTHWEST);
+		cursors[0][2] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/gosouthwest.gif"),
+				hotSpot,
+				NORTHWEST);
+		cursors[1][0] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/gonorth.gif"),
+				hotSpot,
+				NORTHWEST);
+		cursors[1][1] = Cursor.getDefaultCursor();
+		cursors[1][2] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/gosouth.gif"),
+				hotSpot,
+				NORTHWEST);
+		cursors[2][0] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/gonortheast.gif"),
+				hotSpot,
+				NORTHWEST);
+		cursors[2][1] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/goeast.gif"),
+				hotSpot,
+				NORTHWEST);		
+		cursors[2][2] = toolkit.createCustomCursor(
+				toolkit.createImage("images/cursors/gosoutheast.gif"),
+				hotSpot,
+				NORTHWEST);
 	}
 }

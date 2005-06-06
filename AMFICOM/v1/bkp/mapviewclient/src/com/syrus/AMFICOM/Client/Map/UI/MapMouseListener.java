@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.29 2005/05/31 16:09:23 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.30 2005/06/06 07:20:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,10 +11,12 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import java.awt.AWTException;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -24,7 +26,6 @@ import javax.swing.SwingUtilities;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
@@ -37,6 +38,7 @@ import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -50,7 +52,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.29 $, $Date: 2005/05/31 16:09:23 $
+ * @version $Revision: 1.30 $, $Date: 2005/06/06 07:20:17 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -60,9 +62,29 @@ public final class MapMouseListener implements MouseListener
 
 	protected MapNodeLinkSizeField sizeEditBox = null;
 
+	/**
+	 * Сущность для перемещения курсора мыши в нужную точку
+	 */
+	private Robot robot = null;
+
+	/**
+	 * Величина габарита активной области в процентах от габарита окна карты
+	 */
+	private static final double ACTIVE_AREA_SIZE = 0.25;
+
 	public MapMouseListener(LogicalNetLayer logicalNetLayer)
+		throws MapDataException
 	{
 		this.logicalNetLayer = logicalNetLayer;
+		try
+		{
+			this.robot = new Robot();
+		} catch (AWTException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new MapDataException("MapMouseListener - Constructor - Can't create robot");
+		}
 	}
 
 	public void mouseClicked(MouseEvent me)
@@ -104,7 +126,7 @@ public final class MapMouseListener implements MouseListener
 
 //		System.out.println("Pressed at (" + me.getPoint().x + ", " + me.getPoint().y + ")");
 
-		if ( this.logicalNetLayer.getMapView() != null)
+//		if ( this.logicalNetLayer.getMapView() != null)
 		{
 			Point point = me.getPoint();
 			this.logicalNetLayer.setStartPoint(point);//Установить начальную точку
@@ -137,12 +159,17 @@ public final class MapMouseListener implements MouseListener
 				case MapState.NODELINK_SIZE_EDIT:
 					// fall throuth
 				case MapState.NO_OPERATION:
-					proceed = checkNodeSizeEdit(mapState, point);
-					
-					if(!proceed)
-						break;
-
 					try {
+						proceed = checkDescreteNavigation(point);
+						if(!proceed) {
+							proceed = true;
+							break;
+						}
+						proceed = checkNodeSizeEdit(mapState, point);
+						
+						if(!proceed)
+							break;
+
 						defaultAction(me);
 					} catch(MapConnectionException e2) {
 						// TODO Auto-generated catch block
@@ -176,6 +203,83 @@ public final class MapMouseListener implements MouseListener
 			e.printStackTrace();
 		}
 		mapState.setMouseMode(MapState.MOUSE_NONE);
+	}
+
+	private boolean checkDescreteNavigation(Point point) throws MapConnectionException, MapDataException {
+		if(MapPropertiesManager.isDescreteNavigation()) {
+			Dimension imageSize = this.logicalNetLayer.getMapViewer()
+					.getVisualComponent().getSize();
+			int mouseX = point.x;
+			int mouseY = point.y;
+
+			int quadrantX =
+				(mouseX < imageSize.width * MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT) 
+				? 0
+				: (mouseX < imageSize.width * (1 - MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT)) 
+				? 1
+				:2;
+			int quadrantY =
+				(mouseY < imageSize.height * MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT) 
+				? 0
+				: (mouseY < imageSize.height * (1 - MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT)) 
+				? 1
+				: 2;
+
+			if(quadrantX != 1 || quadrantY != 1) {
+
+				DoublePoint center = this.logicalNetLayer.getCenter();
+
+				//Разница между центрами соседних по горизонтали сегментов в пикселах 
+				int xDifferenceScr = (int)Math.round(imageSize.width * (1.D - ACTIVE_AREA_SIZE));
+				//Разница между центрами соседних по вертикали сегментов в пикселах		
+				int yDifferenceScr = (int)Math.round(imageSize.height * (1.D - ACTIVE_AREA_SIZE));		
+				
+				//Координаты текущего центра
+				Point curCenterScr = new Point(imageSize.width / 2,imageSize.height / 2);
+				DoublePoint curCenterSph = this.logicalNetLayer.convertScreenToMap(curCenterScr);
+				
+				//Считаем координаты центра следующего по горизонтали сегмента 
+				Point nextHorizCenterScr = new Point(imageSize.width / 2 + xDifferenceScr,imageSize.height / 2);		
+				DoublePoint nextHorizCenterSph = this.logicalNetLayer.convertScreenToMap(nextHorizCenterScr);
+				//Считаем расстояние между центрами
+				double xDifferenceSph = nextHorizCenterSph.getX() - curCenterSph.getX();
+
+				//Считаем координаты центра следующего по горизонтали сегмента 
+				Point nextVertCenterScr = new Point(imageSize.width / 2,imageSize.height / 2 + yDifferenceScr);		
+				DoublePoint nextVertCenterSph = this.logicalNetLayer.convertScreenToMap(nextVertCenterScr);
+				//Считаем расстояние между центрами
+				double yDifferenceSph = nextVertCenterSph.getY() - curCenterSph.getY();
+								
+				//Перемещаем центр
+				//Географические координаты нового центра
+				DoublePoint newCenter = new DoublePoint(
+						center.getX() + (quadrantX - 1) * xDifferenceSph,
+						center.getY() + (quadrantY - 1) * yDifferenceSph);
+				
+				//Географические координаты текущего положения мыши
+				DoublePoint mousePositionSph = 
+					this.logicalNetLayer.convertScreenToMap(
+							new Point(mouseX, mouseY));
+				
+				this.logicalNetLayer.setCenter(newCenter);
+				
+//				//Курсор ставим в ту же (в топографических координатах) точку - 
+//				//центр уже сменен
+//				Point newMousePosition = 
+//					this.logicalNetLayer.convertMapToScreen(mousePositionSph);
+//				
+//				Point frameLocation =this.logicalNetLayer.getMapViewer()
+//						.getVisualComponent().getLocationOnScreen();
+//				
+//				this.robot.mouseMove(
+//						frameLocation.x + newMousePosition.x,
+//						frameLocation.y + newMousePosition.y);
+
+				return false;
+			}
+
+		}
+		return true;
 	}
 
 	/**
@@ -236,7 +340,7 @@ public final class MapMouseListener implements MouseListener
 			}
 		}
 	}
-
+	
 	/**
 	 * @param mapState
 	 * @param point
