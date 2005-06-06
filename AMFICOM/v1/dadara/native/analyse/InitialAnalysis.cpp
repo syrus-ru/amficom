@@ -139,9 +139,14 @@ InitialAnalysis::~InitialAnalysis()
 // поиск прекрывающихся событий
 // XXX: пересечение - по thr или по weld порогу?
 // note: null-ссылки пропускаем (они остаются при перемещении объектов из одного списка в другой)
+// проверяем перекрыте с учетом разномасштабности
 int InitialAnalysis::splashesOverlap(Splash &spl1, Splash &spl2) {
+	// если всплески одного знака - учитываем разность масштабов
+	int delta = spl1.sign == spl2.sign
+		? abs(spl1.scale - spl2.scale) // integer abs
+		: 0;
 	return
-		spl1.begin_thr + 1 < spl2.end_thr && spl2.begin_thr + 1 < spl1.end_thr;
+		spl1.begin_thr + 1 < spl2.end_thr + delta && spl2.begin_thr + 1 < spl1.end_thr + delta;
 }
 
 int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
@@ -183,14 +188,17 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 #endif
 
 	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
-    shiftThresholds(scaleB);// сдвинуть пороги 
+    shiftThresholds(scaleB);// сдвинуть пороги
 
 #if 0
-	{	FILE *f = fopen ("noise2.tmp", "w");assert(f);
-		int i;
-		for (i = 0; i <= lastPoint; i++)
-			fprintf(f,"%d %g %g %g\n", i, data[i], TEMP[i], noise[i]);
-		fclose(f);
+	{	// FIXME: debug dump
+		FILE *f = fopen ("noise2.tmp", "w");
+		if (f) {
+			int i;
+			for	(i = 0; i <= lastPoint; i++)
+				fprintf(f,"%d %g %g %g\n", i, data[i], TEMP[i], noise[i]);
+			fclose(f);
+		}
 	}
 #endif
 
@@ -206,6 +214,26 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 		// проводим поиск всплесков на данном масштабе
 		ArrList newSpl;
 		performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scale, getWLetNorma(scale));
+
+#if 0
+	{	// FIXME: debug dump
+		FILE *f;
+		f = fopen ("noiserq.dat", "r");
+		if (f != 0) {
+			fclose (f);
+			char sbuf[32];
+			sprintf(sbuf,"noise-%d.tmp", scale);
+			FILE *f = fopen (sbuf, "w");
+			if (f) {
+				int i;
+				for	(i = 0; i <= lastPoint; i++)
+					fprintf(f,"%d %g %g %g\n", i, data[i], TEMP[i], noise[i]);
+				fclose(f);
+			}
+		}
+	}
+#endif
+
 		findAllWletSplashes(TEMP, scale, newSpl);
 		//fprintf(stderr, "scale %d: %d splashes\n", scale, newSpl.getLength()); fflush(stderr);
 		// анализируем, что делать  с каждым найденным всплеском
@@ -247,6 +275,16 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 					}
 				}
 			}
+			/*if (cnSplash->begin_thr < 2840 && cnSplash->end_thr > 2840) {
+				fprintf(stderr, "HIT2840: begin %d end %d f_extr %g ai %d-%d action %d\n",
+					cnSplash->begin_thr,
+					cnSplash->end_thr,
+					cnSplash->f_extr,
+					minAccIndex,
+					maxAccIndex,
+					(int)action);
+
+			}*/
 			// NB: ACTION_REPLACE и ACTION_INSERT производится только для
 			// всплесков, не пересекающихся ни с какими всплесками accSpl
 			// и для всплесков, пересекающихся взаимно-однозначно с одним
@@ -402,8 +440,8 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 		int ew = -1;
 		int bc = -1;
 		int ec = -1;
-		int sign = xsign(f_wlet[i]);
 		double f_extr = f_wlet[i];
+		int sign = xsign(f_wlet[i]);
 		for (; i <= lastPoint-1; i++) { // цикл (2)
 			if (f_wlet[i] * sign < 0)	// смена знака
 		break;
@@ -419,7 +457,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 				if (bc == -1)
 					bc = i - 1;
 			}
-			if (fabs(f_wlet[i]) > f_extr)
+			if (fabs(f_wlet[i]) > fabs(f_extr))
 				f_extr = f_wlet[i];
 		}
 		int et = i; // на этой точке всплеск уже закончился и, возможно, начался следующий
