@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -15,17 +15,17 @@ import java.util.List;
 
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.util.DoubleRect;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.Map.Logger;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
-import com.syrus.AMFICOM.Client.Map.SpatialObject;
-import com.syrus.AMFICOM.Client.Map.TopologicalImageCache;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.Logger;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.ServletCommandNames;
+import com.syrus.AMFICOM.client.map.SpatialObject;
+import com.syrus.AMFICOM.client.map.TopologicalImageCache;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer

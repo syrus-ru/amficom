@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,9 +10,9 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 
 public class MapImagePanel extends JPanel
 {

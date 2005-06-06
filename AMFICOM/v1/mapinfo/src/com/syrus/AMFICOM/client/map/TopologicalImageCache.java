@@ -1,19 +1,15 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.1.2.6 2005/06/06 12:19:38 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.1.2.7 2005/06/06 13:16:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
-import java.awt.AWTException;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Robot;
-import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -22,14 +18,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.6 $, $Date: 2005/06/06 12:19:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.7 $, $Date: 2005/06/06 13:16:59 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache

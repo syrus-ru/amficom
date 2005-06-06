@@ -1,17 +1,17 @@
 /*
- * $Id: EmptyLog.java,v 1.1.2.1 2005/06/02 12:14:04 peskovsky Exp $
+ * $Id: EmptyLog.java,v 1.1.2.2 2005/06/06 13:16:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import org.apache.commons.logging.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.1 $, $Date: 2005/06/02 12:14:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.2 $, $Date: 2005/06/06 13:16:59 $
  * @module mapinfo_v1
  */
 public class EmptyLog implements Log {

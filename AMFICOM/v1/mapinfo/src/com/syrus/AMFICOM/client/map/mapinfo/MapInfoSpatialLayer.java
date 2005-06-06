@@ -1,12 +1,12 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Component;
 
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.unit.Distance;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
 
 public class MapInfoSpatialLayer implements SpatialLayer
 {

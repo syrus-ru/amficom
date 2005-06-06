@@ -1,11 +1,11 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.1.2.1 2005/06/02 12:14:04 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.1.2.2 2005/06/06 13:16:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -22,12 +22,12 @@ import com.mapinfo.unit.LinearUnit;
 import com.mapinfo.util.DoublePoint;
 import com.mapinfo.util.DoubleRect;
 import com.mapinfo.xmlprot.mxtj.ImageRequestComposer;
-import com.syrus.AMFICOM.Client.Map.Logger;
+import com.syrus.AMFICOM.client.map.Logger;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.1 $, $Date: 2005/06/02 12:14:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.2 $, $Date: 2005/06/06 13:16:59 $
  * @module mapinfo_v1
  */
 public class MapJLocalRenderer

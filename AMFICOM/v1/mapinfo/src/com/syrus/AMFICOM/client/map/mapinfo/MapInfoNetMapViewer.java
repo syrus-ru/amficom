@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
@@ -14,18 +14,18 @@ import javax.swing.ToolTipManager;
 
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnection;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
-import com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener;
-import com.syrus.AMFICOM.Client.Map.UI.MapKeyAdapter;
-import com.syrus.AMFICOM.Client.Map.UI.MapMouseListener;
-import com.syrus.AMFICOM.Client.Map.UI.MapMouseMotionListener;
-import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnection;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.ui.MapDropTargetListener;
+import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
+import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
+import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
+import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
 import com.syrus.AMFICOM.client.model.Environment;
 
 public class MapInfoNetMapViewer extends NetMapViewer

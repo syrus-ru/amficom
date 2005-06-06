@@ -1,7 +1,7 @@
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 /**
- * $Id: Logger.java,v 1.1.2.1 2005/06/02 12:14:04 peskovsky Exp $ Syrus Systems Научно-технический центр Проект: АМФИКОМ
+ * $Id: Logger.java,v 1.1.2.2 2005/06/06 13:16:59 krupenn Exp $ Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
 public class Logger {

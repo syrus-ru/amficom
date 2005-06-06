@@ -1,11 +1,11 @@
 /**
- * $Id: MapInfoServletMapImageLoader.java,v 1.1.2.2 2005/06/06 12:16:29 peskovsky Exp $
+ * $Id: MapInfoServletMapImageLoader.java,v 1.1.2.3 2005/06/06 13:16:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -23,14 +23,14 @@ import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapImageLoader;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
-import com.syrus.AMFICOM.Client.Map.TopologicalRequest;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapImageLoader;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.ServletCommandNames;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.TopologicalRequest;
 import com.syrus.AMFICOM.general.LoginManager;
 
 public class MapInfoServletMapImageLoader implements MapImageLoader

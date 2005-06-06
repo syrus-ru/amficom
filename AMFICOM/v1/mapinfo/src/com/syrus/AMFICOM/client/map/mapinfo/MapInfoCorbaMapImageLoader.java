@@ -1,11 +1,11 @@
 /*
- * $Id: MapInfoCorbaMapImageLoader.java,v 1.1.2.2 2005/06/06 12:16:29 peskovsky Exp $
+ * $Id: MapInfoCorbaMapImageLoader.java,v 1.1.2.3 2005/06/06 13:16:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -15,19 +15,17 @@ import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapImageLoader;
-import com.syrus.AMFICOM.Client.Map.ServletCommandNames;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
-import com.syrus.AMFICOM.Client.Map.TopologicalRequest;
-
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapImageLoader;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.TopologicalRequest;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.2 $, $Date: 2005/06/06 12:16:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.3 $, $Date: 2005/06/06 13:16:59 $
  * @module mapinfo_v1
  */
 public class MapInfoCorbaMapImageLoader

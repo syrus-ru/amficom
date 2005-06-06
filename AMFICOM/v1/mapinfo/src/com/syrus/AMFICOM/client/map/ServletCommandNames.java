@@ -1,7 +1,7 @@
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.1 $, $Date: 2005/06/02 12:14:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.2 $, $Date: 2005/06/06 13:16:59 $
  * @module mapper-servlet
  */
 public class ServletCommandNames

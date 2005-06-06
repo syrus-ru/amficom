@@ -1,12 +1,12 @@
 
 /**
- * $Id: LoadingThread.java,v 1.1.2.4 2005/06/03 10:27:24 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.1.2.5 2005/06/06 13:16:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
-package com.syrus.AMFICOM.Client.Map;
+package com.syrus.AMFICOM.client.map;
 
 import java.util.Collections;
 import java.util.Iterator;
