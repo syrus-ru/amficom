@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.55 2005/06/05 18:41:31 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.56 2005/06/06 14:53:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/06/05 18:41:31 $
+ * @version $Revision: 1.56 $, $Date: 2005/06/06 14:53:43 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -102,6 +102,16 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitSets(idsT, sessionKey);
+			}
+		});
+	}
+
+	public java.util.Set loadTests(final java.util.Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ids, ObjectEntities.TEST_ENTITY_CODE, new TransmitProcedure() {
+			public IDLEntity[] transmitStorableObjects(CommonServer server,
+					Identifier_Transferable[] idsT,
+					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).transmitTests(idsT, sessionKey);
 			}
 		});
 	}
@@ -308,11 +318,6 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 
 	public java.util.Set loadModelingTypes(final java.util.Set ids) {
-		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids;
-		return null;
-	}
-
-	public java.util.Set loadTests(final java.util.Set ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids;
 		return null;
 	}
