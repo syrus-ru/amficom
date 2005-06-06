@@ -27,11 +27,11 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -47,8 +47,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -763,13 +763,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		if (this.measurementType != null) {
 			identifier = this.measurementType.getId();
-			measurementTypeCondition = new LinkedIdsCondition(identifier, ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
+			measurementTypeCondition = new LinkedIdsCondition(identifier, ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
 		}
 
 		if (this.monitoredElement != null) {
 			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(
 																					this.monitoredElement.getId(),
-																					ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
+																					ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
 			try {
 				if (measurementTypeCondition != null) {
 					idSet = new HashSet(2);

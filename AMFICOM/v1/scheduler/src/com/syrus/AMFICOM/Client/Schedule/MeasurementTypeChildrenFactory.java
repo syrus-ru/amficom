@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.2 2005/05/31 12:21:59 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.3 2005/06/06 11:45:20 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/31 12:21:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 11:45:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -65,7 +65,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 			try {
 				Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
 				
-				domainCondition.setEntityCode(ObjectEntities.MONITORED_ELEMENT_ENTITY_CODE);
+				domainCondition.setEntityCode(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE);
 				Collection monitoredElements = StorableObjectPool.getStorableObjectsByCondition(
 					domainCondition, true);
 				

@@ -210,7 +210,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		treeFrame.init();
 
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_ENTITY_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENT_SETUP_ENTITY_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SET_ENTITY_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
 
@@ -237,6 +237,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, this.getLazyCommand(PROPERTIES_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TIME, this.getLazyCommand(TIME_PARAMETERS_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.getLazyCommand(TABLE_FRAME));
+		aModel.fireModelChanged();
 	}
 
 	protected void setDefaultModel(ApplicationModel aModel) {

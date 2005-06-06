@@ -40,9 +40,9 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternWrapper;
@@ -1111,9 +1111,9 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.startTimeButton.setVisible(false);
 			this.endTimeButton.setVisible(false);
 			this.endingLabel.setVisible(false);
-			this.endTimeSpinner.setVisible(false);
-			this.endDateSpinner.setVisible(false);
-			this.endDateButton.setVisible(false);
+			this.endTimeSpinner.setVisible(enable);
+			this.endDateSpinner.setVisible(enable);
+			this.endDateButton.setVisible(enable);
 
 			
 			this.pediodTimeButton.setVisible(enable);
