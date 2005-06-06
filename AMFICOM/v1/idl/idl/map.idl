@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.19 2005/05/26 11:31:09 bass Exp $
+ * $Id: map.idl,v 1.20 2005/06/06 11:14:19 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -257,7 +257,7 @@ module com {
 					typedef TopologicalImageQuery_Transferable TopologicalImageQuery;
 
 					struct RenderedImage_Transferable {
-						CORBA::OctetSeq image;
+						::CORBA::OctetSeq image;
 					};
 
 					typedef RenderedImage_Transferable RenderedImage;
