@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.24 2005/06/04 16:56:22 bass Exp $
+ * $Id: LinkTypeController.java,v 1.25 2005/06/06 07:14:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/04 16:56:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/06/06 07:14:06 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -79,14 +79,23 @@ public final class LinkTypeController extends AbstractLinkController {
 	static {
 		lineColors.put(PhysicalLinkType.DEFAULT_COLLECTOR, Color.DARK_GRAY);
 		lineColors.put(PhysicalLinkType.DEFAULT_TUNNEL, Color.BLACK);
+		lineColors.put(PhysicalLinkType.DEFAULT_INDOOR, Color.GREEN);
+		lineColors.put(PhysicalLinkType.DEFAULT_OVERHEAD, Color.BLUE);
+		lineColors.put(PhysicalLinkType.DEFAULT_SUBMARINE, Color.MAGENTA);
 		lineColors.put(PhysicalLinkType.DEFAULT_UNBOUND, Color.RED);
 
-		lineThickness.put(PhysicalLinkType.DEFAULT_COLLECTOR, new Integer(3));
+		lineThickness.put(PhysicalLinkType.DEFAULT_COLLECTOR, new Integer(4));
 		lineThickness.put(PhysicalLinkType.DEFAULT_TUNNEL, new Integer(2));
+		lineThickness.put(PhysicalLinkType.DEFAULT_INDOOR, new Integer(1));
+		lineThickness.put(PhysicalLinkType.DEFAULT_OVERHEAD, new Integer(2));
+		lineThickness.put(PhysicalLinkType.DEFAULT_SUBMARINE, new Integer(3));
 		lineThickness.put(PhysicalLinkType.DEFAULT_UNBOUND, new Integer(1));
 
 		bindDimensions.put(PhysicalLinkType.DEFAULT_COLLECTOR, new IntDimension(2, 6));
 		bindDimensions.put(PhysicalLinkType.DEFAULT_TUNNEL, new IntDimension(3, 4));
+		bindDimensions.put(PhysicalLinkType.DEFAULT_INDOOR, new IntDimension(1, 1));
+		bindDimensions.put(PhysicalLinkType.DEFAULT_OVERHEAD, new IntDimension(10, 1));
+		bindDimensions.put(PhysicalLinkType.DEFAULT_SUBMARINE, new IntDimension(3, 4));
 		bindDimensions.put(PhysicalLinkType.DEFAULT_UNBOUND, new IntDimension(0, 0));
 	}
 
