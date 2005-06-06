@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.3 2005/06/06 11:11:05 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.4 2005/06/06 12:44:32 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -29,7 +29,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/06/06 11:11:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 12:44:32 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -532,16 +532,12 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                         + " BEkm=" + ete.getBegin()*dxkm);
                             }
                             double beginRoughness =
-                                Math.abs(dBeginS - etBegin) / (dBMax - dBMin);
+                                Math.abs(dBeginS) / (dBMax - dBMin);
                             // 0.5 / ( 1/x + 1/sqrt(x) ) == 1 * x / (1 + sqrt(x))
                             // имеет асимпотики - лин. в нуле, sqrt на +inf
                             beginRoughness *= 1.0 / (1.0 + Math.sqrt(beginRoughness));
                             //System.out.println("beginRoughness = " + beginRoughness); // FIXME
-                            if (ets[i][et].getEventType()
-                                    == SimpleReflectogramEvent.CONNECTOR)
-                                fails.incConnBegin(beginRoughness);
-                            else
-                                fails.incPosition(beginRoughness);
+                            incRoughnessCounter(ets[i][et], re[k], dxkm, true, fails, beginRoughness);
                         }
                         // -- end processing
                         if (ete.hasEndMin() || ete.hasEndMax()
@@ -568,13 +564,9 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                         + " EEkm=" + ete.getEnd()*dxkm);
                             }
                             double endRoughness =
-                                Math.abs(dEndS - etEnd) / (dEMax - dEMin);
+                                Math.abs(dEndS) / (dEMax - dEMin);
                             endRoughness *= 1.0 / (1.0 + Math.sqrt(endRoughness));
-                            if (ets[i][et].getEventType()
-                                    == SimpleReflectogramEvent.CONNECTOR)
-                                fails.incConnEnd(endRoughness);
-                            else
-                                fails.incPosition(endRoughness);
+                            incRoughnessCounter(ets[i][et], re[k], dxkm, false, fails, endRoughness);
                         }
                     }
                 }
@@ -624,5 +616,36 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         }
 
         return bestWorstLevel;
+    }
+
+    private void incRoughnessCounter(SimpleReflectogramEvent et,
+            SimpleReflectogramEvent re, double dxkm,
+            boolean isBegin, FailCounter fails, double roughness0) {
+        double roughness = roughness0 / (1.0 + Math.sqrt(roughness0));
+        if (roughness > 0.1 && true) { // if verbose
+            int etPos = isBegin ? et.getBegin() : et.getEnd();
+            int rePos = isBegin ? re.getBegin() : re.getEnd();
+            System.out.println("incRoughness: " + roughness
+                    + " for " + (isBegin ? "begin" : "end  ")
+                    + " T=" + re.getEventType() + "/" + et.getEventType()
+                    + " etPos=" + etPos
+                    + " rePos=" + rePos
+                    + " km=" + rePos * dxkm
+                    );
+        }
+        if (isBegin) {
+            if (et.getEventType()
+                    == SimpleReflectogramEvent.CONNECTOR)
+                fails.incConnBegin(roughness);
+            else
+                fails.incPosition(roughness);
+        }
+        else {
+            if (et.getEventType()
+                    == SimpleReflectogramEvent.CONNECTOR)
+                fails.incConnEnd(roughness);
+            else
+                fails.incPosition(roughness);
+        }
     }
 }
