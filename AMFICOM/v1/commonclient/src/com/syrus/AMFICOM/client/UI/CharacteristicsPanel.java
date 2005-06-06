@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.5 2005/06/04 16:56:24 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.6 2005/06/06 11:02:26 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:24 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 11:02:26 $
  * @module commonclient_v1
  */
 
@@ -236,17 +236,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 	public boolean save() {
 		try {
-			for (Iterator it = this.addedCharacteristics.values().iterator(); it.hasNext();) {
-				List added = (List) it.next();
-				for (Iterator it2 = added.iterator(); it2.hasNext();) {
-					Characteristic ch = (Characteristic) it2.next();
-					StorableObjectPool.putStorableObject(ch.getType());
-					StorableObjectPool.putStorableObject(ch);
-				}
-			}
 			Set removedIds = new HashSet();
-			for (Iterator it = this.removedCharacteristics.values().iterator(); it
-					.hasNext();) {
+			for (Iterator it = this.removedCharacteristics.values().iterator(); it.hasNext();) {
 				List removed = (List) it.next();
 				for (Iterator it2 = removed.iterator(); it2.hasNext();) {
 					Characteristic ch = (Characteristic) it2.next();
