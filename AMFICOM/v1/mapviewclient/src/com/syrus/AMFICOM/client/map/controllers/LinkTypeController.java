@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.25 2005/06/06 07:14:06 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.26 2005/06/06 10:21:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/06 07:14:06 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/06 10:21:39 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -232,9 +232,9 @@ public final class LinkTypeController extends AbstractLinkController {
 				attribute = Characteristic.createInstance(
 						userId,
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(size),
 						linkType,
 						true,
 						true);
@@ -296,9 +296,9 @@ public final class LinkTypeController extends AbstractLinkController {
 				attribute = Characteristic.createInstance(
 						userId,
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						style,
 						linkType,
 						true,
 						true);
@@ -380,9 +380,9 @@ public final class LinkTypeController extends AbstractLinkController {
 				attribute = Characteristic.createInstance(
 						userId,
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(color.getRGB()),
 						linkType,
 						true,
 						true);
@@ -456,9 +456,9 @@ public final class LinkTypeController extends AbstractLinkController {
 				attribute = Characteristic.createInstance(
 						userId,
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(color.getRGB()),
 						linkType,
 						true,
 						true);
@@ -533,9 +533,9 @@ public final class LinkTypeController extends AbstractLinkController {
 				attribute = Characteristic.createInstance(
 						userId,
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(size),
 						linkType,
 						true,
 						true);

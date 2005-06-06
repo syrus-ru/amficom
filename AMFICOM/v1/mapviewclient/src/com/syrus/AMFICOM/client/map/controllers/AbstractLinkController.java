@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.19 2005/06/04 16:56:22 bass Exp $
+ * $Id: AbstractLinkController.java,v 1.20 2005/06/06 10:21:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/06/04 16:56:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/06/06 10:21:39 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -93,7 +93,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			CharacteristicType type = CharacteristicType.createInstance(
 					userId,
 					codename,
-					"",
+					"1",
 					dataType,
 					sort);
 			StorableObjectPool.putStorableObject(type);
@@ -140,9 +140,9 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				attribute = Characteristic.createInstance(
 						getLogicalNetLayer().getUserId(),
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(size),
 						mapElement,
 						true,
 						true);
@@ -199,9 +199,9 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				attribute = Characteristic.createInstance(
 						getLogicalNetLayer().getUserId(),
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						style,
 						mapElement,
 						true,
 						true);
@@ -277,9 +277,9 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				attribute = Characteristic.createInstance(
 						getLogicalNetLayer().getUserId(),
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(color.getRGB()),
 						mapElement,
 						true,
 						true);
@@ -336,9 +336,9 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				attribute = Characteristic.createInstance(
 						getLogicalNetLayer().getUserId(),
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(color.getRGB()),
 						mapElement,
 						true,
 						true);
@@ -395,9 +395,9 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				attribute = Characteristic.createInstance(
 						getLogicalNetLayer().getUserId(),
 						cType,
-						"",
-						"",
-						"",
+						"name",
+						"1",
+						String.valueOf(size),
 						mapElement,
 						true,
 						true);
