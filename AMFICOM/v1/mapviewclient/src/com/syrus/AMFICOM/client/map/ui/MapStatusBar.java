@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.4 2005/05/30 12:19:02 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.5 2005/06/06 07:19:30 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/05/30 12:19:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/06 07:19:30 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel {
@@ -89,6 +89,7 @@ public final class MapStatusBar extends JPanel {
 		this.latitudeLabel.setText(LangModelMap.getString("Latitude"));
 
 		this.latitudeTextField.setText("0.0000");
+		this.latitudeTextField.setSize(fieldSize);
 		this.latitudeTextField.setPreferredSize(fieldSize);
 		this.latitudeTextField.setMaximumSize(fieldSize);
 		this.latitudeTextField.setMinimumSize(fieldSize);
@@ -96,6 +97,7 @@ public final class MapStatusBar extends JPanel {
 		this.longitudeLabel.setText(LangModelMap.getString("Longitude"));
 
 		this.longitudeField.setText("0.0000");
+		this.longitudeField.setSize(fieldSize);
 		this.longitudeField.setPreferredSize(fieldSize);
 		this.longitudeField.setMaximumSize(fieldSize);
 		this.longitudeField.setMinimumSize(fieldSize);
@@ -103,6 +105,7 @@ public final class MapStatusBar extends JPanel {
 		this.scaleLabel.setText(LangModelMap.getString("Scale"));
 
 		this.scaleField.setText("0.0");
+		this.scaleField.setSize(fieldSize);
 		this.scaleField.setPreferredSize(fieldSize);
 		this.scaleField.setMaximumSize(fieldSize);
 		this.scaleField.setMinimumSize(fieldSize);
