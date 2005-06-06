@@ -22,7 +22,11 @@ XMLBEANSCLASSPATH=$(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
 LIBNAME_GENERALXML=generalxml.jar
 LIBNAME_MAPXML=mapxml.jar
 
-SCOMP=$(XMLBEANS_HOME)/bin/scomp
+SCOMP=$(shell which scomp)
+ifeq ($(SCOMP),)
+SCOMP=$($(XMLBEANS_HOME)/bin/scomp
+endif
+
 SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
 
 
