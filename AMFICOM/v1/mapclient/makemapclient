@@ -6,7 +6,7 @@ TARGET=$(LIB)\mapclient.jar
 TARGET_SRC=$(LIBSRC)\mapclientsource.zip
 TARGET_DOC=$(LIBDOC)\mapclientdoc.zip
 
-CLIENTCP=$(LIB)\generalclient.jar;$(LIB)\general.jar
+CLIENTCP=$(LIB)\commonclient.jar;$(LIB)\general.jar
 
 CLASSPATH=$(CLIENTCP)
 
@@ -24,14 +24,15 @@ impl:
 		-d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		$(SRC)\com\syrus\AMFICOM\Client\General\Event\MapEvent.java \
-		$(SRC)\com\syrus\AMFICOM\Client\General\Event\MapNavigateEvent.java \
-		$(SRC)\com\syrus\AMFICOM\Client\General\Lang\LangModelMap.java
+		$(SRC)\com\syrus\AMFICOM\client\event\MapEvent.java \
+		$(SRC)\com\syrus\AMFICOM\client\event\MapNavigateEvent.java \
+		$(SRC)\com\syrus\AMFICOM\client\resource\LangModelMap.java \
+		$(SRC)\com\syrus\AMFICOM\client\resource\MiscUtil.java
 
 loc:
 	copy /y \
-		$(SRC)\com\syrus\AMFICOM\Client\General\Lang\map_ru.properties \
-		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+		$(SRC)\com\syrus\AMFICOM\client\resource\map_ru.properties \
+		$(CLASSES)\com\syrus\AMFICOM\client\resource
 
 javadoc:
 	$(JAVADOCGENERATOR) com

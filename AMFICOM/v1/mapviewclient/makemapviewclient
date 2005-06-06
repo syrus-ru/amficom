@@ -26,7 +26,7 @@ impl:
 		-d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		src\com\syrus\AMFICOM\client\General\Model\*.java \
+		src\com\syrus\AMFICOM\client\model\*.java \
 		src\com\syrus\AMFICOM\client\map\*.java \
 		src\com\syrus\AMFICOM\client\map\command\*.java \
 		src\com\syrus\AMFICOM\client\map\command\action\*.java \
