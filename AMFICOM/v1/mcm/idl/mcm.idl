@@ -18,9 +18,6 @@ module corba {
 		void abortTests(in general::corba::IdentifierSeq test_ids)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::Measurement_Transferable transmitMeasurement(in general::corba::Identifier id)
-			raises (general::corba::AMFICOMRemoteException);
-
 		measurement::corba::MeasurementSeq_Transferable transmitMeasurements(in general::corba::IdentifierSeq ids)
 				raises (general::corba::AMFICOMRemoteException);
 
@@ -29,18 +26,12 @@ module corba {
 				in general::corba::StorableObjectCondition storableObjectCondition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::Analysis_Transferable transmitAnalysis(in general::corba::Identifier id)
-			raises (general::corba::AMFICOMRemoteException);
-
 		measurement::corba::AnalysisSeq_Transferable transmitAnalyses(in general::corba::IdentifierSeq ids)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIdsByCondition(
 				in general::corba::IdentifierSeq ids,
 				in general::corba::StorableObjectCondition storableObjectCondition_Transferable)
-			raises (general::corba::AMFICOMRemoteException);
-
-		measurement::corba::Evaluation_Transferable transmitEvaluation(in general::corba::Identifier id)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::EvaluationSeq_Transferable transmitEvaluations(in general::corba::IdentifierSeq ids)				
