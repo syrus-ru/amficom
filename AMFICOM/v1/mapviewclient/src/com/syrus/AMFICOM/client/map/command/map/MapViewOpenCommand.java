@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.22 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.23 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,7 +13,6 @@ import java.util.Collection;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.ui.MapViewTableController;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -21,6 +20,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * открыть вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/06 12:57:02 $
  * @module mapviewclient_v1
  */
 public class MapViewOpenCommand extends AbstractCommand {

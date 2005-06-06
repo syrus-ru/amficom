@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.21 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.22 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,7 +11,7 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -32,7 +32,7 @@ import java.util.Iterator;
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/06 12:57:01 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle

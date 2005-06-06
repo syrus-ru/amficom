@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
 import com.syrus.AMFICOM.client.map.ui.MapElementLabel;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 public final class ProtoPopupMenu extends MapPopupMenu {

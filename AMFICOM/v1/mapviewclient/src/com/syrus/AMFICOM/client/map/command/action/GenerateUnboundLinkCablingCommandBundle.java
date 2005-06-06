@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.15 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.16 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,8 +13,8 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.map.Map;
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/06/06 12:20:30 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle

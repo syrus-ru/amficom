@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.6 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MapAddMapCommand.java,v 1.7 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,19 +16,19 @@ import java.util.Iterator;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.AbstractNodeController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapTableController;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  */
 public class MapAddMapCommand extends AbstractCommand

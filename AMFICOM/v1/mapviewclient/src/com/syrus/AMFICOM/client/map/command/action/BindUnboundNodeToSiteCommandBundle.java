@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.19 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.20 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,8 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 /**
  *  Команда привязывания непривязанного элемента к узлу.
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle

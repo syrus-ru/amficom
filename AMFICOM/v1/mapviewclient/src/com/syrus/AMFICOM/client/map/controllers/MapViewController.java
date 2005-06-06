@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.26 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: MapViewController.java,v 1.27 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -26,6 +25,7 @@ import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemePathCommand;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/06 12:57:02 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -199,7 +199,7 @@ public final class MapViewController {
 	 * Возвращает флаг, указывающий, что точка currentMousePoint находится
 	 * в определенных границах элемента. Для узла границы определяются
 	 * размерами иконки, для линии дельта-окрестностью линии. Дельта задается
-	 * полем {@link com.syrus.AMFICOM.Client.Map.MapPropertiesManager#getMouseTolerancy()}.
+	 * полем {@link com.syrus.AMFICOM.client.map.MapPropertiesManager#getMouseTolerancy()}.
 	 * @param me элемент карты
 	 * @param currentMousePoint точка в экранных координатах
 	 * @return <code>true</code>, если точка на элементе карты, иначе 

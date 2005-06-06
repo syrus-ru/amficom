@@ -2,11 +2,11 @@ package com.syrus.AMFICOM.client.map.report;
 /*
 import javax.swing.table.TableColumn;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
-import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.client.General.Report.DividableTableColumnModel;
+import com.syrus.AMFICOM.client.General.Report.DividableTableModel;
+import com.syrus.AMFICOM.client.General.Report.ReportData;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;

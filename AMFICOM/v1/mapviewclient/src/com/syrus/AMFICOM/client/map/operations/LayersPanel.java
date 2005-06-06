@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.7 2005/06/06 12:20:33 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.8 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,14 +29,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:33 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/06 12:57:02 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

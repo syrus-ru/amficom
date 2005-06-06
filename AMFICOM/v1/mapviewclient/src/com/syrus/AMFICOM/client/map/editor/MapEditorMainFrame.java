@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.40 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.41 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,8 +31,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseViewCommand;
@@ -68,6 +66,7 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client.UI.StatusBarModel;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
@@ -84,6 +83,7 @@ import com.syrus.AMFICOM.client.model.SessionCloseCommand;
 import com.syrus.AMFICOM.client.model.SessionConnectionCommand;
 import com.syrus.AMFICOM.client.model.SessionDomainCommand;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
@@ -96,7 +96,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.40 $, $Date: 2005/06/06 12:20:33 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/06 12:57:02 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */

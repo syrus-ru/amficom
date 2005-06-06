@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeCellRenderer.java,v 1.3 2005/06/06 12:20:36 krupenn Exp $
+ * $Id: MapViewTreeCellRenderer.java,v 1.4 2005/06/06 12:57:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,8 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.TreeCellRenderer;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.logic.Item;
 
 class MapViewTreeCellRenderer extends JLabel implements TreeCellRenderer {

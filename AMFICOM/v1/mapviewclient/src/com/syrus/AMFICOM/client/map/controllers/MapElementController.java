@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementController.java,v 1.6 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: MapElementController.java,v 1.7 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.awt.geom.Rectangle2D;
  * Интерфейс контроллера элемента карты. Позволяет управлять отображением
  * элементов карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/06 12:57:02 $
  * @module mapviewclient_v1
  */
 public interface MapElementController 
@@ -54,7 +54,7 @@ public interface MapElementController
 	 * Возвращает флаг, указывающий, что точка currentMousePoint находится
 	 * в определенных границах элемента. Для узла границы определяются
 	 * размерами иконки, для линии дельта-окрестностью линии. Дельта задается
-	 * полем {@link com.syrus.AMFICOM.Client.Map.MapPropertiesManager#getMouseTolerancy()}.
+	 * полем {@link com.syrus.AMFICOM.client.map.MapPropertiesManager#getMouseTolerancy()}.
 	 * @param me элемент карты
 	 * @param currentMousePoint точка в экранных координатах
 	 * @return <code>true</code>, если точка на элементе карты, иначе 

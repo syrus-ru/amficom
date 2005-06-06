@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.17 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.18 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,10 +14,10 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.controllers.MeasurementPathController;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/06 12:20:30 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.19 2005/06/06 12:20:35 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.20 2005/06/06 12:57:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.Map;
@@ -81,7 +81,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.19 $, $Date: 2005/06/06 12:20:35 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/06 12:57:03 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

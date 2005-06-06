@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveMapCommand.java,v 1.3 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MapRemoveMapCommand.java,v 1.4 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,17 +9,17 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapTableController;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -28,7 +28,7 @@ import javax.swing.JDesktopPane;
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 12:57:02 $
  * @module mapviewclient_v1
  */
 public class MapRemoveMapCommand extends AbstractCommand {

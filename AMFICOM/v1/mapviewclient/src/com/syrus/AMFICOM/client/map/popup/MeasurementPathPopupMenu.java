@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.command.action.CreateMarkerCommandAtomic;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 public final class MeasurementPathPopupMenu extends MapPopupMenu {

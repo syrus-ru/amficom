@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.21 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.22 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -9,7 +9,6 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -17,6 +16,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * создать новый вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/06 12:57:02 $
  * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends AbstractCommand {

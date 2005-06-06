@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.8 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.9 2005/06/06 12:57:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,12 +20,12 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/06 12:57:02 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {

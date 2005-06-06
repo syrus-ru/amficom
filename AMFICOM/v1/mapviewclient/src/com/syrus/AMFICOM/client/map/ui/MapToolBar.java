@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.23 2005/06/06 12:20:36 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.24 2005/06/06 12:57:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,19 +28,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.23 $, $Date: 2005/06/06 12:20:36 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/06 12:57:03 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

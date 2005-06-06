@@ -4,11 +4,11 @@ import java.util.Iterator;
 
 import javax.swing.table.TableColumn;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
-import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
-import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.client.General.Report.DividableTableColumnModel;
+import com.syrus.AMFICOM.client.General.Report.DividableTableModel;
+import com.syrus.AMFICOM.client.General.Report.ReportData;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;

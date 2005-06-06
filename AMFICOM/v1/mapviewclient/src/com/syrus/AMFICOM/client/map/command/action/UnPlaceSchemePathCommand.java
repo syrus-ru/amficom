@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemePathCommand.java,v 1.9 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: UnPlaceSchemePathCommand.java,v 1.10 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,8 +10,8 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
  * убрать привязку измерительного пути с карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/06 12:20:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemePathCommand extends MapActionCommandBundle

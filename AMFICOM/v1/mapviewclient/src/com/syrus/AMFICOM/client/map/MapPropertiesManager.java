@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.18 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.19 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import java.util.Properties;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.4 2005/06/06 12:20:36 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.5 2005/06/06 12:57:03 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -22,9 +22,9 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:20:36 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/06 12:57:03 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

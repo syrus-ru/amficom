@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.18 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.19 2005/06/06 12:57:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,13 +11,13 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  */
 public class MapNewCommand extends AbstractCommand {

@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.13 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.14 2005/06/06 12:57:01 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
@@ -10,7 +10,6 @@ import java.util.Iterator;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewSaveAsCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
@@ -19,6 +18,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * команду MapSaveAsCommand
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/06 12:57:01 $
  * @module mapviewclient_v1
  * @see MapViewSaveAsCommand
  */

@@ -6,14 +6,14 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+import com.syrus.AMFICOM.client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Report.AMTReport;
-import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.ImagePanel;
-import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
+import com.syrus.AMFICOM.client.General.Report.AMTReport;
+import com.syrus.AMFICOM.client.General.Report.APOReportModel;
+import com.syrus.AMFICOM.client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.client.General.Report.ImagePanel;
+import com.syrus.AMFICOM.client.General.Report.ReportResultsTablePanel;
 */
 
 public class MapReportModel {
