@@ -1,5 +1,5 @@
 /*
- * $Id: MServerGeneralTransmit.java,v 1.3 2005/06/04 16:56:21 bass Exp $
+ * $Id: MServerGeneralTransmit.java,v 1.4 2005/06/06 14:43:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,89 +7,67 @@
  */
 package com.syrus.AMFICOM.mserver;
 
-import java.util.Iterator;
+import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/04 16:56:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/06 14:43:06 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 abstract class MServerGeneralTransmit extends MServerMeasurementReceive {
 
 	private static final long serialVersionUID = 1312455830273815032L;
 
+
 	/* Transmit multiple objects*/
 
-	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
-		java.util.Set objects = this.getGeneralObjects(idsT);
-
-		ParameterType_Transferable[] transferables = new ParameterType_Transferable[objects.size()];
-		int i = 0;
-		ParameterType parameterType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			parameterType = (ParameterType) it.next();
-			transferables[i] = (ParameterType_Transferable) parameterType.getTransferable();
-		}
-		return transferables;
-	}
-
-	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] idsT)
+	public ParameterType_Transferable[] transmitParameterTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
-		java.util.Set objects = this.getGeneralObjects(idsT);
-
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[objects.size()];
-		int i = 0;
-		CharacteristicType characteristicType;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristicType = (CharacteristicType) it.next();
-			transferables[i] = (CharacteristicType_Transferable) characteristicType.getTransferable();
-		}
-		return transferables;
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final ParameterType_Transferable[] ret = new ParameterType_Transferable[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
 	}
 
-	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
-		java.util.Set objects = this.getGeneralObjects(idsT);
+	public CharacteristicType_Transferable[] transmitCharacteristicTypes(Identifier_Transferable[] idsT,
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final CharacteristicType_Transferable[] ret = new CharacteristicType_Transferable[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
 
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[objects.size()];
-		int i = 0;
-		Characteristic characteristic;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			characteristic = (Characteristic) it.next();
-			transferables[i] = (Characteristic_Transferable) characteristic.getTransferable();
-		}
-		return transferables;
+	public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] idsT,
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final Characteristic_Transferable[] ret = new Characteristic_Transferable[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
 	}
 
 
-	private java.util.Set getGeneralObjects(Identifier_Transferable[] idsT) throws AMFICOMRemoteException {
-		try {
-			java.util.Set ids = Identifier.fromTransferables(idsT);
-			java.util.Set objects = StorableObjectPool.getStorableObjects(ids, true);
-			return objects;
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
-		catch (Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
-		}
+
+	/* Transmit multiple objects but ids by condition*/
+
+	public ParameterType_Transferable[] transmitParameterTypesButIdsByCondition(Identifier_Transferable[] idsT,
+			StorableObjectCondition_Transferable conditionT,
+			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(idsT, sessionKeyT, conditionT);
+		final int length = storableObjects.length;
+		final ParameterType_Transferable[] ret = new ParameterType_Transferable[length];
+		System.arraycopy(storableObjects, 0, ret, 0, length);
+		return ret;
 	}
 
 }

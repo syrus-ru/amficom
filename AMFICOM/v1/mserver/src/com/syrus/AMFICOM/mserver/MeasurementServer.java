@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.51 2005/06/04 16:56:21 bass Exp $
+ * $Id: MeasurementServer.java,v 1.52 2005/06/06 14:43:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
@@ -44,14 +43,15 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/04 16:56:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2005/06/06 14:43:06 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -185,7 +185,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new MServerImplementation(), processCodename);
+			corbaServer.activateServant(new MServerPOATie(new MServerImplementation(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
 		}
 		catch (final ApplicationException ae) {
@@ -347,12 +347,6 @@ public class MeasurementServer extends SleepButWorkThread {
 				test = (Test) it.next();
 				if (test.getStatus().value() != status.value()) {
 					test.setStatus(status);
-					try {
-						StorableObjectPool.putStorableObject(test);
-					}
-					catch (IllegalObjectEntityException ioee) {
-						Log.errorException(ioee);
-					}
 				}
 			}
 		}

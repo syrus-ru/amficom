@@ -35,7 +35,7 @@ module corba {
 
 		/* Transmit multiple objects but ids by condition*/
 
-		general::corba::ParameterTypeSeq transmitParameterTypesByCondition(
+		general::corba::ParameterTypeSeq transmitParameterTypesButIdsByCondition(
 			in general::corba::IdentifierSeq idsT,
 			in general::corba::StorableObjectCondition conditionT,
 			in security::corba::SessionKey sessionKeyT)
@@ -132,23 +132,23 @@ module corba {
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetups(in general::corba::IdentifierSeq ids,
+		measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetups(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::SetSeq_Transferable transmitSets(in general::corba::IdentifierSeq ids,
+		measurement::corba::SetSeq_Transferable transmitSets(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatterns(in general::corba::IdentifierSeq ids,
+		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatterns(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatterns(in general::corba::IdentifierSeq ids,
+		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatterns(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatterns(in general::corba::IdentifierSeq ids,
+		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatterns(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -193,32 +193,32 @@ module corba {
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::MeasurementSeq_Transferable transmitMeasurementSetupsButIdsByCondition(
-			in general::corba::IdentifierSeq ids,
+		measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIdsByCondition(
+			in general::corba::IdentifierSeq idsT,
 			in general::corba::StorableObjectCondition conditionT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::AnalysisSeq_Transferable transmitSetsButIdsByCondition(
-			in general::corba::IdentifierSeq ids,
+		measurement::corba::SetSeq_Transferable transmitSetsButIdsByCondition(
+			in general::corba::IdentifierSeq idsT,
 			in general::corba::StorableObjectCondition conditionT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::EvaluationSeq_Transferable transmitCronTemporalPatternsButIdsByCondition(
-			in general::corba::IdentifierSeq ids,
+		measurement::corba::CronTemporalPatternSeq_Transferable transmitCronTemporalPatternsButIdsByCondition(
+			in general::corba::IdentifierSeq idsT,
 			in general::corba::StorableObjectCondition conditionT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::EvaluationSeq_Transferable transmitIntervalsTemporalPatternsButIdsByCondition(
-			in general::corba::IdentifierSeq ids,
+		measurement::corba::IntervalsTemporalPatternSeq_Transferable transmitIntervalsTemporalPatternsButIdsByCondition(
+			in general::corba::IdentifierSeq idsT,
 			in general::corba::StorableObjectCondition conditionT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::EvaluationSeq_Transferable transmitPeriodicalTemporalPatternsButIdsByCondition(
-			in general::corba::IdentifierSeq ids,
+		measurement::corba::PeriodicalTemporalPatternSeq_Transferable transmitPeriodicalTemporalPatternsButIdsByCondition(
+			in general::corba::IdentifierSeq idsT,
 			in general::corba::StorableObjectCondition conditionT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -239,7 +239,7 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 			
 			
-		void deleteTests(in general::corba::IdentifierSeq ids,
+		void deleteTests(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
