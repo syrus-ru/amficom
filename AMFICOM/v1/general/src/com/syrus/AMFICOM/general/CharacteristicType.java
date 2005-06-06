@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.30 2005/06/06 10:30:18 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.31 2005/06/06 12:22:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,14 +20,15 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.Ch
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/06 10:30:18 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/06 12:22:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public final class CharacteristicType extends StorableObjectType {
+public final class CharacteristicType extends StorableObjectType implements Namable {
 	private static final long serialVersionUID = 6153350736368296076L;
 
+	private String name;
 	private int dataType;
 	private int sort;
 
@@ -61,6 +62,7 @@ public final class CharacteristicType extends StorableObjectType {
 			final long version,
 			final String codename,
 			final String description,
+			final String name,
 			final int dataType,
 			final int sort) {
 		super(id,
@@ -71,6 +73,7 @@ public final class CharacteristicType extends StorableObjectType {
 				version,
 				codename,
 				description);
+		this.name = name;
 		this.dataType = dataType;
 		this.sort = sort;
 	}
@@ -87,6 +90,7 @@ public final class CharacteristicType extends StorableObjectType {
 			// Never
 			Log.errorException(ae);
 		}
+		this.name = ctt.name;
 		this.dataType = ctt.data_type.value();
 		this.sort = ctt.sort.value();
 		
@@ -106,6 +110,7 @@ public final class CharacteristicType extends StorableObjectType {
 	public static CharacteristicType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
+			final String name,
 			final DataType dataType,
 			final CharacteristicTypeSort sort) throws CreateObjectException {
 		try {
@@ -114,6 +119,7 @@ public final class CharacteristicType extends StorableObjectType {
 					0L,
 					codename,
 					description,
+					name,
 					dataType.value(),
 					sort.value());
 
@@ -136,19 +142,29 @@ public final class CharacteristicType extends StorableObjectType {
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
-						DataType.from_int(this.dataType),
-						CharacteristicTypeSort.from_int(this.sort));
+				this.name,
+				DataType.from_int(this.dataType),
+				CharacteristicTypeSort.from_int(this.sort));
 	}	
 
 	public DataType getDataType() {
 		return DataType.from_int(this.dataType);
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void setDataType0(final DataType dataType) {
 		this.dataType = dataType.value();
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+		super.markAsChanged();
 	}
 
 	public CharacteristicTypeSort getSort() {
@@ -177,9 +193,11 @@ public final class CharacteristicType extends StorableObjectType {
 			final long version,
 			final String codename,
 			final String description,
+			final String name,
 			final int dataType,
 			final int sort) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
+		this.name = name;
 		this.dataType = dataType;
 		this.sort = sort;
 	}

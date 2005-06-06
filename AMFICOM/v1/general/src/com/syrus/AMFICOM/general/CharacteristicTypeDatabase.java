@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.23 2005/05/26 08:33:31 bass Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.24 2005/06/06 12:22:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/26 08:33:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/06 12:22:32 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -37,6 +37,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns  = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ CharacteristicTypeWrapper.COLUMN_DATA_TYPE + COMMA				
 				+ CharacteristicTypeWrapper.COLUMN_SORT;
 		}
@@ -44,8 +45,9 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues  = QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -57,6 +59,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
 			+ Integer.toString(characteristicType.getSort().value());
 		return sql;
@@ -68,6 +71,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getName(), SIZE_NAME_COLUMN);
 		preparedStatement.setInt( ++startParameterNumber, characteristicType.getDataType().value());
 		preparedStatement.setInt( ++startParameterNumber, characteristicType.getSort().value());
 		return startParameterNumber;
@@ -96,6 +100,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 																	0L,
 																	null,
 																	null,
+																	null,
 																	0,
 																	0);			
 		}
@@ -106,6 +111,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 										 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 										 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 										 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+										 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 										 resultSet.getInt(CharacteristicTypeWrapper.COLUMN_DATA_TYPE),
 										 resultSet.getInt(CharacteristicTypeWrapper.COLUMN_SORT));
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.8 2005/06/04 16:56:18 bass Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.9 2005/06/06 12:22:32 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,14 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/04 16:56:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/06/06 12:22:32 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 
-	public static final String					COLUMN_DATA_TYPE	= "data_type";
-	public static final String					COLUMN_SORT			= "sort";
+	public static final String COLUMN_DATA_TYPE = "data_type";
+	public static final String COLUMN_SORT = "sort";
 
 	protected static CharacteristicTypeWrapper	instance;
 
@@ -31,7 +31,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 
 	private CharacteristicTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_DATA_TYPE, COLUMN_SORT};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_DATA_TYPE, COLUMN_SORT};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -76,6 +76,8 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 				return characteristicType.getCodename();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return characteristicType.getDescription();
+			else if (key.equals(COLUMN_NAME))
+				return characteristicType.getName();
 			else if (key.equals(COLUMN_DATA_TYPE))
 				return new Integer(characteristicType.getDataType().value());
 			else if (key.equals(COLUMN_SORT))
@@ -90,15 +92,17 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 
 	public void setValue(Object object, String key, Object value) {
 		if (object instanceof CharacteristicType) {
-			CharacteristicType characteristic = (CharacteristicType) object;
+			CharacteristicType characteristicType = (CharacteristicType) object;
 			if (key.equals(COLUMN_CODENAME))
-				characteristic.setCodename((String) value);
+				characteristicType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				characteristic.setDescription((String) value);
+				characteristicType.setDescription((String) value);
+			else if (key.equals(COLUMN_NAME))
+				characteristicType.setName((String) value);
 			else if (key.equals(COLUMN_SORT))
-				characteristic.setSort0(CharacteristicTypeSort.from_int(((Integer) value).intValue()));
+				characteristicType.setSort0(CharacteristicTypeSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_DATA_TYPE))
-				characteristic.setDataType0(DataType.from_int(((Integer) value).intValue()));
+				characteristicType.setDataType0(DataType.from_int(((Integer) value).intValue()));
 		}
 	}
 
