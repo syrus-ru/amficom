@@ -364,8 +364,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 		int nRows = view.nRows(Heap.getEventList());
 		
-		System.out.println("View is " + view.viewMode);
-
     CompositeEventList eList = Heap.getEventList();
     CompositeEventList.Walker w = eList.new Walker();
     
