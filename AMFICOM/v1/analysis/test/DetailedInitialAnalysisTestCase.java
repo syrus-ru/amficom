@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.2 2005/06/02 10:02:54 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.3 2005/06/06 11:11:05 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -29,14 +29,16 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/06/02 10:02:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/06 11:11:05 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
     final static int MAX_ERROR_CODE_P1 = 5;
     final static int NO_ERROR = MAX_ERROR_CODE_P1 - 1; // the bigger code the softer error
     //final static String A_PARAMS = "0.001;0.01;0.5;1.5;1.0;";
-    final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.3;";
+    //final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.3;";
+    //final static String A_PARAMS = "0.001;0.01;0.5;3.0;1.5;";
+    final static String A_PARAMS = "0.001;0.01;0.5;3.5;1.3;"; // XXX: temp xxx mark
 
     private static class FailCounter {
         // new/changed and lost events
@@ -49,6 +51,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         private int connBeginPosNumber; // usually very strict
         private int connEndPosNumber; // usally not strict at all
         private int positionNumber; // usually rather non-strict
+        // total time
+        private long timeAcc;
         public FailCounter() {
             //typeCount = new int[MAX_ERROR_CODE];
             newCount = new int[MAX_ERROR_CODE_P1];
@@ -134,6 +138,12 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
             connEndPosNumber += that.connEndPosNumber;
             positionNumber += that.positionNumber;
         }
+        public long getTimeAcc() {
+            return timeAcc;
+        }
+        public void addTimeAcc(long dt) {
+            timeAcc += dt;
+        }
     }
     public final void testAnalysisDB()
     throws IOException {
@@ -152,6 +162,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         for (int i = 0; i < traceStatus.length; i++)
             traceStatus[i] = 0;
 
+        long time0 = System.currentTimeMillis();
         while ((s = br.readLine()) != null) {
             if (s.equals("")) {
                 fName = null;
@@ -194,6 +205,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 System.out.println("");
             }
         }
+        System.out.println("Total number of traces : " + totalTraces);
         System.out.println("Total fail counts:");
         s = "Lost   events: ";
         for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
@@ -225,7 +237,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
             double failedTraces = 0;
             for (int i = 0; i < NO_ERROR; i++) { // excluse NO_ERROR value
                 // double weight =  //1.0 / (i + 1);
-                double weight = Math.pow(0.5, i);
+                // double weight = Math.pow(0.5, i);  // XXX: temp xxx mark
+                double weight = Math.pow(0.3, i);
                 weightedRoughness += fails.getLoss(i) * weight;
                 weightedRoughness += fails.getNew(i) * weight;
                 sumRoughness += fails.getLoss(i);
@@ -261,6 +274,14 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                             + fails.getAvConnEndRoughness()
                             + fails.getAvPositionRoughness()
                     ));
+        }
+        long time1 = System.currentTimeMillis();
+        boolean printTiming = true;
+        if (printTiming) {
+            long dtAn = fails.getTimeAcc();
+            System.out.println("Analysis time : " + dtAn);
+            System.out.println("TestCase time : " + (time1 - time0 - dtAn));
+            System.out.println("Total time    : " + (time1 - time0));
         }
     }
 
@@ -345,9 +366,12 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         AnalysisParameters ap = new AnalysisParameters(
                 A_PARAMS,
                 ClientAnalysisManager.getDefaultAPClone());
+        long t0 = System.currentTimeMillis();
         ReliabilitySimpleReflectogramEvent re[] =
             (ReliabilitySimpleReflectogramEvent[])
             CoreAnalysisManager.makeAnalysis(bs, ap).getSimpleEvents();
+        long t1 = System.currentTimeMillis();
+        fails.addTimeAcc(t1 - t0);
 
         assertNotNull(re);
 
@@ -368,7 +392,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                    evType == SimpleReflectogramEvent.CONNECTOR
                 || evType == SimpleReflectogramEvent.GAIN
                 || evType == SimpleReflectogramEvent.LOSS;
-            if (shouldHaveReliability && false)
+            if (shouldHaveReliability)
                 assertTrue(re[i].hasReliability());
         }
 
@@ -376,6 +400,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 
         int eventBeyondEtalon = 0; // XXX
         int eventTypeChanged = 0; // XXX
+        int eventNewLinearForgive = 1; // добавка к уровню ошибки "новое событие" в случае нового лин. соб.
         // error levels (0 = max) for each new/changed probe event
         int[] ncELs = new int[re.length];
         for (int i = 0; i < re.length; i++) { // init with worst level
@@ -406,37 +431,45 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 int et = rcomp.getEtalonIdByProbeId(k);
                 if (et < 0) {
                     // new event: etalon does not cover this region
+                    level = eventBeyondEtalon;
                     if (verbose)
-                        System.out.println("uncovered new event"
+                        System.out.println("["+level+"]"
+                                + "uncovered new event"
                                 //+ " # " + k
                                 + " T=" + re[k].getEventType()
                                 + " B=" + re[k].getBegin()
                                 + " km=" + re[k].getBegin()*dxkm);
-                    level = eventBeyondEtalon;
                 }
                 else if (rcomp.getProbeIdByEtalonId(et) != k) {
                     // new event: etalon2probe mapping gives another probe event
                     if (verbose)
-                        System.out.println("new event   "
+                        level = ets[i][et].getNewLevel();
+                    if (re[k].getEventType() == SimpleReflectogramEvent.LINEAR) {
+                        level += eventNewLinearForgive;
+                        if (level > NO_ERROR)
+                            level = NO_ERROR;
+                    }
+                        System.out.println("["+level+"]"
+                                + "new event   "
                                 //+ " # " + k
                                 + " T=" + re[k].getEventType()
                                 + " B=" + re[k].getBegin()
                                 + " km=" + re[k].getBegin()*dxkm);
-                    level = ets[i][et].getNewLevel();
                 } else {
                     // changed/not changed event:
                     // (1) compare type
                     if (ets[i][et].getEventType() != re[k].getEventType()
                             && ets[i][et].getOtherType() != re[k].getEventType()) {
+                        level = Math.min(level, Math.max(eventTypeChanged,
+                                ets[i][et].getNewLevel()));
                         if (verbose)
-                            System.out.println("type changed"
+                            System.out.println("["+level+"]"
+                                    + "type changed"
                                     //+ " # " + k
                                     + " T=" + re[k].getEventType()
                                     + " OT=" + ets[i][et].getEventType()
                                     + " B=" + re[k].getBegin()
                                     + " km=" + re[k].getBegin()*dxkm);
-                        level = Math.min(level, Math.max(eventTypeChanged,
-                                    ets[i][et].getNewLevel()));
                     }
                     // (2) comparison of event begin and end:
                     // -- for precise type match only
@@ -503,6 +536,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                             // 0.5 / ( 1/x + 1/sqrt(x) ) == 1 * x / (1 + sqrt(x))
                             // имеет асимпотики - лин. в нуле, sqrt на +inf
                             beginRoughness *= 1.0 / (1.0 + Math.sqrt(beginRoughness));
+                            //System.out.println("beginRoughness = " + beginRoughness); // FIXME
                             if (ets[i][et].getEventType()
                                     == SimpleReflectogramEvent.CONNECTOR)
                                 fails.incConnBegin(beginRoughness);
@@ -558,13 +592,14 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 int k = rcomp.getProbeIdByEtalonId(et);
                 if (k >= 0 && rcomp.getEtalonIdByProbeId(k) == et)
                     continue;
+                int level = ets[i][et].getLossLevel();
                 if (verbose)
-                    System.out.println("lost event  "
+                    System.out.println("["+level+"]"
+                            + "lost event  "
                             //+ " e# " + et
                             + " T=" + ets[i][et].getEventType()
                             + " B=" + ets[i][et].getBegin()
                             + " km=" + ets[i][et].getBegin()*dxkm);
-                int level = ets[i][et].getLossLevel();
                 lELcTemp[level]++;
                 worstLevel = Math.min(worstLevel, level);
             }
