@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRun.java,v 1.5 2005/06/06 10:11:37 krupenn Exp $
+ * $Id: MapEditorRun.java,v 1.6 2005/06/06 10:22:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.util.Application;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/06/06 10:11:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 10:22:35 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -26,7 +26,6 @@ public class MapEditorRun {
 	}
 
 	public static void main(String[] args) {
-		Application.init("mapviewclient");
 		new MapEditor(new DefaultMapEditorApplicationModelFactory());
 	}
 }

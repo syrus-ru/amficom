@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditor.java,v 1.5 2005/05/27 15:14:56 krupenn Exp $
+ * $Id: MapEditor.java,v 1.6 2005/06/06 10:22:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.util.Application;
  * Запуск основного окна модуля "Редактор топологических схем".
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/05/27 15:14:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/06 10:22:35 $
  * @module mapviewclient_v1
  */
 public class MapEditor {
@@ -31,6 +31,8 @@ public class MapEditor {
 	public MapEditor(MapEditorApplicationModelFactory factory) {
 		if(!Environment.canRun(Environment.MODULE_MAP))
 			return;
+
+		Application.init("mapviewclient");
 
 		this.aContext.setApplicationModel(factory.create());
 		Frame frame = new MapEditorMainFrame(this.aContext);
@@ -41,7 +43,6 @@ public class MapEditor {
 	}
 
 	public static void main(String[] args) {
-		Application.init("mapviewclient");
 		new MapEditor(new DefaultMapEditorApplicationModelFactory());
 	}
 }
