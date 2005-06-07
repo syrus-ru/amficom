@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.43 2005/06/06 14:39:58 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.44 2005/06/07 13:25:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/06 14:39:58 $
+ * @version $Revision: 1.44 $, $Date: 2005/06/07 13:25:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -39,7 +39,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 	/* Load multiple objects*/
 
 	public Set loadMeasurementPortTypes(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -52,7 +52,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 
 
 	public Set loadMeasurementPorts(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -62,7 +62,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 	}
 
 	public Set loadKISs(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.KIS_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.KIS_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -72,7 +72,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 	}
 
 	public Set loadMonitoredElements(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -87,9 +87,9 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadKISsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_ENTITY_CODE,
+				ids,
 				condition,
-				ObjectEntities.KIS_ENTITY_CODE,
 				new TransmitButIdsConditionProcedure() {
 					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							Identifier_Transferable[] idsT,

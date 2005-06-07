@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.25 2005/06/03 16:13:46 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.26 2005/06/07 13:25:35 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/03 16:13:46 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/07 13:25:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -37,7 +37,7 @@ final class MCMAdministrationObjectLoader extends MCMObjectLoader implements Adm
 	/* Load multiple objects*/
 
 	public Set loadServers(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SERVER_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SERVER_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -47,7 +47,7 @@ final class MCMAdministrationObjectLoader extends MCMObjectLoader implements Adm
 	}
 
 	public Set loadMCMs(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MCM_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MCM_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {

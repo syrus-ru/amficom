@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.4 2005/06/06 14:39:16 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.5 2005/06/07 13:25:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/06 14:39:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/07 13:25:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -28,14 +28,14 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		super(mcmServantManager);
 	}
 
-	protected Set loadStorableObjects(final Set ids, final short entityCode, final TransmitProcedure transmitProcedure)
+	protected final Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
 			throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 		final Set loadIds = createLoadIds(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 
-		final Set loadedObjects = super.loadStorableObjects(loadIds, entityCode, transmitProcedure);
+		final Set loadedObjects = super.loadStorableObjects(entityCode, loadIds, transmitProcedure);
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
 			try {
@@ -50,16 +50,16 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		return objects;
 	}
 
-	protected Set loadStorableObjectsButIdsCondition(final Set ids,
+	protected final Set loadStorableObjectsButIdsByCondition(final short entityCode,
+			final Set ids,
 			final StorableObjectCondition condition,
-			final short entityCode,
 			final TransmitButIdsConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
-		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
+		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 		final Set loadButIds = createLoadButIds(ids, objects);
 
-		final Set loadedObjects = super.loadStorableObjectsButIdsCondition(loadButIds,
+		final Set loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
+				loadButIds,
 				condition,
-				entityCode,
 				transmitButIdsConditionProcedure);
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
@@ -81,14 +81,13 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 	 * since it has an extra argument, <code>final boolean force</code>,
 	 * unnecessary in super implementation.
 	 */
-	protected void saveStorableObjects(final Set storableObjects,
-			final short entityCode,
+	protected final void saveStorableObjects(final short entityCode,
+			final Set storableObjects,
 			final boolean force,
-			final ReceiveProcedure receiveProcedure)
-			throws ApplicationException {
+			final ReceiveProcedure receiveProcedure) throws ApplicationException {
 		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
 
-		super.saveStorableObjects(storableObjects, entityCode, receiveProcedure);
+		super.saveStorableObjects(entityCode, storableObjects, receiveProcedure);
 	}
 
 	/**
