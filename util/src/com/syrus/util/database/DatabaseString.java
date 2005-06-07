@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseString.java,v 1.10 2005/05/18 10:49:17 bass Exp $
+ * $Id: DatabaseString.java,v 1.11 2005/06/07 09:14:47 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/18 10:49:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/07 09:14:47 $
+ * @author $Author: max $
  * @module util
  */
 public class DatabaseString {
@@ -97,7 +97,8 @@ public class DatabaseString {
 /*/
 		return (string != null) ? string.replaceAll("(')\\1", "$1") : null;
 /*/
-		return string;
+		// Contract: string returned from db must not be null  
+		return string != null ? string : "";
 //*/
 	}
 }
