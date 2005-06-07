@@ -24,7 +24,7 @@ LIBNAME_MAPXML=mapxml.jar
 
 SCOMP=$(shell which scomp)
 ifeq ($(SCOMP),)
-SCOMP=$($(XMLBEANS_HOME)/bin/scomp
+SCOMP=$(XMLBEANS_HOME)/bin/scomp
 endif
 
 SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
@@ -39,7 +39,8 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map
+		-C $(CLASSDIR) com/syrus/AMFICOM/map \
+		-C $(CLASSDIR) com/syrus/AMFICOM/general
 		
 
 .mach:	.corba $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(CLASSDIR)
