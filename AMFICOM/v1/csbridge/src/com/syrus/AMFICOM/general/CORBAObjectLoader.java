@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.26 2005/06/07 16:34:04 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.27 2005/06/07 19:10:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -59,10 +59,10 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	 */
 	public Set refresh(final Set storableObjects) throws ApplicationException {
 		try {
-			return Identifier.fromTransferables(
-					this.serverConnectionManager.getServerReference().transmitRefreshedStorableObjects(
-							StorableObject.createHeadersTransferable(storableObjects),
-							LoginManager.getSessionKeyTransferable()));
+			final CommonServer commonServer = this.serverConnectionManager.getServerReference();
+			final StorableObject_Transferable[] headers = StorableObject.createHeadersTransferable(storableObjects);
+			return Identifier.fromTransferables(commonServer.transmitRefreshedStorableObjects(headers,
+					LoginManager.getSessionKeyTransferable()));
 		}
 		catch (final AMFICOMRemoteException are) {
 			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
@@ -72,8 +72,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -83,8 +83,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -99,8 +99,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {

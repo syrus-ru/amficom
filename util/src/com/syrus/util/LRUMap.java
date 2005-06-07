@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.24 2005/05/18 10:49:17 bass Exp $
+ * $Id: LRUMap.java,v 1.25 2005/06/07 19:11:31 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/18 10:49:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/06/07 19:11:31 $
+ * @author $Author: arseniy $
  * @module util
  */
 
@@ -25,9 +25,9 @@ public class LRUMap implements Serializable {
 	public static final int SIZE = 10;
 
 	protected Entry[] array;
-	
+
 	protected transient int modCount = 0;
-	
+
 	protected int entityCount = 0;
 
 	public LRUMap() {
@@ -48,7 +48,7 @@ public class LRUMap implements Serializable {
 		}
 		this.entityCount = 0;
 	}
-	
+
 	/**
 	 * value iterator
 	 */
@@ -163,75 +163,76 @@ public class LRUMap implements Serializable {
 			return this.value;
 		}
 	}
-	
-    protected class Itr implements Iterator/*, Serializable */{
 
-    	/**
-    	 * Index of element to be returned by subsequent call to next.
-    	 */
-    	int cursor = 0;
+	protected class Itr implements Iterator/*, Serializable */{
 
-    	/**
-    	 * Index of element returned by most recent call to next or
-    	 * previous.  Reset to -1 if this element is deleted by a call
-    	 * to remove.
-    	 */
-    	int lastRet = -1;
+		/**
+		 * Index of element to be returned by subsequent call to next.
+		 */
+		int cursor = 0;
+		
+		/**
+		 * Index of element returned by most recent call to next or previous.
+		 * Reset to -1 if this element is deleted by a call to remove.
+		 */
+		int lastRet = -1;
 
-    	/**
-    	 * The modCount value that the iterator believes that the backing
-    	 * List should have.  If this expectation is violated, the iterator
-    	 * has detected concurrent modification.
-    	 */
-    	int expectedModCount = LRUMap.this.modCount;
-    	
-    	private boolean keyIterator = false;
-    	
-    	public Itr(boolean keyIterator){
-    		this.keyIterator = keyIterator;
-    	}
+		/**
+		 * The modCount value that the iterator believes that the backing List
+		 * should have. If this expectation is violated, the iterator has detected
+		 * concurrent modification.
+		 */
+		int expectedModCount = LRUMap.this.modCount;
 
-    	public boolean hasNext() {
-    	    return this.cursor != LRUMap.this.entityCount;
-    	}
+		private boolean keyIterator = false;
 
-    	public Object next() {
-                checkForComodification();
-    	    try {
-    		Object next = null;
-    		while(next == null){
-    			next = this.keyIterator ? LRUMap.this.array[this.cursor].key : LRUMap.this.array[this.cursor].value;
-    			this.lastRet = this.cursor++;
-    		}
-    		return next;
-    	    } catch(IndexOutOfBoundsException e) {
-    		checkForComodification();
-    		throw new NoSuchElementException();
-    	    }
-    	}
+		public Itr(boolean keyIterator) {
+			this.keyIterator = keyIterator;
+		}
 
-    	public void remove() {
-    	    if (this.lastRet == -1)
-    		throw new IllegalStateException();
-                checkForComodification();
+		public boolean hasNext() {
+			return this.cursor != LRUMap.this.entityCount;
+		}
 
-    	    try {
-    	    int modCountPrev = LRUMap.this.modCount;
-    	    LRUMap.this.remove(LRUMap.this.array[this.lastRet].key);
-    	    LRUMap.this.modCount = modCountPrev;
-    		if (this.lastRet < this.cursor)
-    		    this.cursor--;
-    		this.lastRet = -1;
-    		this.expectedModCount = LRUMap.this.modCount;
-    	    } catch(IndexOutOfBoundsException e) {
-    		throw new ConcurrentModificationException();
-    	    }
-    	}
-
-    	final void checkForComodification() {
-    	    if (LRUMap.this.modCount != this.expectedModCount)
-    		throw new ConcurrentModificationException();
-    	}
-    }
+		public Object next() {
+			this.checkForComodification();
+			try {
+				Object next = null;
+				while (next == null) {
+					next = this.keyIterator ? LRUMap.this.array[this.cursor].key : LRUMap.this.array[this.cursor].value;
+					this.lastRet = this.cursor++;
+				}
+				return next;
+			}
+			catch (IndexOutOfBoundsException e) {
+				this.checkForComodification();
+				throw new NoSuchElementException();
+			}
+		}
+		
+		public void remove() {
+			if (this.lastRet == -1)
+				throw new IllegalStateException();
+			this.checkForComodification();
+			
+			try {
+				int modCountPrev = LRUMap.this.modCount;
+				LRUMap.this.remove(LRUMap.this.array[this.lastRet].key);
+				LRUMap.this.modCount = modCountPrev;
+				if (this.lastRet < this.cursor)
+					this.cursor--;
+				this.lastRet = -1;
+				this.expectedModCount = LRUMap.this.modCount;
+			}
+			catch (IndexOutOfBoundsException e) {
+				throw new ConcurrentModificationException();
+			}
+		}
+		
+		final void checkForComodification() {
+			if (LRUMap.this.modCount != this.expectedModCount)
+				throw new ConcurrentModificationException();
+		}
+	}
 
 }
