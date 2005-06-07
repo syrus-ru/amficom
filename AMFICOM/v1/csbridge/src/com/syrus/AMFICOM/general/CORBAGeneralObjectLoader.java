@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAGeneralObjectLoader.java,v 1.19 2005/06/07 13:22:44 arseniy Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.20 2005/06/07 13:53:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/07 13:22:44 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/07 13:53:51 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -79,40 +79,40 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitParameterTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitParameterTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitCharacteristicTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitCharacteristicTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitCharacteristicsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitCharacteristicsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.9 2005/06/07 13:22:44 arseniy Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.10 2005/06/07 13:53:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/06/07 13:22:44 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/07 13:53:51 $
  * @module csbridge_v1
  */
 public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements SchemeObjectLoader {
@@ -267,7 +267,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadCableChannelingItemsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -280,7 +280,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadPathElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -293,7 +293,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCableLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -306,7 +306,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCablePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -319,7 +319,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCableThreadsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -332,7 +332,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeDevicesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -345,7 +345,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -358,7 +358,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_LINK_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_LINK_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -371,7 +371,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeMonitoringSolutionsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -384,7 +384,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfosButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -397,7 +397,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -410,7 +410,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -423,7 +423,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemePathsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PATH_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PATH_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -436,7 +436,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PORT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PORT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -449,7 +449,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -462,7 +462,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoGroupsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -475,7 +475,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],

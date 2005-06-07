@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAConfigurationObjectLoader.java,v 1.19 2005/06/07 13:22:44 arseniy Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.20 2005/06/07 13:53:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/07 13:22:44 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/07 13:53:51 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -240,196 +240,196 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitEquipmentTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitEquipmentTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitPortTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitPortTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitMeasurementPortTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitMeasurementPortTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitTransmissionPathTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitTransmissionPathTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINKTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINKTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitLinkTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitLinkTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitCableLinkTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitCableLinkTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitCableThreadTypesButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitCableThreadTypesButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitEquipmentsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitEquipmentsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitPortsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitPortsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitMeasurementPortsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitMeasurementPortsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATH_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATH_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitTransmissionPathsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitTransmissionPathsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitKISsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitKISsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitMonitoredElementsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitMonitoredElementsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINK_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINK_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitLinksButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitLinksButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
 
 	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREAD_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREAD_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitCableThreadsButIdsCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitCableThreadsButIdsByCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
