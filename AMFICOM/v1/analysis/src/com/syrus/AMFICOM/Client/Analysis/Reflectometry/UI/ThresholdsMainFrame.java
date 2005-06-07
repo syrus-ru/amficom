@@ -39,7 +39,6 @@ import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
-import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -135,7 +134,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 			public void windowClosing(WindowEvent e) {
 				aContext.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ThresholdsMainFrame.this);
 				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ThresholdsMainFrame.this);
-				ThresholdsMainFrame.this.aContext.getApplicationModel().getCommand(AbstractMainMenuBar.MENU_EXIT).execute();
+				ThresholdsMainFrame.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 			}
 		});
 
@@ -328,7 +327,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 			this.aManager.saveIni();
 			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			this.aContext.getApplicationModel().getCommand(AbstractMainMenuBar.MENU_EXIT).execute();
+			this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 			return;
 		}
 		super.processWindowEvent(e);
