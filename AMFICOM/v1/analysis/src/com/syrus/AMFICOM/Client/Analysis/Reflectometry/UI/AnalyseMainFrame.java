@@ -1,63 +1,19 @@
 
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
-import javax.swing.JInternalFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.UIDefaults;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.NetStudyCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
-import com.syrus.AMFICOM.client.UI.WindowArranger;
+import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
-import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.ExitCommand;
-import com.syrus.AMFICOM.client.model.OpenSessionCommand;
-import com.syrus.AMFICOM.client.model.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.client.model.SessionCloseCommand;
-import com.syrus.AMFICOM.client.model.SessionConnectionCommand;
-import com.syrus.AMFICOM.client.model.SessionDomainCommand;
-import com.syrus.AMFICOM.client.model.SessionOptionsCommand;
-import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.model.*;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -67,9 +23,9 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	ClientAnalysisManager		aManager					= new ClientAnalysisManager();
 
 	public static final String	NOISE_FRAME					= "noiseFrame";
-
-	public static final String	FILTERED_FRAME				= "filteredFrame";
-
+	
+	public static final String	NOISE_HISTOGRAMM_FRAME				= "noiseHistogrammFrame";
+	
 	public static final String	SELECTOR_FRAME				= "selectFrame";
 
 	public static final String	PRIMARY_PARAMETERS_FRAME	= "paramFrame";
@@ -93,6 +49,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	UIDefaults					frames;
 
 	CreateAnalysisReportCommand	analysisReportCommand;
+	NoiseHistogrammPanel noiseHistogrammPanel;	
 
 	public AnalyseMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("AnalyseExtTitle"), new AnalyseMainMenuBar(aContext
@@ -168,16 +125,32 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(FILTERED_FRAME, new UIDefaults.LazyValue() {
-
+//		this.frames.put(FILTERED_FRAME, new UIDefaults.LazyValue() {
+//
+//			public Object createValue(UIDefaults table) {
+//				Log.debugMessage(".createValue | FILTERED_FRAME", Log.FINEST);
+//				ScalableFrame filteredFrame = new ScalableFrame(new ScalableLayeredPanel());
+//				filteredFrame.setTitle(LangModelAnalyse.getString("filteredTitle"));
+//				desktopPane.add(filteredFrame);
+//				AnalyseMainFrame.this.analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL,
+//					filteredFrame);
+//				return filteredFrame;
+//			}
+//		});
+		
+		this.frames.put(NOISE_HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | FILTERED_FRAME", Log.FINEST);
-				ScalableFrame filteredFrame = new ScalableFrame(new ScalableLayeredPanel());
-				filteredFrame.setTitle(LangModelAnalyse.getString("filteredTitle"));
-				desktopPane.add(filteredFrame);
+				Log.debugMessage(".createValue | NOISE_HISTOGRAMM_FRAME", Log.FINEST);
+				
+				ScalableLayeredPanel layeredPanel = new ScalableLayeredPanel();
+				noiseHistogrammPanel = new NoiseHistogrammPanel(layeredPanel);
+				layeredPanel.setGraphPanel(noiseHistogrammPanel);
+				ScalableFrame noiseHistoFrame = new ScalableFrame(layeredPanel);
+				noiseHistoFrame.setTitle(LangModelAnalyse.getString("noiseHistoTitle"));
+				desktopPane.add(noiseHistoFrame);
 				AnalyseMainFrame.this.analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL,
-					filteredFrame);
-				return filteredFrame;
+						noiseHistoFrame);
+				return noiseHistoFrame;
 			}
 		});
 
@@ -199,7 +172,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 								.get(AnalyseMainFrame.PRIMARY_PARAMETERS_FRAME);
 						JInternalFrame statsFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.STATS_FRAME);
 						JInternalFrame noiseFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.NOISE_FRAME);
-						JInternalFrame filteredFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.FILTERED_FRAME);
+						JInternalFrame noiseHistoFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.NOISE_HISTOGRAMM_FRAME);
 						JInternalFrame eventsFrame = (JInternalFrame) f.frames.get(AnalyseMainFrame.EVENTS_FRAME);
 						JInternalFrame detailedEvFrame = (JInternalFrame) f.frames
 								.get(AnalyseMainFrame.DETAILED_EVENTS_FRAME);
@@ -219,7 +192,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						normalize(anaSelectFrame);
 						normalize(dhf);
 						normalize(noiseFrame);
-						normalize(filteredFrame);
+						normalize(noiseHistoFrame);
 
 						paramFrame.setSize(w / 6, minh);
 						selectFrame.setSize(w / 6, minh);
@@ -231,7 +204,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						anaSelectFrame.setSize(w / 3, minh);
 						dhf.setSize(w / 3, minh);
 						noiseFrame.setSize(w / 3, (h - 2 * minh) / 2);
-						filteredFrame.setSize(w / 3, (h - 2 * minh) / 2);
+						noiseHistoFrame.setSize(w / 3, (h - 2 * minh) / 2);
 
 						paramFrame.setLocation(w / 6, 0);
 						selectFrame.setLocation(0, 0);
@@ -239,8 +212,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						mInfoFrame.setLocation(w / 2, 0);
 						analysisFrame.setLocation(0, minh);
 						anaSelectFrame.setLocation(2 * w / 3, 0);
-						filteredFrame.setLocation(2 * w / 3, minh);
-						noiseFrame.setLocation(2 * w / 3, minh + filteredFrame.getHeight());
+						noiseFrame.setLocation(2 * w / 3, minh);
+						noiseHistoFrame.setLocation(2 * w / 3, minh + noiseFrame.getHeight());
 						eventsFrame.setLocation(0, minh + analysisFrame.getHeight());
 						detailedEvFrame.setLocation(eventsFrame.getWidth(), minh + analysisFrame.getHeight());
 						dhf.setLocation(eventsFrame.getWidth() + detailedEvFrame.getWidth(), minh
@@ -250,10 +223,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 				};
 			}
 		});
-
-		// ConcavitiesFrame concFrame = new
-		// ConcavitiesFrame(internal_dispatcher);
-		// desktopPane.add(concFrame);
 
 		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
 
@@ -397,7 +366,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setCommand("menuWindowPrimaryParameters", this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
 		aModel.setCommand("menuWindowOverallStats", this.getLazyCommand(STATS_FRAME));
 		aModel.setCommand("menuWindowNoiseFrame", this.getLazyCommand(NOISE_FRAME));
-		aModel.setCommand("menuWindowFilteredFrame", this.getLazyCommand(FILTERED_FRAME));
+		aModel.setCommand("menuWindowFilteredFrame", this.getLazyCommand(NOISE_HISTOGRAMM_FRAME));
 		aModel.setCommand("menuWindowEvents", this.getLazyCommand(EVENTS_FRAME));
 		aModel.setCommand("menuWindowDetailedEvents", this.getLazyCommand(DETAILED_EVENTS_FRAME));
 		aModel.setCommand("menuWindowAnalysis", this.getLazyCommand(ANALYSIS_FRAME));
@@ -511,18 +480,19 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		} else {
 			double deltaX = bs.getResolution();
 
-			double[] filtered = Heap.getRefAnalysisPrimary().filtered;
+//			double[] filtered = Heap.getRefAnalysisPrimary().filtered;
 			double[] noise = Heap.getRefAnalysisPrimary().noise;
 
 			ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
-			ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
+			ScalableFrame noiseHistoFrame = (ScalableFrame) this.frames.get(NOISE_HISTOGRAMM_FRAME);
 
 			noiseFrame.setGraph(noise, deltaX, false, Heap.PRIMARY_TRACE_KEY);
 			noiseFrame.updScales();
 			noiseFrame.setVisible(true);
-			filteredFrame.setGraph(filtered, deltaX, true, Heap.PRIMARY_TRACE_KEY);
-			filteredFrame.updScales();
-			filteredFrame.setVisible(true);
+			
+			noiseHistogrammPanel.updateHistogrammData();
+			noiseHistoFrame.updScales();
+			noiseHistoFrame.setVisible(true);
 		}
 	}
 
@@ -584,7 +554,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	private void closeFrames() {
 		ScalableFrame noiseFrame = (ScalableFrame) this.frames.get(NOISE_FRAME);
 		noiseFrame.setVisible(false);
-		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(FILTERED_FRAME);
+		ScalableFrame filteredFrame = (ScalableFrame) this.frames.get(NOISE_HISTOGRAMM_FRAME);
 		filteredFrame.setVisible(false);
 	}
 
@@ -686,7 +656,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 		aModel.fireModelChanged("");
 
-		updFrames();
+		//updFrames();
 	}
 
 	public void primaryTraceRemoved() {
