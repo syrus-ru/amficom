@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.14 2005/06/05 21:08:05 arseniy Exp $
+# $Id: Makefile,v 1.15 2005/06/07 16:53:43 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -18,7 +18,7 @@ JIKESFLAGS = -target 1.4.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar:$(LIBDIR)/arserver_interface.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mscharserver_interface.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
