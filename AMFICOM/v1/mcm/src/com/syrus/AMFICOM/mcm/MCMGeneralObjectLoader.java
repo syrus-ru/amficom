@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.26 2005/06/07 13:25:35 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.27 2005/06/07 13:59:04 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/07 13:25:35 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/07 13:59:04 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -76,7 +76,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				ids,
 				condition,
-				new TransmitButIdsConditionProcedure() {
+				new TransmitButIdsByConditionProcedure() {
 					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							Identifier_Transferable[] idsT,
 							SessionKey_Transferable sessionKey,

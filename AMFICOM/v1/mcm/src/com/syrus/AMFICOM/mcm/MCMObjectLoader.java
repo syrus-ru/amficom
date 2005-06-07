@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.5 2005/06/07 13:25:35 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.6 2005/06/07 13:58:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/07 13:25:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/07 13:58:59 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -53,7 +53,7 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 	protected final Set loadStorableObjectsButIdsByCondition(final short entityCode,
 			final Set ids,
 			final StorableObjectCondition condition,
-			final TransmitButIdsConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
+			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 		final Set loadButIds = createLoadButIds(ids, objects);
 

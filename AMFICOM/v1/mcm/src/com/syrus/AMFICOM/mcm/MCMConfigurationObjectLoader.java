@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.44 2005/06/07 13:25:35 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.45 2005/06/07 13:59:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/06/07 13:25:35 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/07 13:59:04 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -90,7 +90,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_ENTITY_CODE,
 				ids,
 				condition,
-				new TransmitButIdsConditionProcedure() {
+				new TransmitButIdsByConditionProcedure() {
 					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							Identifier_Transferable[] idsT,
 							SessionKey_Transferable sessionKey,
