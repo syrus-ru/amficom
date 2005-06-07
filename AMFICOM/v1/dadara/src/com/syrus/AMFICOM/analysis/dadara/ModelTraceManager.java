@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.78 2005/05/27 17:27:17 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.79 2005/06/07 10:36:32 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import org.apache.xalan.transformer.MsgMgr;
-
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
@@ -24,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.78 $, $Date: 2005/05/27 17:27:17 $
+ * @version $Revision: 1.79 $, $Date: 2005/06/07 10:36:32 $
  * @module
  */
 public class ModelTraceManager
