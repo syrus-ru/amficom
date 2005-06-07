@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.33 2005/06/07 15:45:54 arseniy Exp $
+ * $Id: Scheme.java,v 1.34 2005/06/07 16:32:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.33 $, $Date: 2005/06/07 15:45:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/06/07 16:32:59 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -351,7 +351,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 * @return
 	 */
 	public Set getSchemeCableLinks() {
 		try {
@@ -378,7 +377,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 * @return
 	 */
 	public Set getSchemeElements() {
 		try {
@@ -396,7 +394,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 * @return
 	 */
 	public Set getSchemeLinks() {
 		try {
@@ -409,7 +406,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 * @return
 	 */
 	public Set getSchemeOptimizeInfos() {
 		try {

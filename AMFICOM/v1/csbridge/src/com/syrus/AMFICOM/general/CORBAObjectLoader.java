@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.25 2005/06/07 13:53:51 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.26 2005/06/07 16:34:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/07 13:53:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader extends ObjectLoader {
@@ -72,8 +72,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.25 $, $Date: 2005/06/07 13:53:51 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -83,10 +83,10 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.25 $, $Date: 2005/06/07 13:53:51 $
-	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(Set,
-	 *      StorableObjectCondition, short,
+	 * @author $Author: bass $
+	 * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
+	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
+	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module csbridge_v1
 	 */
@@ -99,8 +99,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.25 $, $Date: 2005/06/07 13:53:51 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.26 $, $Date: 2005/06/07 16:34:04 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -150,7 +150,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * <p>This method can be considered a duplicate of
-	 * {@link #loadStorableObjects(Set, short, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitProcedure)},
+	 * {@link #loadStorableObjects(short, Set, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitProcedure)},
 	 * since any particular <code>load...ButIdsByCondition()</code> method can
 	 * be implemented using <em>only</em>
 	 * <code>loadStorableObjects(...)</code> and {@link TransmitProcedure}.

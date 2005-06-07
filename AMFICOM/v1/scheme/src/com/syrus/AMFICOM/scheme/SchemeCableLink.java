@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.33 2005/06/07 15:45:54 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.34 2005/06/07 16:32:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.Log;
 /**
  * #11 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.33 $, $Date: 2005/06/07 15:45:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/06/07 16:32:58 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -185,7 +185,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 * @return
 	 */
 	public Set getCableChannelingItems() {
 		try {

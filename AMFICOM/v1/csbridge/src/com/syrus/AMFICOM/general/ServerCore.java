@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.15 2005/06/07 15:44:56 arseniy Exp $
+ * $Id: ServerCore.java,v 1.16 2005/06/07 16:34:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/06/07 15:44:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/06/07 16:34:04 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -39,7 +39,7 @@ public abstract class ServerCore implements CommonServer {
 	private static final long serialVersionUID = 2873567194611284256L;
 
 	/**
-	 * @param sessionKey an "in" parameter.
+	 * @param sessionKeyT an "in" parameter.
 	 * @param userIdH an "out" parameter.
 	 * @param domainIdH an "out" parameter.
 	 * @throws AMFICOMRemoteException
@@ -52,7 +52,7 @@ public abstract class ServerCore implements CommonServer {
 
 	/**
 	 * @param idsT
-	 * @param sessionKey
+	 * @param sessionKeyT
 	 * @throws AMFICOMRemoteException
 	 */
 	public final void delete(final Identifier_Transferable[] idsT,
@@ -243,7 +243,7 @@ public abstract class ServerCore implements CommonServer {
 	 * Accepts headers of a <em>single</em> <em>solitary</em> group.
 	 *
 	 * @param headers
-	 * @param sessionKey
+	 * @param sessionKeyT
 	 * @throws AMFICOMRemoteException
 	 * @see com.syrus.AMFICOM.general.corba.CommonServer#transmitRefreshedStorableObjects(com.syrus.AMFICOM.general.corba.StorableObject_Transferable[], com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
 	 */

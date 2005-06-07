@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.3 2005/05/24 13:58:41 bass Exp $
+ * $Id: PathElementWrapper.java,v 1.4 2005/06/07 16:32:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/24 13:58:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/07 16:32:58 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -37,10 +37,6 @@ public final class PathElementWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_SCHEME_LINK_ID = "scheme_link_id";
 
 	private static PathElementWrapper instance;
-
-	public String getKey(int index) {
-		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
-	}
 
 	public List getKeys() {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");

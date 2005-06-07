@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.1 2005/05/24 13:58:41 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.2 2005/06/07 16:32:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,19 +15,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/05/24 13:58:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/07 16:32:58 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper {
 	private static SchemeOptimizeInfoSwitchWrapper instance;
-
-	/**
-	 * @param index
-	 * @see com.syrus.util.Wrapper#getKey(int)
-	 */
-	public String getKey(int index) {
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * @see com.syrus.util.Wrapper#getKeys()
