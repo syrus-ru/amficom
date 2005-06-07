@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.98 2005/06/03 16:47:47 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.99 2005/06/07 15:42:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/06/03 16:47:47 $
+ * @version $Revision: 1.99 $, $Date: 2005/06/07 15:42:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -187,14 +187,15 @@ public abstract class StorableObjectPool {
 				+ " is not initialized");
 	}
 
-	public static Set getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)
-			throws ApplicationException {
+	public static Set getStorableObjectsByCondition(final StorableObjectCondition condition,
+			final boolean useLoader,
+			final boolean breakOnLoadError) throws ApplicationException {
 		assert condition != null : ErrorMessages.NON_NULL_EXPECTED;
 		final short groupCode = ObjectGroupEntities.getGroupCode(condition.getEntityCode());
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
 		final StorableObjectPool pool = (StorableObjectPool) GROUP_CODE_POOL_MAP.get(groupCode);
 		if (pool != null)
-			return pool.getStorableObjectsByConditionImpl(condition, useLoader);
+			return pool.getStorableObjectsByConditionImpl(condition, useLoader, breakOnLoadError);
 
 		throw new ApplicationException("StorableObjectPool.getStorableObjectsByCondition | The pool for group: "
 				+ ObjectGroupEntities.codeToString(groupCode) + " is not initialized");
@@ -202,7 +203,8 @@ public abstract class StorableObjectPool {
 
 	public static Set getStorableObjectsByConditionButIds(final Set ids,
 			final StorableObjectCondition condition,
-			final boolean useLoader) throws ApplicationException {
+			final boolean useLoader,
+			final boolean breakOnLoadError) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		final short entityCode = condition.getEntityCode().shortValue();
@@ -215,7 +217,7 @@ public abstract class StorableObjectPool {
 		
 		final StorableObjectPool pool = (StorableObjectPool) GROUP_CODE_POOL_MAP.get(groupCode);
 		if (pool != null)
-			return pool.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
+			return pool.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader, breakOnLoadError);
 
 		throw new ApplicationException("StorableObjectPool.getStorableObjectsByConditionButIds | The pool for group: "
 				+ ObjectGroupEntities.codeToString(groupCode) + " is not initialized");
@@ -329,9 +331,10 @@ public abstract class StorableObjectPool {
 		return storableObjects == null ? Collections.EMPTY_SET : storableObjects;
 	}
 
-	private final Set getStorableObjectsByConditionImpl(final StorableObjectCondition condition, final boolean useLoader)
-			throws ApplicationException {
-		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_SET, condition, useLoader);
+	private final Set getStorableObjectsByConditionImpl(final StorableObjectCondition condition,
+			final boolean useLoader,
+			final boolean breakOnLoadError) throws ApplicationException {
+		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_SET, condition, useLoader, breakOnLoadError);
 	}
 
 	/**
@@ -340,11 +343,13 @@ public abstract class StorableObjectPool {
 	 *          emergency) set of pure-java identifiers.
 	 * @param condition
 	 * @param useLoader
+	 * @param breakOnLoadError
 	 * @throws ApplicationException
 	 */
 	private final Set getStorableObjectsByConditionButIdsImpl(final Set ids,
 			final StorableObjectCondition condition,
-			final boolean useLoader) throws ApplicationException {
+			final boolean useLoader,
+			final boolean breakOnLoadError) throws ApplicationException {
 		assert ids != null: "Supply an empty set instead";
 		assert condition != null: "Supply an EquivalentCondition instead";
 
@@ -395,7 +400,14 @@ public abstract class StorableObjectPool {
 					+ buffer1,
 					Log.DEBUGLEVEL10);
 
-			loadedSet = this.loadStorableObjectsButIds(condition, idsSet);
+			try {
+				loadedSet = this.loadStorableObjectsButIds(condition, idsSet);
+			}
+			catch (ApplicationException ae) {
+				if (breakOnLoadError)
+					throw ae;
+				Log.errorException(ae);
+			}
 			
 			/* logging */
 			final StringBuffer buffer2 = new StringBuffer();
@@ -1063,7 +1075,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.98 $, $Date: 2005/06/03 16:47:47 $
+	 * @version $Revision: 1.99 $, $Date: 2005/06/07 15:42:16 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
