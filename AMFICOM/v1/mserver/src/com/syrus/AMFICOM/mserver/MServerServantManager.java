@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.6 2005/05/18 13:25:44 bass Exp $
+ * $Id: MServerServantManager.java,v 1.7 2005/06/07 16:38:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/18 13:25:44 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/07 16:38:29 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -39,11 +39,11 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 	private String eventServerServantName;
 	private DatabaseIdentifierGeneratorServer databaseIdentifierGeneratorServer;
 
-	public MServerServantManager(CORBAServer corbaServer,
-			String loginServerServantName,
-			String eventServerServantName,
-			Set mcmIdStrings,
-			long timeout) {
+	public MServerServantManager(final CORBAServer corbaServer,
+			final String loginServerServantName,
+			final String eventServerServantName,
+			final Set mcmIdStrings,
+			final long timeout) {
 		super(corbaServer, mcmIdStrings, timeout);
 		super.addServantName(loginServerServantName);
 		super.addServantName(eventServerServantName);
@@ -82,36 +82,36 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 		return this.databaseIdentifierGeneratorServer;
 	}
 
-	public MCM getVerifiedMCMReference(Identifier mcmId) throws CommunicationException, IllegalDataException {
+	public MCM getVerifiedMCMReference(final Identifier mcmId) throws CommunicationException, IllegalDataException {
 		Verifiable reference = super.getVerifiableReference(mcmId.toString());
 		return (MCM) reference;
 	}
 
-	protected void onLoseConnection(String servantName) {
+	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("MServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection with servantName lost"
 	}
 
-	protected void onRestoreConnection(String servantName) {
+	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("MServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection with servantName restored"
 	}
 
-	public static MServerServantManager createAndStart(String serverHostName, Set mcmIds) throws ApplicationException {
-		String contextName = ContextNameFactory.generateContextName(serverHostName);
-		CORBAServer corbaServer = new CORBAServer(contextName);
+	public static MServerServantManager createAndStart(final String serverHostName, final Set mcmIds) throws ApplicationException {
+		final String contextName = ContextNameFactory.generateContextName(serverHostName);
+		final CORBAServer corbaServer = new CORBAServer(contextName);
 
-		String loginServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
+		final String loginServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
-		String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
+		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
 
-		Set mcmIdStrings = Identifier.createStrings(mcmIds);
+		final Set mcmIdStrings = Identifier.createStrings(mcmIds);
 
-		long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
+		final long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 
-		MServerServantManager mServerServantManager = new MServerServantManager(corbaServer,
+		final MServerServantManager mServerServantManager = new MServerServantManager(corbaServer,
 				loginServerServantName,
 				eventServerServantName,
 				mcmIdStrings,

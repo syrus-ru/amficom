@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMServantManager.java,v 1.10 2005/06/01 20:56:26 arseniy Exp $
+ * $Id: MCMServantManager.java,v 1.11 2005/06/07 16:40:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/01 20:56:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/07 16:40:11 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -35,11 +35,11 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 	private String eventServerServantName;
 	private String mServerServantName;
 
-	public MCMServantManager(CORBAServer corbaServer,
-			String loginServerServantName,
-			String eventServerServantName,
-			String mServerServantName,
-			long timeout) {
+	public MCMServantManager(final CORBAServer corbaServer,
+			final String loginServerServantName,
+			final String eventServerServantName,
+			final String mServerServantName,
+			final long timeout) {
 		super(corbaServer, new String[] {loginServerServantName, eventServerServantName, mServerServantName}, timeout);
 
 		this.loginServerServantName = loginServerServantName;
@@ -97,31 +97,31 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 		return (MServer) this.getServerReference();
 	}
 
-	protected void onLoseConnection(String servantName) {
+	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("MCMServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection lost"
 	}
 
-	protected void onRestoreConnection(String servantName) {
+	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("MCMServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection restored"
 	}
 
-	public static MCMServantManager createAndStart(String serverHostName) throws CommunicationException {
-		String contextName = ContextNameFactory.generateContextName(serverHostName);
-		CORBAServer corbaServer = new CORBAServer(contextName);
+	public static MCMServantManager createAndStart(final String serverHostName) throws CommunicationException {
+		final String contextName = ContextNameFactory.generateContextName(serverHostName);
+		final CORBAServer corbaServer = new CORBAServer(contextName);
 
-		String loginServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
+		final String loginServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
-		String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
+		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-		String mServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
+		final String mServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 
-		long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
+		final long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 
-		MCMServantManager mcmServantManager = new MCMServantManager(corbaServer,
+		final MCMServantManager mcmServantManager = new MCMServantManager(corbaServer,
 				loginServerServantName,
 				eventServerServantName,
 				mServerServantName,

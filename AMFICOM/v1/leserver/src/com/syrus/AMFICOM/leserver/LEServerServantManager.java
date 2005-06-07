@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerServantManager.java,v 1.6 2005/05/13 17:55:50 bass Exp $
+ * $Id: LEServerServantManager.java,v 1.7 2005/06/07 16:37:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,31 +19,31 @@ import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/13 17:55:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/07 16:37:40 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LEServerServantManager extends RunnableVerifiedConnectionManager {
 
-	public LEServerServantManager(CORBAServer corbaServer, long timeout) {
+	public LEServerServantManager(final CORBAServer corbaServer, final long timeout) {
 		super(corbaServer, new HashSet(), timeout);
 
 		assert timeout >= 10L * 60L * 1000L: ErrorMessages.TIMEOUT_TOO_SHORT; //not less then 10 min
 	}
 
-	protected void onLoseConnection(String servantName) {
+	protected void onLoseConnection(final String servantName) {
 		// TODO Remove session of client
 		super.onLoseConnection(servantName);
 	}
 
-	public static LEServerServantManager createAndStart(String serverHostName) throws CommunicationException {
-		String contextName = ContextNameFactory.generateContextName(serverHostName);
-		CORBAServer corbaServer = new CORBAServer(contextName);
+	public static LEServerServantManager createAndStart(final String serverHostName) throws CommunicationException {
+		final String contextName = ContextNameFactory.generateContextName(serverHostName);
+		final CORBAServer corbaServer = new CORBAServer(contextName);
 
-		long timeout = ApplicationProperties.getInt(BaseConnectionManager.KEY_SERVANT_CHECK_TIMEOUT,
+		final long timeout = ApplicationProperties.getInt(BaseConnectionManager.KEY_SERVANT_CHECK_TIMEOUT,
 				BaseConnectionManager.SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 
-		LEServerServantManager leServerServantManager =  new LEServerServantManager(corbaServer, timeout);
+		final LEServerServantManager leServerServantManager =  new LEServerServantManager(corbaServer, timeout);
 		(new Thread(leServerServantManager)).start();
 		return leServerServantManager;
 	}
