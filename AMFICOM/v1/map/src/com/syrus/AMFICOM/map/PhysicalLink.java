@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.61 2005/06/04 16:56:22 bass Exp $
+ * $Id: PhysicalLink.java,v 1.62 2005/06/07 15:45:27 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/06/04 16:56:22 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/06/07 15:45:27 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -429,7 +429,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		try {
 			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
 			Set nlinks;
-			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false);
+
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 			List nlinkslist = new ArrayList(nlinks.size());
 			for(Iterator iter = nlinks.iterator(); iter.hasNext();) {
 				nlinkslist.add(iter.next());
@@ -916,13 +918,15 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 			if (collection == null || collection.size() == 0) {
 				typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
 
 				condition.setValue(typeCodeName1);
 
-				collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+				collection = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 				if (collection == null || collection.size() == 0) {
 					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
 				}
@@ -1072,13 +1076,15 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+		Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 		if (collection == null || collection.size() == 0) {
 			typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
 
 			condition.setValue(typeCodeName1);
 
-			collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			collection = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 			if (collection == null || collection.size() == 0) {
 				throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
 			}

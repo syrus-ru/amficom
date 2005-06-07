@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.32 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: SchemePath.java,v 1.33 2005/06/07 15:45:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/06/03 20:39:06 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/07 15:45:54 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -245,11 +245,12 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return child <code>PathElement</code>s in an unsorted manner.
 	 */
 	private Set getPathElements0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATH_ELEMENT_ENTITY_CODE), true);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATH_ELEMENT_ENTITY_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

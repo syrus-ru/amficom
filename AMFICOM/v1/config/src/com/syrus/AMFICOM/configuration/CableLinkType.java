@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.41 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.42 2005/06/07 15:43:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/03 20:37:53 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/07 15:43:55 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -240,11 +240,11 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		super.markAsChanged();
 	}
 
-	public Set getCableThreadTypes() {
+	public Set getCableThreadTypes(final boolean breakOnLoadError) {
 		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
 		Set cableThreadTypes;
 		try {
-			cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+			cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(lic, true, breakOnLoadError);
 		}
 		catch (final ApplicationException ae) {
 			Log.errorException(ae);

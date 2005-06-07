@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.52 2005/06/06 14:43:06 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.53 2005/06/07 15:44:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/06 14:43:06 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/07 15:44:32 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -303,7 +303,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 		}
 
-		tests = StorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true);
+		tests = StorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true, true);
 
 		Set testQueue;
 		for (Iterator it = tests.iterator(); it.hasNext();) {

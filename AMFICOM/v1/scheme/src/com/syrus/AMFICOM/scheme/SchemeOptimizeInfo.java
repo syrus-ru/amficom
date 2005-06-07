@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.26 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.27 2005/06/07 15:45:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/06/03 20:39:06 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/07 15:45:54 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -330,27 +330,39 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		return this.rtuDeleteProb;
 	}
 
+	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
+	 * @return
+	 */
 	public Set getSchemeMonitoringSolutions() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
 
+	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
+	 * @return
+	 */
 	public Set getSchemeOptimizeInfoRtus() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
 
+	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
+	 * @return
+	 */
 	public Set getSchemeOptimizeInfoSwitches() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

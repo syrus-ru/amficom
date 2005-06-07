@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.97 2005/06/04 16:56:18 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.98 2005/06/07 15:45:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/06/04 16:56:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.98 $, $Date: 2005/06/07 15:45:04 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -250,7 +250,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateKISTransceivers() {
 		try {
 			LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_ENTITY_CODE);
-			Collection kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+			Collection kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true, false);
 
 			transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
 			KIS kis;
@@ -291,7 +291,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			tests = StorableObjectPool.getStorableObjectsByCondition(cc, true);
+			tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
 			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
 			sortTestsByStartTime(tests);
 			testList.addAll(tests);
@@ -314,7 +314,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			tests = StorableObjectPool.getStorableObjectsByCondition(cc, true);
+			tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
 			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
 			for (Iterator it = tests.iterator(); it.hasNext();)
 				startTestProcessor((Test) it.next());

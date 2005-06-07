@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.37 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.38 2005/06/07 15:45:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/06/03 20:39:06 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/07 15:45:54 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -580,11 +580,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set getSchemeDevices() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -592,11 +593,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -604,11 +606,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set getSchemeProtoElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.52 2005/06/03 20:56:57 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.53 2005/06/07 15:45:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/03 20:56:57 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/07 15:45:04 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -132,7 +132,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-						results = lastMeasurement.getResults();
+						results = lastMeasurement.getResults(true);
 						if (results != null && !results.isEmpty())
 							measurementResult = (Result) results.iterator().next();
 						if (measurementResult != null)
@@ -142,7 +142,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-						results = lastMeasurement.getResults();
+						results = lastMeasurement.getResults(true);
 						Result analysisResult = null;
 						Result evaluationResult = null;
 						if (results != null && !results.isEmpty()) {

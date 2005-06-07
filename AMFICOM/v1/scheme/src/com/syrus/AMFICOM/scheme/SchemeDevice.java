@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.31 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.32 2005/06/07 15:45:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/06/03 20:39:06 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/07 15:45:54 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -378,11 +378,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set getSchemeCablePorts() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -390,11 +391,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set getSchemePorts() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PORT_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PORT_ENTITY_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

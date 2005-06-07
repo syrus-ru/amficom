@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.36 2005/06/04 16:56:18 bass Exp $
+ * $Id: MCMImplementation.java,v 1.37 2005/06/07 15:45:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/04 16:56:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/06/07 15:45:04 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -260,7 +260,12 @@ public class MCMImplementation extends MCMPOA {
 			Set objects = null;
 			try {
 				Set ids = Identifier.fromTransferables(identifier_Transferables);
-				objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
+
+				/**
+				 * NOTE: If it is impossible to load objects by Loader - return only those from Pool
+				 */
+				objects = StorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true, false);
+
 				return objects;
 			}
 			catch (ApplicationException ae) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.28 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: SchemeCablePort.java,v 1.29 2005/06/07 15:45:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/06/03 20:39:06 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/07 15:45:54 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -191,9 +191,13 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		return port;
 	}
 
+	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
+	 * @return
+	 */
 	public SchemeCableLink getSchemeCableLink() {
 		try {
-			final Set schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true);
+			final Set schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true, true);
 			assert schemeCableLinks != null && schemeCableLinks.size() <= 1;
 			return schemeCableLinks.isEmpty()
 					? null

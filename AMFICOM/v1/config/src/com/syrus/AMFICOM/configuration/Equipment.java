@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.92 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: Equipment.java,v 1.93 2005/06/07 15:43:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/06/03 20:37:53 $
+ * @version $Revision: 1.93 $, $Date: 2005/06/07 15:43:55 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -446,10 +446,11 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	/**
 	 * @return <code>Collection&lt;Port&gt;</code>
 	 */
-	public Set getPorts() {
+	public Set getPorts(final boolean breakOnLoadError) {
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PORT_ENTITY_CODE),
-					true);
+					true,
+					breakOnLoadError);
 		}
 		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);

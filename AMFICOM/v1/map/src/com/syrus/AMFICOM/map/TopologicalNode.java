@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.40 2005/06/03 20:38:46 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.41 2005/06/07 15:45:27 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/06/03 20:38:46 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/07 15:45:27 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -259,7 +259,9 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		try {
 			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
 			Set nlinks;
-			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false);
+
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 			NodeLink nodeLink = (NodeLink )nlinks.iterator().next();
 			return nodeLink.getPhysicalLink();
 		} catch(ApplicationException e) {

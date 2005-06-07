@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.41 2005/06/04 16:56:18 bass Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.42 2005/06/07 15:45:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/04 16:56:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/06/07 15:45:03 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -92,7 +92,7 @@ public class DadaraAnalysisManager implements AnalysisManager
 				condition = (StorableObjectCondition) typicalConditions.iterator().next();
 			else
 				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
-			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
 			for (final Iterator it = parameterTypes.iterator(); it.hasNext();) {
 				final ParameterType parameterType = (ParameterType) it.next();
 				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());

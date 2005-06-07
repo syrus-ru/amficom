@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.36 2005/06/04 16:56:18 bass Exp $
+ * $Id: KISReport.java,v 1.37 2005/06/07 15:45:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/04 16:56:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/06/07 15:45:04 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -69,7 +69,7 @@ public class KISReport {
 				condition = (StorableObjectCondition) typicalConditions.iterator().next();
 			else
 				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
-			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
 			for (final Iterator it = parameterTypes.iterator(); it.hasNext();) {
 				final ParameterType parameterType = (ParameterType) it.next();
 				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());

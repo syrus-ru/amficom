@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.42 2005/06/04 16:56:22 bass Exp $
+ * $Id: SiteNode.java,v 1.43 2005/06/07 15:45:27 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/04 16:56:22 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/06/07 15:45:27 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -389,13 +389,15 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 					ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			Set set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			Set set = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 			if (set == null || set.size() == 0) {
 				typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
 
 				condition.setValue(typeCodeName1);
 
-				set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+				set = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 				if (set == null || set.size() == 0) {
 					throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 				}
@@ -409,7 +411,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
-			set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			set = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 			if (set == null || set.size() == 0) {
 				//@todo add public static final String AbstractImageResource.DEFAULT_SITE_IMAGE = "images/building.gif"
 //				imageCodeName1 = AbstractImageResource.DEFAULT_SITE_IMAGE;
@@ -417,7 +420,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 				condition.setValue(imageCodeName1);
 
-				set = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+				set = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 				if (set == null || set.size() == 0) {
 					throw new CreateObjectException("ImageResource \'" + imageCodeName1 + "\' not found");
 				}
@@ -521,13 +525,15 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+		Collection collection = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 		if (collection == null || collection.size() == 0) {
 			typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
 
 			condition.setValue(typeCodeName1);
 
-			collection = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			collection = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 			if (collection == null || collection.size() == 0) {
 				throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 			}

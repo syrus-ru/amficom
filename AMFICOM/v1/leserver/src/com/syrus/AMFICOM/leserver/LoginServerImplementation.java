@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.14 2005/06/04 16:56:23 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.15 2005/06/07 15:44:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/04 16:56:23 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/06/07 15:44:22 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -61,7 +61,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		this.tc.setValue(login);
 		Set set = null;
 		try {
-			set = StorableObjectPool.getStorableObjectsByCondition(this.tc, true);
+			set = StorableObjectPool.getStorableObjectsByCondition(this.tc, true, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -123,7 +123,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
 		try {
-			Set domains = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+			Set domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
 
 			if (domains.size() == 0)
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_NO_DOMAINS_AVAILABLE,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.28 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: SchemePort.java,v 1.29 2005/06/07 15:45:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/06/03 20:39:06 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/07 15:45:54 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -191,9 +191,13 @@ public final class SchemePort extends AbstractSchemePort {
 		return port;
 	}
 
+	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
+	 * @return
+	 */
 	public SchemeCableThread getSchemeCableThread() {
 		try {
-			final Set schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE), true);
+			final Set schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE), true, true);
 			assert schemeCableThreads != null && schemeCableThreads.size() <= 1;
 			return schemeCableThreads.isEmpty()
 					? null
@@ -204,9 +208,13 @@ public final class SchemePort extends AbstractSchemePort {
 		}
 	}
 
+	/**
+	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
+	 * @return
+	 */
 	public SchemeLink getSchemeLink() {
 		try {
-			final Set schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true);
+			final Set schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true, true);
 			assert schemeLinks != null && schemeLinks.size() <= 1;
 			return schemeLinks.isEmpty()
 					? null
