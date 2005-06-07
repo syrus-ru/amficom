@@ -9,13 +9,12 @@
 	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="src" path="/scheme_v1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/cmserver_interface"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mshserver_interface"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/util"/>
 	<classpathentry kind="src" path="/event_v1"/>
 	<classpathentry kind="src" path="/resource_v1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/leserver_interface"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/arserver_interface"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/trove"/>
 	<classpathentry kind="src" path="/mapview_v1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mscharserver_interface"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
