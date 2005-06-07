@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapViewObjectLoader.java,v 1.1 2005/06/03 17:57:41 bass Exp $
+ * $Id: CORBAMapViewObjectLoader.java,v 1.2 2005/06/07 13:22:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,17 +28,22 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/03 17:57:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/06/07 13:22:44 $
  * @module csbridge_v1
  */
 public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements MapViewObjectLoader {
+
 	public CORBAMapViewObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}
 
+
+
+	/* Load multiple objects*/
+
 	public Set loadMapViews(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.MAPVIEW_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MAPVIEW_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -49,8 +54,12 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 		});
 	}
 
+
+
+	/* Load multiple objects but ids by condition*/
+
 	public Set loadMapViewsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.MAPVIEW_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MAPVIEW_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -62,8 +71,12 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 		});
 	}
 
+
+
+	/*	Save multiple objects*/
+
 	public void saveMapViews(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.MAPVIEW_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.MAPVIEW_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],

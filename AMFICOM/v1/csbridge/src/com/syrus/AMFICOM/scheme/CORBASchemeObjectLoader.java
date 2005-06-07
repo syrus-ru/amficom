@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.8 2005/06/03 10:49:19 bass Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.9 2005/06/07 13:22:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,17 +44,22 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/03 10:49:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/06/07 13:22:44 $
  * @module csbridge_v1
  */
 public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements SchemeObjectLoader {
+
 	public CORBASchemeObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}
 
+
+
+	/* Load multiple objects*/
+
 	public Set loadCableChannelingItems(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -66,7 +71,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadPathElements(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -78,7 +83,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCableLinks(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -90,7 +95,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCablePorts(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -102,7 +107,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCableThreads(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -114,7 +119,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeDevices(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -126,7 +131,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeElements(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -138,7 +143,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeLinks(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_LINK_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_LINK_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -150,7 +155,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeMonitoringSolutions(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -162,7 +167,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfos(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -174,7 +179,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoSwitches(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -186,7 +191,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoRtus(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -198,7 +203,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemePaths(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PATH_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_PATH_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -210,7 +215,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemePorts(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PORT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_PORT_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -222,7 +227,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoElements(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -234,7 +239,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoGroups(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -246,7 +251,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemes(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.SCHEME_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.SCHEME_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -257,8 +262,12 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		});
 	}
 
+
+
+	/* Load multiple objects but ids by condition*/
+
 	public Set loadCableChannelingItemsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -271,7 +280,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadPathElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -284,7 +293,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCableLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -297,7 +306,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCablePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -310,7 +319,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeCableThreadsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -323,7 +332,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeDevicesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -336,7 +345,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -349,7 +358,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_LINK_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_LINK_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -362,7 +371,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeMonitoringSolutionsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -375,7 +384,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfosButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -388,7 +397,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -401,7 +410,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -414,7 +423,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemePathsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PATH_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PATH_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -427,7 +436,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PORT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PORT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -440,7 +449,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -453,7 +462,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoGroupsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -466,7 +475,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public Set loadSchemesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SCHEME_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -478,8 +487,12 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		});
 	}
 
+
+
+	/*	Save multiple objects*/
+
 	public void saveCableChannelingItems(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -491,7 +504,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void savePathElements(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -503,7 +516,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeCableLinks(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -515,7 +528,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeCablePorts(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -527,7 +540,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeCableThreads(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -539,7 +552,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeDevices(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -551,7 +564,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeElements(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -563,7 +576,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeLinks(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_LINK_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_LINK_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -575,7 +588,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeMonitoringSolutions(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -587,7 +600,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeOptimizeInfos(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -599,7 +612,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeOptimizeInfoSwitches(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -611,7 +624,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeOptimizeInfoRtus(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -623,7 +636,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemePaths(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_PATH_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_PATH_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -635,7 +648,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemePorts(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_PORT_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_PORT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -647,7 +660,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeProtoElements(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -659,7 +672,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemeProtoGroups(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -671,7 +684,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 	}
 
 	public void saveSchemes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.SCHEME_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.SCHEME_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],

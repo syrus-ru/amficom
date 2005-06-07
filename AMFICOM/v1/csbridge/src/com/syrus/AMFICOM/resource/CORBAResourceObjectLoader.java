@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.8 2005/06/03 10:49:19 bass Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.9 2005/06/07 13:22:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,17 +28,22 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/03 10:49:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/06/07 13:22:44 $
  * @module csbridge_v1
  */
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
+
 	public CORBAResourceObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		super(serverConnectionManager);
 	}
 
+
+
+	/* Load multiple objects*/
+
 	public Set loadImageResources(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ids, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -49,8 +54,12 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 		});
 	}
 
+
+
+	/* Load multiple objects but ids by condition*/
+
 	public Set loadImageResourcesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, new TransmitButIdsConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, ids, condition, new TransmitButIdsConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -62,8 +71,12 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 		});
 	}
 
+
+
+	/*	Save multiple objects*/
+
 	public void saveImageResources(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(storableObjects, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
