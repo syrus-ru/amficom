@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.10 2005/06/07 13:53:51 arseniy Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.11 2005/06/07 16:34:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.mshserver.corba.MSHServer;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/06/07 13:53:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/07 16:34:26 $
  * @module csbridge_v1
  */
 public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements SchemeObjectLoader {
@@ -65,7 +65,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitCableChannelingItems(ids1, sessionKey);
+				return ((MscharServer) server).transmitCableChannelingItems(ids1, sessionKey);
 			}
 		});
 	}
@@ -77,7 +77,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitPathElements(ids1, sessionKey);
+				return ((MscharServer) server).transmitPathElements(ids1, sessionKey);
 			}
 		});
 	}
@@ -89,7 +89,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeCableLinks(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeCableLinks(ids1, sessionKey);
 			}
 		});
 	}
@@ -101,7 +101,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeCablePorts(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeCablePorts(ids1, sessionKey);
 			}
 		});
 	}
@@ -113,7 +113,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeCableThreads(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeCableThreads(ids1, sessionKey);
 			}
 		});
 	}
@@ -125,7 +125,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeDevices(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeDevices(ids1, sessionKey);
 			}
 		});
 	}
@@ -137,7 +137,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeElements(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeElements(ids1, sessionKey);
 			}
 		});
 	}
@@ -149,7 +149,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeLinks(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeLinks(ids1, sessionKey);
 			}
 		});
 	}
@@ -161,7 +161,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeMonitoringSolutions(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeMonitoringSolutions(ids1, sessionKey);
 			}
 		});
 	}
@@ -173,7 +173,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeOptimizeInfos(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeOptimizeInfos(ids1, sessionKey);
 			}
 		});
 	}
@@ -185,7 +185,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeOptimizeInfoSwitches(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeOptimizeInfoSwitches(ids1, sessionKey);
 			}
 		});
 	}
@@ -197,7 +197,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeOptimizeInfoRtus(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeOptimizeInfoRtus(ids1, sessionKey);
 			}
 		});
 	}
@@ -209,7 +209,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemePaths(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemePaths(ids1, sessionKey);
 			}
 		});
 	}
@@ -221,7 +221,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemePorts(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemePorts(ids1, sessionKey);
 			}
 		});
 	}
@@ -233,7 +233,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeProtoElements(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeProtoElements(ids1, sessionKey);
 			}
 		});
 	}
@@ -245,7 +245,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeProtoGroups(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemeProtoGroups(ids1, sessionKey);
 			}
 		});
 	}
@@ -257,7 +257,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemes(ids1, sessionKey);
+				return ((MscharServer) server).transmitSchemes(ids1, sessionKey);
 			}
 		});
 	}
@@ -274,7 +274,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitCableChannelingItemsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitCableChannelingItemsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -287,7 +287,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitPathElementsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitPathElementsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -300,7 +300,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeCableLinksButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeCableLinksButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -313,7 +313,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeCablePortsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeCablePortsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -326,7 +326,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeCableThreadsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeCableThreadsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -339,7 +339,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeDevicesButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeDevicesButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -352,7 +352,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeElementsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeElementsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -365,7 +365,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeLinksButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeLinksButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -378,7 +378,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeMonitoringSolutionsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeMonitoringSolutionsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -391,7 +391,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeOptimizeInfosButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeOptimizeInfosButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -404,7 +404,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeOptimizeInfoSwitchesButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeOptimizeInfoSwitchesButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -417,7 +417,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeOptimizeInfoRtusButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeOptimizeInfoRtusButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -430,7 +430,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemePathsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemePathsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -443,7 +443,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemePortsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemePortsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -456,7 +456,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeProtoElementsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeProtoElementsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -469,7 +469,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemeProtoGroupsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemeProtoGroupsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -482,7 +482,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitSchemesButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitSchemesButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -498,7 +498,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveCableChannelingItems((CableChannelingItem_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveCableChannelingItems((CableChannelingItem_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -510,7 +510,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receivePathElements((PathElement_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receivePathElements((PathElement_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -522,7 +522,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeCableLinks((SchemeCableLink_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeCableLinks((SchemeCableLink_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -534,7 +534,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeCablePorts((SchemeCablePort_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeCablePorts((SchemeCablePort_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -546,7 +546,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeCableThreads((SchemeCableThread_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeCableThreads((SchemeCableThread_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -558,7 +558,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeDevices((SchemeDevice_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeDevices((SchemeDevice_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -570,7 +570,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeElements((SchemeElement_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeElements((SchemeElement_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -582,7 +582,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeLinks((SchemeLink_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeLinks((SchemeLink_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -594,7 +594,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeMonitoringSolutions((SchemeMonitoringSolution_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeMonitoringSolutions((SchemeMonitoringSolution_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -606,7 +606,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeOptimizeInfos((SchemeOptimizeInfo_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeOptimizeInfos((SchemeOptimizeInfo_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -618,7 +618,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeOptimizeInfoSwitches((SchemeOptimizeInfoSwitch_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeOptimizeInfoSwitches((SchemeOptimizeInfoSwitch_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -630,7 +630,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeOptimizeInfoRtus((SchemeOptimizeInfoRtu_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeOptimizeInfoRtus((SchemeOptimizeInfoRtu_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -642,7 +642,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemePaths((SchemePath_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemePaths((SchemePath_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -654,7 +654,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemePorts((SchemePort_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemePorts((SchemePort_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -666,7 +666,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeProtoElements((SchemeProtoElement_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeProtoElements((SchemeProtoElement_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -678,7 +678,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemeProtoGroups((SchemeProtoGroup_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemeProtoGroups((SchemeProtoGroup_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -690,7 +690,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveSchemes((Scheme_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSchemes((Scheme_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}

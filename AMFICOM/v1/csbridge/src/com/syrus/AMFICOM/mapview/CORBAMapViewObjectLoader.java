@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapViewObjectLoader.java,v 1.3 2005/06/07 13:53:51 arseniy Exp $
+ * $Id: CORBAMapViewObjectLoader.java,v 1.4 2005/06/07 16:34:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
-import com.syrus.AMFICOM.mshserver.corba.MSHServer;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/06/07 13:53:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/07 16:34:26 $
  * @module csbridge_v1
  */
 public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements MapViewObjectLoader {
@@ -49,7 +49,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitMapViews(ids1, sessionKey);
+				return ((MscharServer) server).transmitMapViews(ids1, sessionKey);
 			}
 		});
 	}
@@ -66,7 +66,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).transmitMapViewsButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitMapViewsButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -82,7 +82,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MSHServer) server).receiveMapViews((MapView_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveMapViews((MapView_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.10 2005/06/07 13:53:51 arseniy Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.11 2005/06/07 16:34:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.arserver.corba.ARServer;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -23,13 +22,14 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/06/07 13:53:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/07 16:34:26 $
  * @module csbridge_v1
  */
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
@@ -49,7 +49,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 					final Identifier_Transferable ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((ARServer) server).transmitImageResources(ids1, sessionKey);
+				return ((MscharServer) server).transmitImageResources(ids1, sessionKey);
 			}
 		});
 	}
@@ -66,7 +66,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
-				return ((ARServer) server).transmitImageResourcesButIdsCondition(ids1, sessionKey, condition1);
+				return ((MscharServer) server).transmitImageResourcesButIdsCondition(ids1, sessionKey, condition1);
 			}
 		});
 	}
@@ -82,7 +82,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((ARServer) server).receiveImageResources((ImageResource_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveImageResources((ImageResource_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}
