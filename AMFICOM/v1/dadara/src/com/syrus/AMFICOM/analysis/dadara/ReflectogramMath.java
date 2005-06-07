@@ -322,9 +322,14 @@ public class ReflectogramMath
 //        System.out.println("refraction " + refraction + ", pulsewidth " + pulsewidth + ", resolution " + resolution);
 //        System.out.println("eventSize = " + (- 3d / d[0]) + " + " + (150d / refraction * pulsewidth / 1000d / resolution));
         */
+        if (pulsewidth <= 0)
+            return 50; // XXX: default wavelet width when pulsewidth is unknown
         double eventSize = 150d / refraction * pulsewidth / 1000d / resolution;
-		if(eventSize < 2)
-			eventSize = 2;
+        // ширина вейвлета меньше 2 не допустимо быть в принципе
+        // значения меньше 5 не рекомендуются как приводящие к неустойчивому анализу
+        // 15 (5..20) - на проведенных тестах близко к оптимальному
+		if(eventSize < 15)
+			eventSize = 15;
 		return (int)eventSize;
 	}
 
