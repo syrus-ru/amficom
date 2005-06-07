@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.59 2005/06/07 16:40:04 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.60 2005/06/07 17:33:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/07 16:40:04 $
+ * @version $Revision: 1.60 $, $Date: 2005/06/07 17:33:11 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -108,14 +108,11 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		});
 	}
 
+	/**
+	 * NOTE: New tests come to MCM only by CORBA call 'receiveTests'. 
+	 */
 	public java.util.Set loadTests(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.TEST_ENTITY_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
-					Identifier_Transferable[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitTests(idsT, sessionKey);
-			}
-		});
+		return DatabaseObjectLoader.loadStorableObjects(ids);
 	}
 
 	public java.util.Set loadCronTemporalPatterns(final java.util.Set ids) throws ApplicationException {
@@ -245,19 +242,12 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
+	/**
+	 * NOTE: New tests come to MCM only by CORBA call 'receiveTests'. 
+	 */
 	public java.util.Set loadTestsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TEST_ENTITY_CODE,
-				ids,
-				condition,
-				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
-							Identifier_Transferable[] idsT,
-							SessionKey_Transferable sessionKey,
-							StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-						return ((MServer) server).transmitTestsButIdsByCondition(idsT, conditionT, sessionKey);
-					}
-				});
+		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadCronTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
