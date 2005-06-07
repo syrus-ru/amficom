@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.21 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.22 2005/06/07 07:32:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.LineComboBox;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/07 07:32:41 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -47,7 +48,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	/** Кодовое имя атрибута "Стиль линии". */
 	public static final String ATTRIBUTE_STYLE = "style";
 	/** Кодовое имя атрибута "Толщина линии при сигнале тревоги". */
-	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thckness";
+	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thickness";
 	/** Кодовое имя атрибута "Цвет при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color";
 
@@ -93,7 +94,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			CharacteristicType type = CharacteristicType.createInstance(
 					userId,
 					codename,
-					"1",
+					"no description",
+					LangModelMap.getString(codename),
 					dataType,
 					sort);
 			StorableObjectPool.putStorableObject(type);
