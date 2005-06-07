@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.5 2005/06/04 16:56:24 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.6 2005/06/07 06:25:36 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.Ch
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:24 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/06/07 06:25:36 $
  * @module commonclient_v1
  */
 
@@ -205,9 +205,9 @@ public class CharacteristicAddDialog {
 				if (text != null && text.trim().length() > 0) {
 					try {
 						Identifier userId = LoginManager.getUserId();
-						this.selectedType = CharacteristicType.createInstance(userId,
-							this.nameField.getText(), this.nameField
-									.getText(), DataType.DATA_TYPE_STRING, this.sort);
+						// TODO maybe create separated fields for codename, name and description ?
+						this.selectedType = CharacteristicType.createInstance(userId, this.nameField.getText(),
+							this.nameField.getText(), this.nameField.getText(), DataType.DATA_TYPE_STRING, this.sort);
 					} catch (CreateObjectException ex) {
 						ex.printStackTrace();
 					}
