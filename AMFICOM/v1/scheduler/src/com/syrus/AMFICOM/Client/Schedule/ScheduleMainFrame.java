@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
-import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
@@ -117,7 +116,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 					ScheduleMainFrame.this);
 				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE,
 					ScheduleMainFrame.this);
-				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand(AbstractMainMenuBar.MENU_EXIT)
+				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT)
 						.execute();
 			}
 		});
@@ -281,7 +280,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, enable);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, enable);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, enable);
-		aModel.setEnabled(AbstractMainMenuBar.MENU_VIEW_ARRANGE, enable);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, enable);
 		
 		aModel.fireModelChanged("");
 	}

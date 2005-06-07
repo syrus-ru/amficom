@@ -87,7 +87,7 @@ public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 		this.menuView.addSeparator();
 
 		final JMenuItem menuViewArrangeItem = new JMenuItem(LangModelSchedule.getString("Arrange"));
-		menuViewArrangeItem.setName(MENU_VIEW_ARRANGE);
+		menuViewArrangeItem.setName(ApplicationModel.MENU_VIEW_ARRANGE);
 		menuViewArrangeItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewArrangeItem);
 
@@ -137,9 +137,9 @@ public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 				
 				
 				menuViewArrangeItem.setVisible(ScheduleMainMenuBar.this.getApplicationModel().isVisible(
-					MENU_VIEW_ARRANGE));
+					ApplicationModel.MENU_VIEW_ARRANGE));
 				menuViewArrangeItem.setEnabled(ScheduleMainMenuBar.this.getApplicationModel().isEnabled(
-					MENU_VIEW_ARRANGE));
+					ApplicationModel.MENU_VIEW_ARRANGE));
 
 			}
 

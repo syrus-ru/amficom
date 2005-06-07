@@ -225,13 +225,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
 		add(ScheduleMainMenuBar.MENU_VIEW_TIME);
 		add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
-		add(AbstractMainMenuBar.MENU_VIEW_ARRANGE);
+		add(ApplicationModel.MENU_VIEW_ARRANGE);
 
 		add(ScheduleMainMenuBar.MENU_REPORT);
 		add(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT);
 
-		add(AbstractMainMenuBar.MENU_HELP);
-		add(AbstractMainMenuBar.MENU_HELP_ABOUT);
+		add(ApplicationModel.MENU_HELP);
+		add(ApplicationModel.MENU_HELP_ABOUT);
 
 		setVisible("menuSessionSave", false);
 		setVisible("menuSessionUndo", false);
@@ -246,8 +246,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		setVisible(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
 		setVisible(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
 
-		setVisible(AbstractMainMenuBar.MENU_HELP, true);
-		setVisible(AbstractMainMenuBar.MENU_HELP_ABOUT, true);
+		setVisible(ApplicationModel.MENU_HELP, true);
+		setVisible(ApplicationModel.MENU_HELP_ABOUT, true);
 
 	}
 
