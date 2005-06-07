@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.6 2005/06/06 13:21:28 bob Exp $
+ * $Id: DomainWrapper.java,v 1.7 2005/06/07 13:23:33 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/06 13:21:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/07 13:23:33 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -59,7 +59,7 @@ public class DomainWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return domain.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
