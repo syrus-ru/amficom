@@ -36,7 +36,7 @@ AMFICOMCLASSPATH=\
 "${AMFICOM_HOME}"/admin_v1/classes:\
 "${AMFICOM_HOME}"/resource_v1/classes:\
 "${AMFICOM_HOME}"/csbridge_v1/classes:\
-"${AMFICOM_HOME}"/mshserver_v1/classes
+"${AMFICOM_HOME}"/mscharserver_v1/classes
 
 CMDLINE="${JAVA_HOME}/bin/java -Xloggc:gc -Xmx256m -server -ea -classpath ${AMFICOMCLASSPATH}:${ORACLECLASSPATH}:${TROVE4JCLASSPATH} com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer"
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: mscharserver.idl,v 1.1 2005/06/07 16:35:01 bass Exp $
+ * $Id: mscharserver.idl,v 1.2 2005/06/07 17:58:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -530,4 +530,4 @@ module com {
 	};
 };
 
-#endif // MSHARSERVER_IDL
+#endif // MSCHARSERVER_IDL

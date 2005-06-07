@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHClientServantManager.java,v 1.5 2005/06/01 16:55:08 arseniy Exp $
+ * $Id: MscharClientServantManager.java,v 1.1 2005/06/07 17:58:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,19 +12,19 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/01 16:55:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/06/07 17:58:14 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
-public final class MSHClientServantManager extends ClientServantManager {
-	public MSHClientServantManager(final CORBAServer corbaServer,
+public final class MscharClientServantManager extends ClientServantManager {
+	public MscharClientServantManager(final CORBAServer corbaServer,
 			final String loginServerServantName,
 			final String eventServerServantName,
-			final String mshServerServantName) {
-		super(corbaServer, loginServerServantName, eventServerServantName, mshServerServantName);
+			final String mscharServerServantName) {
+		super(corbaServer, loginServerServantName, eventServerServantName, mscharServerServantName);
 	}
 
-	public static MSHClientServantManager create() throws CommunicationException {
+	public static MscharClientServantManager create() throws CommunicationException {
 		final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
 		final String contextName = ContextNameFactory.generateContextName(serverHostName);
 		final CORBAServer corbaServer = new CORBAServer(contextName);
@@ -33,13 +33,13 @@ public final class MSHClientServantManager extends ClientServantManager {
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-		final String mshServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSHSERVER_PROCESS_CODENAME,
-				ServerProcessWrapper.MSHSERVER_PROCESS_CODENAME);
+		final String mscharServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSCHAR_SERVER_PROCESS_CODENAME,
+				ServerProcessWrapper.MSCHAR_SERVER_PROCESS_CODENAME);
 
-		final MSHClientServantManager mshClientServantManager = new MSHClientServantManager(corbaServer,
+		final MscharClientServantManager mscharClientServantManager = new MscharClientServantManager(corbaServer,
 				loginServerServantName,
 				eventServerServantName,
-				mshServerServantName);
-		return mshClientServantManager;
+				mscharServerServantName);
+		return mscharClientServantManager;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.8 2005/06/07 17:47:43 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.9 2005/06/07 17:58:14 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,14 +7,11 @@
  */
 package com.syrus.AMFICOM.general;
 
-import java.util.Date;
-
-import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/07 17:47:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/06/07 17:58:14 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -112,25 +109,23 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private static void createMapSchemeSession(LoginRestorer loginRestorer) throws CommunicationException {
 		MClientServantManager mClientServantManager = MClientServantManager.create();
-		ARClientServantManager arClientServantManager = ARClientServantManager.create();
-		MSHClientServantManager mshClientServantManager = MSHClientServantManager.create();
-		ClientPoolContext clientPoolContext = new MSHClientPoolContext(mClientServantManager,
-				arClientServantManager,
-				mshClientServantManager);
-		instance = new ClientSessionEnvironment(mshClientServantManager, clientPoolContext, loginRestorer);
+		MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
+		ClientPoolContext clientPoolContext = new MscharClientPoolContext(
+				mClientServantManager,
+				mscharClientServantManager);
+		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
 //
 //		final String xmlPath = ApplicationProperties.getString(XML_KEY, null);
 //		if (xmlPath == null) {
 //			MClientServantManager mClientServantManager = MClientServantManager.create();
-//			ARClientServantManager arClientServantManager = ARClientServantManager.create();
-//			MSHClientServantManager mshClientServantManager = MSHClientServantManager.create();
-//			ClientPoolContext clientPoolContext = new MSHClientPoolContext(mClientServantManager,
-//					arClientServantManager,
-//					mshClientServantManager);
-//			instance = new ClientSessionEnvironment(mshClientServantManager, clientPoolContext, loginRestorer);
-//		}
-//		else {
-//			// TODO init MClientXMLServantManager and MSHClientXMLServantManager
+//			MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
+//			ClientPoolContext clientPoolContext = new MscharClientPoolContext(
+//					mClientServantManager,
+//					mscharClientServantManager);
+//			instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
+//
+//		} else {
+//			// TODO init MClientXMLServantManager and MscharClientXMLServantManager
 //		}
 	}
 

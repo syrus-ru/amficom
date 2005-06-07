@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.3 2005/06/07 17:11:36 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.4 2005/06/07 17:58:14 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/07 17:11:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/07 17:58:14 $
  * @author $Author: bass $
  * @module commonclient_v1
  */
@@ -56,6 +56,8 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 	
 	private void createLoginServer() {
 		this.loginServer = new LoginServer() {
+			private static final long serialVersionUID = 6881608272719879636L;
+
 			public Domain_Transferable[] transmitAvailableDomains(SessionKey_Transferable arg0) throws AMFICOMRemoteException {
 				try {
 					Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE), true, true);

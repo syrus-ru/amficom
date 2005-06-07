@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.2 2005/06/07 17:58:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/07 17:58:13 $
  * @module mscharserver_v1
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
@@ -23,10 +23,10 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	private MscharServerSessionEnvironment(
 			final MscharServerServantManager mscharServerServantManager,
 			final MscharServerPoolContext mscharServerPoolContext) {
-		super(mscharServerServantManager, mscharServerPoolContext, new MapSchemeAdministrationResourceServer.MSHServerLoginRestorer());
+		super(mscharServerServantManager, mscharServerPoolContext, new MapSchemeAdministrationResourceServer.MscharServerLoginRestorer());
 	}
 
-	public MscharServerServantManager getMSHServerServantManager() {
+	public MscharServerServantManager getMscharServerServantManager() {
 		return (MscharServerServantManager) super.baseConnectionManager;
 	}
 

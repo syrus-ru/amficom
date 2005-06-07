@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.6 2005/06/07 13:57:33 arseniy Exp $
+ * $Id: CMServerServantManager.java,v 1.7 2005/06/07 17:58:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/07 13:57:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/07 17:58:14 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 final class CMServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
@@ -115,7 +115,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 * @param servantName
 	 * @see com.syrus.AMFICOM.general.VerifiedConnectionManager#onLoseConnection(String)
 	 * @todo Generate event "Connection lost" and ask Bass to do the same
-	 *       for ARServer and MShServer.
+	 *       for MscharServer.
 	 */
 	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("CMServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
@@ -125,7 +125,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 * @param servantName
 	 * @see com.syrus.AMFICOM.general.VerifiedConnectionManager#onRestoreConnection(String)
 	 * @todo Generate event "Connection restored" and ask Bass to do the
-	 *       same for ARServer and MShServer.
+	 *       same for MscharServer.
 	 */
 	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("CMServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",

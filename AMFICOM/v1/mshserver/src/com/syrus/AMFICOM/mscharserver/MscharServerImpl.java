@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.2 2005/06/07 17:58:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/07 17:58:13 $
  * @author $Author: bass $
  * @module mscharserver_v1
  */
@@ -41,7 +41,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 			throws AMFICOMRemoteException {
 		try {
 			MscharServerSessionEnvironment.getInstance()
-					.getMSHServerServantManager()
+					.getMscharServerServantManager()
 					.getLoginServerReference()
 					.validateAccess(sessionKey, userId, domainId);
 		} catch (final CommunicationException ce) {

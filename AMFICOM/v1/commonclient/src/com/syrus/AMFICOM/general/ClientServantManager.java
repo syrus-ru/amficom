@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.4 2005/06/07 13:28:24 bob Exp $
+ * $Id: ClientServantManager.java,v 1.5 2005/06/07 17:58:14 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/07 13:28:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/06/07 17:58:14 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
 abstract class ClientServantManager extends VerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
@@ -26,7 +26,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	private String eventServerServantName;
 
 	/**
-	 * Currently, can hold the name of CMServer, MSHServer and ARServer
+	 * Currently, can hold the name of CMServer and MscharServer
 	 * servants.
 	 */
 	private String commonServerServantName;

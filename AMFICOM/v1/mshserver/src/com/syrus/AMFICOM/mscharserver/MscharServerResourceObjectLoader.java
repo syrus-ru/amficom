@@ -1,5 +1,5 @@
 /*
- * $Id: MscharServerResourceObjectLoader.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerResourceObjectLoader.java,v 1.2 2005/06/07 17:58:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,16 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.resource.DatabaseResourceObjectLoader;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/07 17:58:13 $
  * @author $Author: bass $
  * @module mscharserver_v1
  * @todo add methods.
  */
 public class MscharServerResourceObjectLoader extends DatabaseResourceObjectLoader {
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
-		/**
-		 * there are not resons for refresh due to all changes made using one MSHServer
+		/*
+		 * There's no reason to refresh since all changes are made by a
+		 * single MscharServer.
 		 */
 		return Collections.EMPTY_SET;
 	}
