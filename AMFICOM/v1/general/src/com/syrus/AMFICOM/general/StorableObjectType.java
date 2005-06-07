@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.22 2005/06/06 10:30:34 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.23 2005/06/07 08:24:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/06/06 10:30:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/06/07 08:24:45 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -117,7 +117,9 @@ public abstract class StorableObjectType extends StorableObject {
 			final String codename,
 			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
+		assert codename != null && codename.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 		this.codename = codename;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.description = description;
 	}
 }
