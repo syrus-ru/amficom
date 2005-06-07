@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.4 2005/05/18 12:52:59 bass Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.5 2005/06/07 16:33:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/07 16:33:30 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class VerifiedConnectionManager {
@@ -33,7 +33,7 @@ public class VerifiedConnectionManager {
 	Map referencesMap; //Map <String servantName, Verifiable reference>
 	private Set disconnectedServants; //Set <String servantName>
 
-	public VerifiedConnectionManager(CORBAServer corbaServer, String[] servantNames) {
+	public VerifiedConnectionManager(final CORBAServer corbaServer, final String[] servantNames) {
 		this(corbaServer, new HashSet(Arrays.asList(servantNames)));
 	}
 
@@ -54,7 +54,7 @@ public class VerifiedConnectionManager {
 		this.disconnectedServants = Collections.synchronizedSet(new HashSet(servantNames));
 	}
 
-	public Verifiable getVerifiableReference(String servantName) throws CommunicationException, IllegalDataException {
+	public Verifiable getVerifiableReference(final String servantName) throws CommunicationException, IllegalDataException {
 		if (this.referencesMap.containsKey(servantName)) {
 			Verifiable reference = (Verifiable) this.referencesMap.get(servantName);
 
@@ -73,14 +73,14 @@ public class VerifiedConnectionManager {
 		throw new IllegalDataException("Servant '" + servantName + "' not registered for this manager");
 	}
 
-	public void addServantName(String servantName) {
+	public void addServantName(final String servantName) {
 		if (!this.referencesMap.containsKey(servantName)) {
 			this.referencesMap.put(servantName, null);
 			this.disconnectedServants.add(servantName);
 		}
 	}
 
-	public void removeServantName(String servantName) {
+	public void removeServantName(final String servantName) {
 		if (this.referencesMap.containsKey(servantName)) {
 			this.referencesMap.remove(servantName);
 			this.disconnectedServants.remove(servantName);
@@ -91,7 +91,7 @@ public class VerifiedConnectionManager {
 		return this.corbaServer;
 	}
 
-	private Verifiable activateAndGet(String servantName) throws CommunicationException {
+	private Verifiable activateAndGet(final String servantName) throws CommunicationException {
 		this.activateVerifiableReference(servantName);
 		Verifiable reference = (Verifiable) this.referencesMap.get(servantName);
 		if (reference != null)
@@ -99,7 +99,7 @@ public class VerifiedConnectionManager {
 		throw new CommunicationException("Cannot establish connection with  '" + servantName + "'");
 	}
 
-	private void activateVerifiableReference(String servantName) {
+	private void activateVerifiableReference(final String servantName) {
 		try {
 			Verifiable reference = VerifiableHelper.narrow(this.corbaServer.resolveReference(servantName));
 			this.referencesMap.put(servantName, reference);
@@ -113,11 +113,11 @@ public class VerifiedConnectionManager {
 		}
 	}
 
-	protected void onLoseConnection(String servantName) {
+	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("VerifiedConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 	}
 
-	protected void onRestoreConnection(String servantName) {
+	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("VerifiedConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 	}

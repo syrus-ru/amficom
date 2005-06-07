@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.9 2005/06/01 15:59:42 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.10 2005/06/07 16:33:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/01 15:59:42 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/07 16:33:30 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -210,9 +210,9 @@ public class CORBAServer {
 
 	public org.omg.CORBA.Object resolveReference(final String name) throws CommunicationException {
 		try {
-			Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
+			Log.debugMessage("CORBAServer.resolveReference | Resolving name: " + name, Log.DEBUGLEVEL08);
 			final org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
-			Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
+			Log.debugMessage("CORBAServer.resolveReference | Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
 			return ref;
 		}
 		catch (UserException nf) {
