@@ -1,4 +1,4 @@
-MODULE_NAME = mshserver_v1
+MODULE_NAME = mscharserver_v1
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
@@ -19,14 +19,12 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDLJ)
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/jdom.jar:$(EXTLIBDIR)/micsys.jar:$(EXTLIBDIR)/miutil.jar:$(EXTLIBDIR)/mxj.jar:$(EXTLIBDIR)/mxjgeom.jar
 
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mscharserver/*.java)
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
@@ -37,11 +35,11 @@ $(LIBNAME): .mach
 
 $(LIBNAME_INTERFACE):	.corba
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServer.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServerOperations.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/_MSHServerStub.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServerHelper.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/MSHServerHolder.class
+		-C $(CLASSDIR) com/syrus/AMFICOM/mscharserver/corba/MscharServer.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mscharserver/corba/MscharServerOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mscharserver/corba/_MscharServerStub.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mscharserver/corba/MscharServerHelper.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/mscharserver/corba/MscharServerHolder.class
 	$(CP) $@ $(LIBDIR)
 
 .mach:	.corba $(CLASSDIR)
@@ -52,11 +50,11 @@ $(LIBNAME_INTERFACE):	.corba
 
 .corba:	$(CLASSDIR)
 	$(IDLJ) $(IDLJFLAGS) \
-		$(IDLDIR)/mshserver.idl
+		$(IDLDIR)/mscharserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/mshserver/corba/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/mscharserver/corba/*.java
 	touch $@
 
 $(CLASSDIR):
@@ -64,18 +62,18 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
-	rm -f .mach
+	$(RM) .mach
 
 .PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/mshserver/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mshserver/corba
-	rm -f .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mscharserver/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mscharserver/corba
+	$(RM) .corba
 
 #### Install ####
 .PHONY:	install
@@ -87,7 +85,7 @@ install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/mshserver.idl \
+		$(IDLDIR)/mscharserver.idl \
 		$(SOURCES)
 
 

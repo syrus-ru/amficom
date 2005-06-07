@@ -12,7 +12,6 @@
 *.swp
 *.log
 classes
-test
 logs
 orb.db
 SerializedLRUMaps

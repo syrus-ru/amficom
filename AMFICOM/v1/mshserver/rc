@@ -4,11 +4,11 @@
 JAVA=$JAVA_HOME/bin/java
 LIB=../lib
 ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:$ORACLE_HOME/jdbc/lib/orai18n.jar
-APPCLASSPATH=$LIB/mshserver.jar:\
+APPCLASSPATH=$LIB/mscharserver.jar:\
 $LIB/map.jar:\
 $LIB/measurement.jar:\
 $LIB/configuration.jar:\
 $LIB/general.jar:\
 $LIB/util.jar
 
-exec $JAVA -server -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.mshserver.MapSchemeServer
+exec $JAVA -server -classpath $APPCLASSPATH:$ORACLECLASSPATH com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer
