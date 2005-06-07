@@ -1,5 +1,5 @@
 /*-
- * $Id: MSHServerSchemeTransmit.java,v 1.8 2005/05/27 16:24:45 bass Exp $
+ * $Id: MSHServerSchemeTransmit.java,v 1.9 2005/06/07 14:01:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/05/27 16:24:45 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/06/07 14:01:19 $
  * @module mshserver_v1
  */
 abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
@@ -57,7 +57,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeProtoGroup_Transferable schemeProtoGroups[] = new SchemeProtoGroup_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeProtoGroups, 0, length);
@@ -80,7 +80,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeProtoElement_Transferable schemeProtoElements[] = new SchemeProtoElement_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeProtoElements, 0, length);
@@ -103,7 +103,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final Scheme_Transferable schemes[] = new Scheme_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemes, 0, length);
@@ -126,7 +126,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeElement_Transferable schemeElements[] = new SchemeElement_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeElements, 0, length);
@@ -149,7 +149,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeOptimizeInfo_Transferable schemeOptimizeInfos[] = new SchemeOptimizeInfo_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfos, 0, length);
@@ -172,7 +172,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeOptimizeInfoSwitch_Transferable schemeOptimizeInfoSwitches[] = new SchemeOptimizeInfoSwitch_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfoSwitches, 0, length);
@@ -195,7 +195,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeOptimizeInfoRtu_Transferable schemeOptimizeInfoRtus[] = new SchemeOptimizeInfoRtu_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfoRtus, 0, length);
@@ -218,7 +218,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeMonitoringSolution_Transferable schemeMonitoringSolutions[] = new SchemeMonitoringSolution_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeMonitoringSolutions, 0, length);
@@ -241,7 +241,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeDevice_Transferable schemeDevices[] = new SchemeDevice_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeDevices, 0, length);
@@ -264,7 +264,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemePort_Transferable schemePorts[] = new SchemePort_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemePorts, 0, length);
@@ -287,7 +287,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeCablePort_Transferable schemeCablePorts[] = new SchemeCablePort_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeCablePorts, 0, length);
@@ -310,7 +310,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeLink_Transferable schemeLinks[] = new SchemeLink_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeLinks, 0, length);
@@ -333,7 +333,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeCableLink_Transferable schemeCableLinks[] = new SchemeCableLink_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeCableLinks, 0, length);
@@ -356,7 +356,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemeCableThread_Transferable schemeCableThreads[] = new SchemeCableThread_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemeCableThreads, 0, length);
@@ -379,7 +379,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final CableChannelingItem_Transferable cableChannelingItems[] = new CableChannelingItem_Transferable[length];
 		System.arraycopy(storableObjects, 0, cableChannelingItems, 0, length);
@@ -402,7 +402,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final SchemePath_Transferable schemePaths[] = new SchemePath_Transferable[length];
 		System.arraycopy(storableObjects, 0, schemePaths, 0, length);
@@ -425,7 +425,7 @@ abstract class MSHServerSchemeTransmit extends MSHServerMapTransmit {
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
-		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsCondition(ids, sessionKey, storableObjectCondition);
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
 		final PathElement_Transferable pathElements[] = new PathElement_Transferable[length];
 		System.arraycopy(storableObjects, 0, pathElements, 0, length);
