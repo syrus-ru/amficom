@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.3 2005/06/06 11:45:20 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.4 2005/06/07 17:46:38 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/06 11:45:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/06/07 17:46:38 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -63,11 +63,10 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 			Map kisMeasurementPorts = new HashMap();
 			LinkedIdsCondition measurementPortCondition = null;
 			try {
-				Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
+				Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
 				
 				domainCondition.setEntityCode(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE);
-				Collection monitoredElements = StorableObjectPool.getStorableObjectsByCondition(
-					domainCondition, true);
+				Collection monitoredElements = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
 				
 				for (Iterator kisIterator = kiss.iterator(); kisIterator.hasNext();) {
 					KIS kis = (KIS) kisIterator.next();
@@ -78,7 +77,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 						measurementPortCondition.setLinkedId(kis.getId());
 
 					Collection measurementPorts = StorableObjectPool.getStorableObjectsByCondition(
-						measurementPortCondition, true);
+						measurementPortCondition, true, true);
 					kisMeasurementPorts.put(kis, measurementPorts);
 					for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
 						MeasurementPort measurementPort = (MeasurementPort) it.next();
@@ -92,7 +91,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 																					ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 
 					Collection measurementTypesFormeasurementPortType = StorableObjectPool
-							.getStorableObjectsByCondition(linkedIdsCondition, true);
+							.getStorableObjectsByCondition(linkedIdsCondition, true, true);
 					
 					List list = new ArrayList(measurementTypesFormeasurementPortType.size());
 					for (Iterator iter = measurementTypesFormeasurementPortType.iterator(); iter.hasNext();) {

@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
-import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -342,7 +341,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (groupTestId != null) {
 			try {
 				java.util.Set testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
-					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_ENTITY_CODE), true);
+					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_ENTITY_CODE), true, true);
 				java.util.Set testIds = new HashSet(testsByCondition.size());
 				for (Iterator iterator = testsByCondition.iterator(); iterator.hasNext();) {
 					Identifier testId = ((Test) iterator.next()).getId();
@@ -376,7 +375,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		{
 			Collection measurementTypes = StorableObjectPool.getStorableObjectsByCondition(
-				new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
+				new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true, true);
 
 			// LinkedIdsCondition domainCondition = new
 			// LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
@@ -404,27 +403,19 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPES, null,
 																		measurementTypeItems));
 
-			this.dispatcher
-					.firePropertyChange(new PropertyChangeEvent(
-																this,
-																COMMAND_SET_ANALYSIS_TYPES,
-																null,
-																StorableObjectPool
-																		.getStorableObjectsByCondition(
-																			new EquivalentCondition(
-																									ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
-																			true)));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+					COMMAND_SET_ANALYSIS_TYPES,
+					null,
+					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
+							true,
+							true)));
 
-			this.dispatcher
-					.firePropertyChange(new PropertyChangeEvent(
-																this,
-																COMMAND_SET_EVALUATION_TYPES,
-																null,
-																StorableObjectPool
-																		.getStorableObjectsByCondition(
-																			new EquivalentCondition(
-																									ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
-																			true)));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+					COMMAND_SET_EVALUATION_TYPES,
+					null,
+					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+							true,
+							true)));
 
 			// if (!monitoredElements.isEmpty()) {
 			// LinkedIdsCondition linkedIdsCondition;
@@ -663,7 +654,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		CompoundCondition compoundCondition = new CompoundCondition(compoundCondition1, CompoundConditionSort.OR,
 																	compoundCondition2);
 
-		java.util.Set tests = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		java.util.Set tests = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true);
 		this.testIds.clear();
 		for (Iterator iterator = tests.iterator(); iterator.hasNext();) {
 			Test test = (Test) iterator.next();
@@ -796,7 +787,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						? this.measurementSetupIdMap.get(idSet) : null);
 				java.util.Set measurementSetups = null;
 				if (measurementSetupIds == null) {
-					measurementSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					measurementSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
 					if (this.measurementSetupIdMap == null) {
 						this.measurementSetupIdMap = new HashMap();
 					}

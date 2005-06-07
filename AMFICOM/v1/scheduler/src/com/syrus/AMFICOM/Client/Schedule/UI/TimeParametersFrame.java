@@ -1179,7 +1179,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				long intervalLength = this.getIntervalLength();
 				TypicalCondition typicalCondition = new TypicalCondition(intervalLength, intervalLength, OperationSort.OPERATION_EQUALS, ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
 				try {
-					java.util.Set set = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+					java.util.Set set = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
 					if (!set.isEmpty()) {
 						temporalPattern = (AbstractTemporalPattern)set.iterator().next();
 					}

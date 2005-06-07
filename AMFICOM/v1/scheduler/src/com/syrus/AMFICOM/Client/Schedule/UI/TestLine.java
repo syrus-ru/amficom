@@ -538,8 +538,7 @@ public class TestLine extends TimeLine {
 																						test.getId(),
 																						ObjectEntities.MEASUREMENT_ENTITY_CODE);
 						try {
-							Set testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
-								true);
+							Set testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true, true);
 							List measurementTestList = new LinkedList();
 							if (!testMeasurements.isEmpty()) {
 								for (Iterator iter = testMeasurements.iterator(); iter.hasNext();) {

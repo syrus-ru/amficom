@@ -67,8 +67,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/06 11:45:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2005/06/07 17:46:38 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -557,8 +557,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			for (Iterator iterator = conditions.iterator(); iterator.hasNext();) {
 				StorableObjectCondition condition = (StorableObjectCondition) iterator.next();
 
-				java.util.Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(condition,
-					true);
+				java.util.Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
 				if (storableObjectsByCondition.isEmpty())
 					throw new IllegalArgumentException(
 														LangModelSchedule.getString("Error.CannotFindParameterTypes") + " "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -701,7 +700,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
 																				port.getType().getId(),
 																				ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-				Collection characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
+				Collection characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true, true);
 
 				if (this.traceLength == null) {
 					this.traceLength = new HashMap();
