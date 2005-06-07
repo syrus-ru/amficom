@@ -20,6 +20,8 @@ const double MAX_VALUE_TO_INITIAL_DB_NOISE = -10; // -5..-10..-15
 // оценка ширины сглаживания белого шума NetTest'ом
 const int NETTESTWIDTH = 16;
 
+const int WIDTHMULT = 10; // NETTESTWIDTH*WIDTHMULT должно быть четно
+
 // для ускорения перевода дБ в интенсивность и обратно
 const double L10O5 = log(10) / 5;
 
@@ -102,10 +104,15 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
 	const int width = NETTESTWIDTH;
 	// mlen должно получиться четным
-	const int mlen = width * 10;
+	const int mlen = width * WIDTHMULT;
 	// -1 здесь для выравнивания x-коорд.
 	const int nsam = mlen - 2 * width - 1;
 	const int mofs = mlen / 2 - 1;
+
+	// участок в начале рефлектограммы определяем с меньшим width
+	const int firstRegion = mlen;
+	const int widthFirst = width / 2;
+
 	double gist[nsam];
 
 	int i;
@@ -147,9 +154,17 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 		// строго говоря, I2+I0-2I1 - это не то совсем что нам нужно,
 		// но при характерных для рефлектометрии степенях затухания
 		// поправка на нелинейность на 3 порядка меньше чем levelPrec0
-		double v0 = out[i];
+		//double v0 = out[i];
+		//double v1 = out[i + width];
+		//double v2 = out[i + width * 2];
+		//int widthCur = i < firstRegion ? widthFirst : width;
+		int dw = width;
+		int dwMax = (i + width) / 10;
+		if (dw > dwMax)
+			dw = dwMax;
+		double v0 = out[i + width - dw];
 		double v1 = out[i + width];
-		double v2 = out[i + width * 2];
+		double v2 = out[i + width + dw];
 		temp[i] = fabs(v2 + v0 - v1 - v1) + levelPrec0 * v1;
 	}
 
