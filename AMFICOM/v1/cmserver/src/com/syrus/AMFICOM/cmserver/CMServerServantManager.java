@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.5 2005/05/18 13:11:21 bass Exp $
+ * $Id: CMServerServantManager.java,v 1.6 2005/06/07 13:57:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,8 @@ import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
+import com.syrus.AMFICOM.general.ServerConnectionManager;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
@@ -25,11 +27,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/18 13:11:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/07 13:57:33 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
-final class CMServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
+final class CMServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
 	private String loginServerServantName;
 	private String eventServerServantName;
 	private String mServerServantName;
@@ -82,6 +84,22 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 		return this.databaseIdentifierGeneratorServer;
 	}
 
+	public CommonServer getServerReference() throws CommunicationException {
+		try {
+			return (CommonServer) super.getVerifiableReference(this.mServerServantName);
+		}
+		catch (final IllegalDataException ide) {
+			// Never
+			assert false;
+			return null;
+		}
+	}
+
+	/**
+	 * @deprecated Use getServerReference() instead.
+	 * @return
+	 * @throws CommunicationException
+	 */
 	public MServer getMServerReference() throws CommunicationException {
 		try {
 			return (MServer) super.getVerifiableReference(this.mServerServantName);

@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.5 2005/05/27 11:13:49 bass Exp $
+ * $Id: CMServerPoolContext.java,v 1.6 2005/06/07 13:57:33 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/27 11:13:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/07 13:57:33 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 final class CMServerPoolContext extends PoolContext {
@@ -43,6 +43,12 @@ final class CMServerPoolContext extends PoolContext {
 	 */
 	public static final int REFRESH_TIMEOUT = 30;
 	public static final String DATABASE_LOADER_ONLY = "false";
+
+	private CMServerServantManager cmServerServantManager;
+
+	public CMServerPoolContext(final CMServerServantManager cmServerServantManager) {
+		this.cmServerServantManager = cmServerServantManager;
+	}
 
 	public void init() {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY, DATABASE_LOADER_ONLY)).booleanValue();
@@ -74,7 +80,7 @@ final class CMServerPoolContext extends PoolContext {
 					lruMapClass,
 					configurationPoolSize);
 			MeasurementStorableObjectPool.init(
-					new CMServerMeasurementObjectLoader(refreshTimeout),
+					new CMServerMeasurementObjectLoader(refreshTimeout, this.cmServerServantManager),
 					lruMapClass,
 					measurementPoolSize);
 		}
