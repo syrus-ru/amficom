@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.99 2005/06/07 15:42:16 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.100 2005/06/07 16:40:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/06/07 15:42:16 $
+ * @version $Revision: 1.100 $, $Date: 2005/06/07 16:40:41 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -407,6 +407,7 @@ public abstract class StorableObjectPool {
 				if (breakOnLoadError)
 					throw ae;
 				Log.errorException(ae);
+				loadedSet = Collections.EMPTY_SET;
 			}
 			
 			/* logging */
@@ -1075,7 +1076,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.99 $, $Date: 2005/06/07 15:42:16 $
+	 * @version $Revision: 1.100 $, $Date: 2005/06/07 16:40:41 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
