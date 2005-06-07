@@ -1,5 +1,5 @@
 /*-
- * $Id: MClientXMLServantManager.java,v 1.1 2005/06/07 13:28:24 bob Exp $
+ * $Id: MClientXMLServantManager.java,v 1.2 2005/06/07 13:50:42 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,11 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/07 13:28:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/07 13:50:42 $
  * @author $Author: bob $
  * @module commonclient_v1
  */
-public final class MClientXMLServantManager extends XMLClientServantManager implements BaseConnectionManager {
+public final class MClientXMLServantManager extends XMLClientServantManager {
 
 	private MClientXMLServantManager() {
 		// nothing
@@ -29,5 +29,5 @@ public final class MClientXMLServantManager extends XMLClientServantManager impl
 	public CORBAServer getCORBAServer() {
 		// TODO Auto-generated method stub
 		return null;
-	}	
+	}
 }
