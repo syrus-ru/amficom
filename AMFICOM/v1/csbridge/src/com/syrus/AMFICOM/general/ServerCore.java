@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.13 2005/06/05 21:08:05 arseniy Exp $
+ * $Id: ServerCore.java,v 1.14 2005/06/07 13:51:36 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/06/05 21:08:05 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/07 13:51:36 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -157,7 +157,7 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	protected final IDLEntity[] transmitStorableObjectsButIdsCondition(final Identifier_Transferable[] idsT,
+	protected final IDLEntity[] transmitStorableObjectsButIdsByCondition(final Identifier_Transferable[] idsT,
 			final SessionKey_Transferable sessionKeyT,
 			final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
 		try {
