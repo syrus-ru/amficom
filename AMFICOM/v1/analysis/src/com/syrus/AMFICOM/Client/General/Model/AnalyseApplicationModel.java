@@ -1,6 +1,7 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
+import java.awt.*;
 import java.awt.Color;
 import java.awt.Toolkit;
 
@@ -163,6 +164,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 
+		defaults.put(AnalysisResourceKeys.COLOR_PRIMARY_TRACE, Color.BLUE);
         defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED, Color.MAGENTA);
         defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW, Color.RED);
 
@@ -209,6 +211,8 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		defaults.put(AnalysisResourceKeys.COLOR_SCALE_DIGITS, Color.BLACK);
 		defaults.put(AnalysisResourceKeys.COLOR_SELECT, Color.GRAY); 
 		
+		defaults.put(AnalysisResourceKeys.STROKE_NOISE_HISTOGRAMM, new BasicStroke(1.5f));
+		defaults.put(AnalysisResourceKeys.STROKE_DEFAULT, new BasicStroke(1));
 	}
 	/*
 	 * public DataSourceInterface getDataSource(SessionInterface si) { String

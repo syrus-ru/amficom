@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.16 2005/06/03 09:48:34 stas Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.17 2005/06/07 10:03:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,13 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
+import java.awt.*;
+
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/03 09:48:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/07 10:03:22 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -95,5 +97,8 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	TEXT_NM									= "nm";
 	String	TEXT_MT									= "mt";
 	String	TEXT_NO_PATTERN							= "no_pattern";
-	String	TEXT_PATTERN							= "pattern";		
+	String	TEXT_PATTERN							= "pattern";
+	
+	String STROKE_NOISE_HISTOGRAMM = "noise_histogramm_stroke";
+	String STROKE_DEFAULT = "default_stroke";
 }
