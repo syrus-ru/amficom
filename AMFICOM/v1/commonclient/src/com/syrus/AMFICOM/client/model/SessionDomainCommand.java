@@ -88,26 +88,29 @@ public class SessionDomainCommand extends AbstractCommand {
 			}
 		}
 
-		int result = JOptionPane.showOptionDialog(Environment.getActiveWindow(), objComboBox, LangModel
+		int result1 = JOptionPane.showOptionDialog(Environment.getActiveWindow(), objComboBox, LangModel
 				.getString("SessionDomainTitle"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
 			new Object[] { LangModel.getString("buttonSelect"), LangModel.getString("buttonCancel")}, LangModel
 					.getString("buttonSelect"));
-		if (result == JOptionPane.OK_OPTION) {
+		if (result1 == JOptionPane.OK_OPTION) {
 			Domain selectedDomain = (Domain) objComboBox.getSelectedItem();
-			Identifier domainId = selectedDomain.getId();
-			try {
-				LoginManager.selectDomain(domainId);
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																			"Новый домен выбран"));
-				this.dispatcher.firePropertyChange(new ContextChangeEvent(domainId,
-																			ContextChangeEvent.DOMAIN_SELECTED_EVENT));
-			} catch (CommunicationException e) {
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																			"Ошибка соединения!"));
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-						.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
-					JOptionPane.ERROR_MESSAGE, null);
-				return;
+			if (selectedDomain != null) {
+				Identifier domainId = selectedDomain.getId();
+				try {
+					LoginManager.selectDomain(domainId);
+					this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
+																				"Новый домен выбран"));
+					this.dispatcher
+							.firePropertyChange(new ContextChangeEvent(domainId,
+																		ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+				} catch (CommunicationException e) {
+					this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
+																				"Ошибка соединения!"));
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
+							.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
+						JOptionPane.ERROR_MESSAGE, null);
+					return;
+				}
 			}
 		} else {
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
