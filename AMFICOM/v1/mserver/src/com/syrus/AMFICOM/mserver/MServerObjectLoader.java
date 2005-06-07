@@ -1,5 +1,5 @@
 /*
- * $Id: MServerObjectLoader.java,v 1.1 2005/06/06 14:40:32 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.2 2005/06/07 13:23:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,11 +33,11 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/06 14:40:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/07 13:23:18 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
-abstract class MServerObjectLoader extends ObjectLoader {
+final class MServerObjectLoader extends ObjectLoader {
 	protected static Identifier preferredMCMId;
 	protected static Object lock;
 
@@ -45,12 +45,14 @@ abstract class MServerObjectLoader extends ObjectLoader {
 		lock = new Object();
 	}
 
+	private MServerObjectLoader() {
+		assert false;
+	}
 
 
 	/**
-	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.1 $, $Date: 2005/06/06 14:40:32 $
+	 * @version $Revision: 1.2 $, $Date: 2005/06/07 13:23:18 $
 	 * @see MServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.MServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -61,9 +63,8 @@ abstract class MServerObjectLoader extends ObjectLoader {
 	}
 
 	/**
-	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.1 $, $Date: 2005/06/06 14:40:32 $
+	 * @version $Revision: 1.2 $, $Date: 2005/06/07 13:23:18 $
 	 * @see MServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.MServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -203,7 +204,7 @@ abstract class MServerObjectLoader extends ObjectLoader {
 			final Set ids,
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsByConditionProcedure) throws ApplicationException {
-		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIds(condition, ids);
+		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 
 		final Set loadButIds = createLoadButIds(ids, objects);
 		final Set loadedObjects = new HashSet();
