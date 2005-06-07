@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.58 2005/06/07 13:59:04 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.59 2005/06/07 16:40:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/07 13:59:04 $
+ * @version $Revision: 1.59 $, $Date: 2005/06/07 16:40:04 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -226,6 +226,10 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
+	public java.util.Set loadResultsButIds(final StorableObjectCondition condition, final java.util.Set ids) throws ApplicationException {
+		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
+	}
+
 	public java.util.Set loadSetsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SET_ENTITY_CODE,
@@ -241,8 +245,19 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
-	public java.util.Set loadResultsButIds(final StorableObjectCondition condition, final java.util.Set ids) throws ApplicationException {
-		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
+	public java.util.Set loadTestsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+			throws ApplicationException {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TEST_ENTITY_CODE,
+				ids,
+				condition,
+				new TransmitButIdsByConditionProcedure() {
+					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+							Identifier_Transferable[] idsT,
+							SessionKey_Transferable sessionKey,
+							StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+						return ((MServer) server).transmitTestsButIdsByCondition(idsT, conditionT, sessionKey);
+					}
+				});
 	}
 
 	public java.util.Set loadCronTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
@@ -345,11 +360,6 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadModelingsButIds(final StorableObjectCondition condition, final java.util.Set ids) {
-		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
-		return null;
-	}
-
-	public java.util.Set loadTestsButIds(final StorableObjectCondition condition, final java.util.Set ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
 		return null;
 	}
