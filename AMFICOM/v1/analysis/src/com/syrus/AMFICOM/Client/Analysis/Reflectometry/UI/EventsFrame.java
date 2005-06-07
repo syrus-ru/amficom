@@ -166,7 +166,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		jTable.setAllowSorting(false);
 
 		FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());			
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(fontMetrics.stringWidth("WW"));
+		jTable.getColumnModel().getColumn(0).setMinWidth(fontMetrics.stringWidth("WW"));
 		jTable.getColumnModel().getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
 		Dimension bttnSize = (Dimension) UIManager.get(ResourceKeys.SIZE_BUTTON);
 		jTable.getColumnModel().getColumn(1).setPreferredWidth(bttnSize.width);
@@ -176,6 +176,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		setContentPane(mainPanel);
 		this.setResizable(true);
 		this.setClosable(true);
+		this.setMaximizable(true);
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("eventTableTitle"));
 
