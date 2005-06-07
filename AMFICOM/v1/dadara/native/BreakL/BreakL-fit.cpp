@@ -263,10 +263,14 @@ void update_acc_xi2(ACC_XI2 &acc_xi2, double dx, double y0, double f, double th)
  * linkFlags - флаги связывания с соседними участками
  * linkData - данные для связывания с соседними участками
  * noise - величина погрешности (дБ) - если не null, то вместо нее используются error1, error2
+ * xStop - массив X-координат, в которых рекомендуется установка узла ломаной (берется из границ событий);
+ *    установка узлов в этих точках не гарантирована, если найдется лучшая расстановка узлов.
+ *    Координаты в этом массиве должны идти по возрастанию.
+ * nStops - длина массива xStop; если nStops == 0, то xStop не используется и м б null
  */
 void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 	int length, int quick, double error1, double error2, int maxpoints,
-	int linearOnly, int linkFlags, double *linkData, double *noise)
+	int linearOnly, int linkFlags, double *linkData, double *noise, long *xStop, int nStops)
 {
 	//fprintf(stdout, "BreakL_Fit: i0 %d x0 %d len %d q %d  e1 %g e2 %g mp %d lin %d; mf.nPars %d\n",
 	//	i_begin, x_begin, length, quick, error1, error2, maxpoints, linearOnly, mf.getNPars());
@@ -348,10 +352,17 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 			ay[nPts++] = y0;
 			//update_acc_xi2(...); - не нужен, т.к. начинаем строго из точки р/г
 
+			int stopIndex = 0; // текущая поз. в списке xStop
 			for (i = 1; i <= size; i++)
 			{
+				// корректируем stopIndex
+				while (stopIndex < nStops && xStop[stopIndex] < i)
+					stopIndex++;
+				// запрошено ли прерывание отрезка за этой точке?
+				int needStop = stopIndex < nStops && xStop[stopIndex] == i;
+
 				// пробуем провести прямую с учетом i-й точки
-				if (i < size)
+				if (i < size && !needStop)
 				{
 					double mx, my, mxx, mxy, myy;
 					double a;
@@ -794,17 +805,17 @@ void BreakL_FitI (ModelF &mf, double *data0, int i0, int x0, int length)
 
 void BreakL_FitL (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData)
 {
-	BreakL_Fit_int(mf, data0 + i0, x0, length, 0, 0.0, 0.0, 0, 1, linkFlags, linkData, 0);
+	BreakL_Fit_int(mf, data0 + i0, x0, length, 0, 0.0, 0.0, 0, 1, linkFlags, linkData, 0, 0, 0);
 }
 
 void BreakL_Fit  (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,
 	int quick, double error1, double error2, int maxpoints)
 {
-	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, error1, error2, maxpoints, 0, linkFlags, linkData, 0);
+	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, error1, error2, maxpoints, 0, linkFlags, linkData, 0, 0, 0);
 }
 
 void BreakL_Fit2 (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,
-	int quick, double* error)
+	int quick, double* error, long *xStopArr, int nStops)
 {
-	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, 0.0, 0.0, 0, 0, linkFlags, linkData, error + i0);
+	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, 0.0, 0.0, 0, 0, linkFlags, linkData, error + i0, xStopArr, nStops);
 }

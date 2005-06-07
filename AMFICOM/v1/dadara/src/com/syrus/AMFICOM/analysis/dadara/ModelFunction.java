@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.20 $, $Date: 2005/05/01 06:14:13 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/07 16:33:15 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -107,10 +107,11 @@ public class ModelFunction {
 	/**
 	 * Процедура фитировки. Описание остальных параметров см. в nFit1)
 	 * @param error желаемая точность фитировки вдоль кривой
+     * @param xStops точки, в которых рекомендуется сделать изломы (для ломаной)
 	 */
-	private native void nFit3(double y[], int begin, int end, int fitMode,
+	private native void nFit4(double y[], int begin, int end, int fitMode,
 			int linkFlags, double linkData0,
-			double[] error);
+			double[] error, int[] xStops);
 
 	/**
 	 * Получить значение заданного параметра (по его имени)
@@ -334,6 +335,7 @@ public class ModelFunction {
 
 	/**
 	 * Performs fitting
+     * // XXX: unused?
 	 *
 	 * @param y      real r/g data array
 	 * @param begin  starting fitting array index
@@ -346,15 +348,33 @@ public class ModelFunction {
 			double[] noise)
 	{
 	    //System.out.println("fit-3: linkFlags " + linkFlags);
-		nFit3(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0,
-			noise);
+		nFit4(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0,
+			noise, null);
 	}
-	
-	public static ModelFunction createFitedAsBreakL(double[] y, int begin, int end, double[] noise)
+
+    /**
+     * @deprecated use {@link #createFitedAsBreakL(double[], int, int, double[], SimpleReflectogramEvent[])}
+     */
+    public static ModelFunction createFitedAsBreakL(double[] y,
+            int begin, int end,
+            double[] noise)
+    {
+        return createFitedAsBreakL(y, begin, end, noise, null);
+    }
+
+    public static ModelFunction createFitedAsBreakL(double[] y,
+            int begin, int end,
+            double[] noise,
+            SimpleReflectogramEvent[] re)
 	{
+        int[] stops = re != null ? new int[re.length] : null;
+        if (re != null) {
+            for (int i = 0; i < re.length; i++)
+                stops[i] = re[i].getBegin();
+        }
 		ModelFunction mf = createLinear();
-		mf.nFit3(y, begin, end, FITMODE_SET_BREAKL, 0, 0,
-			noise);
+		mf.nFit4(y, begin, end, FITMODE_SET_BREAKL, 0, 0,
+			noise, stops);
 		return mf;
 	}
 
