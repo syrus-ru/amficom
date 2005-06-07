@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.5 2005/06/03 09:36:16 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.6 2005/06/07 12:30:28 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/03 09:36:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/06/07 12:30:28 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -57,8 +57,12 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private static void createMapSchemeSession(LoginRestorer loginRestorer) throws CommunicationException {
 		MClientServantManager mClientServantManager = MClientServantManager.create();
+		ARClientServantManager arClientServantManager = ARClientServantManager.create();
 		MSHClientServantManager mshClientServantManager = MSHClientServantManager.create();
-		ClientPoolContext clientPoolContext = new MSHClientPoolContext(mClientServantManager, mshClientServantManager);
+		ClientPoolContext clientPoolContext = new MSHClientPoolContext(
+				mClientServantManager,
+				arClientServantManager,
+				mshClientServantManager);
 		instance = new ClientSessionEnvironment(mshClientServantManager, clientPoolContext, loginRestorer);
 	}
 
