@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMapViewObjectLoader.java,v 1.2 2005/06/05 18:52:29 arseniy Exp $
+ * $Id: DatabaseMapViewObjectLoader.java,v 1.3 2005/06/07 13:18:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/06/05 18:52:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/07 13:18:51 $
  * @module csbridge_v1
  */
 public class DatabaseMapViewObjectLoader extends DatabaseObjectLoader implements MapViewObjectLoader {
@@ -26,7 +26,7 @@ public class DatabaseMapViewObjectLoader extends DatabaseObjectLoader implements
 	}
 
 	public final Set loadMapViewsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids); 
+		return loadStorableObjectsButIdsByCondition(condition, ids); 
 	}
 
 	public final void saveMapViews(final Set objects, final boolean force) throws ApplicationException {

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseSchemeObjectLoader.java,v 1.8 2005/06/03 15:23:58 arseniy Exp $
+ * $Id: DatabaseSchemeObjectLoader.java,v 1.9 2005/06/07 13:18:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/06/03 15:23:58 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/07 13:18:51 $
  * @module csbridge_v1
  */
 public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements SchemeObjectLoader {
@@ -26,7 +26,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadCableChannelingItemsButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadPathElements(Set ids) throws ApplicationException {
@@ -34,7 +34,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadPathElementsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeCableLinks(Set ids) throws ApplicationException {
@@ -42,7 +42,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeCableLinksButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeCablePorts(Set ids) throws ApplicationException {
@@ -50,7 +50,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeCablePortsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeCableThreads(Set ids) throws ApplicationException {
@@ -58,7 +58,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeCableThreadsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeDevices(Set ids) throws ApplicationException {
@@ -66,7 +66,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeDevicesButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeElements(Set ids) throws ApplicationException {
@@ -74,7 +74,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeElementsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeLinks(Set ids) throws ApplicationException {
@@ -82,7 +82,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeLinksButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeMonitoringSolutions(Set ids) throws ApplicationException {
@@ -90,7 +90,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeMonitoringSolutionsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeOptimizeInfoRtus(Set ids) throws ApplicationException {
@@ -98,7 +98,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoRtusButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeOptimizeInfos(Set ids) throws ApplicationException {
@@ -106,7 +106,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfosButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeOptimizeInfoSwitches(Set ids) throws ApplicationException {
@@ -114,7 +114,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeOptimizeInfoSwitchesButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemePaths(Set ids) throws ApplicationException {
@@ -122,7 +122,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemePathsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemePorts(Set ids) throws ApplicationException {
@@ -130,7 +130,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemePortsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeProtoElements(Set ids) throws ApplicationException {
@@ -138,7 +138,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoElementsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemeProtoGroups(Set ids) throws ApplicationException {
@@ -146,7 +146,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemeProtoGroupsButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public Set loadSchemes(Set ids) throws ApplicationException {
@@ -154,7 +154,7 @@ public class DatabaseSchemeObjectLoader extends DatabaseObjectLoader implements 
 	}
 
 	public Set loadSchemesButIds(StorableObjectCondition storableObjectCondition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(storableObjectCondition, ids);
+		return loadStorableObjectsButIdsByCondition(storableObjectCondition, ids);
 	}
 
 	public void saveCableChannelingItems(Set objects, boolean force) throws ApplicationException {

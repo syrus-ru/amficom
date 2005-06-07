@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.9 2005/06/03 15:23:58 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.10 2005/06/07 13:18:51 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/03 15:23:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/07 13:18:51 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -87,63 +87,63 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 	/* Load multiple objects but ids*/
 
 	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadMeasurementsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadAnalysesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadEvaluationsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadModelingsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadResultsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadTestsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public java.util.Set loadCronTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 	
 	public Set loadIntervalsTemporalPatternsButIds(	StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadPeriodicalTemporalPatternsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	/* Save multiple objects*/

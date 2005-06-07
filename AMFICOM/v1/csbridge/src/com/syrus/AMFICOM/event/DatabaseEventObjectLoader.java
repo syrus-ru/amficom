@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.9 2005/06/03 15:23:58 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.10 2005/06/07 13:18:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/03 15:23:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/07 13:18:51 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -37,15 +37,15 @@ public class DatabaseEventObjectLoader extends DatabaseObjectLoader implements E
 	/* Load multiple objects but ids*/
 
 	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	/* Save multiple objects*/

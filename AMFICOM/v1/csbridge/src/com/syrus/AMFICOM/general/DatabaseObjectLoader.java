@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.12 2005/06/06 14:33:48 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.13 2005/06/07 13:18:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/06 14:33:48 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/07 13:18:51 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -37,7 +37,7 @@ public abstract class DatabaseObjectLoader extends ObjectLoader {
 		return retrieveFromDatabase(database, ids);
 	}
 
-	public static final Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public static final Set loadStorableObjectsButIdsByCondition(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);

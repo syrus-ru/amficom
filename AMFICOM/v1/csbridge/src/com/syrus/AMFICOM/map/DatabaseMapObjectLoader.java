@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMapObjectLoader.java,v 1.7 2005/06/03 15:23:58 arseniy Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.8 2005/06/07 13:18:51 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/03 15:23:58 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/07 13:18:51 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -57,39 +57,39 @@ public class DatabaseMapObjectLoader extends DatabaseObjectLoader implements Map
 	}
 
 	public Set loadCollectorsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadMapsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadMarksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadNodeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadPhysicalLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 	
 	public Set loadSiteNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadSiteNodeTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadTopologicalNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public void saveCollectors(final Set objects, final boolean force) throws ApplicationException {

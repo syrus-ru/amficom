@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.8 2005/06/03 15:23:58 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.9 2005/06/07 13:18:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/03 15:23:58 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/07 13:18:51 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -87,63 +87,63 @@ public class DatabaseConfigurationObjectLoader extends DatabaseObjectLoader impl
 	/* Load multiple objects but ids*/
 
 	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return loadStorableObjectsButIds(condition, ids);
+		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
 //############################################################################
