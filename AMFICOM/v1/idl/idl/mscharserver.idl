@@ -1,13 +1,13 @@
 /*-
- * $Id: mshserver.idl,v 1.15 2005/06/03 17:57:41 bass Exp $
+ * $Id: mscharserver.idl,v 1.1 2005/06/07 16:35:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-#ifndef MSHSERVER_IDL
-#define MSHSERVER_IDL
+#ifndef MSCHARSERVER_IDL
+#define MSCHARSERVER_IDL
 
 #include "map.idl"
 #include "scheme.idl"
@@ -15,9 +15,26 @@
 module com {
 	module syrus {
 		module AMFICOM {
-			module mshserver {
+			module mscharserver {
 				module corba {
-					interface MSHServer: general::corba::CommonServer {
+					interface MscharServer: general::corba::CommonServer {
+						general::corba::StorableObjectSeq receiveImageResources(
+								in resource::corba::ImageResourceSeq imageResources,
+								in boolean force,
+								in security::corba::SessionKey sessionKey)						 		   
+							raises (general::corba::AMFICOMRemoteException);
+
+						resource::corba::ImageResourceSeq transmitImageResources(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey)
+							raises (general::corba::AMFICOMRemoteException);
+
+						resource::corba::ImageResourceSeq transmitImageResourcesButIdsCondition(
+								in general::corba::IdentifierSeq ids,
+								in security::corba::SessionKey sessionKey,
+								in general::corba::StorableObjectCondition condition)
+							raises (general::corba::AMFICOMRemoteException);
+
 /*-************************************************************
  * Map -- receive multiple objects.                           *
  **************************************************************/
@@ -513,4 +530,4 @@ module com {
 	};
 };
 
-#endif // MSHSERVER_IDL
+#endif // MSHARSERVER_IDL
