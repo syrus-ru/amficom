@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.3 2005/06/03 09:04:10 arseniy Exp $
+ * $Id: ClientServantManager.java,v 1.4 2005/06/07 13:28:24 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/03 09:04:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/06/07 13:28:24 $
+ * @author $Author: bob $
  * @module commonclient_v1
  */
 abstract class ClientServantManager extends VerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
@@ -49,7 +49,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		this.commonServerServantName = commonServerServantName;
 	}
 
-	public final LoginServer getLoginServerReference() throws CommunicationException {
+	public LoginServer getLoginServerReference() throws CommunicationException {
 		try {
 			return (LoginServer) super.getVerifiableReference(this.loginServerServantName);
 		}
@@ -62,7 +62,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		}
 	}
 
-	public final EventServer getEventServerReference() throws CommunicationException {
+	public EventServer getEventServerReference() throws CommunicationException {
 		try {
 			return (EventServer) super.getVerifiableReference(this.eventServerServantName);
 		}
@@ -75,7 +75,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		}
 	}
 
-	public final IdentifierGeneratorServer getIGSReference() throws CommunicationException {
+	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
 		try {
 			return (IdentifierGeneratorServer) super.getVerifiableReference(this.commonServerServantName);
 		}
@@ -88,7 +88,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		}
 	}
 
-	public final CommonServer getServerReference() throws CommunicationException {
+	public CommonServer getServerReference() throws CommunicationException {
 		try {
 			return (CommonServer) super.getVerifiableReference(this.commonServerServantName);
 		}
