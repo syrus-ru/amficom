@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTrace.java,v 1.9 2005/05/27 06:15:25 saa Exp $
+ * $Id: ModelTrace.java,v 1.10 2005/06/07 14:03:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.9 $, $Date: 2005/05/27 06:15:25 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/07 14:03:50 $
  * @module
  */
 public abstract class ModelTrace extends ModelTraceRange
@@ -40,36 +40,4 @@ public abstract class ModelTrace extends ModelTraceRange
 	{
 		return getYArray(0, getLength());
 	}
-
-    /**
-     * Расширяет контракт {@link ModelTraceRange} на значения иксов,
-     * выходящих за область определения кривой.
-     * 
-     * @param x0 начальный икс, должен быть >=0
-     * @param N количество иксов
-     * @return значения игреков на запрошенном диапазоне иксов x0 .. x0+N-1,
-     * полагая нулевыми значения за пределами области определения.
-     * (в принципе, обнулять не обязательно, но так почему-то принято)
-     * 
-     * @todo remove as outdated (see {@link ModelTraceRange})
-     */
-    private double[] getYArrayZeroPad1(int x0, int N)
-    {
-        if (N <= 0) // на случай отрицательного N, возвращаем пустой массив
-            return new double[0];
-        int toEnd = getLength() - x0;
-        if (toEnd < 0)
-            toEnd = 0;
-        if (N <= toEnd)
-            return getYArray(x0, N);
-        else
-        {
-            double[] temp = getYArray(x0, toEnd);
-            double[] ret = new double[N];
-            System.arraycopy(temp, 0, ret, 0, toEnd);
-            for (int i = toEnd; i < N; i++)
-                ret[i] = 0;
-            return ret;
-        }
-    }
 }
