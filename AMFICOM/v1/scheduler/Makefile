@@ -22,6 +22,9 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administratio
 $(call checkenve,JAVA_HOME)
 
 $(LIBNAME): .mach
+	$(CP) \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/Schedule/UI/parametersPanel.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/Client/Schedule/UI
 	mkdir -p $(CLASSDIR)/com/syrus/AMFICOM/Client/General/lang
 	$(CP) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/lang/*.properties) \
