@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.9 2005/05/24 15:18:12 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.10 2005/06/08 10:53:09 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,17 +13,17 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/24 15:18:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/06/08 10:53:09 $
+ * @author $Author: bob $
  * @module csbridge_v1
  */
 public abstract class BaseSessionEnvironment {
 	protected BaseConnectionManager baseConnectionManager;
-	private PoolContext poolContext;
-	private Date sessionEstablishDate;
-	private boolean sessionEstablished;
+	protected PoolContext poolContext;
+	protected Date sessionEstablishDate;
+	protected boolean sessionEstablished;
 
-	private class LogoutShutdownHook extends Thread {
+	protected class LogoutShutdownHook extends Thread {
 
 		public void run() {
 			try {
@@ -36,7 +36,7 @@ public abstract class BaseSessionEnvironment {
 
 	}
 
-	private LogoutShutdownHook logoutShutdownHook;
+	protected LogoutShutdownHook logoutShutdownHook;
 
 	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
 			final PoolContext poolContext,
@@ -90,7 +90,7 @@ public abstract class BaseSessionEnvironment {
 		this.sessionEstablished = false;
 	}
 
-	void logout0() throws CommunicationException, LoginException {
+	protected void logout0() throws CommunicationException, LoginException {
 		IdentifierPool.serialize();
 		this.poolContext.serialize();
 		LoginManager.logout();
