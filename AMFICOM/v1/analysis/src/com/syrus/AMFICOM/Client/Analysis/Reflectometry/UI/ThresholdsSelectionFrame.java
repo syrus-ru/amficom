@@ -108,16 +108,17 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
 
 		this.tModel = new ThresholdTableModel(
-			new String[] { LangModelAnalyse.getString("thresholdsKey") },
 			new String[] {
+					"",
 					LangModelAnalyse.getString("thresholdsUpWarning"),
 					LangModelAnalyse.getString("thresholdsUpAlarm"),
 					LangModelAnalyse.getString("thresholdsDownWarning"),
 					LangModelAnalyse.getString("thresholdsDownAlarm")},
 			new int[] { },
-			null
+			new Object[0][0]
 		);
 		this.jTable = new ATable(this.tModel);
+		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(200);
 		
 		analysisInitialButton = new JButton();
 		analysisInitialButton.setMargin(UIManager.getInsets(
@@ -185,11 +186,8 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 				if (ted != null)
 				{
 					ted.increaseValues();
-					int selectedColumn = jTable.getSelectedColumn();
 					dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-					jTable.setColumnSelectionInterval(selectedColumn,
-						selectedColumn);
 				}
 			}
 		});
@@ -205,12 +203,9 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 				ModelTraceManager.ThreshEditor ted = getCurrentTED();
 				if (ted != null)
 				{
-					int selectedColumn = jTable.getSelectedColumn();
 					ted.decreaseValues();
 					dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-					jTable.setColumnSelectionInterval(selectedColumn,
-						selectedColumn);
 				}
 			}
 		});
@@ -251,64 +246,10 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		jToolBar.add(previuosEventButton);
 		jToolBar.add(nextEventButton);
 
-//		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-//		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-//		this.jTable.setMinimumSize(new Dimension(200, 213));
 		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.jTable.setCellSelectionEnabled(false);
-
-		this.jTable.setColumnSelectionAllowed(true);
-		this.jTable.setRowSelectionAllowed(false);		
 		
 		this.jTable.setDefaultRenderer(Object.class,
-			new ADefaultTableCellRenderer.ObjectRenderer() {
-
-			// (1) hides 'focus' - just because its color overrides selection
-			// colot
-			// (2) suppress visualization of selection of 1st column
-			public Component getTableCellRendererComponent(	JTable table,
-															Object value,
-															boolean isSelected1,
-															boolean hasFocus,
-															int rowIndex,
-															int vColIndex) {
-				int mColIndex = table.convertColumnIndexToModel(vColIndex);
-
-				if (mColIndex == 0)
-					isSelected1 = false;
-				hasFocus = false;
-				return super.getTableCellRendererComponent(table, value,
-					isSelected1, hasFocus, rowIndex, vColIndex);
-			}
-		});
-		
-		this.jTable.getTableHeader().addMouseListener(new MouseAdapter() {
-
-			public void mouseClicked(MouseEvent evt) {
-				/* recipe get at http://www.javaalmanac.com/egs/javax.swing.table/ColHeadEvent.html */
-				JTable table = ((JTableHeader) evt.getSource()).getTable();
-				TableColumnModel colModel = table.getColumnModel();
-
-				// The index of the column whose header was clicked
-				int vColIndex = colModel.getColumnIndexAtX(evt.getX());
-				int mColIndex = table.convertColumnIndexToModel(vColIndex);
-
-				// Return if not clicked on any column header
-				if (vColIndex == -1) { return; }
-
-				// Determine if mouse was clicked between column heads
-				Rectangle headerRect =
-					table.getTableHeader().getHeaderRect(vColIndex);
-				if (vColIndex == 0) {
-					headerRect.width -= 3; // Hard-coded constant
-				} else {
-					headerRect.grow(-3, 0); // Hard-coded constant
-				}
-				if (headerRect.contains(evt.getX(), evt.getY())) {
-					table.setColumnSelectionInterval(mColIndex, mColIndex);
-				}
-			}
-		});
+			new ADefaultTableCellRenderer.ObjectRenderer());
 
 		scrollPane.setViewport(viewport);
 		scrollPane.getViewport().add(this.jTable);
@@ -343,16 +284,16 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
         if (teds == null)
             return null;
 
-        // сначала пытаемся выбрать редактор для текущего столбца
-		int current_th = this.jTable.getSelectedColumn() - 1;
+        // сначала пытаемся выбрать редактор для текущей строки
+		int current_th = this.jTable.getSelectedRow();
         if (current_th >= 0 && current_th < teds.length)
                 return teds[current_th];
 
-        // если текущего столбца нет, выбираем порог по умолчанию
+        // если текущей строки нет, выбираем порог по умолчанию
         current_th = ModelTraceManager.getDefaultThreshEditorIndex(teds);
         if (current_th >= 0) {
             // и делаем его текущим
-            this.jTable.changeSelection(0, current_th + 1, false, false);
+            this.jTable.changeSelection(current_th, 0, false, true);
             return teds[current_th];
         }
 
@@ -379,63 +320,47 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 	void updateThresholds()
 	{
+		int selected = jTable.getSelectedRow();
 		ThreshEditor[] te = getTeds();
         if (te == null)
             te = new ThreshEditor[0];
 
-		String[] pColumns = new String[te.length + 1];
-		pColumns[0] = LangModelAnalyse.getString("thresholdsKey");
-		for (int i = 1; i < pColumns.length; i++)
+       int n = te.length;
+    Object[][] pData = new Object[n][5];
+    for (int i = 0; i < n; i++)
 		{
-			switch(te[i - 1].getType())
+			switch(te[i].getType())
 			{
 			case ModelTraceManager.ThreshEditor.TYPE_A:
-				pColumns[i] = LangModelAnalyse.getString("thresholdsAmplitude");
+				pData[i][0] = LangModelAnalyse.getString("thresholdsAmplitude");
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_L:
-				pColumns[i] = LangModelAnalyse.getString("thresholdsHeight");
+				pData[i][0] = LangModelAnalyse.getString("thresholdsHeight");
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_DXF:
-				pColumns[i] = LangModelAnalyse.getString("thresholdsDXF");
+				pData[i][0] = LangModelAnalyse.getString("thresholdsDXF");
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_DXT:
-				pColumns[i] = LangModelAnalyse.getString("thresholdsDXT");
+				pData[i][0] = LangModelAnalyse.getString("thresholdsDXT");
 				break;
 			// default... - @todo
 			}
+			for (int j = 1; j < 5; j++)
+				pData[i][j] = new Double(MathRef.round_4(te[i].getValue(j - 1)));
 		}
-
-		Object[][] pData = new Object[4][];
-		for (int k = 0; k < 4; k++)
-		{
-			pData[k] = new Double[te.length];
-            // XXX: round values to be displayed with 0.0001 precision
-			for (int i = 0; i < te.length; i++)
-				((Double[] )pData[k])[i] = new Double(
-                        MathRef.round_4(te[i].getValue(k)));
-		}
-		
-		tModel.setColumns(pColumns);
 		tModel.updateData(pData);
-		
-		int n = te.length + 1;
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(200);
-		for (int i = 1; i < n; i++) {
-			jTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-		}
-			
+		if (selected != -1 && selected <= jTable.getRowCount())
+			jTable.getSelectionModel().setSelectionInterval(selected, selected);
 	}
 
 	class ThresholdTableModel extends AbstractTableModel {
 		private String[] columns;
 		private Object[][] values;
-		private String[] rows;
 		int[] editable;
 		public ThresholdTableModel(String[] columns,
-				String[] rows, int[] editable, Object[][] data) {
+				int[] editable, Object[][] data) {
 			this.columns = columns;
 			this.values = data;
-			this.rows = rows;
 			this.editable = editable;
 		}
 		
@@ -457,8 +382,8 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
                 return; // XXX: can it happen?
 			try
 			{
-				te[col - 1].setValue(
-						row,
+				te[row].setValue(
+						col - 1,
 						Double.valueOf(value.toString()).doubleValue());
 				dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
@@ -476,20 +401,12 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		public int getRowCount()
 		{
-			return rows.length;
+			return values.length;
 		}
 
 		public Object getValueAt(int rowIndex, int columnIndex)
 		{
-			if (columnIndex == 0)
-				return rows[rowIndex];
-			else
-			{
-				if (values == null)
-					return ""; // XXX
-				else
-					return values[rowIndex][columnIndex - 1];
-			}
+			return values[rowIndex][columnIndex];
 		}
 
 		public boolean isCellEditable(int row, int column)
