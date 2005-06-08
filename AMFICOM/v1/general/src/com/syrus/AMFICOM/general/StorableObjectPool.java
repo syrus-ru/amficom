@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.101 2005/06/08 09:34:51 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.102 2005/06/08 09:37:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/06/08 09:34:51 $
+ * @version $Revision: 1.102 $, $Date: 2005/06/08 09:37:14 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -220,6 +220,29 @@ public abstract class StorableObjectPool {
 				+ ObjectGroupEntities.codeToString(groupCode) + " is not initialized");
 	}
 
+	/**
+	 * Break on load error
+	 * @param ids
+	 * @param condition
+	 * @param useLoader
+	 * @return Set of StorableObject with identifiers not in set, matching condition
+	 * @throws ApplicationException
+	 */
+	public static Set getStorableObjectsByConditionButIds(final Set ids,
+			final StorableObjectCondition condition,
+			final boolean useLoader) throws ApplicationException {
+		return getStorableObjectsByConditionButIds(ids, condition, useLoader, true);
+	}
+
+	/**
+	 * 3-d parameter controls if break on load error
+	 * @param ids
+	 * @param condition
+	 * @param useLoader
+	 * @param breakOnLoadError
+	 * @return Set of StorableObject with identifiers not in set, matching condition
+	 * @throws ApplicationException
+	 */
 	public static Set getStorableObjectsByConditionButIds(final Set ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader,
@@ -1095,7 +1118,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.101 $, $Date: 2005/06/08 09:34:51 $
+	 * @version $Revision: 1.102 $, $Date: 2005/06/08 09:37:14 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
