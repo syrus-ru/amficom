@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharClientServantManager.java,v 1.1 2005/06/07 17:58:14 bass Exp $
+ * $Id: MscharClientServantManager.java,v 1.2 2005/06/08 09:45:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/07 17:58:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/08 09:45:03 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public final class MscharClientServantManager extends ClientServantManager {
@@ -33,8 +33,8 @@ public final class MscharClientServantManager extends ClientServantManager {
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-		final String mscharServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSCHAR_SERVER_PROCESS_CODENAME,
-				ServerProcessWrapper.MSCHAR_SERVER_PROCESS_CODENAME);
+		final String mscharServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSCHARSERVER_PROCESS_CODENAME,
+				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
 
 		final MscharClientServantManager mscharClientServantManager = new MscharClientServantManager(corbaServer,
 				loginServerServantName,
