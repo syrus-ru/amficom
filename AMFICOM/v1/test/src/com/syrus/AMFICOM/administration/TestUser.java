@@ -1,5 +1,5 @@
 /*
- * $Id: TestUser.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: TestUser.java,v 1.4 2005/06/08 09:43:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,10 +17,10 @@ import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/08 09:43:00 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -33,7 +33,7 @@ public final class TestUser extends CommonTest {
 		return suiteWrapper(TestUser.class);
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void _testCreateInstance() throws ApplicationException {
 //	Retrieve sys user
 		TypicalCondition tc = new TypicalCondition(UserWrapper.SYS_LOGIN,
 				OperationSort.OPERATION_EQUALS,
@@ -77,7 +77,7 @@ public final class TestUser extends CommonTest {
 
 //	5
 		User mshserverUser = User.createInstance(sysUser.getId(),
-				UserWrapper.MSHSERVER_LOGIN,
+				UserWrapper.MSCHARSERVER_LOGIN,
 				UserSort.USER_SORT_SERVERPROCESS,
 				"mЫsh-server",
 				"Need for Map-Scheme Server");
@@ -85,5 +85,15 @@ public final class TestUser extends CommonTest {
 
 //	save all
 		StorableObjectPool.flush(ObjectEntities.USER_ENTITY_CODE, true);
+	}
+
+	public void testUpdate() throws ApplicationException {
+		final TypicalCondition tc = new TypicalCondition(UserWrapper.MSCHARSERVER_LOGIN,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.USER_ENTITY_CODE,
+				UserWrapper.COLUMN_LOGIN);
+		final Set set = StorableObjectPool.getStorableObjectsByCondition(tc, true);
+		final User user = (User) set.iterator().next();
+		System.out.println("User: " + user.getLogin() + ", '" + user.getId() + "'");
 	}
 }
