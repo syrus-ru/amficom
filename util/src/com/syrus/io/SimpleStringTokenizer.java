@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleStringTokenizer.java,v 1.3 2005/05/18 10:49:17 bass Exp $
+ * $Id: SimpleStringTokenizer.java,v 1.4 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,12 @@ package com.syrus.io;
 
 import java.util.StringTokenizer;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/08 13:49:06 $
+ * @deprecated
+ * @module util
+ */
 public class SimpleStringTokenizer extends StringTokenizer
 {
 

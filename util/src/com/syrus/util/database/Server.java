@@ -1,5 +1,5 @@
-/*
- * $Id: Server.java,v 1.4 2005/05/18 10:49:17 bass Exp $
+/*-
+ * $Id: Server.java,v 1.5 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,14 @@ package com.syrus.util.database;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import com.syrus.util.Log;
-import com.syrus.util.ServerLogger;
 
-public class Server {
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/08 13:49:06 $
+ * @deprecated
+ * @module util
+ */
+public final class Server {
 	private static String applicationName;
 	private static String internetAddress;
 
@@ -44,7 +49,7 @@ public class Server {
 			catch (UnknownHostException e) {
 				internetAddress = "INETADDR_UNKNOWN";
 			}
-		Log.initialize(new ServerLogger(applicationName, internetAddress));
+		Log.initialize(new com.syrus.util.ServerLogger(applicationName, internetAddress));
 		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ConsoleErrorHandler.java,v 1.4 2005/05/18 10:49:18 bass Exp $
+ * $Id: ConsoleErrorHandler.java,v 1.5 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,8 @@ import java.sql.SQLException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 10:49:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/08 13:49:06 $
+ * @deprecated
  * @module util
  */
 public final class ConsoleErrorHandler extends ErrorHandler {

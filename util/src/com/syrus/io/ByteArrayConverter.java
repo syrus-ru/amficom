@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayConverter.java,v 1.5 2005/05/18 10:49:17 bass Exp $
+ * $Id: ByteArrayConverter.java,v 1.6 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,11 @@
 package com.syrus.io;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/18 10:49:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/08 13:49:06 $
  * @author $Author: bass $
  * @module util
  */
-public class ByteArrayConverter
-{
+public final class ByteArrayConverter {
   private byte[] b;
 
   public ByteArrayConverter(byte[] array)

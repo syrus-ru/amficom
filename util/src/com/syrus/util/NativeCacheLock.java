@@ -1,5 +1,5 @@
 /*
- * $Id: NativeCacheLock.java,v 1.5 2005/05/18 10:49:17 bass Exp $
+ * $Id: NativeCacheLock.java,v 1.6 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,12 @@
 
 package com.syrus.util;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/08 13:49:06 $
+ * @deprecated
+ * @module util
+ */
 public class NativeCacheLock implements CacheLock {
 	private static final String LOCK_POSTFIX = ".sm.USER";
 	private static boolean fileLockLoaded = false;

@@ -1,5 +1,5 @@
 /*
- * $Id: IIOPConnectionManager.java,v 1.4 2005/05/18 10:49:17 bass Exp $
+ * $Id: IIOPConnectionManager.java,v 1.5 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,9 @@ import java.net.*;
 import java.util.prefs.Preferences;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 10:49:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/08 13:49:06 $
  * @author $Author: bass $
+ * @deprecated
  * @module util
  */
 public final class IIOPConnectionManager {

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreReader.java,v 1.8 2005/05/18 10:49:17 bass Exp $
+ * $Id: BellcoreReader.java,v 1.9 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/18 10:49:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/08 13:49:06 $
  * @author $Author: bass $
  * @module util
  */
-public class BellcoreReader extends DataReader {
+public final class BellcoreReader extends DataReader {
 	BellcoreStructure bs;
 	ByteArrayInputStream bais;
 	IntelDataInputStream idis;

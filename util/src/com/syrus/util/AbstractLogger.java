@@ -1,5 +1,5 @@
 /*
- * $Id: StolenLogger.java,v 1.8 2005/05/18 10:49:17 bass Exp $
+ * $Id: AbstractLogger.java,v 1.1 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,12 @@ import java.io.FileWriter;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-public abstract class StolenLogger implements Logger {
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2005/06/08 13:49:06 $
+ * @module util
+ */
+abstract class AbstractLogger implements Logger {
 	static final String DELIMITER = ".";
 	static final String ERROR = "error";
 	static final String DEBUG = "debug";
@@ -44,7 +49,9 @@ public abstract class StolenLogger implements Logger {
 	private PrintWriter errorLog;
 	private PrintWriter debugLog;
 
-	public StolenLogger(String appName, String hostName) {
+	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "/logs";
+
+	public AbstractLogger(String appName, String hostName) {
 		this.appName = (appName != null)?appName:DEFAULT_APPNAME;
 		this.hostName = (hostName != null)?hostName:DEFAULT_HOSTNAME;
 		this.init();
@@ -146,8 +153,8 @@ public abstract class StolenLogger implements Logger {
 		String d = sdf.format(new Date());
 		if(!currd.equals(d)) {
 			this.logDate = new Date();
-			this.errorLogFileName = this.createLogFileName(StolenLogger.ERROR);
-			this.debugLogFileName = this.createLogFileName(StolenLogger.DEBUG);
+			this.errorLogFileName = this.createLogFileName(ERROR);
+			this.debugLogFileName = this.createLogFileName(DEBUG);
 		}
 	}
 
@@ -162,10 +169,10 @@ public abstract class StolenLogger implements Logger {
 	}
 
 	private String createLogFileName(String logType) {
-				return this.getLogPath(logType) +	File.separator +
-								logType +	DELIMITER +
-								this.appName + DELIMITER +
-								this.hostName + ".log";
+		return this.getLogPath(logType) +	File.separator +
+				logType +	DELIMITER +
+				this.appName + DELIMITER +
+				this.hostName + ".log";
 	}
 
 	private String getLogPath(String logType) {

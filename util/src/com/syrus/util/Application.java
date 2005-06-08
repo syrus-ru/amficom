@@ -1,5 +1,5 @@
 /*
- * $Id: Application.java,v 1.5 2005/05/18 10:49:17 bass Exp $
+ * $Id: Application.java,v 1.6 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.util;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class Application {
+public final class Application {
 	private static String applicationName;
 	private static String internetAddress;
 

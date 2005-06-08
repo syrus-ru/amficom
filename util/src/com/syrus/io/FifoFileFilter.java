@@ -1,5 +1,5 @@
 /*-
- * $Id: FifoFileFilter.java,v 1.1 2005/05/18 09:42:49 max Exp $
+ * $Id: FifoFileFilter.java,v 1.2 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,11 @@ import java.io.File;
 import java.io.FileFilter;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/18 09:42:49 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/06/08 13:49:06 $
+ * @author $Author: bass $
  * @module util
  */
-public class FifoFileFilter implements FileFilter {
+public final class FifoFileFilter implements FileFilter {
 
 	public boolean accept(File pathname) {
 		String fileName = pathname.getName();

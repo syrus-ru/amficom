@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayCollector.java,v 1.4 2005/03/16 16:29:26 arseniy Exp $
+ * $Id: ByteArrayCollector.java,v 1.5 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
-public class ByteArrayCollector {
+public final class ByteArrayCollector {
 	ByteArrayOutputStream baos;
 	ByteArrayInputStream bais;
 	DataOutputStream dos;

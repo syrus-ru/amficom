@@ -1,5 +1,5 @@
 /*
- * $Id: NameServiceIORPrinter.java,v 1.5 2005/05/18 10:49:17 bass Exp $
+ * $Id: NameServiceIORPrinter.java,v 1.6 2005/06/08 13:49:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,8 @@ import org.omg.CORBA.*;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/18 10:49:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/08 13:49:06 $
+ * @deprecated
  * @module util
  */
 final class NameServiceIORPrinter {
