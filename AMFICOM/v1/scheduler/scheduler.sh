@@ -20,6 +20,7 @@ $LIB/resource.jar:\
 $LIB/csbridge.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
+$LIB/leserver_interface.jar:\
 $LIB/cmserver_interface.jar:\
 $LIB/util.jar
 
