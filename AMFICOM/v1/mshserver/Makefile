@@ -19,7 +19,7 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDLJ)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/jdom.jar:$(EXTLIBDIR)/micsys.jar:$(EXTLIBDIR)/miutil.jar:$(EXTLIBDIR)/mxj.jar:$(EXTLIBDIR)/mxjgeom.jar
 
 
