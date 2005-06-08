@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.ServletCommandNames;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.map.TopologicalImageCache;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer
@@ -50,7 +51,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	    try {
             //		this.imageCache = new TopologicalImageCache(this, new MapInfoServletMapImageLoader(this));
             this.imageCache = new TopologicalImageCache(this, new MapInfoCorbaMapImageLoader(this));
-        } catch (IOException e) {
+        } catch (CommunicationException e) {
             throw new MapDataException("TopologicalImageCache is not initialized.");
         }        
 	}
