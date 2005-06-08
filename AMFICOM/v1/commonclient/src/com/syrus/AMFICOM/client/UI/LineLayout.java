@@ -11,6 +11,9 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 
+/**
+ * @deprecated as an invalid evolution branch
+ */
 public class LineLayout implements LayoutManager {
 
 	private static Dimension dimension;

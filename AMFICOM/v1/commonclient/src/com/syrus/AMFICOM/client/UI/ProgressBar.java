@@ -10,6 +10,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 
 /**
+ * @deprecated as an invalid evolution branch
  * <p>Title: </p>
  * <p>Description: Прогрессбар на манер нетскейповского</p>
  * <p>Copyright: Copyright (c) 2004</p>
@@ -17,7 +18,6 @@ import javax.swing.JPanel;
  * @author Песковский Пётр
  * @version 1.0
  */
-
 public class ProgressBar extends JPanel
 {
 	private static final long serialVersionUID = 3258132436071429426L;

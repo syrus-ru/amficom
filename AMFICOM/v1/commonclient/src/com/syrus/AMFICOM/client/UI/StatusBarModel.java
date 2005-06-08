@@ -66,14 +66,16 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
 import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+//import oracle.jdeveloper.layout.XYLayout;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.LangModel;
 
 
-
+/**
+ * @deprecated as an invalid evolution branch
+ */
 public class StatusBarModel extends JPanel implements PropertyChangeListener
 {
 	private static final long serialVersionUID = 4049354223311403313L;
@@ -250,7 +252,7 @@ public class StatusBarModel extends JPanel implements PropertyChangeListener
 	int fieldNum;
 	public static final int MAX_FIELDS = 8;
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
-	XYLayout xYLayout1 = new XYLayout();
+//	XYLayout xYLayout1 = new XYLayout();
 
 	boolean dragging = false;
 	StatusBarField draggingSbf;
