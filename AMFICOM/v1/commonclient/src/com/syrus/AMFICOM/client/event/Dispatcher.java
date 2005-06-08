@@ -13,7 +13,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.3 $, $Date: 2005/05/27 12:47:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/08 10:48:56 $
  * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -69,23 +69,25 @@ public class Dispatcher {
 
 		if (listeners != null && !listeners.isEmpty()) {
 			Object source = event.getSource();
-			for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-				PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+			synchronized (listeners) {
+				for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
+					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
 
-				/*
-				 * yeah, really compare references, skip sending message to
-				 * source
-				 */
-				if (!canSendToSelf && listener == source) {
-					Log.debugMessage("Dispatcher.firePropertyChange | propertyName: " + propertyName
-							+ ", listener == source (" + source.getClass().getName() + ")", Log.DEBUGLEVEL10);
-					continue;
+					/*
+					 * yeah, really compare references, skip sending message to
+					 * source
+					 */
+					if (!canSendToSelf && listener == source) {
+						Log.debugMessage("Dispatcher.firePropertyChange | propertyName: " + propertyName
+								+ ", listener == source (" + source.getClass().getName() + ")", Log.DEBUGLEVEL10);
+						continue;
+					}
+
+					Log.debugMessage("Dispatcher.firePropertyChange | propertyName: " + propertyName + ", listener: "
+							+ listener.getClass().getName(), Log.DEBUGLEVEL10);
+					listener.propertyChange(event);
+
 				}
-
-				Log.debugMessage("Dispatcher.firePropertyChange | propertyName: " + propertyName + ", listener: "
-						+ listener.getClass().getName(), Log.DEBUGLEVEL10);
-				listener.propertyChange(event);
-
 			}
 		}
 	}
