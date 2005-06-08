@@ -163,7 +163,7 @@ public class TunnelLayout implements PropertyChangeListener {
 		int i = istart;
 		int j = jstart;
 
-		while(true) {
+		while(counter <= limit) {
 			GraphActions.setText(this.panel.getGraph(),this.cells[i][j], String.valueOf(counter++));
 			if(counter > limit)
 				break;
