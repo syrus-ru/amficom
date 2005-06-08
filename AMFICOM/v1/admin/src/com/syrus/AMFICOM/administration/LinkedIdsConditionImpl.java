@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.17 2005/05/20 21:11:25 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/06/08 09:18:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/20 21:11:25 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/08 09:18:28 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -55,7 +55,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MCM_ENTITY_CODE:
-				MCM mcm = (MCM) storableObject;
+				final MCM mcm = (MCM) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.SERVER_ENTITY_CODE:
 						condition = super.conditionTest(mcm.getServerId());
@@ -70,11 +70,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				Domain domain = (Domain) storableObject;
+				final Domain domain = (Domain) storableObject;
 				condition = this.checkDomain(domain);
 				break;
 			case ObjectEntities.SERVER_ENTITY_CODE:
-				Server server = (Server) storableObject;
+				final Server server = (Server) storableObject;
 				condition = this.checkDomain(server);
 				break;
 			default:
