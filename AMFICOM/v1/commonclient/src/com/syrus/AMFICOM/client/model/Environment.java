@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.5 2005/06/08 10:48:37 bob Exp $
+ * $Id: Environment.java,v 1.6 2005/06/08 14:27:15 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/06/08 10:48:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/08 14:27:15 $
  * @module commonclient_v1
  */
 public final class Environment {
@@ -196,6 +196,10 @@ public final class Environment {
 	private static void initUIConstats() {
 		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, new SimpleDateFormat(LangModel
 				.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
+		
+		UIManager.put(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT, new SimpleDateFormat(LangModel
+			.getString(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
+		
 		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		UIManager.put(ResourceKeys.ICON_GENERAL, new ImageIcon(Toolkit.getDefaultToolkit().getImage(

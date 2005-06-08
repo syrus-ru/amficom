@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.3 2005/05/25 07:53:21 bob Exp $
+ * $Id: ResourceKeys.java,v 1.4 2005/06/08 14:27:15 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/25 07:53:21 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/08 14:27:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -17,6 +17,7 @@ package com.syrus.AMFICOM.client.resource;
 public interface ResourceKeys {
 
 	String	SIMPLE_DATE_FORMAT						= "simpleDateFormat";
+	String	HOURS_MINUTES_SECONDS_DATE_FORMAT		= "hmsDateFormat";
 
 	String	COLOR_GRAPHICS_BACKGROUND				= "graphicsBackgroundColor";
 
