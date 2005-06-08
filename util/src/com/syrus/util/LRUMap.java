@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.25 2005/06/07 19:11:31 arseniy Exp $
+ * $Id: LRUMap.java,v 1.26 2005/06/08 13:02:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/07 19:11:31 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/08 13:02:43 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -34,7 +34,7 @@ public class LRUMap implements Serializable {
 		this (SIZE);
 	}
 
-	public LRUMap(int capacity) {
+	public LRUMap(final int capacity) {
 		if (capacity > 0) {
 			this.array = new Entry[capacity];
 		}
@@ -67,7 +67,7 @@ public class LRUMap implements Serializable {
 		return this.entityCount;
 	}
 
-	public int indexOf(Object key) {
+	public int indexOf(final Object key) {
 		int index = -1;
 		if (key != null) {
 			for (int i = 0; i < this.array.length; i++) {
@@ -81,7 +81,7 @@ public class LRUMap implements Serializable {
 		return index;
 	}
 
-	public synchronized Object put(Object key, Object value) {
+	public synchronized Object put(final Object key, final Object value) {
 		this.modCount++;
 		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;
 		this.remove(key);
@@ -95,7 +95,7 @@ public class LRUMap implements Serializable {
 		return ret;
 	}
 
-	public synchronized Object get(Object key) {
+	public synchronized Object get(final Object key) {
 		this.modCount++;
 		if (key != null) {
 			Object ret = null;
@@ -119,7 +119,7 @@ public class LRUMap implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
-	public synchronized Object remove(Object key) {
+	public synchronized Object remove(final Object key) {
 		this.modCount++;
 		if (key != null) {
 			Object ret = null;
@@ -142,7 +142,7 @@ public class LRUMap implements Serializable {
 		Object key;
 		Object value;
 
-		public Entry(Object key, Object value) {
+		public Entry(final Object key, final Object value) {
 			if (key != null) {
 				if (value != null) {
 					this.key = key;
@@ -186,7 +186,7 @@ public class LRUMap implements Serializable {
 
 		private boolean keyIterator = false;
 
-		public Itr(boolean keyIterator) {
+		public Itr(final boolean keyIterator) {
 			this.keyIterator = keyIterator;
 		}
 
@@ -229,7 +229,7 @@ public class LRUMap implements Serializable {
 			}
 		}
 		
-		final void checkForComodification() {
+		private final void checkForComodification() {
 			if (LRUMap.this.modCount != this.expectedModCount)
 				throw new ConcurrentModificationException();
 		}
