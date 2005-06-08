@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.6 2005/04/12 16:52:34 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.7 2005/06/08 09:23:05 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/12 16:52:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/08 09:23:05 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -38,6 +38,10 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME))
 					return StorableObjectWrapper.COLUMN_NAME;
+				break;
+			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME))
+					return StorableObjectWrapper.COLUMN_CODENAME;
 				break;
 			default:
 				throw new IllegalObjectEntityException("DatabaseTypicalConditionImpl.getColumnName | entity "
