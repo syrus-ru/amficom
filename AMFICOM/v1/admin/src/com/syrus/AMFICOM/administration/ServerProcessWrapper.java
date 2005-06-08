@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.5 2005/06/07 17:58:13 bass Exp $
+ * $Id: ServerProcessWrapper.java,v 1.6 2005/06/08 09:33:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/07 17:58:13 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/08 09:33:18 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class ServerProcessWrapper extends StorableObjectWrapper {
@@ -23,19 +23,13 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 	public static final String KEY_EVENT_PROCESS_CODENAME = "EventProcessCodename";
 	public static final String KEY_MSERVER_PROCESS_CODENAME = "MServerProcessCodename";
 	public static final String KEY_CMSERVER_PROCESS_CODENAME = "CMServerProcessCodename";
-	/**
-	 * Arseniy, <em>don&apos;t</em> change either name or value. 
-	 */
-	public static final String KEY_MSCHAR_SERVER_PROCESS_CODENAME = "MscharServerProcessCodename";
+	public static final String KEY_MSCHARSERVER_PROCESS_CODENAME = "MSchARServerProcessCodename";
 
 	public static final String LOGIN_PROCESS_CODENAME = "LoginServer";
 	public static final String EVENT_PROCESS_CODENAME = "EventServer";
 	public static final String MSERVER_PROCESS_CODENAME = "MServer";
 	public static final String CMSERVER_PROCESS_CODENAME = "CMServer";
-	/**
-	 * Arseniy, <em>don&apos;t</em> change either name or value. 
-	 */
-	public static final String MSCHAR_SERVER_PROCESS_CODENAME = "MscharServer";
+	public static final String MSCHARSERVER_PROCESS_CODENAME = "MSchARServer";
 
 	public static final String	COLUMN_SERVER_ID = "server_id";
 	public static final String	COLUMN_USER_ID = "user_id";
