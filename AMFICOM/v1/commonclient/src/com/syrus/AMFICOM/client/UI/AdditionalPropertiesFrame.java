@@ -1,5 +1,5 @@
 /*-
- * $Id: AdditionalPropertiesFrame.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: AdditionalPropertiesFrame.java,v 1.2 2005/06/08 14:29:27 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,10 @@
 
 package com.syrus.AMFICOM.client.UI;
 
-import javax.swing.event.ChangeEvent;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/08 14:29:27 $
  * @module commonclient_v1
  */
 

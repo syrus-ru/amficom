@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -20,7 +19,7 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/08 14:29:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */

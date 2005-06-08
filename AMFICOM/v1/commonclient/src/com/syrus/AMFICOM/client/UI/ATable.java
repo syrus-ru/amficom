@@ -18,6 +18,8 @@ import javax.swing.table.TableModel;
 
 public class ATable extends JTable {
 	
+	private static final long	serialVersionUID	= -7206079277893564010L;
+	
 	private int	height			= 4;
 	private int	initialHeight	= -1;
 
@@ -71,7 +73,7 @@ public class ATable extends JTable {
 	}
 
 	public int getHeaderHeight() {
-		return height;
+		return this.height;
 	}
 
 	public void updateHeaderSize() {
@@ -79,8 +81,9 @@ public class ATable extends JTable {
 		if (jTableHeader == null)
 			return;
 
-		if (initialHeight == -1)
-			initialHeight = jTableHeader.getPreferredSize().height;
+		if (this.initialHeight == -1) {
+			this.initialHeight = jTableHeader.getPreferredSize().height;
+		}
 
 		boolean hasNonEmptyTitle = false;
 		for (int i = 0; i < getColumnCount(); i++) {
