@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.4 2005/05/26 10:35:41 bob Exp $
+ * $Id: Environment.java,v 1.5 2005/06/08 10:48:37 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.MetalTheme;
 
-import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
+//import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
@@ -57,7 +57,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 10:35:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/08 10:48:37 $
  * @module commonclient_v1
  */
 public final class Environment {
@@ -408,8 +408,8 @@ public final class Environment {
 				plaf = (LookAndFeel) (WindowsLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF))
 				plaf = (LookAndFeel) (MotifLookAndFeel.class.newInstance());
-			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
-				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
+//			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
+//				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
 			else
 				return getDefaultLookAndFeel();
 			if (plaf.isSupportedLookAndFeel())
