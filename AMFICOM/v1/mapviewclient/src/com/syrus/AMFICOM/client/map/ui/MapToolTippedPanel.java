@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.7 2005/06/06 12:20:36 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.8 2005/06/08 09:48:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.MapElement;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:36 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/08 09:48:26 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -84,9 +85,10 @@ public class MapToolTippedPanel extends JComponent {
 
 	public String getToolTipText() 	{
 //		System.out.println("create tooltip");
-		if(this.parent.getLogicalNetLayer() == null)
+		LogicalNetLayer logicalNetLayer = this.parent.getLogicalNetLayer();
+		if(logicalNetLayer == null)
 			return "";
-		MapState mapState = this.parent.getLogicalNetLayer().getMapState();
+		MapState mapState = logicalNetLayer.getMapState();
 		if(mapState.getOperationMode() != MapState.NO_OPERATION)
 			return "";
 		if(mapState.getMouseMode() != MapState.MOUSE_NONE)
@@ -94,10 +96,10 @@ public class MapToolTippedPanel extends JComponent {
 		if(mapState.getActionMode() != MapState.NULL_ACTION_MODE)
 			return "";
 		try {
-			MapElement me = this.parent.getLogicalNetLayer().getMapElementAtPoint(
-					this.parent.getLogicalNetLayer().getCurrentPoint());
+			MapElement me = logicalNetLayer.getMapElementAtPoint(
+					logicalNetLayer.getCurrentPoint());
 //			System.out.println("tooltip created! " + me.getToolTipText());
-			return this.parent.getLogicalNetLayer().getMapViewController().getController(me).getToolTipText(me);
+			return logicalNetLayer.getMapViewController().getController(me).getToolTipText(me);
 		} 
 		catch (Exception ex) {
 //			System.out.println("TOOLTIP: " + ex.getMessage());
@@ -111,7 +113,7 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:36 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/08 09:48:26 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
