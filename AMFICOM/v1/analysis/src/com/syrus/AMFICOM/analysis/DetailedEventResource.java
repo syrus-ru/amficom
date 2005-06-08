@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.2 2005/06/03 09:48:34 stas Exp $
+ * $Id: DetailedEventResource.java,v 1.3 2005/06/08 13:23:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/06/03 09:48:34 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/08 13:23:38 $
  * @module analysis_v1
  */
 
@@ -37,33 +37,33 @@ public class DetailedEventResource {
 	private static final Icon ICON_BREAK = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BREAK);
 	
 	// Basic details
-	private String number;
+	private String number = DASH;
 	private String type = DEFAULT_TYPE;
-	private String location;
-	private String length;
-	private String reflectance;
-	private String loss;
-	private String attenuation;
+	private String location = DASH;
+	private String length = DASH;
+	private String reflectance = DASH;
+	private String loss = DASH;
+	private String attenuation = DASH;
 	
 	// Additional details
-	private String extension; //same as length but may have different units
-	private String startLevel; //all but notid 
-	private String endLevel; //all but end & notid
-	private String meanDeviation; //only linear
-	private String maxDeviation; //only linear & notidentified
-	private String reflectionLevel; //only reflection & end
-	private String adz; //only dz
-	private String edz; //only dz
-	private String maxLevel; //only notid
-	private String minLevel; //only notid
+	private String extension = DASH; //same as length but may have different units
+	private String startLevel = DASH; //all but notid 
+	private String endLevel = DASH; //all but end & notid
+	private String meanDeviation = DASH; //only linear
+	private String maxDeviation = DASH; //only linear & notidentified
+	private String reflectionLevel = DASH; //only reflection & end
+	private String adz = DASH; //only dz
+	private String edz = DASH; //only dz
+	private String maxLevel = DASH; //only notid
+	private String minLevel = DASH; //only notid
 	
 	//compare with etalon
 	private String etalonType = DEFAULT_TYPE;
-	private String etalonMaxDeviation;
-	private String etalonMeanDeviation;
-	private String lossDifference;
-	private String locationDifference;
-	private String lengthDifference;
+	private String etalonMaxDeviation = DASH;
+	private String etalonMeanDeviation = DASH;
+	private String lossDifference = DASH;
+	private String locationDifference = DASH;
+	private String lengthDifference = DASH;
 	
 	private DetailedEvent event;
 	
