@@ -20,7 +20,7 @@ public class Evaluation {
 	public Evaluation(AnalyseApplicationModelFactory factory) {
 		if (!Environment.canRun(Environment.MODULE_EVALUATE))
 			return;
-
+		Application.init(Analyse.APPLICATION_NAME);
 		this.aContext.setApplicationModel(factory.create());
 		this.aContext.setDispatcher(new Dispatcher());
 		ThresholdsMainFrame frame = new ThresholdsMainFrame(this.aContext);
@@ -29,7 +29,6 @@ public class Evaluation {
 	}
 
 	public static void main(String[] args) {
-		Application.init(Analyse.APPLICATION_NAME);
 		new Evaluation(new ReflectometryAnalyseApplicationModelFactory());
 	}
 }

@@ -22,6 +22,7 @@ public class AnalyseExt
 		if(!Environment.canRun(Environment.MODULE_SURVEY))
 			return;
 
+		Application.init(Analyse.APPLICATION_NAME);
 		this.aContext.setApplicationModel(factory.create());
 		this.aContext.setDispatcher(new Dispatcher());
 		AnalyseMainFrame frame = new AnalyseMainFrame(this.aContext);
@@ -31,7 +32,6 @@ public class AnalyseExt
 
 	public static void main(String[] args)
 	{
-        Application.init(Analyse.APPLICATION_NAME);
 		new AnalyseExt(new ReflectometryAnalyseApplicationModelFactory());
 	}
 }

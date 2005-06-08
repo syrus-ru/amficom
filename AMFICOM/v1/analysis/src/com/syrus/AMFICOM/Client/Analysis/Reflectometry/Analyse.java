@@ -23,7 +23,7 @@ public class Analyse
 	{
 		if(!Environment.canRun(Environment.MODULE_ANALYSE))
 			return;
-
+		Application.init(Analyse.APPLICATION_NAME);
 		this.aContext.setApplicationModel(factory.create());
 		this.aContext.setDispatcher(new Dispatcher());
 		AnalyseMainFrameSimplified frame = new AnalyseMainFrameSimplified(this.aContext);
@@ -34,15 +34,6 @@ public class Analyse
 
 	public static void main(String[] args)
 	{
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		Application.init(APPLICATION_NAME);
-
 		new Analyse(new ReflectometryAnalyseApplicationModelFactory());
 	}
 }
