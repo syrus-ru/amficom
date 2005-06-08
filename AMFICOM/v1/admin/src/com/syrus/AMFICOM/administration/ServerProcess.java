@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.8 2005/06/03 20:37:40 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.9 2005/06/08 09:29:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/03 20:37:40 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/08 09:29:13 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -196,7 +196,14 @@ public class ServerProcess extends StorableObject {
 		return this.description;
 	}
 
+	protected void setCodename(final String codename) {
+		assert codename != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.codename = codename;
+		super.markAsChanged();
+	}
+
 	public void setDescription(final String description) {
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.description = description;
 		super.markAsChanged();
 	}
