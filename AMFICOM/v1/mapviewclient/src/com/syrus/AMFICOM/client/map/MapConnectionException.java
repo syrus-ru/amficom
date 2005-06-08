@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnectionException.java,v 1.2 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: MapConnectionException.java,v 1.3 2005/06/08 09:49:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,11 @@ package com.syrus.AMFICOM.client.map;
 
 /**
  * 
- * @version $Revision: 1.2 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/08 09:49:24 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
-public class MapConnectionException extends Exception {
+public class MapConnectionException extends MapException {
 	public MapConnectionException(String message) {
 		super(message);
 	}
