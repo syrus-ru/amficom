@@ -1,8 +1,11 @@
-package com.syrus.AMFICOM.client.map;
-
 /**
- * $Id: Logger.java,v 1.1.2.2 2005/06/06 13:16:59 krupenn Exp $ Syrus Systems Научно-технический центр Проект: АМФИКОМ
+ * $Id: Logger.java,v 1.1.2.3 2005/06/08 09:50:54 krupenn Exp $ 
+ * Syrus Systems 
+ * Научно-технический центр 
+ * Проект: АМФИКОМ
  */
+
+package com.syrus.AMFICOM.client.map;
 
 public class Logger {
     private static long startTime = System.currentTimeMillis();
