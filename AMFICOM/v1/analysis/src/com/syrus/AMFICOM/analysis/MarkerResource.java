@@ -1,5 +1,5 @@
 /*-
- * $Id: MarkerResource.java,v 1.1 2005/06/02 12:53:29 stas Exp $
+ * $Id: MarkerResource.java,v 1.2 2005/06/08 11:16:23 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,26 +12,25 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/02 12:53:29 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/08 11:16:23 $
  * @module analysis_v1
  */
 
 public class MarkerResource {
 	public static final String DASH = LangModelAnalyse.getString("eventTypeNoType");
 	
-	private String aType;
-	private String aPositionM;
-	private String aLoss;
-	private String aReflectance;
-	private String aAttenuation;
-	private String aCumulativeLoss;
+	private String aPositionM = DASH;
+	private String aLoss = DASH;
+	private String aReflectance = DASH;
+	private String aAttenuation = DASH;
+	private String aCumulativeLoss = DASH;
 
-	private String bPositionM;
-	private String abDistanceM;
-	private String abLoss;
-	private String abAttenuation;
-	private String lsaAttenuation;
-	private String abOrl;
+	private String bPositionM = DASH;
+	private String abDistanceM = DASH;
+	private String abLoss = DASH;
+	private String abAttenuation = DASH;
+	private String lsaAttenuation = DASH;
+	private String abOrl = DASH;
 		
 	public String getAAttenuation() {
 		return this.aAttenuation;
@@ -103,14 +102,6 @@ public class MarkerResource {
 	
 	public void setAReflectance(String reflectance) {
 		this.aReflectance = reflectance;
-	}
-	
-	public String getAType() {
-		return this.aType;
-	}
-	
-	public void setAType(String type) {
-		this.aType = type;
 	}
 	
 	public String getBPosition() {
