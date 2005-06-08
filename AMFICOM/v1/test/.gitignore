@@ -6,4 +6,5 @@ tools.jar
 *.jpr
 *.jpx*
 *.swp
+.mach
 common.properties
