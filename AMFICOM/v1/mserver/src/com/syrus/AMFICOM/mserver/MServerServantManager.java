@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.7 2005/06/07 16:38:29 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.8 2005/06/08 15:21:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/07 16:38:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/08 15:21:09 $
  * @author $Author: arseniy $
- * @module cmserver_v1
+ * @module mserver_v1
  */
 
 final class MServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager {
