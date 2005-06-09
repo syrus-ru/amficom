@@ -617,7 +617,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// this.setCursor(UIStorage.WAIT_CURSOR);
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
 																	LangModelSchedule
-																			.getString("Updating tests from DB"))); //$NON-NLS-1$
+																			.getString("StatusMessage.UpdatingTests"))); //$NON-NLS-1$
+		
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
 		if (this.measurementSetupIdMap != null) {
 			this.measurementSetupIdMap.clear();
@@ -663,8 +665,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		this.dispatcher
 				.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-						.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
+						.getString("StatusMessage.TestsUpdated"))); //$NON-NLS-1$
 		this.refreshTests();
+		this.dispatcher
+		.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
 
 	public java.util.Set getSelectedTestIds() {

@@ -397,12 +397,12 @@ class PlanToolBar {
 		this.applyButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 				CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 					public void run() {
 						try {
+							PlanToolBar.this.dispatcher
+							.firePropertyChange(new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 							schedulerModel.commitChanges();
 							
 							Calendar date = Calendar.getInstance();
@@ -423,7 +423,7 @@ class PlanToolBar {
 							AbstractMainFrame.showErrorMessage(PlanToolBar.this.toolBar, e1);
 						}
 					}
-				}, LangModelSchedule.getString("Updating_tests_from_DB"));
+				}, LangModelSchedule.getString("StatusMessage.UpdatingTests"));
 			}
 		});		
 	}
