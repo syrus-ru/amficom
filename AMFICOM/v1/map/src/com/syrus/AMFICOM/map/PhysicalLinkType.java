@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.42 2005/06/07 08:25:28 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.43 2005/06/09 12:16:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/07 08:25:28 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.43 $, $Date: 2005/06/09 12:16:04 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -171,6 +171,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 		Set ids = Identifier.fromTransferables(pltt.characteristicIds);
 		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
+		this.bindingDimension = new IntDimension(pltt.dimensionX, pltt.dimensionY);
 	}
 
 	public Set getDependencies() {
