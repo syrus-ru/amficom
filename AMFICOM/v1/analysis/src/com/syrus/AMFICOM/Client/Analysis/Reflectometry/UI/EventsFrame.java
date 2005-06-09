@@ -197,10 +197,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 				if (!lsm.isSelectionEmpty()) {
 					int selected = lsm.getMinSelectionIndex();
-					DetailedEventResource res = (DetailedEventResource)tModel.getObject(selected);
-					int number = Integer.parseInt(res.getNumber()) - 1;
-					if (view.currentRow2() != number)
-						view.moveTo(number);
+					if (view.currentRow2() != selected)
+						view.moveTo(selected);
 				}
 			}
 		});
