@@ -318,35 +318,40 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		}
 	}
 
-	void updateThresholds()
-	{
+	void updateThresholds() {
 		int selected = jTable.getSelectedRow();
 		ThreshEditor[] te = getTeds();
-        if (te == null)
-            te = new ThreshEditor[0];
+		if (te == null)
+			te = new ThreshEditor[0];
 
-       int n = te.length;
-    Object[][] pData = new Object[n][5];
-    for (int i = 0; i < n; i++)
-		{
-			switch(te[i].getType())
-			{
+		int n = te.length;
+		Object[][] pData = new Object[n][5];
+		for (int i = 0; i < n; i++) {
+			String key = null;
+			switch (te[i].getType()) {
 			case ModelTraceManager.ThreshEditor.TYPE_A:
-				pData[i][0] = LangModelAnalyse.getString("thresholdsAmplitude");
+				if (i == 0 && i != n - 1)
+					key = "thresholdsAmplitudeBegin";
+				else if (i == n - 1 && i != 0)
+					key = "thresholdsAmplitudeEnd";
+				else
+					key = "thresholdsAmplitude"; // currently, never happed
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_L:
-				pData[i][0] = LangModelAnalyse.getString("thresholdsHeight");
+				key = "thresholdsHeight";
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_DXF:
-				pData[i][0] = LangModelAnalyse.getString("thresholdsDXF");
+				key = "thresholdsDXF";
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_DXT:
-				pData[i][0] = LangModelAnalyse.getString("thresholdsDXT");
+				key = "thresholdsDXT";
 				break;
 			// default... - @todo
 			}
+			pData[i][0] = LangModelAnalyse.getString(key);
 			for (int j = 1; j < 5; j++)
-				pData[i][j] = new Double(MathRef.floatRound(te[i].getValue(j - 1), 4));
+				pData[i][j] =
+					new Double(MathRef.floatRound(te[i].getValue(j - 1), 4));
 		}
 		tModel.updateData(pData);
 		if (selected != -1 && selected <= jTable.getRowCount())
