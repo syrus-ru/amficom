@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.46 2005/06/03 20:38:45 arseniy Exp $
+ * $Id: Map.java,v 1.47 2005/06/09 12:15:16 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/06/03 20:38:45 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.47 $, $Date: 2005/06/09 12:15:16 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -466,7 +466,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 		this.nodeElements.addAll(this.getAllTopologicalNodes());
 		this.nodeElements.addAll(this.getAllMarks());
 		this.nodeElements.addAll(this.getExternalNodes());
-		return this.nodeElements;
+		return Collections.unmodifiableSet(this.nodeElements);
 	}
 
 	/**
@@ -847,7 +847,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 	 * @return набор выделенных элементов
 	 */
 	public Set getSelectedElements() {
-		return this.selectedElements;
+		return Collections.unmodifiableSet(this.selectedElements);
 	}
 
 	/**
@@ -975,8 +975,8 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 	 */
 	public Set getOppositeNodes(final AbstractNode node)
 	{
-		Iterator e = getNodeLinks(node).iterator();
 		Set returnNodes = new HashSet();
+		Iterator e = getNodeLinks(node).iterator();
 	
 		while (e.hasNext())
 		{
