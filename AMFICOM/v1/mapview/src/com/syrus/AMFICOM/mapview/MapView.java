@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.32 2005/06/03 20:45:09 arseniy Exp $
+* $Id: MapView.java,v 1.33 2005/06/09 12:18:33 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/06/03 20:45:09 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2005/06/09 12:18:33 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -822,8 +822,10 @@ public class MapView extends DomainMember implements Namable {
 	 */
 	public void removeMarkers()
 	{
-		getMap().getNodes().removeAll(this.markers);
-		this.markers.clear();
+		for(Iterator iter = this.markers.iterator(); iter.hasNext();) {
+			Marker marker = (Marker )iter.next();
+			removeMarker(marker);
+		}
 	}
 
 	/**
