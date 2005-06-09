@@ -213,27 +213,6 @@ public class AnalysisUtil
 		return etalon;
 	}
 
-	// FIXME: не используется? - а должен бы...
-	public static void setParamsFromThresholdsSet(Set thresholdSet, ModelTraceManager mtm)
-	{
-		SetParameter[] params = thresholdSet.getParameters();
-
-		for (int i = 0; i < params.length; i++)
-		{
-			ParameterType type = (ParameterType)params[i].getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL))
-			{
-				try
-				{
-					Heap.setMinTraceLevel(new ByteArray(params[i].getValue()).toDouble());
-				}
-				catch (IOException ex)
-				{
-				}
-			}
-		}
-	}
-
 	public static void setParamsFromCriteriaSet(Set criteriaSet)
     throws DataFormatException
 	{
