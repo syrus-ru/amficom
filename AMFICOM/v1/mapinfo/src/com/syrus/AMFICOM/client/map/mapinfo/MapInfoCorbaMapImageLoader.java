@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaMapImageLoader.java,v 1.1.2.4 2005/06/08 12:10:28 peskovsky Exp $
+ * $Id: MapInfoCorbaMapImageLoader.java,v 1.1.2.5 2005/06/09 09:41:45 peskovsky Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2005/06/08 12:10:28 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2005/06/09 09:41:45 $
  * @author $Author: peskovsky $
  * @module map_v1
  */
@@ -74,7 +74,7 @@ public class MapInfoCorbaMapImageLoader
 	 */
 	public void stopRenderingAtServer()
 	{
-		SessionKey_Transferable keyt = new SessionKey_Transferable();
+		SessionKey_Transferable keyt = LoginManager.getSessionKeyTransferable();
 		try {
 			this.mscharServer.stopRenderTopologicalImage(LoginManager.getSessionKey().hashCode(), keyt);
 		} catch (AMFICOMRemoteException e) {
@@ -121,7 +121,7 @@ public class MapInfoCorbaMapImageLoader
             LoginManager.getSessionKey().hashCode());
 		
 		TopologicalImageQuery_Transferable transf = serverQuery.getTransferable();
-		SessionKey_Transferable keyt = new SessionKey_Transferable();
+		SessionKey_Transferable keyt = LoginManager.getSessionKeyTransferable();
 		RenderedImage_Transferable rit;
 		try {
 			rit = this.mscharServer.transmitTopologicalImage(transf,keyt);

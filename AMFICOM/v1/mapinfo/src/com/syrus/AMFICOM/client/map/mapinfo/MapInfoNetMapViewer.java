@@ -135,6 +135,11 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
 				.getName(), "saveConfig()");
 
+		//TODO Здесь, при наличии кэша, закрывается поток подгрузки
+		//изображений. По-хорошему должно быть перенесено в какой-нибудь
+		//другой метод, вызываемый при закрытии модуля карты
+		this.lnl.actionOnExit();
+		
 		try {
 			MapPropertiesManager.setCenter(this.lnl.getCenter());
 			MapPropertiesManager.setZoom(this.lnl.getScale());

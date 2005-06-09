@@ -525,14 +525,14 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
 	public void handMoved(MouseEvent me) throws MapConnectionException, MapDataException
 	{
-		this.imageCache.analyzeMouseLocation(me);
+		// empty
 	}
 
-	public void handClicked(MouseEvent me) throws MapConnectionException, MapDataException
+	public void mouseMoved(MouseEvent me) throws MapConnectionException, MapDataException
 	{
 		this.imageCache.analyzeMouseLocation(me);
 	}
-	
+
 	public void actionOnExit()
 	{
 		if (MapPropertiesManager.isTopologicalImageCache())
