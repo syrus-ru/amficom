@@ -346,7 +346,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			// default... - @todo
 			}
 			for (int j = 1; j < 5; j++)
-				pData[i][j] = new Double(MathRef.round_4(te[i].getValue(j - 1)));
+				pData[i][j] = new Double(MathRef.floatRound(te[i].getValue(j - 1), 4));
 		}
 		tModel.updateData(pData);
 		if (selected != -1 && selected <= jTable.getRowCount())
