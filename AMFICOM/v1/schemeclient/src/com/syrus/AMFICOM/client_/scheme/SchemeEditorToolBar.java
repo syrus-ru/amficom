@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorToolBar.java,v 1.2 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeEditorToolBar.java,v 1.3 2005/06/09 10:53:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,17 +20,15 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/09 10:53:52 $
  * @module schemeclient_v1
  */
 
-public class SchemeEditorToolBar extends JToolBar implements
-		ApplicationModelListener {
+public class SchemeEditorToolBar extends AbstractMainToolBar {
 	private ApplicationModel aModel;
 	public final static int img_siz = 16;
 	public final static int btn_siz = 24;
 
-	JButton sessionOpen = new JButton();
 	JButton schemeNew = new JButton();
 	JButton schemeLoad = new JButton();
 	JButton schemeSave = new JButton();
@@ -51,15 +49,6 @@ public class SchemeEditorToolBar extends JToolBar implements
 				this);
 
 		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
-
-		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/open_session.gif")
-				.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		sessionOpen.setMaximumSize(buttonSize);
-		sessionOpen.setPreferredSize(buttonSize);
-		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		sessionOpen.setName("menuSessionNew");
-		sessionOpen.addActionListener(actionAdapter);
 
 		schemeNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				"images/new.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
@@ -94,7 +83,6 @@ public class SchemeEditorToolBar extends JToolBar implements
 		catalog.setName("menuInsertToCatalog");
 		catalog.addActionListener(actionAdapter);
 
-		add(sessionOpen);
 		addSeparator();
 		add(schemeNew);
 		add(schemeLoad);
@@ -116,8 +104,6 @@ public class SchemeEditorToolBar extends JToolBar implements
 	}
 
 	public void modelChanged(String e[]) {
-		sessionOpen.setVisible(aModel.isVisible("menuSessionNew"));
-		sessionOpen.setEnabled(aModel.isEnabled("menuSessionNew"));
 		schemeNew.setVisible(aModel.isVisible("menuSchemeNew"));
 		schemeNew.setEnabled(aModel.isEnabled("menuSchemeNew"));
 		schemeSave.setVisible(aModel.isVisible("menuSchemeSave"));

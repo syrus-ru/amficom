@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditor.java,v 1.3 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeEditor.java,v 1.4 2005/06/09 10:53:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,17 +14,21 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client.UI.SplashScreen;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.*;
+import com.syrus.util.Application;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/09 10:53:52 $
  * @module schemeclient_v1
  */
 
 public class SchemeEditor {
+	public static final String APPLICATION_NAME = "scheme";
 	ApplicationContext aContext = new ApplicationContext();
 
 	public SchemeEditor(SchematicsApplicationModelFactory factory) {
+		Application.init(APPLICATION_NAME);
+
 		if (!Environment.canRun(Environment.MODULE_SCHEMATICS))
 			return;
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePanel.java,v 1.2 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemePanel.java,v 1.3 2005/06/09 10:53:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,12 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/09 10:53:52 $
  * @module schemeclient_v1
  */
 
 public class SchemePanel extends ElementsPanel {
-	public SchemePanel(ApplicationContext aContext) {
+	protected SchemePanel(ApplicationContext aContext) {
 		super(aContext);
 		try {
 			jbInit();

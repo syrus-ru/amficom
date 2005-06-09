@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.3 2005/05/26 07:40:51 stas Exp $
+ * $Id: ElementsPanel.java,v 1.4 2005/06/09 10:53:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/09 10:53:52 $
  * @module schemeclient_v1
  */
 
 public class ElementsPanel extends UgoPanel {
-	public ElementsPanel(ApplicationContext aContext) {
+	protected ElementsPanel(ApplicationContext aContext) {
 		super(aContext);
 
 		try {

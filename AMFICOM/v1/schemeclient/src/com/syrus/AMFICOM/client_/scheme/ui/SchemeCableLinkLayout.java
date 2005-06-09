@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.1 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.2 2005/06/09 10:53:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/09 10:53:52 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +41,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 	private int radius = 20;
 	
 	private ApplicationContext internalContext = new ApplicationContext();
-	private UgoPanel panel;
+	private UgoTabbedPane panel;
 //	private Map mapping = new HashMap();
 	protected JScrollPane scrollPane;
 
@@ -49,7 +49,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		internalContext.setDispatcher(new Dispatcher());
 		internalContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 
-		panel = new UgoPanel(internalContext);
+		panel = new UgoTabbedPane(internalContext);
 		panel.getGraph().setGraphEditable(false);
 		panel.getGraph().setAntiAliased(true);
 		scrollPane = new JScrollPane(panel.getGraph());
@@ -144,7 +144,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 			Rectangle bounds = new Rectangle(x, y, 2 * radius, 2 * radius);
 			addCell(panel.getGraph(), "", bounds, Color.WHITE); //$NON-NLS-1$
 		}
-		panel.setGraphSize(new Dimension(2 * GAP + 2 * (r2 + r1), 2 * GAP + 2 * (r2 + r1)));
+		panel.getCurrentPanel().setGraphSize(new Dimension(2 * GAP + 2 * (r2 + r1), 2 * GAP + 2 * (r2 + r1)));
 	}
 
 	public JComponent getGUI() {

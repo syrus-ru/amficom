@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.7 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.8 2005/06/09 10:53:52 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,13 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/09 10:53:52 $
  * @module schemeclient_v1
  */
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
-import java.text.SimpleDateFormat;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -26,181 +25,169 @@ import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.Schematics.UI.ElementsNavigatorPanel;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client.event.*;
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.client_.scheme.graph.*;
 import com.syrus.AMFICOM.client_.scheme.ui.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
+import com.syrus.util.Log;
 
-public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListener {
-	public ApplicationContext aContext;
-	static SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-			"dd.MM.yyyy HH:mm:ss");
-	private Dispatcher internal_dispatcher = new Dispatcher();
-
-	JPanel mainPanel = new JPanel();
-	SchemeEditorToolBar toolBar = new SchemeEditorToolBar();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	JDesktopPane desktopPane = new JDesktopPane();
-	JPanel statusBarPanel = new JPanel();
-	StatusBarModel statusBar = new StatusBarModel(0);
-	SchemeEditorMenuBar menuBar = new SchemeEditorMenuBar();
+public class SchemeEditorMainFrame extends AbstractMainFrame {
 	SchemeGraph scheme_graph;
 
 	static int scheme_count = 0;
 
-	SchemeViewerFrame editorFrame;
-	GeneralPropertiesFrame generalFrame;
-	CharacteristicPropertiesFrame characteristicFrame;
-	AdditionalPropertiesFrame additionalFrame;
-	JInternalFrame treeFrame;
-
+	public static final String	EDITOR_FRAME	= "editorFrame";
+	public static final String	GENERAL_PROPERIES_FRAME	= "generalFrame";
+	public static final String	CHARACTERISTIC_PROPERIES_FRAME = "characteristicFrame";
+	public static final String	ADDITIONAL_PROPERIES_FRAME = "additionalFrame";
+	public static final String	TREE_FRAME = "treeFrame";
+		
 	ArrayList graphs = new ArrayList();
 	SchemeTabbedPane schemeTab;
+	
+	UIDefaults frames;
 
 	public SchemeEditorMainFrame(ApplicationContext aContext) {
-		super();
-		this.aContext = aContext;
-		this.aContext.setDispatcher(internal_dispatcher);
+		super(aContext, LangModelSchematics.getString("SchemeEditorTitle"), new SchemeEditorMenuBar(aContext.getApplicationModel()), new SchemeEditorToolBar());
 
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Environment.addWindow(this);
-		setContext(aContext);
-	}
+		this.addComponentListener(new ComponentAdapter() {
 
+			public void componentShown(ComponentEvent e) {
+				initModule();
+				desktopPane.setPreferredSize(desktopPane.getSize());
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						SchemeEditorMainFrame.this.windowArranger.arrange();
+					}
+				});
+			}
+		});
+		
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				UgoPanel p = schemeTab.getCurrentPanel();
+				while (p != null) {
+					if (!schemeTab.removePanel(p))
+						return;
+					p = schemeTab.getCurrentPanel();
+				}
+				dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, SchemeEditorMainFrame.this);
+				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, SchemeEditorMainFrame.this);
+				SchemeEditorMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
+			}
+		});
+
+		this.frames = new UIDefaults();
+		this.frames.put(EDITOR_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | EDITOR_FRAME", Log.FINEST);
+				schemeTab = new SchemeTabbedPane(SchemeEditorMainFrame.this.aContext);
+				SchemeViewerFrame editorFrame = new SchemeViewerFrame(SchemeEditorMainFrame.this.aContext, schemeTab);
+				editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
+				desktopPane.add(editorFrame);
+				return editorFrame;
+			}
+		});
+
+		this.frames.put(GENERAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Log.FINEST);
+				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
+				desktopPane.add(generalFrame);
+				new SchemeEventHandler(generalFrame, SchemeEditorMainFrame.this.aContext);
+				return generalFrame;
+			}
+		});
+
+		this.frames.put(CHARACTERISTIC_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Log.FINEST);
+				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
+				desktopPane.add(characteristicFrame);
+				new SchemeEventHandler(characteristicFrame, SchemeEditorMainFrame.this.aContext);
+				return characteristicFrame;
+			}
+		});
+
+		this.frames.put(ADDITIONAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Log.FINEST);
+				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
+				desktopPane.add(additionalFrame);
+				new SchemeEventHandler(additionalFrame, SchemeEditorMainFrame.this.aContext);
+				return additionalFrame;
+			}
+		});
+		
+		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | TREE_FRAME", Log.FINEST);
+				JInternalFrame treeFrame = new JInternalFrame();
+				treeFrame.setIconifiable(true);
+				treeFrame.setClosable(true);
+				treeFrame.setResizable(true);
+				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				treeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+						"images/general.gif")));
+				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
+				
+				SchemeTreeModel model = new SchemeTreeModel(SchemeEditorMainFrame.this.aContext);
+				ElementsNavigatorPanel utp = new ElementsNavigatorPanel(SchemeEditorMainFrame.this.aContext,
+						dispatcher, model);
+				treeFrame.getContentPane().setLayout(new BorderLayout());
+				treeFrame.getContentPane().add(utp, BorderLayout.CENTER);
+				
+				desktopPane.add(treeFrame);
+				return treeFrame;
+			}
+		});
+		
+		this.setWindowArranger(new WindowArranger(SchemeEditorMainFrame.this) {
+					public void arrange() {
+						SchemeEditorMainFrame f = (SchemeEditorMainFrame) this.mainframe;
+
+						int w = f.desktopPane.getSize().width;
+						int h = f.desktopPane.getSize().height;
+						
+						JInternalFrame editorFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.EDITOR_FRAME);
+						JInternalFrame generalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.GENERAL_PROPERIES_FRAME);
+						JInternalFrame characteristicsFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.CHARACTERISTIC_PROPERIES_FRAME);
+						JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.ADDITIONAL_PROPERIES_FRAME);
+						JInternalFrame treeFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.TREE_FRAME);
+						
+						normalize(editorFrame);
+						normalize(generalFrame);
+						normalize(characteristicsFrame);
+						normalize(additionalFrame);
+						normalize(treeFrame);
+
+						editorFrame.setSize(3 * w / 5, h);
+						additionalFrame.setSize(w / 5, 2 * h / 5);
+						generalFrame.setSize(w/5, 3 * h / 10);
+						characteristicsFrame.setSize(w/5, 3 * h / 10);
+						treeFrame.setSize(w / 5, 2 * h / 5);
+
+						editorFrame.setLocation(2 * w / 5, 0);
+						additionalFrame.setLocation(w / 5, 0);
+						generalFrame.setLocation(4*w/5, 0);
+						characteristicsFrame.setLocation(4*w/5, 3*h/10);
+						treeFrame.setLocation(0, 0);
+					}
+				});
+			}
+	
+	
 	public SchemeEditorMainFrame() {
 		this(new ApplicationContext());
 	}
 
-	private void jbInit() throws Exception {
-		this.addComponentListener(new SchemeEditorMainFrame_this_componentAdapter(this));
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				this_windowClosing(e);
-			}
-		});
-
-		setContentPane(mainPanel);
-		setResizable(true);
-		setTitle(LangModelSchematics.getString("SchemeEditorTitle"));
-		setJMenuBar(menuBar);
 		
-		mainPanel.setLayout(new BorderLayout());
-		setBackground(SystemColor.control);
-		desktopPane.setLayout(null);
-		desktopPane.setBackground(SystemColor.control.darker().darker());
-
-		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		statusBarPanel.setLayout(new BorderLayout());
-		statusBarPanel.add(statusBar, BorderLayout.CENTER);
-
-		statusBar.add("status");
-		statusBar.add("server");
-		statusBar.add("session");
-		statusBar.add("user");
-		statusBar.add("domain");
-		statusBar.add("time");
-
-		viewport.setView(desktopPane);
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
-
-		mainPanel.add(toolBar, BorderLayout.NORTH);
-		mainPanel.add(statusBarPanel, BorderLayout.SOUTH);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-		schemeTab = new SchemeTabbedPane(aContext);
-		editorFrame = new SchemeViewerFrame(aContext, schemeTab);
-		editorFrame.setClosable(false);
-		editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
-		desktopPane.add(editorFrame);
-
-		SchemeToolBar schemeToolBar = new SchemeToolBar(schemeTab, additionalFrame, aContext);
-		schemeToolBar.createToolBar();
-		schemeTab.setToolBar(schemeToolBar);
-
-		generalFrame = new GeneralPropertiesFrame("Title");
-		desktopPane.add(generalFrame);
-		new SchemeEventHandler(generalFrame, aContext);
-
-		characteristicFrame = new CharacteristicPropertiesFrame("Title");
-		desktopPane.add(characteristicFrame);
-		new SchemeEventHandler(characteristicFrame, aContext);
-		
-		additionalFrame = new AdditionalPropertiesFrame("Title");
-		desktopPane.add(additionalFrame);
-		new SchemeEventHandler(additionalFrame, aContext);
-
-		treeFrame = new JInternalFrame();
-		treeFrame.setIconifiable(true);
-		treeFrame.setClosable(true);
-		treeFrame.setResizable(true);
-		treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		treeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/general.gif")));
-		treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
-		treeFrame.getContentPane().setLayout(new BorderLayout());
-		desktopPane.add(treeFrame);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(screenSize.width,
-				screenSize.height - 24);
-		setSize(frameSize);
-		setLocation(0, 0);
-	}
-
-	public void init_module() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		statusBar.distribute();
-		statusBar.setWidth("status", 100);
-		statusBar.setWidth("server", 250);
-		statusBar.setWidth("session", 200);
-		statusBar.setWidth("user", 100);
-		statusBar.setWidth("time", 50);
-
-		statusBar.setText("status", LangModel.getString("statusReady"));
-		statusBar.setText("server", LangModel.getString("statusNoConnection"));
-		statusBar.setText("session", LangModel.getString("statusNoSession"));
-		statusBar.setText("user", LangModel.getString("statusNoUser"));
-		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
-		statusBar.setText("time", " ");
-		statusBar.organize();
-
-		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.addPropertyChangeListener(CreatePathEvent.TYPE, this);
-		internal_dispatcher.addPropertyChangeListener(SchemeEvent.TYPE, this);
-		// internal_dispatcher.register(this, CatalogNavigateEvent.type);
-		internal_dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-
-		setContext(aContext);
-		setDefaultModel(aModel);
-
-		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment
-				.getDispatcher()));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment
-				.getDispatcher()));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(
-				Environment.getDispatcher(), aContext));
-		aModel.setCommand("menuSessionChangePassword",
-						new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment
-				.getDispatcher(), aContext));
-		aModel.setCommand("menuExit", new ExitCommand(this));
-
-		// SchemePanel epanel = (SchemePanel)schemeTab.getPanel();
+	public void initModule() {
+		super.initModule();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(aContext));
 		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext));
@@ -244,137 +231,35 @@ public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListe
 //		rc.setParameter(CreateSchemeReportCommand.TYPE, ReportTemplate.rtt_Scheme);
 //		aModel.setCommand("menuReportCreate", rc);
 
-		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(
-				new SchemeEditorWindowArranger(this)));
-		aModel.setCommand("menuWindowTree", new ShowFrameCommand(desktopPane,
-				treeFrame));
-		aModel.setCommand("menuWindowScheme", new ShowFrameCommand(desktopPane,
-				editorFrame));
-		aModel.setCommand("menuWindowUgo", new ShowFrameCommand(desktopPane,
-				additionalFrame));
-		aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane,
-				generalFrame));
-		aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane,
-				characteristicFrame));
+		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new WindowArranger(this) {
+			public void arrange() {
+				SchemeEditorMainFrame.this.windowArranger.arrange();
+			}
+		}));
+		
+		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
+		aModel.setCommand("menuWindowScheme", this.getLazyCommand(EDITOR_FRAME));
+		aModel.setCommand("menuWindowUgo", this.getLazyCommand(ADDITIONAL_PROPERIES_FRAME));
+		aModel.setCommand("menuWindowProps", this.getLazyCommand(GENERAL_PROPERIES_FRAME));
+		aModel.setCommand("menuWindowList", this.getLazyCommand(CHARACTERISTIC_PROPERIES_FRAME));
 
 		aModel.fireModelChanged("");
 
-		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
-			internal_dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
-		}
+//		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
+//			internal_dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
+//		}
 	}
 
-	public void setContext(ApplicationContext aContext) {
-		this.aContext = aContext;
-		if (aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(ApplicationModel.getInstance());
-		setModel(aContext.getApplicationModel());
-	}
-
-	public ApplicationContext getContext() {
-		return aContext;
-	}
-
-	public void setModel(ApplicationModel aModel) {
-		toolBar.setModel(aModel);
-		menuBar.setModel(aModel);
-		aModel.addListener(menuBar);
-		aModel.addListener(toolBar);
-		aModel.fireModelChanged("");
-	}
-
-	public ApplicationModel getModel() {
-		return aContext.getApplicationModel();
-	}
-
-	void setDefaultModel(ApplicationModel aModel) {
-		aModel.setAllItemsEnabled(false);
-		aModel.setEnabled("menuSession", true);
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionConnection", true);
+	protected void setDefaultModel(ApplicationModel aModel) {
+		super.setDefaultModel(aModel);
 		aModel.setEnabled("menuScheme", true);
 		aModel.setEnabled("menuPath", true);
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
-
-		// aModel.setVisible("menuSchemeExport", false);
-		// aModel.setVisible("menuSchemeImport", false);
-
-		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
-	}
-
-	public Dispatcher getInternalDispatcher() {
-		return internal_dispatcher;
 	}
 
 	public void propertyChange(PropertyChangeEvent ae) {
-		if (ae.getPropertyName().equals("contextchange")) {
-			ContextChangeEvent cce = (ContextChangeEvent) ae;
-			
-			System.out.println("perform context change \""
-					+ "\" at " + this.getTitle());
-			/*
-			if (cce.SESSION_OPENED) {
-				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi)) {
-					setSessionOpened();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", sdf.format(new Date(aContext
-							.getSessionInterface().getLogonTime())));
-					statusBar.setText("user", aContext.getSessionInterface().getUser());
-				}
-			}
-			if (cce.SESSION_CLOSED) {
-				SessionInterface ssi = (SessionInterface) cce.getSource();
-				if (aContext.getSessionInterface().equals(ssi)) {
-					setSessionClosed();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", LangModel.getString("statusNoSession"));
-					statusBar.setText("user", LangModel.getString("statusNoUser"));
-				}
-			}
-			if (cce.CONNECTION_OPENED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci)) {
-					setConnectionOpened();
-
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", ConnectionInterface.getInstance()
-							.getServerName());
-				}
-			}
-			if (cce.CONNECTION_CLOSED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci)) {
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel
-							.getString("statusConnectionError"));
-
-					statusBar
-							.setText("status", LangModel.getString("statusDisconnected"));
-					statusBar
-							.setText("server", LangModel.getString("statusNoConnection"));
-
-					setConnectionClosed();
-				}
-			}
-			if (cce.CONNECTION_FAILED) {
-				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (ConnectionInterface.getInstance().equals(cci)) {
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel
-							.getString("statusConnectionError"));
-
-					setConnectionFailed();
-				}
-			}
-			if (cce.DOMAIN_SELECTED) {
-				setDomainSelected();
-			}
-			*/
-		} else if (ae.getPropertyName().equals(CreatePathEvent.TYPE)) {
+		if (ae.getPropertyName().equals(CreatePathEvent.TYPE)) {
 			CreatePathEvent cpe = (CreatePathEvent) ae;
 			if (cpe.CREATE_PATH || cpe.EDIT_PATH) {
 				ApplicationModel aModel = aContext.getApplicationModel();
@@ -448,39 +333,42 @@ public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListe
 				schemeTab.openSchemeElement(sel);
 			}
 		}
+		super.propertyChange(ae);
 	}
 
-	public void setConnectionOpened() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.fireModelChanged("");
-	}
+	private AbstractCommand getLazyCommand(final Object key) {
+		return new AbstractCommand() {
 
-	public void setConnectionClosed() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.fireModelChanged("");
-	}
+			private Command	command;
 
-	public void setConnectionFailed() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew", false);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.fireModelChanged("");
-	}
+			private Command getLazyCommand() {
+				if (this.command == null) {
+					Object object = SchemeEditorMainFrame.this.frames.get(key);
+					if (object instanceof JInternalFrame) {
+						System.out.println("init getLazyCommand for " + key);
+						this.command = new ShowWindowCommand(object);
+					}
+				}
+				return this.command;
+			}
 
+			public void execute() {
+				this.getLazyCommand().execute();
+			}
+		};
+	}
+	
 	public void setSessionOpened() {
+		super.setSessionOpened();
+
+
+//		editorFrame.setVisible(true);
+//		additionalFrame.setVisible(true);
+//		generalFrame.setVisible(true);
+//		characteristicFrame.setVisible(true);
+//		treeFrame.setVisible(true);
+
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionDomain", true);
-		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuSchemeExport", true);
 		aModel.setEnabled("menuSchemeImport", true);
 
@@ -492,36 +380,12 @@ public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListe
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
 		aModel.fireModelChanged("");
-		internal_dispatcher.firePropertyChange(new ContextChangeEvent(this,
-				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
-
-		editorFrame.setVisible(true);
-		additionalFrame.setVisible(true);
-		generalFrame.setVisible(true);
-		characteristicFrame.setVisible(true);
-		treeFrame.setVisible(true);
-
-		SchemeTreeModel model = new SchemeTreeModel(aContext);
-
-		ElementsNavigatorPanel utp = new ElementsNavigatorPanel(aContext,
-				internal_dispatcher, model);
-		// UniTreePanel utp = new UniTreePanel(internal_dispatcher, aContext,
-		// model);
-		// utp.setBorder(BorderFactory.createLoweredBevelBorder());
-		// utp.getTree().setRootVisible(false);
-		treeFrame.getContentPane().removeAll();
-		treeFrame.getContentPane().add(utp, BorderLayout.CENTER);
-		treeFrame.updateUI();
+		
 	}
 
 	public void setDomainSelected() {
+		super.setDomainSelected();
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionClose", true);
-		aModel.setEnabled("menuSessionOptions", true);
-		aModel.setEnabled("menuSessionChangePassword", true);
-		aModel.setEnabled("menuSessionClose", true);
-		aModel.setEnabled("menuSessionOptions", true);
-		aModel.setEnabled("menuSessionChangePassword", true);
 
 		aModel.setEnabled("menuSchemeNew", true);
 		aModel.setEnabled("menuSchemeLoad", true);
@@ -532,24 +396,11 @@ public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListe
 		aModel.setEnabled("menuReportCreate", true);
 
 		aModel.fireModelChanged();
-
-		try {
-			Identifier domain_id = LoginManager.getDomainId();
-			Domain domain = (Domain) AdministrationStorableObjectPool
-					.getStorableObject(domain_id, true);
-			statusBar.setText(StatusBarModel.FIELD_DOMAIN, domain.getName());
-		} catch (ApplicationException ex) {
-		}
 	}
 
 	public void setSessionClosed() {
+		super.setSessionClosed();
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.setEnabled("menuTrace", false);
-		aModel.setEnabled("menuAnalyseUpload", false);
-		aModel.setEnabled("menuSessionNew", true);
 
 		aModel.setEnabled("menuSchemeNew", false);
 		aModel.setEnabled("menuSchemeLoad", false);
@@ -571,20 +422,13 @@ public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListe
 
 		aModel.fireModelChanged("");
 
-		editorFrame.setVisible(false);
-		additionalFrame.setVisible(false);
-		generalFrame.setVisible(false);
-		characteristicFrame.setVisible(false);
-		treeFrame.setVisible(false);
+//		editorFrame.setVisible(false);
+//		additionalFrame.setVisible(false);
+//		generalFrame.setVisible(false);
+//		characteristicFrame.setVisible(false);
+//		treeFrame.setVisible(false);
 
 		statusBar.setText("domain", "Домен не установлен");
-	}
-
-	void this_componentShown(ComponentEvent e) {
-		init_module();
-
-		desktopPane.setPreferredSize(desktopPane.getSize());
-		new SchemeEditorWindowArranger(this).arrange();
 	}
 
 	void this_windowClosing(WindowEvent e) {
@@ -621,11 +465,12 @@ public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListe
 		 * return; } else if (res == JOptionPane.CANCEL_OPTION) return; } if
 		 * (!schemeTab.removePanel(p[i])) return; }
 		 */
-		internal_dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+		dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
-
+	
+	
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
 			Environment.setActiveWindow(this);
@@ -638,51 +483,3 @@ public class SchemeEditorMainFrame extends JFrame implements PropertyChangeListe
 	}
 }
 
-class SchemeEditorWindowArranger extends WindowArranger {
-	public SchemeEditorWindowArranger(SchemeEditorMainFrame mainframe) {
-		super(mainframe);
-	}
-
-	public void arrange() {
-		SchemeEditorMainFrame f = (SchemeEditorMainFrame) mainframe;
-		int w = f.desktopPane.getSize().width;
-		int h = f.desktopPane.getSize().height;
-
-		// f.editorFrame.setVisible(true);
-		// f.ugoFrame.setVisible(true);
-		// f.elementsListFrame.setVisible(true);
-		// f.propsFrame.setVisible(true);
-		// f.treeFrame.setVisible(true);
-
-		normalize(f.editorFrame);
-		normalize(f.additionalFrame);
-		normalize(f.generalFrame);
-		normalize(f.characteristicFrame);
-		normalize(f.treeFrame);
-
-		f.editorFrame.setSize(11 * w / 20, h);
-		f.additionalFrame.setSize(w / 4, 3 * h / 10);
-		f.generalFrame.setSize(w / 4, 4 * h / 10);
-		f.characteristicFrame.setSize(w / 4, 3 * h / 10);
-		f.treeFrame.setSize(w / 5, h);
-
-		f.editorFrame.setLocation(w / 5, 0);
-		f.additionalFrame.setLocation(3 * w / 4, 7 * h / 10);
-		f.generalFrame.setLocation(3 * w / 4, 0);
-		f.characteristicFrame.setLocation(3 * w / 4, 4 * h / 10);
-		f.treeFrame.setLocation(0, 0);
-	}
-}
-
-class SchemeEditorMainFrame_this_componentAdapter extends
-		java.awt.event.ComponentAdapter {
-	SchemeEditorMainFrame adaptee;
-
-	SchemeEditorMainFrame_this_componentAdapter(SchemeEditorMainFrame adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void componentShown(ComponentEvent e) {
-		adaptee.this_componentShown(e);
-	}
-}

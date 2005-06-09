@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.2 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.3 2005/06/09 10:53:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,131 +8,60 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
-import java.awt.event.ActionEvent;
-
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.model.ApplicationModelListener;
-import com.syrus.AMFICOM.client.resource.LangModel;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/09 10:53:52 $
  * @module schemeclient_v1
  */
 
-public class SchemeEditorMenuBar extends JMenuBar implements
-		ApplicationModelListener {
-	private ApplicationModel aModel;
-
-	JMenu menuSession = new JMenu();
-	JMenuItem menuSessionNew = new JMenuItem();
-	JMenuItem menuSessionClose = new JMenuItem();
-	JMenuItem menuSessionOptions = new JMenuItem();
-	JMenuItem menuSessionConnection = new JMenuItem();
-	JMenuItem menuSessionChangePassword = new JMenuItem();
-	JMenuItem menuSessionDomain = new JMenuItem();
-	JMenuItem menuSessionSave = new JMenuItem();
-	JMenuItem menuSessionUndo = new JMenuItem();
-	JMenuItem menuExit = new JMenuItem();
-
-	JMenu menuScheme = new JMenu();
-	JMenuItem menuSchemeNew = new JMenuItem();
-	JMenuItem menuSchemeLoad = new JMenuItem();
-	JMenuItem menuSchemeSave = new JMenuItem();
-	JMenuItem menuSchemeSaveAs = new JMenuItem();
-	JMenuItem menuInsertToCatalog = new JMenuItem();
-	JMenuItem menuSchemeImport = new JMenuItem();
-	JMenuItem menuSchemeExport = new JMenuItem();
-
-	JMenu menuPath = new JMenu();
-	JMenuItem menuPathNew = new JMenuItem();
-	JMenuItem menuPathEdit = new JMenuItem();
-	JMenuItem menuPathSave = new JMenuItem();
-	JMenuItem menuPathCancel = new JMenuItem();
-	JMenuItem menuPathDelete = new JMenuItem();
-	JMenuItem menuPathAddStart = new JMenuItem();
-	JMenuItem menuPathAddEnd = new JMenuItem();
-	JMenuItem menuPathAddLink = new JMenuItem();
-	JMenuItem menuPathRemoveLink = new JMenuItem();
-	JMenuItem menuPathAutoCreate = new JMenuItem();
-
-	JMenu menuReport = new JMenu();
-	JMenuItem menuReportCreate = new JMenuItem();
-	
-	JMenu menuWindow = new JMenu();
-	JMenuItem menuWindowArrange = new JMenuItem();
-	JMenuItem menuWindowTree = new JMenuItem();
-	JMenuItem menuWindowScheme = new JMenuItem();
-	JMenuItem menuWindowCatalog = new JMenuItem();
-	JMenuItem menuWindowUgo = new JMenuItem();
-	JMenuItem menuWindowProps = new JMenuItem();
-	JMenuItem menuWindowList = new JMenuItem();
-
-	public SchemeEditorMenuBar() {
-		super();
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 
 	public SchemeEditorMenuBar(ApplicationModel aModel) {
-		this();
-		this.aModel = aModel;
+		super(aModel);
 	}
 
-	private void jbInit() throws Exception {
-		SchemeEditorMenuBar_this_actionAdapter actionAdapter = new SchemeEditorMenuBar_this_actionAdapter(
-				this);
+	protected void addMenuItems() {
+//		SchemeEditorMenuBar_this_actionAdapter actionAdapter = new SchemeEditorMenuBar_this_actionAdapter(
+//				this);
 
-		menuSession.setText(LangModel.getString("menuSession"));
-		menuSession.setName("menuSession");
-		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
-		menuSessionNew.setName("menuSessionNew");
-		menuSessionNew.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
-		menuSessionClose.setName("menuSessionClose");
-		menuSessionClose.addActionListener(actionAdapter);
-		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
-		menuSessionOptions.setName("menuSessionOptions");
-		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
-		menuSessionConnection.setName("menuSessionConnection");
-		menuSessionConnection.addActionListener(actionAdapter);
-		menuSessionChangePassword.setText(LangModel
-				.getString("menuSessionChangePassword"));
-		menuSessionChangePassword.setName("menuSessionChangePassword");
-		menuSessionChangePassword.addActionListener(actionAdapter);
-		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
-		menuSessionDomain.setName("menuSessionDomain");
-		menuSessionDomain.addActionListener(actionAdapter);
-		menuSessionSave.setText(LangModel.getString("menuSessionSave"));
-		menuSessionSave.setName("menuSessionSave");
-		menuSessionSave.addActionListener(actionAdapter);
-		menuSessionUndo.setText(LangModel.getString("menuSessionUndo"));
-		menuSessionUndo.setName("menuSessionUndo");
-		menuSessionUndo.addActionListener(actionAdapter);
-		menuExit.setText(LangModel.getString("menuExit"));
-		menuExit.setName("menuExit");
-		menuExit.addActionListener(actionAdapter);
+		final JMenu menuScheme = new JMenu();
+		final JMenuItem menuSchemeNew = new JMenuItem();
+		final JMenuItem menuSchemeLoad = new JMenuItem();
+		final JMenuItem menuSchemeSave = new JMenuItem();
+		final JMenuItem menuSchemeSaveAs = new JMenuItem();
+		final JMenuItem menuInsertToCatalog = new JMenuItem();
+		final JMenuItem menuSchemeImport = new JMenuItem();
+		final JMenuItem menuSchemeExport = new JMenuItem();
 
-		menuSession.add(menuSessionNew);
-		menuSession.add(menuSessionClose);
-		menuSession.add(menuSessionOptions);
-		menuSession.add(menuSessionChangePassword);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionConnection);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionSave);
-		menuSession.add(menuSessionUndo);
-		menuSession.add(menuSessionDomain);
-		menuSession.addSeparator();
-		menuSession.add(menuExit);
+		final JMenu menuPath = new JMenu();
+		final JMenuItem menuPathNew = new JMenuItem();
+		final JMenuItem menuPathEdit = new JMenuItem();
+		final JMenuItem menuPathSave = new JMenuItem();
+		final JMenuItem menuPathCancel = new JMenuItem();
+		final JMenuItem menuPathDelete = new JMenuItem();
+		final JMenuItem menuPathAddStart = new JMenuItem();
+		final JMenuItem menuPathAddEnd = new JMenuItem();
+		final JMenuItem menuPathAddLink = new JMenuItem();
+		final JMenuItem menuPathRemoveLink = new JMenuItem();
+		final JMenuItem menuPathAutoCreate = new JMenuItem();
 
+		final JMenu menuReport = new JMenu();
+		final JMenuItem menuReportCreate = new JMenuItem();
+		
+		final JMenu menuWindow = new JMenu();
+		final JMenuItem menuWindowArrange = new JMenuItem();
+		final JMenuItem menuWindowTree = new JMenuItem();
+		final JMenuItem menuWindowScheme = new JMenuItem();
+		final JMenuItem menuWindowCatalog = new JMenuItem();
+		final JMenuItem menuWindowUgo = new JMenuItem();
+		final JMenuItem menuWindowProps = new JMenuItem();
+		final JMenuItem menuWindowList = new JMenuItem();
+		
 		menuScheme.setText(LangModelSchematics.getString("menuScheme"));
 		menuScheme.setName("menuScheme");
 		menuSchemeNew.setText(LangModelSchematics.getString("menuSchemeNew"));
@@ -258,39 +187,20 @@ public class SchemeEditorMenuBar extends JMenuBar implements
 		menuWindow.add(menuWindowList);
 		menuWindow.add(menuWindowCatalog);
 
-		add(menuSession);
 		add(menuScheme);
 		add(menuPath);
 		add(menuReport);
 		add(menuWindow);
-	}
 
-	public void modelChanged(String e) {
-		modelChanged(new String[] {e});
-	}
+
+		this.addApplicationModelListener(new ApplicationModelListener() {
+			public void modelChanged(String e) {
+				modelChanged(new String[] {e});
+			}
 	
 	public void modelChanged(String e[]) {
-		menuSession.setVisible(aModel.isVisible("menuSession"));
-		menuSession.setEnabled(aModel.isEnabled("menuSession"));
-		menuSessionNew.setVisible(aModel.isVisible("menuSessionNew"));
-		menuSessionNew.setEnabled(aModel.isEnabled("menuSessionNew"));
-		menuSessionClose.setVisible(aModel.isVisible("menuSessionClose"));
-		menuSessionClose.setEnabled(aModel.isEnabled("menuSessionClose"));
-		menuSessionOptions.setVisible(aModel.isVisible("menuSessionOptions"));
-		menuSessionOptions.setEnabled(aModel.isEnabled("menuSessionOptions"));
-		menuSessionConnection.setVisible(aModel.isVisible("menuSessionConnection"));
-		menuSessionConnection.setEnabled(aModel.isEnabled("menuSessionConnection"));
-		menuSessionChangePassword.setVisible(aModel
-				.isVisible("menuSessionChangePassword"));
-		menuSessionChangePassword.setEnabled(aModel
-				.isEnabled("menuSessionChangePassword"));
-		menuSessionDomain.setVisible(aModel.isVisible("menuSessionDomain"));
-		menuSessionDomain.setEnabled(aModel.isEnabled("menuSessionDomain"));
-		menuSessionSave.setVisible(aModel.isVisible("menuSessionSave"));
-		menuSessionSave.setEnabled(aModel.isEnabled("menuSessionSave"));
-		menuSessionUndo.setVisible(aModel.isVisible("menuSessionUndo"));
-		menuSessionUndo.setEnabled(aModel.isEnabled("menuSessionUndo"));
-
+		ApplicationModel aModel = SchemeEditorMenuBar.this.getApplicationModel();
+		
 		menuScheme.setVisible(aModel.isVisible("menuScheme"));
 		menuScheme.setEnabled(aModel.isEnabled("menuScheme"));
 		menuSchemeNew.setVisible(aModel.isVisible("menuSchemeNew"));
@@ -353,30 +263,8 @@ public class SchemeEditorMenuBar extends JMenuBar implements
 		menuWindowList.setVisible(aModel.isVisible("menuWindowList"));
 		menuWindowList.setEnabled(aModel.isEnabled("menuWindowList"));
 	}
-
-	public void setModel(ApplicationModel aModel) {
-		this.aModel = aModel;
+	});
 	}
 
-	public void this_actionPerformed(ActionEvent e) {
-		if (aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton) e.getSource();
-		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command.execute();
-	}
-}
 
-class SchemeEditorMenuBar_this_actionAdapter implements
-		java.awt.event.ActionListener {
-	SchemeEditorMenuBar adaptee;
-
-	SchemeEditorMenuBar_this_actionAdapter(SchemeEditorMenuBar adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		adaptee.this_actionPerformed(e);
-	}
 }
