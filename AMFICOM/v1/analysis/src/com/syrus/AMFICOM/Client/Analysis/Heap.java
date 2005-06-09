@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.63 2005/06/09 10:53:03 saa Exp $
+ * $Id: Heap.java,v 1.64 2005/06/09 13:09:37 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.63 $, $Date: 2005/06/09 10:53:03 $
+ * @version $Revision: 1.64 $, $Date: 2005/06/09 13:09:37 $
  * @module
  */
 public class Heap
@@ -98,7 +98,7 @@ public class Heap
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 	//private static int currentEv = -1;
-    private static CompositeEventList eventList = new CompositeEventList(false);
+    private static CompositeEventList eventList = new CompositeEventList();
     private static CompositeEventList.Walker currentEvent =
         eventList.new Walker();
 

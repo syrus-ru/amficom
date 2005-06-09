@@ -1,5 +1,5 @@
 /*-
- * $Id: CompositeEventList.java,v 1.3 2005/05/24 10:27:41 saa Exp $
+ * $Id: CompositeEventList.java,v 1.4 2005/06/09 13:09:37 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/05/24 10:27:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/09 13:09:37 $
  * @module
  */
 public class CompositeEventList {
@@ -28,13 +28,7 @@ public class CompositeEventList {
     protected int[] c2pEx = null; // non-strict mapping
     protected int[] c2eEx = null; // non-strict mapping
 
-    /**
-     * @param strictMode false, if you allow one A event being in many
-     * iterations paired to different B events and vica versa.
-     * true, if you want find every A and every B event only one time
-     * during any kind of iteration.
-     */
-    public CompositeEventList(boolean strictMode) {
+    public CompositeEventList() {
     }
 
     public void dataUpdated() {
