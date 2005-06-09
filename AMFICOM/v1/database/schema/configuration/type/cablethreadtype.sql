@@ -8,8 +8,8 @@ CREATE TABLE CableThreadType (
 --
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
- name VARCHAR2(128),
 --
+ name VARCHAR2(128),
  mark VARCHAR2(64),
  color VARCHAR2(32),
  link_type_id VARCHAR2(32),
@@ -23,7 +23,7 @@ CREATE TABLE CableThreadType (
  CONSTRAINT cthtype_linktype_fk FOREIGN KEY (link_type_id)
   REFERENCES LinkType (id) ON DELETE CASCADE,
  CONSTRAINT cthtype_clinktype_fk FOREIGN KEY (cable_link_type_id)
-  REFERENCES LinkType (id) ON DELETE CASCADE
+  REFERENCES CableLinkType (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE cablethreadtype_seq ORDER;
+CREATE SEQUENCE CableThreadType_seq ORDER;
