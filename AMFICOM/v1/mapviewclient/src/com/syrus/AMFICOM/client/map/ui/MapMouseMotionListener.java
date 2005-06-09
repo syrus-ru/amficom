@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.16 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.17 2005/06/09 08:46:48 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,13 +13,10 @@ package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
-import javax.swing.SwingConstants;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
@@ -39,8 +36,8 @@ import com.syrus.AMFICOM.map.MapElement;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:57:02 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/06/09 08:46:48 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseMotionListener implements MouseMotionListener
@@ -160,10 +157,24 @@ public final class MapMouseMotionListener implements MouseMotionListener
 		}
 
 		//Обрабатывает события на панели инстрементов
-		if(mapState.getOperationMode() == MapState.MOVE_HAND) {
+		if (mapState.getOperationMode() == MapState.MOVE_HAND)
+		{		
+			try {
+				//Если перемещают карту лапкой
+				this.logicalNetLayer.handMoved(me);
+			} catch(MapConnectionException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch(MapDataException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		}
+		if(mapState.getActionMode() == MapState.NULL_ACTION_MODE)
+			if(MapPropertiesManager.isTopologicalImageCache()) {
 				try {
 					//Если перемещают карту лапкой
-					this.logicalNetLayer.handMoved(me);
+					this.logicalNetLayer.mouseMoved(me);
 				} catch(MapConnectionException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
@@ -171,7 +182,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-		}
+			}
 		
 		if(mapState.getActionMode() == MapState.NULL_ACTION_MODE)
 		if(MapPropertiesManager.isDescreteNavigation()) {
