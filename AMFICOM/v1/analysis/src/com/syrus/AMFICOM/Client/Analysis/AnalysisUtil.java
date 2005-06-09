@@ -293,11 +293,10 @@ public class AnalysisUtil
 		case SimpleReflectogramEvent.NOTIDENTIFIED:
 		    eventTypeName = LangModelAnalyse.getString("eventTypeNonIdentified");
 			break;
-		case SimpleReflectogramEvent.RESERVED:
+		//case SimpleReflectogramEvent.RESERVED:
+		default:
 		    eventTypeName = LangModelAnalyse.getString("dash");
 			break;
-		default:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeUnk"); // @todo: отличать от eventTypeNonIdentified или нет?
 		}
 		return eventTypeName;
 	}
