@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.72 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.73 2005/06/09 08:42:57 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -78,8 +78,8 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.72 $, $Date: 2005/06/06 12:57:01 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.73 $, $Date: 2005/06/09 08:42:57 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -335,11 +335,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		throws MapConnectionException, MapDataException;
 
 	/**
-	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
-	 * нажата мышь.
+	 * В пустом режиме ({@link MapState#NULL_ACTION_MODE})
+	 * передвинута мышь.
 	 * @param me мышиное событие
 	 */	
-	public abstract void handClicked(MouseEvent me)
+	public abstract void mouseMoved(MouseEvent me)
 		throws MapConnectionException, MapDataException;
 
 	/**
