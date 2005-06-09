@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
-import com.syrus.util.Log;
 
 public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 
@@ -104,7 +103,6 @@ public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 			}
 
 			private void modelChanged() {
-				Log.debugMessage(".modelChanged | ", Log.FINEST);
 				menuViewPlanItem.setVisible(ScheduleMainMenuBar.this.getApplicationModel().isVisible(MENU_VIEW_PLAN));
 				menuViewPlanItem.setEnabled(ScheduleMainMenuBar.this.getApplicationModel().isEnabled(MENU_VIEW_PLAN));
 
