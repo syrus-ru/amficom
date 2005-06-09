@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.10 2005/06/04 16:56:21 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.11 2005/06/09 10:00:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/04 16:56:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/09 10:00:35 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -108,8 +108,11 @@ final class TypicalConditionImpl extends TypicalCondition {
 					if (storableObject instanceof MCM)
 						wrapper = MCMWrapper.getInstance();
 					else
-						throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						if (storableObject instanceof ServerProcess)
+							wrapper = ServerProcessWrapper.getInstance();
+						else
+							throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
+									IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 
 		return super.parseCondition(wrapper.getValue(storableObject, this.key));
 	}
