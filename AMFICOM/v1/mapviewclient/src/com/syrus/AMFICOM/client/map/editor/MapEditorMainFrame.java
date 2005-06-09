@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.41 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.42 2005/06/09 11:31:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -86,17 +86,21 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
  * 
  * 
- * @version $Revision: 1.41 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/09 11:31:22 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -757,17 +761,19 @@ public class MapEditorMainFrame extends JFrame
 			ex.printStackTrace();
 		}
 
-//		try {
-//			SchemeSampleData.populate(
-//					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id),
-//					new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id));
-//		} catch(DatabaseException e) {
-//			e.printStackTrace();
-//		} catch(IllegalObjectEntityException e) {
-//			e.printStackTrace();
-//		} catch(IdentifierGenerationException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			SchemeSampleData.populate(
+					LoginManager.getUserId(),
+					LoginManager.getDomainId());
+		} catch(DatabaseException e) {
+			e.printStackTrace();
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
+		} catch(IdentifierGenerationException e) {
+			e.printStackTrace();
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setSessionClosed()
