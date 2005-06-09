@@ -267,8 +267,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				sen = true;
 			}
 			else
-				if(element instanceof SchemeCableLink) {
-					this.schemePanel.getGraph().setVisible(false);
+			if(element instanceof SchemeCableLink) {
+				this.schemePanel.getGraph().setVisible(false);
 				this.crossingScrollPane.setVisible(true);
 				
 				SchemeCableLink scl = (SchemeCableLink )element;
@@ -281,9 +281,18 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				AbstractNode endNode = mapView.getEndNode(scl);
 				sen = !(startNode.equals(this.site))
 						&& !(endNode.equals(this.site));
-				}
-				else {
-					this.schemePanel.getGraph().setVisible(false);
+			}
+			// TODO demo cheat
+//			else
+//			if(element.equals("йн 17-221")) {
+//				this.schemePanel.getGraph().setVisible(false);
+//				this.crossingScrollPane.setVisible(true);
+//				
+//				this.crossingPanel.setCable(null);
+//			}
+			//
+			else {
+				this.schemePanel.getGraph().setVisible(false);
 				this.crossingPanel.setCable(null);
 				this.crossingScrollPane.setVisible(true);
 			}
@@ -363,6 +372,9 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					this.cablesBranch.add(cableNode);
 				}
 			}
+			// TODO demo cheat!
+//			this.cablesBranch.add(new DefaultMutableTreeNode("йн 17-221"));
+			//
 		}
 
 		return this.root;
