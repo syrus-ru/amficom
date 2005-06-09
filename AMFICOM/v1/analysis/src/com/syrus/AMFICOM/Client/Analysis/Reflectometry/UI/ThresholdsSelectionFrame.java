@@ -1,47 +1,20 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
  
 import java.awt.*;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.*;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JToolBar;
-import javax.swing.JViewport;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
-import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
@@ -121,7 +94,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		);
 		this.jTable = new ATable(this.tModel);
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(200);
-		this.jTable.setDefaultEditor(Object.class, new ThresholdEditor());
+		this.jTable.setDefaultEditor(Object.class, ThresholdEditor.getInstance());
 		
 		analysisInitialButton = new JButton();
 		analysisInitialButton.setMargin(UIManager.getInsets(
@@ -361,8 +334,16 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			jTable.getSelectionModel().setSelectionInterval(selected, selected);
 	}
 
-	class ThresholdEditor extends DefaultCellEditor {
-		public ThresholdEditor() {
+	static class ThresholdEditor extends DefaultCellEditor {
+		private static ThresholdEditor INSTANCE;
+		
+		public static ThresholdEditor getInstance() {
+			if (INSTANCE == null)
+				INSTANCE = new ThresholdEditor();
+			return INSTANCE;
+		}
+		
+		private ThresholdEditor() {
 			super(new JTextField());
 		}
 
