@@ -338,7 +338,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 				else if (i == n - 1 && i != 0)
 					key = "thresholdsAmplitudeEnd";
 				else
-					key = "thresholdsAmplitude"; // currently, never happed
+					key = "thresholdsAmplitude";
 				break;
 			case ModelTraceManager.ThreshEditor.TYPE_L:
 				key = "thresholdsHeight";
