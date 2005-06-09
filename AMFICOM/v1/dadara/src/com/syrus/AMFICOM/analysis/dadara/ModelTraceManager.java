@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.79 2005/06/07 10:36:32 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.80 2005/06/09 12:48:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.79 $, $Date: 2005/06/07 10:36:32 $
+ * @version $Revision: 1.80 $, $Date: 2005/06/09 12:48:57 $
  * @module
  */
 public class ModelTraceManager
@@ -339,7 +339,7 @@ implements DataStreamable, Cloneable
 				ret.add(new ThreshEditorWithDefaultMark(
 					((ThreshDX )th).isRise()
 						? ThreshEditor.TYPE_DXF
-						: ThreshEditor.TYPE_DXF,
+						: ThreshEditor.TYPE_DXT,
 					th,
                     th == defaultTh)); // mark if thesh object is same
 			}
