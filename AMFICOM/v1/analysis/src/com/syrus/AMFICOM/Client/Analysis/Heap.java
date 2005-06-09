@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.62 2005/05/27 16:06:51 saa Exp $
+ * $Id: Heap.java,v 1.63 2005/06/09 10:53:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.util.Log;
 
 /**
  * Временная замена клиентскому пулу com.syrus.AMFICOM.Client.Resource.Pool
@@ -70,7 +71,7 @@ import com.syrus.io.BellcoreStructure;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.62 $, $Date: 2005/05/27 16:06:51 $
+ * @version $Revision: 1.63 $, $Date: 2005/06/09 10:53:03 $
  * @module
  */
 public class Heap
@@ -387,17 +388,20 @@ public class Heap
     // notifyBsHashAdd -> bsHashAdded() and
     // notifyPrimaryTraceChanged -> primaryTraceCUpdated()
     public static void notifyBsHashAdd(String key, BellcoreStructure bs) {
+        Log.debugMessage("Heap.notifyBsHashAdd | key " + key, Log.FINEST);
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
             ((BsHashChangeListener) it.next()).bsHashAdded(key, bs);
     }
 
     //  primary trace всегда останется
     public static void notifyBsHashRemove(String key) {
+        Log.debugMessage("Heap.notifyBsHashRemove | key " + key, Log.FINEST);
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
             ((BsHashChangeListener) it.next()).bsHashRemoved(key);
     }
 
     private static void notifyBsHashRemoveAll() {
+        Log.debugMessage("Heap.notifyBsHashRemoveAll | ", Log.FINEST);
         for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
             ((BsHashChangeListener) it.next()).bsHashRemovedAll();
     }
@@ -406,57 +410,69 @@ public class Heap
      * should also be suitable if primary trace completely replaced
      */
     public static void notifyPrimaryTraceOpened() {
+        Log.debugMessage("Heap.notifyPrimaryTraceOpened | ", Log.FINEST);
         for (Iterator it = primaryTraceListeners.iterator(); it.hasNext();)
             ((PrimaryTraceListener) it.next()).primaryTraceCUpdated();
     }
 
     public static void notifyPrimaryTraceClosed() {
+        Log.debugMessage("Heap.notifyPrimaryTraceClosed | ", Log.FINEST);
         for (Iterator it = primaryTraceListeners.iterator(); it.hasNext();)
             ((PrimaryTraceListener) it.next()).primaryTraceRemoved();
     }
 
     public static void notifyAnalysisParametersUpdated() {
+        Log.debugMessage("Heap.notifyAnalysisParametersUpdated | ", Log.FINEST);
         for (Iterator it = analysisParametersListeners.iterator(); it.hasNext(); )
             ((AnalysisParametersListener) it.next()).analysisParametersUpdated();
     }
 
     private static void notifyPrimaryMTAECUpdated() {
+        Log.debugMessage("Heap.notifyPrimaryMTAECUpdated | ", Log.FINEST);
         for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
             ((PrimaryMTAEListener) it.next()).primaryMTMCUpdated();
     }
 
     private static void notifyPrimaryMTAERemoved() {
+        Log.debugMessage("Heap.notifyPrimaryMTAERemoved | ", Log.FINEST);
         for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
             ((PrimaryMTAEListener) it.next()).primaryMTMRemoved();
     }
 
     private static void notifyPrimaryRefAnalysisCUpdated() {
+        Log.debugMessage("Heap.notifyPrimaryRefAnalysisCUpdated | ",
+                        Log.FINEST);
         for (Iterator it = primaryRefAnalysisListeners.iterator(); it.hasNext();)
             ((PrimaryRefAnalysisListener)it.next()).primaryRefAnalysisCUpdated();
     }
 
     private static void notifyPrimaryRefAnalysisRemoved() {
+        Log.debugMessage("Heap.notifyPrimaryRefAnalysisRemoved | ", Log.FINEST);
         for (Iterator it = primaryRefAnalysisListeners.iterator(); it.hasNext();)
             ((PrimaryRefAnalysisListener)it.next()).primaryRefAnalysisRemoved();
     }
 
     private static void notifyEtalonMTMCUpdated() {
+        Log.debugMessage("Heap.notifyEtalonMTMCUpdated | ", Log.FINEST);
         for (Iterator it = etalonMTMListeners.iterator(); it.hasNext();)
             ((EtalonMTMListener) it.next()).etalonMTMCUpdated();
     }
 
     private static void notifyEtalonMTMRemoved() {
+        Log.debugMessage("Heap.notifyEtalonMTMRemoved | ", Log.FINEST);
         for (Iterator it = etalonMTMListeners.iterator(); it.hasNext();)
             ((EtalonMTMListener) it.next()).etalonMTMRemoved();
     }
 
     private static void notifyCurrentTraceChanged() {
+        Log.debugMessage("Heap.notifyCurrentTraceChanged | ", Log.FINEST);
         for (Iterator it = currentTraceChangeListeners.iterator(); it.hasNext();)
             ((CurrentTraceChangeListener) it.next())
                     .currentTraceChanged(currentTrace);
     }
 
     private static void notifyCurrentEventChanged() {
+        Log.debugMessage("Heap.notifyCurrentEventChanged | nEvent = (" + getCurrentEvent1() + ", " + getCurrentEtalonEvent1() + ")", Log.FINEST);
         for (Iterator it = currentEventChangeListeners.iterator(); it.hasNext();)
             ((CurrentEventChangeListener) it.next())
                     .currentEventChanged();
@@ -603,8 +619,12 @@ public class Heap
     public static void setRefAnalysisPrimary(RefAnalysis ra) {
         refAnalysisPrimary = ra;
         fixEventList();
+        if (ra != null && ra.getMTAE().getNEvents() >= 0)
+            currentEvent.toEvent(0); // (1)
         notifyPrimaryRefAnalysisCUpdated();
         notifyPrimaryMTAECUpdated();
+        notifyCurrentEventChanged(); // (2)
+        // операторы (1) и (2) делают текущим событие #0
     }
 
     /**
