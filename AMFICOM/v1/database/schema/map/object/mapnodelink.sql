@@ -1,8 +1,8 @@
--- $Id: mapnodelink.sql,v 1.2 2005/06/03 11:48:02 bass Exp $
+-- $Id: mapnodelink.sql,v 1.3 2005/06/09 14:40:11 max Exp $
 
 CREATE TABLE MapNodeLink (
- map_id VARCHAR2(32),
- node_link_id VARCHAR2(32),
+ map_id NUMBER(19),
+ node_link_id NUMBER(19),
 --
  CONSTRAINT mapnl_map_fk FOREIGN KEY (map_id)
   REFERENCES Map (id) ON DELETE CASCADE,
@@ -10,4 +10,4 @@ CREATE TABLE MapNodeLink (
   REFERENCES NodeLink (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE MapNodeLink IS '$Id: mapnodelink.sql,v 1.2 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE MapNodeLink IS '$Id: mapnodelink.sql,v 1.3 2005/06/09 14:40:11 max Exp $';

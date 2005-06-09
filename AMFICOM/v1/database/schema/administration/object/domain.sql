@@ -1,31 +1,31 @@
--- $Id: domain.sql,v 1.8 2005/02/10 11:09:25 max Exp $
+-- $Id: domain.sql,v 1.9 2005/06/09 14:40:10 max Exp $
 
 CREATE TABLE Domain (
- id VARCHAR2(32),
+ id NUMBER(19),
 --
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- domain_id VARCHAR2(32),
+ domain_id NUMBER(19),
 --
  name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
- owner_id VARCHAR2(32),
+ owner_id NUMBER(19),
 --
  CONSTRAINT domain_pk PRIMARY KEY (id),
  CONSTRAINT domain_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystmeUser (id) ON DELETE CASCADE,
  CONSTRAINT domain_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
  CONSTRAINT domain_domain_fk FOREIGN KEY (domain_id)
   REFERENCES domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT domain_owner_fk FOREIGN KEY (owner_id)
-  REFERENCES "User" (id) ON DELETE CASCADE
+  REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE Domain_seq ORDER;

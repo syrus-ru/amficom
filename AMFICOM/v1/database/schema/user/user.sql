@@ -1,11 +1,11 @@
--- $Id: user.sql,v 1.2 2005/02/10 11:09:26 max Exp $
+-- $Id: user.sql,v 1.3 2005/06/09 14:40:12 max Exp $
 
-CREATE TABLE "User"(
- id VARCHAR2(32),
+CREATE TABLE SystemUser(
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  login VARCHAR2(32) NOT NULL,
@@ -15,11 +15,11 @@ CREATE TABLE "User"(
 --
  CONSTRAINT user_pk PRIMARY KEY (id),
  CONSTRAINT user_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT user_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT user_login_uniq UNIQUE (login)
 );
 
-CREATE SEQUENCE user_seq ORDER;
+CREATE SEQUENCE systemuser_seq ORDER;
 

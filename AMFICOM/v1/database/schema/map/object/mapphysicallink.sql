@@ -1,8 +1,8 @@
--- $Id: mapphysicallink.sql,v 1.2 2005/06/03 11:48:02 bass Exp $
+-- $Id: mapphysicallink.sql,v 1.3 2005/06/09 14:40:11 max Exp $
 
 CREATE TABLE MapPhysicalLink (
- map_id VARCHAR2(32),
- physical_link_id VARCHAR2(32),
+ map_id NUMBER(19),
+ physical_link_id NUMBER(19),
 --
  CONSTRAINT mappl_map_fk FOREIGN KEY (map_id)
   REFERENCES Map (id) ON DELETE CASCADE,
@@ -10,4 +10,4 @@ CREATE TABLE MapPhysicalLink (
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE MapPhysicalLink IS '$Id: mapphysicallink.sql,v 1.2 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE MapPhysicalLink IS '$Id: mapphysicallink.sql,v 1.3 2005/06/09 14:40:11 max Exp $';

@@ -1,6 +1,6 @@
 CREATE TABLE EquipmentMELink (
- equipment_id VARCHAR2(32),
- monitored_element_id VARCHAR2(32),
+ equipment_id NUMBER(19),
+ monitored_element_id NUMBER(19),
 --
  CONSTRAINT eqmelink_eq_fk FOREIGN KEY (equipment_id)
   REFERENCES Equipment (id) ON DELETE CASCADE,

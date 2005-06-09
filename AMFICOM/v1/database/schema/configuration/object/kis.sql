@@ -1,24 +1,24 @@
 CREATE TABLE KIS (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- domain_id VARCHAR2(32),
+ domain_id NUMBER(19),
  name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
  hostname VARCHAR2(64),
  tcp_port NUMBER(5,0),
- equipment_id varchar2(32) NOT NULL,
- mcm_id VARCHAR2(32) NOT NULL,
+ equipment_id NUMBER(19) NOT NULL,
+ mcm_id NUMBER(19) NOT NULL,
 --
  CONSTRAINT kis_pk PRIMARY KEY (id),
  CONSTRAINT kis_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT kis_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
  CONSTRAINT kis_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,

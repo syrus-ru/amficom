@@ -1,6 +1,6 @@
 CREATE TABLE MeasurementSetupMTLink (
- measurement_setup_id VARCHAR2(32) NOT NULL,
- measurement_type_id VARCHAR2(32) NOT NULL,
+ measurement_setup_id NUMBER(19) NOT NULL,
+ measurement_type_id NUMBER(19) NOT NULL,
 --
  CONSTRAINT mntspmtlink_mntsetup_fk FOREIGN KEY (measurement_setup_id)
   REFERENCES MeasurementSetup (id) ON DELETE CASCADE,

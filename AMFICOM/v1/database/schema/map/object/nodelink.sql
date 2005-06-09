@@ -1,28 +1,28 @@
--- $Id: nodelink.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+-- $Id: nodelink.sql,v 1.5 2005/06/09 14:40:11 max Exp $
 
 CREATE TABLE NodeLink (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  name VARCHAR2(128),
- physical_link_id VARCHAR2(32),
- start_node_id VARCHAR2(32),
- end_node_id VARCHAR2(32), 
+ physical_link_id NUMBER(19),
+ start_node_id NUMBER(19),
+ end_node_id NUMBER(19), 
  length NUMBER(12, 6),
 --
  CONSTRAINT nodelink_pk PRIMARY KEY (id),
  CONSTRAINT nodelink_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT nodelink_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT nodelink_phlink_type_fk FOREIGN KEY (physical_link_id)
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE NodeLink IS '$Id: nodelink.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE NodeLink IS '$Id: nodelink.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
 
 CREATE SEQUENCE NodeLink_Seq ORDER;

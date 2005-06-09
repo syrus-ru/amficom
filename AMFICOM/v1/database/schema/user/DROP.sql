@@ -1,4 +1,4 @@
-DROP TABLE "User";
+DROP TABLE SystemUser;
 
-DROP SEQUENCE user_seq;
+DROP SEQUENCE systemuser_seq;
 

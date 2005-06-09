@@ -1,6 +1,6 @@
--- $Id: linktypenatureupdatecheck.sql,v 1.1 2005/02/18 11:12:27 bass Exp $
+-- $Id: linktypenatureupdatecheck.sql,v 1.2 2005/06/09 14:40:11 max Exp $
 
-CREATE TRIGGER "LinkTypeNatureUpdateCheck"
+CREATE TRIGGER LinkTypeNatureUpdateCheck
 	BEFORE UPDATE OF id, nature
 	ON LinkType
 	FOR EACH ROW
@@ -37,7 +37,7 @@ BEGIN
 				|| cnt || errMsg6 || errMsg9 || errMsg2
 				|| errMsgE || errMsg0);
 		END IF;
-		SELECT COUNT(*) INTO cnt FROM "SchemeCableLink" WHERE cable_link_type_id = :old.id;
+		SELECT COUNT(*) INTO cnt FROM SchemeCableLink WHERE cable_link_type_id = :old.id;
 		IF (cnt >= 1) THEN
 			RAISE_APPLICATION_ERROR(num => -20000, msg => errMsg5
 				|| :old.id || errMsg4 || :old.nature || errMsg7
@@ -52,7 +52,7 @@ BEGIN
 				|| cnt || errMsg3 || errMsg9 || errMsg2
 				|| errMsgF || errMsg1 || errMsg2 || errMsg0);
 		END IF;
-		SELECT COUNT(*) INTO cnt FROM "SchemeLink" WHERE link_type_id = :old.id;
+		SELECT COUNT(*) INTO cnt FROM SchemeLink WHERE link_type_id = :old.id;
 		IF (cnt >= 1) THEN
 			RAISE_APPLICATION_ERROR(num => -20000, msg => errMsg5
 				|| :old.id || errMsg4 || :old.nature || errMsg7
@@ -70,7 +70,7 @@ BEGIN
 					|| errMsg3 || errMsg9 || errMsg1
 					|| errMsg2 || errMsgE || errMsg0);
 			END IF;
-			SELECT COUNT(*) INTO cnt FROM "SchemeLink" WHERE link_type_id = :old.id;
+			SELECT COUNT(*) INTO cnt FROM SchemeLink WHERE link_type_id = :old.id;
 			IF (cnt >= 1) THEN
 				RAISE_APPLICATION_ERROR(num => -20000, msg =>
 					errMsg1 || errMsg5 || :old.id || errMsg4
@@ -88,7 +88,7 @@ BEGIN
 					|| errMsg2 || errMsgF || errMsg2
 					|| errMsg0);
 			END IF;
-			SELECT COUNT(*) INTO cnt FROM "SchemeCableLink" WHERE cable_link_type_id = :old.id;
+			SELECT COUNT(*) INTO cnt FROM SchemeCableLink WHERE cable_link_type_id = :old.id;
 			IF (cnt >= 1) THEN
 				RAISE_APPLICATION_ERROR(num => -20000, msg =>
 					errMsg1 || errMsg5 || :old.id || errMsg4

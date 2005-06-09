@@ -1,6 +1,6 @@
 CREATE TABLE ModTypParTypLink (
- modeling_type_id VARCHAR2(32) NOT NULL,
- parameter_type_id VARCHAR2(32) NOT NULL,
+ modeling_type_id NUMBER(19) NOT NULL,
+ parameter_type_id NUMBER(19) NOT NULL,
  parameter_mode VARCHAR2(3) NOT NULL,
 --
  CONSTRAINT modtpartlnk_modt_fk FOREIGN KEY (modeling_type_id)

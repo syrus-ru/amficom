@@ -1,53 +1,53 @@
--- $Id: schemeelement.sql,v 1.8 2005/06/03 11:48:02 bass Exp $
+-- $Id: schemeelement.sql,v 1.9 2005/06/09 14:40:12 max Exp $
 
-CREATE TABLE "SchemeElement" (
-	id VARCHAR2(32 CHAR) NOT NULL,
+CREATE TABLE SchemeElement (
+	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id VARCHAR2(32 CHAR) NOT NULL,
-	modifier_id VARCHAR2(32 CHAR) NOT NULL,
+	creator_id NUMBER(19) NOT NULL,
+	modifier_id NUMBER(19) NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR)NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
 	label VARCHAR2(64 CHAR),
-	equipment_type_id VARCHAR2(32 CHAR),
-	equipment_id VARCHAR2(32 CHAR),
-	rtu_id VARCHAR2(32 CHAR),
-	site_node_id VARCHAR2(32 CHAR),
-	symbol_id VARCHAR2(32 CHAR),
-	ugo_cell_id VARCHAR2(32 CHAR),
-	scheme_cell_id VARCHAR2(32 CHAR),
-	parent_scheme_id VARCHAR2(32 CHAR),
-	parent_scheme_element_id VARCHAR2(32 CHAR),
+	equipment_type_id NUMBER(19),
+	equipment_id NUMBER(19),
+	kis_id NUMBER(19),
+	site_node_id NUMBER(19),
+	symbol_id NUMBER(19),
+	ugo_cell_id NUMBER(19),
+	scheme_cell_id NUMBER(19),
+	parent_scheme_id NUMBER(19),
+	parent_scheme_element_id NUMBER(19),
 --
 	CONSTRAINT schemeelement_pk PRIMARY KEY(id),
 --
 	CONSTRAINT schemeelement_creator_fk FOREIGN KEY(creator_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_modifier_fk FOREIGN KEY(modifier_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schemeelement_equipmnt_type_fk FOREIGN KEY(equipment_type_id)
 		REFERENCES EquipmentType(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_equipmnt_fk FOREIGN KEY(equipment_id)
 		REFERENCES Equipment(id) ON DELETE CASCADE,
-	CONSTRAINT schemeelement_rtu_fk FOREIGN KEY(rtu_id)
+	CONSTRAINT schemeelement_kis_fk FOREIGN KEY(kis_id)
 		REFERENCES Kis(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_sitenode_fk FOREIGN KEY(site_node_id)
 		REFERENCES SiteNode(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_symbol_fk FOREIGN KEY(symbol_id)
-		REFERENCES "ImageResource"(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_ugo_cell_fk FOREIGN KEY(ugo_cell_id)
-		REFERENCES "ImageResource"(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_scheme_cell_fk FOREIGN KEY(scheme_cell_id)
-		REFERENCES "ImageResource"(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_prnt_schm_fk FOREIGN KEY(parent_scheme_id)
-		REFERENCES "Scheme"(id) ON DELETE CASCADE,
+		REFERENCES Scheme(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_prnt_schmlmnt_fk FOREIGN KEY(parent_scheme_element_id)
-		REFERENCES "SchemeElement"(id) ON DELETE CASCADE,
+		REFERENCES SchemeElement(id) ON DELETE CASCADE,
 --
 	-- Boolean OR: equipment_type_id and equipment_id may be both nulls.
 	CONSTRAINT schemeelement_equipmnt_chk CHECK
@@ -62,11 +62,11 @@ CREATE TABLE "SchemeElement" (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE "SchemeElement" IS '$Id: schemeelement.sql,v 1.8 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.9 2005/06/09 14:40:12 max Exp $';
 
-ALTER TABLE "Scheme" ADD (
+ALTER TABLE Scheme ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)
-		REFERENCES "SchemeElement"(id) ON DELETE CASCADE ENABLE
+		REFERENCES SchemeElement(id) ON DELETE CASCADE ENABLE
 );
 
 CREATE SEQUENCE SchemeElement_Seq ORDER;

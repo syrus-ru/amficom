@@ -1,4 +1,4 @@
--- $Id: physicallinktype.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+-- $Id: physicallinktype.sql,v 1.5 2005/06/09 14:40:11 max Exp $
 
 CREATE TABLE PhysicalLinkType (
  id VARCHAR2(32),
@@ -17,11 +17,11 @@ CREATE TABLE PhysicalLinkType (
  CONSTRAINT phlinktype_pk PRIMARY KEY (id),
  CONSTRAINT phlinktype_uniq UNIQUE (codename),
  CONSTRAINT phlinktype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT phlinktype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE
+  REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
 
 CREATE SEQUENCE PhysicalLinkType_Seq ORDER;

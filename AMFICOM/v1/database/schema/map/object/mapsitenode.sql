@@ -1,8 +1,8 @@
--- $Id: mapsitenode.sql,v 1.2 2005/06/03 11:48:02 bass Exp $
+-- $Id: mapsitenode.sql,v 1.3 2005/06/09 14:40:11 max Exp $
 
 CREATE TABLE MapSiteNode (
- map_id VARCHAR2(32),
- site_node_id VARCHAR2(32),
+ map_id NUMBER(19),
+ site_node_id NUMBER(19),
 --
  CONSTRAINT mapsn_map_fk FOREIGN KEY (map_id)
   REFERENCES Map (id) ON DELETE CASCADE,
@@ -10,4 +10,4 @@ CREATE TABLE MapSiteNode (
   REFERENCES SiteNode (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE MapSiteNode IS '$Id: mapsitenode.sql,v 1.2 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE MapSiteNode IS '$Id: mapsitenode.sql,v 1.3 2005/06/09 14:40:11 max Exp $';

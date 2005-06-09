@@ -1,6 +1,6 @@
 CREATE TABLE TransmissionPathMELink (
- transmission_path_id VARCHAR2(32),
- monitored_element_id VARCHAR2(32),
+ transmission_path_id NUMBER(19),
+ monitored_element_id NUMBER(19),
 --
  CONSTRAINT tpathmelink_tpath_fk FOREIGN KEY (transmission_path_id)
   REFERENCES TransmissionPath (id) ON DELETE CASCADE,

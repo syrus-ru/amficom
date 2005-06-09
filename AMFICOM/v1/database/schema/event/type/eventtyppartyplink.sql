@@ -1,6 +1,6 @@
 CREATE TABLE EventTypParTypLink (
- event_type_id VARCHAR2(32) NOT NULL,
- parameter_type_id VARCHAR2(32) NOT NULL,
+ event_type_id NUMBER(19) NOT NULL,
+ parameter_type_id NUMBER(19) NOT NULL,
 --
  CONSTRAINT evtpartlnk_uniq
   UNIQUE (event_type_id, parameter_type_id),

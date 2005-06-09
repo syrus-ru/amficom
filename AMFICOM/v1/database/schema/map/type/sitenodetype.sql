@@ -1,4 +1,4 @@
--- $Id: sitenodetype.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+-- $Id: sitenodetype.sql,v 1.5 2005/06/09 14:40:11 max Exp $
 
 CREATE TABLE SiteNodeType (
  id VARCHAR2(32),
@@ -17,11 +17,11 @@ CREATE TABLE SiteNodeType (
  CONSTRAINT sitnodetype_pk PRIMARY KEY (id),
  CONSTRAINT sitnodetype_uniq UNIQUE (codename),
  CONSTRAINT sitnodetype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT sitnodetype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE
+  REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.4 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
 
 CREATE SEQUENCE SiteNodeType_Seq ORDER;

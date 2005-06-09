@@ -1,6 +1,6 @@
--- $Id: imageresource.sql,v 1.8 2005/06/03 11:48:02 bass Exp $
+-- $Id: imageresource.sql,v 1.9 2005/06/09 14:40:11 max Exp $
 
-CREATE TABLE "ImageResource" (
+CREATE TABLE ImageResource (
 	id VARCHAR2(32) NOT NULL,
 --
 	created DATE NOT NULL,
@@ -15,12 +15,12 @@ CREATE TABLE "ImageResource" (
 --
 	CONSTRAINT imgres_pk PRIMARY KEY(id),
 	CONSTRAINT imgres_creator_fk FOREIGN KEY(creator_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT imgres_modifier_fk FOREIGN KEY(modifier_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT imgres_uniq UNIQUE(codename)
 );
 
-COMMENT ON TABLE "ImageResource" IS '$Id: imageresource.sql,v 1.8 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE ImageResource IS '$Id: imageresource.sql,v 1.9 2005/06/09 14:40:11 max Exp $';
 
 CREATE SEQUENCE ImageResource_Seq ORDER;

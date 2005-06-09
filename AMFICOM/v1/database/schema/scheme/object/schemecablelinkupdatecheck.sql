@@ -1,8 +1,8 @@
--- $Id: schemecablelinkupdatecheck.sql,v 1.1 2005/02/18 16:45:56 bass Exp $
+-- $Id: schemecablelinkupdatecheck.sql,v 1.2 2005/06/09 14:40:12 max Exp $
 
-CREATE TRIGGER "SchemeCableLinkUpdateCheck"
+CREATE TRIGGER SchemeCableLinkUpdateCheck
 	BEFORE INSERT OR UPDATE OF cable_link_type_id, cable_link_id
-	ON "SchemeCableLink"
+	ON SchemeCableLink
 	FOR EACH ROW
 	WHEN ((old.cable_link_type_id != new.cable_link_type_id) OR (old.cable_link_id != new.cable_link_id))
 BEGIN

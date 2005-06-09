@@ -1,7 +1,7 @@
 CREATE TABLE EventParameter (
- id VARCHAR2(32),
- type_id VARCHAR2(32) NOT NULL,
- event_id VARCHAR2(32) NOT NULL,
+ id NUMBER(19),
+ type_id NUMBER(19) NOT NULL,
+ event_id NUMBER(19) NOT NULL,
  value VARCHAR2(256) NOT NULL,
 --
  CONSTRAINT evpar_pk PRIMARY KEY (id),

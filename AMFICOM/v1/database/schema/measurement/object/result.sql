@@ -1,23 +1,23 @@
 CREATE TABLE Result (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- measurement_id VARCHAR2(32) NOT NULL,
- analysis_id VARCHAR2(32),
- evaluation_id VARCHAR2(32),
- modeling_id VARCHAR2(32),
+ measurement_id NUMBER(19) NOT NULL,
+ analysis_id NUMBER(19),
+ evaluation_id NUMBER(19),
+ modeling_id NUMBER(19),
  sort NUMBER(2, 0) NOT NULL,
  alarm_level NUMBER(2, 0) NOT NULL,
 --
  CONSTRAINT res_pk PRIMARY KEY (id),
  CONSTRAINT res_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT res_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
  CONSTRAINT res_mnt_fk FOREIGN KEY (measurement_id)
   REFERENCES Measurement (id) ON DELETE CASCADE,

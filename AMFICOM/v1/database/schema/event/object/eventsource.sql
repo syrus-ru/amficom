@@ -1,26 +1,26 @@
 CREATE TABLE EventSource (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  source_entity_code NUMBER(5) NOT NULL,
 --
- mcm_id VARCHAR2(32),
+ mcm_id NUMBER(19),
 --
- port_id VARCHAR2(32),
- equipment_id VARCHAR2(32),
- transmission_path_id VARCHAR2(32),
- link_id VARCHAR2(32),
--- monitored_element_id VARCHAR2(32),
+ port_id NUMBER(19),
+ equipment_id NUMBER(19),
+ transmission_path_id NUMBER(19),
+ link_id NUMBER(19),
+-- monitored_element_id NUMBER(19),
 --
  CONSTRAINT evsrc_pk PRIMARY KEY (id),
  CONSTRAINT evsrc_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT evsrc_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
  CONSTRAINT evsrc_mcm_fk FOREIGN KEY (mcm_id)
   REFERENCES MCM (id) ON DELETE CASCADE,

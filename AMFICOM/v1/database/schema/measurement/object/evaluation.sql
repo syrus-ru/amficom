@@ -1,23 +1,23 @@
 CREATE TABLE Evaluation (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- type_id VARCHAR2(32) NOT NULL,
- monitored_element_id VARCHAR2(32) NOT NULL,
- measurement_id VARCHAR2(32),
+ type_id NUMBER(19) NOT NULL,
+ monitored_element_id NUMBER(19) NOT NULL,
+ measurement_id NUMBER(19),
 --
- threshold_set_id VARCHAR2(32) NOT NULL,
- etalon_id VARCHAR2(32) NOT NULL,
+ threshold_set_id NUMBER(19) NOT NULL,
+ etalon_id NUMBER(19) NOT NULL,
 --
  CONSTRAINT eva_pk PRIMARY KEY (id),
  CONSTRAINT eva_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT eva_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
  CONSTRAINT eva_evatype_fk FOREIGN KEY (type_id)
   REFERENCES EvaluationType (id) ON DELETE CASCADE,
@@ -27,9 +27,9 @@ CREATE TABLE Evaluation (
   REFERENCES Measurement (id) ON DELETE CASCADE,
 --
  CONSTRAINT eva_thrset_fk FOREIGN KEY (threshold_set_id)
-  REFERENCES "Set" (id) ON DELETE CASCADE,
+  REFERENCES ParameterSet (id) ON DELETE CASCADE,
  CONSTRAINT eva_eta_fk FOREIGN KEY (ETALON_ID)
-  REFERENCES "Set" (id) ON DELETE CASCADE
+  REFERENCES ParameterSet (id) ON DELETE CASCADE
  );
 
 CREATE SEQUENCE evaluaition_seq ORDER;

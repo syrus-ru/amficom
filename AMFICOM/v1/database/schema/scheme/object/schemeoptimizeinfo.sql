@@ -1,12 +1,12 @@
--- $Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $
+-- $Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $
 
-CREATE TABLE "SchemeOptimizeInfo" (
-	id VARCHAR2(32 CHAR) NOT NULL,
+CREATE TABLE SchemeOptimizeInfo (
+	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id VARCHAR2(32 CHAR) NOT NULL,
-	modifier_id VARCHAR2(32 CHAR) NOT NULL,
+	creator_id NUMBER(19) NOT NULL,
+	modifier_id NUMBER(19) NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
@@ -24,31 +24,31 @@ CREATE TABLE "SchemeOptimizeInfo" (
 	nodes_splice_prob BINARY_DOUBLE NOT NULL,
 	nodes_cut_prob BINARY_DOUBLE NOT NULL,
 	survivor_rate BINARY_DOUBLE NOT NULL,
-	parent_scheme_id VARCHAR2(32 CHAR) NOT NULL,
+	parent_scheme_id NUMBER(19) NOT NULL,
 --
 	CONSTRAINT schmoptimizeinfo_pk PRIMARY KEY(id),
 --
 	CONSTRAINT schmoptimizeinfo_creator_fk FOREIGN KEY(creator_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT schmoptimizeinfo_modifier_fk FOREIGN KEY(modifier_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmoptimizeinfo_prnt_schm_fk FOREIGN KEY(parent_scheme_id)
-		REFERENCES "Scheme"(id) ON DELETE CASCADE
+		REFERENCES Scheme(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE SchemeOptimizeInfo IS '$Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $';
 
 CREATE SEQUENCE SchemeOptimizeInfo_Seq ORDER;
 
 
-CREATE TABLE "SchemeOptimizeInfoRtu" (
-	id VARCHAR2(32 CHAR) NOT NULL,
+CREATE TABLE SchemeOptimizeInfoRtu (
+	id NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(128 CHAR) NOT NULL,
 	price_usd NUMBER(10) NOT NULL,
 	range_db NUMBER(5, 2) NOT NULL,
-	scheme_optimize_info_id VARCHAR2(32 CHAR) NOT NULL,
+	scheme_optimize_info_id NUMBER(19) NOT NULL,
 --
 	CONSTRAINT schemeoptimizeinfortu_pk PRIMARY KEY(id),
 --
@@ -60,23 +60,23 @@ CREATE TABLE "SchemeOptimizeInfoRtu" (
 	),
 --
 	CONSTRAINT schemeoptimizeinfortu_fk FOREIGN KEY(scheme_optimize_info_id)
-		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
+		REFERENCES SchemeOptimizeInfo(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $';
-COMMENT ON COLUMN "SchemeOptimizeInfoRtu".price_usd IS 'RTU price in US dollars.';
-COMMENT ON COLUMN "SchemeOptimizeInfoRtu".range_db IS 'RTU range in decibels, from 0.00 to 128.00 db.';
+COMMENT ON TABLE SchemeOptimizeInfoRtu IS '$Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $';
+COMMENT ON COLUMN SchemeOptimizeInfoRtu.price_usd IS 'RTU price in US dollars.';
+COMMENT ON COLUMN SchemeOptimizeInfoRtu.range_db IS 'RTU range in decibels, from 0.00 to 128.00 db.';
 
 CREATE SEQUENCE SchemeOptimizeInfoRtu_Seq ORDER;
 
 
-CREATE TABLE "SchemeOptimizeInfoSwitch" (
-	id VARCHAR2(32 CHAR) NOT NULL,
+CREATE TABLE SchemeOptimizeInfoSwitch (
+	id NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(128 CHAR) NOT NULL,
 	price_usd NUMBER(10) NOT NULL,
 	no_of_ports NUMBER(3) NOT NULL,
-	scheme_optimize_info_id VARCHAR2(32 CHAR) NOT NULL,
+	scheme_optimize_info_id NUMBER(19) NOT NULL,
 --
 	CONSTRAINT schemeoptimizeinfoswitch_pk PRIMARY KEY(id),
 --
@@ -88,11 +88,11 @@ CREATE TABLE "SchemeOptimizeInfoSwitch" (
 	),
 --
 	CONSTRAINT schemeoptimizeinfoswitch_fk FOREIGN KEY(scheme_optimize_info_id)
-		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
+		REFERENCES SchemeOptimizeInfo(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.6 2005/06/03 11:48:02 bass Exp $';
-COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".price_usd IS 'Optical switch price in US dollars.';
-COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".no_of_ports IS 'Number of ports in this optical switch. Up to 256.';
+COMMENT ON TABLE SchemeOptimizeInfoSwitch IS '$Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $';
+COMMENT ON COLUMN SchemeOptimizeInfoSwitch.price_usd IS 'Optical switch price in US dollars.';
+COMMENT ON COLUMN SchemeOptimizeInfoSwitch.no_of_ports IS 'Number of ports in this optical switch. Up to 256.';
 
 CREATE SEQUENCE SchemeOptimizeInfoSwitch_Seq ORDER;

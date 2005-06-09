@@ -1,6 +1,6 @@
-@@set.sql
+@@parameterset.sql
 @@setmelink.sql
-@@setparameter.sql
+@@parameter.sql
 @@measurementsetup.sql
 @@measurementsetupmelink.sql
 @@crontemporalpattern.sql

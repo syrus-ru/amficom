@@ -1,12 +1,12 @@
--- $Id: schemelink.sql,v 1.5 2005/06/03 11:48:02 bass Exp $
+-- $Id: schemelink.sql,v 1.6 2005/06/09 14:40:12 max Exp $
 
-CREATE TABLE "SchemeLink" (
-	id VARCHAR2(32 CHAR) NOT NULL,
+CREATE TABLE SchemeLink (
+	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id VARCHAR2(32 CHAR) NOT NULL,
-	modifier_id VARCHAR2(32 CHAR) NOT NULL,
+	creator_id NUMBER(19) NOT NULL,
+	modifier_id NUMBER(19) NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
@@ -15,23 +15,23 @@ CREATE TABLE "SchemeLink" (
 	physical_length BINARY_DOUBLE NOT NULL,
 	optical_length BINARY_DOUBLE NOT NULL,
 --
-	link_type_id VARCHAR2(32 CHAR),
-	link_id VARCHAR2(32 CHAR),
+	link_type_id NUMBER(19),
+	link_id NUMBER(19),
 --
-	site_node_id VARCHAR2(32 CHAR),
-	source_scheme_port_id VARCHAR2(32 CHAR),
-	target_scheme_port_id VARCHAR2(32 CHAR),
+	site_node_id NUMBER(19),
+	source_scheme_port_id NUMBER(19),
+	target_scheme_port_id NUMBER(19),
 --
-	parent_scheme_id VARCHAR2(32 CHAR),
-	parent_scheme_element_id VARCHAR2(32 CHAR),
-	parent_scheme_proto_element_id VARCHAR2(32 CHAR),
+	parent_scheme_id NUMBER(19),
+	parent_scheme_element_id NUMBER(19),
+	parent_scheme_proto_element_id NUMBER(19),
 --
 	CONSTRAINT schmlnk_pk PRIMARY KEY(id),
 --
 	CONSTRAINT schmlnk_creator_fk FOREIGN KEY(creator_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT schmlnk_modifier_fk FOREIGN KEY(modifier_id)
-		REFERENCES "User"(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmlnk_lnk_tp_fk FOREIGN KEY(link_type_id)
 		REFERENCES LinkType(id) ON DELETE CASCADE,
@@ -41,16 +41,16 @@ CREATE TABLE "SchemeLink" (
 	CONSTRAINT schmlnk_site_node_fk FOREIGN KEY(site_node_id)
 		REFERENCES SiteNode(id) ON DELETE CASCADE,
 	CONSTRAINT schmlnk_source_scheme_port_fk FOREIGN KEY(source_scheme_port_id)
-		REFERENCES "SchemePort"(id) ON DELETE CASCADE,
+		REFERENCES SchemePort(id) ON DELETE CASCADE,
 	CONSTRAINT schmlnk_target_scheme_port_fk FOREIGN KEY(target_scheme_port_id)
-		REFERENCES "SchemePort"(id) ON DELETE CASCADE,
+		REFERENCES SchemePort(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmlnk_prnt_schm_fk FOREIGN KEY(parent_scheme_id)
-		REFERENCES "Scheme"(id) ON DELETE CASCADE,
+		REFERENCES Scheme(id) ON DELETE CASCADE,
 	CONSTRAINT schmlnk_prnt_schm_elmnt_fk FOREIGN KEY(parent_scheme_element_id)
-		REFERENCES "SchemeElement"(id) ON DELETE CASCADE,
+		REFERENCES SchemeElement(id) ON DELETE CASCADE,
 	CONSTRAINT schmlnk_prnt_schm_prt_elmnt_fk FOREIGN KEY(parent_scheme_proto_element_id)
-		REFERENCES "SchemeProtoElement"(id) ON DELETE CASCADE,
+		REFERENCES SchemeProtoElement(id) ON DELETE CASCADE,
 --
 	-- Boolean XOR: only one of link_type_id and link_id may be defined,
 	-- and only one may be null.
@@ -72,6 +72,6 @@ CREATE TABLE "SchemeLink" (
 		AND parent_scheme_proto_element_id IS NOT NULL))
 );
 
-COMMENT ON TABLE "SchemeLink" IS '$Id: schemelink.sql,v 1.5 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE SchemeLink IS '$Id: schemelink.sql,v 1.6 2005/06/09 14:40:12 max Exp $';
 
 CREATE SEQUENCE SchemeLink_Seq ORDER;

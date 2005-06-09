@@ -1,9 +1,9 @@
 CREATE TABLE LinkType (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  codename VARCHAR2(32) NOT NULL,
@@ -19,9 +19,9 @@ CREATE TABLE LinkType (
 --
  CONSTRAINT lkptype_pk PRIMARY KEY (id),
  CONSTRAINT lkptype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT lkptype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES "User" (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT lkptype_nature_chk CHECK (
   nature >= 0 AND nature <= 1),
  CONSTRAINT lkptype_kind_chk CHECK (

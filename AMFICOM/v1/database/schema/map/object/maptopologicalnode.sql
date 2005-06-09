@@ -1,8 +1,8 @@
--- $Id: maptopologicalnode.sql,v 1.2 2005/06/03 11:48:02 bass Exp $
+-- $Id: maptopologicalnode.sql,v 1.3 2005/06/09 14:40:11 max Exp $
 
 CREATE TABLE MapTopologicalNode (
- map_id VARCHAR2(32),
- topological_node_id VARCHAR2(32),
+ map_id NUMBER(19),
+ topological_node_id NUMBER(19),
 --
  CONSTRAINT maptn_map_fk FOREIGN KEY (map_id)
   REFERENCES Map (id) ON DELETE CASCADE,
@@ -10,4 +10,4 @@ CREATE TABLE MapTopologicalNode (
   REFERENCES TopologicalNode (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE MapTopologicalNode IS '$Id: maptopologicalnode.sql,v 1.2 2005/06/03 11:48:02 bass Exp $';
+COMMENT ON TABLE MapTopologicalNode IS '$Id: maptopologicalnode.sql,v 1.3 2005/06/09 14:40:11 max Exp $';
