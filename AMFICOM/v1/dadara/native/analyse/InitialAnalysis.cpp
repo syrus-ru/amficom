@@ -101,8 +101,6 @@ InitialAnalysis::InitialAnalysis(
 
 	prf_b("IA: analyse");
 
-	// FIXME: treatment of lastPoint !!!
-
 	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
 
 	performAnalysis(f_wletTEMP, scaleB);
@@ -531,9 +529,12 @@ return;
     shift = processDeadZone(splashes, dzMaxDist);// ищем мёртвую зону
 	// ищем остальные коннекторы  и сварки
     for(int i = shift+1; i<splashes.getLength()-1; i++)
-    { int len = processIfIsConnector(i, splashes);
+    {
+	  EventParams *ep = 0;
+	  int len = findConnector(i, splashes, ep);
       if(len != -1)// если коннектор был найден
       { i+= len;
+	    events->add(ep);
     continue;
       }
 	  len = processIfIsNonId(i, splashes);
@@ -802,12 +803,12 @@ return;
 }
 // -------------------------------------------------------------------------------------------------
 // Посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и
-// добавить, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен -1.
+// создать, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен -1.
 // В данный момент обрабатывается так:
 // Если на указанной на входе позиции находится коннекторный всплеск вверх и в пределах reflSize находится
 // коннекторный вниз, то он и берётся. Если коннекторного нет, но есть хотя бы сварочный вниз, то в качестве
 // граничного берётся самый дальний ( в пределах reflSize ) сварочный.
-int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
+int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 {   int shift = -1;
     Splash* sp1 = (Splash*)splashes[i];
     Splash* sp2, *sp_tmp;
@@ -833,6 +834,7 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
         if(sp2->begin_conn!=-1 && sp2->sign>0)// если нашли коннекторный вверх, то значит найдено начало нового коннектора
         { shift = j-i;
           shift--;// чтобы этот же всплеск был началом следующего коннектора
+		  // saa: FIXME: скорее всего, в этом случае sp2 будет указывать не на тот всплеск
     break;
         }
       }
@@ -859,10 +861,9 @@ int InitialAnalysis::processIfIsConnector(int i, ArrList& splashes)
       }
       //  если таки нашли коннектор, то добавляем это в события
       if(shift!=-1 )
-      { EventParams *ep = new EventParams;
+      { ep = new EventParams;
         setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
         correctConnectorFront(ep); // уточняем фронт коннекора
-        events->add(ep);
 #ifdef debug_lines
 		double begin = ep->begin, end = ep->end;
         xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
@@ -988,6 +989,14 @@ int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
 	double ampl = fabs(cur->f_extr); // текущая хар. ампл. неид. соб.
 	int j;
 	for(j = i + 1; j<splashes.getLength(); j++) {
+		EventParams *ep;
+		int shift2 = findConnector(j, splashes, ep);
+		if (shift2 >= 0) {
+			delete ep;
+			// распознав коннектор, никак его не испольуем, а только лишь прерываем связывание неид. события
+			// XXX: в таком случае, создание коннектора будет запрошено дважды - здесь, и по возврату в findEventsBySplashes
+	break;
+		}
 		cur = (Splash*)splashes[j];
 		int begin2 = cur->begin_thr - (int)(cur->scale * mult);
 		if (begin2 > lastPos)
