@@ -9,7 +9,6 @@ import com.syrus.io.BellcoreStructure;
 
 public class RefAnalysis
 {
-	public TraceEvent[] events; // hope nobody will change it // @todo: hide TraceEvents[]
 	public double[] noise; // hope nobody will change it
 	public double[] filtered; // hope nobody will change it
 	public TraceEvent overallStats; // hope nobody will change it
@@ -63,7 +62,6 @@ public class RefAnalysis
 		// ComplexReflectogramEvent[] re = mtae.getComplexEvents();
         DetailedEvent[] de = mtae.getDetailedEvents();
 		ModelTrace mt = mtae.getModelTrace();
-		events = null; //new TraceEvent[re.length];
 
 		double maxY = y.length > 0 ? y[0] : 0;
 		double minY = maxY;
