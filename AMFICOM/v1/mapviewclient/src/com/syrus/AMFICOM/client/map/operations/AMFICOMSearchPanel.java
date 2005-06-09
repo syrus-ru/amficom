@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.10 2005/06/06 12:57:02 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.11 2005/06/09 11:32:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -50,7 +51,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/09 11:32:12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -267,8 +268,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 		String loweredSearchText = this.searchText.toLowerCase();
 		this.searchButton.setEnabled(false);
 		List foundElements = new LinkedList();
-		SortedSet foundSites = new TreeSet(NodeTypeComparator.instance);
-		SortedSet foundLinks = new TreeSet(LinkTypeComparator.instance);
+		List foundSites = new LinkedList();
+		List foundLinks = new LinkedList();
 		
 		Map map = this.mapView.getMap();
 		try
@@ -304,6 +305,9 @@ import com.syrus.AMFICOM.mapview.MapView;
 						foundLinks.add(link);
 			}
 			
+			Collections.sort(foundSites, NodeTypeComparator.instance);
+			Collections.sort(foundLinks, LinkTypeComparator.instance);
+
 			foundElements.addAll(foundSites);
 			foundElements.addAll(foundLinks);
 		}
