@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.32 2005/05/26 08:33:34 bass Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.33 2005/06/09 13:04:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/05/26 08:33:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/06/09 13:04:18 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -48,6 +48,7 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase {
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -59,21 +60,23 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ CableThreadTypeWrapper.COLUMN_COLOR + COMMA
-				+ CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID;
+				+ CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID + COMMA
+				+ CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID;
 		}
 		return columns;
 	}
-	
+
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
-            + APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE
-			+ APOSTOPHE + cableThreadType.getColor() + APOSTOPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(cableThreadType.getLinkType().getId());
+				+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + cableThreadType.getColor() + APOSTOPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(cableThreadType.getLinkType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(cableThreadType.getCableLinkType().getId());
 		return sql;
 	}
-	
+
 	private CableThreadType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CableThreadType)
 			return (CableThreadType)storableObject;
@@ -84,7 +87,7 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(cableThreadType);
 	}
-	
+
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
@@ -93,29 +96,40 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase {
 		preparedStatement.setString(++startParameterNumber, cableThreadType.getName());
 		preparedStatement.setInt(++startParameterNumber, cableThreadType.getColor());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableThreadType.getLinkType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableThreadType.getCableLinkType().getId());
 		return startParameterNumber;
 	}
-	
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException {
 		CableThreadType cableThreadType = storableObject == null ? null : this.fromStorableObject(storableObject);
-		if (cableThreadType == null){
-			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0, null, null);			
+		if (cableThreadType == null) {
+			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+					null,
+					0L,
+					null,
+					null,
+					null,
+					0,
+					null,
+					null);
 		}
 		LinkType linkType;
 		CableLinkType cableLinkType;
 		try {
-			linkType = (LinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID), true);
-			cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID), true);
+			linkType = (LinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID), true);
+			cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID), true);
 		}
 		catch (final ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
 		cableThreadType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
@@ -126,10 +140,9 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase {
 				linkType,
 				cableLinkType);
 
-		
 		return cableThreadType;
 	}
-	
+
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
