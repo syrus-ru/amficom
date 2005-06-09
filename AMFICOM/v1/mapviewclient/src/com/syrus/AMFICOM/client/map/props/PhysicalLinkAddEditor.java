@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -186,7 +187,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.topDownLabel.setIcon(topdownicon);
 		this.leftRightLabel.setIcon(leftrighticon);
 		
-		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getPanel().getGraph());
+		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getUgoPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);
 
 		this.jPanel.add(this.cablesScrollPane, ReusedGridBagConstraints.get(0, 0, 1, 2, 1.0, 0.1, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
@@ -216,6 +217,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 			this.tunnelLayout.setBinding(binding);
 
+			// TODO demo cheat!
+//			this.cableList.addElements(Collections.singletonList(this.physicalLink));
+			//
+			
 			List list = binding.getBindObjects();
 			if(list != null) {
 				this.cableList.addElements(list);

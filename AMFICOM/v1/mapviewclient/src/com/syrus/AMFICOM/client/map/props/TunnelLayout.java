@@ -14,13 +14,14 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 public class TunnelLayout implements PropertyChangeListener {
 	private ApplicationContext internalContext = new ApplicationContext();
-	private UgoPanel panel;
+	private UgoTabbedPane panel;
 	private static final int RADIUS = 15;
 	private static final int SPACE = 2;
 	private int m, n;
@@ -38,7 +39,7 @@ public class TunnelLayout implements PropertyChangeListener {
 
 		this.internalContext.setDispatcher(new Dispatcher());
 
-		this.panel = new UgoPanel(this.internalContext);
+		this.panel = new UgoTabbedPane(this.internalContext);
 		this.panel.getGraph().setGraphEditable(false);
 		this.panel.getGraph().setAntiAliased(true);
 
@@ -47,7 +48,7 @@ public class TunnelLayout implements PropertyChangeListener {
 				this);
 	}
 
-	public UgoPanel getPanel() {
+	public UgoTabbedPane getUgoPanel() {
 		return this.panel;
 	}
 
@@ -133,6 +134,12 @@ public class TunnelLayout implements PropertyChangeListener {
 	public void setActiveElement(Object or) {
 		removeSelection();
 		this.activeCoordinates = this.binding.getBinding(or);
+
+		// TODO demo cheat!
+//		if(n > 1 && m > 2)
+//			this.activeCoordinates = new IntPoint(0, 2);
+		//
+
 		if(this.activeCoordinates != null)
 			this.panel.getGraph().setSelectionCell(this.cells[this.activeCoordinates.x][this.activeCoordinates.y]);
 	}
