@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.1 2005/06/08 09:53:29 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.2 2005/06/09 08:50:14 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import java.util.ListIterator;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/06/08 09:53:29 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2005/06/09 08:50:14 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -254,10 +254,11 @@ public class TopologicalImageCache implements MapImageRenderer
 				nulifyCache();
 				
 				//Устанавливаем значения сектора неактивной области и послденей активной области на нули 
-				this.lastActiveArea.setSize(0,0);
-				this.nonActiveZoneLastSector.setSize(0,0);				
 			}
 
+			this.lastActiveArea.setSize(0,0);
+			this.nonActiveZoneLastSector.setSize(0,0);				
+			
 			this.center = newCenter;			
 			this.createMovingRequests();
 		}
@@ -327,50 +328,6 @@ public class TopologicalImageCache implements MapImageRenderer
 		
 		//Определяем направление подгрузки
 		Dimension direction = this.getDirectionForAngle(currentAngle);
-		
-//		//Если мы находимся на границе экрана -
-//		//делаем centerChanged для LogicalNetLeyer'а и выходим.
-//		if (	(mouseX < this.imageSize.width * TopologicalImageCache.BORDER_AREA_SIZE)
-//				||(mouseX > this.imageSize.width * (1 - TopologicalImageCache.BORDER_AREA_SIZE))
-//				||(mouseY < this.imageSize.height * TopologicalImageCache.BORDER_AREA_SIZE)
-//				||(mouseY > this.imageSize.height * (1 - TopologicalImageCache.BORDER_AREA_SIZE)))
-//		{
-//			//Выставляем курсор-стрелку
-//			this.logicalNetLayer.setCursor(this.getCursorForDirection(direction));
-//			
-//			if (SwingUtilities.isRightMouseButton(event))
-//			{
-//				//Перемещаем центр
-//				//Географические координаты нового центра
-//				DoublePoint newCenter = new DoublePoint(
-//						this.center.getX() + direction.getWidth() * this.xDifferenceSph,
-//						this.center.getY() + direction.getHeight() * this.yDifferenceSph);
-//				
-//				//Географические координаты текущего положения мыши
-//				DoublePoint mousePositionSph = this.logicalNetLayer.convertScreenToMap(new Point(mouseX,mouseY));
-//				
-//				this.logicalNetLayer.setCenter(newCenter);
-//				
-//				//Курсор ставим в ту же (в топографических координатах) точку - центр уже сменен
-//				Point newMousePosition = this.logicalNetLayer.convertMapToScreen(mousePositionSph);
-//				
-//				Point frameLocation = 
-//					this.logicalNetLayer.getMapViewer().getVisualComponent().getLocationOnScreen();
-//				
-//				this.robot.mouseMove(
-//						frameLocation.x + newMousePosition.x,
-//						frameLocation.y + newMousePosition.y);
-//	
-//				return;
-//			}
-//		}
-//		else
-//			//Если мы не на границе окна - курсор обычный, не направленный
-//			this.logicalNetLayer.setCursor(this.getCursorForDirection(new Dimension(0,0)));
-//		
-		
-		
-		
 		
 //		
 //		// Вычисляем в какой мы сейчас области, если dX или dY
