@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.42 2005/06/09 11:31:22 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.43 2005/06/09 12:37:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.client.UI.StatusBarModel;
+import com.syrus.AMFICOM.client.UI.StatusBar;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
@@ -100,7 +100,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.42 $, $Date: 2005/06/09 11:31:22 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/09 12:37:32 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -123,7 +123,7 @@ public class MapEditorMainFrame extends JFrame
 	JViewport viewport = new JViewport();
 	JDesktopPane desktopPane = new JDesktopPane();
 	JPanel statusBarPanel = new JPanel();
-	StatusBarModel statusBar = new StatusBarModel(0);
+	StatusBar statusBar = new StatusBar();
 	MapEditorMenuBar menuBar = new MapEditorMenuBar();
 
 	protected MapFrame mapFrame = null;
@@ -192,14 +192,14 @@ public class MapEditorMainFrame extends JFrame
 
 		this.statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.statusBarPanel.setLayout(new BorderLayout());
-		this.statusBarPanel.add(this.statusBar, BorderLayout.CENTER);
+		this.statusBarPanel.add(this.statusBar.getPanel(), BorderLayout.CENTER);
 
-		this.statusBar.add(StatusBarModel.FIELD_STATUS);
-		this.statusBar.add(StatusBarModel.FIELD_SERVER);
-		this.statusBar.add(StatusBarModel.FIELD_SESSION);
-		this.statusBar.add(StatusBarModel.FIELD_USER);
-		this.statusBar.add(StatusBarModel.FIELD_DOMAIN);
-		this.statusBar.add(StatusBarModel.FIELD_TIME);
+		this.statusBar.add(StatusBar.FIELD_STATUS);
+		this.statusBar.add(StatusBar.FIELD_SERVER);
+		this.statusBar.add(StatusBar.FIELD_SESSION);
+		this.statusBar.add(StatusBar.FIELD_USER);
+		this.statusBar.add(StatusBar.FIELD_DOMAIN);
+		this.statusBar.add(StatusBar.FIELD_TIME);
 
 		this.viewport.setView(this.desktopPane);
 		this.scrollPane.setViewport(this.viewport);
@@ -289,21 +289,21 @@ public class MapEditorMainFrame extends JFrame
 	{
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		this.statusBar.distribute();
-		this.statusBar.setWidth(StatusBarModel.FIELD_STATUS, 200);
-		this.statusBar.setWidth(StatusBarModel.FIELD_SERVER, 250);
-		this.statusBar.setWidth(StatusBarModel.FIELD_SESSION, 200);
-		this.statusBar.setWidth(StatusBarModel.FIELD_USER, 100);
-		this.statusBar.setWidth(StatusBarModel.FIELD_DOMAIN, 150);
-		this.statusBar.setWidth(StatusBarModel.FIELD_TIME, 50);
+//		this.statusBar.distribute();
+		this.statusBar.setWidth(StatusBar.FIELD_STATUS, 200);
+		this.statusBar.setWidth(StatusBar.FIELD_SERVER, 250);
+		this.statusBar.setWidth(StatusBar.FIELD_SESSION, 200);
+		this.statusBar.setWidth(StatusBar.FIELD_USER, 100);
+		this.statusBar.setWidth(StatusBar.FIELD_DOMAIN, 150);
+		this.statusBar.setWidth(StatusBar.FIELD_TIME, 50);
 
-		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
-		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModelGeneral.getString("statusNoConnection"));
-		this.statusBar.setText(StatusBarModel.FIELD_SESSION, LangModelGeneral.getString("statusNoSession"));
-		this.statusBar.setText(StatusBarModel.FIELD_USER, LangModelGeneral.getString("statusNoUser"));
-		this.statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModelGeneral.getString("statusNoDomain"));
-		this.statusBar.setText(StatusBarModel.FIELD_TIME, " ");
-		this.statusBar.organize();
+		this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
+		this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("statusNoConnection"));
+		this.statusBar.setText(StatusBar.FIELD_SESSION, LangModelGeneral.getString("statusNoSession"));
+		this.statusBar.setText(StatusBar.FIELD_USER, LangModelGeneral.getString("statusNoUser"));
+		this.statusBar.setText(StatusBar.FIELD_DOMAIN, LangModelGeneral.getString("statusNoDomain"));
+		this.statusBar.setText(StatusBar.FIELD_TIME, " ");
+//		this.statusBar.organize();
 		this.statusBar.addDispatcher(Environment.getDispatcher());
 		this.statusBar.addDispatcher(this.internalDispatcher);
 
@@ -586,7 +586,7 @@ public class MapEditorMainFrame extends JFrame
 			}
 			if(cce.isSessionChanging())
 			{
-				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModelGeneral.getString("statusSettingSession"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("statusSettingSession"));
 			}
 //			if(cce.SESSION_CHANGED)
 //			{
@@ -610,7 +610,7 @@ public class MapEditorMainFrame extends JFrame
 			if(cce.isConnectionChanging())
 			{
 				this.statusBar.setText(
-						StatusBarModel.FIELD_STATUS, 
+						StatusBar.FIELD_STATUS, 
 						LangModelGeneral.getString("statusConnecting"));
 			}
 //			if(cce.CONNECTION_CHANGED)
@@ -630,8 +630,8 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.fireModelChanged();
 
-		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
-		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModelGeneral.getString("statusConnected"));
+		this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
+		this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("statusConnected"));
 	}
 
 	public void setConnectionClosed()
@@ -651,8 +651,8 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.fireModelChanged();
 
-		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModelGeneral.getString("statusDisconnected"));
-		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModelGeneral.getString("statusNoConnection"));
+		this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("statusDisconnected"));
+		this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("statusNoConnection"));
 	}
 
 	public void setConnectionFailed()
@@ -672,8 +672,8 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.fireModelChanged();
 
-		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModelGeneral.getString("statusError"));
-		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModelGeneral.getString("statusConnectionError"));
+		this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("statusError"));
+		this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("statusConnectionError"));
 	}
 
 	public void setSessionOpened()
@@ -690,14 +690,14 @@ public class MapEditorMainFrame extends JFrame
 		{
 			setDomainSelected();
 		}
-		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
-		this.statusBar.setText(StatusBarModel.FIELD_SESSION, MapPropertiesManager.getDateFormat().format(ClientSessionEnvironment.getInstance().getSessionEstablishDate()));
+		this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
+		this.statusBar.setText(StatusBar.FIELD_SESSION, MapPropertiesManager.getDateFormat().format(ClientSessionEnvironment.getInstance().getSessionEstablishDate()));
 
 		try
 		{
 			Identifier userId = LoginManager.getUserId();
 			User user = (User )StorableObjectPool.getStorableObject(userId, true);
-			this.statusBar.setText(StatusBarModel.FIELD_USER, user.getName());
+			this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
 		}
 		catch(ApplicationException ex)
 		{
@@ -814,10 +814,10 @@ public class MapEditorMainFrame extends JFrame
 
 		new CloseAllInternalCommand(this.desktopPane).execute();
 
-		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
-		this.statusBar.setText(StatusBarModel.FIELD_SESSION, LangModelGeneral.getString("statusNoSession"));
-		this.statusBar.setText(StatusBarModel.FIELD_USER, LangModelGeneral.getString("statusNoUser"));
-		this.statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModelGeneral.getString("statusNoDomain"));
+		this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("statusReady"));
+		this.statusBar.setText(StatusBar.FIELD_SESSION, LangModelGeneral.getString("statusNoSession"));
+		this.statusBar.setText(StatusBar.FIELD_USER, LangModelGeneral.getString("statusNoUser"));
+		this.statusBar.setText(StatusBar.FIELD_DOMAIN, LangModelGeneral.getString("statusNoDomain"));
 	}
 
 	public Dispatcher getInternalDispatcher()
