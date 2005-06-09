@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.1 2005/05/26 07:40:51 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.2 2005/06/09 10:53:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/09 10:53:29 $
  * @module schemeclient_v1
  */
 
@@ -44,7 +44,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 	private int radius = 20;
 	
 	private ApplicationContext internalContext = new ApplicationContext();
-	private UgoPanel panel;
+	private UgoTabbedPane panel;
 //	private Map mapping = new HashMap();
 	protected JScrollPane scrollPane;
 
@@ -52,7 +52,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		internalContext.setDispatcher(new Dispatcher());
 		internalContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 
-		panel = new UgoPanel(internalContext);
+		panel = new UgoTabbedPane(internalContext);
 		panel.getGraph().setGraphEditable(false);
 		panel.getGraph().setAntiAliased(true);
 		scrollPane = new JScrollPane(panel.getGraph());
@@ -70,7 +70,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 					|| type.getCodename().equals("okst16"))
 				nModules = 6;
 
-			Set ctts = type.getCableThreadTypes();
+			Set ctts = type.getCableThreadTypes(false);
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					ctts.size() / (double) nModules + 0.499)));
 			if (tmp > radius)
@@ -147,7 +147,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 			Rectangle bounds = new Rectangle(x, y, 2 * radius, 2 * radius);
 			addCell(panel.getGraph(), "", bounds, Color.WHITE); //$NON-NLS-1$
 		}
-		panel.setGraphSize(new Dimension(2 * GAP + 2 * (r2 + r1), 2 * GAP + 2 * (r2 + r1)));
+		panel.getCurrentPanel().setGraphSize(new Dimension(2 * GAP + 2 * (r2 + r1), 2 * GAP + 2 * (r2 + r1)));
 	}
 
 	public JComponent getGUI() {
