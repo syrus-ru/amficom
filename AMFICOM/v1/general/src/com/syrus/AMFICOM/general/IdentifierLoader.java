@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.6 2005/05/06 05:19:21 bob Exp $
+ * $Id: IdentifierLoader.java,v 1.7 2005/06/09 09:34:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/06 05:19:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/06/09 09:34:04 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class IdentifierLoader extends SleepButWorkThread {
@@ -27,40 +27,39 @@ public class IdentifierLoader extends SleepButWorkThread {
 	private IdentifierGeneratorServer	igServer;
 	private Fifo idPool;
 	private short entityCode;
+	private boolean running;
 
-	public IdentifierLoader(IdentifierGeneratorServer igServer, Fifo idPool, short entityCode) {
+	public IdentifierLoader(final IdentifierGeneratorServer igServer, final Fifo idPool, final short entityCode) {
 		super(TIME_TO_SLEEP);
 		this.igServer = igServer;
 		this.idPool = idPool;
 		this.entityCode = entityCode;
-	}
-
-	protected void processFall() {
-		Log.errorMessage("IdentifierLoader.processFall | coundn't fetch " + ObjectEntities.codeToString(this.entityCode) + " ids");
-	}
-
-	protected void clearFalls() {
-		super.clearFalls();
+		this.running = true;
 	}
 
 	public void run() {
-		Identifier_Transferable[] generatedIdentifierRange = null;
-		while (generatedIdentifierRange == null) {
-			try {
-				int size = this.idPool.capacity() - this.idPool.getNumber();
-				generatedIdentifierRange = this.igServer.getGeneratedIdentifierRange(this.entityCode, size);
-				Log.debugMessage("IdentifierLoader.run | fetched " + generatedIdentifierRange.length + " identifiers for " + ObjectEntities.codeToString(this.entityCode), Log.DEBUGLEVEL10);
-			}
-			catch (AMFICOMRemoteException e) {
-				Log.errorMessage(e.getMessage());
-				sleepCauseOfFall();
+		synchronized (this.idPool) {
+			int numberToLoad = this.idPool.capacity() - this.idPool.getNumber();
+			while (this.running && numberToLoad > 0) {
+				try {
+					final Identifier_Transferable[] identifiersT = this.igServer.getGeneratedIdentifierRange(this.entityCode, numberToLoad);
+					for (int i = 0; i < identifiersT.length; i++) {
+						Identifier id = new Identifier(identifiersT[i]);
+						this.idPool.push(id);
+					}
+					numberToLoad -= identifiersT.length;
+				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage(are.message);
+					super.sleepCauseOfFall();
+				}
 			}
 		}
+	}
 
-		for (int i = 0; i < generatedIdentifierRange.length; i++) {
-			Identifier id = new Identifier(generatedIdentifierRange[i]);
-			this.idPool.push(id);
-		}
-
+	protected void processFall() {
+		Log.errorMessage("Aboting load of identifiers for entity '"
+				+ ObjectEntities.codeToString(this.entityCode) + "'/" + this.entityCode);
+		this.running = false;
 	}
 }
