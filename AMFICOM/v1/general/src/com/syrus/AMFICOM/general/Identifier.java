@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.35 2005/05/18 11:07:39 bass Exp $
+ * $Id: Identifier.java,v 1.36 2005/06/09 15:19:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.35 $, $Date: 2005/05/18 11:07:39 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/09 15:19:59 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
@@ -155,13 +155,95 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 		return ids;
 	}
 
-	public static Set getIdentifiers(final Set identifiables) {
+	/**
+	 * Creates new set of identifiers from the given set of identifiables
+	 * @param identifiables
+	 * @return Set of identifiers
+	 */
+	public static Set createIdentifiers(final Set identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		Set identifiers = new HashSet(identifiables.size());
-		for (Iterator it = identifiables.iterator(); it.hasNext();)
-			identifiers.add(((Identifiable) it.next()).getId());
+		final Set identifiers = new HashSet(identifiables.size());
+		for (Iterator it = identifiables.iterator(); it.hasNext();) {
+			final Identifiable identifiable = (Identifiable) it.next();
+			identifiers.add(identifiable.getId());
+		}
 		return identifiers;
+	}
+
+	/**
+	 * Creates new set of identifiers, containing values from both supplied sets of identifiables
+	 * @param identifiables1
+	 * @param identifiables2
+	 * @return Set of identifiers
+	 */
+	public static Set createSumIdentifiers(final Set identifiables1, final Set identifiables2) {
+		assert identifiables1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert identifiables2 != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		final Set identifiers = new HashSet(identifiables1.size() + identifiables2.size());
+		for (final Iterator it = identifiables1.iterator(); it.hasNext();) {
+			final Identifiable identifiable = (Identifiable) it.next();
+			identifiers.add(identifiable.getId());
+		}
+		for (final Iterator it = identifiables2.iterator(); it.hasNext();) {
+			final Identifiable identifiable = (Identifiable) it.next();
+			identifiers.add(identifiable.getId());
+		}
+		return identifiers;
+	}
+
+	/**
+	 * Creates new set of identifiers, containing values from set <code>identifiables1</code>
+	 * with exception to those, containing in set <code>identifiables2</code>
+	 * @param identifiables1
+	 * @param identifiables2
+	 * @return
+	 */
+	public static Set createSubstractionIdentifiers(final Set identifiables1, final Set identifiables2) {
+		assert identifiables1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert identifiables2 != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		final Set identifiers = Identifier.createIdentifiers(identifiables1);
+		for (final Iterator it = identifiables2.iterator(); it.hasNext();) {
+			final Identifiable identifiable = (Identifiable) it.next();
+			identifiers.remove(identifiable.getId());
+		}
+		return identifiers;
+	}
+
+	/**
+	 * Adds to set of identifiers <code>identifiers</code>
+	 * identifiers from set of identifiables <code>identifiables</code>.
+	 * (I. e., parameter <code>identifiers</code> is passed as &quot;inout&quot; argument.)
+	 * @param identifiers
+	 * @param identifiables
+	 */
+	public static void addToIdentifiers(final Set identifiers, final Set identifiables) {
+		assert identifiers != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		for (final Iterator it = identifiables.iterator(); it.hasNext();) {
+			final Identifiable identifiable = (Identifiable) it.next();
+			identifiers.add(identifiable.getId());
+		}
+	}
+
+	/**
+	 * Removes from set of identifiers <code>identifiers</code> those,
+	 * which contained in set of identifiables <code>identifiables</code>.
+	 * (I. e., parameter <code>identifiers</code> is passed as &quot;inout&quot; argument.)
+	 * @param identifiers
+	 * @param identifiables
+	 */
+	public static void substractFromIdentifiers(final Set identifiers, final Set identifiables) {
+		assert identifiers != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		for (final Iterator it = identifiables.iterator(); it.hasNext();) {
+			final Identifiable identifiable = (Identifiable) it.next();
+			identifiers.remove(identifiable.getId());
+		}
 	}
 
 	/**
