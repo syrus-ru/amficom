@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
  
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Rectangle;
@@ -35,6 +36,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
@@ -119,6 +121,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		);
 		this.jTable = new ATable(this.tModel);
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(200);
+		this.jTable.setDefaultEditor(Object.class, new ThresholdEditor());
 		
 		analysisInitialButton = new JButton();
 		analysisInitialButton.setMargin(UIManager.getInsets(
@@ -358,6 +361,22 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			jTable.getSelectionModel().setSelectionInterval(selected, selected);
 	}
 
+	class ThresholdEditor extends DefaultCellEditor {
+		public ThresholdEditor() {
+			super(new JTextField());
+		}
+
+		public Component getTableCellEditorComponent(JTable table, Object value,
+				boolean isSelected, int row, int column) {
+			JTextField tf = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
+			Color c = UIManager.getColor(Thresh.isKeyHard(column - 1)
+					? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
+          : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD);
+			tf.setSelectionColor(c);
+			return tf;
+		}
+	}
+	
 	class ThresholdTableModel extends AbstractTableModel {
 		private String[] columns;
 		private Object[][] values;
