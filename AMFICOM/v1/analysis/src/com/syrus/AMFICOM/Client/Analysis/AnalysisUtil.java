@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -236,6 +238,37 @@ public class AnalysisUtil
         Heap.notifyAnalysisParametersUpdated();
 	}
 
+	/**
+	 * @param ev событие DetailedEvent
+	 * @return уточненное описание такого события (напр., потери на изгибе)
+	 */
+	public static String getDetailedEventName(DetailedEvent ev)
+	{
+		final double CRIT_LOSS = 0.5;
+		final double CRIT_GAIN = CRIT_LOSS;
+		switch(ev.getEventType())
+		{
+		case SimpleReflectogramEvent.GAIN:
+			if (-((SpliceDetailedEvent)ev).getLoss() > CRIT_GAIN)
+				return LangModelAnalyse.getString("eventTypeGain");
+			else
+				return LangModelAnalyse.getString("eventTypeGainAtWeld");
+		case SimpleReflectogramEvent.LOSS:
+			if (((SpliceDetailedEvent)ev).getLoss() > CRIT_LOSS)
+				return LangModelAnalyse.getString("eventTypeLossAtBend");
+			else
+				return LangModelAnalyse.getString("eventTypeLossAtWeld");
+		default:
+			return getSimpleEventNameByType(ev.getEventType());
+		}
+	}
+
+	/**
+	 * @param eventType тип SimpleReflectogramEvent события
+	 * @return общий тип такого события (не уточненный)
+	 * XXX: нужен ли, ведь выводится только уточненный
+	 *   (getDetailedEventName) тип.
+	 */
 	public static String getSimpleEventNameByType(int eventType)
 	{
 		String eventTypeName;

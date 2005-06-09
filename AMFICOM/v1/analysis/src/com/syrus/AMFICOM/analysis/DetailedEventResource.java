@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.3 2005/06/08 13:23:38 stas Exp $
+ * $Id: DetailedEventResource.java,v 1.4 2005/06/09 15:30:45 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.analysis.dadara.events.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/08 13:23:38 $
+ * @author $Author: saa $
+ * @version $Revision: 1.4 $, $Date: 2005/06/09 15:30:45 $
  * @module analysis_v1
  */
 
@@ -71,7 +71,7 @@ public class DetailedEventResource {
 		this.event = ev;
 		setNumber(Integer.toString(num));
 		int sType = ev.getEventType();
-		setType(AnalysisUtil.getSimpleEventNameByType(sType));
+		setType(AnalysisUtil.getDetailedEventName(ev));
 		setLocation(Double.toString(MathRef.round_3(res * ev.getBegin())));
 		setLength(Double.toString(MathRef.round_3(res * (DetailedEventUtil.getWidth(ev)))));
 		
@@ -116,7 +116,7 @@ public class DetailedEventResource {
 		String sMT = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT);
 		
 		int sType = ev.getEventType();
-		setType(AnalysisUtil.getSimpleEventNameByType(sType));
+		setType(AnalysisUtil.getDetailedEventName(ev));
 		setExtension(Double.toString(MathRef.round_3(res * (DetailedEventUtil.getWidth(ev)))) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM));
 		
 		switch (sType) {
@@ -156,8 +156,8 @@ public class DetailedEventResource {
 	
 	public void initComparative(DetailedEvent dataEvent, DetailedEvent etalonEvent, ModelTrace etalonMT, double deltaX) {
 		this.event = dataEvent;
-		setType(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
-		setEtalonType(etalonEvent != null ? AnalysisUtil.getSimpleEventNameByType(etalonEvent.getEventType()) : DEFAULT_TYPE);
+		setType(dataEvent != null ? AnalysisUtil.getDetailedEventName(dataEvent) : DEFAULT_TYPE);
+		setEtalonType(etalonEvent != null ? AnalysisUtil.getDetailedEventName(etalonEvent) : DEFAULT_TYPE);
 		
 		DetailedEvent ev = dataEvent != null ? dataEvent : etalonEvent;
 
