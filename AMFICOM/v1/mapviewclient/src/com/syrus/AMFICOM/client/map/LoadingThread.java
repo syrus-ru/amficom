@@ -1,6 +1,6 @@
 
 /**
- * $Id: LoadingThread.java,v 1.1 2005/06/08 09:53:29 krupenn Exp $
+ * $Id: LoadingThread.java,v 1.2 2005/06/09 08:52:37 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -262,6 +262,14 @@ public class LoadingThread extends Thread {
         {
             TopologicalRequest curRequest = (TopologicalRequest) it.next();
             curRequest.setPriority(TopologicalRequest.PRIORITY_BACKGROUND_LOW);
+        }
+        
+        synchronized (this.state)
+        {
+        	if (this.state.getValue() == State.STATE_RENDERING)
+          {
+        		this.requestCurrentlyProcessed.setPriority(TopologicalRequest.PRIORITY_BACKGROUND_LOW);
+          }
         }
         Logger.log(" TIC - loadingThread - setTheLowestPriorityForAll - done");        
     }
