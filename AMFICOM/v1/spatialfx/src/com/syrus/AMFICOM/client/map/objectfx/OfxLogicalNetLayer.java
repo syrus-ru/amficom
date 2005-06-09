@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.9 2005/06/06 13:04:56 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.10 2005/06/09 08:50:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/06/06 13:04:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/09 08:50:18 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -339,7 +339,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		// nothing
 	}
 
-	public void handClicked(MouseEvent me) throws MapConnectionException, MapDataException {
+	public void mouseMoved(MouseEvent me) throws MapConnectionException, MapDataException {
 		// nothing
 	}
 
