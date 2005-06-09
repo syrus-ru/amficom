@@ -38,10 +38,6 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		this.dispatcher = dispatcher1;
 	}
 
-	public void updateTrace (ModelTraceAndEvents mtae1) // was: updateEvents
-	{ // do nothing
-	}
-
 	public void updateAlarms (ReflectogramAlarm[] alarms1)
 	{
 		this.alarms = alarms1;

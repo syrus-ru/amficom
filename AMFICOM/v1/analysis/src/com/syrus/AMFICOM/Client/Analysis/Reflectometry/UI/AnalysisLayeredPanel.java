@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
@@ -131,8 +130,6 @@ implements CurrentEventChangeListener,
             {
                 {
                     ((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
-                    ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
-                    ((AnalysisPanel)panel).updateTrace(mtae);
                     ((AnalysisPanel)panel).updMarkers();
                     jLayeredPane.repaint();
                 }
