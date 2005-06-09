@@ -86,13 +86,11 @@ public class SaveAnalysisCommand extends AbstractCommand
 		AnalysisType type;
 		ParameterType ptype0 = null;
 		ParameterType ptype1 = null;
-		ParameterType ptype2 = null;
 		try
 		{
 			type = AnalysisUtil.getAnalysisType(ParameterTypeCodenames.DADARA);
 			ptype0 = AnalysisUtil.getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
-			ptype1 = AnalysisUtil.getParameterType(ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
-			ptype2 = AnalysisUtil.getParameterType(ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
+			ptype1 = AnalysisUtil.getParameterType(ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
 		} catch (ApplicationException e) {
 			// FIXME: exceptions: add a better error processing
 			System.err.println("SaveAnalysisCommand: Application exception while getAnalysisType");
@@ -114,22 +112,13 @@ public class SaveAnalysisCommand extends AbstractCommand
 			return;
 		}
 
-		SetParameter[] params = new SetParameter[3];
+		SetParameter[] params = new SetParameter[2];
 		try
 		{
 			params[0] = SetParameter.createInstance(ptype0,
 					new BellcoreWriter().write(bs));
 
-			ByteArrayCollector bac = new ByteArrayCollector();
-			for(int i = 0; i < refanalysis.events.length; i++)
-			{
-				byte[] b = refanalysis.events[i].toByteArray();
-				bac.add(b);
-			}
 			params[1] = SetParameter.createInstance(ptype1,
-					bac.encode());
-
-			params[2] = SetParameter.createInstance(ptype2,
 				DataStreamableUtil.writeDataStreamableToBA(mtae));
 		}
 		catch (CreateObjectException e)
