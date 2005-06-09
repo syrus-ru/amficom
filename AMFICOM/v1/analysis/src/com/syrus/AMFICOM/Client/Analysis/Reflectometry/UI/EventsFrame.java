@@ -45,6 +45,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         public TableView(int viewMode) {
             this.viewMode = viewMode;
         }
+        public void setViewMode(int viewMode) {
+            this.viewMode = viewMode;
+        }
         public int nRows(CompositeEventList eList) {
             switch(viewMode) {
             case COMP: return eList.getNCompositeEvents();
@@ -133,7 +136,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		this.aContext = aContext1;
 		this.aContext.getDispatcher().addPropertyChangeListener(RefUpdateEvent.typ, this);
 		
-        view = new TableView(TableView.PRIM); // @todo: автоматически переключать виды
+        view = new TableView(TableView.PRIM);
+        updateEventsModel();
+
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
         Heap.addPrimaryRefAnalysisListener(this);
@@ -507,16 +512,13 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     	boolean showEtalon = etalonOpened && etalonShown;
     	
     	if (showPrimary && showEtalon) {
-    		if (view.viewMode != TableView.COMP)
-    			view = new TableView(TableView.COMP);
+    		view.setViewMode(TableView.COMP);
     	}
     	else if (showPrimary) {
-    		if (view.viewMode != TableView.PRIM)
-    			view = new TableView(TableView.PRIM);
+            view.setViewMode(TableView.PRIM);
     	}
     	else if (showEtalon) {
-    		if (view.viewMode != TableView.ETAL)
-    			view = new TableView(TableView.ETAL);
+            view.setViewMode(TableView.ETAL);
     	}
     	else 
     		return;
