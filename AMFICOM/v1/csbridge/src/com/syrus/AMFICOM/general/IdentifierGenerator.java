@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.3 2005/05/10 18:57:30 bass Exp $
+ * $Id: IdentifierGenerator.java,v 1.4 2005/06/09 13:18:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/10 18:57:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/09 13:18:30 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class IdentifierGenerator {
@@ -28,13 +28,13 @@ public class IdentifierGenerator {
 		assert false;
 	}
 	
-	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {
+	protected static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {
 		short major = generateMajor(entityCode);
 		long minor = generateMinor(entityCode);
 		return new Identifier(major, minor);
 	}
 
-	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException, IdentifierGenerationException {
+	protected static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException, IdentifierGenerationException {
 		List list = new LinkedList();
 		short major = generateMajor(entityCode);
 		long minor;
