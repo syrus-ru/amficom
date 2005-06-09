@@ -42,10 +42,8 @@ import com.syrus.util.ByteArray;
 
 public class AnalysisUtil
 {
-	public static final String ETALON = Heap.ETALON_TRACE_KEY;
-
 	private AnalysisUtil()
-	{ // empty
+	{ // non-instantiable
 	}
 
 	public static ParameterType getParameterType(String codename, DataType dataType) throws ApplicationException {
