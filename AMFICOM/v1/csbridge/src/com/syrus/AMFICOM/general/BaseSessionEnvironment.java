@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.10 2005/06/08 10:53:09 bob Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.11 2005/06/09 10:45:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/08 10:53:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/06/09 10:45:10 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class BaseSessionEnvironment {
@@ -86,6 +86,7 @@ public abstract class BaseSessionEnvironment {
 
 		this.logout0();
 
+		//@todo Maybe move to logout0()
 		this.sessionEstablishDate = null;
 		this.sessionEstablished = false;
 	}
