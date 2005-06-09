@@ -21,7 +21,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	public boolean draw_min_trace_level = false;
 	public boolean draw_noise_level = false;
 
-	protected ModelTraceAndEvents mtae; // используется только в методах, вызываемых из paint()
+	//protected ModelTraceAndEvents mtae; // использовалось только в методах, вызываемых из paint()
 	protected ReflectogramAlarm[] alarms;
 
 	protected double noise_level = 28; // ???!
@@ -39,8 +39,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	}
 
 	public void updateTrace (ModelTraceAndEvents mtae1) // was: updateEvents
-	{
-		this.mtae = mtae1;
+	{ // do nothing
 	}
 
 	public void updateAlarms (ReflectogramAlarm[] alarms1)
@@ -240,6 +239,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 
     protected void paint_modeled_trace(Graphics g)
 	{
+    	ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
 		if (mtae == null)
 			return;
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));

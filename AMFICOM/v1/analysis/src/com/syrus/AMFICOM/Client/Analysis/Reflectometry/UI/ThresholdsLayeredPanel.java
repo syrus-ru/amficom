@@ -13,17 +13,15 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
 implements PropertyChangeListener,
-    CurrentEventChangeListener, EtalonMTMListener, PrimaryMTAEListener
+    CurrentEventChangeListener, EtalonMTMListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -55,7 +53,6 @@ implements PropertyChangeListener,
 		// на RefUpdateEvent подписывается суперкласс - нам подписываться не надо
 		Heap.addCurrentEventChangeListener(this);
 		Heap.addEtalonMTMListener(this);
-        Heap.addPrimaryMTMListener(this);
 	}
 
 	public void propertyChange(PropertyChangeEvent ae)
@@ -165,33 +162,6 @@ implements PropertyChangeListener,
 	{
 		etalonUpdated();
 	}
-
-    /* (non-Javadoc)
-     * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener#primaryMTMCUpdated()
-     */
-    public void primaryMTMCUpdated() {
-        for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-        {
-            SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-            if (panel instanceof ThresholdsPanel)
-            {
-                ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
-                ((ThresholdsPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
-                ((ThresholdsPanel)panel).updateTrace(mtae);
-                updScale2fitCurrentEv(.2, 1.);
-                jLayeredPane.repaint();
-            }
-        }
-    }
-
-    public void primaryMTMRemoved() {
-        for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-        {
-            SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-            if (panel instanceof ThresholdsPanel)
-                ((ThresholdsPanel)panel).mtae = null;
-        }
-    }
 }
 
 class ThresholdsToolBar extends TraceEventsToolBar
@@ -269,15 +239,6 @@ class ThresholdsToolBar extends TraceEventsToolBar
 
 	void showThresholdButton_actionPerformed(ActionEvent e)
 	{
-		/*for(int i=0; i<panel.jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel sgp = (SimpleGraphPanel)(panel.jLayeredPane.getComponent(i));
-
-			if (sgp instanceof ThresholdsPanel)
-			{
-				((ThresholdsPanel)sgp).paint_all_thresholds = showThresholdButton.isSelected();
-			}
-		}*/
 		panel.jLayeredPane.repaint();
 	}
 }
