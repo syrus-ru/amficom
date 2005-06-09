@@ -339,7 +339,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
             }
             if (dashStroke)
                 ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-            this.fps.inc();
+            //this.fps.inc();
         } else { // update range only
             for (int key = 0; key < 4; key++) {
                 drawModelCurve(g, r, curves[key], true);
