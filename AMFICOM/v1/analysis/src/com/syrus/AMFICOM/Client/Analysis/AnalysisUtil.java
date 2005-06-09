@@ -266,10 +266,8 @@ public class AnalysisUtil
 	/**
 	 * @param eventType тип SimpleReflectogramEvent события
 	 * @return общий тип такого события (не уточненный)
-	 * XXX: нужен ли, ведь выводится только уточненный
-	 *   (getDetailedEventName) тип.
 	 */
-	public static String getSimpleEventNameByType(int eventType)
+	private static String getSimpleEventNameByType(int eventType)
 	{
 		String eventTypeName;
 		switch(eventType)
@@ -296,7 +294,7 @@ public class AnalysisUtil
 		    eventTypeName = LangModelAnalyse.getString("eventTypeNonIdentified");
 			break;
 		case SimpleReflectogramEvent.RESERVED:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeNoType");
+		    eventTypeName = LangModelAnalyse.getString("dash");
 			break;
 		default:
 		    eventTypeName = LangModelAnalyse.getString("eventTypeUnk"); // @todo: отличать от eventTypeNonIdentified или нет?

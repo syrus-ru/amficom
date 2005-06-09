@@ -1,5 +1,5 @@
 /*-
- * $Id: MarkerResource.java,v 1.2 2005/06/08 11:16:23 stas Exp $
+ * $Id: MarkerResource.java,v 1.3 2005/06/09 15:38:37 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,13 @@ package com.syrus.AMFICOM.analysis;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/06/08 11:16:23 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/06/09 15:38:37 $
  * @module analysis_v1
  */
 
 public class MarkerResource {
-	public static final String DASH = LangModelAnalyse.getString("eventTypeNoType");
+	public static final String DASH = LangModelAnalyse.getString("dash");
 	
 	private String aPositionM = DASH;
 	private String aLoss = DASH;

@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.4 2005/06/09 15:30:45 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.5 2005/06/09 15:38:37 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.analysis.dadara.events.*;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/06/09 15:30:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/09 15:38:37 $
  * @module analysis_v1
  */
 
 public class DetailedEventResource {
-	private static final String DEFAULT_TYPE = AnalysisUtil.getSimpleEventNameByType(SimpleReflectogramEvent.RESERVED);
-	private static final String DASH = LangModelAnalyse.getString("eventTypeNoType");
+	private static final String DASH = LangModelAnalyse.getString("dash");
+	private static final String DEFAULT_TYPE = DASH;
 	
 	private static final Icon ICON_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_GAIN);
 	private static final Icon ICON_SPLICE_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_GAIN);
