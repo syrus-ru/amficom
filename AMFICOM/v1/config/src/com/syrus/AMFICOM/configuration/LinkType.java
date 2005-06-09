@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.50 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: LinkType.java,v 1.51 2005/06/09 12:38:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/06/03 20:37:53 $
+ * @version $Revision: 1.51 $, $Date: 2005/06/09 12:38:56 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -114,8 +114,13 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 			final String manufacturer,
 			final String manufacturerCode,
 			final Identifier imageId) throws CreateObjectException {
-		if (creatorId == null || codename == null || description == null || name == null ||
-				sort == null || manufacturer == null || manufacturerCode == null || imageId == null)
+		if (creatorId == null
+				|| codename == null
+				|| description == null
+				|| name == null
+				|| sort == null
+				|| manufacturer == null
+				|| manufacturerCode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -166,6 +171,10 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 				LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
 				(Identifier_Transferable) this.imageId.getTransferable(),
 				charIds);
+	}
+
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.manufacturer != null && this.manufacturerCode != null;
 	}
 
 	protected synchronized void setAttributes(final Date created,

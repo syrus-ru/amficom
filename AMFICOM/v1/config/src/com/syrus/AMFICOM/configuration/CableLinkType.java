@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.42 2005/06/07 15:43:55 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.43 2005/06/09 12:38:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,13 +35,13 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/07 15:43:55 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/09 12:38:56 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
 
-	private static final long   serialVersionUID    = 3257007652839372857L;
+	private static final long serialVersionUID = 3257007652839372857L;
 
 	private String name;
 	private int sort;
@@ -119,8 +119,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 				|| name == null
 				|| sort == null
 				|| manufacturer == null
-				|| manufacturerCode == null
-				|| imageId == null)
+				|| manufacturerCode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -172,6 +171,10 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 				this.manufacturerCode,
 				(Identifier_Transferable) this.imageId.getTransferable(),
 				charIds);
+	}
+
+	protected boolean isValid() {
+		return super.isValid() && this.name != null && this.manufacturer != null && this.manufacturerCode != null;
 	}
 
 	protected synchronized void setAttributes(final Date created,
