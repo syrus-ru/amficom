@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.5 2005/05/27 18:30:39 arseniy Exp $
+ * $Id: CommonTest.java,v 1.6 2005/06/09 14:40:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -66,11 +66,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/27 18:30:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/09 14:40:06 $
  * @author $Author: arseniy $
  * @module test
  */
 public abstract class CommonTest extends TestCase {
+	public static final String APPLICATION_NAME = "test";
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
@@ -102,15 +103,15 @@ public abstract class CommonTest extends TestCase {
 		return testSetupWrapper;
 	}
 
-	public static void oneTimeSetUp() {
-		Application.init("tests");
+	protected static void oneTimeSetUp() {
+		Application.init(APPLICATION_NAME);
 		establishDatabaseConnection();
 		initDatabaseContext();
 		initStorableObjectPools();
 		initIdentifierPool();
 	}
 
-	public static void oneTimeTearDown() {
+	protected static void oneTimeTearDown() {
 		DatabaseConnection.closeConnection();
 	}
 

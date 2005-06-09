@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.4 2005/06/08 09:43:17 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.5 2005/06/09 14:40:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/08 09:43:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/09 14:40:06 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -123,7 +123,7 @@ public final class TestServerProcess extends CommonTest {
 	}
 
 	public void testUpdate() throws ApplicationException {
-		final TypicalCondition tc = new TypicalCondition("MSHServer",
+		final TypicalCondition tc = new TypicalCondition(ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SERVERPROCESS_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
