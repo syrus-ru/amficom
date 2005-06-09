@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.1 2005/06/08 14:28:03 bob Exp $
+ * $Id: StatusBar.java,v 1.2 2005/06/09 13:01:45 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/08 14:28:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/09 13:01:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -238,10 +238,13 @@ public class StatusBar implements PropertyChangeListener {
 	private void setValue(final 	String fieldId,
 	                      final Object value) {
 		final JTableHeader tableHeader = this.table.getTableHeader();
-		int columnIndex = this.model.getColumnIndex(fieldId);
-		if (columnIndex >= 0) {
-			TableColumn column = this.model.getColumn(columnIndex);
-
+		TableColumn column = null;
+		for (int i = 0; i < this.model.getColumnCount(); i++) {
+			column = this.model.getColumn(i);
+			Object identifier = column.getIdentifier();
+			if (fieldId.equals(identifier)) { break; }
+		}
+		if (column != null) {
 			column.setHeaderValue(value);
 			if (this.progressBarTimer == null) {
 				tableHeader.repaint();
@@ -306,6 +309,7 @@ public class StatusBar implements PropertyChangeListener {
 	}
 
 	private void setProgressBarEnable(boolean enable) {
+		Log.debugMessage("StatusBar.setProgressBarEnable | enable is " + enable, Log.FINEST);
 		final String field = FIELD_STATUS;
 		if (enable) {
 			/* is there status bar ? */
@@ -346,6 +350,7 @@ public class StatusBar implements PropertyChangeListener {
 	
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
+		Log.debugMessage("StatusBar.propertyChange | propertyName : " + propertyName + " ["+ evt.getClass().getName() + ']', Log.FINEST);
 		if (evt instanceof StatusMessageEvent) {
 			StatusMessageEvent sme = (StatusMessageEvent) evt;
 			if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
