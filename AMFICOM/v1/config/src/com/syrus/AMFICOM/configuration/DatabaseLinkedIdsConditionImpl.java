@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.12 2005/06/05 18:39:59 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.13 2005/06/09 13:41:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/05 18:39:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/06/09 13:41:54 $
+ * @author $Author: bob $
  * @module config_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -30,7 +30,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-				return super.getQuery(CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID);
+				return super.getQuery(CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID);
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 				return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:

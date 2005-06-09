@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/06/05 18:39:59 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/06/09 13:41:54 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/06/05 18:39:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/06/09 13:41:54 $
+ * @author $Author: bob $
  * @module config_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -61,7 +61,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				CableThreadType cableThreadType = (CableThreadType) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
-						condition = super.conditionTest(cableThreadType.getLinkType().getId());
+						condition = super.conditionTest(cableThreadType.getCableLinkType().getId());
 						break;
 					default:
 						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
