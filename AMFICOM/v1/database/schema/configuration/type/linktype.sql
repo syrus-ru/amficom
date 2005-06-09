@@ -31,4 +31,4 @@ CREATE TABLE LinkType (
 COMMENT ON COLUMN LinkType.nature IS '0 stands for LinkType, 1 for CableLinktype.';
 COMMENT ON COLUMN LinkType.kind IS '0 stands for OpticalFiber, 1 for Ethernet, 2 for Gsm.';
 
-CREATE SEQUENCE linktype_seq ORDER;
+CREATE SEQUENCE LinkType_seq ORDER;
