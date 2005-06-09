@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.32 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.33 2005/06/09 08:45:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.32 $, $Date: 2005/06/06 12:57:02 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2005/06/09 08:45:21 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -162,7 +162,7 @@ public final class MapMouseListener implements MouseListener
 					try {
 						proceed = checkDescreteNavigation(point);
 						if(!proceed) {
-							proceed = true;
+							this.logicalNetLayer.repaint(true);
 							break;
 						}
 						proceed = checkNodeSizeEdit(mapState, point);
@@ -263,17 +263,17 @@ public final class MapMouseListener implements MouseListener
 				
 				this.logicalNetLayer.setCenter(newCenter);
 				
-//				//Курсор ставим в ту же (в топографических координатах) точку - 
-//				//центр уже сменен
-//				Point newMousePosition = 
-//					this.logicalNetLayer.convertMapToScreen(mousePositionSph);
-//				
-//				Point frameLocation =this.logicalNetLayer.getMapViewer()
-//						.getVisualComponent().getLocationOnScreen();
-//				
-//				this.robot.mouseMove(
-//						frameLocation.x + newMousePosition.x,
-//						frameLocation.y + newMousePosition.y);
+				//Курсор ставим в ту же (в топографических координатах) точку - 
+				//центр уже сменен
+				Point newMousePosition = 
+					this.logicalNetLayer.convertMapToScreen(mousePositionSph);
+				
+				Point frameLocation =this.logicalNetLayer.getMapViewer()
+						.getVisualComponent().getLocationOnScreen();
+				
+				this.robot.mouseMove(
+						frameLocation.x + newMousePosition.x,
+						frameLocation.y + newMousePosition.y);
 
 				return false;
 			}
@@ -510,46 +510,7 @@ public final class MapMouseListener implements MouseListener
 	 * @throws MapDataException
 	 */
 	private void finishMoveHand(MouseEvent me) throws MapConnectionException, MapDataException {
-		if(MapPropertiesManager.isDescreteNavigation()) {
-			this.logicalNetLayer.handClicked(me);
-//			Point startPoint = null;
-//			Point endPoint = null;		
-//			if (SwingUtilities.isRightMouseButton(me))
-//			{
-//				Dimension visSize = this.logicalNetLayer.getMapViewer().getVisualComponent().getSize();			
-//				endPoint = new Point(visSize.width / 2, visSize.height / 2);
-//				startPoint = me.getPoint();
-//			}
-//			else
-//			{
-//				startPoint = this.logicalNetLayer.getStartPoint();
-//				endPoint = me.getPoint();			
-//			}
-//
-//			int shiftX = (int )(endPoint.getX() - startPoint.getX());
-//			int shiftY = (int )(endPoint.getY() - startPoint.getY());
-//			Dimension discreteShift = this.logicalNetLayer.getDiscreteShifts(shiftX,shiftY);
-//			
-//			if ((discreteShift.width != 0) || (discreteShift.height != 0))
-//			{
-//				Point resultEndPoint = new Point(
-//						startPoint.x + discreteShift.width,
-//						startPoint.y + discreteShift.height);
-//				
-//				DoublePoint center = this.logicalNetLayer.getCenter();
-//				DoublePoint p1 = this.logicalNetLayer.convertScreenToMap(startPoint);
-//				DoublePoint p2 = this.logicalNetLayer.convertScreenToMap(resultEndPoint);
-//				
-//				double dx = p1.getX() - p2.getX();
-//				double dy = p1.getY() - p2.getY();
-//				center.setLocation(center.getX() + dx, center.getY() + dy);
-//				this.logicalNetLayer.setCenter(center);
-//				this.logicalNetLayer.getMapView().setCenter(
-//						this.logicalNetLayer.getCenter());
-//				this.logicalNetLayer.repaint(true);
-//			}
-		}
-		else {
+		if(!MapPropertiesManager.isDescreteNavigation()) {
 			DoublePoint center = this.logicalNetLayer.getCenter();
 			DoublePoint p1 = this.logicalNetLayer.convertScreenToMap(this.logicalNetLayer.getStartPoint());
 			DoublePoint p2 = this.logicalNetLayer.convertScreenToMap(me.getPoint());
