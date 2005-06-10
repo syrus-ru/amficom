@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.10 2005/06/07 16:38:17 arseniy Exp $
+ * $Id: MServerMeasurementTransmit.java,v 1.11 2005/06/10 19:12:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/07 16:38:17 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/10 19:12:54 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -38,8 +38,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 
   /* Transmit multiple objects*/
 
-	public MeasurementType_Transferable[] transmitMeasurementTypes(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public MeasurementType_Transferable[] transmitMeasurementTypes(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final MeasurementType_Transferable[] ret = new MeasurementType_Transferable[length];
@@ -47,8 +47,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public AnalysisType_Transferable[] transmitAnalysisTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
-			throws AMFICOMRemoteException {
+	public AnalysisType_Transferable[] transmitAnalysisTypes(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final AnalysisType_Transferable[] ret = new AnalysisType_Transferable[length];
@@ -56,8 +56,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public EvaluationType_Transferable[] transmitEvaluationTypes(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
-			throws AMFICOMRemoteException {
+	public EvaluationType_Transferable[] transmitEvaluationTypes(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final EvaluationType_Transferable[] ret = new EvaluationType_Transferable[length];
@@ -65,8 +65,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Measurement_Transferable[] transmitMeasurements(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
-			throws AMFICOMRemoteException {
+	public Measurement_Transferable[] transmitMeasurements(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final Measurement_Transferable[] ret = new Measurement_Transferable[length];
@@ -74,7 +74,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Analysis_Transferable[] transmitAnalyses(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -83,8 +83,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Evaluation_Transferable[] transmitEvaluations(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
-			throws AMFICOMRemoteException {
+	public Evaluation_Transferable[] transmitEvaluations(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final Evaluation_Transferable[] ret = new Evaluation_Transferable[length];
@@ -92,8 +92,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public MeasurementSetup_Transferable[] transmitMeasurementSetups(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public MeasurementSetup_Transferable[] transmitMeasurementSetups(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final MeasurementSetup_Transferable[] ret = new MeasurementSetup_Transferable[length];
@@ -101,7 +101,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Set_Transferable[] transmitSets(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Set_Transferable[] transmitSets(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -110,7 +110,7 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Test_Transferable[] transmitTests(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Test_Transferable[] transmitTests(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -119,8 +119,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public CronTemporalPattern_Transferable[] transmitCronTemporalPatterns(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatterns(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final CronTemporalPattern_Transferable[] ret = new CronTemporalPattern_Transferable[length];
@@ -128,8 +128,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatterns(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatterns(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final IntervalsTemporalPattern_Transferable[] ret = new IntervalsTemporalPattern_Transferable[length];
@@ -137,8 +137,8 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatterns(Identifier_Transferable[] idsT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatterns(final Identifier_Transferable[] idsT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final PeriodicalTemporalPattern_Transferable[] ret = new PeriodicalTemporalPattern_Transferable[length];
@@ -150,9 +150,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 
 	/* Transmit multiple objects but ids by condition*/
 
-	public MeasurementType_Transferable[] transmitMeasurementTypesButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public MeasurementType_Transferable[] transmitMeasurementTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final MeasurementType_Transferable[] ret = new MeasurementType_Transferable[length];
@@ -160,9 +160,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final AnalysisType_Transferable[] ret = new AnalysisType_Transferable[length];
@@ -170,9 +170,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final EvaluationType_Transferable[] ret = new EvaluationType_Transferable[length];
@@ -182,9 +182,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 
 
 
-	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Measurement_Transferable[] ret = new Measurement_Transferable[length];
@@ -192,9 +192,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Analysis_Transferable[] ret = new Analysis_Transferable[length];
@@ -202,9 +202,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Evaluation_Transferable[] ret = new Evaluation_Transferable[length];
@@ -212,9 +212,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public MeasurementSetup_Transferable[] transmitMeasurementSetupsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final MeasurementSetup_Transferable[] ret = new MeasurementSetup_Transferable[length];
@@ -222,9 +222,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Set_Transferable[] transmitSetsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public Set_Transferable[] transmitSetsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Set_Transferable[] ret = new Set_Transferable[length];
@@ -232,9 +232,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Test_Transferable[] transmitTestsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public Test_Transferable[] transmitTestsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Test_Transferable[] ret = new Test_Transferable[length];
@@ -242,9 +242,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public CronTemporalPattern_Transferable[] transmitCronTemporalPatternsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public CronTemporalPattern_Transferable[] transmitCronTemporalPatternsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final CronTemporalPattern_Transferable[] ret = new CronTemporalPattern_Transferable[length];
@@ -252,9 +252,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatternsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IntervalsTemporalPattern_Transferable[] transmitIntervalsTemporalPatternsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final IntervalsTemporalPattern_Transferable[] ret = new IntervalsTemporalPattern_Transferable[length];
@@ -262,9 +262,9 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatternsButIdsByCondition(Identifier_Transferable[] idsT,
-			StorableObjectCondition_Transferable conditionT,
-			SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public PeriodicalTemporalPattern_Transferable[] transmitPeriodicalTemporalPatternsButIdsByCondition(final Identifier_Transferable[] idsT,
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final PeriodicalTemporalPattern_Transferable[] ret = new PeriodicalTemporalPattern_Transferable[length];

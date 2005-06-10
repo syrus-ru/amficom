@@ -1,5 +1,5 @@
 /*
- * $Id: MServerAdministrationTransmit.java,v 1.4 2005/06/06 14:43:06 arseniy Exp $
+ * $Id: MServerAdministrationTransmit.java,v 1.5 2005/06/10 19:12:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/06 14:43:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/10 19:12:54 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -26,7 +26,7 @@ abstract class MServerAdministrationTransmit extends MServerGeneralTransmit {
 
 	/* Transmit multiple objects*/
 
-	public Server_Transferable[] transmitServers(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public Server_Transferable[] transmitServers(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -35,7 +35,7 @@ abstract class MServerAdministrationTransmit extends MServerGeneralTransmit {
 		return ret;
 	}
 
-	public MCM_Transferable[] transmitMCMs(Identifier_Transferable[] idsT, SessionKey_Transferable sessionKeyT)
+	public MCM_Transferable[] transmitMCMs(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;

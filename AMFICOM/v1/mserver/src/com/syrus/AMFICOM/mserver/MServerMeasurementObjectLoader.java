@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.33 2005/06/10 15:29:38 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.34 2005/06/10 19:12:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/10 15:29:38 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/10 19:12:54 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -91,7 +91,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadMeasurementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE,
 				ids,
 				condition,
@@ -108,7 +108,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadAnalysesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_ENTITY_CODE,
 				ids,
 				condition,
@@ -125,7 +125,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadEvaluationsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_ENTITY_CODE,
 				ids,
 				condition,
@@ -141,7 +141,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 
 
 
-	public void delete(Set identifiables) {
+	public void delete(final Set identifiables) {
 
 		if (identifiables == null || identifiables.isEmpty()) {
 			return;
