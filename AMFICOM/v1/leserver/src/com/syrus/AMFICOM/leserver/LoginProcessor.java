@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.7 2005/05/18 13:29:31 bass Exp $
+ * $Id: LoginProcessor.java,v 1.8 2005/06/10 16:14:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/18 13:29:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/10 16:14:20 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LoginProcessor extends SleepButWorkThread {
@@ -52,6 +52,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		this.running = true;
 
 		this.restoreState();
+		printUserLogins();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
@@ -111,6 +112,7 @@ final class LoginProcessor extends SleepButWorkThread {
 	protected static void addUserLogin(final UserLogin userLogin) {
 		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userLogin.getUserId() + "'", Log.DEBUGLEVEL08);
 		loginMap.put(userLogin.getSessionKey(), userLogin);
+		printUserLogins();
 	}
 
 	protected static UserLogin getUserLogin(final SessionKey sessionKey) {
@@ -118,7 +120,20 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	protected static UserLogin removeUserLogin(final SessionKey sessionKey) {
-		return (UserLogin) loginMap.remove(sessionKey);
+		final UserLogin userLogin = (UserLogin) loginMap.remove(sessionKey);
+		printUserLogins();
+		return userLogin;
+	}
+
+	private static void printUserLogins() {
+		Log.debugMessage("LoginProcessor.printUserLogins | Logged in: ", Log.DEBUGLEVEL10);
+		for (final Iterator it = loginMap.keySet().iterator(); it.hasNext();) {
+			final SessionKey sessionKey = (SessionKey) it.next();
+			final UserLogin userLogin = (UserLogin) loginMap.get(sessionKey);
+			Log.debugMessage("'" + userLogin.getUserId()
+					+ "' from: " + userLogin.getLoginDate()
+					+ ", last: " + userLogin.getLastActivityDate(), Log.DEBUGLEVEL10);
+		}
 	}
 
 	protected void shutdown() {
