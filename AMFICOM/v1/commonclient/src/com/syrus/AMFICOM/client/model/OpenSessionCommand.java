@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.6 2005/06/10 07:53:34 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.7 2005/06/10 10:52:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/06/10 07:53:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/10 10:52:42 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -145,6 +145,8 @@ public class OpenSessionCommand extends AbstractCommand {
 			Set availableDomains;
 			try {
 				clientSessionEnvironment.login(login1, password1);
+				this.dispatcher.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
+					ContextChangeEvent.CONNECTION_OPENED_EVENT));
 				availableDomains = LoginManager.getAvailableDomains();
 			} catch (CommunicationException e) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
