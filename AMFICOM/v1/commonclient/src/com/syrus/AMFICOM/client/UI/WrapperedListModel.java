@@ -11,10 +11,11 @@ import java.util.Map;
 import javax.swing.AbstractListModel;
 import javax.swing.MutableComboBoxModel;
 
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/23 12:51:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/10 07:04:43 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -108,7 +109,10 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		return obj;
 	}
 
-	public Object getObjectByField(Object field) {
+	public Object getObjectByField(final Object field) {
+		
+		assert field != null : ErrorMessages.NON_NULL_EXPECTED;
+		
 		Object object = null;
 		if (field != null) {
 			for (Iterator it = this.objects.iterator(); it.hasNext();) {
@@ -154,7 +158,10 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		}
 	}
 
-	public void addElements(Collection _objects) {
+	public void addElements(final Collection _objects) {
+		
+		assert _objects != null : ErrorMessages.NON_NULL_EXPECTED;
+		
 		if (_objects.size() == 0)
 			return;
 		this.objects.addAll(_objects);
@@ -162,7 +169,7 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	}
 
 	// implements javax.swing.MutableComboBoxModel
-	public void insertElementAt(Object anObject,
+	public void insertElementAt(final Object anObject,
 								int index) {
 		this.objects.add(index, anObject);
 		fireIntervalAdded(this, index, index);
@@ -184,7 +191,7 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	}
 
 	// implements javax.swing.MutableComboBoxModel
-	public void removeElement(Object anObject) {
+	public void removeElement(final Object anObject) {
 		int index = this.objects.indexOf(anObject);
 		if (index != -1) {
 			removeElementAt(index);
