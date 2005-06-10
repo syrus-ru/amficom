@@ -3,8 +3,6 @@ package com.syrus.AMFICOM.client.event;
 
 import java.beans.PropertyChangeEvent;
 
-import com.syrus.util.Log;
-
 public class StatusMessageEvent extends PropertyChangeEvent {
 
 	private static final long serialVersionUID = 3257847671132730418L;
@@ -18,12 +16,10 @@ public class StatusMessageEvent extends PropertyChangeEvent {
 
 	public StatusMessageEvent(Object source, String type, String text) {
 		super(source, type, null, text);
-		Log.debugMessage("StatusMessageEvent.StatusMessageEvent | text ", Log.FINEST);
 	}
 
 	public StatusMessageEvent(Object source, String type, boolean showProgressBar) {
 		super(source, type, null, Boolean.valueOf(showProgressBar));
-		Log.debugMessage("StatusMessageEvent.StatusMessageEvent | boolean ", Log.FINEST);
 	}
 
 	public String getText() {
