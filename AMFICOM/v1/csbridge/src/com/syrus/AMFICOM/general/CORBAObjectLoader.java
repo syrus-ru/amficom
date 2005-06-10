@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.29 2005/06/10 11:10:30 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.30 2005/06/10 15:31:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,11 +24,11 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
+ * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
-public abstract class CORBAObjectLoader extends ObjectLoader {
+public abstract class CORBAObjectLoader {
 	protected ServerConnectionManager serverConnectionManager;
 
 	protected CORBAObjectLoader (final ServerConnectionManager serverConnectionManager) {
@@ -73,7 +73,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
+	 * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -84,7 +84,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
+	 * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -100,7 +100,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
+	 * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {

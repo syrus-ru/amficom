@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.13 2005/06/07 13:18:51 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.14 2005/06/10 15:31:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/07 13:18:51 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/10 15:31:17 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
-public abstract class DatabaseObjectLoader extends ObjectLoader {
+public abstract class DatabaseObjectLoader {
 	protected static Identifier userId;
 
 	public static void init(final Identifier userId1) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectLoader.java,v 1.5 2005/06/10 11:06:15 arseniy Exp $
+ * $Id: ObjectLoader.java,v 1.6 2005/06/10 15:31:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/10 11:06:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/10 15:31:17 $
  * @author $Author: arseniy $
  * @module csbridge_v1
+ * @deprecated No really need to us this.
  */
 public abstract class ObjectLoader {
 
