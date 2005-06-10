@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.28 2005/06/10 11:06:59 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.29 2005/06/10 11:10:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -73,7 +73,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
+	 * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -84,7 +84,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
+	 * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -100,7 +100,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
+	 * @version $Revision: 1.29 $, $Date: 2005/06/10 11:10:30 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -209,7 +209,8 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 						sessionKeyT,
 						conditionT);
 				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
-			} catch (final AMFICOMRemoteException are) {
+			}
+			catch (final AMFICOMRemoteException are) {
 				switch (are.error_code.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
