@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.65 2005/06/10 10:05:15 saa Exp $
+ * $Id: Heap.java,v 1.66 2005/06/10 10:11:19 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.65 $, $Date: 2005/06/10 10:05:15 $
+ * @version $Revision: 1.66 $, $Date: 2005/06/10 10:11:19 $
  * @module
  */
 public class Heap
@@ -620,12 +620,8 @@ public class Heap
     public static void setRefAnalysisPrimary(RefAnalysis ra) {
         refAnalysisPrimary = ra;
         fixEventList();
-        if (ra != null && ra.getMTAE().getNEvents() >= 0)
-            currentEvent.toEvent(0); // (1)
         notifyPrimaryRefAnalysisCUpdated();
         notifyPrimaryMTAECUpdated();
-        notifyCurrentEventChanged(); // (2)
-        // операторы (1) и (2) делают текущим событие #0
     }
 
     /**
@@ -828,6 +824,10 @@ public class Heap
 	public static void makePrimaryAnalysis() {
 		new AnalysisCommand().execute();
 		primaryTraceOpened(getBSPrimaryTrace());
+        if (refAnalysisPrimary.getMTAE().getNEvents() >= 0)
+            currentEvent.toEvent(0); // (1)
+        notifyCurrentEventChanged(); // (2)
+        // операторы (1) и (2) делают текущим событие #0
 		setCurrentTracePrimary();
 	}
 
