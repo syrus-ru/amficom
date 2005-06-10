@@ -10,4 +10,4 @@ APPCLASSPATH=$LIB/cmserver.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/con
 
 $JAVA -Xloggc:./gc -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer &
 # Expands to the process ID of the most recently executed background (asynchronous) command.
-echo $! > pid
+echo $! > cmserver.pid
