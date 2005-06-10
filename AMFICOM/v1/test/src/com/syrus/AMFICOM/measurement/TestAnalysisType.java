@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisType.java,v 1.2 2005/05/14 09:43:34 arseniy Exp $
+ * $Id: TestAnalysisType.java,v 1.3 2005/06/10 15:18:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/14 09:43:34 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/10 15:18:18 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -86,7 +86,7 @@ public class TestAnalysisType extends CommonTest {
 		butIds.addAll(etaParTypIds);
 		butIds.addAll(outParTypIds);
 		Set parameterTypes = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(butIds, ec, true);
-		Set parameterTypeIds = Identifier.getIdentifiers(parameterTypes);
+		Set parameterTypeIds = Identifier.createIdentifiers(parameterTypes);
 		for (Iterator it = parameterTypeIds.iterator(); it.hasNext();) {
 			System.out.println("Loaded: '" + it.next() + "'");
 		}
