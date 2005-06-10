@@ -1,5 +1,5 @@
 /*
- * $Id: TestMCM.java,v 1.2 2005/06/09 14:40:06 arseniy Exp $
+ * $Id: TestMCM.java,v 1.3 2005/06/10 19:21:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/09 14:40:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/10 19:21:24 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -50,20 +50,27 @@ public final class TestMCM extends CommonTest {
 	private static final String LOGIN = "mserver";
 	private static final String PASSWORD = "MServer";
 
-	private static MCM mcmRef;
 	private static LoginServer loginServerRef;
 	private static SessionKey_Transferable sessionKeyT;
+	private static MCM mcmRef;
 
 	public TestMCM(final String name) {
 		super(name);
 	}
 
-	protected void setUp() {
-		System.out.println("********* set up **********");
-	}
-
-	protected void tearDown() {
-		System.out.println("********* tear down **********");
+	public static Test suite() {
+		TestSuite testSuite = new TestSuite();
+		testSuite.addTest(new TestMCM("testTransmitMeasurements"));
+		testSuite.addTest(new TestMCM("testTransmitMeasurementsButIdsByCondition"));
+		TestSetup testSetup = new TestSetup(testSuite) {
+			protected void setUp() {
+				oneTimeSetUp();
+			}
+			protected void tearDown() {
+				oneTimeTearDown();
+			}
+		};
+		return testSetup;
 	}
 
 	protected static void oneTimeSetUp() {
@@ -75,14 +82,14 @@ public final class TestMCM extends CommonTest {
 			final String contextName = ContextNameFactory.generateContextName(serverHostName);
 			final CORBAServer corbaServer = new CORBAServer(contextName);
 
-			final String mcmIdString = ApplicationProperties.getString(KEY_MCM_ID, MCM_ID);
-			mcmRef = (MCM) corbaServer.resolveReference(mcmIdString);
-
 			loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			final String login = ApplicationProperties.getString(KEY_LOGIN, LOGIN);
 			final String password = ApplicationProperties.getString(KEY_PASSWORD, PASSWORD);
 			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
 			sessionKeyT = loginServerRef.login(login, password, userIdH);
+
+			final String mcmIdString = ApplicationProperties.getString(KEY_MCM_ID, MCM_ID);
+			mcmRef = (MCM) corbaServer.resolveReference(mcmIdString);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -118,7 +125,7 @@ public final class TestMCM extends CommonTest {
 		id = new Identifier("Measurement_2755");
 		ids.add(id);
 
-		Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		
 		final Measurement_Transferable[] measurementsT = mcmRef.transmitMeasurements(idsT);
 		for (int i = 0; i < measurementsT.length; i++) {
@@ -148,21 +155,6 @@ public final class TestMCM extends CommonTest {
 
 	public void test3() {
 		assertEquals("test 3", 1, 1);
-	}
-
-	public static Test suite() {
-		TestSuite testSuite = new TestSuite();
-		//testSuite.addTest(new TestMCM("testTransmitMeasurements"));
-		testSuite.addTest(new TestMCM("testTransmitMeasurementsButIdsByCondition"));
-		TestSetup testSetup = new TestSetup(testSuite) {
-			protected void setUp() {
-				oneTimeSetUp();
-			}
-			protected void tearDown() {
-				oneTimeTearDown();
-			}
-		};
-		return testSetup;
 	}
 
 	static class TestMCMLoginRestorer implements LoginRestorer {
