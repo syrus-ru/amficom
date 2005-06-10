@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.102 2005/06/08 09:37:14 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.103 2005/06/10 15:07:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/06/08 09:37:14 $
+ * @version $Revision: 1.103 $, $Date: 2005/06/10 15:07:45 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -101,7 +101,7 @@ public abstract class StorableObjectPool {
 		ENTITY_CODE_FACTORY_MAP.put(entityCode, factory);
 	}
 
-	protected void addObjectPool(	final short objectEntityCode, final int poolSize) {
+	protected void addObjectPool(final short objectEntityCode, final int poolSize) {
 		try {
 			final Constructor constructor = this.cacheMapClass.getConstructor(new Class[] { int.class});
 			final Object obj = constructor.newInstance(new Object[] { new Integer(poolSize)});
@@ -411,58 +411,54 @@ public abstract class StorableObjectPool {
 				storableObjects.add(storableObject);
 		}
 
-		Set loadedSet = null;
+		/*	Just debug output -- nothing more*/
+		Log.debugMessage("StorableObjectPool.getStorableObjectsByConditionButIdsImpl | Requested objects '"
+				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, Log.DEBUGLEVEL10);
+		Log.debugMessage("StorableObjectPool.getStorableObjectsByConditionButIdsImpl | But ids: " + ids, Log.DEBUGLEVEL10);
+		final StringBuffer stringBuffer1 = new StringBuffer();
+		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+			final StorableObject storableObject = (StorableObject) it.next();
+			if (stringBuffer1.length() != 0)
+				stringBuffer1.append(", ");
+			stringBuffer1.append(storableObject.getId());
+		}
+		Log.debugMessage("StorableObjectPool.getStorableObjectsByConditionButIdsImpl | Found in pool "
+				+ storableObjects.size() + " (of total " + objectPool.size() + ") objects: " + stringBuffer1, Log.DEBUGLEVEL10);
+		/*	^Just debug output -- nothing more^*/
+
+		Set loadedObjects = null;
 
 		if (useLoader && condition.isNeedMore(storableObjects)) {
-			Set idsSet = new HashSet(storableObjects.size());
-			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
-				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-				idsSet.add(storableObject.getId());
-			}
-
-			idsSet.addAll(ids);
+			final Set loadButIds = Identifier.createSumIdentifiers(ids, storableObjects);
 
 			/* do not load deleted object with entityCode */
-			final short code = condition.getEntityCode().shortValue();
 			for (final Iterator idIterator = this.deletedIds.iterator(); idIterator.hasNext();) {
 				final Identifier id = (Identifier) idIterator.next();
-				if (id.getMajor() == code)
-					idsSet.add(id);
+				if (id.getMajor() == entityCode)
+					loadButIds.add(id);
 			}
-			
-			/* logging */
-			final StringBuffer buffer1 = new StringBuffer();
-			for (final Iterator idIterator = idsSet.iterator(); idIterator.hasNext();) {
-				final Identifier identifier = (Identifier) idIterator.next();
-				if (buffer1.length() != 0)
-					buffer1.append(", ");
-				buffer1.append(identifier);
-			}
-			Log.debugMessage("StorableObjectPool.getStorableObjectsByConditionButIdsImpl | before loadStorableObjectsButIds : "
-					+ buffer1,
-					Log.DEBUGLEVEL10);
 
 			try {
-				loadedSet = this.loadStorableObjectsButIds(condition, idsSet);
+				loadedObjects = this.loadStorableObjectsButIds(condition, loadButIds);
 			}
 			catch (ApplicationException ae) {
 				if (breakOnLoadError)
 					throw ae;
 				Log.errorException(ae);
-				loadedSet = Collections.EMPTY_SET;
+				loadedObjects = Collections.EMPTY_SET;
 			}
 			
-			/* logging */
-			final StringBuffer buffer2 = new StringBuffer();
-			for (final Iterator storableObjectIterator = loadedSet.iterator(); storableObjectIterator.hasNext();) {
+			/*	Just debug output -- nothing more*/
+			final StringBuffer stringBuffer2 = new StringBuffer();
+			for (final Iterator storableObjectIterator = loadedObjects.iterator(); storableObjectIterator.hasNext();) {
 				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-				if (buffer2.length() != 0)
-					buffer2.append(", ");
-				buffer2.append(storableObject.getId());
+				if (stringBuffer2.length() != 0)
+					stringBuffer2.append(", ");
+				stringBuffer2.append(storableObject.getId());
 			}
-			Log.debugMessage("StorableObjectPool.getStorableObjectsByConditionButIdsImpl | loaded : "
-					+ buffer2,
-					Log.DEBUGLEVEL10);
+			Log.debugMessage("StorableObjectPool.getStorableObjectsByConditionButIdsImpl | Loaded : " + stringBuffer2, Log.DEBUGLEVEL10);
+			/* ^Just debug output -- nothing more^ */
+
 		}
 
 		/*
@@ -473,12 +469,12 @@ public abstract class StorableObjectPool {
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();)
 				objectPool.get(((StorableObject) storableObjectIterator.next()).getId());
 
-		if (loadedSet != null) {
-			for (final Iterator storableObjectIterator = loadedSet.iterator(); storableObjectIterator.hasNext();) {
+		if (loadedObjects != null) {
+			for (final Iterator storableObjectIterator = loadedObjects.iterator(); storableObjectIterator.hasNext();) {
 				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
 				objectPool.put(storableObject.getId(), storableObject);
 			}
-			storableObjects.addAll(loadedSet);
+			storableObjects.addAll(loadedObjects);
 		}
 
 		return storableObjects;
@@ -1118,7 +1114,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.102 $, $Date: 2005/06/08 09:37:14 $
+	 * @version $Revision: 1.103 $, $Date: 2005/06/10 15:07:45 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
