@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.66 2005/06/10 10:11:19 saa Exp $
+ * $Id: Heap.java,v 1.67 2005/06/10 10:13:43 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.66 $, $Date: 2005/06/10 10:11:19 $
+ * @version $Revision: 1.67 $, $Date: 2005/06/10 10:13:43 $
  * @module
  */
 public class Heap
@@ -821,6 +821,12 @@ public class Heap
         setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
     }
 
+    /*
+     * ===============================================================
+     * Other methods
+     * ===============================================================
+     */
+
 	public static void makePrimaryAnalysis() {
 		new AnalysisCommand().execute();
 		primaryTraceOpened(getBSPrimaryTrace());
@@ -831,9 +837,12 @@ public class Heap
 		setCurrentTracePrimary();
 	}
 
-    /*
-     * ===============================================================
-     * Other methods
-     * ===============================================================
-     */
+	public static void makeAnalysis() {
+		BellcoreStructure bs = getBSPrimaryTrace();
+		if (bs != null)
+		{
+	        RefAnalysis a = new RefAnalysis(bs);
+			setRefAnalysisPrimary(a);
+		}
+	}
 }

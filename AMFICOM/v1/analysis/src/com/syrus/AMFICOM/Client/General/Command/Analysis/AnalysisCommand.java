@@ -6,6 +6,6 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 public class AnalysisCommand extends AbstractCommand {
 	public void execute()
 	{
-		Heap.analyse();
+		Heap.makeAnalysis();
 	}
 }
