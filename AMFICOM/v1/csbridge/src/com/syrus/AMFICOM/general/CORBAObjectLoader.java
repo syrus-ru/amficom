@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.27 2005/06/07 19:10:58 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.28 2005/06/10 11:06:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -73,7 +73,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
+	 * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -84,7 +84,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
+	 * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -100,7 +100,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.27 $, $Date: 2005/06/07 19:10:58 $
+	 * @version $Revision: 1.28 $, $Date: 2005/06/10 11:06:59 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -245,7 +245,7 @@ public abstract class CORBAObjectLoader extends ObjectLoader {
 
 		try {
 			final StorableObject_Transferable[] headers = receiveProcedure.receiveStorableObjects(server, transferables, sessionKeyT);
-			super.updateHeaders(storableObjects, headers);
+			StorableObject.updateHeaders(storableObjects, headers);
 		}
 		catch (final AMFICOMRemoteException are) {
 			final String mesg = "Cannot save objects -- ";
