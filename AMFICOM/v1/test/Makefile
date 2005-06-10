@@ -1,7 +1,7 @@
 # Simple Makefile to compile single test class
 
-TEST_CLASS = TestMCM
-TEST_PACKAGE = com.syrus.AMFICOM.mcm
+TEST_CLASS = TestStorableObjectPool
+TEST_PACKAGE = com.syrus.AMFICOM.general
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class

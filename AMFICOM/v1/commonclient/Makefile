@@ -27,6 +27,9 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 all: $(LIBNAME)
 
 $(LIBNAME): .mach
+	$(CP) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties)\
+		$(CLASSDIR)/com/syrus/AMFICOM/client/resource
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
