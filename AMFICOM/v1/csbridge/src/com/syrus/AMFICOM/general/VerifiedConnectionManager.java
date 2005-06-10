@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.6 2005/06/10 12:51:19 bob Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.7 2005/06/10 14:48:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/10 12:51:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/06/10 14:48:21 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class VerifiedConnectionManager {
@@ -121,11 +121,19 @@ public class VerifiedConnectionManager {
 		}
 	}
 
+	/**
+	 * @todo Make final. In subcalsses register application-specific listeners instead of method overridding
+	 * @param servantName
+	 */
 	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("VerifiedConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		this.firePropertyChangeListners(new PropertyChangeEvent(this, servantName, Boolean.TRUE, Boolean.FALSE));
 	}
 
+	/**
+	 * @todo Make final. In subcalsses register application-specific listeners instead of method overridding
+	 * @param servantName
+	 */
 	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("VerifiedConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
