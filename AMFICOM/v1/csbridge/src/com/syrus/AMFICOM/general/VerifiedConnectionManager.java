@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.5 2005/06/07 16:33:30 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.6 2005/06/10 12:51:19 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,15 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/07 16:33:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/06/10 12:51:19 $
+ * @author $Author: bob $
  * @module csbridge_v1
  */
 public class VerifiedConnectionManager {
@@ -32,6 +36,8 @@ public class VerifiedConnectionManager {
 
 	Map referencesMap; //Map <String servantName, Verifiable reference>
 	private Set disconnectedServants; //Set <String servantName>
+	
+	private List connectionListeners;
 
 	public VerifiedConnectionManager(final CORBAServer corbaServer, final String[] servantNames) {
 		this(corbaServer, new HashSet(Arrays.asList(servantNames)));
@@ -62,7 +68,9 @@ public class VerifiedConnectionManager {
 				reference = this.activateAndGet(servantName);
 
 			try {
+				Log.debugMessage("VerifiedConnectionManager.getVerifiableReference | 1 ", Log.FINEST);
 				reference.verify((byte) 1);
+				Log.debugMessage("VerifiedConnectionManager.getVerifiableReference | 2 ", Log.FINEST);
 			}
 			catch (SystemException se) {
 				reference = this.activateAndGet(servantName);
@@ -115,11 +123,42 @@ public class VerifiedConnectionManager {
 
 	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("VerifiedConnectionManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		this.firePropertyChangeListners(new PropertyChangeEvent(this, servantName, Boolean.TRUE, Boolean.FALSE));
 	}
 
 	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("VerifiedConnectionManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
+		
+		this.firePropertyChangeListners(new PropertyChangeEvent(this, servantName, Boolean.FALSE, Boolean.TRUE));
+	}
+	
+	private void firePropertyChangeListners(PropertyChangeEvent propertyChangeEvent) {
+		if (this.connectionListeners != null && !this.connectionListeners.isEmpty()) {
+			for (Iterator iterator = this.connectionListeners.iterator(); iterator.hasNext();) {
+				PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+				listener.propertyChange(propertyChangeEvent);
+			}
+		}
 	}
 
+	public void addPropertyListener(PropertyChangeListener listener) {
+		if (this.connectionListeners == null) {
+			this.connectionListeners = new LinkedList();
+		}
+		
+		if (!this.connectionListeners.contains(listener)) {
+			this.connectionListeners.add(listener);
+		}
+	}
+	
+	public void removePropertyListener(PropertyChangeListener listener) {
+		if (this.connectionListeners == null) {
+			return;
+		}
+		
+		if (this.connectionListeners.contains(listener)) {
+			this.connectionListeners.remove(listener);
+		}
+	}
 }
