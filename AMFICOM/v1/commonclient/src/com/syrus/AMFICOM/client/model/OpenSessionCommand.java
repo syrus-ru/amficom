@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.5 2005/06/10 07:39:39 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.6 2005/06/10 07:53:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -40,10 +41,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/06/10 07:39:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/10 07:53:34 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -61,10 +63,6 @@ public class OpenSessionCommand extends AbstractCommand {
 
 	private static LoginRestorer	loginRestorer;
 
-	public OpenSessionCommand() {
-		// nothing
-	}
-
 	public OpenSessionCommand(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
@@ -80,65 +78,13 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	public void execute() {
-//		if (Environment.getConnectionType().equals(Environment.CONNECTION_EMPTY)) {
-//			executeLocal();
-//		} else 
-		{
-			while (!this.executeRemote());
+		while (!this.executeRemote()) {
+			Log.debugMessage("OpenSessionCommand.execute | try again ", Log.FINEST);
 		}
 	}
 
-	private void executeLocal() {
-		// try {
-		// SessionInterface ssi = aContext.getSessionInterface().openSession();
-		// } catch (ApplicationException e) {
-		// Log.debugException(e, Log.WARNING);
-		// }
-		//
-		// dispatcher.notify(new
-		// StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие
-		// сессии..."));
-		// dispatcher.notify(new
-		// ContextChangeEvent(aContext.getSessionInterface(),
-		// ContextChangeEvent.SESSION_CHANGING_EVENT));
-		//
-		// final DataSourceInterface dataSource =
-		// aContext.getApplicationModel().getDataSource(
-		// aContext.getSessionInterface());
-		// //
-		// dispatcher.notify(new
-		// StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация
-		// начальных данных"));
-		//
-		// dispatcher.notify(new
-		// StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
-		//
-		// dispatcher.notify(new
-		// StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-		//
-		// SessionInterface sess = dataSource.getSession();
-		//
-		// dispatcher.notify(new
-		// StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Сессия
-		// открыта"));
-		// dispatcher.notify(new
-		// ContextChangeEvent(aContext.getSessionInterface(),
-		// ContextChangeEvent.SESSION_OPENED_EVENT));
-	}
-
 	private boolean executeRemote() {
-		// ConnectionInterface connection = ConnectionInterface.getInstance();
-		// if(!connection.isConnected())
-		// {
-		// new CheckConnectionCommand(dispatcher, aContext).execute();
-		// if (!connection.isConnected())
-		// {
-		// dispatcher.notify(new ContextChangeEvent(connection,
-		// ContextChangeEvent.CONNECTION_FAILED_EVENT));
-		// return;
-		// }
-		// }
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Открытие сессии..."));
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral.getString("StatusBar.OpeningSession")));
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
 
 		if (System.getProperty("com.amficom.login") == null || System.getProperty("com.amficom.password") == null) {
@@ -151,7 +97,7 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		if (!OpenSessionCommand.logged) {
 			this.dispatcher
-					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModel.getString("Aborted")));
+					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral.getString("StatusBar.Aborted")));
 			return true;
 		}
 		// else
@@ -191,7 +137,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-														"Инициализация начальных данных"));
+														LangModelGeneral.getString("StatusBar.InitStartupData")));
 
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 			
@@ -220,7 +166,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 				public void run() {
-					dispatcher1.firePropertyChange(new StatusMessageEvent(OpenSessionCommand.this, StatusMessageEvent.STATUS_MESSAGE, "Сессия открыта"));
+					dispatcher1.firePropertyChange(new StatusMessageEvent(OpenSessionCommand.this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral.getString("StatusBar.SessionHaveBeenOpened")));
 					dispatcher1.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
 																ContextChangeEvent.SESSION_OPENED_EVENT));
 
@@ -339,14 +285,5 @@ public class OpenSessionCommand extends AbstractCommand {
 			logged = false;
 		}
 
-	}
-
-	public static void main(String[] args) {
-
-		JFrame frame = new JFrame();
-		frame.setVisible(true);
-		System.out.println(Environment.class);
-		OpenSessionCommand command = new OpenSessionCommand();
-		command.showOpenSessionDialog(frame);
 	}
 }
