@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.io.*;
 
 public class FileOpenCommand extends AbstractCommand
@@ -133,12 +132,11 @@ public class FileOpenCommand extends AbstractCommand
 
 			String activeRefId = chooser.getSelectedFile().getName();
 			bs.title = activeRefId;
+
+			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			Heap.setBSPrimaryTrace(bs);
 			Heap.setActiveContextActivePathIDToEmptyString();
-			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			new AnalysisCommand().execute();
-			Heap.primaryTraceOpened(bs);
-			Heap.setCurrentTracePrimary();
+			Heap.makePrimaryAnalysis();
 
             if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
                 Heap.setMTMEtalon(Heap.getMTMEtalon());
@@ -151,7 +149,6 @@ public class FileOpenCommand extends AbstractCommand
 			catch (IOException ex)
 			{
 			}
-
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}

@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.io.*;
 
 public class FileOpenAsWavetekCommand extends AbstractCommand
@@ -71,9 +70,7 @@ public class FileOpenAsWavetekCommand extends AbstractCommand
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.setBSPrimaryTrace(bs);
 			Heap.setActiveContextActivePathIDToEmptyString();
-			new AnalysisCommand().execute();
-			Heap.primaryTraceOpened(bs);
-			Heap.setCurrentTracePrimary();
+			Heap.makePrimaryAnalysis();
 
 			try
 			{

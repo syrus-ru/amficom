@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.64 2005/06/09 13:09:37 saa Exp $
+ * $Id: Heap.java,v 1.65 2005/06/10 10:05:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.64 $, $Date: 2005/06/09 13:09:37 $
+ * @version $Revision: 1.65 $, $Date: 2005/06/10 10:05:15 $
  * @module
  */
 public class Heap
@@ -558,7 +559,7 @@ public class Heap
         removeListener(analysisParametersListeners, listener);
     }
 
-    public static void primaryTraceOpened(BellcoreStructure bs) {
+    public static void primaryTraceOpened(BellcoreStructure bs) { // FIXME: remove arg
         notifyBsHashAdd(PRIMARY_TRACE_KEY, bs);
         notifyPrimaryTraceOpened();
     }
@@ -823,6 +824,12 @@ public class Heap
                 mtae, out, bs.getTraceData());
         setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
     }
+
+	public static void makePrimaryAnalysis() {
+		new AnalysisCommand().execute();
+		primaryTraceOpened(getBSPrimaryTrace());
+		setCurrentTracePrimary();
+	}
 
     /*
      * ===============================================================

@@ -108,10 +108,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
     				Heap.setBSEtalonTrace(null);
     				Heap.setMTMEtalon(null);
     			}
-                new AnalysisCommand().execute();
-
-                Heap.primaryTraceOpened(bs);
-                Heap.setCurrentTracePrimary();
+    			Heap.makePrimaryAnalysis();
             } catch (DataFormatException e) {
                 GUIUtil.showDataFormatError();
                 return;
