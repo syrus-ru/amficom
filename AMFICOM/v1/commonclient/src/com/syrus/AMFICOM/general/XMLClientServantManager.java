@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.4 2005/06/07 17:58:14 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.5 2005/06/10 10:50:55 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/07 17:58:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/10 10:50:55 $
+ * @author $Author: bob $
  * @module commonclient_v1
  */
 abstract class XMLClientServantManager implements BaseConnectionManager {
@@ -196,4 +196,9 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED;
 		return null;
 	}
+	
+	public CORBAServer getCORBAServer() {		
+		return null;
+	}
+
 }
