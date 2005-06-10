@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/05/23 10:01:25 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/06/10 11:54:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/05/23 10:01:25 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/10 11:54:02 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -58,6 +58,22 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 */
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		switch (super.entityCode.shortValue()) {
+			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
+				final SchemePort schemePort = (SchemePort) storableObject;
+				switch (super.linkedEntityCode) {
+					case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
+						return super.conditionTest(schemePort.parentSchemeDeviceId);
+					default:
+						throw newIllegalObjectEntityException();
+				}
+			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
+				final SchemeCablePort schemeCablePort = (SchemeCablePort) storableObject;
+				switch (super.linkedEntityCode) {
+					case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
+						return super.conditionTest(schemeCablePort.parentSchemeDeviceId);
+					default:
+						throw newIllegalObjectEntityException();
+				}
 			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
 				final SchemeLink schemeLink = (SchemeLink) storableObject;
 				switch (super.linkedEntityCode) {
@@ -67,13 +83,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						assert !(precondition1 && precondition2);
 						return precondition1 ^ precondition2;
 					default:
-						throw new IllegalObjectEntityException(
-								LINKED_ENTITY_CODE_NOT_REGISTERED
-										+ super.linkedEntityCode
-										+ ", "
-										+ ObjectEntities
-												.codeToString(super.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw newIllegalObjectEntityException();
 				}
 			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
 				final SchemeCableLink schemeCableLink = (SchemeCableLink) storableObject;
@@ -84,13 +94,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						assert !(precondition1 && precondition2);
 						return precondition1 ^ precondition2;
 					default:
-						throw new IllegalObjectEntityException(
-								LINKED_ENTITY_CODE_NOT_REGISTERED
-										+ super.linkedEntityCode
-										+ ", "
-										+ ObjectEntities
-												.codeToString(super.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw newIllegalObjectEntityException();
 				}
 			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
 				final SchemeCableThread schemeCableThread = (SchemeCableThread) storableObject;
@@ -101,22 +105,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						assert !(precondition1 && precondition2);
 						return precondition1 ^ precondition2;
 					default:
-						throw new IllegalObjectEntityException(
-								LINKED_ENTITY_CODE_NOT_REGISTERED
-										+ super.linkedEntityCode
-										+ ", "
-										+ ObjectEntities
-												.codeToString(super.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						throw newIllegalObjectEntityException();
 				}
 			default:
-				throw new IllegalObjectEntityException(
-						ENTITY_CODE_NOT_REGISTERED
-								+ super.entityCode
-								+ ", "
-								+ ObjectEntities
-										.codeToString(super.entityCode),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw newIllegalObjectEntityException();
 		}
 	}
 
@@ -127,19 +119,15 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 */
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
+			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
+			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
 			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
 			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
 			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
 				super.entityCode = entityCode;
 				break;
 			default:
-				throw new IllegalObjectEntityException(
-						ENTITY_CODE_NOT_REGISTERED
-								+ super.entityCode
-								+ ", "
-								+ ObjectEntities
-										.codeToString(super.entityCode),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw newIllegalObjectEntityException();
 		}
 	}
 
@@ -149,5 +137,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 */
 	public boolean isNeedMore(final Set storableObjects) {
 		return true;
+	}
+
+	private IllegalObjectEntityException newIllegalObjectEntityException() {
+		return new IllegalObjectEntityException(
+				ENTITY_CODE_NOT_REGISTERED + super.entityCode
+				+ ", " + ObjectEntities.codeToString(super.entityCode),
+				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 }
