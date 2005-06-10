@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.103 2005/06/10 15:07:45 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.104 2005/06/10 19:24:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/06/10 15:07:45 $
+ * @version $Revision: 1.104 $, $Date: 2005/06/10 19:24:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -351,6 +351,19 @@ public abstract class StorableObjectPool {
 				Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '"
 						+ id + "', entity code: '" + ObjectEntities.codeToString(entityCode) + "'");
 		}
+
+		/*	Just debug output -- nothing more*/
+		Log.debugMessage("StorableObjectPool.getStorableObjectsImpl | Requested objects for set: " + ids, Log.DEBUGLEVEL10);
+		final StringBuffer stringBuffer1 = new StringBuffer();
+		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+			final StorableObject storableObject = (StorableObject) it.next();
+			if (stringBuffer1.length() != 0)
+				stringBuffer1.append(", ");
+			stringBuffer1.append(storableObject.getId());
+		}
+		Log.debugMessage("StorableObjectPool.getStorableObjectsImpl | Found in pool "
+				+ storableObjects.size() + " objects: " + stringBuffer1, Log.DEBUGLEVEL10);
+		/*	^Just debug output -- nothing more^*/
 
 		if (objectQueueMap != null) {
 			for (final TShortObjectIterator entityCodeIterator = objectQueueMap.iterator(); entityCodeIterator.hasNext();) {
@@ -1114,7 +1127,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.103 $, $Date: 2005/06/10 15:07:45 $
+	 * @version $Revision: 1.104 $, $Date: 2005/06/10 19:24:37 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
@@ -1203,18 +1216,20 @@ public abstract class StorableObjectPool {
 	}
 
 	private final void deserializeImpl() {
-		try {
-			for (final TShortObjectIterator entityCodeIterator = this.objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
-				entityCodeIterator.advance();
-				final short entityCode = entityCodeIterator.key();
-				Set keys = LRUMapSaver.load(ObjectEntities.codeToString(entityCode));
-				if (keys != null)
+		for (final TShortObjectIterator entityCodeIterator = this.objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
+			entityCodeIterator.advance();
+			final short entityCode = entityCodeIterator.key();
+			Set keys = LRUMapSaver.load(ObjectEntities.codeToString(entityCode));
+			if (keys != null) {
+				try {
 					this.getStorableObjectsImpl(keys, true);
+				}
+				catch (ApplicationException ae) {
+					Log.errorMessage(this.selfGroupName + "StorableObjectPool.deserializeImpl | Cannot get entity '"
+							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+					Log.errorException(ae);
+				}
 			}
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.deserializeImpl | Error: " + ae.getMessage());
 		}
 	}
 
