@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.7 2005/06/04 16:56:22 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.8 2005/06/10 14:06:12 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/04 16:56:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/10 14:06:12 $
+ * @author $Author: max $
  * @module map_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -98,12 +98,13 @@ final class TypicalConditionImpl extends TypicalCondition {
 		Wrapper wrapper;
 		if (storableObject instanceof PhysicalLinkType)
 			wrapper = PhysicalLinkTypeWrapper.getInstance();
+		else if (storableObject instanceof SiteNodeType)
+			wrapper = SiteNodeTypeWrapper.getInstance();
+		else if (storableObject instanceof PhysicalLink)
+			wrapper = PhysicalLinkWrapper.getInstance();
 		else
-			if (storableObject instanceof SiteNodeType)
-				wrapper = SiteNodeTypeWrapper.getInstance();
-			else
-				throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
+					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 
 		return super.parseCondition(wrapper.getValue(storableObject, this.key));
 	}

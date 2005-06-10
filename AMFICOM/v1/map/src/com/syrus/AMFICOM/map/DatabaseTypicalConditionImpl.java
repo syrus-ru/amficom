@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.5 2005/06/04 16:56:22 bass Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.6 2005/06/10 14:06:12 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/10 14:06:12 $
+ * @author $Author: max $
  * @module map_v1
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -39,6 +39,10 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
+			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+					return StorableObjectWrapper.COLUMN_CODENAME;
+				}
 			default:
 				throw new IllegalObjectEntityException("DatabaseTypicalConditionImpl.getColumnName | entity "
 						+ ObjectEntities.codeToString(this.condition.getEntityCode())
