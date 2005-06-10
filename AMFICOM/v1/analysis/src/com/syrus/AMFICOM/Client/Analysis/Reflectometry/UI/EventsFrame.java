@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.*;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.*;
@@ -170,13 +171,13 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		jTable = new WrapperedTable(tModel);
 		jTable.setAllowSorting(false);
 
-		FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());			
-		jTable.getColumnModel().getColumn(0).setMinWidth(fontMetrics.stringWidth("WW"));
-		jTable.getColumnModel().getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
+		FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());
+		TableColumnModel cModel = jTable.getColumnModel();
+		cModel.getColumn(0).setMinWidth(fontMetrics.stringWidth("WW"));
+		cModel.getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
 		Dimension bttnSize = (Dimension) UIManager.get(ResourceKeys.SIZE_BUTTON);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(bttnSize.width);
-		jTable.getColumnModel().getColumn(1).setMaxWidth(bttnSize.width);
-
+		cModel.getColumn(1).setPreferredWidth(bttnSize.width);
+		cModel.getColumn(1).setMaxWidth(bttnSize.width);
 
 		setContentPane(mainPanel);
 		this.setResizable(true);
@@ -385,6 +386,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
             res.initGeneral(ev, nPri + 1, resKm, sigma);
             tModel.addObject(res);
 		}
+		jTable.getColumnModel().getColumn(2).setPreferredWidth(120);
 		jTable.updateUI();
 	}
 	

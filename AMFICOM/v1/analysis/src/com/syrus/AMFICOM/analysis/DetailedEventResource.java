@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.5 2005/06/09 15:38:37 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.6 2005/06/10 08:02:53 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.analysis.dadara.events.*;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/06/09 15:38:37 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/06/10 08:02:53 $
  * @module analysis_v1
  */
 
@@ -156,8 +156,8 @@ public class DetailedEventResource {
 	
 	public void initComparative(DetailedEvent dataEvent, DetailedEvent etalonEvent, ModelTrace etalonMT, double deltaX) {
 		this.event = dataEvent;
-		setType(dataEvent != null ? AnalysisUtil.getDetailedEventName(dataEvent) : DEFAULT_TYPE);
-		setEtalonType(etalonEvent != null ? AnalysisUtil.getDetailedEventName(etalonEvent) : DEFAULT_TYPE);
+		setType(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
+		setEtalonType(etalonEvent != null ? AnalysisUtil.getSimpleEventNameByType(etalonEvent.getEventType()) : DEFAULT_TYPE);
 		
 		DetailedEvent ev = dataEvent != null ? dataEvent : etalonEvent;
 

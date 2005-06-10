@@ -267,7 +267,7 @@ public class AnalysisUtil
 	 * @param eventType тип SimpleReflectogramEvent события
 	 * @return общий тип такого события (не уточненный)
 	 */
-	private static String getSimpleEventNameByType(int eventType)
+	public static String getSimpleEventNameByType(int eventType)
 	{
 		String eventTypeName;
 		switch(eventType)

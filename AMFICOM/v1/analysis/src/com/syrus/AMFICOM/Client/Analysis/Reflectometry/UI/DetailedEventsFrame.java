@@ -36,34 +36,34 @@ implements EtalonMTMListener,
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
 	private static final String[] linearKeys = new String[] {
-			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_MAXDEVIATION,
 			DetailedEventWrapper.KEY_MEAN_DEVIATION };
 
 	private static final String[] dzKeys = new String[] {
-			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_EDZ, DetailedEventWrapper.KEY_ADZ };
 
 	private static final String[] spliceKeys = new String[] {
-			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_MAXDEVIATION,
 			DetailedEventWrapper.KEY_MEAN_DEVIATION };
 
 	private static final String[] notidKeys = new String[] {
-			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_MAX_LEVEL, DetailedEventWrapper.KEY_MIN_LEVEL,
 			DetailedEventWrapper.KEY_MAXDEVIATION };
 	
 	private static final String[] reflectionKeys = new String[] {
-			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
 	
 	private static final String[] endKeys = new String[] {
-			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
 	
