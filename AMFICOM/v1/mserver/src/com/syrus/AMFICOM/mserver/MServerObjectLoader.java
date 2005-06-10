@@ -1,5 +1,5 @@
 /*
- * $Id: MServerObjectLoader.java,v 1.2 2005/06/07 13:23:18 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.3 2005/06/10 15:16:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/07 13:23:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/10 15:16:53 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -52,7 +52,7 @@ final class MServerObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.2 $, $Date: 2005/06/07 13:23:18 $
+	 * @version $Revision: 1.3 $, $Date: 2005/06/10 15:16:53 $
 	 * @see MServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.MServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -64,7 +64,7 @@ final class MServerObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.2 $, $Date: 2005/06/07 13:23:18 $
+	 * @version $Revision: 1.3 $, $Date: 2005/06/10 15:16:53 $
 	 * @see MServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.MServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -93,7 +93,7 @@ final class MServerObjectLoader extends ObjectLoader {
 			throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 
-		final Set loadIds = createLoadIds(ids, objects);
+		final Set loadIds = Identifier.createSubstractionIdentifiers(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 
@@ -167,7 +167,7 @@ final class MServerObjectLoader extends ObjectLoader {
 				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(mcmRef, loadIdsT, sessionKeyT);
 
 				final Set mcmLoadedObjects = StorableObjectPool.fromTransferables(entityCode, transferables, true);
-				removeFromLoadIds(loadIds, mcmLoadedObjects);
+				Identifier.substractFromIdentifiers(loadIds, mcmLoadedObjects);
 				loadedObjects.addAll(mcmLoadedObjects);
 			}
 			catch (AMFICOMRemoteException are) {
@@ -206,7 +206,7 @@ final class MServerObjectLoader extends ObjectLoader {
 			final TransmitButIdsByConditionProcedure transmitButIdsByConditionProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 
-		final Set loadButIds = createLoadButIds(ids, objects);
+		final Set loadButIds = Identifier.createSumIdentifiers(ids, objects);
 		final Set loadedObjects = new HashSet();
 		final Set mcmIds = MeasurementServer.getMCMIds();
 		for (final Iterator it = mcmIds.iterator(); it.hasNext();) {
@@ -278,7 +278,7 @@ final class MServerObjectLoader extends ObjectLoader {
 						sessionKeyT);
 
 				final Set mcmLoadedObjects = StorableObjectPool.fromTransferables(entityCode, transferables, true);
-				addToLoadButIds(loadButIds, mcmLoadedObjects);
+				Identifier.addToIdentifiers(loadButIds, mcmLoadedObjects);
 				loadedObjects.addAll(mcmLoadedObjects);
 			}
 			catch (AMFICOMRemoteException are) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.6 2005/06/07 13:58:59 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.7 2005/06/10 15:16:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/07 13:58:59 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/10 15:16:24 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -31,7 +32,7 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 	protected final Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
 			throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
-		final Set loadIds = createLoadIds(ids, objects);
+		final Set loadIds = Identifier.createSubstractionIdentifiers(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 
@@ -55,7 +56,7 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
-		final Set loadButIds = createLoadButIds(ids, objects);
+		final Set loadButIds = Identifier.createSumIdentifiers(ids, objects);
 
 		final Set loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
 				loadButIds,

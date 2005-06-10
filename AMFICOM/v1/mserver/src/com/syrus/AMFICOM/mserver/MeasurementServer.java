@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.53 2005/06/07 15:44:32 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.54 2005/06/10 15:16:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/06/07 15:44:32 $
+ * @version $Revision: 1.54 $, $Date: 2005/06/10 15:16:53 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -157,7 +157,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			final Server server = new Server(serverId);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE)).retrieveForServerAndCodename(serverId, processCodename);
 			final User user = new User(serverProcess.getUserId());
-			final Set mcmIds = Identifier.getIdentifiers(((MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE)).retrieveForServer(serverId));
+			final Set mcmIds = Identifier.createIdentifiers(((MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE)).retrieveForServer(serverId));
 			login = user.getLogin();
 			
 			/*	Create map of test queues*/
