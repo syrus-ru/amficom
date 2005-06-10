@@ -2,7 +2,6 @@
 package com.syrus.AMFICOM.client.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -14,10 +13,12 @@ import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 public class SessionDomainCommand extends AbstractCommand {
@@ -74,16 +75,17 @@ public class SessionDomainCommand extends AbstractCommand {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
 																	"Выбор домена..."));
 
-		/* TODO may be ObjComboBox for Collection as parameter */
 		WrapperedComboBox objComboBox = new WrapperedComboBox(DomainWrapper.getInstance(), new ArrayList(availableDomains),
 													StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 		{
 			Identifier domainId = Environment.getDomainId();
-			for (Iterator iterator = availableDomains.iterator(); iterator.hasNext();) {
-				Domain domain = (Domain) iterator.next();
-				if (domain.getId().equals(domainId)) {
-					objComboBox.setSelectedItem(domain);
-					break;
+			if (domainId != null) {
+				try {
+					objComboBox.setSelectedItem(StorableObjectPool.getStorableObject(domainId, true));
+				} catch (ApplicationException e) {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
+						.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
+					JOptionPane.ERROR_MESSAGE, null);
 				}
 			}
 		}

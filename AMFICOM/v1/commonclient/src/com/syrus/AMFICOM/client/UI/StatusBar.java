@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.2 2005/06/09 13:01:45 bob Exp $
+ * $Id: StatusBar.java,v 1.3 2005/06/10 07:39:39 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,13 +36,13 @@ import javax.swing.table.TableColumn;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/09 13:01:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/10 07:39:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -51,6 +51,7 @@ public class StatusBar implements PropertyChangeListener {
 
 	public static final String		FIELD_PREFIX	= "field";
 	public static final String		FIELD_DOMAIN	= "domain";
+	public static final String		FIELD_PROGRESS	= "progress";
 	public static final String		FIELD_STATUS	= "status";
 	public static final String		FIELD_SERVER	= "server";
 	public static final String		FIELD_SESSION	= "session";
@@ -72,17 +73,11 @@ public class StatusBar implements PropertyChangeListener {
 	private class TableHeaderCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long	serialVersionUID	= 1416487175210085862L;
-		
-		//private final SimpleDateFormat	sdf	= new SimpleDateFormat("HH:mm:ss");
 
 		public TableHeaderCellRenderer() {
 			this.setHorizontalAlignment(SwingConstants.CENTER);
-			this.setBorder(BorderFactory.createBevelBorder(
-				BevelBorder.LOWERED,
-				Color.white,
-				Color.white,
-				new Color(142, 142, 142),
-				new Color(99, 99, 99)));
+			this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, Color.WHITE, Color.WHITE,
+				Color.LIGHT_GRAY, Color.GRAY));
 		}
 
 		public Component getTableCellRendererComponent(	JTable jtable,
@@ -108,7 +103,7 @@ public class StatusBar implements PropertyChangeListener {
 			} else {
 				this.setText((value == null) ? "" : value.toString());
 			}
-//			this.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+			// this.setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 			return this;
 		}
 
@@ -128,6 +123,20 @@ public class StatusBar implements PropertyChangeListener {
 		this.table = new JTable(this.tableModel, this.model);
 		this.table.setRowHeight(1);
 
+		this.table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
+			public Component getTableCellRendererComponent(	JTable jtable,
+															Object value,
+															boolean isSelected,
+															boolean hasFocus,
+															int row,
+															int column) {
+				super.getTableCellRendererComponent(jtable, value, isSelected, hasFocus, row, column);
+				this.setBorder(null);
+				return this;
+			}
+		});
+
 		JTableHeader tableHeader = this.table.getTableHeader();
 		tableHeader.setDefaultRenderer(new TableHeaderCellRenderer());
 
@@ -139,63 +148,10 @@ public class StatusBar implements PropertyChangeListener {
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 
-		this.panel.add(this.table, gbc);
 		this.panel.add(tableHeader, gbc);
-		// this.createAddRemoveButtons();
-//		this.createStartStopButtons();
+		this.panel.add(this.table, gbc);
 	}
 
-//	private void createAddRemoveButtons() {
-//		JButton addButton = new JButton("add");
-//		GridBagConstraints gbc = new GridBagConstraints();
-//		gbc.fill = GridBagConstraints.HORIZONTAL;
-//		gbc.gridwidth = GridBagConstraints.RELATIVE;
-//		this.panel.add(addButton, gbc);
-//		addButton.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				StatusBar.this.add(Integer.toString(++StatusBar.this.number));
-//
-//			}
-//		});
-//
-//		JButton removeButton = new JButton("remove");
-//		gbc.gridwidth = GridBagConstraints.REMAINDER;
-//		this.panel.add(removeButton, gbc);
-//		removeButton.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				StatusBar.this.remove(Integer.toString(StatusBar.this.number--));
-//
-//			}
-//		});
-//	}
-//
-//	private void createStartStopButtons() {
-//		JButton startButton = new JButton("Start");
-//		GridBagConstraints gbc = new GridBagConstraints();
-//		gbc.fill = GridBagConstraints.HORIZONTAL;
-//		gbc.gridwidth = GridBagConstraints.RELATIVE;
-//		this.panel.add(startButton, gbc);
-//		startButton.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				StatusBar.this.setProgressBarEnable(true);
-//
-//			}
-//		});
-//
-//		JButton stopButton = new JButton("Stop");
-//		gbc.gridwidth = GridBagConstraints.REMAINDER;
-//		this.panel.add(stopButton, gbc);
-//		stopButton.addActionListener(new ActionListener() {
-//
-//			public void actionPerformed(ActionEvent e) {
-//				StatusBar.this.setProgressBarEnable(false);
-//
-//			}
-//		});
-//	}
 
 	public JPanel getPanel() {
 		return this.panel;
@@ -235,14 +191,16 @@ public class StatusBar implements PropertyChangeListener {
 
 	}
 
-	private void setValue(final 	String fieldId,
-	                      final Object value) {
+	public void setValue(	final String fieldId,
+							final Object value) {
 		final JTableHeader tableHeader = this.table.getTableHeader();
 		TableColumn column = null;
 		for (int i = 0; i < this.model.getColumnCount(); i++) {
 			column = this.model.getColumn(i);
 			Object identifier = column.getIdentifier();
-			if (fieldId.equals(identifier)) { break; }
+			if (fieldId.equals(identifier)) {
+				break;
+			}
 		}
 		if (column != null) {
 			column.setHeaderValue(value);
@@ -253,20 +211,21 @@ public class StatusBar implements PropertyChangeListener {
 			Log.debugMessage("StatusBar.addTimerField | fieldId '" + fieldId + "' not found.", Log.FINEST);
 		}
 	}
-	
-	public void setText(final String fieldId, final String text) {
+
+	public void setText(final String fieldId,
+						final String text) {
 		this.setValue(fieldId, text);
 	}
-	
-	public void setWidth(final String fieldId, final int width) {
-		TableColumn column = this.model.getColumn(this.model.getColumnIndex(fieldId));
-		column.setWidth(width);
+
+	public void setWidth(	final String fieldId,
+							final int width) {
+		this.table.getColumn(fieldId).setPreferredWidth(width);
 	}
 
 	private void addStatusBarField(final String fieldId) {
 
 		JProgressBar progressBar = new JProgressBar();
-		progressBar.setString(LangModel.getString("Loading_Please_wait"));
+		progressBar.setString(LangModelGeneral.getString("StatusBar.PleaseWait"));
 		progressBar.setIndeterminate(true);
 		progressBar.setStringPainted(true);
 
@@ -309,8 +268,7 @@ public class StatusBar implements PropertyChangeListener {
 	}
 
 	private void setProgressBarEnable(boolean enable) {
-		Log.debugMessage("StatusBar.setProgressBarEnable | enable is " + enable, Log.FINEST);
-		final String field = FIELD_STATUS;
+		final String field = FIELD_PROGRESS;
 		if (enable) {
 			/* is there status bar ? */
 			for (int i = 0; i < this.model.getColumnCount(); i++) {
@@ -347,10 +305,9 @@ public class StatusBar implements PropertyChangeListener {
 			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_PROGRESS_BAR, this);
 		}
 	}
-	
+
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
-		Log.debugMessage("StatusBar.propertyChange | propertyName : " + propertyName + " ["+ evt.getClass().getName() + ']', Log.FINEST);
 		if (evt instanceof StatusMessageEvent) {
 			StatusMessageEvent sme = (StatusMessageEvent) evt;
 			if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
@@ -366,25 +323,6 @@ public class StatusBar implements PropertyChangeListener {
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_BAR)) {
 				this.setProgressBarEnable(sme.isShowProgressBar());
 			}
-
 		}
-
 	}
-
-//	public static void main(String[] args) {
-//		JFrame frame = new JFrame();
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		StatusBar statusBar = new StatusBar();
-//		statusBar.add("первонахЪ");
-//		statusBar.add("2");
-//		statusBar.add("3");
-//		statusBar.add("4");
-//		statusBar.remove("2");
-//		statusBar.setProgressBarEnable(true);
-//		statusBar.add(FIELD_TIME);
-//		frame.getContentPane().add(statusBar.getPanel());
-//		frame.pack();
-//		frame.setVisible(true);
-//	}
-
 }

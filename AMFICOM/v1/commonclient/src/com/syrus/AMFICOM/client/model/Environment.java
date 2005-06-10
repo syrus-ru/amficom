@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.6 2005/06/08 14:27:15 bob Exp $
+ * $Id: Environment.java,v 1.7 2005/06/10 07:39:39 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -57,12 +57,12 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/06/08 14:27:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/10 07:39:39 $
  * @module commonclient_v1
  */
 public final class Environment {
 
-	private static Dispatcher	the_dispatcher				= new Dispatcher();
+	private static Dispatcher	theDispatcher				= new Dispatcher();
 
 	private static ArrayList	windows						= new ArrayList();
 
@@ -438,7 +438,7 @@ public final class Environment {
 	}
 
 	public static Dispatcher getDispatcher() {
-		return the_dispatcher;
+		return theDispatcher;
 	}
 
 	public static void addWindow(Window window) {

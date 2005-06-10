@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.4 2005/06/08 14:28:59 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.5 2005/06/10 07:39:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/08 14:28:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/10 07:39:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -89,6 +89,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		this.statusBarPanel = new JPanel(new BorderLayout());
 		this.statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.statusBar = new StatusBar();
+		this.statusBar.addDispatcher(this.dispatcher);
 		this.statusBarPanel.add(this.statusBar.getPanel(), BorderLayout.CENTER);
 
 		this.statusBar.add(StatusBar.FIELD_STATUS);
@@ -134,10 +135,11 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
 		Log.debugMessage("AbstractMainFrame.propertyChange | propertyName " + propertyName, Log.FINEST);
-		if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
-			StatusMessageEvent sme = (StatusMessageEvent) evt;
-			this.statusBar.setText(StatusBar.FIELD_STATUS, sme.getText());
-		} else if (propertyName.equals(ContextChangeEvent.TYPE)) {
+//		if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
+//			StatusMessageEvent sme = (StatusMessageEvent) evt;
+//			this.statusBar.setText(StatusBar.FIELD_STATUS, sme.getText());
+//		} else 
+		if (propertyName.equals(ContextChangeEvent.TYPE)) {
 			Log.debugMessage("AbstractMainFrame.propertyChange | 1 ", Log.FINEST);
 			ContextChangeEvent cce = (ContextChangeEvent) evt;
 			if (cce.isSessionOpened()) {
@@ -349,22 +351,25 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		// this.statusBar.organize();
 
 		this.aContext.setDispatcher(this.dispatcher);
-		this.dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_MESSAGE, this);
+//		this.dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_MESSAGE, this);
 		// this.dispatcher.addPropertyChangeListener(COMMAND_CHANGE_STATUSBAR_STATE,
 		// this);
 
 		this.dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-		Dispatcher dispatcher1 = Environment.getDispatcher();
-		dispatcher1.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
+		Dispatcher theDispatcher = Environment.getDispatcher();
+		
+		this.statusBar.addDispatcher(theDispatcher);
+		
+		theDispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
-		aModel.setCommand(ApplicationModel.MENU_SESSION_NEW, new OpenSessionCommand(dispatcher1));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher1));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_NEW, new OpenSessionCommand(theDispatcher));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_CLOSE, new SessionCloseCommand(theDispatcher));
 		aModel.setCommand(ApplicationModel.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_CONNECTION, new SessionConnectionCommand(dispatcher1,
+		aModel.setCommand(ApplicationModel.MENU_SESSION_CONNECTION, new SessionConnectionCommand(theDispatcher,
 																									this.aContext));
 		aModel.setCommand(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD,
-			new SessionChangePasswordCommand(dispatcher1, this.aContext));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher1, this.aContext));
+			new SessionChangePasswordCommand(theDispatcher, this.aContext));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_DOMAIN, new SessionDomainCommand(theDispatcher, this.aContext));
 		aModel.setCommand(ApplicationModel.MENU_EXIT, new ExitCommand(this));
 
 		// this.setWindowArranger(this.windowArranger);
