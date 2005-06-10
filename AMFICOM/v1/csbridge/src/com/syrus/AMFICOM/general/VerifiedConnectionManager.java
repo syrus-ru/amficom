@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.7 2005/06/10 14:48:21 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.8 2005/06/10 17:20:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/10 14:48:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/10 17:20:04 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -68,9 +68,7 @@ public class VerifiedConnectionManager {
 				reference = this.activateAndGet(servantName);
 
 			try {
-				Log.debugMessage("VerifiedConnectionManager.getVerifiableReference | 1 ", Log.FINEST);
 				reference.verify((byte) 1);
-				Log.debugMessage("VerifiedConnectionManager.getVerifiableReference | 2 ", Log.FINEST);
 			}
 			catch (SystemException se) {
 				reference = this.activateAndGet(servantName);
