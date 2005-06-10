@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.11 2005/06/08 16:18:00 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.12 2005/06/10 10:51:33 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/08 16:18:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/06/10 10:51:33 $
+ * @author $Author: bob $
  * @module commonclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -47,6 +47,13 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	public ClientServantManager getClientServantManager() {
 		return (ClientServantManager) super.baseConnectionManager;
+	}
+	
+	public String getServerName() {
+		if (this.xmlPath == null) {
+			return super.baseConnectionManager.getCORBAServer().getRootContextName();
+		} 
+		return "XML:" + this.xmlPath;
 	}
 
 	public static void createInstance(	int sessionKind,
