@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.63 2005/06/03 20:35:37 arseniy Exp $
+ * $Id: StorableObject.java,v 1.64 2005/06/10 11:03:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.63 $, $Date: 2005/06/03 20:35:37 $
+ * @version $Revision: 1.64 $, $Date: 2005/06/10 11:03:59 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -157,20 +157,6 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 				(Identifier_Transferable) this.creatorId.getTransferable(),
 				(Identifier_Transferable) this.modifierId.getTransferable(),
 				this.version);
-	}
-
-	/**
-	 * This method called only when client succesfully updated object
-	 *
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @param sot
-	 */
-	public final void updateFromHeaderTransferable(StorableObject_Transferable sot) {
-		this.modified = new Date(sot.modified);
-		this.modifierId = new Identifier(sot.modifier_id);
-		if (this.version != sot.version || (this.version == 0 && sot.version == 0))
-			this.changed = false;
-		this.version = sot.version;
 	}
 
 	/**
@@ -343,7 +329,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return clone;
 	}
 
-	public static StorableObject_Transferable[] createHeadersTransferable(final Collection storableObjects) {
+	public static final StorableObject_Transferable[] createHeadersTransferable(final Collection storableObjects) {
 		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		StorableObject_Transferable[] headersT = new StorableObject_Transferable[storableObjects.size()];
@@ -356,7 +342,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return headersT;
 	}
 
-	public static IDLEntity[] allocateArrayOfTransferables(
+	public static final IDLEntity[] allocateArrayOfTransferables(
 			final short entityCode,
 			final int length)
 			throws CreateObjectException {
@@ -380,7 +366,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return <code>true</code> if all entities within this set are of
 	 *         the same type, <code>false</code> otherwise.
 	 */
-	public static boolean hasSingleTypeEntities(final Set identifiables) {
+	public static final boolean hasSingleTypeEntities(final Set identifiables) {
 		/*
 		 * Nested assertions are ok.
 		 */
@@ -400,7 +386,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @see #hasSingleTypeEntities(Set)
 	 */
-	public static boolean hasSingleTypeEntities(final Identifier_Transferable ids[]) {
+	public static final boolean hasSingleTypeEntities(final Identifier_Transferable ids[]) {
 		assert ids != null;
 
 		final int length = ids.length;
@@ -422,7 +408,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return <code>true</code> if all entities within this set belong to
 	 *         the same group, <code>false</code> otherwise.
 	 */
-	public static boolean hasSingleGroupEntities(final Set identifiables) {
+	public static final boolean hasSingleGroupEntities(final Set identifiables) {
 		/*
 		 * Nested assertions are ok.
 		 */
@@ -449,7 +435,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return common type of identifiables supplied as
 	 *         <code>short</code>.
 	 */
-	public static short getEntityCodeOfIdentifiables(final Set identifiables) {
+	public static final short getEntityCodeOfIdentifiables(final Set identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
 		assert hasSingleTypeEntities(identifiables);
 
@@ -459,7 +445,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @see #getEntityCodeOfIdentifiables(Set)
 	 */
-	public static short getEntityCodeOfIdentifiables(final Identifier_Transferable ids[]) {
+	public static final short getEntityCodeOfIdentifiables(final Identifier_Transferable ids[]) {
 		assert ids != null && ids.length != 0;
 		assert hasSingleTypeEntities(ids);
 
@@ -479,9 +465,45 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return common group of identifiables supplied as
 	 *         <code>short</code>.
 	 */
-	public static short getGroupCodeOfIdentifiables(final Set identifiables) {
+	public static final short getGroupCodeOfIdentifiables(final Set identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
 
 		return ObjectGroupEntities.getGroupCode(((Identifiable) identifiables.iterator().next()).getId().getMajor());
 	}
+
+	/**
+	 * Update headers of every StorableObject from supplied set,
+	 * using corresponding header from supplied array.
+	 * NOTE: This method removes updated objects from the supplied set;
+	 * if you are plannig to use the set <code>storableObjects</code> after this method invocation
+	 *  - supply a copy of your set to this method instead of passing your set itself.
+	 * @param storableObjects
+	 * @param headers
+	 */
+	protected static final void updateHeaders(final Set storableObjects, final StorableObject_Transferable[] headers) {
+		for (int i = 0; i < headers.length; i++) {
+			final Identifier id = new Identifier(headers[i].id);
+			for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
+				if (storableObject.getId().equals(id)) {
+					storableObject.updateFromHeaderTransferable(headers[i]);
+					it.remove();
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method called only when client succesfully updated object
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @param sot
+	 */
+	private final void updateFromHeaderTransferable(StorableObject_Transferable sot) {
+		this.modified = new Date(sot.modified);
+		this.modifierId = new Identifier(sot.modifier_id);
+		if (this.version != sot.version || (this.version == 0 && sot.version == 0))
+			this.changed = false;
+		this.version = sot.version;
+	}
+
 }
