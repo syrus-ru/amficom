@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.17 2005/06/10 16:51:40 max Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.18 2005/06/10 18:39:53 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/10 16:51:40 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2005/06/10 18:39:53 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
@@ -60,7 +60,6 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		query.append(StorableObjectDatabase.CLOSE_BRACKET);
 		return query.toString();
 	}
-	
 
 	protected IllegalObjectEntityException newIllegalObjectEntityException() {
 		final short entityCode = getEntityCode().shortValue();
