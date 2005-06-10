@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.13 2005/06/06 14:43:06 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.14 2005/06/10 15:29:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/06 14:43:06 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/10 15:29:12 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -46,8 +46,8 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 
 			Identifier mcmId = new Identifier(mcmIdT);
 			Log.debugMessage("Received " + resultsT.length + " results from MCM '" + mcmId + "'", Log.DEBUGLEVEL03);
-			synchronized (MServerObjectLoader.lock) {
-				MServerObjectLoader.preferredMCMId = mcmId;
+			synchronized (CORBAMServerObjectLoader.lock) {
+				CORBAMServerObjectLoader.preferredMCMId = mcmId;
 				Result result;
 				java.util.Set results = new HashSet(resultsT.length);
 				for (int i = 0; i < resultsT.length; i++) {
@@ -60,7 +60,7 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 						throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
 					}
 				}
-				MServerObjectLoader.preferredMCMId = null;
+				CORBAMServerObjectLoader.preferredMCMId = null;
 
 				ResultDatabase resultDatabase = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
 				try {

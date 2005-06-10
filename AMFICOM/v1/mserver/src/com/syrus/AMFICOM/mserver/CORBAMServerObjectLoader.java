@@ -1,5 +1,5 @@
 /*
- * $Id: MServerObjectLoader.java,v 1.3 2005/06/10 15:16:53 arseniy Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.1 2005/06/10 15:28:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -33,11 +32,11 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/10 15:16:53 $
+ * @version $Revision: 1.1 $, $Date: 2005/06/10 15:28:54 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
-final class MServerObjectLoader extends ObjectLoader {
+final class CORBAMServerObjectLoader {
 	protected static Identifier preferredMCMId;
 	protected static Object lock;
 
@@ -45,15 +44,16 @@ final class MServerObjectLoader extends ObjectLoader {
 		lock = new Object();
 	}
 
-	private MServerObjectLoader() {
+	private CORBAMServerObjectLoader() {
+		//singleton
 		assert false;
 	}
 
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.3 $, $Date: 2005/06/10 15:16:53 $
-	 * @see MServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.MServerObjectLoader.TransmitProcedure)
+	 * @version $Revision: 1.1 $, $Date: 2005/06/10 15:28:54 $
+	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
 	interface TransmitProcedure {
@@ -64,8 +64,8 @@ final class MServerObjectLoader extends ObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.3 $, $Date: 2005/06/10 15:16:53 $
-	 * @see MServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.MServerObjectLoader.TransmitButIdsByConditionProcedure)
+	 * @version $Revision: 1.1 $, $Date: 2005/06/10 15:28:54 $
+	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
 	interface TransmitButIdsByConditionProcedure {
@@ -100,13 +100,13 @@ final class MServerObjectLoader extends ObjectLoader {
 		final Set loadedObjects = new HashSet();
 
 		if (preferredMCMId != null) {
-			Log.debugMessage("MServerObjectLoader.loadStorableObjects | Trying to load from MCM '" + preferredMCMId + "'",
+			Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjects | Trying to load from MCM '" + preferredMCMId + "'",
 					Log.DEBUGLEVEL08);
 			loadStorableObjectsFromMCM(preferredMCMId, entityCode, transmitProcedure, loadIds, loadedObjects);
 		}
 
 		if (!loadIds.isEmpty()) {
-			Log.debugMessage("MServerObjectLoader.loadStorableObjects | Searching on all MCMs", Log.DEBUGLEVEL08);
+			Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjects | Searching on all MCMs", Log.DEBUGLEVEL08);
 			final Set mcmIds = MeasurementServer.getMCMIds();
 			for (final Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
 				final Identifier mcmId = (Identifier) it.next();
@@ -177,7 +177,7 @@ final class MServerObjectLoader extends ObjectLoader {
 							if (LoginManager.restoreLogin()) {
 								continue;
 							}
-							Log.debugMessage("MServerObjectLoader.loadStorableObjectsFromMCM() | Login restoration cancelled", Log.INFO);
+							Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjectsFromMCM() | Login restoration cancelled", Log.INFO);
 							return;
 						}
 						throw new LoginException(are.message);
@@ -288,7 +288,7 @@ final class MServerObjectLoader extends ObjectLoader {
 							if (LoginManager.restoreLogin()) {
 								continue;
 							}
-							Log.debugMessage("MServerObjectLoader.loadStorableObjectsButIdsByConditionFromMCM() | Login restoration cancelled",
+							Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjectsButIdsByConditionFromMCM() | Login restoration cancelled",
 									Log.INFO);
 							return;
 						}

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.32 2005/06/06 14:41:10 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.33 2005/06/10 15:29:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/06 14:41:10 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/10 15:29:38 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -45,9 +45,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	 * @todo make access validation on MCM
 	 */
 	public Set loadMeasurements(final Set ids) throws ApplicationException {
-		return MServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_ENTITY_CODE,
 				ids,
-				new MServerObjectLoader.TransmitProcedure() {
+				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
 							final Identifier_Transferable loadIdsT[],
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
@@ -60,9 +60,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	 * @todo make access validation on MCM
 	 */
 	public Set loadAnalyses(final Set ids) throws ApplicationException {
-		return MServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_ENTITY_CODE,
 				ids,
-				new MServerObjectLoader.TransmitProcedure() {
+				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
 							final Identifier_Transferable loadIdsT[],
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
@@ -75,9 +75,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	 * @todo make access validation on MCM
 	 */
 	public Set loadEvaluations(final Set ids) throws ApplicationException {
-		return MServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_ENTITY_CODE,
 				ids,
-				new MServerObjectLoader.TransmitProcedure() {
+				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
 							final Identifier_Transferable loadIdsT[],
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
@@ -92,10 +92,10 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	 * @todo make access validation on MCM
 	 */
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return MServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE,
 				ids,
 				condition,
-				new MServerObjectLoader.TransmitButIdsByConditionProcedure() {
+				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
 							final Identifier_Transferable loadButIdsT[],
 							final StorableObjectCondition_Transferable conditionT,
@@ -109,10 +109,10 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	 * @todo make access validation on MCM
 	 */
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return MServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_ENTITY_CODE,
 				ids,
 				condition,
-				new MServerObjectLoader.TransmitButIdsByConditionProcedure() {
+				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
 							final Identifier_Transferable loadButIdsT[],
 							final StorableObjectCondition_Transferable conditionT,
@@ -126,10 +126,10 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 	 * @todo make access validation on MCM
 	 */
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return MServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_ENTITY_CODE,
 				ids,
 				condition,
-				new MServerObjectLoader.TransmitButIdsByConditionProcedure() {
+				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
 							final Identifier_Transferable loadButIdsT[],
 							final StorableObjectCondition_Transferable conditionT,
