@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.5 2005/06/10 07:39:39 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.6 2005/06/10 10:52:12 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.awt.SystemColor;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
@@ -35,16 +37,17 @@ import com.syrus.AMFICOM.client.UI.StatusBar;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/10 07:39:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/10 10:52:12 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -134,21 +137,23 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
-		Log.debugMessage("AbstractMainFrame.propertyChange | propertyName " + propertyName, Log.FINEST);
+//		Log.debugMessage("AbstractMainFrame.propertyChange | propertyName " + propertyName, Log.FINEST);
 //		if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
 //			StatusMessageEvent sme = (StatusMessageEvent) evt;
 //			this.statusBar.setText(StatusBar.FIELD_STATUS, sme.getText());
 //		} else 
 		if (propertyName.equals(ContextChangeEvent.TYPE)) {
-			Log.debugMessage("AbstractMainFrame.propertyChange | 1 ", Log.FINEST);
 			ContextChangeEvent cce = (ContextChangeEvent) evt;
 			if (cce.isSessionOpened()) {
-				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionOpened() ", Log.FINEST);
+//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionOpened() ", Log.FINEST);
 				this.setSessionOpened();
 
 				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModel.getString("statusReady"));
-				// SimpleDateFormat sdf = (SimpleDateFormat)
-				// UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				
+				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+				this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
+				
 				// TODO
 				// this.statusBar.setText("session", sdf.format(new
 				// Date(this.aContext.getSessionInterface()
@@ -164,10 +169,10 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 				}
 			}
 			if (cce.isSessionClosed()) {
-				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionClosed() ", Log.FINEST);
+//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionClosed() ", Log.FINEST);
 				this.setSessionClosed();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModel.getString("statusReady"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModel.getString("statusReady"));				
 				this.statusBar.setText(StatusBar.FIELD_SESSION, LangModel.getString("statusNoSession"));
 				this.statusBar.setText(StatusBar.FIELD_USER, LangModel.getString("statusNoUser"));
 			}
@@ -176,11 +181,14 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 				this.setConnectionOpened();
 
 				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModel.getString("statusReady"));
+				ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+				this.statusBar.setText(StatusBar.FIELD_SERVER, clientSessionEnvironment.getServerName());
+
 				// this.statusBar.setText("server",
 				// ConnectionInterface.getInstance().getServerName());
 			}
 			if (cce.isConnectionClosed()) {
-				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isConnectionClosed() ", Log.FINEST);
+//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isConnectionClosed() ", Log.FINEST);
 				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModel.getString("statusError"));
 				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModel.getString("statusConnectionError"));
 
@@ -196,7 +204,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 				this.setConnectionFailed();
 			}
 			if (cce.isDomainSelected()) {
-				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isDomainSelected()() ", Log.FINEST);
+//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isDomainSelected()() ", Log.FINEST);
 				this.setDomainSelected();
 			}
 		}
@@ -204,7 +212,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	}
 
 	public void setConnectionClosed() {
-		Log.debugMessage("AbstractMainFrame.setConnectionClosed | ", Log.FINEST);
+//		Log.debugMessage("AbstractMainFrame.setConnectionClosed | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
@@ -224,7 +232,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	}
 
 	public void setConnectionOpened() {
-		Log.debugMessage("AbstractMainFrame.setConnectionOpened | ", Log.FINEST);
+//		Log.debugMessage("AbstractMainFrame.setConnectionOpened | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
@@ -295,10 +303,10 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		// Checker(aContext.getDataSourceInterface());
 
 		// Dispatcher dispatcher = this.aContext.getDispatcher();
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModel
-				.getString("Loading_DB")));
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModel
-				.getString("Loding_DB_finished")));
+//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModel
+//				.getString("Loading_DB")));
+//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModel
+//				.getString("Loding_DB_finished")));
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, true);
