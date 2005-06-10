@@ -172,13 +172,14 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		jTable.setAllowSorting(false);
 
 		FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());
+    CommonUIUtilities.arrangeTableColumns(this.jTable);
 		TableColumnModel cModel = jTable.getColumnModel();
 		cModel.getColumn(0).setMinWidth(fontMetrics.stringWidth("WW"));
 		cModel.getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
 		Dimension bttnSize = (Dimension) UIManager.get(ResourceKeys.SIZE_BUTTON);
-		cModel.getColumn(1).setPreferredWidth(bttnSize.width);
 		cModel.getColumn(1).setMaxWidth(bttnSize.width);
-
+		jTable.getColumnModel().getColumn(2).setPreferredWidth(120);
+		
 		setContentPane(mainPanel);
 		this.setResizable(true);
 		this.setClosable(true);
@@ -351,7 +352,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	}
 
     private void updateColors() {
-        this.jTable.revalidate();
+//        this.jTable.revalidate();
         this.jTable.repaint();
     }
 
@@ -386,7 +387,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
             res.initGeneral(ev, nPri + 1, resKm, sigma);
             tModel.addObject(res);
 		}
-		jTable.getColumnModel().getColumn(2).setPreferredWidth(120);
 		jTable.updateUI();
 	}
 	
@@ -486,7 +486,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         {
         	primaryOpened = true;
         	updateEventsModel();
-            CommonUIUtilities.arrangeTableColumns(this.jTable);
             updateTableModel();
             updateCompDebug();
         }
