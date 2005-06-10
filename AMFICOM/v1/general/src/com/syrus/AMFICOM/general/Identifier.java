@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.36 2005/06/09 15:19:59 arseniy Exp $
+ * $Id: Identifier.java,v 1.37 2005/06/10 11:02:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.36 $, $Date: 2005/06/09 15:19:59 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/10 11:02:49 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -116,7 +116,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 		return this.identifierString;
 	}
 
-	public static Set createStrings(final Collection identifiables) {
+	public static final Set createStrings(final Collection identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		Set idStrings = new HashSet(identifiables.size());
@@ -131,7 +131,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 *         elements ordered in the same way as returned by the iterator.
 	 * @see #fromTransferables(Identifier_Transferable[])
 	 */
-	public static Identifier_Transferable[] createTransferables(final Collection identifiables) {
+	public static final Identifier_Transferable[] createTransferables(final Collection identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		int i = 0;
@@ -145,7 +145,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @param identifiables
 	 * @see #createTransferables(Collection)
 	 */
-	public static Identifier_Transferable[] createTransferables(final Identifiable identifiables[]) {
+	public static final Identifier_Transferable[] createTransferables(final Identifiable identifiables[]) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 		
 		final int length = identifiables.length;
@@ -160,7 +160,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @param identifiables
 	 * @return Set of identifiers
 	 */
-	public static Set createIdentifiers(final Set identifiables) {
+	public static final Set createIdentifiers(final Set identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		final Set identifiers = new HashSet(identifiables.size());
@@ -177,7 +177,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @param identifiables2
 	 * @return Set of identifiers
 	 */
-	public static Set createSumIdentifiers(final Set identifiables1, final Set identifiables2) {
+	public static final Set createSumIdentifiers(final Set identifiables1, final Set identifiables2) {
 		assert identifiables1 != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert identifiables2 != null : ErrorMessages.NON_NULL_EXPECTED;
 
@@ -200,7 +200,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @param identifiables2
 	 * @return
 	 */
-	public static Set createSubstractionIdentifiers(final Set identifiables1, final Set identifiables2) {
+	public static final Set createSubstractionIdentifiers(final Set identifiables1, final Set identifiables2) {
 		assert identifiables1 != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert identifiables2 != null : ErrorMessages.NON_NULL_EXPECTED;
 
@@ -219,7 +219,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @param identifiers
 	 * @param identifiables
 	 */
-	public static void addToIdentifiers(final Set identifiers, final Set identifiables) {
+	public static final void addToIdentifiers(final Set identifiers, final Set identifiables) {
 		assert identifiers != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 
@@ -236,7 +236,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @param identifiers
 	 * @param identifiables
 	 */
-	public static void substractFromIdentifiers(final Set identifiers, final Set identifiables) {
+	public static final void substractFromIdentifiers(final Set identifiers, final Set identifiables) {
 		assert identifiers != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 
@@ -251,7 +251,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @return a newly created <code>Set&lt;Identifier&gt;</code>.
 	 * @see #createTransferables(Collection)
 	 */
-	public static Set fromTransferables(final Identifier_Transferable[] transferables) {
+	public static final Set fromTransferables(final Identifier_Transferable[] transferables) {
 		final Set set = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++)
 			set.add(new Identifier(transferables[i]));
@@ -270,18 +270,18 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @return an <code>Identifier</code> of the object supplied, or
 	 *         {@link #VOID_IDENTIFIER} if the object is <code>null</code>.
 	 */
-	public static Identifier possiblyVoid(final StorableObject storableObject) {
+	public static final Identifier possiblyVoid(final StorableObject storableObject) {
 		return storableObject == null ? VOID_IDENTIFIER : storableObject.getId();
 	}
 
 	/**
 	 * @see Identifiable#getId()
 	 */
-	public Identifier getId() {
+	public final Identifier getId() {
 		return this;
 	}
 
-	public boolean isVoid() {
+	public final boolean isVoid() {
 		return equals(VOID_IDENTIFIER);
 	}
 }
