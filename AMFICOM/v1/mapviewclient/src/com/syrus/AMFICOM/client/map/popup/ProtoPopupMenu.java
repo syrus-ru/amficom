@@ -66,13 +66,10 @@ public final class ProtoPopupMenu extends MapPopupMenu {
 		SiteNodeTypeEditor prop = new SiteNodeTypeEditor();
 		if(prop == null)
 			return;
-		EditorDialog dialog = new EditorDialog(
+		EditorDialog.showEditorDialog(
 				LangModelGeneral.getString("Properties"), 
-				true, 
 				this.proto,
 				prop);
-
-		dialog.setVisible(true);
 
 		this.lab.updateIcon();
 	}

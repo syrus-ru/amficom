@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.19 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.20 2005/06/14 10:11:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.Map;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/14 10:11:17 $
  * @module mapviewclient_v1
  */
 public class MapSaveAsCommand extends AbstractCommand {
@@ -62,15 +62,10 @@ public class MapSaveAsCommand extends AbstractCommand {
 						StatusMessageEvent.STATUS_MESSAGE,
 						LangModelMap.getString("MapSaving")));
 
-		EditorDialog dialog = new EditorDialog(
+		if(EditorDialog.showEditorDialog(
 				LangModelMap.getString("MapProperties"),
-				true,
 				this.newMap,
-				MapVisualManager.getInstance().getGeneralPropertiesPanel());
-
-		dialog.setVisible(true);
-
-		if(dialog.ifAccept()) {
+				MapVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // try
 // {
 //				newMap = (Map )map.clone();

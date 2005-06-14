@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.21 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.22 2005/06/14 10:11:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/14 10:11:17 $
  * @module mapviewclient_v1
  */
 public class MapViewSaveCommand extends AbstractCommand
@@ -46,16 +46,10 @@ public class MapViewSaveCommand extends AbstractCommand
 
 	public void execute()
 	{
-		EditorDialog dialog = new EditorDialog(
+		if(EditorDialog.showEditorDialog(
 				LangModelMap.getString("MapViewProperties"), 
-				true, 
 				this.mapView, 
-				MapViewVisualManager.getInstance().getGeneralPropertiesPanel());
-
-		dialog.setVisible(true);
-
-		if ( dialog.ifAccept())
-		{
+				MapViewVisualManager.getInstance().getGeneralPropertiesPanel())) {
 			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
 					this,
 					StatusMessageEvent.STATUS_MESSAGE,

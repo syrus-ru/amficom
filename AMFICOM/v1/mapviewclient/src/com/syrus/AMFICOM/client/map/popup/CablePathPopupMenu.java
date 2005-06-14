@@ -129,15 +129,10 @@ public class CablePathPopupMenu extends MapPopupMenu
 	void bind()
 	{
 		StorableObjectEditor prop = MapVisualManager.getVisualManager(this.path).getAdditionalPropertiesPanel();
-		EditorDialog dialog = new EditorDialog(
+		if(EditorDialog.showEditorDialog(
 				LangModelGeneral.getString("Properties"), 
-				true, 
 				this.path,
-				prop);
-
-		dialog.setVisible(true);
-
-		if ( dialog.ifAccept())
+				prop))
 		{
 			// think about repainting?..
 		}

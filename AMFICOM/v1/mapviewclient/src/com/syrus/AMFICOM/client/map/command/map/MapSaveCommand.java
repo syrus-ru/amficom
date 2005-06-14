@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveCommand.java,v 1.15 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapSaveCommand.java,v 1.16 2005/06/14 10:11:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/14 10:11:17 $
  * @module mapviewclient_v1
  */
 public class MapSaveCommand extends AbstractCommand {
@@ -44,15 +44,10 @@ public class MapSaveCommand extends AbstractCommand {
 						StatusMessageEvent.STATUS_MESSAGE,
 						LangModelMap.getString("MapSaving")));
 
-		EditorDialog dialog = new EditorDialog(
+		if(EditorDialog.showEditorDialog(
 				LangModelMap.getString("MapProperties"), 
-				true, 
 				this.map, 
-				MapVisualManager.getInstance().getGeneralPropertiesPanel());
-
-		dialog.setVisible(true);
-
-		if(dialog.ifAccept()) {
+				MapVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // aContext.getDispatcher().notify(new StatusMessageEvent(
 //					StatusMessageEvent.STATUS_PROGRESS_BAR, 
 //					true));

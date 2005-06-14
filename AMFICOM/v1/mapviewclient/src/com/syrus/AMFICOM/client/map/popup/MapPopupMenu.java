@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.40 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.41 2005/06/14 10:11:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.40 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/14 10:11:38 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -83,19 +83,14 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	}
 
 	public void showProperties(Object me) {
-		StorableObjectEditor prop = MapVisualManager.getVisualManager((MapElement )me).getGeneralPropertiesPanel();
+		StorableObjectEditor prop = MapVisualManager.getVisualManager(me).getGeneralPropertiesPanel();
 		if(prop == null)
 			return;
-		EditorDialog dialog = new EditorDialog(
-				LangModelGeneral.getString("Properties"), 
-				true, 
-				me,
-				prop);
-
 //		MapElementState mes = me.getState();
-		dialog.setVisible(true);
-
-		if(dialog.ifAccept()) {
+		if(EditorDialog.showEditorDialog(
+				LangModelGeneral.getString("Properties"), 
+				me,
+				prop)) {
 // MapElementState mes2 = me.getState();
 //			if(! mes.equals(mes2))
 			{
