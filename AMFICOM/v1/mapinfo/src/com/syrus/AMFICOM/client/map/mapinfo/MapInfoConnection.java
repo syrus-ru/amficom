@@ -1,16 +1,15 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.unit.LinearUnit;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.MapConnection;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapConnection;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.model.Environment;
 
 public class MapInfoConnection extends MapConnection
 {

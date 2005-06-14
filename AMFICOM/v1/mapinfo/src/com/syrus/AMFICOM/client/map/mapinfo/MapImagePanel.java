@@ -1,16 +1,18 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 
 public class MapImagePanel extends JPanel
 {
@@ -26,24 +28,41 @@ public class MapImagePanel extends JPanel
 			this.removeComponentListener(listeners[i]);
 
 		this.addComponentListener(new ComponentAdapter()
-		{
-			private void setLayerSize()
-			{
-				if(MapImagePanel.this.layerToPaint != null)
-					MapImagePanel.this.layerToPaint.setMapImageSize(
-							MapImagePanel.this.getWidth(),
-							MapImagePanel.this.getHeight());
-			}
-			public void componentResized(ComponentEvent e)
-			{
-				setLayerSize();
-			}
+				{
+					public void componentResized(ComponentEvent e)
+					{
+						setLayerSize();
+					}
+				});
+		
+		this.addPropertyChangeListener(MapFrame.MAP_FRAME_SHOWN, new PropertyChangeListener() {
 
-			public void componentShown(ComponentEvent e)
+			public void propertyChange(PropertyChangeEvent evt)
 			{
+				if(evt.getPropertyName().equals(MapFrame.MAP_FRAME_SHOWN)
+						&& ((Boolean )evt.getNewValue()).booleanValue())
 				setLayerSize();
 			}
 		});
+	}
+
+	void setLayerSize()
+	{
+		if(this.layerToPaint != null)
+			try
+			{
+				this.layerToPaint.setMapImageSize(
+						this.getWidth(),
+						this.getHeight());
+			} catch (MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	public Image getImage()
@@ -53,8 +72,11 @@ public class MapImagePanel extends JPanel
 	
 	public void setImage(Image newImage)
 	{
-		this.mapImage = newImage;
-		this.imageIsMoving = false;
+        if (newImage != null)
+        {
+    		this.mapImage = newImage;
+    		this.imageIsMoving = false;
+        }
 //		if (newImage != null)
 //			this.mapImage.getGraphics().drawImage(newImage,0,0,this);
 	}
@@ -107,26 +129,28 @@ public class MapImagePanel extends JPanel
 			this.imageIsMoving = true;
 		}
 		
-		g.setColor(Color.GRAY);
+		if (this.mapImage != null && g != null)
+			g.drawImage(this.mapImage, 0, 0, this);
 
-		if(shiftX > 0)
-			g.fillRect(0, 0, shiftX, this.getHeight());
-		else
-			if(shiftX < 0)
-				g.fillRect(this.getWidth() + shiftX, 0, -shiftX, this
-						.getHeight());
-
-		if(shiftY > 0)
-			g.fillRect(0, 0, this.getWidth(), shiftY);
-		else
-			if(shiftY < 0)
-				g.fillRect(
-						0,
-						this.getHeight() + shiftY,
-						this.getWidth(),
-						-shiftY);
-
-		if(this.mapImage != null && g != null)
-			g.drawImage(this.mapImage, shiftX, shiftY, this);
+//		g.setColor(Color.GRAY);
+//
+//		if(boundedShiftX > 0)
+//			g.fillRect(0, 0, boundedShiftX, this.getHeight());
+//		else
+//			if(boundedShiftX < 0)
+//				g.fillRect(this.getWidth() + boundedShiftX, 0, -boundedShiftX, this.getHeight());
+//
+//		if(boundedShiftY > 0)
+//			g.fillRect(0, 0, this.getWidth(), boundedShiftY);
+//		else
+//			if(boundedShiftY < 0)
+//				g.fillRect(
+//						0,
+//						this.getHeight() + boundedShiftY,
+//						this.getWidth(),
+//						-boundedShiftY);
+//
+//		if(this.mapImage != null && g != null)
+//			g.drawImage(this.mapImage, boundedShiftX, boundedShiftY, this);
 	}
 }
