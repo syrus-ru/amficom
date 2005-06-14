@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.98 2005/06/07 15:45:04 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.99 2005/06/14 12:01:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Result;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/06/07 15:45:04 $
+ * @version $Revision: 1.99 $, $Date: 2005/06/14 12:01:58 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -366,10 +367,21 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					super.sleepCauseOfFall();
 				}
 				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("Cannot transmit results: " + are.message + "; sleeping cause of fall");
-					super.fallCode = FALL_CODE_RECEIVE_RESULTS;
-					this.resultsToRemove = resultList;
-					super.sleepCauseOfFall();
+					switch (are.error_code.value()) {
+						case ErrorCode._ERROR_NOT_LOGGED_IN:
+							try {
+								LoginManager.restoreLogin();
+							}
+							catch (ApplicationException ae) {
+								Log.errorException(ae);
+							}
+							break;
+						default:
+							Log.errorMessage("Cannot transmit results: " + are.message + "; sleeping cause of fall");
+							super.fallCode = FALL_CODE_RECEIVE_RESULTS;
+							this.resultsToRemove = resultList;
+							super.sleepCauseOfFall();
+					}
 				}
 			}
 
