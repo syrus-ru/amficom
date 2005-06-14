@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.77 2005/06/09 08:00:18 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.78 2005/06/14 11:52:10 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.77 $, $Date: 2005/06/09 08:00:18 $
+ * @version $Revision: 1.78 $, $Date: 2005/06/14 11:52:10 $
  * @module
  */
 
@@ -699,11 +699,11 @@ public class CoreAnalysisManager
         // (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh
         // XXX - надо ли было предварительно смещать р/г по вертикали?
         int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
-        // (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала последнего коннектора?
+        // (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала EOT ?
         if (breakPos < 0 && tpa.traceLength < etMinLength)
             breakPos = tpa.traceLength;
 
-        if (breakPos >= 0) // если был обнаружен обрыв
+        if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
         {
             ReflectogramAlarm alarm = new ReflectogramAlarm();
             alarm.level = ReflectogramAlarm.LEVEL_HARD;
