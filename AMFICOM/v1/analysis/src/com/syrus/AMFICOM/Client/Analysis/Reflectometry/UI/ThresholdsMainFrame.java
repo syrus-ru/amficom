@@ -67,8 +67,8 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 
 	public ThresholdsMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("ThresholdsTitle"), new AnalyseMainMenuBar(aContext
-			.getApplicationModel()), new AnalyseMainToolBar());	
-		
+			.getApplicationModel()), new AnalyseMainToolBar());
+
 		this.setWindowArranger( new WindowArranger(this) {
 
 			public void arrange() {
@@ -186,7 +186,9 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		for (Iterator it = this.graphs.iterator(); it.hasNext();) {
 			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
 		}
-
+		// XXX: debug code
+		if (System.getProperty("amficom.debug.partialHeight", "false").equals("true"))
+			this.setSize(getSize().width, getSize().height * 3 / 4);
 	}
 
 	public ThresholdsMainFrame() {
