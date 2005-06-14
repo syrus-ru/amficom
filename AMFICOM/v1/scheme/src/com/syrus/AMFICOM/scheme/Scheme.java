@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.34 2005/06/07 16:32:59 bass Exp $
+ * $Id: Scheme.java,v 1.35 2005/06/14 10:51:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/07 16:32:59 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/14 10:51:36 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -775,5 +775,40 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.schemeCellId = new Identifier(scheme.schemeCellId);
 		this.currentSchemeMonitoringSolutionId = new Identifier(scheme.currentSchemeMonitoringSolutionId);
 		this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
+	}
+
+	public void addSchemePath(final SchemePath schemePath) {
+		assert schemePath != null : ErrorMessages.NON_NULL_EXPECTED;
+		schemePath.setParentScheme(this);
+	}
+
+	public void removeSchemePath(final SchemePath schemePath) {
+		assert schemePath != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.getSchemePaths().contains(schemePath) : ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemePath.setParentScheme(null);
+	}
+
+	public Set getSchemePaths() {
+		try {
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PATH_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_SET;
+		}
+	}
+
+	public void setSchemePaths(final Set schemePaths) {
+		assert schemePaths != null : ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator oldSchemePathIterator = this.getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
+			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();
+			/*
+			 * Check is made to prevent SchemePaths from
+			 * permanently losing their parents.
+			 */
+			assert !schemePaths.contains(oldSchemePath);
+			this.removeSchemePath(oldSchemePath);
+		}
+		for (final Iterator schemePathIterator = schemePaths.iterator(); schemePathIterator.hasNext();)
+			this.addSchemePath((SchemePath) schemePathIterator.next());
 	}
 }

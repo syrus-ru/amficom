@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.5 2005/05/26 08:33:33 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.6 2005/06/14 10:51:36 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/26 08:33:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/14 10:51:36 $
  * @module scheme_v1
  */
 public final class SchemePathDatabase extends CharacterizableDatabase {
@@ -32,7 +32,7 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 			return (SchemePath) storableObject;
 		throw new IllegalDataException("SchemePathDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-	
+
 	/**
 	 * @param storableObject
 	 * @param retrieveKind
@@ -56,8 +56,9 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+					+ SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID + COMMA
 					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID + COMMA
-					+ SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID;
+					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_ID;
 		}
 		return columns;
 	}
@@ -76,7 +77,6 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
-					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -92,10 +92,9 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		SchemePath schemePath = fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getStartSchemeElement().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getEndSchemeElement().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPath().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolution().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPath().getId()) + COMMA;
+				+ DatabaseIdentifier.toSQLString(schemePath.getParentScheme().getId());
 		return sql;
 	}
 
@@ -114,10 +113,9 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		SchemePath schemePath = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getStartSchemeElement().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getEndSchemeElement().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolution().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getTransmissionPath().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolution().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentScheme().getId());
 		return startParameterNumber;
 	}
 
@@ -134,7 +132,8 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		if (storableObject == null) {
 			Date created = new Date();
 			schemePath = new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, null, null);
+					created, created, null, null, 0L, null,
+					null, null, null, null);
 		} else {
 			schemePath = fromStorableObject(storableObject);
 		}
@@ -145,8 +144,9 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID));
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_ID));
 		return schemePath;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.5 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemePathWrapper.java,v 1.6 2005/06/14 10:51:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,17 +12,16 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/14 10:51:36 $
  * @author $Author: bass $
  * @module scheme_v1
  */
 public final class SchemePathWrapper extends StorableObjectWrapper {
-	
-	//TODO: create a table in the database
-	
-	//TODO: Wrong colunm name, too many characters
-	public static final String COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID = "parent_scheme_monitoring_solution_id";
 	public static final String COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
+
+	public static final String COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID = "prnt_schm_mntrng_sltn_id";
+
+	public static final String COLUMN_PARENT_SCHEME_ID = "prnt_schm_id";
 
 	private static SchemePathWrapper instance;
 
