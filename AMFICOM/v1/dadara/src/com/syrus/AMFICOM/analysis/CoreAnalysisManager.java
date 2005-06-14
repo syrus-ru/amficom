@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.78 2005/06/14 11:52:10 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.79 2005/06/14 11:56:08 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.78 $, $Date: 2005/06/14 11:52:10 $
+ * @version $Revision: 1.79 $, $Date: 2005/06/14 11:56:08 $
  * @module
  */
 
@@ -703,6 +703,7 @@ public class CoreAnalysisManager
         if (breakPos < 0 && tpa.traceLength < etMinLength)
             breakPos = tpa.traceLength;
 
+        // @todo: проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
         if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
         {
             ReflectogramAlarm alarm = new ReflectogramAlarm();
