@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.73 2005/06/09 08:42:57 peskovsky Exp $
+ * $Id: LogicalNetLayer.java,v 1.74 2005/06/14 07:06:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -78,8 +78,8 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.73 $, $Date: 2005/06/09 08:42:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.74 $, $Date: 2005/06/14 07:06:49 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -372,10 +372,12 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		this.aContext = aContext;
 
-		this.userId = LoginManager.getUserId();
-		
-		LinkTypeController.createDefaults(this.userId);
-		NodeTypeController.createDefaults(this.userId);
+		if(aContext != null) {
+			this.userId = LoginManager.getUserId();
+
+			LinkTypeController.createDefaults(this.userId);
+			NodeTypeController.createDefaults(this.userId);
+		}
 	}
 
 	/**
