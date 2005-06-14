@@ -1,5 +1,5 @@
 /**
- * $Id: MapVisualManager.java,v 1.4 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: MapVisualManager.java,v 1.5 2005/06/14 08:27:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:20:33 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/14 08:27:10 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -32,10 +32,10 @@ public class MapVisualManager implements VisualManager {
 
 	static
 	{
-//		vmMap.put(com.syrus.AMFICOM.mapview.MapView.class,
-//				MapViewVisualManager.getInstance());
-//		vmMap.put(com.syrus.AMFICOM.map.Map.class,
-//				MapVisualManager.getInstance());
+		vmMap.put(com.syrus.AMFICOM.mapview.MapView.class,
+				MapViewVisualManager.getInstance());
+		vmMap.put(com.syrus.AMFICOM.map.Map.class,
+				MapVisualManager.getInstance());
 
 		vmMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
 				TopologicalNodeVisualManager.getInstance());
@@ -70,8 +70,8 @@ public class MapVisualManager implements VisualManager {
 				UnboundNodeVisualManager.getInstance());
 	}
 
-	public static VisualManager getVisualManager(MapElement mapElement) {
-		return (VisualManager) vmMap.get(mapElement.getClass());
+	public static VisualManager getVisualManager(Object element) {
+		return (VisualManager) vmMap.get(element.getClass());
 	}
 	
 	protected MapVisualManager() {
