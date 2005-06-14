@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.5 2005/06/10 11:54:02 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.6 2005/06/14 10:32:56 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/10 11:54:02 $
+ * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2005/06/14 10:32:56 $
  * @module scheme_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -80,13 +80,5 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 			default:
 				throw newIllegalObjectEntityException();
 		}
-	}
-
-	private IllegalObjectEntityException newIllegalObjectEntityException() {
-		final short entityCode = super.condition.getEntityCode().shortValue();
-		return new IllegalObjectEntityException(
-				"Unsupported entity type -- " + entityCode
-				+ ", " + ObjectEntities.codeToString(entityCode),
-				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 }
