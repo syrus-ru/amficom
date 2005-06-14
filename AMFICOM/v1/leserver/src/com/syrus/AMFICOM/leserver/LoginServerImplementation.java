@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.15 2005/06/07 15:44:22 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.16 2005/06/14 09:45:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/07 15:44:22 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/14 09:45:34 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -107,7 +108,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		if (userLogin != null)
 			this.userLoginDatabase.delete(userLogin);
 		else
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, ErrorMessages.NOT_LOGGED_IN);
 	}
 
 	/**
@@ -119,7 +120,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		SessionKey sessionKey = new SessionKey(sessionKeyT);
 		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin == null)
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, ErrorMessages.NOT_LOGGED_IN);
 
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
 		try {
@@ -154,7 +155,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			}
 		}
 		else
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, ErrorMessages.NOT_LOGGED_IN);
 	}
 
 	/**
@@ -169,7 +170,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			final Identifier_TransferableHolder domainIdTH) throws AMFICOMRemoteException {
 		final UserLogin userLogin = LoginProcessor.getUserLogin(new SessionKey(sessionKeyT));
 		if (userLogin == null)
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, "Not logged in");
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, ErrorMessages.NOT_LOGGED_IN);
 
 		userLogin.updateLastActivityDate();
 		try {
