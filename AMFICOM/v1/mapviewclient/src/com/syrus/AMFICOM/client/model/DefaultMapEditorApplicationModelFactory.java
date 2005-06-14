@@ -1,5 +1,5 @@
 /**
- * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.1 2005/06/06 12:19:08 krupenn Exp $
+ * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.2 2005/06/14 12:05:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/06/06 12:19:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/14 12:05:09 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -29,15 +29,6 @@ public class DefaultMapEditorApplicationModelFactory
 	public ApplicationModel create()
 	{
 		ApplicationModel aModel = super.create();
-
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_CONTENTS, false);
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_FIND, false);
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_FIND, false);
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_START, false);
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_COURSE, false);
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_HELP, false);
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_SUPPORT, false);
-		aModel.setVisible(MapEditorApplicationModel.ITEM_HELP_LICENSE, false);
 
 		return aModel;
 	}
