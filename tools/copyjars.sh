@@ -28,7 +28,7 @@ fi
 
 LIBDIR=$HOME/work/AMFICOM_v1/lib
 
-FILES="util.jar general.jar administration.jar configuration.jar measurement.jar event.jar csbridge.jar leserver_interface.jar leserver.jar mcm_interface.jar mcm.jar mserver_interface.jar mserver.jar cmserver_interface.jar cmserver.jar dadara.jar"
+FILES="util.jar general.jar administration.jar configuration.jar measurement.jar event.jar csbridge.jar leserver_interface.jar leserver.jar mcm_interface.jar mcm.jar mserver_interface.jar mserver.jar cmserver_interface.jar cmserver.jar mscharserver_interface.jar mscharserver.jar dadara.jar"
 
 #FILES="$FILES libmcmtransceiver.so"
 
