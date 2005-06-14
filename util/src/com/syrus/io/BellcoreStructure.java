@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.14 2005/05/18 10:49:17 bass Exp $
+ * $Id: BellcoreStructure.java,v 1.15 2005/06/14 08:52:14 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/05/18 10:49:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/06/14 08:52:14 $
+ * @author $Author: saa $
  * @module util
  */
 public class BellcoreStructure {
@@ -380,11 +380,16 @@ public class BellcoreStructure {
 		for (int i = 0; i < this.dataPts.tps[0]; i++)
 			y[i] = (65535 - this.dataPts.dsf[0][i]) / 1000d;
 
-		correctReflectogramm(y);
+		correctReflectogramm1(y);
+		shiftTraceByAbsMax(y);
 		return y;
 	}
 
-	private void correctReflectogramm(double[] data) {
+	// корректируем мин. значения и первые две точки рефлектограммы
+	private void correctReflectogramm1(double[] data) {
+		if (data.length < 3)
+			return;
+
 		int begin = 300;
 		if (begin > data.length / 2)
 			begin = data.length / 2;
@@ -408,5 +413,40 @@ public class BellcoreStructure {
 
 		if (data[1] < 0.001)
 			data[1] = data[2] / 2.;
+	}
+
+	/**
+	 * Выравниваем р/г по абс. максимуму (т.к. считаем его уровнем мертвой зоны).
+	 * Это необходимо для нынешнего (june 2005) анализа - по крайней мере для
+	 * построения эталона. Код анализа, отображающий р/г на экран,
+	 * сам проводит выравнивание, которое, с введением настоящей процедуры
+	 * становится излишним.
+	 * @todo Привести выравнивание в порядок, одним из трех способов:
+	 * <ol>
+	 * <li>оставить только настоящее выравнивание, убрав все остальное
+	 * выравнивание из анализа как излишнее
+	 * (самый прямолинейный и надежный вариант),
+	 * <li>сделать унифицированное выравнивание в анализе (фактически,
+	 * сделать надстойку над BellcoreStructure и перенести туда
+	 * настоящую процедуру),
+	 * <li>сделать выравнивание "по месту" - зависящую от того, где она
+	 * требуется. Это наиболее гибкий, но наиболее сложный и наименее трудно
+	 * контролируемый вариант - однако он может понадобиться, если
+	 * выравнивание по мертвой зоне окажется неадекватным - скажем, в случае
+	 * отсутствия мертвой зоны.
+	 * </ol>
+	 */
+	private void shiftTraceByAbsMax(double[] data) {
+		if (data.length == 0)
+			return;
+		// определяем абс. макс.
+		double vMax = data[0];
+		for (int i = 1; i < data.length; i++)
+			if (vMax < data[i])
+				vMax = data[i];
+		//System.err.println("correctReflectogramm2: vMax = " + vMax);
+		// смещаем
+		for (int i = 0; i < data.length; i++)
+			data[i] -= vMax;
 	}
 }
