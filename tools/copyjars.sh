@@ -28,9 +28,29 @@ fi
 
 LIBDIR=$AMFICOM_HOME/lib
 
-FILES="util.jar general.jar administration.jar configuration.jar measurement.jar event.jar csbridge.jar leserver_interface.jar leserver.jar mcm_interface.jar mcm.jar mserver_interface.jar mserver.jar cmserver_interface.jar cmserver.jar mscharserver_interface.jar mscharserver.jar dadara.jar"
-
-#FILES="$FILES libmcmtransceiver.so"
+FILES="general.jar \
+administration.jar \
+configuration.jar \
+measurement.jar \
+event.jar \
+resource.jar \
+map.jar \
+scheme.jar \
+mapview.jar \
+filter.jar \
+dadara.jar \
+csbridge.jar \
+leserver_interface.jar \
+leserver.jar \
+mcm_interface.jar \
+mcm.jar \
+mserver_interface.jar \
+mserver.jar \
+cmserver_interface.jar \
+cmserver.jar \
+mscharserver_interface.jar \
+mscharserver.jar \
+util.jar"
 
 STR=
 for file in $FILES ;

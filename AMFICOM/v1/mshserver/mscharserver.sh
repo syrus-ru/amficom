@@ -9,7 +9,7 @@ ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:$ORACLE_HOME/jdbc/lib/orai18
 
 EXTCLASSPATH=$EXTLIB/trove.jar:$EXTLIB/jdom.jar:$EXTLIB/micsys.jar:$EXTLIB/miutil.jar:$EXTLIB/mxj.jar:$EXTLIB/commons-logging.jar:$EXTLIB/mxjgeom.jar:$EXTLIB/miappletsup.jar:$EXTLIB/xercesImpl.jar:$EXTLIB/mxjtabdp.jar:$EXTLIB/xmlbeans.jar:$EXTLIB/mistyles.jar
 
-APPCLASSPATH=$LIB/filter.jar:$LIB/mscharserver.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/configuration.jar:$LIB/csbridge.jar:$LIB/leserver_interface.jar:$LIB/map.jar:$LIB/scheme.jar:$LIB/util.jar:$LIB/resource.jar:$LIB/mapview.jar:x
+APPCLASSPATH=$LIB/mscharserver.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/configuration.jar:$LIB/resource.jar:$LIB/map.jar:$LIB/scheme.jar:$LIB/mapview.jar:$LIB/filter.jar:$LIB/csbridge.jar:$LIB/leserver_interface.jar:$LIB/util.jar
 
 
 $JAVA -Xloggc:./gc -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$EXTCLASSPATH com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer &
