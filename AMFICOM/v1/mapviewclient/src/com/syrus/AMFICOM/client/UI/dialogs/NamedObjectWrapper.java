@@ -1,5 +1,5 @@
 /**
- * $Id: NamedObjectController.java,v 1.1 2005/06/08 13:44:06 krupenn Exp $
+ * $Id: NamedObjectWrapper.java,v 1.1 2005/06/14 11:30:32 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.client.UI.dialogs;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Wrapper;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -21,15 +22,15 @@ import java.util.List;
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
-public class NamedObjectController implements Wrapper {
+public class NamedObjectWrapper implements Wrapper {
 	public static final String KEY_NAME = "name";
 
-	private static NamedObjectController instance;
+	private static NamedObjectWrapper instance;
 
 	private List keys;
 	private String[] keysArray;
 
-	private NamedObjectController() {
+	private NamedObjectWrapper() {
 		// empty private constructor
 		this.keysArray = new String[] { KEY_NAME };
 
@@ -37,9 +38,9 @@ public class NamedObjectController implements Wrapper {
 				Arrays.asList(this.keysArray)));
 	}
 
-	public static NamedObjectController getInstance() {
+	public static NamedObjectWrapper getInstance() {
 		if(instance == null)
-			instance = new NamedObjectController();
+			instance = new NamedObjectWrapper();
 		return instance;
 	}
 
@@ -88,6 +89,20 @@ public class NamedObjectController implements Wrapper {
 				} catch(IllegalAccessException iae) {
 					// ignore
 				} catch(NoSuchMethodException nsme) {
+					// ignore
+				}
+			}
+			if(result == null) {
+				String fieldName = "name";
+				try {
+					Field field = clazz.getField(fieldName);
+					name = (String )(field.get(object));
+					result = name;
+				} catch(IllegalAccessException iae) {
+					// ignore
+				} catch(SecurityException e) {
+					// ignore
+				} catch(NoSuchFieldException e) {
 					// ignore
 				}
 			}
