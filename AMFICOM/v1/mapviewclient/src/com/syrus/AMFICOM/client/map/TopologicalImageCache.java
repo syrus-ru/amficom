@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.2 2005/06/09 08:50:14 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.3 2005/06/14 12:20:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/06/09 08:50:14 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/14 12:20:29 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -128,10 +128,10 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private Dimension lastActiveArea = new Dimension();
 
-	/**
-	 * Точка входа в последнюю активную область
-	 */
-	private Point activeAreaEntryPoint = new Point();
+//	/**
+//	 * Точка входа в последнюю активную область
+//	 */
+//	private Point activeAreaEntryPoint = new Point();
 
 	/**
 	 * Массив углов, образуемый положительно направленной горизонтальной прямой
@@ -152,7 +152,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private double yDifferenceSph = 0.D;
 	
-	public TopologicalImageCache(LogicalNetLayer miLayer, MapImageLoader loader)
+	public TopologicalImageCache(LogicalNetLayer miLayer, MapConnection connection)
 			throws MapConnectionException, MapDataException
 	{
 		this.logicalNetLayer = miLayer;
@@ -160,12 +160,14 @@ public class TopologicalImageCache implements MapImageRenderer
 		this.center = this.logicalNetLayer.getCenter();
 
 		this.sizeChanged();
-		this.loadingThread = new LoadingThread(loader);
+		this.loadingThread = new LoadingThread(connection);
 		this.loadingThread.start();
 	}
 
 	public void sizeChanged() throws MapConnectionException, MapDataException
 	{
+		Logger.log(" TIC - sizeChanged - just entered.");
+		
 		Dimension newSize = this.logicalNetLayer.getMapViewer()
 				.getVisualComponent().getSize();
 		if ((newSize.width <= 0) || (newSize.height <= 0))
@@ -237,6 +239,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	public void setCenter(DoublePoint newCenter) throws MapConnectionException, MapDataException
 	{
+		Logger.log(" TIC - setCenter - just entered.");		
 		if (this.imageSize == null)
 		{
 			this.center = newCenter;			
@@ -253,14 +256,17 @@ public class TopologicalImageCache implements MapImageRenderer
 				this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
 				nulifyCache();
 				
-				//Устанавливаем значения сектора неактивной области и послденей активной области на нули 
+				//Устанавливаем значения сектора неактивной области и послденей активной области на нули
+				this.lastActiveArea.setSize(0,0);
+				this.nonActiveZoneLastSector.setSize(0,0);				
 			}
-
-			this.lastActiveArea.setSize(0,0);
-			this.nonActiveZoneLastSector.setSize(0,0);				
 			
 			this.center = newCenter;			
 			this.createMovingRequests();
+			
+			//TODO эти строки должны быть закоментарены, если в MapMouseListener'е
+			//курсор сдвигается после изменения центра
+			reactMouseLocation();
 		}
 	}
 
@@ -269,6 +275,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	public void setScale(double newScale) throws MapConnectionException, MapDataException
 	{
+		Logger.log(" TIC - setScale - just entered.");		
 		if (this.imageSize == null)
 		{
 			this.scale = newScale;			
@@ -295,14 +302,71 @@ public class TopologicalImageCache implements MapImageRenderer
 
 	private void nulifyCache()
 	{
-		this.requestToPaint = null;
+		Logger.log(" TIC - nulifying cache.");		
+//		this.requestToPaint = null;
 		this.cacheOfImages.clear();
 		this.loadingThread.clearQueue();
+	}
+	
+	private void reactMouseLocation() throws MapDataException,MapConnectionException
+	{
+		//Устанавливаем всем запросам самые низкие приоритеты
+		this.loadingThread.setTheLowestPriorityForAll();
+
+		if (this.nonActiveZoneLastSector.width == 0)
+			this.createVerticalRequests(this.nonActiveZoneLastSector.height);
+		else if (this.nonActiveZoneLastSector.height == 0)
+			this.createHorizontalRequests(this.nonActiveZoneLastSector.width);
+		else
+			this.createDiagonalRequests(this.nonActiveZoneLastSector);
+//	}
+//	else
+//	{
+		// Сохраняем точку входа в активную область
+//		if ((this.lastActiveArea.width != dX) || (this.lastActiveArea.height != dY))
+//		{
+//			this.activeAreaEntryPoint.x = mouseX;
+//			this.activeAreaEntryPoint.y = mouseY;
+//		}
+
+//		// Расчитываем длину радиус-вектора, если меньше пороговой - выходим
+//		double rvLength = Math.pow(Math
+//				.pow(mouseX - this.activeAreaEntryPoint.x, 2)
+//				+ Math.pow(mouseY - this.activeAreaEntryPoint.y, 2), 0.5);
+//		if (rvLength < TopologicalImageCache.RV_THRESHOLD_LENGTH)
+//			return;
+//
+//		// Вычисляем центр сегмента, которому относится активная область
+//		// Его экранные координаты
+//		Point newCenterScr = new Point((int) Math.round(this.imageSize.width
+//				* (0.5 + dX * (1 - TopologicalImageCache.ACTIVE_AREA_SIZE))),
+//				(int) Math.round(this.imageSize.height
+//						* (0.5 + dY * (1 - TopologicalImageCache.ACTIVE_AREA_SIZE))));
+//
+//		DoublePoint newCenterSph = this.logicalNetLayer
+//				.convertScreenToMap(newCenterScr);
+
+		// Вычисляем местоположение углов сегмента
+
+		// Вычисляем в каком сегменте круга лежит наш радиус вектор -
+		// ставим в очередь PRIORITY_HIGH-запрос на соответсвующий запрос
+		// (????????????и PRIORITY_MEDIUM на соседние????????)
+//	}
+		
+		// Удаляем неподгруженные очёты вышедшие из кэш области
+		this.clearFarAndUnloadedSegments();
+
+		// Если в кэше слишком много сегментов удаляем самые старые
+		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT
+				+ TopologicalImageCache.MAX_EXCEEDING_COUNT)
+			this.clearOldSegments();
 	}
 	
 	public void analyzeMouseLocation(MouseEvent event)
 			throws MapDataException, MapConnectionException
 	{
+		Logger.log(" TIC - analyzeMouseLocation - just entered.");
+		
 		if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
 			//В том случае, если мы до этого переключали кэш, меняем режим.
 			//Если мы этого не сделаем, то из-за изменения режима кэш обнулится
@@ -352,64 +416,15 @@ public class TopologicalImageCache implements MapImageRenderer
 			// Мы находимся в неактивной части экрана
 			
 			
-			//Если мы уже производили расчёт для этого сектора неактивной области - выходим
-			if (	(this.nonActiveZoneLastSector.width == direction.width)
-					&&(this.nonActiveZoneLastSector.height == direction.height))
-				return;
-			
-			//Фиксируем новое значение сектора
-			this.nonActiveZoneLastSector = direction;
-			
-			//Устанавливаем всем запросам самые низкие приоритеты
-			this.loadingThread.setTheLowestPriorityForAll();
-
-			if (this.nonActiveZoneLastSector.width == 0)
-				this.createVerticalRequests(this.nonActiveZoneLastSector.height);
-			else if (this.nonActiveZoneLastSector.height == 0)
-				this.createHorizontalRequests(this.nonActiveZoneLastSector.width);
-			else
-				this.createDiagonalRequests(this.nonActiveZoneLastSector);
-//		}
-//		else
-//		{
-			// Сохраняем точку входа в активную область
-//			if ((this.lastActiveArea.width != dX) || (this.lastActiveArea.height != dY))
-//			{
-//				this.activeAreaEntryPoint.x = mouseX;
-//				this.activeAreaEntryPoint.y = mouseY;
-//			}
-	
-//			// Расчитываем длину радиус-вектора, если меньше пороговой - выходим
-//			double rvLength = Math.pow(Math
-//					.pow(mouseX - this.activeAreaEntryPoint.x, 2)
-//					+ Math.pow(mouseY - this.activeAreaEntryPoint.y, 2), 0.5);
-//			if (rvLength < TopologicalImageCache.RV_THRESHOLD_LENGTH)
-//				return;
-//	
-//			// Вычисляем центр сегмента, которому относится активная область
-//			// Его экранные координаты
-//			Point newCenterScr = new Point((int) Math.round(this.imageSize.width
-//					* (0.5 + dX * (1 - TopologicalImageCache.ACTIVE_AREA_SIZE))),
-//					(int) Math.round(this.imageSize.height
-//							* (0.5 + dY * (1 - TopologicalImageCache.ACTIVE_AREA_SIZE))));
-//	
-//			DoublePoint newCenterSph = this.logicalNetLayer
-//					.convertScreenToMap(newCenterScr);
-	
-			// Вычисляем местоположение углов сегмента
-	
-			// Вычисляем в каком сегменте круга лежит наш радиус вектор -
-			// ставим в очередь PRIORITY_HIGH-запрос на соответсвующий запрос
-			// (????????????и PRIORITY_MEDIUM на соседние????????)
-//		}
-			
-			// Удаляем неподгруженные очёты вышедшие из кэш области
-			this.clearFarAndUnloadedSegments();
-
-			// Если в кэше слишком много сегментов удаляем самые старые
-			if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT
-					+ TopologicalImageCache.MAX_EXCEEDING_COUNT)
-				this.clearOldSegments();
+		//Если мы уже производили расчёт для этого сектора неактивной области - выходим
+		if (	(this.nonActiveZoneLastSector.width == direction.width)
+				&&(this.nonActiveZoneLastSector.height == direction.height))
+			return;
+		
+		//Фиксируем новое значение сектора
+		this.nonActiveZoneLastSector = direction;
+		
+		reactMouseLocation();		
 	}
 	
 	private Dimension getDirectionForAngle(double angle)
@@ -513,6 +528,8 @@ public class TopologicalImageCache implements MapImageRenderer
 				if (request.getPriority() > TopologicalRequest.PRIORITY_ALREADY_LOADED)
 					this.loadingThread.changeRequestPriority(request,priority);
 				
+				request.setLastUsed(System.currentTimeMillis());
+				
 				return request;
 			}
 		}
@@ -614,7 +631,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	{
 		// TODO Здесь по-хорошему надо перерисовывать отдельные слои,
 		// но такого механизма пока нет.
-		this.requestToPaint = null;
+//		this.requestToPaint = null;
 		this.cacheOfImages.clear();
 		this.loadingThread.clearQueue();
 
@@ -723,7 +740,9 @@ public class TopologicalImageCache implements MapImageRenderer
 	private void createMovingRequests()
 			throws MapConnectionException, MapDataException
 	{
+		Logger.log(" TIC - createMovingRequests - just entered.");		
 		this.requestToPaint = this.setPriorityForRequest(this.center,this.scale,TopologicalRequest.PRIORITY_EXPRESS);
+		Logger.log(" TIC - createMovingRequests - exiting.");		
 	}
 
 	/**
@@ -733,9 +752,10 @@ public class TopologicalImageCache implements MapImageRenderer
 	 * _VisualComponent_.getSize();
 	 * 
 	 */
-	private void clearFarAndUnloadedSegments() throws MapConnectionException,
-			MapDataException
+	private void clearFarAndUnloadedSegments()
 	{
+		Logger.log(" TIC - clearFarAndUnloadedSegments - just entered.");
+		
 		double dX = TopologicalImageCache.CACHE_SIZE * 1.01 * this.xDifferenceSph;
 		double dY = TopologicalImageCache.CACHE_SIZE * 1.01 * this.yDifferenceSph;		
 		DoublePoint upperLeftSph = new DoublePoint(this.center.getX() - dX,this.center.getY() - dY);
@@ -755,9 +775,9 @@ public class TopologicalImageCache implements MapImageRenderer
 		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 		{
 			TopologicalRequest curRequest = (TopologicalRequest) it.next();
-			if ((!currCacheBorders.contains(curRequest.getTopoCenter().getX(),
-					curRequest.getTopoCenter().getY()))
-					&& (curRequest.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED))
+			if ((!currCacheBorders.contains(curRequest.getTopoCenter().getX(),curRequest.getTopoCenter().getY()))
+					&& (curRequest.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+					&& (curRequest != this.requestToPaint))
 			{
 				// Удаляем сегмент - не имеет смысла его подгружает
 				Logger.log(" TIC - clearFarAndUnloadedSegments - removing request."
@@ -766,6 +786,8 @@ public class TopologicalImageCache implements MapImageRenderer
 				it.remove();
 			}
 		}
+		
+		Logger.log(" TIC - clearFarAndUnloadedSegments - exiting.");		
 	}
 
 	/**
@@ -803,6 +825,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	private void createScaleRequests() throws MapConnectionException,
 			MapDataException
 	{
+		Logger.log(" TIC - createScaleRequests - just entered.");		
 		if ((this.cacheOfImages.size() == 0)
 				|| (	(!TopologicalImageCache.compare(this.scale, this.logicalNetLayer.getScale()	* LogicalNetLayer.ZOOM_FACTOR))
 						&&(!TopologicalImageCache.compare(this.scale * LogicalNetLayer.ZOOM_FACTOR, this.logicalNetLayer.getScale()))))
@@ -811,6 +834,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			// или мы только что вышли из режима изменения центра
 			// грузим все изображения заново.
 			renewScaleImages();
+			Logger.log(" TIC - createScaleRequests - exiting.");			
 			return;
 		}
 
@@ -843,6 +867,8 @@ public class TopologicalImageCache implements MapImageRenderer
 		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT
 				+ TopologicalImageCache.MAX_EXCEEDING_COUNT)
 			this.clearOldSegments();
+		
+		Logger.log(" TIC - createScaleRequests - exiting.");		
 	}
 
 	private static boolean compare(double p1, double p2)
