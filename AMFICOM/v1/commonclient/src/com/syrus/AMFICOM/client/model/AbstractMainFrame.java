@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.7 2005/06/14 11:23:59 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.8 2005/06/14 14:59:10 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/14 11:23:59 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/14 14:59:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -340,7 +340,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	public static void showErrorMessage(Component component,
 										Exception exception) {
 		exception.printStackTrace();
-		JOptionPane.showMessageDialog(component, exception.getMessage(), LangModelGeneral.getString("Error"),
+		JOptionPane.showMessageDialog(component, exception.getMessage(), LangModelGeneral.getString("Error.ErrorOccur"),
 			JOptionPane.OK_OPTION);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.8 2005/06/14 11:26:36 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.9 2005/06/14 14:59:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.resource.LangModel;
+//import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/06/14 11:26:36 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/14 14:59:10 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -88,7 +88,7 @@ public class OpenSessionCommand extends AbstractCommand {
 																			.getString("StatusBar.OpeningSession")));
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
 
-		if (System.getProperty("com.amficom.login") == null || System.getProperty("com.amficom.password") == null) {
+		if (System.getProperty("_com.amficom.login") == null || System.getProperty("com.amficom.password") == null) {
 			this.showOpenSessionDialog(Environment.getActiveWindow());
 		} else {
 			OpenSessionCommand.login = System.getProperty("com.amficom.login");
@@ -121,21 +121,21 @@ public class OpenSessionCommand extends AbstractCommand {
 			clientSessionEnvironment.login(login, password);
 			availableDomains = LoginManager.getAvailableDomains();
 		} catch (IllegalDataException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel.getString("Unknown session kind"),
-				LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral.getString("StatusBar.IllegalSessionKind"),
+				LangModelGeneral.getString("Error.OpenSession"), JOptionPane.ERROR_MESSAGE, null);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
 																		false));
 			return false;
 		} catch (CommunicationException e) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModel.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
+				LangModelGeneral.getString("Error.ServerConnection"), LangModelGeneral.getString("Error.OpenSession"),
 				JOptionPane.ERROR_MESSAGE, null);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
 																		false));
 			return false;
 		} catch (LoginException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel.getString("errorWrongLogin"),
-				LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral.getString("Error.WrongLogin"),
+				LangModelGeneral.getString("Error.OpenSession"), JOptionPane.ERROR_MESSAGE, null);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
 																		false));
 			return false;
@@ -171,9 +171,8 @@ public class OpenSessionCommand extends AbstractCommand {
 																				OpenSessionCommand.this,
 																				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 						} catch (CommunicationException e) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-									.getString("Error server connection"),
-								LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral.getString("Error.ServerConnection"),
+								LangModelGeneral.getString("Error.OpenSession"), JOptionPane.ERROR_MESSAGE, null);
 							break;
 						}
 
@@ -183,7 +182,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				dispatcher1.firePropertyChange(new StatusMessageEvent(OpenSessionCommand.this,
 																		StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 			}
-		}, "Идёт загрузка. Пожалуйста, подождите.");
+		}, LangModelGeneral.getString("Message.Information.LoadingPlsWait"));
 		return true;
 	}
 
@@ -213,7 +212,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				gbc.fill = GridBagConstraints.NONE;
 				gbc.weightx = 0.0;
 				gbc.anchor = GridBagConstraints.EAST;
-				textFieldsPanel.add(new JLabel(LangModel.getString("labelName") + ':'), gbc);
+				textFieldsPanel.add(new JLabel(LangModelGeneral.getString("Login.LoginName") + ':'), gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.fill = GridBagConstraints.HORIZONTAL;
 				gbc.weightx = 1.0;
@@ -224,7 +223,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				gbc.fill = GridBagConstraints.NONE;
 				gbc.weightx = 0.0;
 				gbc.anchor = GridBagConstraints.EAST;
-				textFieldsPanel.add(new JLabel(LangModel.getString("labelPassword") + ':'), gbc);
+				textFieldsPanel.add(new JLabel(LangModelGeneral.getString("Login.Password") + ':'), gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.fill = GridBagConstraints.HORIZONTAL;
 				gbc.weightx = 1.0;
@@ -243,13 +242,13 @@ public class OpenSessionCommand extends AbstractCommand {
 		}
 
 		loginTextField.requestFocus();
-		final String okButton = LangModel.getString("buttonEnter");
-		final String cancelButton = LangModel.getString("buttonCancel");
+		final String okButton = LangModelGeneral.getString("Login.Button.ok");
+		final String cancelButton = LangModelGeneral.getString("Login.Button.cancel");
 		final JOptionPane optionPane = new JOptionPane(mainPanel, JOptionPane.PLAIN_MESSAGE,
 														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
 																cancelButton}, null);
 
-		final JDialog dialog = optionPane.createDialog(frame, LangModel.getString("SessionOpenTitle"));
+		final JDialog dialog = optionPane.createDialog(frame, LangModelGeneral.getString("Login.Login"));
 
 		final ActionListener actionListener = new ActionListener() {
 
