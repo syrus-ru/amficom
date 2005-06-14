@@ -1,5 +1,5 @@
 /*
- * $Id: TestMServer.java,v 1.1 2005/06/10 19:20:57 arseniy Exp $
+ * $Id: TestMServer.java,v 1.2 2005/06/14 12:02:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/10 19:20:57 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/14 12:02:55 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -100,7 +100,7 @@ public final class TestMServer extends CommonTest {
 		}
 	}
 
-	public void testTransmitMeasurements() throws AMFICOMRemoteException {
+	public void _testTransmitMeasurements() throws AMFICOMRemoteException {
 		final Set ids = new HashSet();
 		ids.add(new Identifier("Measurement_2491"));
 		ids.add(new Identifier("Measurement_2492"));
