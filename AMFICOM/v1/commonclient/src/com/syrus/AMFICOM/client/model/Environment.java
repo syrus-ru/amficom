@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.7 2005/06/10 07:39:39 bob Exp $
+ * $Id: Environment.java,v 1.8 2005/06/14 11:25:44 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/06/10 07:39:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/14 11:25:44 $
  * @module commonclient_v1
  */
 public final class Environment {
@@ -202,6 +202,13 @@ public final class Environment {
 		
 		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_CLOSE_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		"images/close_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_DOMAIN_SELECTION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		"images/domains.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		
 		UIManager.put(ResourceKeys.ICON_GENERAL, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/general.gif")));
 		UIManager.put(ResourceKeys.ICON_DELETE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
