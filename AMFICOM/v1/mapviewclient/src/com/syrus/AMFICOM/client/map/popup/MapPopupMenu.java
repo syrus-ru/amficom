@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.41 2005/06/14 10:11:38 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.42 2005/06/14 11:32:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.41 $, $Date: 2005/06/14 10:11:38 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/14 11:32:11 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -105,55 +105,18 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	public abstract void setElement(Object me);
 
 	protected Collector selectCollector() {
-		Collector collector = null;
-
 		Collection list = this.logicalNetLayer.getMapView().getMap().getAllCollectors();
-		
-		WrapperedComboChooserDialog dialog = new WrapperedComboChooserDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == WrapperedComboChooserDialog.RET_OK) {
-			collector = (Collector )dialog.getSelected();
-		}
-		
-		return collector;
+		return (Collector )WrapperedComboChooserDialog.showChooserDialog(list);
 	}
 	
 	protected SiteNodeType selectNodeProto() {
-		SiteNodeType proto = null;
-
+		Object toSelect = null;
 		Collection list = NodeTypeController.getTopologicalNodeTypes();
-
-		WrapperedComboChooserDialog dialog = new WrapperedComboChooserDialog(list);
-		
 		Iterator listIt = list.iterator();
 		if (listIt.hasNext())
-			dialog.setSelected(listIt.next());
-			
-		dialog.setModal(true);
+			toSelect = listIt.next();
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == WrapperedComboChooserDialog.RET_OK) {
-			proto = (SiteNodeType )dialog.getSelected();
-		}
-
-		return proto;
+		return (SiteNodeType )WrapperedComboChooserDialog.showChooserDialog(list, toSelect);
 	}
 
 	protected SiteNode selectSiteNode() {
@@ -167,22 +130,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 				list.add(s);
 		}
 		
-		WrapperedComboChooserDialog dialog = new WrapperedComboChooserDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == WrapperedComboChooserDialog.RET_OK) {
-			site = (SiteNode )dialog.getSelected();
-		}
-		return site;
+		return (SiteNode )WrapperedComboChooserDialog.showChooserDialog(list);
 	}
 
 	protected PhysicalLink selectPhysicalLinkAt(UnboundLink unbound) {
@@ -204,23 +152,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 					list.add(le);
 		}
 
-		WrapperedComboChooserDialog dialog = new WrapperedComboChooserDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == WrapperedComboChooserDialog.RET_OK) {
-			link = (PhysicalLink )dialog.getSelected();
-		}
-
-		return link;
+		return (PhysicalLink )WrapperedComboChooserDialog.showChooserDialog(list);
 	}
 
 	protected Collector createCollector() {
