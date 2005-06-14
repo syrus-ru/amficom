@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.2 2005/06/10 19:23:27 arseniy Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.3 2005/06/14 09:44:33 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/10 19:23:27 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/14 09:44:33 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -54,7 +54,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.2 $, $Date: 2005/06/10 19:23:27 $
+	 * @version $Revision: 1.3 $, $Date: 2005/06/14 09:44:33 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -66,7 +66,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.2 $, $Date: 2005/06/10 19:23:27 $
+	 * @version $Revision: 1.3 $, $Date: 2005/06/14 09:44:33 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -104,7 +104,12 @@ final class CORBAMServerObjectLoader {
 		if (preferredMCMId != null) {
 			Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjects | Trying to load from MCM '" + preferredMCMId + "'",
 					Log.DEBUGLEVEL08);
-			loadStorableObjectsFromMCM(preferredMCMId, entityCode, transmitProcedure, loadIds, loadedObjects);
+			try {
+				loadStorableObjectsFromMCM(preferredMCMId, entityCode, transmitProcedure, loadIds, loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
 		}
 
 		if (!loadIds.isEmpty()) {
@@ -112,7 +117,12 @@ final class CORBAMServerObjectLoader {
 			final Set mcmIds = MeasurementServer.getMCMIds();
 			for (final Iterator it = mcmIds.iterator(); it.hasNext() && !loadIds.isEmpty();) {
 				final Identifier mcmId = (Identifier) it.next();
-				loadStorableObjectsFromMCM(mcmId, entityCode, transmitProcedure, loadIds, loadedObjects);
+				try {
+					loadStorableObjectsFromMCM(mcmId, entityCode, transmitProcedure, loadIds, loadedObjects);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
 			}
 		}
 
@@ -233,12 +243,17 @@ final class CORBAMServerObjectLoader {
 		final Set mcmIds = MeasurementServer.getMCMIds();
 		for (final Iterator it = mcmIds.iterator(); it.hasNext();) {
 			final Identifier mcmId = (Identifier) it.next();
-			loadStorableObjectsButIdsByConditionFromMCM(mcmId,
-					entityCode,
-					transmitButIdsByConditionProcedure,
-					condition,
-					loadButIds,
-					loadedObjects);
+			try {
+				loadStorableObjectsButIdsByConditionFromMCM(mcmId,
+						entityCode,
+						transmitButIdsByConditionProcedure,
+						condition,
+						loadButIds,
+						loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
 		}
 
 		if (!loadedObjects.isEmpty()) {
