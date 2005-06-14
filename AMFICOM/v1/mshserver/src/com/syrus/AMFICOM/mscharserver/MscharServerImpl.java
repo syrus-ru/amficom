@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.3 2005/06/14 08:54:29 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.4 2005/06/14 11:13:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/14 08:54:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/06/14 11:13:09 $
+ * @author $Author: bass $
  * @module mscharserver_v1
  */
 public final class MscharServerImpl extends MscharServerSchemeTransmit {
@@ -37,24 +37,21 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 	 */
 	protected void validateAccess(final SessionKey_Transferable sessionKey,
 			final Identifier_TransferableHolder userId,
-			final Identifier_TransferableHolder domainId) throws AMFICOMRemoteException {
+			final Identifier_TransferableHolder domainId)
+			throws AMFICOMRemoteException {
 		try {
-			MscharServerSessionEnvironment.getInstance().getMscharServerServantManager().getLoginServerReference().validateAccess(sessionKey,
-					userId,
-					domainId);
-		}
-		catch (final CommunicationException ce) {
+			MscharServerSessionEnvironment.getInstance()
+					.getMscharServerServantManager()
+					.getLoginServerReference()
+					.validateAccess(sessionKey, userId, domainId);
+		} catch (final CommunicationException ce) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		}
-		catch (AMFICOMRemoteException are) {
+		} catch (final AMFICOMRemoteException are) {
 			//-Pass AMFICOMRemoteException upward -- do not catch it by 'throw Throwable' below
 			throw are;
-		}
-		catch (final Throwable throwable) {
-			Log.errorException(throwable);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION,
-					CompletionStatus.COMPLETED_PARTIALLY,
-					throwable.getMessage());
+		} catch (final Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
 		}
 	}
 
