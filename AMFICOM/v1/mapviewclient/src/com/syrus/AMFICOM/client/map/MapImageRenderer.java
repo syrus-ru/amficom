@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageRenderer.java,v 1.3 2005/06/08 09:48:51 krupenn Exp $
+ * $Id: MapImageRenderer.java,v 1.4 2005/06/14 14:23:35 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,8 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/08 09:48:51 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/06/14 14:23:35 $
+ * @author $Author: peskovsky $
  * @module mapviewclient
  */
 public interface MapImageRenderer {
@@ -26,6 +26,7 @@ public interface MapImageRenderer {
 	void refreshLayers() throws MapConnectionException, MapDataException;
 	Image getImage() throws MapConnectionException, MapDataException;
 	Dimension getImageSize();
+	void cancel();
 	/**
 	 * Используется при задании нового центра для карты.
 	 * Выдаёт ближайший к указанной точке центр для дискретного режима перемещения 
