@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.4 2005/06/06 14:52:47 bob Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.5 2005/06/14 11:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/06 14:52:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/14 11:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -57,41 +57,41 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 	private void createMenuItems() {
 		final JMenu menuSession = new JMenu();
 
-		menuSession.setText(LangModel.getString(ApplicationModel.MENU_SESSION));
+		menuSession.setText(LangModelGeneral.getString("Menu.Session"));
 		menuSession.setName(ApplicationModel.MENU_SESSION);
 
 		final JMenuItem menuSessionNew = new JMenuItem();
-		menuSessionNew.setText(LangModel.getString(ApplicationModel.MENU_SESSION_NEW));
+		menuSessionNew.setText(LangModelGeneral.getString("Menu.Session.NewSession"));
 		menuSessionNew.setName(ApplicationModel.MENU_SESSION_NEW);
 		menuSessionNew.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionClose = new JMenuItem();
-		menuSessionClose.setText(LangModel.getString(ApplicationModel.MENU_SESSION_CLOSE));
+		menuSessionClose.setText(LangModelGeneral.getString("Menu.Session.CloseSession"));
 		menuSessionClose.setName(ApplicationModel.MENU_SESSION_CLOSE);
 		menuSessionClose.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionOptions = new JMenuItem();
-		menuSessionOptions.setText(LangModel.getString(ApplicationModel.MENU_SESSION_OPTIONS));
+		menuSessionOptions.setText(LangModelGeneral.getString("Menu.Session.SessionOptions"));
 		menuSessionOptions.setName(ApplicationModel.MENU_SESSION_OPTIONS);
 		menuSessionOptions.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionConnection = new JMenuItem();
-		menuSessionConnection.setText(LangModel.getString(ApplicationModel.MENU_SESSION_CONNECTION));
+		menuSessionConnection.setText(LangModelGeneral.getString("Menu.Session.ConnectionProperties"));
 		menuSessionConnection.setName(ApplicationModel.MENU_SESSION_CONNECTION);
 		menuSessionConnection.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionChangePassword = new JMenuItem();
-		menuSessionChangePassword.setText(LangModel.getString(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
+		menuSessionChangePassword.setText(LangModelGeneral.getString("Menu.Session.ChangePassword"));
 		menuSessionChangePassword.setName(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
 		menuSessionChangePassword.addActionListener(this.actionAdapter);
 
 		final JMenuItem menuSessionDomain = new JMenuItem();
-		menuSessionDomain.setText(LangModel.getString(ApplicationModel.MENU_SESSION_DOMAIN));
+		menuSessionDomain.setText(LangModelGeneral.getString("Menu.Session.SelectDomain"));
 		menuSessionDomain.setName(ApplicationModel.MENU_SESSION_DOMAIN);
 		menuSessionDomain.addActionListener(this.actionAdapter);
 
 		JMenuItem menuExit = new JMenuItem();
-		menuExit.setText(LangModel.getString(ApplicationModel.MENU_EXIT));
+		menuExit.setText(LangModelGeneral.getString("Menu.Exit"));
 		menuExit.setName(ApplicationModel.MENU_EXIT);
 		menuExit.addActionListener(this.actionAdapter);
 
@@ -110,10 +110,10 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 
 		this.addMenuItems();
 
-		final JMenu menuHelp = new JMenu(LangModel.getString("Help"));
+		final JMenu menuHelp = new JMenu(LangModelGeneral.getString("Menu.Help"));
 		menuHelp.setName(ApplicationModel.MENU_HELP);
 
-		final JMenuItem menuHelpAboutItem = new JMenuItem(LangModel.getString("About_program"));
+		final JMenuItem menuHelpAboutItem = new JMenuItem(LangModelGeneral.getString("Menu.Help.About"));
 		menuHelpAboutItem.setName(ApplicationModel.MENU_HELP_ABOUT);
 		menuHelpAboutItem.addActionListener(this.actionAdapter);
 		menuHelp.add(menuHelpAboutItem);
