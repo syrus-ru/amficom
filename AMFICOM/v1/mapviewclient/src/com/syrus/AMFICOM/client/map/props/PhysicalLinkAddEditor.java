@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,17 +24,15 @@ import javax.swing.JToggleButton;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import oracle.jdeveloper.layout.VerticalFlowLayout;
-
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.client.UI.WrapperedList;
+import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.client.UI.WrapperedList;
-import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
@@ -141,7 +138,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				unbind(or);
 			}
 		});
-		this.buttonsPanel.setLayout(new VerticalFlowLayout());
+		this.buttonsPanel.setLayout(new FlowLayout());
 		this.buttonsPanel.add(this.bindButton);
 		this.buttonsPanel.add(this.unbindButton);
 
