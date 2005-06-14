@@ -1,5 +1,5 @@
 /**
- * $Id: EditorDialog.java,v 1.3 2005/06/14 10:17:05 krupenn Exp $
+ * $Id: EditorDialog.java,v 1.4 2005/06/14 11:29:27 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -20,14 +20,12 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
 public class EditorDialog
 {
-	protected boolean accept = false;
-
 	public static boolean showEditorDialog(
 			String title,
 			Object object,
@@ -36,8 +34,7 @@ public class EditorDialog
 		if(editor != null)
 			editor.setObject(object);
 
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
+		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(editor.getGUI(), BorderLayout.CENTER);
 		
 		final String okButton = LangModelGeneral.getString("Ok");
