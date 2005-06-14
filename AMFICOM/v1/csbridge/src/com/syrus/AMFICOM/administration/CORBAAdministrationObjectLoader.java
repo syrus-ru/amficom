@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.21 2005/06/07 13:53:51 arseniy Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.22 2005/06/14 11:46:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/07 13:53:51 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/14 11:46:28 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -49,10 +49,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjects(ObjectEntities.USER_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitUsers(ids1, sessionKey);
+				return ((CMServer) server).transmitUsers(idsT, sessionKey);
 			}
 		});
 	}
@@ -61,10 +61,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjects(ObjectEntities.DOMAIN_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitDomains(ids1, sessionKey);
+				return ((CMServer) server).transmitDomains(idsT, sessionKey);
 			}
 		});
 	}
@@ -73,10 +73,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjects(ObjectEntities.SERVER_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitServers(ids1, sessionKey);
+				return ((CMServer) server).transmitServers(idsT, sessionKey);
 			}
 		});
 	}
@@ -85,10 +85,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjects(ObjectEntities.MCM_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitMCMs(ids1, sessionKey);
+				return ((CMServer) server).transmitMCMs(idsT, sessionKey);
 			}
 		});
 	}
@@ -97,10 +97,10 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjects(ObjectEntities.SERVERPROCESS_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitServerProcesses(ids1, sessionKey);
+				return ((CMServer) server).transmitServerProcesses(idsT, sessionKey);
 			}
 		});
 	}
@@ -113,11 +113,11 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.USER_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitUsersButIdsByCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitUsersButIdsByCondition(idsT, conditionT, sessionKey);
 			}
 		});
 	}
@@ -126,11 +126,11 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.DOMAIN_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitDomainsButIdsByCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitDomainsButIdsByCondition(idsT, conditionT, sessionKey);
 			}
 		});
 	}
@@ -139,11 +139,11 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SERVER_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitServersButIdsByCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitServersButIdsByCondition(idsT, conditionT, sessionKey);
 			}
 		});
 	}
@@ -152,11 +152,11 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MCM_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitMCMsButIdsByCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitMCMsButIdsByCondition(idsT, conditionT, sessionKey);
 			}
 		});
 	}
@@ -165,11 +165,11 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SERVERPROCESS_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitServerProcessesButIdsByCondition(ids1, sessionKey, condition1);
+				return ((CMServer) server).transmitServerProcessesButIdsByCondition(idsT, conditionT, sessionKey);
 			}
 		});
 	}
