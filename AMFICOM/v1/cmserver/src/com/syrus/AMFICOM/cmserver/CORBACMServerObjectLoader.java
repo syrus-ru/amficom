@@ -1,5 +1,5 @@
 /*
- * $Id: CORBACMServerObjectLoader.java,v 1.2 2005/06/10 15:15:51 arseniy Exp $
+ * $Id: CORBACMServerObjectLoader.java,v 1.3 2005/06/14 09:43:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/10 15:15:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/14 09:43:51 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -37,9 +37,15 @@ final class CORBACMServerObjectLoader extends CORBAObjectLoader {
 		if (loadIds.isEmpty())
 			return objects;
 
-		final Set loadedObjects = super.loadStorableObjects(entityCode, loadIds, transmitProcedure);
+		Set loadedObjects = null;
+		try {
+			loadedObjects = super.loadStorableObjects(entityCode, loadIds, transmitProcedure);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
 
-		if (!loadedObjects.isEmpty()) {
+		if (loadedObjects != null && !loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
 			try {
 				final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
@@ -60,12 +66,19 @@ final class CORBACMServerObjectLoader extends CORBAObjectLoader {
 		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 
 		final Set loadButIds = Identifier.createSumIdentifiers(ids, objects);
-		final Set loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
-				loadButIds,
-				condition,
-				transmitButIdsConditionProcedure);
 
-		if (!loadedObjects.isEmpty()) {
+		Set loadedObjects = null;
+		try {
+			loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
+					loadButIds,
+					condition,
+					transmitButIdsConditionProcedure);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+
+		if (loadedObjects != null && !loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
 			try {
 				final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
