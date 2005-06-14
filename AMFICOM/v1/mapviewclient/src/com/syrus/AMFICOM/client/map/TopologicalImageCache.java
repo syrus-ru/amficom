@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.3 2005/06/14 12:20:29 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.4 2005/06/14 12:44:35 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import java.util.ListIterator;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/06/14 12:20:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/06/14 12:44:35 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -152,7 +152,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private double yDifferenceSph = 0.D;
 	
-	public TopologicalImageCache(LogicalNetLayer miLayer, MapConnection connection)
+	public TopologicalImageCache(LogicalNetLayer miLayer, MapImageLoader loader)
 			throws MapConnectionException, MapDataException
 	{
 		this.logicalNetLayer = miLayer;
@@ -160,7 +160,7 @@ public class TopologicalImageCache implements MapImageRenderer
 		this.center = this.logicalNetLayer.getCenter();
 
 		this.sizeChanged();
-		this.loadingThread = new LoadingThread(connection);
+		this.loadingThread = new LoadingThread(loader);
 		this.loadingThread.start();
 	}
 
