@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.14 2005/05/26 06:58:56 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.15 2005/06/14 11:02:10 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <li> ReliabilityModelTraceAndEvents to MTM
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/05/26 06:58:56 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/14 11:02:10 $
  * @module
  */
 public class ModelTraceComparer
@@ -150,24 +150,40 @@ public class ModelTraceComparer
 	}
 
 	/**
-	 * Проверяет, не опускается ли модельная кривая ниже указанного уровня.
-	 * Если опускается, возвращает соотв. координату.
-	 * Если не опускается
+	 * Проверяет обрыв по указанному уровню.
+	 * <ul>
+	 * <li>
+	 * если кривая пересекает порог сверху вниз - возвращаем
+	 * ближайшую справа точку первого такого пересечения
+	 * <li>
+	 * если кривая заканчивается выше порога - возвращаем -1
+	 * <li>
+	 * если кривая целиком ниже порога - возвращаем 0
+	 * </ul>
+	 * 
 	 * @param mt модельная кривая
 	 * @param th пороговое значение Y, отсчитанное от уровня абс. максимума.
      *   Значение меньше нуля.
-	 * @return самая левая точка, в которой кривая ниже порога,
-	 * либо -1, если кривая везде выше порога
+     * @return дистанция обрыва либо -1
 	 */
 	public static int compareToMinLevel(ModelTrace mt, double th)
 	{
+		// XXX: проводим выравнивание, которое, вероятно, более не нужно
 		double[] y = mt.getYArray();
         double yMax = ReflectogramMath.getArrayMax(y);
-		for (int i = 0; i < y.length; i++)
-		{
-			if (y[i] < yMax + th)
-				return i;
+        int i;
+        // ищем первую точку выше порога
+		for (i = 0; i < y.length; i++) {
+			if (y[i] >= yMax + th)
+				break;
 		}
-		return -1;
+		if (i == y.length) // не найдено ни одной точки выше порога
+			return 0;
+		// ищем переход сверху вниз
+		for (; i < y.length; i++) {
+			if (y[i] < yMax + th)
+				return i; // нашли
+		}
+		return -1; // не нашли
 	}
 }
