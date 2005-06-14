@@ -16,3 +16,4 @@ logs
 *.jpr
 *.jpx
 .settings
+common.properties
