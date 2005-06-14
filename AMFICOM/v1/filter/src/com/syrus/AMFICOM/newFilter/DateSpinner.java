@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.newFilter;
 
-import javax.swing.*;
+import javax.swing.JComponent;
 
 public class DateSpinner extends TimeSpinner
 {

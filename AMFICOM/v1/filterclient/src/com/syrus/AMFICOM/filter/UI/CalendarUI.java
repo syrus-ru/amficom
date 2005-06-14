@@ -1,3 +1,10 @@
+/*-
+ * $Id: CalendarUI.java,v 1.2 2005/06/14 07:33:04 arseniy Exp $
+ *
+ * Copyright © 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.filter.UI;
 
 import java.awt.BorderLayout;
@@ -27,14 +34,21 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import com.syrus.AMFICOM.client.resource.LangModel;
 
-public class CalendarUI extends JPanel
-{
+/**
+ * @version $Revision: 1.2 $, $Date: 2005/06/14 07:33:04 $
+ * @author $Author: arseniy $
+ * @module filterclient_v1
+ */
+public class CalendarUI extends JPanel {
+	private static final long serialVersionUID = 3257845476471485492L;
+
 	public static final int STATUS_CANCEL = 0;
 	public static final int STATUS_OK = 1;
-	public Dimension btn_size = new Dimension(24, 24);
+	public Dimension btnSize = new Dimension(24, 24);
 
 	protected MonthCanvas mCanvas;
 	protected SimpleDateFormat sdf = new SimpleDateFormat("MMMMMMMMM yyyy");
@@ -62,17 +76,14 @@ public class CalendarUI extends JPanel
 			e.printStackTrace();
 		}
 
-		mCanvas.init(this, cal);
-		monthLabel.setText(" " + sdf.format(getCalendar().getTime()) + LangModel.getString("YearPostfix"));
+		this.mCanvas.init(this, cal);
+		this.monthLabel.setText(" " + this.sdf.format(getCalendar().getTime()) + LangModel.getString("YearPostfix"));
 	}
 
-	public static JDialog createDialogInstance(Calendar cal, boolean hideOnChoose)
-	{
+	public static JDialog createDialogInstance(Calendar cal, boolean hideOnChoose) {
 		CalendarUI instance = new CalendarUI(cal);
-		dialog = new JDialog()
-		{
-			public void dispose()
-			{
+		dialog = new JDialog() {
+			public void dispose() {
 				dialog = null;
 				super.dispose();
 			}
@@ -84,13 +95,10 @@ public class CalendarUI extends JPanel
 		return dialog;
 	}
 
-	public static JDialog createDialogInstance(Frame owner, Calendar cal, boolean hideOnChoose)
-	{
+	public static JDialog createDialogInstance(Frame owner, Calendar cal, boolean hideOnChoose) {
 		CalendarUI instance = new CalendarUI(cal);
-		dialog = new JDialog(owner)
-		{
-			public void dispose()
-			{
+		dialog = new JDialog(owner) {
+			public void dispose() {
 				dialog = null;
 				super.dispose();
 			}
@@ -102,19 +110,16 @@ public class CalendarUI extends JPanel
 		return dialog;
 	}
 
-	public static JDialog createDialogInstance(Frame owner, Calendar cal, boolean hideOnChoose, boolean modal)
-	{
+	public static JDialog createDialogInstance(Frame owner, Calendar cal, boolean hideOnChoose, boolean modal) {
 		CalendarUI instance = new CalendarUI(cal);
-		dialog = new JDialog(owner)
-		{
-			public void dispose()
-			{
+		dialog = new JDialog(owner) {
+			public void dispose() {
 				dialog = null;
 				super.dispose();
 			}
 		};
 		dialog.setModal(modal);
-//		dialog.setSize(new Dimension(190, 190));
+		// dialog.setSize(new Dimension(190, 190));
 		dialog.pack();
 		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
@@ -122,13 +127,10 @@ public class CalendarUI extends JPanel
 		return dialog;
 	}
 
-	public static JDialog createDialogInstance(Dialog owner, Calendar cal, boolean hideOnChoose)
-	{
+	public static JDialog createDialogInstance(Dialog owner, Calendar cal, boolean hideOnChoose) {
 		CalendarUI instance = new CalendarUI(cal);
-		dialog = new JDialog(owner)
-		{
-			public void dispose()
-			{
+		dialog = new JDialog(owner) {
+			public void dispose() {
 				dialog = null;
 				super.dispose();
 			}
@@ -140,13 +142,10 @@ public class CalendarUI extends JPanel
 		return dialog;
 	}
 
-	public static JDialog createDialogInstance(Dialog owner, Calendar cal, boolean hideOnChoose, boolean modal)
-	{
+	public static JDialog createDialogInstance(Dialog owner, Calendar cal, boolean hideOnChoose, boolean modal) {
 		CalendarUI instance = new CalendarUI(cal);
-		dialog = new JDialog(owner)
-		{
-			public void dispose()
-			{
+		dialog = new JDialog(owner) {
+			public void dispose() {
 				dialog = null;
 				super.dispose();
 			}
@@ -159,13 +158,10 @@ public class CalendarUI extends JPanel
 		return dialog;
 	}
 
-	public static JFrame createFrameInstance(Calendar cal, boolean hideOnChoose)
-	{
+	public static JFrame createFrameInstance(Calendar cal, boolean hideOnChoose) {
 		CalendarUI instance = new CalendarUI(cal);
-		frame = new JFrame()
-		{
-			public void dispose()
-			{
+		frame = new JFrame() {
+			public void dispose() {
 				frame = null;
 				super.dispose();
 			}
@@ -177,8 +173,7 @@ public class CalendarUI extends JPanel
 		return frame;
 	}
 
-	public static JInternalFrame createInternalFrameInstance(Calendar cal)
-	{
+	public static JInternalFrame createInternalFrameInstance(Calendar cal) {
 		CalendarUI instance = new CalendarUI(cal);
 		internalFrame = new JInternalFrame();
 		internalFrame.setSize(new Dimension(190, 190));
@@ -187,132 +182,114 @@ public class CalendarUI extends JPanel
 		return internalFrame;
 	}
 
-	public static JPanel createPanelInstance(Calendar cal)
-	{
+	public static JPanel createPanelInstance(Calendar cal) {
 		CalendarUI instance = new CalendarUI(cal);
 		return instance;
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		setLayout(new BorderLayout());
 
-		lessButton.setFocusable(false);
-		lessButton.setBorder(BorderFactory.createEtchedBorder());
-		lessButton.setPreferredSize(btn_size);
-		lessButton.setMinimumSize(btn_size);
-		lessButton.setMinimumSize(btn_size);
-		moreButton.setFocusable(false);
-		moreButton.setBorder(BorderFactory.createEtchedBorder());
-		moreButton.setPreferredSize(btn_size);
-		moreButton.setMinimumSize(btn_size);
-		moreButton.setMinimumSize(btn_size);
-		lessButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent ev)
-			{
+		this.lessButton.setFocusable(false);
+		this.lessButton.setBorder(BorderFactory.createEtchedBorder());
+		this.lessButton.setPreferredSize(this.btnSize);
+		this.lessButton.setMinimumSize(this.btnSize);
+		this.lessButton.setMinimumSize(this.btnSize);
+		this.moreButton.setFocusable(false);
+		this.moreButton.setBorder(BorderFactory.createEtchedBorder());
+		this.moreButton.setPreferredSize(this.btnSize);
+		this.moreButton.setMinimumSize(this.btnSize);
+		this.moreButton.setMinimumSize(this.btnSize);
+		this.lessButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
 				decrease();
 			}
 		});
-		moreButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent ev)
-			{
+		this.moreButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
 				increase();
 			}
 		});
 
-		//monthPanel = new JPanel(new FlowLayout());
-		monthPanel = new JPanel(new BorderLayout());
+		// monthPanel = new JPanel(new FlowLayout());
+		this.monthPanel = new JPanel(new BorderLayout());
 		JPanel labelPanel = new JPanel(new FlowLayout());
-		labelPanel.add(monthLabel);
-		monthPanel.add(lessButton, BorderLayout.WEST);
-		monthPanel.add(labelPanel, BorderLayout.CENTER);
-		monthPanel.add(moreButton, BorderLayout.EAST);
+		labelPanel.add(this.monthLabel);
+		this.monthPanel.add(this.lessButton, BorderLayout.WEST);
+		this.monthPanel.add(labelPanel, BorderLayout.CENTER);
+		this.monthPanel.add(this.moreButton, BorderLayout.EAST);
 
-		mCanvas = new MonthCanvas();
+		this.mCanvas = new MonthCanvas();
 
-		todayPanel = new JPanel(new FlowLayout());
-		todayPanel.add(
-			new JLabel(
-				LangModel.getString("Today") + ": " +
-				new SimpleDateFormat("dd.MM.yyyy").format(MonthCanvas.todayCal.getTime()) +
-				LangModel.getString("YearPostfix")),
-			BorderLayout.SOUTH);
+		this.todayPanel = new JPanel(new FlowLayout());
+		this.todayPanel.add(new JLabel(LangModel.getString("Today")
+				+ ": "
+				+ new SimpleDateFormat("dd.MM.yyyy").format(MonthCanvas.todayCal.getTime())
+				+ LangModel.getString("YearPostfix")), BorderLayout.SOUTH);
 
-		add(monthPanel, BorderLayout.NORTH);
-		add(mCanvas, BorderLayout.CENTER);
-		add(todayPanel, BorderLayout.SOUTH);
+		add(this.monthPanel, BorderLayout.NORTH);
+		add(this.mCanvas, BorderLayout.CENTER);
+		add(this.todayPanel, BorderLayout.SOUTH);
 	}
 
-	public Calendar getCalendar()
-	{
-		return mCanvas.cal;
+	public Calendar getCalendar() {
+		return this.mCanvas.monthCal;
 	}
 
-	public void setCalendar(Calendar cal)
-	{
-		mCanvas.cal = cal;
-		mCanvas.reinit();
+	public void setCalendar(Calendar cal) {
+		this.mCanvas.monthCal = cal;
+		this.mCanvas.reinit();
 	}
 
-	public int getStatus()
-	{
-		return status;
+	public int getStatus() {
+		return this.status;
 	}
 
-	public void increase()
-	{
+	public void increase() {
 		Calendar cal = getCalendar();
-		if (cal.get(Calendar.MONTH) == cal.getMaximum(Calendar.MONTH))
-		{
+		if (cal.get(Calendar.MONTH) == cal.getMaximum(Calendar.MONTH)) {
 			cal.set(Calendar.MONTH, cal.getMinimum(Calendar.MONTH));
 			cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
 		}
 		else
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
 
-		mCanvas.reinit();
-		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
+		this.mCanvas.reinit();
+		this.monthLabel.setText(" " + this.sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
 	}
 
-	public void decrease()
-	{
+	public void decrease() {
 		Calendar cal = getCalendar();
-		if (cal.get(Calendar.MONTH) == cal.getMinimum(Calendar.MONTH))
-		{
+		if (cal.get(Calendar.MONTH) == cal.getMinimum(Calendar.MONTH)) {
 			cal.set(Calendar.MONTH, cal.getMaximum(Calendar.MONTH));
 			cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
 		}
 		else
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
 
-		mCanvas.reinit();
-		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
+		this.mCanvas.reinit();
+		this.monthLabel.setText(" " + this.sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
 	}
 
-	public void setMonthVisible(boolean b)
-	{
-		monthPanel.setVisible(b);
+	public void setMonthVisible(boolean b) {
+		this.monthPanel.setVisible(b);
 	}
 
-	public void setTodayVisible(boolean b)
-	{
-		todayPanel.setVisible(b);
+	public void setTodayVisible(boolean b) {
+		this.todayPanel.setVisible(b);
 	}
 
-	public void setHideOnChoose(boolean b)
-	{
-		mCanvas.hideOnChoose = b;
+	public void setHideOnChoose(boolean b) {
+		this.mCanvas.hideOnChoose = b;
 	}
 
-	void okClose()
-	{
-		status = CalendarUI.STATUS_OK;
+	void okClose() {
+		this.status = CalendarUI.STATUS_OK;
 		if (dialog != null)
 			dialog.dispose();
-		else if (frame != null)
-			frame.dispose();
+		else
+			if (frame != null)
+				frame.dispose();
 	}
 }
 
@@ -325,21 +302,21 @@ class MonthCanvas extends Container
 	static Calendar todayCal = Calendar.getInstance();
 
 	boolean hideOnChoose = false;
-	CalendarUI parent;
-	Calendar cal;
+	CalendarUI monthParent;
+	Calendar monthCal;
 	JPanel calPanel;
 
 	void init(CalendarUI panel, Calendar cal)
 	{
-		this.parent = panel;
-		this.cal = cal;
+		this.monthParent = panel;
+		this.monthCal = cal;
 		reinit();
 	}
 
 	void reinit()
 	{
-		if (todayCal.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
-			&& todayCal.get(Calendar.YEAR) == cal.get(Calendar.YEAR))
+		if (todayCal.get(Calendar.MONTH) == this.monthCal.get(Calendar.MONTH)
+			&& todayCal.get(Calendar.YEAR) == this.monthCal.get(Calendar.YEAR))
 			today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		else
 			today = 0;
@@ -353,7 +330,7 @@ class MonthCanvas extends Container
 		JPanel q = new JPanel(new GridLayout(0, weekNames.length));
 		for (int i=0; i<weekNames.length; i++)
 		{
-			JLabel l = new JLabel(weekNames[i], JLabel.CENTER);
+			JLabel l = new JLabel(weekNames[i], SwingConstants.CENTER);
 			q.setBackground(Color.gray);
 			q.add(l);
 		}
@@ -361,43 +338,43 @@ class MonthCanvas extends Container
 		add(p, BorderLayout.NORTH);
 
 		// Create a grid for the days.
-		calPanel = new JPanel(new GridLayout(0, weekNames.length));
+		this.calPanel = new JPanel(new GridLayout(0, weekNames.length));
 
 		// Get the day of the week of the first day.
-		int temp_day = cal.get(Calendar.DAY_OF_MONTH);
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		int fday = cal.getFirstDayOfWeek();
+		int temp_day = this.monthCal.get(Calendar.DAY_OF_MONTH);
+		this.monthCal.set(Calendar.DAY_OF_MONTH, 1);
+		int dayOfWeek = this.monthCal.get(Calendar.DAY_OF_WEEK);
+		int fday = this.monthCal.getFirstDayOfWeek();
 		if (fday > dayOfWeek)
 			dayOfWeek += 7;
 
-		cal.set(Calendar.DAY_OF_MONTH, temp_day);
+		this.monthCal.set(Calendar.DAY_OF_MONTH, temp_day);
 		// Fill the first few cells with blanks.
 		for (int i = fday; i < dayOfWeek; i++) {
-			calPanel.add(new JLabel(" ", JLabel.CENTER));
+			this.calPanel.add(new JLabel(" ", SwingConstants.CENTER));
 		}
 
 		// Add the days.
-		for (int i = cal.getMinimum(Calendar.DAY_OF_MONTH); i <= cal.getMaximum(Calendar.DAY_OF_MONTH); i++)
+		for (int i = this.monthCal.getMinimum(Calendar.DAY_OF_MONTH); i <= this.monthCal.getMaximum(Calendar.DAY_OF_MONTH); i++)
 		{
 			Calendar c = Calendar.getInstance();
-			c.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), i);
+			c.set(this.monthCal.get(Calendar.YEAR), this.monthCal.get(Calendar.MONTH), i);
 
 			// Make sure we haven't skipped to the next month.
-			if (c.get(Calendar.MONTH) != cal.get(Calendar.MONTH))
+			if (c.get(Calendar.MONTH) != this.monthCal.get(Calendar.MONTH))
 			{
 				break;
 			}
-			calPanel.add(new DayCanvas(c, this));
+			this.calPanel.add(new DayCanvas(c, this));
 		}
-		add(calPanel, BorderLayout.CENTER);
+		add(this.calPanel, BorderLayout.CENTER);
 
 		repaint();
 	}
 
 	void close()
 	{
-		parent.okClose();
+		this.monthParent.okClose();
 	}
 
 	static
@@ -449,36 +426,36 @@ class MonthCanvas extends Container
 
 	class DayCanvas extends Component implements MouseListener
 	{
-		Calendar cal;
-		MonthCanvas parent;
+		Calendar dayCal;
+		MonthCanvas dayParent;
 		boolean selected = false;
 
 		DayCanvas(Calendar cal, MonthCanvas parent)
 		{
-			this.cal = cal;
-			this.parent = parent;
+			this.dayCal = cal;
+			this.dayParent = parent;
 			addMouseListener(this);
 		}
 
 		public void paint(Graphics g)
 		{
 			super.paint(g);
-			int day = cal.get(Calendar.DAY_OF_MONTH);
-			int week = cal.get(Calendar.DAY_OF_WEEK);
-			int month = cal.get(Calendar.MONTH);
-			int year = cal.get(Calendar.YEAR);
-			int hour = cal.get(Calendar.HOUR);
-			int minute = cal.get(Calendar.MINUTE);
-			int second = cal.get(Calendar.SECOND);
+			int day = this.dayCal.get(Calendar.DAY_OF_MONTH);
+			int week = this.dayCal.get(Calendar.DAY_OF_WEEK);
+			int month = this.dayCal.get(Calendar.MONTH);
+			int year = this.dayCal.get(Calendar.YEAR);
+			int hour = this.dayCal.get(Calendar.HOUR);
+			int minute = this.dayCal.get(Calendar.MINUTE);
+			int second = this.dayCal.get(Calendar.SECOND);
 
 			FontMetrics fm = g.getFontMetrics();
 
 			int x = (getSize().width - fm.stringWidth("" + day)) / 2;
 			int y = (getSize().height - fm.getHeight()) / 2;
 
-			if (selected)
+			if (this.selected)
 				g.setColor(Color.white);
-			else if (day == parent.cal.get(Calendar.DAY_OF_MONTH))
+			else if (day == this.dayParent.monthCal.get(Calendar.DAY_OF_MONTH))
 				g.setColor(Color.blue);
 			else
 				g.setColor(Color.black);
@@ -501,19 +478,19 @@ class MonthCanvas extends Container
 		// Event handling methods.
 		public void mousePressed(MouseEvent e)
 		{
-			selected = true;
+			this.selected = true;
 			repaint();
 		}
 		public void mouseClicked(MouseEvent e) {}
 		public void mouseReleased(MouseEvent e)
 		{
-			parent.cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH));
-			if (hideOnChoose)
-				parent.close();
+			this.dayParent.monthCal.set(Calendar.DAY_OF_MONTH, dayCal.get(Calendar.DAY_OF_MONTH));
+			if (MonthCanvas.this.hideOnChoose)
+				this.dayParent.close();
 			else
 			{
-				selected = false;
-				parent.repaint();
+				this.selected = false;
+				this.dayParent.repaint();
 			}
 		}
 		public void mouseEntered(MouseEvent e) {}

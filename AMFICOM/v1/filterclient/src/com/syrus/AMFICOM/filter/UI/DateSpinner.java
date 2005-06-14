@@ -1,5 +1,5 @@
 /*-
- * $Id: DateSpinner.java,v 1.1 2005/05/06 06:04:09 bob Exp $
+ * $Id: DateSpinner.java,v 1.2 2005/06/14 07:33:04 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,12 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/06 06:04:09 $
- * @author $Author: bob $
- * @module generalclient_v1
+ * @version $Revision: 1.2 $, $Date: 2005/06/14 07:33:04 $
+ * @author $Author: arseniy $
+ * @module filterclient_v1
  */
 public class DateSpinner extends JSpinner {
+	private static final long serialVersionUID = 3907215931355967544L;
 
 	private static final String	PATTERN	= "dd  MMMMMMMMM  yyyy";
 
