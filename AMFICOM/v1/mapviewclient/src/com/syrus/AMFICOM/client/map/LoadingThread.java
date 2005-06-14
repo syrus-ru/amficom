@@ -1,6 +1,6 @@
 
 /**
- * $Id: LoadingThread.java,v 1.2 2005/06/09 08:52:37 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.3 2005/06/14 14:32:20 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -96,13 +96,14 @@ public class LoadingThread extends Thread {
 	          Logger.log(" TIC - loadingThread - run - processing request ("
 	              + this.requestCurrentlyProcessed + ")");
         	
-            imageForRequest = this.mapImageLoader.renderMapImageAtServer(this.requestCurrentlyProcessed);
+            imageForRequest = this.mapImageLoader.renderMapImage(this.requestCurrentlyProcessed);
 
             if (imageForRequest == null)
             {
 	            synchronized (this.state)
 	            {
 	            	//≈сли рендеринг был остановлен
+	            	this.add(this.requestCurrentlyProcessed);
                 this.state.setValue(State.STATE_IDLE);
                 this.requestCurrentlyProcessed = null;            
               
@@ -157,7 +158,7 @@ public class LoadingThread extends Thread {
     }
 
     private void stopRendering() {
-        this.mapImageLoader.stopRenderingAtServer();
+        this.mapImageLoader.stopRendering();
     }
 
     /**
@@ -252,7 +253,8 @@ public class LoadingThread extends Thread {
     }
 
     /**
-     * ћен€ет приоритет всех запросов из очереди на самый низкий
+     * ћен€ет приоритет всех запросов из очереди, кроме запросов
+     * с приоритетом EXPRESS, на самый низкий
      */
     public void setTheLowestPriorityForAll() {
         Logger.log(" TIC - loadingThread - setTheLowestPriorityForAll - entering");
@@ -261,14 +263,16 @@ public class LoadingThread extends Thread {
         for (; it.hasNext();)
         {
             TopologicalRequest curRequest = (TopologicalRequest) it.next();
-            curRequest.setPriority(TopologicalRequest.PRIORITY_BACKGROUND_LOW);
+            if (curRequest.getPriority() > TopologicalRequest.PRIORITY_EXPRESS)
+            	curRequest.setPriority(TopologicalRequest.PRIORITY_BACKGROUND_LOW);
         }
         
         synchronized (this.state)
         {
         	if (this.state.getValue() == State.STATE_RENDERING)
           {
-        		this.requestCurrentlyProcessed.setPriority(TopologicalRequest.PRIORITY_BACKGROUND_LOW);
+            if (this.requestCurrentlyProcessed.getPriority() > TopologicalRequest.PRIORITY_EXPRESS)        		
+            	this.requestCurrentlyProcessed.setPriority(TopologicalRequest.PRIORITY_BACKGROUND_LOW);
           }
         }
         Logger.log(" TIC - loadingThread - setTheLowestPriorityForAll - done");        
