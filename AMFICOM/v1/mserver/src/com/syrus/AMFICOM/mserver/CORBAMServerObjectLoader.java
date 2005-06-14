@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.3 2005/06/14 09:44:33 arseniy Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.4 2005/06/14 11:26:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/14 09:44:33 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/14 11:26:44 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -54,7 +54,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.3 $, $Date: 2005/06/14 09:44:33 $
+	 * @version $Revision: 1.4 $, $Date: 2005/06/14 11:26:44 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -66,7 +66,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.3 $, $Date: 2005/06/14 09:44:33 $
+	 * @version $Revision: 1.4 $, $Date: 2005/06/14 11:26:44 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -179,10 +179,10 @@ final class CORBAMServerObjectLoader {
 		/*	^Just debug output -- nothing more^*/
 
 		final Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
-		final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
+				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(mcmRef, loadIdsT, sessionKeyT);
 
 				final Set mcmLoadedObjects = StorableObjectPool.fromTransferables(entityCode, transferables, true);
@@ -314,10 +314,10 @@ final class CORBAMServerObjectLoader {
 
 		final Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
 		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
-		final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
+				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitButIdsByConditionProcedure.transmitStorableObjectsButIdsByCondition(mcmRef,
 						loadButIdsT,
 						conditionT,

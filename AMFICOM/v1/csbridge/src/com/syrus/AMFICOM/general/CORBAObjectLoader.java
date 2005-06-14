@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.30 2005/06/10 15:31:17 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.31 2005/06/14 11:28:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/14 11:28:04 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -42,8 +42,7 @@ public abstract class CORBAObjectLoader {
 	 */
 	public void delete(final Set identifiables) {
 		try {
-			this.serverConnectionManager.getServerReference().delete(
-					Identifier.createTransferables(identifiables),
+			this.serverConnectionManager.getServerReference().delete(Identifier.createTransferables(identifiables),
 					LoginManager.getSessionKeyTransferable());
 		}
 		catch (final CommunicationException ce) {
@@ -73,7 +72,7 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
+	 * @version $Revision: 1.31 $, $Date: 2005/06/14 11:28:04 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -84,7 +83,7 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
+	 * @version $Revision: 1.31 $, $Date: 2005/06/14 11:28:04 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -100,7 +99,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.30 $, $Date: 2005/06/10 15:31:17 $
+	 * @version $Revision: 1.31 $, $Date: 2005/06/14 11:28:04 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -123,10 +122,10 @@ public abstract class CORBAObjectLoader {
 			throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
+				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(server, idsT, sessionKeyT);
 				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
 			}
@@ -199,11 +198,11 @@ public abstract class CORBAObjectLoader {
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
+				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitButIdsConditionProcedure.transmitStorableObjectsButIdsCondition(server,
 						idsT,
 						sessionKeyT,
@@ -236,7 +235,6 @@ public abstract class CORBAObjectLoader {
 			final Set storableObjects,
 			final ReceiveProcedure receiveProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
-		final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 
 		final IDLEntity[] transferables = StorableObject.allocateArrayOfTransferables(entityCode, storableObjects.size());
 		int i = 0;
@@ -245,6 +243,7 @@ public abstract class CORBAObjectLoader {
 		}
 
 		try {
+			final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
 			final StorableObject_Transferable[] headers = receiveProcedure.receiveStorableObjects(server, transferables, sessionKeyT);
 			StorableObject.updateHeaders(storableObjects, headers);
 		}
