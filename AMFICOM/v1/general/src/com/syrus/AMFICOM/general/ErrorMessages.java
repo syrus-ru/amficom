@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.16 2005/06/03 15:19:20 arseniy Exp $
+ * $Id: ErrorMessages.java,v 1.17 2005/06/14 09:46:01 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,11 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/06/03 15:19:20 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/14 09:46:01 $
  * @module general_v1
  */
 public interface ErrorMessages {
+	String NOT_LOGGED_IN = "NOT_LOGGED_IN";
 	String OBJECT_NOT_INITIALIZED = "object not initialized yet";
 	String NON_NULL_EXPECTED = "non-null value expected";
 	String NON_EMPTY_EXPECTED = "both non-null and non-empty string/array value expected";
