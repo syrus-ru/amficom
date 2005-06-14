@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.24 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.25 2005/06/14 10:53:43 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/06 12:57:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/06/14 10:53:43 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -73,7 +73,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
 		try {
-			Scheme scheme = this.schemePath.getScheme();
+			Scheme scheme = this.schemePath.getParentScheme();
 			this.startNode = this.mapView.getStartNode(this.schemePath);
 			this.endNode = this.mapView.getEndNode(this.schemePath);
 			this.measurementPath = this.mapView.findMeasurementPath(this.schemePath);

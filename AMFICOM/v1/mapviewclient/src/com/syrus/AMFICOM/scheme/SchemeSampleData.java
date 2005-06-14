@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.10 2005/06/14 08:28:04 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.11 2005/06/14 10:53:43 bass Exp $
  *
  * Copyright њ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -267,7 +267,7 @@ public final class SchemeSampleData {
 		clink.add(clink4);
 
 		SchemePath path0 = SchemePath.createInstance(userId, "ѕут€ра измерений");
-		path0.setScheme(scheme);
+		path0.setParentScheme(scheme);
 
 		path.add(path0);
 
@@ -435,7 +435,7 @@ public final class SchemeSampleData {
 		clink0.setSchemeCableThreads(Collections.singleton(clink0th));
 
 		SchemePath path0 = SchemePath.createInstance(userId, "ѕут€ра измерений");
-		path0.setScheme(scheme);
+		path0.setParentScheme(scheme);
 
 		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
 		pel0.setStartAbstractSchemePort(port00);
