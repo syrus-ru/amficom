@@ -16,7 +16,7 @@ int BreakL_getLinkDataOffset(int linkFlags, int desiredData);
 void BreakL_FitI (ModelF &mf, double *data, int i0, int x0, int length); // самый простой и быстрый
 void BreakL_FitL (ModelF &mf, double *data, int i0, int x0, int length, int linkFlags, double *linkData);
 void BreakL_Fit  (ModelF &mf, double *data, int i0, int x0, int length, int linkFlags, double *linkData, int quick, double error1 = 0, double error2 = -999, int max_points = 0);
-void BreakL_Fit2 (ModelF &mf, double *data, int i0, int x0, int length, int linkFlags, double *linkData, int quick, double *error, long *xStop, int nStops);
+void BreakL_Fit2 (ModelF &mf, double *data, int i0, int x0, int length, int linkFlags, double *linkData, int quick, double *error, int *xStop, int nStops);
 
 #endif
 

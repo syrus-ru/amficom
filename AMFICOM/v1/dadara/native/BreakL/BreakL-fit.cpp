@@ -270,7 +270,7 @@ void update_acc_xi2(ACC_XI2 &acc_xi2, double dx, double y0, double f, double th)
  */
 void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 	int length, int quick, double error1, double error2, int maxpoints,
-	int linearOnly, int linkFlags, double *linkData, double *noise, long *xStop, int nStops)
+	int linearOnly, int linkFlags, double *linkData, double *noise, int *xStop, int nStops)
 {
 	//fprintf(stdout, "BreakL_Fit: i0 %d x0 %d len %d q %d  e1 %g e2 %g mp %d lin %d; mf.nPars %d\n",
 	//	i_begin, x_begin, length, quick, error1, error2, maxpoints, linearOnly, mf.getNPars());
@@ -815,7 +815,7 @@ void BreakL_Fit  (ModelF &mf, double *data0, int i0, int x0, int length, int lin
 }
 
 void BreakL_Fit2 (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,
-	int quick, double* error, long *xStopArr, int nStops)
+	int quick, double* error, int *xStopArr, int nStops)
 {
 	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, 0.0, 0.0, 0, 0, linkFlags, linkData, error + i0, xStopArr, nStops);
 }

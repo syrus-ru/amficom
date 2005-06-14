@@ -443,11 +443,15 @@ static void nFit
 	get_arr_region(env, y, &yy, begin, end - begin + 1);
 
 	int xStopLen = xStop ? env->GetArrayLength(xStop) : 0;
-	long *xStopArr = 0;
+	int *xStopArr = 0;
 	if (xStopLen) {
-		xStopArr = new jint[xStopLen];
+		xStopArr = new int[xStopLen];
 		assert(xStopArr);
-		xStopArr = env->GetIntArrayElements(xStop, 0);
+		jint *xStopArrJ = env->GetIntArrayElements(xStop, 0);
+		int i;
+		for (i = 0; i < xStopLen; i++)
+			xStopArr[i] = xStopArrJ[i];
+		env->ReleaseIntArrayElements(xStop, xStopArrJ, 0);
 	}
 
 	fit_stat_res stat;
@@ -537,7 +541,7 @@ static void nFit
 
 	release_arr_region(env,y,yy);
 	if (xStopArr)
-		env->ReleaseIntArrayElements(xStop, xStopArr, 0);
+		delete[] xStopArr;
 
 	ModelF_C2J_update(env, mf, obj);
 	prf_e();
