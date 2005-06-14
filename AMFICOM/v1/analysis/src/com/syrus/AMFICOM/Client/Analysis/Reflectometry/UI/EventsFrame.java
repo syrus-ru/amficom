@@ -1,23 +1,58 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
+import java.util.List;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.Analysis.CompositeEventList;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.*;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.DetailedEventResource;
+import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
+import com.syrus.AMFICOM.analysis.TraceResource;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
@@ -453,9 +488,25 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     private void updateCompDebug() {
 //      System.err.println("MTAE = " + Heap.getMTAEPrimary());
 //      System.err.println("MTM = "  + Heap.getMTMEtalon());
-        // FIXME: debug: development-time console code
-        if (Heap.getMTAEPrimary() != null && Heap.getMTMEtalon() != null)
-            ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon());
+        //ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon());
+        // FIXME: debug: development-time console code for comparison
+        if (Heap.getBSPrimaryTrace() != null
+        		&& Heap.getMinuitAnalysisParams() != null
+        		&& Heap.getMTMEtalon() != null) {
+        	List alarms = CoreAnalysisManager.analyseCompareAndMakeAlarms(
+        			Heap.getBSPrimaryTrace(),
+        			Heap.getMinuitAnalysisParams(),
+        			Heap.getMinTraceLevel(),
+        			Heap.getMTMEtalon());
+        	if (alarms.size() == 0)
+        		System.out.println("No alarms");
+        	else
+        		System.out.println(alarms.size() + " alarms:");
+        	for (Iterator it = alarms.iterator(); it.hasNext(); ) {
+        		ReflectogramAlarm al = (ReflectogramAlarm)it.next();
+        		System.out.println("- " + al);
+        	}
+        }
     }
 
 	public void etalonMTMCUpdated()
