@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.12 2005/06/06 12:20:35 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.13 2005/06/14 12:01:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,12 +20,12 @@ import javax.swing.JPanel;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
-import com.syrus.AMFICOM.client.UI.dialogs.NamedObjectController;
+import com.syrus.AMFICOM.client.UI.dialogs.NamedObjectWrapper;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * @version $Revision: 1.12 $, $Date: 2005/06/06 12:20:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/14 12:01:20 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -63,11 +63,11 @@ public final class MapPenBarPanel extends JPanel
 		setMinimumSize(new Dimension(150, 27));
 		setMaximumSize(new Dimension(150, 27));
 		
-		NamedObjectController controller = NamedObjectController.getInstance(); 
+		NamedObjectWrapper controller = NamedObjectWrapper.getInstance(); 
 		this.penComboBox = new WrapperedComboBox(
 				controller, 
-				NamedObjectController.KEY_NAME, 
-				NamedObjectController.KEY_NAME);
+				NamedObjectWrapper.KEY_NAME, 
+				NamedObjectWrapper.KEY_NAME);
 		
 		this.penComboBox.addActionListener(new ActionListener()
 			{
