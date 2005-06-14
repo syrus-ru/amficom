@@ -41,7 +41,7 @@ $(call checkenve,JAVA_HOME)
 
 PACKAGES = com/syrus/AMFICOM/analysis com/syrus/AMFICOM/analysis/dadara com/syrus/AMFICOM/analysis/dadara/events
 
-$(LIBNAME):	.mach #.native
+$(LIBNAME):	.mach .native
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
