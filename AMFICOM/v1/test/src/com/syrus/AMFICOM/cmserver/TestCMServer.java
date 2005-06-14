@@ -1,5 +1,5 @@
 /*
- * $Id: TestCMServer.java,v 1.1 2005/06/14 12:02:52 arseniy Exp $
+ * $Id: TestCMServer.java,v 1.2 2005/06/14 12:50:31 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,13 @@ import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -34,7 +36,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/14 12:02:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/14 12:50:31 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -100,7 +102,7 @@ public final class TestCMServer extends CommonTest {
 		}
 	}
 
-	public void testTransmitMeasurementsButIdsByCondition() throws AMFICOMRemoteException {
+	public void _testTransmitMeasurementsButIdsByCondition() throws AMFICOMRemoteException {
 		final Set ids = new HashSet();
 		ids.add(new Identifier("Measurement_2491"));
 		ids.add(new Identifier("Measurement_2492"));
@@ -114,6 +116,19 @@ public final class TestCMServer extends CommonTest {
 				sessionKeyT);
 		for (int i = 0; i < measurementsT.length; i++) {
 			Log.debugMessage("Loaded: " + measurementsT[i].header.id.identifier_string, Log.DEBUGLEVEL02);
+		}
+	}
+
+	public void testTransmitMonitoredElementsButIdsByCondition() throws AMFICOMRemoteException {
+		final Set ids = new HashSet();
+		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		LinkedIdsCondition lic = new LinkedIdsCondition(new Identifier("Domain_19"), ObjectEntities.MONITOREDELEMENT_ENTITY_CODE);
+		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) lic.getTransferable();
+		final MonitoredElement_Transferable[] monitoredElementsT = cmServerRef.transmitMonitoredElementsButIdsByCondition(idsT,
+				conditionT,
+				sessionKeyT);
+		for (int i = 0; i < monitoredElementsT.length; i++) {
+			Log.debugMessage("Loaded: " + monitoredElementsT[i].header.id.identifier_string, Log.DEBUGLEVEL02);
 		}
 	}
 }
