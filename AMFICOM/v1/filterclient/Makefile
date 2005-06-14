@@ -4,7 +4,7 @@ LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-APPCLASSPATH = $(LIBDIR)/measurement.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/administration.jar
+APPCLASSPATH = $(LIBDIR)/filter.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/administration.jar
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
