@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.UIDefaults;
 
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TestRequestFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -54,13 +56,19 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		super(aContext, LangModelSchedule.getString("Scheduling_AMFICOM"), new ScheduleMainMenuBar(aContext
 				.getApplicationModel()), new AbstractMainToolBar() {});
 
+		final ApplicationContext aContext1 = this.aContext;
+		final Dispatcher dispatcher1 = this.dispatcher;
+		
+		final JDesktopPane desktopPane1 = this.desktopPane;
+
+		
 		this.setWindowArranger(new WindowArranger(this) {
 
 			public void arrange() {
 				ScheduleMainFrame f = (ScheduleMainFrame) this.mainframe;
 
-				int w = f.desktopPane.getSize().width;
-				int h = f.desktopPane.getSize().height;
+				int w = desktopPane1.getSize().width;
+				int h = desktopPane1.getSize().height;
 
 				// int minWidth = w / 5;
 
@@ -103,20 +111,21 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 			}
 		});
 
+		
 		this.addComponentListener(new ComponentAdapter() {
 
 			public void componentShown(ComponentEvent e) {
-				ScheduleMainFrame.this.desktopPane.setPreferredSize(ScheduleMainFrame.this.desktopPane.getSize());
+				desktopPane1.setPreferredSize(desktopPane1.getSize());
 			}
 		});
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
-				ScheduleMainFrame.this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE,
+				dispatcher1.removePropertyChangeListener(ContextChangeEvent.TYPE,
 					ScheduleMainFrame.this);
 				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE,
 					ScheduleMainFrame.this);
-				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT)
+				aContext1.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT)
 						.execute();
 			}
 		});
@@ -127,7 +136,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 			public Object createValue(UIDefaults table) {
 				PlanFrame frame = new PlanFrame(aContext);
-				ScheduleMainFrame.this.desktopPane.add(frame);
+				desktopPane1.add(frame);
 				return frame;
 			}
 		});
@@ -136,7 +145,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 			public Object createValue(UIDefaults table) {
 				TestParametersFrame frame = new TestParametersFrame(aContext);
-				ScheduleMainFrame.this.desktopPane.add(frame);
+				desktopPane1.add(frame);
 				return frame;
 			}
 		});
@@ -145,7 +154,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 			public Object createValue(UIDefaults table) {
 				TestRequestFrame frame = new TestRequestFrame(aContext);
-				ScheduleMainFrame.this.desktopPane.add(frame);
+				desktopPane1.add(frame);
 				return frame;
 			}
 		});
@@ -154,7 +163,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 			public Object createValue(UIDefaults table) {
 				TimeParametersFrame frame = new TimeParametersFrame(aContext);
-				ScheduleMainFrame.this.desktopPane.add(frame);
+				desktopPane1.add(frame);
 				return frame;
 			}
 		});
@@ -163,7 +172,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 			public Object createValue(UIDefaults table) {
 				ElementsTreeFrame frame = new ElementsTreeFrame(aContext);
-				ScheduleMainFrame.this.desktopPane.add(frame);
+				desktopPane1.add(frame);
 				return frame;
 			}
 		});
@@ -172,7 +181,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 			public Object createValue(UIDefaults table) {
 				SaveParametersFrame frame = new SaveParametersFrame(aContext);
-				ScheduleMainFrame.this.desktopPane.add(frame);
+				desktopPane1.add(frame);
 				return frame;
 			}
 		});
@@ -181,7 +190,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 			public Object createValue(UIDefaults table) {
 				TableFrame frame = new TableFrame(aContext);
-				ScheduleMainFrame.this.desktopPane.add(frame);
+				desktopPane1.add(frame);
 				return frame;
 			}
 		});
@@ -238,10 +247,18 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.getLazyCommand(TABLE_FRAME));
 		aModel.fireModelChanged();
 	}
+	
+	protected void disposeModule() {
+		super.disposeModule();
+		
+		this.frames.clear();
+		this.frames = null;
+		
+	}
 
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
-		Log.debugMessage("ScheduleMainFrame.setDefaultModel | ", Log.FINEST);
+//		Log.debugMessage("ScheduleMainFrame.setDefaultModel | ", Log.FINEST);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PLAN, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TREE, false);
@@ -257,14 +274,14 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 	public void setConnectionOpened() {
 		super.setConnectionOpened();
-		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
+//		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
 		this.setEnableViewItems(true);
 		
 	}
 
 	public void setSessionOpened() {
 		super.setSessionOpened();		
-		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
+//		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
 		this.setEnableViewItems(true);
 	}
 	
@@ -287,7 +304,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 	public void setConnectionClosed() {
 		super.setConnectionClosed();
-		Log.debugMessage("ScheduleMainFrame.setConnectionClosed | ", Log.FINEST);
+//		Log.debugMessage("ScheduleMainFrame.setConnectionClosed | ", Log.FINEST);
 		this.setEnableViewItems(false);
 
 	}
