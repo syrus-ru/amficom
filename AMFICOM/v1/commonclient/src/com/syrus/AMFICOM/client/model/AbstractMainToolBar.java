@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.6 2005/06/06 14:52:47 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.7 2005/06/14 11:25:17 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/06 14:52:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/14 11:25:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -36,14 +36,11 @@ public abstract class AbstractMainToolBar extends JToolBar {
 
 	protected List				applicationModelListeners;
 
-	JButton				sessionOpen;
+	protected JButton			openSessionButton;
+	protected JButton			closeSessionButton;
+	protected JButton			sessionDomainButton;
 
-	public AbstractMainToolBar() {
-		this.sessionOpen = new JButton();
-		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
-		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		this.sessionOpen.setName(ApplicationModel.MENU_SESSION_NEW);
-		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+	public AbstractMainToolBar() {		
 		this.actionListener = new ActionListener() {
 
 			private boolean	executed	= false;
@@ -56,16 +53,39 @@ public abstract class AbstractMainToolBar extends JToolBar {
 				AbstractButton jb = (AbstractButton) e.getSource();
 				String s = jb.getName();
 				Command command = model.getCommand(s);
-				// command = (Command) command.clone();
-				Log.debugMessage(".actionPerformed | command " + command, Log.FINEST);
+				Log.debugMessage("AbstractMainToolBar$ActionListener.actionPerformed | command " + command, Log.FINEST);
 				command.execute();
 				this.executed = false;
 			}
 		};
-		this.sessionOpen.addActionListener(this.actionListener);
+		
+		this.openSessionButton = new JButton();
+		this.openSessionButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
+		this.openSessionButton.setToolTipText(LangModelGeneral.getString("Menu.Session.NewSession"));
+		this.openSessionButton.setName(ApplicationModel.MENU_SESSION_NEW);
+		this.openSessionButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));		
+		this.openSessionButton.addActionListener(this.actionListener);
+		
+		this.closeSessionButton = new JButton();
+		this.closeSessionButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_CLOSE_SESSION));
+		this.closeSessionButton.setToolTipText(LangModelGeneral.getString("Menu.Session.CloseSession"));
+		this.closeSessionButton.setName(ApplicationModel.MENU_SESSION_CLOSE);
+		this.closeSessionButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		this.closeSessionButton.addActionListener(this.actionListener);
+		
+		
+		this.sessionDomainButton = new JButton();
+		this.sessionDomainButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DOMAIN_SELECTION));
+		this.sessionDomainButton.setToolTipText(LangModelGeneral.getString("Menu.Session.SelectDomain"));
+		this.sessionDomainButton.setName(ApplicationModel.MENU_SESSION_DOMAIN);
+		this.sessionDomainButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		this.sessionDomainButton.addActionListener(this.actionListener);
 
-		this.add(this.sessionOpen);
+
+		this.add(this.openSessionButton);
+		this.add(this.closeSessionButton);
 		this.addSeparator();
+		this.add(this.sessionDomainButton);
 
 		this.addApplicationModelListener(new ApplicationModelListener() {
 
@@ -74,10 +94,20 @@ public abstract class AbstractMainToolBar extends JToolBar {
 			}
 
 			public void modelChanged(String elementName) {
-				AbstractMainToolBar.this.sessionOpen.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(
-					ApplicationModel.MENU_SESSION_NEW));
-				AbstractMainToolBar.this.sessionOpen.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(
-					ApplicationModel.MENU_SESSION_NEW));
+				AbstractMainToolBar.this.openSessionButton.setVisible(AbstractMainToolBar.this.getApplicationModel()
+						.isVisible(ApplicationModel.MENU_SESSION_NEW));
+				AbstractMainToolBar.this.openSessionButton.setEnabled(AbstractMainToolBar.this.getApplicationModel()
+						.isEnabled(ApplicationModel.MENU_SESSION_NEW));
+
+				AbstractMainToolBar.this.closeSessionButton.setVisible(AbstractMainToolBar.this.getApplicationModel()
+						.isVisible(ApplicationModel.MENU_SESSION_CLOSE));
+				AbstractMainToolBar.this.closeSessionButton.setEnabled(AbstractMainToolBar.this.getApplicationModel()
+						.isEnabled(ApplicationModel.MENU_SESSION_CLOSE));
+				AbstractMainToolBar.this.sessionDomainButton.setVisible(AbstractMainToolBar.this.getApplicationModel()
+						.isVisible(ApplicationModel.MENU_SESSION_DOMAIN));
+				AbstractMainToolBar.this.sessionDomainButton.setEnabled(AbstractMainToolBar.this.getApplicationModel()
+						.isEnabled(ApplicationModel.MENU_SESSION_DOMAIN));
+
 			}
 		});
 
