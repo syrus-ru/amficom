@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.21 2005/06/14 07:22:10 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.22 2005/06/14 14:05:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.resource.FileImageResource;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.21 $, $Date: 2005/06/14 07:22:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/06/14 14:05:23 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -70,6 +70,7 @@ public final class MapPropertiesManager
 
  	protected static final String KEY_CONNECTION_CLASS = "connectionClass";
  	protected static final String KEY_VIEWER_CLASS = "viewerClass"; 	
+ 	protected static final String KEY_RENDERER_CLASS = "rendererClass"; 	
 	protected static final String KEY_DATA_BASE_PATH = "dataBasePath";
 	protected static final String KEY_DATA_BASE_VIEW = "dataBaseView";
 	protected static final String KEY_DATA_BASE_URL = "dataBaseURL";
@@ -95,7 +96,8 @@ public final class MapPropertiesManager
 	protected static String descreteNavigation = "false";
 	protected static String useTopologicalImageCache = "false";
 	protected static String connectionClass = "";
-	protected static String viewerClass = "";	
+	protected static String viewerClass = "";
+	protected static String rendererClass = "";
 
 	/* display constants. */
 	public static final Color DEFAULT_TEXT_BACKGROUND = Color.YELLOW;
@@ -295,8 +297,7 @@ public final class MapPropertiesManager
 	/**
 	 * Получить имя класса, отображающего вид карты.
 	 */
-	public static String getNetMapViewerClassName()
-	{
+	public static String getNetMapViewerClassName() {
 		return viewerClass;
 	}
 
@@ -304,9 +305,15 @@ public final class MapPropertiesManager
 	 * Получить имя класса, реализующего подсоединение к данным ГИС
 	 * отображения географических объектов.
 	 */
-	public static String getConnectionClassName()
-	{
+	public static String getConnectionClassName() {
 		return connectionClass;
+	}
+
+	/**
+	 * Получить имя класса, отображающего вид карты.
+	 */
+	public static String getMapImageRendererClassName() {
+		return rendererClass;
 	}
 
 	public static DateFormat getLogDateFormat() {
@@ -393,6 +400,7 @@ public final class MapPropertiesManager
 
 		viewerClass = properties.getProperty(KEY_VIEWER_CLASS);
 		connectionClass = properties.getProperty(KEY_CONNECTION_CLASS);		
+		rendererClass = properties.getProperty(KEY_RENDERER_CLASS);
 		
 		lastLong = properties.getProperty(KEY_LAST_LONGITUDE);
 		if (lastLong.equals("NaN"))
@@ -428,6 +436,7 @@ public final class MapPropertiesManager
 		useTopologicalImageCache = "false";
 		viewerClass = "";
 		connectionClass = "";		
+		rendererClass = "";
 	}
 
 	/**
