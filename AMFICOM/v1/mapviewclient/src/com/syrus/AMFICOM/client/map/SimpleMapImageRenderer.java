@@ -1,5 +1,5 @@
 /**
- * $Id: SimpleMapImageRenderer.java,v 1.3 2005/06/08 09:48:51 krupenn Exp $
+ * $Id: SimpleMapImageRenderer.java,v 1.4 2005/06/14 14:33:00 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,8 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/08 09:48:51 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/06/14 14:33:00 $
+ * @author $Author: peskovsky $
  * @module mapviewclient
  */
 public class SimpleMapImageRenderer implements MapImageRenderer {
@@ -56,5 +56,14 @@ public class SimpleMapImageRenderer implements MapImageRenderer {
 
 	public DoublePoint getNearestCenter(DoublePoint point) {
 		return point;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.MapImageRenderer#cancel()
+	 */
+	public void cancel()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
