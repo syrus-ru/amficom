@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.28 2005/06/07 13:55:59 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.29 2005/06/14 11:21:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/07 13:55:59 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/14 11:21:58 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -62,8 +62,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	/* Transmit multiple objects but ids by condition */
 
 	public ParameterType_Transferable[] transmitParameterTypesButIdsByCondition(final Identifier_Transferable[] idsT,
-			final SessionKey_Transferable sessionKeyT,
-			final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final ParameterType_Transferable[] parameterTypes = new ParameterType_Transferable[length];
@@ -72,8 +72,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIdsByCondition(final Identifier_Transferable[] idsT,
-			final SessionKey_Transferable sessionKeyT,
-			final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final CharacteristicType_Transferable[] characteristicTypes = new CharacteristicType_Transferable[length];
@@ -82,8 +82,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	}
 
 	public Characteristic_Transferable[] transmitCharacteristicsButIdsByCondition(final Identifier_Transferable[] idsT,
-			final SessionKey_Transferable sessionKeyT,
-			final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+			final StorableObjectCondition_Transferable conditionT,
+			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Characteristic_Transferable[] characteristics = new Characteristic_Transferable[length];
