@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.8 2005/06/10 16:14:20 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.9 2005/06/14 11:48:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/10 16:14:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/14 11:48:14 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -116,21 +116,26 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	protected static UserLogin getUserLogin(final SessionKey sessionKey) {
+		Log.debugMessage("LoginProcessor.getUserLogin | Getting login for session key '" + sessionKey
+				+ "'; found: " + loginMap.containsKey(sessionKey), Log.DEBUGLEVEL08);
+		printUserLogins();
 		return (UserLogin) loginMap.get(sessionKey);
 	}
 
 	protected static UserLogin removeUserLogin(final SessionKey sessionKey) {
+		Log.debugMessage("LoginProcessor.getUserLogin | Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = (UserLogin) loginMap.remove(sessionKey);
 		printUserLogins();
 		return userLogin;
 	}
 
 	private static void printUserLogins() {
-		Log.debugMessage("LoginProcessor.printUserLogins | Logged in: ", Log.DEBUGLEVEL10);
+		Log.debugMessage("#### LoginProcessor.printUserLogins | Logged in: ", Log.DEBUGLEVEL10);
 		for (final Iterator it = loginMap.keySet().iterator(); it.hasNext();) {
 			final SessionKey sessionKey = (SessionKey) it.next();
 			final UserLogin userLogin = (UserLogin) loginMap.get(sessionKey);
-			Log.debugMessage("'" + userLogin.getUserId()
+			Log.debugMessage("#### Session key: '" + sessionKey + "'", Log.DEBUGLEVEL10);
+			Log.debugMessage("#### '" + userLogin.getUserId()
 					+ "' from: " + userLogin.getLoginDate()
 					+ ", last: " + userLogin.getLastActivityDate(), Log.DEBUGLEVEL10);
 		}

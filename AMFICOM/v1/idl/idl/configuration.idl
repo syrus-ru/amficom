@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.88 2005/05/04 15:05:40 bass Exp $
+ * $Id: configuration.idl,v 1.89 2005/06/14 11:47:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -303,7 +303,7 @@ module corba {
 ///////////////////// Link /////////////////////
 	enum LinkSort{
 		LINKSORT_LINK,
-		LINKSORT_CABLELINK		
+		LINKSORT_CABLELINK
 	};
 
 	struct Link_Transferable {
