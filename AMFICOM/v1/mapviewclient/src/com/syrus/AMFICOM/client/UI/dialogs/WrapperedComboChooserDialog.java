@@ -1,5 +1,5 @@
 /**
- * $Id: WrapperedComboChooserDialog.java,v 1.1 2005/06/08 13:44:06 krupenn Exp $
+ * $Id: WrapperedComboChooserDialog.java,v 1.2 2005/06/14 11:29:53 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,138 +7,97 @@
  */
 package com.syrus.AMFICOM.client.UI.dialogs;
 
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
-import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @module commonclient_v1
  */
-public class WrapperedComboChooserDialog extends JDialog {
-	private static final Insets INSETS = new Insets(10, 10, 10, 10);
-
-	private JLabel jLabel = new JLabel();
-
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-
-	WrapperedComboBox comboBox = null;
-	private WrapperedListModel model = null;
-
-	private JButton buttonOk = new JButton();
-	private JButton buttonCancel = new JButton();
-
-	int retCode = 0;
-	Object selected;
-	
-	public static final int RET_OK = 1;
-	public static final int RET_CANCEL = 2;
-
-	protected WrapperedComboChooserDialog(
-			Frame parent,
-			String title,
-			boolean modal) {
-		super(parent, title, modal);
-
-		this.comboBox = new WrapperedComboBox(
-				NamedObjectController.getInstance(), 
-				NamedObjectController.KEY_NAME, 
-				NamedObjectController.KEY_NAME);
-		this.model = (WrapperedListModel )this.comboBox.getModel();
-
-		try {
-			jbInit();
-			pack();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+public class WrapperedComboChooserDialog {
+	public static Object showChooserDialog(Collection contents) {
+		return showChooserDialog(
+				contents, 
+				null, 
+				NamedObjectWrapper.getInstance(),
+				NamedObjectWrapper.KEY_NAME,
+				NamedObjectWrapper.KEY_NAME);
 	}
 
-	public WrapperedComboChooserDialog(Collection contents) {
-		this(Environment.getActiveWindow(), LangModelGeneral.getString("SelectElement"), false);
-		setContents(contents);
+	public static Object showChooserDialog(
+			Collection contents,
+			Object object) {
+		return showChooserDialog(
+				contents, 
+				object, 
+				NamedObjectWrapper.getInstance(),
+				NamedObjectWrapper.KEY_NAME,
+				NamedObjectWrapper.KEY_NAME);
 	}
 
-	public WrapperedComboChooserDialog(Collection contents, Object or) {
-		this(contents);
-		setSelected(or);
+	public static Object showChooserDialog(
+			Collection contents,
+			Wrapper wrapper,
+			String key,
+			String compareKey) {
+		return showChooserDialog(contents, null, wrapper, key, compareKey);
 	}
 
-	private void jbInit() throws Exception {
-		getContentPane().setLayout(this.gridBagLayout1);
+		public static Object showChooserDialog(
+			Collection contents,
+			Object object,
+			Wrapper wrapper,
+			String key,
+			String compareKey) {
 
-		this.setResizable(false);
-
-		this.jLabel.setText(LangModelGeneral.getString("Element"));
-
-		this.buttonOk.setText(LangModelGeneral.getString("Choose"));
-		this.buttonOk.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-						WrapperedComboChooserDialog.this.selected = WrapperedComboChooserDialog.this.comboBox.getSelectedItem();
-						WrapperedComboChooserDialog.this.retCode = WrapperedComboChooserDialog.RET_OK;
-					} catch(Exception ex) {
-						WrapperedComboChooserDialog.this.selected = null;
-						WrapperedComboChooserDialog.this.retCode = WrapperedComboChooserDialog.RET_CANCEL;
-						ex.printStackTrace();
-					}
-					dispose();
-				}
-			});
-		this.buttonCancel.setText(LangModelGeneral.getString("Cancel"));
-		this.buttonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-					WrapperedComboChooserDialog.this.retCode = WrapperedComboChooserDialog.RET_CANCEL;
-					WrapperedComboChooserDialog.this.dispose();
-				}
-			});
-
-		this.jLabel.setPreferredSize(new Dimension(130, 20));
-		this.comboBox.setPreferredSize(new Dimension(200, 20));
+		Object returnObject = null;
 		
-		getContentPane().add(this.jLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, INSETS, 0, 0));
-		getContentPane().add(this.comboBox, ReusedGridBagConstraints.get(2, 0, 2, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, INSETS, 0, 0));
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		JLabel jLabel = new JLabel(LangModelGeneral.getString("Element"));
+		WrapperedComboBox comboBox = new WrapperedComboBox(
+				wrapper, 
+				new ArrayList(contents),
+				key, 
+				compareKey);
+		if(object != null)
+			comboBox.setSelectedItem(object);
+		
+		mainPanel.add(jLabel, BorderLayout.WEST);
+		mainPanel.add(comboBox, BorderLayout.CENTER);
 
-		getContentPane().add(this.buttonOk, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, INSETS, 0, 0));
-		getContentPane().add(this.buttonCancel, ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, INSETS, 0, 0));
+		final String okButton = LangModelGeneral.getString("Choose");
+		final String cancelButton = LangModelGeneral.getString("Cancel");
+
+		int result = JOptionPane.showOptionDialog(
+				Environment.getActiveWindow(), 
+				mainPanel,
+				LangModelGeneral.getString("SelectElement"),
+				JOptionPane.OK_CANCEL_OPTION, 
+				JOptionPane.PLAIN_MESSAGE, 
+				null,
+				new Object[] { okButton, cancelButton }, 
+				okButton);
+		
+		if (result == JOptionPane.OK_OPTION) {
+			returnObject = comboBox.getSelectedItem();
+		}
+		
+		return returnObject;
 	}
 
-	public void setSelected(Object or) {
-		this.model.setSelectedItem(or);
+	private WrapperedComboChooserDialog() {
+		// empty
 	}
-
-	public void setContents(Collection contents) {
-		this.model.removeAllElements();
-		this.model.addElements(contents);
-	}
-
-	public Object getSelected() {
-		return this.selected;
-	}
-
-	public int getReturnCode() {
-		return this.retCode;
-	}
-
-	public void setLabel(String text) {
-		this.jLabel.setText(text);
-	}
-
 }
 
