@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.3 2005/06/10 07:39:39 bob Exp $
+ * $Id: StatusBar.java,v 1.4 2005/06/14 11:56:31 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/10 07:39:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/14 11:56:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -76,8 +76,12 @@ public class StatusBar implements PropertyChangeListener {
 
 		public TableHeaderCellRenderer() {
 			this.setHorizontalAlignment(SwingConstants.CENTER);
-			this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, Color.WHITE, Color.WHITE,
-				Color.LIGHT_GRAY, Color.GRAY));
+			this.setBorder(BorderFactory.createBevelBorder(
+				BevelBorder.LOWERED,
+				Color.WHITE,
+				Color.WHITE,
+				new Color(142, 142, 142),
+				new Color(99, 99, 99)));
 		}
 
 		public Component getTableCellRendererComponent(	JTable jtable,
@@ -124,6 +128,8 @@ public class StatusBar implements PropertyChangeListener {
 		this.table.setRowHeight(1);
 
 		this.table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+
+			private static final long	serialVersionUID	= 4968210937248459683L;
 
 			public Component getTableCellRendererComponent(	JTable jtable,
 															Object value,
