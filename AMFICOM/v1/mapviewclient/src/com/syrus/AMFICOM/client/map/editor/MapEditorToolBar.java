@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.15 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.16 2005/06/14 12:07:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,32 +9,25 @@
 
 package com.syrus.AMFICOM.client.map.editor;
 
-import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.ApplicationModelListener;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
-
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JToolBar;
-import java.awt.event.ActionListener;
+
+import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/14 12:07:14 $
  * @module mapviewclient_v1
  */
-public class MapEditorToolBar extends JToolBar implements ApplicationModelListener {
-	private ApplicationModel aModel;
+public class MapEditorToolBar extends AbstractMainToolBar {
 
 	/**
 	 * <img src="images/open_session.gif">.
@@ -43,11 +36,11 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	/**
 	 * <img src="images/close_session.gif">.
 	 */
-	JButton buttonCloseSession = new JButton();
+	JButton sessionClose = new JButton();
 	/**
 	 * <img src="images/domains.gif">.
 	 */
-	JButton menuSessionDomain = new JButton();
+	JButton sessionDomain = new JButton();
 	/**
 	 * <img src="images/new.gif">.
 	 */
@@ -104,45 +97,12 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	public MapEditorToolBar() {
 		super();
 
-		try {
-			jbInit();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		createButtons();
 	}
 
-	private void jbInit() {
-		ActionListener actionAdapter = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				buttonActionPerformed(e);
-			}
-		};
+	private void createButtons() {
 
 		Dimension buttonSize = new Dimension(BTN_SIZE, BTN_SIZE);
-
-		this.sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif").
-				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
-		this.sessionOpen.setMaximumSize(buttonSize);
-		this.sessionOpen.setPreferredSize(buttonSize);
-		this.sessionOpen.setToolTipText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_NEW));
-		this.sessionOpen.setName(MapEditorApplicationModel.ITEM_SESSION_NEW);
-		this.sessionOpen.addActionListener(actionAdapter);
-
-		this.buttonCloseSession.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_session.gif").
-				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
-		this.buttonCloseSession.setMaximumSize(buttonSize);
-		this.buttonCloseSession.setPreferredSize(buttonSize);
-		this.buttonCloseSession.setToolTipText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
-		this.buttonCloseSession.setName(MapEditorApplicationModel.ITEM_SESSION_CLOSE);
-//		this.buttonCloseSession.addActionListener(actionAdapter);
-
-		this.menuSessionDomain.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/domains.gif").
-				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
-		this.menuSessionDomain.setMaximumSize(buttonSize);
-		this.menuSessionDomain.setPreferredSize(buttonSize);
-		this.menuSessionDomain.setToolTipText(LangModelGeneral.getString(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
-		this.menuSessionDomain.setName(MapEditorApplicationModel.ITEM_SESSION_DOMAIN);
-//		this.menuSessionDomain.addActionListener(actionAdapter);
 
 		this.menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -150,7 +110,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapNew.setPreferredSize(buttonSize);
 		this.menuMapNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_NEW));
 		this.menuMapNew.setName(MapEditorApplicationModel.ITEM_MAP_NEW);
-		this.menuMapNew.addActionListener(actionAdapter);
+		this.menuMapNew.addActionListener(super.actionListener);
 
 		this.menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -158,7 +118,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapOpen.setPreferredSize(buttonSize);
 		this.menuMapOpen.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_OPEN));
 		this.menuMapOpen.setName(MapEditorApplicationModel.ITEM_MAP_OPEN);
-		this.menuMapOpen.addActionListener(actionAdapter);
+		this.menuMapOpen.addActionListener(super.actionListener);
 
 		this.menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -166,7 +126,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapSave.setPreferredSize(buttonSize);
 		this.menuMapSave.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_SAVE));
 		this.menuMapSave.setName(MapEditorApplicationModel.ITEM_MAP_SAVE);
-		this.menuMapSave.addActionListener(actionAdapter);
+		this.menuMapSave.addActionListener(super.actionListener);
 
 		this.menuMapAddMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addmap.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -174,7 +134,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapAddMap.setPreferredSize(buttonSize);
 		this.menuMapAddMap.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
 		this.menuMapAddMap.setName(MapEditorApplicationModel.ITEM_MAP_ADD_MAP);
-		this.menuMapAddMap.addActionListener(actionAdapter);
+		this.menuMapAddMap.addActionListener(super.actionListener);
 
 		this.menuMapRemoveMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removemap.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -182,7 +142,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapRemoveMap.setPreferredSize(buttonSize);
 		this.menuMapRemoveMap.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
 		this.menuMapRemoveMap.setName(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP);
-		this.menuMapRemoveMap.addActionListener(actionAdapter);
+		this.menuMapRemoveMap.addActionListener(super.actionListener);
 
 		this.menuMapAddExternal.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addexternal.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -190,7 +150,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapAddExternal.setPreferredSize(buttonSize);
 		this.menuMapAddExternal.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
 		this.menuMapAddExternal.setName(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL);
-		this.menuMapAddExternal.addActionListener(actionAdapter);
+		this.menuMapAddExternal.addActionListener(super.actionListener);
 
 		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -198,15 +158,15 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapViewNew.setPreferredSize(buttonSize);
 		this.menuMapViewNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
 		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW);
-		this.menuMapViewNew.addActionListener(actionAdapter);
+		this.menuMapViewNew.addActionListener(super.actionListener);
 
-		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openview.gif").
+		this.menuMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
-		this.menuMapViewNew.setMaximumSize(buttonSize);
-		this.menuMapViewNew.setPreferredSize(buttonSize);
-		this.menuMapViewNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
-		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
-		this.menuMapViewNew.addActionListener(actionAdapter);
+		this.menuMapViewOpen.setMaximumSize(buttonSize);
+		this.menuMapViewOpen.setPreferredSize(buttonSize);
+		this.menuMapViewOpen.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		this.menuMapViewOpen.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
+		this.menuMapViewOpen.addActionListener(super.actionListener);
 
 		this.menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/saveview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -214,7 +174,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapViewSave.setPreferredSize(buttonSize);
 		this.menuMapViewSave.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
 		this.menuMapViewSave.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE);
-		this.menuMapViewSave.addActionListener(actionAdapter);
+		this.menuMapViewSave.addActionListener(super.actionListener);
 
 		this.menuMapViewAddScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -222,7 +182,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapViewAddScheme.setPreferredSize(buttonSize);
 		this.menuMapViewAddScheme.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
 		this.menuMapViewAddScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
-		this.menuMapViewAddScheme.addActionListener(actionAdapter);
+		this.menuMapViewAddScheme.addActionListener(super.actionListener);
 
 		this.menuMapViewRemoveScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -230,7 +190,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuMapViewRemoveScheme.setPreferredSize(buttonSize);
 		this.menuMapViewRemoveScheme.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
-		this.menuMapViewRemoveScheme.addActionListener(actionAdapter);
+		this.menuMapViewRemoveScheme.addActionListener(super.actionListener);
 
 		this.menuViewSetup.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/mapsetup.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
@@ -238,13 +198,8 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		this.menuViewSetup.setPreferredSize(buttonSize);
 		this.menuViewSetup.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
 		this.menuViewSetup.setName(MapEditorApplicationModel.ITEM_VIEW_CONTROLS);
-		this.menuViewSetup.addActionListener(actionAdapter);
+		this.menuViewSetup.addActionListener(super.actionListener);
 
-		add(this.sessionOpen);
-//		add(this.buttonCloseSession);
-//		addSeparator();
-//		add(this.menuSessionDomain);
-		addSeparator();
 		add(this.menuMapNew);
 		add(this.menuMapOpen);
 		add(this.menuMapSave);
@@ -255,7 +210,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		add(this.menuMapAddExternal);
 		addSeparator();
 		add(this.menuMapViewNew);
-		add(this.menuMapViewNew);
+		add(this.menuMapViewOpen);
 		add(this.menuMapViewSave);
 		addSeparator();
 		add(this.menuMapViewAddScheme);
@@ -263,63 +218,44 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		addSeparator();
 		add(this.menuViewSetup);
 		addSeparator();
-	}
 
-	public void setModel(ApplicationModel a) {
-		this.aModel = a;
-	}
+		this.addApplicationModelListener(new ApplicationModelListener() {
 
-	public ApplicationModel getModel() {
-		return this.aModel;
-	}
+			public void modelChanged(String e[]) {
+				this.modelChanged("");
+			}
 
-	public void modelChanged(String e) {
-		modelChanged(new String[] { e
+			public void modelChanged(String elementName) {
+				MapEditorToolBar.this.menuMapNew.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_NEW));
+				MapEditorToolBar.this.menuMapNew.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_NEW));
+				MapEditorToolBar.this.menuMapOpen.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_OPEN));
+				MapEditorToolBar.this.menuMapOpen.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_OPEN));
+				MapEditorToolBar.this.menuMapSave.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_SAVE));
+				MapEditorToolBar.this.menuMapSave.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE));
+
+				MapEditorToolBar.this.menuMapAddMap.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+				MapEditorToolBar.this.menuMapAddMap.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+				MapEditorToolBar.this.menuMapRemoveMap.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+				MapEditorToolBar.this.menuMapRemoveMap.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+
+				MapEditorToolBar.this.menuMapAddExternal.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+				MapEditorToolBar.this.menuMapAddExternal.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+		
+				MapEditorToolBar.this.menuMapViewNew.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+				MapEditorToolBar.this.menuMapViewNew.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+				MapEditorToolBar.this.menuMapViewOpen.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+				MapEditorToolBar.this.menuMapViewOpen.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+				MapEditorToolBar.this.menuMapViewSave.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+				MapEditorToolBar.this.menuMapViewSave.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+
+				MapEditorToolBar.this.menuMapViewAddScheme.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+				MapEditorToolBar.this.menuMapViewAddScheme.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+				MapEditorToolBar.this.menuMapViewRemoveScheme.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+				MapEditorToolBar.this.menuMapViewRemoveScheme.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+		
+				MapEditorToolBar.this.menuViewSetup.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+				MapEditorToolBar.this.menuViewSetup.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+			}
 		});
-	}
-
-	public void modelChanged(String[] elementNames) {
-		this.sessionOpen.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_NEW));
-		this.sessionOpen.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_NEW));
-		this.buttonCloseSession.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
-		this.buttonCloseSession.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_CLOSE));
-		this.menuSessionDomain.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
-		this.menuSessionDomain.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_SESSION_DOMAIN));
-
-		this.menuMapNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_NEW));
-		this.menuMapNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_NEW));
-		this.menuMapOpen.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_OPEN));
-		this.menuMapOpen.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_OPEN));
-		this.menuMapSave.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_SAVE));
-		this.menuMapSave.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE));
-		this.menuMapAddMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
-		this.menuMapAddMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
-		this.menuMapRemoveMap.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
-		this.menuMapRemoveMap.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
-		this.menuMapAddExternal.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
-		this.menuMapAddExternal.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
-
-		this.menuMapViewNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
-		this.menuMapViewNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
-		this.menuMapViewNew.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
-		this.menuMapViewNew.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
-		this.menuMapViewSave.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
-		this.menuMapViewSave.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
-		this.menuMapViewAddScheme.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
-		this.menuMapViewAddScheme.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
-		this.menuMapViewRemoveScheme.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
-		this.menuMapViewRemoveScheme.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
-
-		this.menuViewSetup.setVisible(this.aModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
-		this.menuViewSetup.setEnabled(this.aModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
-	}
-
-	public void buttonActionPerformed(ActionEvent e) {
-		if(this.aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = this.aModel.getCommand(s);
-		command.execute();
 	}
 }
