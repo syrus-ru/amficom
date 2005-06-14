@@ -1,3 +1,5 @@
 *.jar
 classes
-
+.mach
+.project
+.classpath
