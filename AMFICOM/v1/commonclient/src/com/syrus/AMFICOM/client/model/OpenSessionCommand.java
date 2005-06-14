@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.7 2005/06/10 10:52:42 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.8 2005/06/14 11:26:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,14 +38,15 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.LoginRestorer;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/06/10 10:52:42 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/14 11:26:36 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -60,8 +61,6 @@ public class OpenSessionCommand extends AbstractCommand {
 	private static String			password;
 
 	private static boolean			logged	= false;
-
-	private static LoginRestorer	loginRestorer;
 
 	public OpenSessionCommand(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -84,7 +83,9 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	private boolean executeRemote() {
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral.getString("StatusBar.OpeningSession")));
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
+																	LangModelGeneral
+																			.getString("StatusBar.OpeningSession")));
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
 
 		if (System.getProperty("com.amficom.login") == null || System.getProperty("com.amficom.password") == null) {
@@ -97,106 +98,92 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		if (!OpenSessionCommand.logged) {
 			this.dispatcher
-					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral.getString("StatusBar.Aborted")));
+					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
+																LangModelGeneral.getString("StatusBar.Aborted")));
 			return true;
 		}
-		// else
-		{
-			/* TODO login ! */
-			final String login1 = OpenSessionCommand.login;
-			final String password1 = OpenSessionCommand.password;
 
-			if (loginRestorer == null) {
-				loginRestorer = new LoginRestorer() {
+		final Dispatcher dispatcher1 = this.dispatcher;
 
-					/* TODO just dummy login restorer */
-					public String getLogin() {
-						return login1;
-					}
 
-					public String getPassword() {
-						return password1;
-					}
+		Set availableDomains;
+		try {
+			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment
+					.getInstance(ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1));
 
-					public boolean restoreLogin() {
-						return true;
-					}
-				};
-			}
-			try {
+			this.dispatcher
+					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
+																LangModelGeneral.getString("StatusBar.InitStartupData")));
 
-				ClientSessionEnvironment.createInstance(ClientSessionEnvironment.SESSION_KIND_MEASUREMENT,
-					loginRestorer);
-			} catch (CommunicationException e) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-						.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
-					JOptionPane.ERROR_MESSAGE, null);
-				return false;
-			}
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
+																		true));
 
-			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+			clientSessionEnvironment.login(login, password);
+			availableDomains = LoginManager.getAvailableDomains();
+		} catch (IllegalDataException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel.getString("Unknown session kind"),
+				LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
+																		false));
+			return false;
+		} catch (CommunicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModel.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
+				JOptionPane.ERROR_MESSAGE, null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
+																		false));
+			return false;
+		} catch (LoginException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel.getString("errorWrongLogin"),
+				LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
+																		false));
+			return false;
+		}
 
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-														LangModelGeneral.getString("StatusBar.InitStartupData")));
+		final Set availableDomains1 = availableDomains;
 
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
-			
+		CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
-			Set availableDomains;
-			try {
-				clientSessionEnvironment.login(login1, password1);
-				this.dispatcher.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
+			public void run() {
+				dispatcher1
+						.firePropertyChange(new StatusMessageEvent(
+																	OpenSessionCommand.this,
+																	StatusMessageEvent.STATUS_MESSAGE,
+																	LangModelGeneral
+																			.getString("StatusBar.SessionHaveBeenOpened")));
+				dispatcher1.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
+																		ContextChangeEvent.SESSION_OPENED_EVENT));
+				dispatcher1.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
 					ContextChangeEvent.CONNECTION_OPENED_EVENT));
-				availableDomains = LoginManager.getAvailableDomains();
-			} catch (CommunicationException e) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-						.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
-					JOptionPane.ERROR_MESSAGE, null);
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-				return false;
-			} catch (LoginException e) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel.getString("errorWrongLogin"),
-					LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-				return false;
-			}
 
-			final Set availableDomains1 = availableDomains;
-			
-			final Dispatcher dispatcher1 = this.dispatcher;
 
-			CommonUIUtilities.invokeAsynchronously(new Runnable() {
+				// Берем сохраненный локально с прошлой сессии домен
+				Identifier domainId = Environment.getDomainId();
 
-				public void run() {
-					dispatcher1.firePropertyChange(new StatusMessageEvent(OpenSessionCommand.this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral.getString("StatusBar.SessionHaveBeenOpened")));
-					dispatcher1.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
-																ContextChangeEvent.SESSION_OPENED_EVENT));
-
-					// Берем сохраненный локально с прошлой сессии домен
-					Identifier domainId = Environment.getDomainId();
-
-					for (Iterator iterator = availableDomains1.iterator(); iterator.hasNext();) {
-						Domain domain = (Domain) iterator.next();
-						if (domain.getId().equals(domainId)) {
-							try {
-								LoginManager.selectDomain(domainId);
-								dispatcher1.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
-																			ContextChangeEvent.DOMAIN_SELECTED_EVENT));
-							} catch (CommunicationException e) {
-								JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-										.getString("Error server connection"), LangModel
-										.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);								
-								break;
-							}
-
+				for (Iterator iterator = availableDomains1.iterator(); iterator.hasNext();) {
+					Domain domain = (Domain) iterator.next();
+					if (domain.getId().equals(domainId)) {
+						try {
+							LoginManager.selectDomain(domainId);
+							dispatcher1
+									.firePropertyChange(new ContextChangeEvent(
+																				OpenSessionCommand.this,
+																				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+						} catch (CommunicationException e) {
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
+									.getString("Error server connection"),
+								LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
 							break;
 						}
-					}
-					dispatcher1.firePropertyChange(new StatusMessageEvent(OpenSessionCommand.this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-				}
-			}, "Идёт загрузка. Пожалуйста, подождите.");
 
-		}
+						break;
+					}
+				}
+				dispatcher1.firePropertyChange(new StatusMessageEvent(OpenSessionCommand.this,
+																		StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+			}
+		}, "Идёт загрузка. Пожалуйста, подождите.");
 		return true;
 	}
 

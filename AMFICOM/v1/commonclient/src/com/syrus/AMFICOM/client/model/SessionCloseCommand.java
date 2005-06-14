@@ -4,13 +4,13 @@ package com.syrus.AMFICOM.client.model;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/23 08:19:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/14 11:26:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -35,15 +35,13 @@ public class SessionCloseCommand extends AbstractCommand {
 
 	public void execute() {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Закрытие сессии..."));		
-		final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 		try {
+			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance(ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1));
+
 			clientSessionEnvironment.logout();
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Сессия закрыта"));
 			this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CLOSED_EVENT));
-		} catch (CommunicationException e) {
-			Log.errorException(e);
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка при закрытии сессии..."));
-		} catch (LoginException e) {
+		} catch (ApplicationException e) {
 			Log.errorException(e);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка при закрытии сессии..."));
 		}
