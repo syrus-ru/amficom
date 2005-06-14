@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.58 2005/06/06 14:43:06 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.59 2005/06/14 08:55:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/06 14:43:06 $
+ * @version $Revision: 1.59 $, $Date: 2005/06/14 08:55:52 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -43,9 +43,15 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 		catch (final CommunicationException ce) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
 		}
-		catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
+		catch (AMFICOMRemoteException are) {
+			//-Pass AMFICOMRemoteException upward -- do not catch it by 'throw Throwable' below
+			throw are;
+		}
+		catch (final Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION,
+					CompletionStatus.COMPLETED_PARTIALLY,
+					throwable.getMessage());
 		}
 	}
 
