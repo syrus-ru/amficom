@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.1 2005/06/06 12:19:08 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.2 2005/06/14 12:06:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/06/06 12:19:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/14 12:06:18 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -26,14 +26,6 @@ public class MapEditorApplicationModel extends ApplicationModel
 {
 	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties";
 	public static final String ITEM_EDIT_PROPERTIES = "mapActionEditProperties";
-
-	public static final String ITEM_SESSION = "menuSession";
-	public static final String ITEM_SESSION_NEW = "menuSessionNew";
-	public static final String ITEM_SESSION_CLOSE = "menuSessionClose";
-	public static final String ITEM_SESSION_CONNECTION = "menuSessionConnection";
-	public static final String ITEM_SESSION_CHANGE_PASSWORD = "menuSessionChangePassword";
-	public static final String ITEM_SESSION_DOMAIN = "menuSessionDomain";
-	public static final String ITEM_SESSION_EXIT = "menuExit";
 
 	public static final String ITEM_MAP = "menuMap";
 	public static final String ITEM_MAP_NEW = "menuMapNew";
@@ -68,29 +60,18 @@ public class MapEditorApplicationModel extends ApplicationModel
 	public static final String ITEM_REPORT = "menuReport";
 	public static final String ITEM_REPORT_CREATE = "menuReportCreate";
 
-	public static final String ITEM_HELP = "menuHelp";
-	public static final String ITEM_HELP_CONTENTS = "menuHelpContents";
-	public static final String ITEM_HELP_FIND = "menuHelpFind";
-	public static final String ITEM_HELP_TIPS = "menuHelpTips";
-	public static final String ITEM_HELP_START = "menuHelpStart";
-	public static final String ITEM_HELP_COURSE = "menuHelpCourse";
-	public static final String ITEM_HELP_HELP = "menuHelpHelp";
-	public static final String ITEM_HELP_SUPPORT = "menuHelpSupport";
-	public static final String ITEM_HELP_LICENSE = "menuHelpLicense";
-	public static final String ITEM_HELP_ABOUT = "menuHelpAbout";
-
 	public MapEditorApplicationModel()
 	{
 		add(ITEM_VIEW_PROPERTIES);
 		add(ITEM_EDIT_PROPERTIES);
 
-		add(MapEditorApplicationModel.ITEM_SESSION);
-		add(MapEditorApplicationModel.ITEM_SESSION_NEW);
-		add(MapEditorApplicationModel.ITEM_SESSION_CLOSE);
-		add(MapEditorApplicationModel.ITEM_SESSION_CONNECTION);
-		add(MapEditorApplicationModel.ITEM_SESSION_CHANGE_PASSWORD);
-		add(MapEditorApplicationModel.ITEM_SESSION_DOMAIN);
-		add(MapEditorApplicationModel.ITEM_SESSION_EXIT);
+		add(ApplicationModel.MENU_SESSION);
+		add(ApplicationModel.MENU_SESSION_NEW);
+		add(ApplicationModel.MENU_SESSION_CLOSE);
+		add(ApplicationModel.MENU_SESSION_CONNECTION);
+		add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
+		add(ApplicationModel.MENU_SESSION_DOMAIN);
+		add(ApplicationModel.MENU_EXIT);
 
 		add(MapEditorApplicationModel.ITEM_MAP);
 		add(MapEditorApplicationModel.ITEM_MAP_NEW);
@@ -124,15 +105,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add(MapEditorApplicationModel.ITEM_REPORT);
 		add(MapEditorApplicationModel.ITEM_REPORT_CREATE);
 
-		add(MapEditorApplicationModel.ITEM_HELP);
-		add(MapEditorApplicationModel.ITEM_HELP_CONTENTS);
-		add(MapEditorApplicationModel.ITEM_HELP_FIND);
-		add(MapEditorApplicationModel.ITEM_HELP_FIND);
-		add(MapEditorApplicationModel.ITEM_HELP_START);
-		add(MapEditorApplicationModel.ITEM_HELP_COURSE);
-		add(MapEditorApplicationModel.ITEM_HELP_HELP);
-		add(MapEditorApplicationModel.ITEM_HELP_SUPPORT);
-		add(MapEditorApplicationModel.ITEM_HELP_LICENSE);
-		add(MapEditorApplicationModel.ITEM_HELP_ABOUT);
+		add(ApplicationModel.MENU_HELP);
+		add(ApplicationModel.MENU_HELP_ABOUT);
 	}
 }
