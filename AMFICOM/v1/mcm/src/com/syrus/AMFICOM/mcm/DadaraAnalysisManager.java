@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.44 2005/06/15 09:54:55 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.45 2005/06/15 11:20:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/06/15 09:54:55 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/15 11:20:54 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -51,8 +51,7 @@ import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
-public class DadaraAnalysisManager implements AnalysisManager
-{
+public class DadaraAnalysisManager implements AnalysisManager {
 	// input SetParameters codenames
 	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodenames.REFLECTOGRAMMA;
 	public static final String CODENAME_DADARA_ETALON_MTM = ParameterTypeCodenames.DADARA_ETALON_MTM;
@@ -105,7 +104,14 @@ public class DadaraAnalysisManager implements AnalysisManager
 		}
 	}
 
-	public DadaraAnalysisManager(final Result measurementResult,
+	/**
+	 * This constructor is called only by Reflection API
+	 * @param measurementResult
+	 * @param analysis
+	 * @param etalon
+	 * @throws AnalysisException
+	 */
+	private DadaraAnalysisManager(final Result measurementResult,
 			final Analysis analysis,
 			final Set etalon) throws AnalysisException {
 		this.tracePars = new HashMap();
