@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.13 2005/06/15 10:15:13 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.14 2005/06/15 14:24:33 arseniy Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,13 +20,13 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/06/15 10:15:13 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/06/15 14:24:33 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
 {
-	private static final String PROPERTIES_FILE_NAME = "analysis.properties";
+	private static final String PROPERTIES_FILE_NAME = "analysis.ini";
 
 	private static AnalysisParameters defaultAP = new AnalysisParameters (
 			0.05, //минимальный уровень события
@@ -41,17 +41,20 @@ public class ClientAnalysisManager extends CoreAnalysisManager
     }
 
 	public ClientAnalysisManager() {
-		AnalysisParameters minuitParams;
+		AnalysisParameters minuitParams = null;
 		Heap.setMinuitDefaultParams(getDefaultAPClone());
 
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
 			String temp = properties.getProperty("parameters");
-			minuitParams = new AnalysisParameters(temp, defaultAP);
+			if (temp != null)
+				minuitParams = new AnalysisParameters(temp, defaultAP);
 		} catch (IOException ex) {
-			minuitParams = (AnalysisParameters)defaultAP.clone();
+			// just ignore, that's ok
 		}
+		if (minuitParams == null)
+				minuitParams = (AnalysisParameters)defaultAP.clone();
 
 		// сохраняем в Pool
 		Heap.setMinuitAnalysisParams(minuitParams);
