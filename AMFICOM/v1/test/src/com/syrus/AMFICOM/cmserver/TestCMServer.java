@@ -1,5 +1,5 @@
 /*
- * $Id: TestCMServer.java,v 1.2 2005/06/14 12:50:31 arseniy Exp $
+ * $Id: TestCMServer.java,v 1.3 2005/06/15 12:24:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.cmserver;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import junit.extensions.TestSetup;
@@ -17,18 +18,24 @@ import junit.framework.TestSuite;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.ContextNameFactory;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Application;
@@ -36,7 +43,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/14 12:50:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/15 12:24:21 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -71,9 +78,11 @@ public final class TestCMServer extends CommonTest {
 	}
 
 	protected static void oneTimeSetUp() {
-		 Application.init(APPLICATION_NAME);
+		Application.init(APPLICATION_NAME);
 
-		 try {
+		CommonTest.oneTimeSetUp();
+
+		try {
 			final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
 			final String contextName = ContextNameFactory.generateContextName(serverHostName);
 			final CORBAServer corbaServer = new CORBAServer(contextName);
@@ -100,6 +109,8 @@ public final class TestCMServer extends CommonTest {
 			Log.errorException(e);
 			fail(e.getMessage());
 		}
+
+		CommonTest.oneTimeTearDown();
 	}
 
 	public void _testTransmitMeasurementsButIdsByCondition() throws AMFICOMRemoteException {
@@ -119,7 +130,7 @@ public final class TestCMServer extends CommonTest {
 		}
 	}
 
-	public void testTransmitMonitoredElementsButIdsByCondition() throws AMFICOMRemoteException {
+	public void _testTransmitMonitoredElementsButIdsByCondition() throws AMFICOMRemoteException {
 		final Set ids = new HashSet();
 		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
 		LinkedIdsCondition lic = new LinkedIdsCondition(new Identifier("Domain_19"), ObjectEntities.MONITOREDELEMENT_ENTITY_CODE);
@@ -130,5 +141,20 @@ public final class TestCMServer extends CommonTest {
 		for (int i = 0; i < monitoredElementsT.length; i++) {
 			Log.debugMessage("Loaded: " + monitoredElementsT[i].header.id.identifier_string, Log.DEBUGLEVEL02);
 		}
+	}
+
+	public void testTransmitRefreshedStorableObjects() throws AMFICOMRemoteException, ApplicationException {
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_ENTITY_CODE);
+		final Set set = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+		for (final Iterator it = set.iterator(); it.hasNext();) {
+			final Analysis analysis = (Analysis) it.next();
+			System.out.println("Analysis: " + analysis.getId() + ", " + analysis.getName());
+		}
+
+		final StorableObject_Transferable[] storableObjectsT = new StorableObject_Transferable[1];
+		Analysis analysis = (Analysis) set.iterator().next();
+		storableObjectsT[0] = analysis.getHeaderTransferable();
+		final Identifier_Transferable[] idsT = cmServerRef.transmitRefreshedStorableObjects(storableObjectsT, sessionKeyT);
+		System.out.println(idsT.length);
 	}
 }

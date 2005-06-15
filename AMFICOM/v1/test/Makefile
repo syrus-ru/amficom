@@ -1,7 +1,7 @@
 # Simple Makefile to compile single test class
 
-TEST_CLASS = TestParameterType
-TEST_PACKAGE = com.syrus.AMFICOM.general
+TEST_CLASS = TestCMServer
+TEST_PACKAGE = com.syrus.AMFICOM.cmserver
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
