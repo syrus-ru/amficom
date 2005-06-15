@@ -1,5 +1,5 @@
 /*-
- * $Id: ConditionKey.java,v 1.3 2005/05/18 12:42:50 bass Exp $
+ * $Id: ConditionKey.java,v 1.4 2005/06/15 07:21:46 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,15 +13,15 @@ import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:42:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/15 07:21:46 $
+ * @author $Author: max $
  * @module filterclient_v1
  */
 
 /**
  * The <code>ConditionKey</code> is used to create criteria for {@link com.syrus.AMFICOM.newFilter.Filter Filter}
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:42:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/15 07:21:46 $
+ * @author $Author: max $
  * @module filterclient_v1
  */
 public class ConditionKey {
@@ -44,7 +44,7 @@ public class ConditionKey {
 	public ConditionKey(String key, String name, byte type) {
 		this.name = name;
 		this.key = key;
-		this.type = type;		
+		this.type = type;
 	}
 	
 	/**
