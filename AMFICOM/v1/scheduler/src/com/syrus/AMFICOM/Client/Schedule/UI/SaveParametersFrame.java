@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.12 $, $Date: 2005/05/19 14:32:22 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/15 14:24:42 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
@@ -118,7 +118,7 @@ public class SaveParametersFrame extends JInternalFrame implements  PropertyChan
 
 				public void actionPerformed(ActionEvent e) {
 					TestReturnType returnType = SaveParametersFrame.this.getReturnType();
-					Log.debugMessage("SaveParametersFrame.refreshTestsReturnType | " + returnType.value(), Log.FINEST);
+					Log.debugMessage("SaveParametersFrame.refreshTestsReturnType | " + returnType.value(), Log.DEBUGLEVEL10);
 
 					java.util.Set selectedTestIds = SaveParametersFrame.this.schedulerModel.getSelectedTestIds();
 					if (selectedTestIds != null && !selectedTestIds.isEmpty()) {

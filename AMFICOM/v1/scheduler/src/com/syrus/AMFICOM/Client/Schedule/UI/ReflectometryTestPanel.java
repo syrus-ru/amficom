@@ -67,8 +67,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/07 17:46:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2005/06/15 14:24:42 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -1005,8 +1005,12 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public void setSet(Set set) {
 		if (this.skip) {
 			return;
-		}
-
+		}		
+		
+		if (this.setId != null && this.setId.equals(set.getId())) {
+			return;
+		}		
+		
 		this.skip = true;
 		if (this.unchangedObjects == null) {
 			this.unchangedObjects = new HashMap();

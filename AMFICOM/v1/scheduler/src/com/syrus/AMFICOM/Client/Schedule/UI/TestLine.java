@@ -30,9 +30,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -194,20 +196,34 @@ public class TestLine extends TimeLine {
 			// testTimeItem.width " + (testTimeItem.x + testTimeItem.width),
 			// Log.FINEST);
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
-				try {
 					if (this.selectedTestIds == null) {
 						this.selectedTestIds = new HashSet();
 					}
-					Test test = (Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object, true);
+					try {
+					final Test test = (Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object,
+						true);
 					this.selectedTestIds.add(test.getId());
-					this.skip = true;
-					this.schedulerModel.addSelectedTest(test);
-					this.skip = false;
+
+					CommonUIUtilities.invokeAsynchronously(new Runnable() {
+
+						public void run() {
+							try {
+
+								TestLine.this.skip = true;
+								TestLine.this.schedulerModel.addSelectedTest(test);
+								TestLine.this.skip = false;
+							} catch (ApplicationException e) {
+								AbstractMainFrame.showErrorMessage(TestLine.this, e);
+							}
+
+						}
+					}, LangModelGeneral.getString("Message.Information.PlsWait"));
 					// Log.debugMessage("TestLine.selectTest | select " +
 					// ((Test) testTimeItem.object).getId(), Log.FINEST);
 				} catch (ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(this, e);
+					AbstractMainFrame.showErrorMessage(TestLine.this, e);
 				}
+				
 				this.selectedItems.add(testTimeItem);
 				// Log.debugMessage("TestLine.selectTest | selectedItems.size()
 				// " + selectedItems.size(), Log.FINEST);
@@ -228,8 +244,7 @@ public class TestLine extends TimeLine {
 			for (Iterator iter = this.timeItems.iterator(); iter.hasNext();) {
 				TestTimeItem element = (TestTimeItem) iter.next();
 				if (((Identifier) element.object).equals(testId)) {
-					int x = element.x;
-					rectangle = new Rectangle(x - PlanPanel.MARGIN / 2, 0, element.x, this.getHeight()
+					rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.getWidth(), this.getHeight()
 							- (this.titleHeight / 2 + 4) - 2);
 					break;
 				}
@@ -337,9 +352,7 @@ public class TestLine extends TimeLine {
 	}
 
 	public void updateTests() {
-		Log.debugMessage("TestLine.updateTests | 1 ", Log.FINEST);
 		if (this.skip) { return; }
-		Log.debugMessage("TestLine.updateTests | 2 ", Log.FINEST);
 		this.acquireTests();
 		this.updateTest();
 	}
@@ -407,7 +420,11 @@ public class TestLine extends TimeLine {
 
 			public void mouseReleased(MouseEvent e) {
 				if (TestLine.this.currentPoint != null && TestLine.this.startPoint != null) {
-					long offset = (long) ((TestLine.this.currentPoint.x - TestLine.this.startPoint.x) / TestLine.this.scale);
+					int deltaX = TestLine.this.currentPoint.x - TestLine.this.startPoint.x;
+					if (Math.abs(deltaX) < 5) {
+						return;
+					}
+					long offset = (long) ((deltaX) / TestLine.this.scale);
 					// moveIntervals(offset);
 
 					if (TestLine.this.selectedItems != null && !TestLine.this.selectedItems.isEmpty()) {
@@ -653,7 +670,7 @@ public class TestLine extends TimeLine {
 		this.refreshTimeItems();
 	}
 
-	void refreshTimeItems() {
+	synchronized void refreshTimeItems() {
 		// Log.debugMessage("TestLine.refreshTimeItems | ", Log.FINEST);
 		this.timeItems.clear();
 		if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
@@ -744,16 +761,16 @@ public class TestLine extends TimeLine {
 			this.unsavedTestTimeItems.clear();
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				Log.debugMessage("TestLine.refreshTimeItems | testTimeItem.object: " + testTimeItem.object, Log.FINEST);
+//				Log.debugMessage("TestLine.refreshTimeItems | testTimeItem.object: " + testTimeItem.object, Log.FINEST);
 				if (((Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object, true)).isChanged()) {
 					it.remove();
 					this.unsavedTestTimeItems.add(testTimeItem);
 				}
 			}
 
-			Log.debugMessage("TestLine.refreshTimeItems | timeItems " + this.timeItems.size(), Log.FINEST);
-			Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + this.unsavedTestTimeItems.size(),
-				Log.FINEST);
+//			Log.debugMessage("TestLine.refreshTimeItems | timeItems " + this.timeItems.size(), Log.FINEST);
+//			Log.debugMessage("TestLine.refreshTimeItems | unsavedTestTimeItems " + this.unsavedTestTimeItems.size(),
+//				Log.FINEST);
 		} catch (ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(this, e);
 		}

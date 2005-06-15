@@ -25,12 +25,14 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -70,9 +72,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	// public static final String COMMAND_ADD_PARAM_PANEL = "AddParamPanel";
 	// //$NON-NLS-1$
 
-	public static final String	COMMAND_CHANGE_KIS					= "ChangeKIS";					
-	public static final String	COMMAND_CHANGE_ME_TYPE				= "ChangeMEType";				
-	
+	public static final String	COMMAND_CHANGE_KIS					= "ChangeKIS";
+	public static final String	COMMAND_CHANGE_ME_TYPE				= "ChangeMEType";
 
 	// //$NON-NLS-1$
 	public static final String	COMMAND_CLEAN						= "Clean";
@@ -81,16 +82,15 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	private static final int	FLAG_APPLY							= 1 << 1;
 	private static final int	FLAG_CREATE							= 1 << 2;
-	// private ApplicationContext aContext;
-	private Dispatcher			dispatcher;
+	Dispatcher					dispatcher;
 
 	private int					flag								= 0;
 
 	// private ObjectResourceTreeModel treeModel;
 	private java.util.Set		testIds								= new HashSet();
 	private Identifier			selectedFirstTestId;
-	private java.util.Set		selectedTestIds;
-	private Map					measurementSetupIdMap;
+	java.util.Set				selectedTestIds;
+	Map							measurementSetupIdMap;
 
 	public static final String	COMMAND_GET_NAME					= "GetName";
 	public static final String	COMMAND_SET_NAME					= "SetName";
@@ -134,16 +134,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public static final String	COMMAND_DATE_OPERATION				= "DateOperation";
 
-	// public static final String COMMAND_ONE_TIME_S
-
-	// private KISEditor kisEditor;
-
-	private MeasurementType		measurementType						= null;
+	MeasurementType				measurementType						= null;
 
 	// private IntervalsEditor intervalsEditor;
 	// private KIS kis = null;
 	private String				name								= null;
-	private MonitoredElement	monitoredElement					= null;
+	MonitoredElement			monitoredElement					= null;
 	private Identifier			analysisTypeId						= null;
 	private Identifier			evaluationTypeId					= null;
 	private Set					set									= null;
@@ -403,19 +399,27 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPES, null,
 																		measurementTypeItems));
 
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-					COMMAND_SET_ANALYSIS_TYPES,
-					null,
-					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
-							true,
-							true)));
+			this.dispatcher
+					.firePropertyChange(new PropertyChangeEvent(
+																this,
+																COMMAND_SET_ANALYSIS_TYPES,
+																null,
+																StorableObjectPool
+																		.getStorableObjectsByCondition(
+																			new EquivalentCondition(
+																									ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
+																			true, true)));
 
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-					COMMAND_SET_EVALUATION_TYPES,
-					null,
-					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
-							true,
-							true)));
+			this.dispatcher
+					.firePropertyChange(new PropertyChangeEvent(
+																this,
+																COMMAND_SET_EVALUATION_TYPES,
+																null,
+																StorableObjectPool
+																		.getStorableObjectsByCondition(
+																			new EquivalentCondition(
+																									ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+																			true, true)));
 
 			// if (!monitoredElements.isEmpty()) {
 			// LinkedIdsCondition linkedIdsCondition;
@@ -474,8 +478,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					// this.setEditor.setSet(measurementSetup1.getParameterSet());
 					// }
 					// this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
-					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
-																				null, measurementSetup1));
+//					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
+//																				null, measurementSetup1));
 				}
 			}
 
@@ -490,10 +494,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 
 		}
-
-		// for (int i = 0; i < this.testEditors.length; i++) {
-		// this.testEditors[i].updateTest();
-		// }
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));
 	}
 
@@ -618,7 +618,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
 																	LangModelSchedule
 																			.getString("StatusMessage.UpdatingTests"))); //$NON-NLS-1$
-		
+
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
 		if (this.measurementSetupIdMap != null) {
@@ -663,12 +663,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.testIds.add(test.getId());
 		}
 
-		this.dispatcher
-				.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-						.getString("StatusMessage.TestsUpdated"))); //$NON-NLS-1$
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
+																	LangModelSchedule
+																			.getString("StatusMessage.TestsUpdated"))); //$NON-NLS-1$
 		this.refreshTests();
-		this.dispatcher
-		.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
 
 	public java.util.Set getSelectedTestIds() {
@@ -708,7 +707,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.selectedTestIds.clear();
 		}
 		this.selectedFirstTestId = null;
-		this.refreshTest();
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));
 		// this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 		// COMMAND_REFRESH_TEST, null, null));
 	}
@@ -750,26 +749,28 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void refreshMeasurementSetups() {
+		// CommonUIUtilities.invokeAsynchronously(new Runnable() {
+		//
+		// public void run() {
 		StorableObjectCondition condition = null;
 
 		LinkedIdsCondition measurementTypeCondition = null;
 		Identifier identifier = null;
 		java.util.Set idSet = null;
 
-		if (this.measurementType != null) {
-			identifier = this.measurementType.getId();
+		if (SchedulerModel.this.measurementType != null) {
+			identifier = SchedulerModel.this.measurementType.getId();
 			measurementTypeCondition = new LinkedIdsCondition(identifier, ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
 		}
 
-		if (this.monitoredElement != null) {
-			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(
-																					this.monitoredElement.getId(),
-																					ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
+		if (SchedulerModel.this.monitoredElement != null) {
+			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(SchedulerModel.this.monitoredElement
+					.getId(), ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
 			try {
 				if (measurementTypeCondition != null) {
 					idSet = new HashSet(2);
 					idSet.add(identifier);
-					identifier = this.monitoredElement.getId();
+					identifier = SchedulerModel.this.monitoredElement.getId();
 					idSet.add(identifier);
 					condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.OR,
 														monitoredElementCondition);
@@ -780,46 +781,65 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			} catch (CreateObjectException e) {
 				// never !
 				e.printStackTrace();
+				return;
 			}
 		} else {
-			condition = measurementTypeCondition;
+			if (identifier != null) {
+				condition = measurementTypeCondition;
+			}
 		}
 
 		try {
 			if (condition != null) {
-				java.util.Set measurementSetupIds = (java.util.Set) (this.measurementSetupIdMap != null
-						? this.measurementSetupIdMap.get(idSet) : null);
-				java.util.Set measurementSetups = null;
-				if (measurementSetupIds == null) {
-					measurementSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
-					if (this.measurementSetupIdMap == null) {
-						this.measurementSetupIdMap = new HashMap();
+				final java.util.Set idSet1 = idSet;
+				final StorableObjectCondition condition1 = condition;
+				CommonUIUtilities.invokeAsynchronously(new Runnable() {
+
+					public void run() {
+						try {
+							java.util.Set measurementSetupIds = (java.util.Set) (SchedulerModel.this.measurementSetupIdMap != null
+									? SchedulerModel.this.measurementSetupIdMap.get(idSet1) : null);
+							java.util.Set measurementSetups = null;
+							if (measurementSetupIds == null) {
+								measurementSetups = StorableObjectPool.getStorableObjectsByCondition(condition1, true,
+									true);
+								if (SchedulerModel.this.measurementSetupIdMap == null) {
+									SchedulerModel.this.measurementSetupIdMap = new HashMap();
+								}
+								measurementSetupIds = new HashSet();
+								for (Iterator iterator = measurementSetups.iterator(); iterator.hasNext();) {
+									Identifiable identifiable = (Identifiable) iterator.next();
+									measurementSetupIds.add(identifiable.getId());
+								}
+								SchedulerModel.this.measurementSetupIdMap.put(idSet1, measurementSetupIds);
+							} else {
+								measurementSetups = StorableObjectPool.getStorableObjects(measurementSetupIds, true);
+							}
+							SchedulerModel.this.dispatcher
+									.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUPS,
+																				null, measurementSetups));
+						} catch (ApplicationException e) {
+							AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
+						}
+
 					}
-					measurementSetupIds = new HashSet();
-					for (Iterator iterator = measurementSetups.iterator(); iterator.hasNext();) {
-						Identifiable identifiable = (Identifiable) iterator.next();
-						measurementSetupIds.add(identifiable.getId());
-					}
-					this.measurementSetupIdMap.put(idSet, measurementSetupIds);
-				} else {
-					measurementSetups = StorableObjectPool.getStorableObjects(measurementSetupIds, true);
-				}
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUPS, null,
-																			measurementSetups));
+				}, LangModelGeneral.getString("Message.Information.PlsWait"));
 			}
 
-			if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
-				Collection measurementSetupIds = this.getSelectedTest().getMeasurementSetupIds();
+			if (SchedulerModel.this.selectedTestIds != null && !SchedulerModel.this.selectedTestIds.isEmpty()) {
+				Collection measurementSetupIds = getSelectedTest().getMeasurementSetupIds();
 				if (!measurementSetupIds.isEmpty()) {
 					Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
 					MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(
 						mainMeasurementSetupId, true);
 					if (measurementSetup1 != null) {
-						this.dispatcher
-								.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_SET, null,
-																			measurementSetup1.getParameterSet()));
-						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
-																					null, measurementSetup1));
+						// SchedulerModel.this.dispatcher
+						// .firePropertyChange(new PropertyChangeEvent(this,
+						// COMMAND_SET_SET, null,
+						// measurementSetup1.getParameterSet()));
+						SchedulerModel.this.dispatcher
+								.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP, null,
+																			measurementSetup1));
 
 					}
 				}
@@ -828,6 +848,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		} catch (ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 		}
+		// }
+		// }, LangModelGeneral.getString("Message.Information.PlsWait"));
 	}
 
 	public void commitChanges() throws ApplicationException {
@@ -959,8 +981,17 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.addGroupTests();
 	}
 
-	public void moveSelectedTests(Date startDate) {
+	public void moveSelectedTests(Date startDate) {		
+		
+		try {
+			throw new Exception();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Log.FINEST);
+		long t0 = System.currentTimeMillis();
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			try {
 				SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(),
@@ -990,6 +1021,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				}
 
 				if (correct) {
+					boolean moved = false;
 					for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
 						Test selectedTest = (Test) iterator.next();
 						if (selectedTest.isChanged()) {
@@ -1000,7 +1032,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							}
 							selectedTest.setStartTime(newStartDate);
 							selectedTest.setEndTime(newEndDate);
+							moved = true;
 						}
+					}
+					if (moved) {
+						this.refreshTests();
 					}
 				}
 			} catch (ApplicationException e) {
@@ -1009,7 +1045,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 			}
 		}
-		this.refreshTests();
+
+		// XXX - regenerate time line !!!
+
 		Test selectedTest = this.getSelectedTest();
 		if (selectedTest.getGroupTestId() == null) {
 			this.refreshTemporalStamps();
@@ -1017,6 +1055,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_START_GROUP_TIME, null,
 																		selectedTest.getStartTime()));
 		}
+		
+		long t1 = System.currentTimeMillis();
+		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1-t0), Log.FINEST);
 	}
 
 	private void addGroupTests() {
@@ -1182,7 +1223,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 		Log.debugMessage("SchedulerModel.isValid | result is " + result, Log.FINEST);
 		return result;
-	}	
+	}
 
 	public static Color getColor(TestStatus testStatus) {
 		return getColor(testStatus, false);

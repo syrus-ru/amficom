@@ -192,7 +192,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 															public void run() {
 																while (true) {
-																	if (waiting
+																	if (waiting 
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
 
 																		Date startDate = TimeParametersPanel.this
@@ -278,12 +278,11 @@ public class TimeParametersFrame extends JInternalFrame {
 
 					public void stateChanged(ChangeEvent e) {
 						if (!this.waiting) {
-//							this.event = ;
 							if (!this.startedThread) {
 								this.thread.start();
 								this.startedThread = true;
 							}
-							this.waiting =  isTestAgree(TimeParametersPanel.this.schedulerModel
+							this.waiting = !TimeParametersPanel.this.skipChanging && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 								.getSelectedTest());
 						}
 						this.previousEventTime = System.currentTimeMillis();						
@@ -412,13 +411,14 @@ public class TimeParametersFrame extends JInternalFrame {
 						
 
 						public void stateChanged(ChangeEvent e) {
+							
 							if (!this.waiting) {
 //								this.event = ;
 								if (!this.startedThread) {
 									this.thread.start();
 									this.startedThread = true;
 								}
-								this.waiting =  isTestAgree(TimeParametersPanel.this.schedulerModel
+								this.waiting = !TimeParametersPanel.this.skipChanging &&  TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 									.getSelectedTest());
 							}
 							this.previousEventTime = System.currentTimeMillis();						
@@ -552,7 +552,7 @@ public class TimeParametersFrame extends JInternalFrame {
 								this.thread.start();
 								this.startedThread = true;
 							}
-							this.waiting = isTestAgree(TimeParametersPanel.this.schedulerModel
+							this.waiting = !TimeParametersPanel.this.skipChanging && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 								.getSelectedTest());
 						}
 						this.previousEventTime = System.currentTimeMillis();						
@@ -1036,9 +1036,10 @@ public class TimeParametersFrame extends JInternalFrame {
 			Object newValue = e.getNewValue();
 			if (propertyName.equals(SchedulerModel.COMMAND_DATE_OPERATION)) {
 				/* TODO remove dummy skipChanging */
-//				this.skipChanging = true;
+				this.skipChanging = true;
 				Date date = (Date) newValue;
 				// if (!date.equals(this.getStartDate())){
+				Log.debugMessage("TimeParametersPanel.propertyChange | startDateSpinner ", Log.FINEST);
 				this.startDateSpinner.getModel().setValue(date);
 				this.startTimeSpinner.getModel().setValue(date);
 				this.skipChanging = false;
@@ -1058,13 +1059,13 @@ public class TimeParametersFrame extends JInternalFrame {
 				}
 			} else if(propertyName.equals(SchedulerModel.COMMAND_SET_START_GROUP_TIME)){
 				TimeParametersPanel.this.groupRadioButton.doClick();
-				TimeParametersPanel.this.skipChanging = true;
+				this.skipChanging = true;
 				Date date = (Date) newValue;
 				// if (!date.equals(this.getStartDate())){
+				Log.debugMessage("TimeParametersPanel.propertyChange | startDateSpinner ", Log.FINEST);
 				TimeParametersPanel.this.startDateSpinner.getModel().setValue(date);
 				TimeParametersPanel.this.startTimeSpinner.getModel().setValue(date);
-				TimeParametersPanel.this.skipChanging = false;
-				
+				this.skipChanging = false;
 			}
 		}
 		
@@ -1251,6 +1252,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		
 		public void setTestTemporalStamps(TestTemporalStamps testTemporalStamps) {		
 
+			this.skipChanging = true;
 			Date startTime = testTemporalStamps.getStartTime();
 			this.startDateSpinner.getModel().setValue(startTime);
 			this.startTimeSpinner.getModel().setValue(startTime);
@@ -1286,8 +1288,9 @@ public class TimeParametersFrame extends JInternalFrame {
 					this.continuosRadioButton.doClick();
 					break;
 
-			}		
-		}
+			}
+			this.skipChanging = false;
+		}		
 		
 		public void setTemporalPatterns(Collection temporalPatterns) {
 			this.temporalPatterns = temporalPatterns;
