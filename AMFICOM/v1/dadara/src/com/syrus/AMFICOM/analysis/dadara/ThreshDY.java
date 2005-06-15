@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.16 2005/05/01 09:35:17 saa Exp $
+ * $Id: ThreshDY.java,v 1.17 2005/06/15 15:00:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/05/01 09:35:17 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/15 15:00:01 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -26,13 +26,43 @@ public class ThreshDY extends Thresh
 	protected ThreshDY()
 	{ // do nothing
 	}
-
+	// shallow copy-constructor
+	protected ThreshDY(ThreshDY that)
+	{
+		super(that);
+		this.typeL = that.typeL;
+		this.values = that.values;
+	}
 	protected ThreshDY(int eventId, boolean typeL, int xMin, int xMax)
 	{
 		super(eventId, eventId, xMin, xMax);
 		this.typeL = typeL;
 		//this.values = new double[] { 0.1, 0.2, -0.1, -0.2 }; // defaults?
 		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 }; // FIXME: default values of thresholds
+	}
+
+	/**
+	 * —оздает DY-порог заданного уровн€ по текущему порогу.
+	 * ¬ созданном пороге SOFT и HARD пороги совпадают
+	 * (эта избыточность - издержки проектировани€).
+	 * @param level уровень, от 0.0 до 1.0
+	 * @return созданный порог запрошенного уровн€
+	 */
+	public ThreshDY makeWeightedThresholds(double level)
+	{
+		ThreshDY ret = new ThreshDY(this);
+		ret.values = new double[4];
+		double w1 = 1.0 - level;
+		double w2 = level;
+		ret.values[SOFT_UP] =
+			this.values[SOFT_UP] * w1 + this.values[HARD_UP] * w2;
+		ret.values[SOFT_DOWN] = 
+			this.values[SOFT_DOWN] * w1 + this.values[HARD_DOWN] * w2;
+		ret.snapAndLimit(SOFT_UP);
+		ret.snapAndLimit(SOFT_DOWN);
+		ret.values[HARD_UP] = ret.values[SOFT_UP];
+		ret.values[HARD_DOWN] = ret.values[SOFT_DOWN];
+		return ret;
 	}
 
     public Object clone() throws CloneNotSupportedException

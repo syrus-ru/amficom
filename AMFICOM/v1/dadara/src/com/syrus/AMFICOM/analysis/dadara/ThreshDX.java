@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.16 2005/05/06 12:10:32 saa Exp $
+ * $Id: ThreshDX.java,v 1.17 2005/06/15 15:00:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/05/06 12:10:32 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/15 15:00:00 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -22,7 +22,37 @@ public class ThreshDX extends Thresh
 	private boolean rise; // accessed from JNI
 
 	protected ThreshDX()
-	{ // do nothing
+	{ // do nothing -- for DIS reading
+	}
+
+	// shallow copy-constructor
+	protected ThreshDX(ThreshDX that)
+	{
+		super(that);
+		this.dX = that.dX;
+		this.rise = that.rise;
+	}
+
+	/**
+	 * —оздает DX-порог заданного уровн€ по текущему порогу.
+	 * ¬ созданном пороге SOFT и HARD пороги совпадают
+	 * (эта избыточность - издержки проектировани€).
+	 * @param level уровень, от 0.0 до 1.0
+	 * @return созданный порог запрошенного уровн€
+	 */
+	public ThreshDX makeWeightedThresholds(double level)
+	{
+		ThreshDX ret = new ThreshDX(this);
+		ret.dX = new int[4];
+		double w1 = 1.0 - level;
+		double w2 = level;
+		ret.dX[SOFT_UP] = (int)Math.round(
+				(this.dX[SOFT_UP] * w1 + this.dX[HARD_UP] * w2));
+		ret.dX[SOFT_DOWN] = (int)Math.round(
+				(this.dX[SOFT_DOWN] * w1 + this.dX[HARD_DOWN] * w2));
+		ret.dX[HARD_UP] = ret.dX[SOFT_UP];
+		ret.dX[HARD_DOWN] = ret.dX[SOFT_DOWN];
+		return ret;
 	}
 
     public Object clone() throws CloneNotSupportedException
