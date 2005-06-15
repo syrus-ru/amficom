@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.88 2005/06/05 18:39:59 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.89 2005/06/15 14:19:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/06/05 18:39:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2005/06/15 14:19:47 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -122,16 +122,20 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new ConfigurationStorableObjectPool(clazz);
+		if (size > 0) {
+			Class clazz = null;
+			try {
+				clazz = Class.forName(cacheClass.getName());
+				instance = new ConfigurationStorableObjectPool(clazz);
+			}
+			catch (ClassNotFoundException e) {
+				Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, using default");
+				instance = new ConfigurationStorableObjectPool();
+			}
+			init(cObjectLoader1, size);
+		} else {
+			init(cObjectLoader1, cacheClass);
 		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, using default");
-			instance = new ConfigurationStorableObjectPool();
-		}
-		init(cObjectLoader1, size);
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass) {

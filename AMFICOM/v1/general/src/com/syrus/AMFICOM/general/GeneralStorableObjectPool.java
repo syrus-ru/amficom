@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.29 2005/06/03 15:51:03 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.30 2005/06/15 14:20:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/03 15:51:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/06/15 14:20:13 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -67,16 +67,20 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	}
 
 	public static void init(GeneralObjectLoader gObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new GeneralStorableObjectPool(clazz);
+		if (size > 0) {
+			Class clazz = null;
+			try {
+				clazz = Class.forName(cacheClass.getName());
+				instance = new GeneralStorableObjectPool(clazz);
+			}
+			catch (ClassNotFoundException e) {
+				Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
+				instance = new GeneralStorableObjectPool();
+			}
+			init(gObjectLoader1, size);
+		} else {
+			init(gObjectLoader1, cacheClass);
 		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
-			instance = new GeneralStorableObjectPool();
-		}
-		init(gObjectLoader1, size);
 	}
 
 	public static void init(GeneralObjectLoader gObjectLoader1, Class cacheClass) {

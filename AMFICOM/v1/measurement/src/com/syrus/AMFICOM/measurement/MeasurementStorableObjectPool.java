@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.96 2005/06/05 18:31:27 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.97 2005/06/15 14:20:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/06/05 18:31:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.97 $, $Date: 2005/06/15 14:20:34 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -123,16 +123,20 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new MeasurementStorableObjectPool(clazz);
+		if (size > 0) {
+			Class clazz = null;
+			try {
+				clazz = Class.forName(cacheClass.getName());
+				instance = new MeasurementStorableObjectPool(clazz);
+			}
+			catch (ClassNotFoundException e) {
+				Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
+				instance = new MeasurementStorableObjectPool();
+			}
+			init(mObjectLoader1, size);
+		} else {
+			init(mObjectLoader1, cacheClass);
 		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
-			instance = new MeasurementStorableObjectPool();
-		}
-		init(mObjectLoader1, size);
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass) {
