@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 
@@ -59,7 +60,9 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 				noise_level = ev.overallStatsNoiseLevel98Pct();
 		}
 
-		updateMinTraceLevel(noise_level - 3);
+		// FIXME: способ выбора minTraceLevel (оба не годятся -- saa)
+		//updateMinTraceLevel(noise_level - 3); // по +3 дБ от ур. шума?
+		ClientAnalysisManager.setDefaultMinTraceLevel(); // между мин. фит. кр. и абс. мин. р/г? 
 	}
 
 	protected void updColorModel()
