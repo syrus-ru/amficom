@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.7 2005/06/15 07:50:18 bass Exp $
+-- $Id: CREATE.sql,v 1.8 2005/06/15 10:04:54 bass Exp $
 
 @@parameterset;
 @@setmelink;
@@ -7,8 +7,6 @@
 @@measurementsetupmelink;
 @@crontemporalpattern;
 @@periodicaltemporalpattern;
-@@intervalstemporalpattern;
-@@intervalstemporalpatternoffsetiddur;
 @@test;
 @@measurementsetuptestlink;
 @@measurement;
