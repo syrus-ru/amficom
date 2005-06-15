@@ -23,6 +23,62 @@ public class ReflectogramAlarm {
 	public int alarmType = TYPE_UNDEFINED;
     public double deltaX = 0.0;
 
+    // оценка степени превышения предупр. порога по сравнению с тревожным
+    // состояние "не определено" - если min > max
+    // начальное состояние - "не определено"
+    private double minMismatch = 1.0; // оценка снизу (состояние не определено)
+    private double maxMismatch = 0.0; // оценка сверху (состояние не определено)
+
+    /**
+     * Устанавливает степень превышения предупр. порога в состояние
+     * "определено" с диапазоном от min до max.
+     * min должен быть не более max
+     */
+    public void setMismatch(double min, double max) {
+    	if (min > max)
+    		throw new IllegalArgumentException("minMismatch > maxMismatch");
+    	this.minMismatch = min;
+    	this.maxMismatch = max;
+    }
+    /**
+     * Устанавливает степень превышения предупр. порога в состояние "не определено" 
+     */
+    public void unsetMismatch() {
+    	this.minMismatch = 1.0;
+    	this.maxMismatch = 0.0;
+    }
+
+    /**
+     * @return true, если степень превышения предупр. порога определена
+     */
+    public boolean hasMismatch() {
+    	return minMismatch <= maxMismatch;
+    }
+    /**
+     * @return нижняя оценка степени превышения предупредительного порога,
+     *   если степень превышения определена
+     *   ({@link #hasMismatch() возвращает true})
+     * @throws IllegalArgumentException, если степень превышения не определена
+     */
+    public double getMinMismatch() {
+    	if (hasMismatch())
+    		return minMismatch;
+    	else
+    		throw new IllegalArgumentException();
+    }
+    /**
+     * @return верхняя оценка степени превышения предупредительного порога,
+     *   если степень превышения определена
+     *   ({@link #hasMismatch() возвращает true})
+     * @throws IllegalArgumentException, если степень превышения не определена
+     */
+    public double getMaxMismatch() {
+    	if (hasMismatch())
+    		return maxMismatch;
+    	else
+    		throw new IllegalArgumentException();
+    }
+
     /*
 	public int getLevel()
 	{
@@ -59,6 +115,13 @@ public class ReflectogramAlarm {
 		ret.endPointCoord = dis.readInt();
 		ret.alarmType = dis.readInt();
         ret.deltaX = dis.readDouble();
+        if (dis.readBoolean()) {
+        	ret.minMismatch = dis.readDouble();
+        	ret.maxMismatch = dis.readDouble();
+        } else {
+        	ret.minMismatch = 1.0;
+        	ret.maxMismatch = 0.0;
+        }
 		return ret;
 	}
  
@@ -70,6 +133,13 @@ public class ReflectogramAlarm {
 		dos.writeInt(this.endPointCoord);
 		dos.writeInt(this.alarmType);
         dos.writeDouble(this.deltaX);
+        if (hasMismatch()) {
+        	dos.writeBoolean(true);
+        	dos.writeDouble(this.minMismatch);
+        	dos.writeDouble(this.maxMismatch);
+        } else {
+        	dos.writeBoolean(false);
+        }
 	}
 
 	public static ReflectogramAlarm createFromByteArray(byte[] bar) throws DataFormatException
@@ -163,6 +233,12 @@ public class ReflectogramAlarm {
     
     public String toString()
     {
-        return "ReflectogramAlarm(level=" + level + ",type=" + alarmType + ",begin=" + pointCoord + ",end=" + endPointCoord + ",distance=" + getDistance() + ")";
+        return "ReflectogramAlarm(level=" + level
+        + ",type=" + alarmType
+        + ",begin=" + pointCoord
+        + ",end=" + endPointCoord
+        + ",distance=" + getDistance()
+        + (hasMismatch() ? ",mismatch=" + getMinMismatch() + "-" + getMaxMismatch() : "")
+        + ")";
     }
 }
