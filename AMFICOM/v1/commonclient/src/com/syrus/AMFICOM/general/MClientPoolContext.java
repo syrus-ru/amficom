@@ -1,5 +1,5 @@
 /*
- * $Id: MClientPoolContext.java,v 1.9 2005/06/15 14:21:10 bob Exp $
+ * $Id: MClientPoolContext.java,v 1.10 2005/06/15 15:52:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,14 @@
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.measurement.CORBAMeasurementObjectLoader;
+import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.XMLMeasurementObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/15 14:21:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/06/15 15:52:22 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 final class MClientPoolContext extends ClientPoolContext {
@@ -31,13 +32,19 @@ final class MClientPoolContext extends ClientPoolContext {
 
 	public void init() {
 		super.init();
-		int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, -1);
+
+		MeasurementObjectLoader measurementObjectLoader;
 		if (super.xmlFile == null) {
-			MeasurementStorableObjectPool.init(new CORBAMeasurementObjectLoader(this.clientServantManager),
-					StorableObjectResizableLRUMap.class, measurementPoolSize);
-		} else {
-			MeasurementStorableObjectPool.init(new XMLMeasurementObjectLoader(super.xmlFile),
-				StorableObjectResizableLRUMap.class, measurementPoolSize);
+			measurementObjectLoader = new CORBAMeasurementObjectLoader(this.clientServantManager);
 		}
+		else {
+			measurementObjectLoader = new XMLMeasurementObjectLoader(super.xmlFile);
+		}
+
+		final Class lruMapClass = StorableObjectResizableLRUMap.class;
+
+		int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, -1);
+
+		MeasurementStorableObjectPool.init(measurementObjectLoader, lruMapClass, measurementPoolSize);
 	}
 }

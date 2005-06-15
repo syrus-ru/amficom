@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.9 2005/06/15 14:21:10 bob Exp $
+ * $Id: ClientPoolContext.java,v 1.10 2005/06/15 15:52:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,17 +10,19 @@ package com.syrus.AMFICOM.general;
 
 import java.io.File;
 
+import com.syrus.AMFICOM.administration.AdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.CORBAAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.XMLAdministrationObjectLoader;
 import com.syrus.AMFICOM.configuration.CORBAConfigurationObjectLoader;
+import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.XMLConfigurationObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/15 14:21:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/06/15 15:52:22 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 class ClientPoolContext extends PoolContext {
@@ -42,25 +44,29 @@ class ClientPoolContext extends PoolContext {
 	}
 
 	public void init() {
-		int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, -1);
-		int adminPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, -1);
-		int configPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, -1);
-		
-		if (this.xmlFile != null) {
-			GeneralStorableObjectPool.init(new XMLGeneralObjectLoader(this.xmlFile), 
-				StorableObjectResizableLRUMap.class, generalPoolSize);
-			AdministrationStorableObjectPool.init(new XMLAdministrationObjectLoader(this.xmlFile), 
-				StorableObjectResizableLRUMap.class, adminPoolSize);
-			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(this.xmlFile),
-				StorableObjectResizableLRUMap.class, configPoolSize);
-		} else {			
-			GeneralStorableObjectPool.init(new CORBAGeneralObjectLoader(this.clientServantManager),
-				StorableObjectResizableLRUMap.class, generalPoolSize);
-			AdministrationStorableObjectPool.init(new CORBAAdministrationObjectLoader(this.clientServantManager),
-				StorableObjectResizableLRUMap.class, adminPoolSize);
-			ConfigurationStorableObjectPool.init(new CORBAConfigurationObjectLoader(this.clientServantManager),
-				StorableObjectResizableLRUMap.class, configPoolSize);
+		GeneralObjectLoader generalObjectLoader;
+		AdministrationObjectLoader administrationObjectLoader;
+		ConfigurationObjectLoader configurationObjectLoader;
+		if (this.xmlFile == null) {
+			generalObjectLoader = new CORBAGeneralObjectLoader(this.clientServantManager);
+			administrationObjectLoader = new CORBAAdministrationObjectLoader(this.clientServantManager);
+			configurationObjectLoader = new CORBAConfigurationObjectLoader(this.clientServantManager);
 		}
+		else {
+			generalObjectLoader = new XMLGeneralObjectLoader(this.xmlFile);
+			administrationObjectLoader = new XMLAdministrationObjectLoader(this.xmlFile);
+			configurationObjectLoader = new XMLConfigurationObjectLoader(this.xmlFile);
+		}
+
+		final Class lruMapClass = StorableObjectResizableLRUMap.class;
+
+		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, -1);
+		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, -1);
+		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, -1);
+
+		GeneralStorableObjectPool.init(generalObjectLoader, lruMapClass, generalPoolSize);
+		AdministrationStorableObjectPool.init(administrationObjectLoader, lruMapClass, administrationPoolSize);
+		ConfigurationStorableObjectPool.init(configurationObjectLoader, lruMapClass, configurationPoolSize);
 	}
 
 }

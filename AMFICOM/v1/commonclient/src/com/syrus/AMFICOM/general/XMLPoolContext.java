@@ -1,5 +1,5 @@
 /*
- * $Id: XMLPoolContext.java,v 1.2 2005/05/23 08:40:15 bob Exp $
+ * $Id: XMLPoolContext.java,v 1.3 2005/06/15 15:52:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.scheme.XMLSchemeObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/23 08:40:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/06/15 15:52:22 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public final class XMLPoolContext extends PoolContext {
@@ -43,7 +43,7 @@ public final class XMLPoolContext extends PoolContext {
 		//EventStorableObjectPool.init(new XMLEventObjectLoader(cachePath), cacheClass);
 		ResourceStorableObjectPool.init(new XMLResourceObjectLoader(cachePath), cacheClass);
 		MapStorableObjectPool.init(new XMLMapObjectLoader(cachePath), cacheClass);
-		//MapViewStorableObjectPool.init(new XMLMapViewObjectLoader(cachePath), cacheClass);
 		SchemeStorableObjectPool.init(new XMLSchemeObjectLoader(cachePath), cacheClass);
+		//MapViewStorableObjectPool.init(new XMLMapViewObjectLoader(cachePath), cacheClass);
 	}
 }
