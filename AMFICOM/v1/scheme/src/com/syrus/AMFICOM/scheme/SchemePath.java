@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.34 2005/06/14 10:51:36 bass Exp $
+ * $Id: SchemePath.java,v 1.35 2005/06/15 09:56:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/14 10:51:36 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/15 09:56:11 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -291,6 +291,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 				this.description,
 				(Identifier_Transferable) this.transmissionPathId.getTransferable(),
 				(Identifier_Transferable) this.parentSchemeMonitoringSolutionId.getTransferable(),
+				(Identifier_Transferable) this.parentSchemeId.getTransferable(),
 				Identifier.createTransferables(this.characteristics));
 	}
 
@@ -479,6 +480,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		this.description = schemePath.description;
 		this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
 		this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
+		this.parentSchemeId = new Identifier(schemePath.parentSchemeId);
 	}
 
 	/*-********************************************************************

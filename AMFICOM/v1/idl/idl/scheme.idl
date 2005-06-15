@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.23 2005/05/20 11:45:18 bass Exp $
+ * $Id: scheme.idl,v 1.24 2005/06/15 09:56:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -297,6 +297,7 @@ module com {
 
 						general::corba::Identifier transmissionPathId;
 						general::corba::Identifier parentSchemeMonitoringSolutionId;
+						general::corba::Identifier parentSchemeId;
 
 						general::corba::IdentifierSeq characteristicIds;
 					};
