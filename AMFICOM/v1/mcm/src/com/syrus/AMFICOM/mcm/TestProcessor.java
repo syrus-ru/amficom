@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.53 2005/06/07 15:45:04 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.54 2005/06/15 12:23:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -34,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/06/07 15:45:04 $
+ * @version $Revision: 1.54 $, $Date: 2005/06/15 12:23:53 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -252,7 +253,9 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.flush(measurement.getId(), false);
+				StorableObjectPool.flush(ObjectEntities.RESULT_ENTITY_CODE, false);
+				//- Every action contains in dependencies of it's result
+				//StorableObjectPool.flush(measurement.getId(), false);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
