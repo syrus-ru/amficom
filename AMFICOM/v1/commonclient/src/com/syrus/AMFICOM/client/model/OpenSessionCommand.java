@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.9 2005/06/14 14:59:10 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.10 2005/06/15 05:43:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-//import com.syrus.AMFICOM.client.resource.LangModel;
+// import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/06/14 14:59:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/15 05:43:54 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -60,7 +60,10 @@ public class OpenSessionCommand extends AbstractCommand {
 	private static String			login;
 	private static String			password;
 
-	private static boolean			logged	= false;
+	private static final String		LOGIN_PROPERTY_KEY		= "com.amficom.login";
+	private static final String		PASSWORD_PROPERTY_KEY	= "com.amficom.password";
+
+	private static boolean			logged					= false;
 
 	public OpenSessionCommand(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -77,6 +80,14 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	public void execute() {
+		String loginProperty = System.getProperty(LOGIN_PROPERTY_KEY);
+		String passwordProperty = System.getProperty(PASSWORD_PROPERTY_KEY);
+		if (loginProperty != null) {
+			login = loginProperty;
+			password = passwordProperty;
+			logged = true;
+		}
+
 		while (!this.executeRemote()) {
 			Log.debugMessage("OpenSessionCommand.execute | try again ", Log.FINEST);
 		}
@@ -88,15 +99,11 @@ public class OpenSessionCommand extends AbstractCommand {
 																			.getString("StatusBar.OpeningSession")));
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
 
-		if (System.getProperty("_com.amficom.login") == null || System.getProperty("com.amficom.password") == null) {
+		if (!logged) {
 			this.showOpenSessionDialog(Environment.getActiveWindow());
-		} else {
-			OpenSessionCommand.login = System.getProperty("com.amficom.login");
-			OpenSessionCommand.password = System.getProperty("com.amficom.password");
-			OpenSessionCommand.logged = true;
 		}
 
-		if (!OpenSessionCommand.logged) {
+		if (!logged) {
 			this.dispatcher
 					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
 																LangModelGeneral.getString("StatusBar.Aborted")));
@@ -104,7 +111,6 @@ public class OpenSessionCommand extends AbstractCommand {
 		}
 
 		final Dispatcher dispatcher1 = this.dispatcher;
-
 
 		Set availableDomains;
 		try {
@@ -121,23 +127,28 @@ public class OpenSessionCommand extends AbstractCommand {
 			clientSessionEnvironment.login(login, password);
 			availableDomains = LoginManager.getAvailableDomains();
 		} catch (IllegalDataException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral.getString("StatusBar.IllegalSessionKind"),
-				LangModelGeneral.getString("Error.OpenSession"), JOptionPane.ERROR_MESSAGE, null);
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
-																		false));
-			return false;
-		} catch (CommunicationException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModelGeneral.getString("Error.ServerConnection"), LangModelGeneral.getString("Error.OpenSession"),
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral
+					.getString("StatusBar.IllegalSessionKind"), LangModelGeneral.getString("Error.OpenSession"),
 				JOptionPane.ERROR_MESSAGE, null);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
 																		false));
+			logged = false;
 			return false;
-		} catch (LoginException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral.getString("Error.WrongLogin"),
-				LangModelGeneral.getString("Error.OpenSession"), JOptionPane.ERROR_MESSAGE, null);
+		} catch (CommunicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral
+					.getString("Error.ServerConnection"), LangModelGeneral.getString("Error.OpenSession"),
+				JOptionPane.ERROR_MESSAGE, null);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
 																		false));
+			logged = false;
+			return false;
+		} catch (LoginException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.WrongLogin"), LangModelGeneral.getString("Error.OpenSession"),
+				JOptionPane.ERROR_MESSAGE, null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR,
+																		false));
+			logged = false;
 			return false;
 		}
 
@@ -155,8 +166,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				dispatcher1.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
 																		ContextChangeEvent.SESSION_OPENED_EVENT));
 				dispatcher1.firePropertyChange(new ContextChangeEvent(OpenSessionCommand.this,
-					ContextChangeEvent.CONNECTION_OPENED_EVENT));
-
+																		ContextChangeEvent.CONNECTION_OPENED_EVENT));
 
 				// Берем сохраненный локально с прошлой сессии домен
 				Identifier domainId = Environment.getDomainId();
@@ -171,8 +181,9 @@ public class OpenSessionCommand extends AbstractCommand {
 																				OpenSessionCommand.this,
 																				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 						} catch (CommunicationException e) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral.getString("Error.ServerConnection"),
-								LangModelGeneral.getString("Error.OpenSession"), JOptionPane.ERROR_MESSAGE, null);
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelGeneral
+									.getString("Error.ServerConnection"), LangModelGeneral
+									.getString("Error.OpenSession"), JOptionPane.ERROR_MESSAGE, null);
 							break;
 						}
 
@@ -241,6 +252,9 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		}
 
+		loginTextField.setText(login);
+		passwordTextField.setText("");
+		
 		loginTextField.requestFocus();
 		final String okButton = LangModelGeneral.getString("Login.Button.ok");
 		final String cancelButton = LangModelGeneral.getString("Login.Button.cancel");
