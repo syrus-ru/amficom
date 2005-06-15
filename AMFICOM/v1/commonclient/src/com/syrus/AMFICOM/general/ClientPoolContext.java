@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.8 2005/06/08 16:18:00 arseniy Exp $
+ * $Id: ClientPoolContext.java,v 1.9 2005/06/15 14:21:10 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,14 +16,19 @@ import com.syrus.AMFICOM.administration.XMLAdministrationObjectLoader;
 import com.syrus.AMFICOM.configuration.CORBAConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.XMLConfigurationObjectLoader;
+import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/08 16:18:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/06/15 14:21:10 $
+ * @author $Author: bob $
  * @module commonclient_v1
  */
 class ClientPoolContext extends PoolContext {
 
+	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
+	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
+	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
+	
 	ServerConnectionManager	clientServantManager;
 
 	protected File xmlFile;
@@ -37,20 +42,24 @@ class ClientPoolContext extends PoolContext {
 	}
 
 	public void init() {
- if (this.xmlFile != null) {
+		int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, -1);
+		int adminPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, -1);
+		int configPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, -1);
+		
+		if (this.xmlFile != null) {
 			GeneralStorableObjectPool.init(new XMLGeneralObjectLoader(this.xmlFile), 
-				StorableObjectResizableLRUMap.class);
+				StorableObjectResizableLRUMap.class, generalPoolSize);
 			AdministrationStorableObjectPool.init(new XMLAdministrationObjectLoader(this.xmlFile), 
-				StorableObjectResizableLRUMap.class);
+				StorableObjectResizableLRUMap.class, adminPoolSize);
 			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(this.xmlFile),
-				StorableObjectResizableLRUMap.class);
-		} else {
+				StorableObjectResizableLRUMap.class, configPoolSize);
+		} else {			
 			GeneralStorableObjectPool.init(new CORBAGeneralObjectLoader(this.clientServantManager),
-				StorableObjectResizableLRUMap.class);
+				StorableObjectResizableLRUMap.class, generalPoolSize);
 			AdministrationStorableObjectPool.init(new CORBAAdministrationObjectLoader(this.clientServantManager),
-				StorableObjectResizableLRUMap.class);
+				StorableObjectResizableLRUMap.class, adminPoolSize);
 			ConfigurationStorableObjectPool.init(new CORBAConfigurationObjectLoader(this.clientServantManager),
-				StorableObjectResizableLRUMap.class);
+				StorableObjectResizableLRUMap.class, configPoolSize);
 		}
 	}
 
