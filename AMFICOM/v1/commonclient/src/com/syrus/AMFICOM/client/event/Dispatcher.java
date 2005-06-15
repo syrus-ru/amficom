@@ -13,7 +13,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.5 $, $Date: 2005/06/10 07:39:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/15 05:43:31 $
  * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -42,12 +42,7 @@ public class Dispatcher {
 			listeners.add(listener);
 		} else {
 			Log.debugMessage("Dispatcher.addPropertyChangeListener | already added listener: " + listener.getClass().getName(), Log.WARNING);
-		}
-		
-		for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-			PropertyChangeListener changeListener = (PropertyChangeListener) iterator.next();
-			Log.debugMessage("Dispatcher.addPropertyChangeListener | changeListener : " + changeListener.getClass().getName(), Log.FINEST);
-		}
+		}	
 	}
 
 	// унрегистрация убирает связь подписчика с определенным событием
@@ -82,8 +77,6 @@ public class Dispatcher {
 	                                            
 	public synchronized void firePropertyChange(PropertyChangeEvent event, boolean canSendToSelf) {
 		String propertyName = event.getPropertyName();
-
-//		this.printListeners();
 		
 		List listeners = (List) this.events.get(propertyName);
 
