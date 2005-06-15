@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.27 2005/06/03 15:56:30 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.28 2005/06/15 14:53:52 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/06/03 15:56:30 $
+ * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/06/15 14:53:52 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -64,16 +64,20 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	}
 
 	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new ResourceStorableObjectPool(clazz);
+		if (size > 0) {
+			Class clazz = null;
+			try {
+				clazz = Class.forName(cacheClass.getName());
+				instance = new ResourceStorableObjectPool(clazz);
+			}
+			catch (ClassNotFoundException e) {
+				Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+				instance = new ResourceStorableObjectPool();
+			}
+			init(rObjectLoader1, size);
+		} else {
+			init(rObjectLoader1, cacheClass);
 		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
-			instance = new ResourceStorableObjectPool();
-		}
-		init(rObjectLoader1, size);
 	}
 
 	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass) {
