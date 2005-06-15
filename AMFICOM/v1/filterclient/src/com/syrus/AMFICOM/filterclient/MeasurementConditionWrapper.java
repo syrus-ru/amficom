@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementConditionWrapper.java,v 1.2 2005/06/15 07:08:10 max Exp $
+ * $Id: MeasurementConditionWrapper.java,v 1.3 2005/06/15 08:15:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/15 07:08:10 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/15 08:15:16 $
  * @author $Author: max $
  * @module filterclient_v1
  */
-public class MeasurementConditionWrapper {
+public class MeasurementConditionWrapper implements ConditionWrapper {
 	
 	private static short entityCode = ObjectEntities.MEASUREMENT_ENTITY_CODE;
 	
