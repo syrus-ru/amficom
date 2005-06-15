@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.15 2005/05/24 12:24:23 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.16 2005/06/15 09:37:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/24 12:24:23 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/15 09:37:11 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ParameterTypeCodenames {
 
 	public static final String REFLECTOGRAMMA = "reflectogramma";
+	public static final String REFLECTOGRAMMA_ETALON = "reflectogramma_etalon";
 
 	public static final String TRACE_WAVELENGTH = "ref_wvlen";
 	public static final String TRACE_LENGTH = "ref_trclen";
