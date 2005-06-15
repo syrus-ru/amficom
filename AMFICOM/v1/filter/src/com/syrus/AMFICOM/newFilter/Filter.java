@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.11 2005/05/18 12:42:50 bass Exp $
+ * $Id: Filter.java,v 1.12 2005/06/15 08:09:45 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.LinkedConditionLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/18 12:42:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/06/15 08:09:45 $
+ * @author $Author: max $
  * @module misc
  */
 public class Filter {
@@ -40,8 +40,8 @@ public class Filter {
 	
 	private short	entityCode;
 	
-	LogicalScheme logicalScheme;
-	LinkedConditionLoader linkedConditionLoader;
+	private LogicalScheme logicalScheme;
+	private LinkedConditionLoader linkedConditionLoader;
 		
 	public Filter(ConditionWrapper wrapper, LinkedConditionLoader linkedConditionLoader) {
 		this.keys = new ArrayList(wrapper.getKeys());
@@ -104,5 +104,13 @@ public class Filter {
 	}	
 	public List getConditionNames() {
 		return this.conditionNames;
+	}
+	
+	public LinkedConditionLoader getLinkedConditionLoader() {
+		return this.linkedConditionLoader;
+	}
+	
+	public LogicalScheme getLogicalScheme() {
+		return this.logicalScheme;
 	}
 }

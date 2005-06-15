@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.12 2005/06/04 16:56:22 bass Exp $
+ * $Id: FilterController.java,v 1.13 2005/06/15 08:09:45 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,13 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.newFilter.ConditionKey;
+import com.syrus.AMFICOM.newFilter.DateCondition;
+import com.syrus.AMFICOM.newFilter.Filter;
+import com.syrus.AMFICOM.newFilter.FilterView;
+import com.syrus.AMFICOM.newFilter.ListCondition;
+import com.syrus.AMFICOM.newFilter.NumberCondition;
+import com.syrus.AMFICOM.newFilter.StringCondition;
 import com.syrus.util.Log;
 
 import java.awt.event.ActionEvent;
@@ -40,8 +47,8 @@ import javax.swing.event.PopupMenuListener;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/04 16:56:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/06/15 08:09:45 $
+ * @author $Author: max $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener {
@@ -123,7 +130,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			List linkedObjects = key.getLinkedObjects();
 			if(linkedObjects == null) {
 				try {
-					List linkedStorableObjects = new ArrayList(this.model.linkedConditionLoader.loadLinkedCondition(key.getLinkedEntityCode()));
+					List linkedStorableObjects = new ArrayList(this.model.getLinkedConditionLoader().loadLinkedCondition(key.getLinkedEntityCode()));
 					key.setLinkedObjects(linkedStorableObjects);
 				} catch (IllegalDataException e1) {
 					e1.printStackTrace();
@@ -336,7 +343,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			this.view.showErrorMessage(Filter.NO_CONDITIONS_CREATED);
 			return;
 		}
-		this.view.createLogicalSchemeView(this.model.logicalScheme);	
+		this.view.createLogicalSchemeView(this.model.getLogicalScheme());	
 	}
 	
 //	private boolean noConditionsCreated() {
