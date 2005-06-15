@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedList.java,v 1.2 2005/05/23 12:51:04 bob Exp $
+ * $Id: WrapperedList.java,v 1.3 2005/06/15 12:04:44 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/05/23 12:51:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/15 12:04:44 $
  * @module generalclient_v1
  */
 public class WrapperedList extends JList {
@@ -56,6 +56,7 @@ public class WrapperedList extends JList {
 
 	public void setSelectedValue(	Object anObject,
 									boolean shouldScroll) {
+
 		Object anObjectValue = this.model.wrapper.getValue(anObject, this.model.compareKey);
 //		Log.debugMessage("WrapperedList.setSelectedValue | anObject " + anObject, Log.FINEST);
 //		Log.debugMessage("WrapperedList.setSelectedValue | this.model.compareKey: " + this.model.compareKey, Log.FINEST);
@@ -66,9 +67,10 @@ public class WrapperedList extends JList {
 			Object elementValue = this.model.wrapper.getValue(getSelectedValue(), this.model.compareKey);
 //			Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Log.FINEST);
 			if (!anObjectValue.equals(elementValue)) {
-				int i, c;
-				ListModel dm = getModel();
-				for (i = 0, c = dm.getSize(); i < c; i++) {
+				ListModel dm = this.getModel();
+				int count = dm.getSize();
+//				Log.debugMessage("WrapperedList.setSelectedValue | count " + count, Log.FINEST);
+				for (int i = 0; i < count; i++) {
 					elementValue = this.model.wrapper.getValue(dm.getElementAt(i), this.model.compareKey);
 //					Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " + anObjectValue, Log.FINEST);
 //					Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Log.FINEST);
