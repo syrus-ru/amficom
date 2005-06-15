@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.4 2005/05/26 08:33:33 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.5 2005/06/15 13:17:17 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:33 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/15 13:17:17 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
@@ -110,10 +110,6 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 
 	protected short getEntityCode() {
 		return ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE;
-	}
-
-	protected String getEntityName() {
-		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

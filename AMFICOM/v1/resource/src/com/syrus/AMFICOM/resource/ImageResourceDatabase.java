@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.22 2005/05/26 08:33:30 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.23 2005/06/15 13:17:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/05/26 08:33:30 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/15 13:17:17 $
  * @module resource_v1
  */
 
@@ -127,10 +127,6 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 
 	protected short getEntityCode() {
 		return ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE;
-	}
-
-	protected String getEntityName() {
-		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getColumnsTmpl() {

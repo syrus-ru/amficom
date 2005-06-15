@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.5 2005/06/15 12:20:41 bass Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.6 2005/06/15 13:17:17 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/15 12:20:41 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/15 13:17:17 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase {
@@ -99,10 +99,6 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 
 	protected short getEntityCode() {
 		return ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE;
-	}
-
-	protected String getEntityName() {
-		return '"' + super.getEntityName() + '"';
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
