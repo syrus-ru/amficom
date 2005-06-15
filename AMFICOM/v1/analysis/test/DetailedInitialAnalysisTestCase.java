@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.5 2005/06/06 15:18:33 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.6 2005/06/15 07:33:40 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.util.HashCodeGenerator;
 
 import junit.framework.TestCase;
 
@@ -29,7 +30,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/06/06 15:18:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/15 07:33:40 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -51,12 +52,15 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         private int connBeginPosNumber; // usually very strict
         private int connEndPosNumber; // usally not strict at all
         private int positionNumber; // usually rather non-strict
+        // hash code
+        private HashCodeGenerator hashAcc;
         // total time
         private long timeAcc;
         public FailCounter() {
             //typeCount = new int[MAX_ERROR_CODE];
             newCount = new int[MAX_ERROR_CODE_P1];
             lossCount = new int[MAX_ERROR_CODE_P1];
+            hashAcc = new HashCodeGenerator();
         }
         public int getNew(int level) {
             return newCount[level];
@@ -105,6 +109,16 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         public void incPosition(double val) {
             positionRoughness += val;
             positionNumber++;
+        }
+        public void addHash(ReliabilitySimpleReflectogramEvent ev) {
+        	hashAcc.addInt(ev.getBegin());
+        	hashAcc.addInt(ev.getEnd());
+        	hashAcc.addInt(ev.getEventType());
+        	if (ev.hasReliability())
+        		hashAcc.addDouble(ev.getReliability());
+        }
+        public int getHash() {
+        	return hashAcc.getResult();
         }
         public void toSmallestCounts(FailCounter that) {
             for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
@@ -275,13 +289,15 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                             + fails.getAvPositionRoughness()
                     ));
         }
+        System.out.println("Hash result:     "
+        		+ Integer.toHexString(fails.getHash()));
         long time1 = System.currentTimeMillis();
         boolean printTiming = true;
         if (printTiming) {
             long dtAn = fails.getTimeAcc();
-            System.out.println("Analysis time : " + dtAn);
-            System.out.println("TestCase time : " + (time1 - time0 - dtAn));
-            System.out.println("Total time    : " + (time1 - time0));
+            System.out.println("Analysis time :  " + dtAn);
+            System.out.println("TestCase time :  " + (time1 - time0 - dtAn));
+            System.out.println("Total time    :  " + (time1 - time0));
         }
     }
 
@@ -394,6 +410,11 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 || evType == SimpleReflectogramEvent.LOSS;
             if (shouldHaveReliability)
                 assertTrue(re[i].hasReliability());
+        }
+
+        // вычисление хеш-значения
+        for (int i = 0; i < re.length; i++) {
+        	fails.addHash(re[i]);
         }
 
         // сравнение с эталонами
