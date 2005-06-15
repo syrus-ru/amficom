@@ -6,7 +6,6 @@ LIB=../lib
 EXTLIB=../../extlib
 
 EXTCLASSPATH=$EXTLIB/kunststoff.jar:$EXTLIB/trove.jar
-#ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:$ORACLE_HOME/jdbc/lib/orai18n.jar:$ORACLE_HOME/jdbc/lib/classes12.jar:$ORACLE_HOME/jdbc/lib/nls_charset12.jar
 APPCLASSPATH=$LIB/scheduler.jar:\
 $LIB/general.jar:\
 $LIB/administration.jar:\
