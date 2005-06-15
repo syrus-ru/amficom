@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.34 2005/06/10 19:12:54 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.35 2005/06/15 15:55:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,12 +34,12 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/10 19:12:54 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/15 15:55:12 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
 
-public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
+final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 	/**
 	 * @todo make access validation on MCM
