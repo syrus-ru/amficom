@@ -1,20 +1,20 @@
--- $Id: schemepath.sql,v 1.4 2005/06/15 07:50:19 bass Exp $
+-- $Id: schemepath.sql,v 1.5 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE SchemePath (
 	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id NUMBER(19) NOT NULL,
-	modifier_id NUMBER(19) NOT NULL,
+	creator_id NOT NULL,
+	modifier_id NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
-	transmission_path_id NUMBER(19),
-	prnt_schm_mntrng_sltn_id NUMBER(19),
-	prnt_schm_id NUMBER(19) NOT NULL,
+	transmission_path_id,
+	prnt_schm_mntrng_sltn_id,
+	prnt_schm_id NOT NULL,
 --
         CONSTRAINT schemepath_pk PRIMARY KEY(id),
 --
@@ -31,6 +31,6 @@ CREATE TABLE SchemePath (
 		REFERENCES Scheme(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemePath IS '$Id: schemepath.sql,v 1.4 2005/06/15 07:50:19 bass Exp $';
+COMMENT ON TABLE SchemePath IS '$Id: schemepath.sql,v 1.5 2005/06/15 17:03:10 bass Exp $';
 
 CREATE SEQUENCE SchemePath_Seq ORDER;

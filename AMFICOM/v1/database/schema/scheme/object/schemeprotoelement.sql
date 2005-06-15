@@ -1,24 +1,24 @@
--- $Id: schemeprotoelement.sql,v 1.7 2005/06/09 14:40:12 max Exp $
+-- $Id: schemeprotoelement.sql,v 1.8 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE SchemeProtoElement (
 	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id NUMBER(19) NOT NULL,
-	modifier_id NUMBER(19) NOT NULL,
+	creator_id NOT NULL,
+	modifier_id NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
 	label VARCHAR2(64 CHAR),
-	equipment_type_id NUMBER(19),
-	symbol_id NUMBER(19),
-	ugo_cell_id NUMBER(19),
-	scheme_cell_id NUMBER(19),
-	parent_scheme_proto_group_id NUMBER(19),
-	parent_scheme_proto_element_id NUMBER(19),
+	equipment_type_id,
+	symbol_id,
+	ugo_cell_id,
+	scheme_cell_id,
+	parent_scheme_proto_group_id,
+	parent_scheme_proto_element_id,
 --
 	CONSTRAINT schemeprotoelement_pk PRIMARY KEY(id),
 --
@@ -50,6 +50,6 @@ CREATE TABLE SchemeProtoElement (
 		AND parent_scheme_proto_element_id iS NULL))
 );
 
-COMMENT ON TABLE SchemeProtoElement IS '$Id: schemeprotoelement.sql,v 1.7 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeProtoElement IS '$Id: schemeprotoelement.sql,v 1.8 2005/06/15 17:03:10 bass Exp $';
 
 CREATE SEQUENCE SchemeProtoElement_Seq ORDER;

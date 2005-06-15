@@ -1,8 +1,8 @@
--- $Id: evatyppartyplink.sql,v 1.8 2005/06/15 09:40:35 bass Exp $
+-- $Id: evatyppartyplink.sql,v 1.9 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE EvaTypParTypLink (
- evaluation_type_id NUMBER(19) NOT NULL,
- parameter_type_id NUMBER(19) NOT NULL,
+ evaluation_type_id NOT NULL,
+ parameter_type_id NOT NULL,
  parameter_mode VARCHAR2(3 CHAR) NOT NULL,
 --
  CONSTRAINT evatpartlnk_uniq

@@ -1,14 +1,14 @@
--- $Id: characteristic.sql,v 1.11 2005/06/15 09:40:34 bass Exp $
+-- $Id: characteristic.sql,v 1.12 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE Characteristic (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- type_id NUMBER(19) NOT NULL,
+ type_id NOT NULL,
 --
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),

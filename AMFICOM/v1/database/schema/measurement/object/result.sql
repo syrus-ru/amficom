@@ -1,17 +1,17 @@
--- $Id: result.sql,v 1.10 2005/06/15 11:12:16 arseniy Exp $
+-- $Id: result.sql,v 1.11 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE Result (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- measurement_id NUMBER(19),
- analysis_id NUMBER(19),
- evaluation_id NUMBER(19),
- modeling_id NUMBER(19),
+ measurement_id,
+ analysis_id,
+ evaluation_id,
+ modeling_id,
  sort NUMBER(2, 0) NOT NULL,
  alarm_level NUMBER(2, 0) NOT NULL,
 --

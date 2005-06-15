@@ -1,8 +1,8 @@
--- $Id: collphlink.sql,v 1.3 2005/06/09 14:40:11 max Exp $
+-- $Id: collphlink.sql,v 1.4 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE CollPhLink (
- collector_id NUMBER(19),
- physical_link_id NUMBER(19),
+ collector_id,
+ physical_link_id,
 --
  CONSTRAINT collphlink_coll_fk FOREIGN KEY (collector_id)
   REFERENCES Collector (id) ON DELETE CASCADE,
@@ -10,4 +10,4 @@ CREATE TABLE CollPhLink (
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE CollPhLink IS '$Id: collphlink.sql,v 1.3 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE CollPhLink IS '$Id: collphlink.sql,v 1.4 2005/06/15 17:03:09 bass Exp $';

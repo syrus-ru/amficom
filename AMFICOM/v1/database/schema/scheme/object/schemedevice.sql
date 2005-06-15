@@ -1,19 +1,19 @@
--- $Id: schemedevice.sql,v 1.5 2005/06/09 14:40:12 max Exp $
+-- $Id: schemedevice.sql,v 1.6 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE SchemeDevice (
 	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id NUMBER(19) NOT NULL,
-	modifier_id NUMBER(19) NOT NULL,
+	creator_id NOT NULL,
+	modifier_id NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
-	parent_scheme_proto_element_id NUMBER(19),
-	parent_scheme_element_id NUMBER(19),
+	parent_scheme_proto_element_id,
+	parent_scheme_element_id,
 --
 	CONSTRAINT schemdev_pk PRIMARY KEY(id),
 --
@@ -36,6 +36,6 @@ CREATE TABLE SchemeDevice (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeDevice IS '$Id: schemedevice.sql,v 1.5 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeDevice IS '$Id: schemedevice.sql,v 1.6 2005/06/15 17:03:10 bass Exp $';
 
 CREATE SEQUENCE SchemeDevice_Seq ORDER;

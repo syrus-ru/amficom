@@ -1,11 +1,11 @@
--- $Id: cablelinktype.sql,v 1.3 2005/06/15 09:40:34 bass Exp $
+-- $Id: cablelinktype.sql,v 1.4 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE CableLinkType (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  codename VARCHAR2(32 CHAR) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE CableLinkType (
  kind NUMBER(1) NOT NULL,
  manufacturer VARCHAR2(128 CHAR),
  manufacturer_code VARCHAR2(32 CHAR),
- image_id NUMBER(19),
+ image_id,
 --
  CONSTRAINT cltype_pk PRIMARY KEY (id),
  CONSTRAINT cltype_creator_fk FOREIGN KEY (creator_id)

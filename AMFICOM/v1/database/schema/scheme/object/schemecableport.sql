@@ -1,22 +1,22 @@
--- $Id: schemecableport.sql,v 1.7 2005/06/15 07:50:19 bass Exp $
+-- $Id: schemecableport.sql,v 1.8 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE SchemeCablePort (
 	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id NUMBER(19) NOT NULL,
-	modifier_id NUMBER(19) NOT NULL,
+	creator_id NOT NULL,
+	modifier_id NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
 	direction_type NUMBER(1) NOT NULL,
-	cable_port_type_id NUMBER(19),
-	cable_port_id NUMBER(19),
-	measurement_port_id NUMBER(19),
-	parent_device_id NUMBER(19) NOT NULL,
+	cable_port_type_id,
+	cable_port_id,
+	measurement_port_id,
+	parent_device_id NOT NULL,
 --
 	CONSTRAINT schmcblprt_pk PRIMARY KEY(id),
 --
@@ -43,6 +43,6 @@ CREATE TABLE SchemeCablePort (
 		AND cable_port_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeCablePort IS '$Id: schemecableport.sql,v 1.7 2005/06/15 07:50:19 bass Exp $';
+COMMENT ON TABLE SchemeCablePort IS '$Id: schemecableport.sql,v 1.8 2005/06/15 17:03:10 bass Exp $';
 
 CREATE SEQUENCE SchemeCablePort_Seq ORDER;

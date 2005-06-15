@@ -1,9 +1,9 @@
--- $Id: parameter.sql,v 1.2 2005/06/15 07:50:18 bass Exp $
+-- $Id: parameter.sql,v 1.3 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE Parameter (
  id NUMBER(19),
- type_id NUMBER(19) NOT NULL,
- set_id NUMBER(19) NOT NULL,
+ type_id NOT NULL,
+ set_id NOT NULL,
  value BLOB NOT NULL,
 --
  CONSTRAINT spar_pk PRIMARY KEY (id),

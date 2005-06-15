@@ -1,8 +1,8 @@
--- $Id: mapcollector.sql,v 1.3 2005/06/09 14:40:11 max Exp $
+-- $Id: mapcollector.sql,v 1.4 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE MapCollector (
- map_id NUMBER(19),
- collector_id NUMBER(19),
+ map_id,
+ collector_id,
 --
  CONSTRAINT mapc_map_fk FOREIGN KEY (map_id)
   REFERENCES Map (id) ON DELETE CASCADE,
@@ -10,4 +10,4 @@ CREATE TABLE MapCollector (
   REFERENCES Collector (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE MapCollector IS '$Id: mapcollector.sql,v 1.3 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE MapCollector IS '$Id: mapcollector.sql,v 1.4 2005/06/15 17:03:09 bass Exp $';

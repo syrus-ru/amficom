@@ -1,8 +1,8 @@
--- $Id: mapmark.sql,v 1.3 2005/06/09 14:40:11 max Exp $
+-- $Id: mapmark.sql,v 1.4 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE MapMark (
- map_id NUMBER(19),
- mark_id NUMBER(19),
+ map_id,
+ mark_id,
 --
  CONSTRAINT mapm_map_fk FOREIGN KEY (map_id)
   REFERENCES Map (id) ON DELETE CASCADE,
@@ -10,4 +10,4 @@ CREATE TABLE MapMark (
   REFERENCES Mark (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE MapMark IS '$Id: mapmark.sql,v 1.3 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE MapMark IS '$Id: mapmark.sql,v 1.4 2005/06/15 17:03:09 bass Exp $';

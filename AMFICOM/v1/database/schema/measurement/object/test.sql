@@ -1,25 +1,25 @@
--- $Id: test.sql,v 1.11 2005/06/15 09:40:35 bass Exp $
+-- $Id: test.sql,v 1.12 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  temporal_type NUMBER(2, 0) NOT NULL,
  start_time DATE,
  end_time DATE,
- cron_temporal_pattern_id NUMBER(19),
+ cron_temporal_pattern_id,
 --
- measurement_type_id NUMBER(19) NOT NULL,
- analysis_type_id NUMBER(19),
- evaluation_type_id NUMBER(19),
- group_test_id	VARCHAR(32),
+ measurement_type_id NOT NULL,
+ analysis_type_id,
+ evaluation_type_id,
+ group_test_id,
 --
  status NUMBER(2, 0) NOT NULL,
- monitored_element_id NUMBER(19) NOT NULL,
+ monitored_element_id NOT NULL,
  return_type NUMBER(2, 0) NOT NULL,
  description VARCHAR2(256 CHAR),
  number_of_measurements NUMBER(10) NOT NULL,

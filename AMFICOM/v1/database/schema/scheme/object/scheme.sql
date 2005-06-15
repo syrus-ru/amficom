@@ -1,12 +1,12 @@
--- $Id: scheme.sql,v 1.8 2005/06/15 07:50:19 bass Exp $
+-- $Id: scheme.sql,v 1.9 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE Scheme (
 	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id NUMBER(19) NOT NULL,
-	modifier_id NUMBER(19) NOT NULL,
+	creator_id NOT NULL,
+	modifier_id NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
@@ -15,11 +15,11 @@ CREATE TABLE Scheme (
 	label VARCHAR2(64 CHAR),
 	width NUMBER(10) DEFAULT 840 NOT NULL,
 	height NUMBER(10) DEFAULT 1190 NOT NULL,
-	domain_id NUMBER(19) NOT NULL,
-	map_id NUMBER(19),
-	symbol_id NUMBER(19),
-	ugo_cell_id NUMBER(19),
-	scheme_cell_id NUMBER(19),
+	domain_id NOT NULL,
+	map_id,
+	symbol_id,
+	ugo_cell_id,
+	scheme_cell_id,
 	kind NUMBER(1) NOT NULL,
 	parent_scheme_element_id NUMBER(19),
 --
@@ -42,7 +42,7 @@ CREATE TABLE Scheme (
 		REFERENCES ImageResource(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE Scheme IS '$Id: scheme.sql,v 1.8 2005/06/15 07:50:19 bass Exp $';
+COMMENT ON TABLE Scheme IS '$Id: scheme.sql,v 1.9 2005/06/15 17:03:10 bass Exp $';
 COMMENT ON COLUMN Scheme.kind IS 'Logically this is a SchemeKind. While SchemeType table is absent, it will remain an enum.';
 
 CREATE SEQUENCE Scheme_Seq ORDER;

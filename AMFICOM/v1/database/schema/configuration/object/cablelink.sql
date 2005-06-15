@@ -1,16 +1,16 @@
--- $Id: cablelink.sql,v 1.3 2005/06/15 09:40:34 bass Exp $
+-- $Id: cablelink.sql,v 1.4 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE CableLink (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- domain_id NUMBER(19),
+ domain_id,
 --
- type_id NUMBER(19) NOT NULL,
+ type_id NOT NULL,
 --
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
@@ -18,7 +18,6 @@ CREATE TABLE CableLink (
  inventory_no VARCHAR2(64 CHAR),
  supplier VARCHAR2(128 CHAR),
  supplier_code VARCHAR2(32 CHAR),
- link_id NUMBER(19),
  color VARCHAR(32),
  mark VARCHAR(32),
 --

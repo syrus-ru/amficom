@@ -1,19 +1,19 @@
--- $Id: analysis.sql,v 1.11 2005/06/15 09:40:35 bass Exp $
+-- $Id: analysis.sql,v 1.12 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE Analysis (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- type_id NUMBER(19) NOT NULL,
- monitored_element_id NUMBER(19) NOT NULL,
- measurement_id NUMBER(19),
+ type_id NOT NULL,
+ monitored_element_id NOT NULL,
+ measurement_id,
  name VARCHAR2(128 CHAR),
 --
- criteria_set_id NUMBER(19) NOT NULL,
+ criteria_set_id NOT NULL,
 --
  CONSTRAINT ana_pk PRIMARY KEY (id),
  CONSTRAINT ana_creator_fk FOREIGN KEY (creator_id)

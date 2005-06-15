@@ -1,8 +1,8 @@
--- $Id: eventtypeuseralert.sql,v 1.3 2005/06/15 07:50:18 bass Exp $
+-- $Id: eventtypeuseralert.sql,v 1.4 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE EventTypeUserAlert (
- event_type_id NUMBER(19) NOT NULL,
- user_id NUMBER(19) NOT NULL,
+ event_type_id NOT NULL,
+ user_id NOT NULL,
  alert_kind NUMBER(2) NOT NULL,
 --
  CONSTRAINT uetlnk_evtype_fk FOREIGN KEY (event_type_id)

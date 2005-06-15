@@ -1,19 +1,19 @@
--- $Id: evaluation.sql,v 1.10 2005/06/15 07:50:18 bass Exp $
+-- $Id: evaluation.sql,v 1.11 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE Evaluation (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- type_id NUMBER(19) NOT NULL,
- monitored_element_id NUMBER(19) NOT NULL,
- measurement_id NUMBER(19),
+ type_id NOT NULL,
+ monitored_element_id NOT NULL,
+ measurement_id,
 --
- threshold_set_id NUMBER(19) NOT NULL,
- etalon_id NUMBER(19) NOT NULL,
+ threshold_set_id NOT NULL,
+ etalon_id NOT NULL,
 --
  CONSTRAINT eva_pk PRIMARY KEY (id),
  CONSTRAINT eva_creator_fk FOREIGN KEY (creator_id)
@@ -30,7 +30,7 @@ CREATE TABLE Evaluation (
 --
  CONSTRAINT eva_thrset_fk FOREIGN KEY (threshold_set_id)
   REFERENCES ParameterSet (id) ON DELETE CASCADE,
- CONSTRAINT eva_eta_fk FOREIGN KEY (ETALON_ID)
+ CONSTRAINT eva_eta_fk FOREIGN KEY (etalon_id)
   REFERENCES ParameterSet (id) ON DELETE CASCADE
  );
 

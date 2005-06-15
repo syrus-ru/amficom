@@ -1,17 +1,17 @@
--- $Id: measurementsetup.sql,v 1.8 2005/06/15 09:40:35 bass Exp $
+-- $Id: measurementsetup.sql,v 1.9 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE MeasurementSetup (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- parameter_set_id NUMBER(19) NOT NULL,
- criteria_set_id NUMBER(19),
- threshold_set_id NUMBER(19),
- etalon_id NUMBER(19),
+ parameter_set_id NOT NULL,
+ criteria_set_id,
+ threshold_set_id,
+ etalon_id,
  description VARCHAR2(256 CHAR),
  measurement_duration NUMBER(20),
 --

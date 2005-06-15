@@ -1,12 +1,12 @@
--- $Id: schemelink.sql,v 1.7 2005/06/15 09:28:25 bass Exp $
+-- $Id: schemelink.sql,v 1.8 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE SchemeLink (
 	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id NUMBER(19) NOT NULL,
-	modifier_id NUMBER(19) NOT NULL,
+	creator_id NOT NULL,
+	modifier_id NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
@@ -15,16 +15,16 @@ CREATE TABLE SchemeLink (
 	physical_length BINARY_DOUBLE NOT NULL,
 	optical_length BINARY_DOUBLE NOT NULL,
 --
-	link_type_id NUMBER(19),
-	link_id NUMBER(19),
+	link_type_id,
+	link_id,
 --
-	source_scheme_port_id NUMBER(19),
-	target_scheme_port_id NUMBER(19),
-	site_node_id NUMBER(19),
+	source_scheme_port_id,
+	target_scheme_port_id,
+	site_node_id,
 --
-	parent_scheme_id NUMBER(19),
-	parent_scheme_element_id NUMBER(19),
-	parent_scheme_proto_element_id NUMBER(19),
+	parent_scheme_id,
+	parent_scheme_element_id,
+	parent_scheme_proto_element_id,
 --
 	CONSTRAINT schmlnk_pk PRIMARY KEY(id),
 --
@@ -72,6 +72,6 @@ CREATE TABLE SchemeLink (
 		AND parent_scheme_proto_element_id IS NOT NULL))
 );
 
-COMMENT ON TABLE SchemeLink IS '$Id: schemelink.sql,v 1.7 2005/06/15 09:28:25 bass Exp $';
+COMMENT ON TABLE SchemeLink IS '$Id: schemelink.sql,v 1.8 2005/06/15 17:03:10 bass Exp $';
 
 CREATE SEQUENCE SchemeLink_Seq ORDER;

@@ -1,8 +1,8 @@
--- $Id: eventsourcelink.sql,v 1.4 2005/06/15 07:50:18 bass Exp $
+-- $Id: eventsourcelink.sql,v 1.5 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE EventSourceLink (
- event_id NUMBER(19) NOT NULL,
- source_id NUMBER(19) NOT NULL,
+ event_id NOT NULL,
+ source_id NOT NULL,
 --
  CONSTRAINT evsrclnk_uniq UNIQUE (event_id, source_id),
  CONSTRAINT evsrclnk_event_fk FOREIGN KEY (event_id)

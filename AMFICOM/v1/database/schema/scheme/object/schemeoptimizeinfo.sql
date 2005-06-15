@@ -1,12 +1,12 @@
--- $Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $
+-- $Id: schemeoptimizeinfo.sql,v 1.8 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE SchemeOptimizeInfo (
 	id NUMBER(19) NOT NULL,
 --
 	created TIMESTAMP NOT NULL,
 	modified TIMESTAMP NOT NULL,
-	creator_id NUMBER(19) NOT NULL,
-	modifier_id NUMBER(19) NOT NULL,
+	creator_id NOT NULL,
+	modifier_id NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE SchemeOptimizeInfo (
 	nodes_splice_prob BINARY_DOUBLE NOT NULL,
 	nodes_cut_prob BINARY_DOUBLE NOT NULL,
 	survivor_rate BINARY_DOUBLE NOT NULL,
-	parent_scheme_id NUMBER(19) NOT NULL,
+	parent_scheme_id NOT NULL,
 --
 	CONSTRAINT schmoptimizeinfo_pk PRIMARY KEY(id),
 --
@@ -37,7 +37,7 @@ CREATE TABLE SchemeOptimizeInfo (
 		REFERENCES Scheme(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemeOptimizeInfo IS '$Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeOptimizeInfo IS '$Id: schemeoptimizeinfo.sql,v 1.8 2005/06/15 17:03:10 bass Exp $';
 
 CREATE SEQUENCE SchemeOptimizeInfo_Seq ORDER;
 
@@ -48,7 +48,7 @@ CREATE TABLE SchemeOptimizeInfoRtu (
 	name VARCHAR2(128 CHAR) NOT NULL,
 	price_usd NUMBER(10) NOT NULL,
 	range_db NUMBER(5, 2) NOT NULL,
-	scheme_optimize_info_id NUMBER(19) NOT NULL,
+	scheme_optimize_info_id NOT NULL,
 --
 	CONSTRAINT schemeoptimizeinfortu_pk PRIMARY KEY(id),
 --
@@ -63,7 +63,7 @@ CREATE TABLE SchemeOptimizeInfoRtu (
 		REFERENCES SchemeOptimizeInfo(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemeOptimizeInfoRtu IS '$Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeOptimizeInfoRtu IS '$Id: schemeoptimizeinfo.sql,v 1.8 2005/06/15 17:03:10 bass Exp $';
 COMMENT ON COLUMN SchemeOptimizeInfoRtu.price_usd IS 'RTU price in US dollars.';
 COMMENT ON COLUMN SchemeOptimizeInfoRtu.range_db IS 'RTU range in decibels, from 0.00 to 128.00 db.';
 
@@ -76,7 +76,7 @@ CREATE TABLE SchemeOptimizeInfoSwitch (
 	name VARCHAR2(128 CHAR) NOT NULL,
 	price_usd NUMBER(10) NOT NULL,
 	no_of_ports NUMBER(3) NOT NULL,
-	scheme_optimize_info_id NUMBER(19) NOT NULL,
+	scheme_optimize_info_id NOT NULL,
 --
 	CONSTRAINT schemeoptimizeinfoswitch_pk PRIMARY KEY(id),
 --
@@ -91,7 +91,7 @@ CREATE TABLE SchemeOptimizeInfoSwitch (
 		REFERENCES SchemeOptimizeInfo(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemeOptimizeInfoSwitch IS '$Id: schemeoptimizeinfo.sql,v 1.7 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeOptimizeInfoSwitch IS '$Id: schemeoptimizeinfo.sql,v 1.8 2005/06/15 17:03:10 bass Exp $';
 COMMENT ON COLUMN SchemeOptimizeInfoSwitch.price_usd IS 'Optical switch price in US dollars.';
 COMMENT ON COLUMN SchemeOptimizeInfoSwitch.no_of_ports IS 'Number of ports in this optical switch. Up to 256.';
 

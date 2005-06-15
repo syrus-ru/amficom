@@ -1,16 +1,16 @@
--- $Id: serverprocess.sql,v 1.5 2005/06/15 09:40:34 bass Exp $
+-- $Id: serverprocess.sql,v 1.6 2005/06/15 17:03:09 bass Exp $
 
 CREATE TABLE ServerProcess (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  codename VARCHAR2(32 CHAR) NOT NULL,
- server_id NUMBER(19) NOT NULL,
- user_id NUMBER(19) NOT NULL,
+ server_id NOT NULL,
+ user_id NOT NULL,
  description VARCHAR2(256 CHAR),
 --
  CONSTRAINT sproc_pk PRIMARY KEY (id),

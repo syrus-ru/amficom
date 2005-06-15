@@ -1,11 +1,11 @@
--- $Id: systemuser.sql,v 1.2 2005/06/15 09:40:35 bass Exp $
+-- $Id: systemuser.sql,v 1.3 2005/06/15 17:03:10 bass Exp $
 
 CREATE TABLE SystemUser(
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id NUMBER(19) NOT NULL,
- modifier_id NUMBER(19) NOT NULL,
+ creator_id NOT NULL,
+ modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  login VARCHAR2(32 CHAR) NOT NULL,
