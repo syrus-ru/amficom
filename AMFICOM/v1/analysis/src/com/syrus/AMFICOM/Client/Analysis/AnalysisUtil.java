@@ -142,7 +142,7 @@ public class AnalysisUtil
 				Heap.setMTMEtalon(mtm);
 				Heap.setEtalonEtalonMetas(metas);
 			}
-            else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
+            else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON))
             {
                 bsEt = new BellcoreReader().getData(params[i].getValue());
                 Heap.setBSEtalonTrace(bsEt);
@@ -198,7 +198,7 @@ public class AnalysisUtil
 
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
-		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
+		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
 		params[1] = SetParameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
 
