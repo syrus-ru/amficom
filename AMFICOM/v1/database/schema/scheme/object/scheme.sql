@@ -1,4 +1,4 @@
--- $Id: scheme.sql,v 1.7 2005/06/09 14:40:11 max Exp $
+-- $Id: scheme.sql,v 1.8 2005/06/15 07:50:19 bass Exp $
 
 CREATE TABLE Scheme (
 	id NUMBER(19) NOT NULL,
@@ -21,7 +21,6 @@ CREATE TABLE Scheme (
 	ugo_cell_id NUMBER(19),
 	scheme_cell_id NUMBER(19),
 	kind NUMBER(1) NOT NULL,
-	scheme_monitoring_solution_id NUMBER(19),
 	parent_scheme_element_id NUMBER(19),
 --
 	CONSTRAINT scheme_pk PRIMARY KEY(id),
@@ -43,7 +42,7 @@ CREATE TABLE Scheme (
 		REFERENCES ImageResource(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE Scheme IS '$Id: scheme.sql,v 1.7 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE Scheme IS '$Id: scheme.sql,v 1.8 2005/06/15 07:50:19 bass Exp $';
 COMMENT ON COLUMN Scheme.kind IS 'Logically this is a SchemeKind. While SchemeType table is absent, it will remain an enum.';
 
 CREATE SEQUENCE Scheme_Seq ORDER;

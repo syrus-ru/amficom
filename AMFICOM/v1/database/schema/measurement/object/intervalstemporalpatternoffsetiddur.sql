@@ -1,3 +1,5 @@
+-- $Id: intervalstemporalpatternoffsetiddur.sql,v 1.4 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE ITmpPattrnOffsetDur (
  inter_temp_patt_id NUMBER(19) NOT NULL,
 -- 

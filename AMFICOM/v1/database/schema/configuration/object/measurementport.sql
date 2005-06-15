@@ -1,3 +1,5 @@
+-- $Id: measurementport.sql,v 1.7 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE MeasurementPort (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -16,7 +18,7 @@ CREATE TABLE MeasurementPort (
 --
  CONSTRAINT mp_pk PRIMARY KEY (id),
  CONSTRAINT mp_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES SystmeUser (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT mp_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --

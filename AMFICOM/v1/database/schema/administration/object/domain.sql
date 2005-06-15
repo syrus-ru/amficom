@@ -1,4 +1,4 @@
--- $Id: domain.sql,v 1.9 2005/06/09 14:40:10 max Exp $
+-- $Id: domain.sql,v 1.10 2005/06/15 07:50:17 bass Exp $
 
 CREATE TABLE Domain (
  id NUMBER(19),
@@ -17,7 +17,7 @@ CREATE TABLE Domain (
 --
  CONSTRAINT domain_pk PRIMARY KEY (id),
  CONSTRAINT domain_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES SystmeUser (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT domain_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --

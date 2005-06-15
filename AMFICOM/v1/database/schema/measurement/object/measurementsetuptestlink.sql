@@ -1,3 +1,5 @@
+-- $Id: measurementsetuptestlink.sql,v 1.5 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE MeasurementSetupTestLink (
  test_id NUMBER(19) NOT NULL,
  measurement_setup_id NUMBER(19) NOT NULL,

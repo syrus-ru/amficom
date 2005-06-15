@@ -1,3 +1,5 @@
+-- $Id: servertype.sql,v 1.5 2005/06/15 07:50:17 bass Exp $
+
 CREATE TABLE ServerType (
  id NUMBER(19),
  created DATE NOT NULL,

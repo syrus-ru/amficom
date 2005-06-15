@@ -1,3 +1,5 @@
+-- $Id: eventsourcelink.sql,v 1.4 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE EventSourceLink (
  event_id NUMBER(19) NOT NULL,
  source_id NUMBER(19) NOT NULL,

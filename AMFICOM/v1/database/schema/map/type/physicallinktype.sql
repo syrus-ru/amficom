@@ -1,11 +1,11 @@
--- $Id: physicallinktype.sql,v 1.5 2005/06/09 14:40:11 max Exp $
+-- $Id: physicallinktype.sql,v 1.6 2005/06/15 07:50:18 bass Exp $
 
 CREATE TABLE PhysicalLinkType (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  codename VARCHAR2(32) NOT NULL,
@@ -22,6 +22,6 @@ CREATE TABLE PhysicalLinkType (
   REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.6 2005/06/15 07:50:18 bass Exp $';
 
 CREATE SEQUENCE PhysicalLinkType_Seq ORDER;

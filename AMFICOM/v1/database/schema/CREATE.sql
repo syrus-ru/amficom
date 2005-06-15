@@ -1,29 +1,31 @@
+-- $Id: CREATE.sql,v 1.10 2005/06/15 07:50:17 bass Exp $
+
 REM user
-@@./user/CREATE.sql
+@@./user/CREATE;
 
 REM general
-@@./general/CREATE.sql
+@@./general/CREATE;
 
 REM administration
-@@./administration/CREATE.sql
+@@./administration/CREATE;
 
 REM resource
-@@./resource/CREATE.sql
+@@./resource/CREATE;
 
 REM configuration
-@@./configuration/CREATE.sql
+@@./configuration/CREATE;
 
 REM measurement
-@@./measurement/CREATE.sql
+@@./measurement/CREATE;
 
 REM map
-@@./map/CREATE.sql
+@@./map/CREATE;
 
 REM scheme
-@@./scheme/CREATE.sql
+@@./scheme/CREATE;
 
 REM mapview
-@@./mapview/CREATE.sql
+@@./mapview/CREATE;
 
 REM security
-@@./security/CREATE.sql
+@@./security/CREATE;

@@ -1,4 +1,4 @@
--- $Id: schememonitoringsolution.sql,v 1.5 2005/06/09 14:40:12 max Exp $
+-- $Id: schememonitoringsolution.sql,v 1.6 2005/06/15 07:50:19 bass Exp $
 
 CREATE TABLE SchemeMonitoringSolution (
 	id NUMBER(19) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE SchemeMonitoringSolution (
 	CONSTRAINT schememonitoringsolution_pk PRIMARY KEY(id),
 --
 	CONSTRAINT schmmonitoringsltn_creator_fk FOREIGN KEY(creator_id)
-		REFERENCES SystamUser(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT schmmonitoringsltn_modifier_fk FOREIGN KEY(modifier_id)
 		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
@@ -26,12 +26,7 @@ CREATE TABLE SchemeMonitoringSolution (
 		REFERENCES SchemeOptimizeInfo(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemeMonitoringSolution IS '$Id: schememonitoringsolution.sql,v 1.5 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeMonitoringSolution IS '$Id: schememonitoringsolution.sql,v 1.6 2005/06/15 07:50:19 bass Exp $';
 COMMENT ON COLUMN SchemeMonitoringSolution.price_usd IS 'Cost of this solution in US dollars.';
-
-ALTER TABLE Scheme ADD (
-	CONSTRAINT scheme_schm_monitoring_sltn_fk FOREIGN KEY(scheme_monitoring_solution_id)
-		REFERENCES SchemeMonitoringSolution(id) ON DELETE CASCADE ENABLE
-);
 
 CREATE SEQUENCE SchemeMonitoringSolution_Seq ORDER;

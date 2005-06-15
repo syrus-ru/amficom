@@ -1,3 +1,5 @@
+-- $Id: kis.sql,v 1.14 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE KIS (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -30,4 +32,3 @@ CREATE TABLE KIS (
 );
 
 CREATE SEQUENCE kis_seq ORDER;
-

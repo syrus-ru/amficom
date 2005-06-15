@@ -1,3 +1,5 @@
+-- $Id: parameter.sql,v 1.2 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE Parameter (
  id NUMBER(19),
  type_id NUMBER(19) NOT NULL,

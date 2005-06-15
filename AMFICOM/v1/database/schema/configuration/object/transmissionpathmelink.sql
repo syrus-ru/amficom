@@ -1,3 +1,5 @@
+-- $Id: transmissionpathmelink.sql,v 1.5 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE TransmissionPathMELink (
  transmission_path_id NUMBER(19),
  monitored_element_id NUMBER(19),

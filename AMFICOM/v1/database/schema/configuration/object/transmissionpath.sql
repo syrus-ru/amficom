@@ -1,3 +1,5 @@
+-- $Id: transmissionpath.sql,v 1.14 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE TransmissionPath (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -18,7 +20,7 @@ CREATE TABLE TransmissionPath (
 --
  CONSTRAINT tpath_pk PRIMARY KEY (id),
  CONSTRAINT tpath_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES SystmeUser (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT tpath_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --

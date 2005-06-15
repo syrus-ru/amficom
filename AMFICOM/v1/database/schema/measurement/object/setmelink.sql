@@ -1,3 +1,5 @@
+-- $Id: setmelink.sql,v 1.6 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE SetMELink (
  set_id NUMBER(19) NOT NULL,
  monitored_element_id NUMBER(19) NOT NULL,

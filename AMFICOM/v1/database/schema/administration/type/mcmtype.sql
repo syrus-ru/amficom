@@ -1,3 +1,5 @@
+-- $Id: mcmtype.sql,v 1.5 2005/06/15 07:50:17 bass Exp $
+
 CREATE TABLE MCMType (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -13,7 +15,7 @@ CREATE TABLE MCMType (
  CONSTRAINT mcmtype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT mcmtype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES SystmeUser (id) ON DELETE CASCADE
+  REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE mcmtype_seq ORDER;

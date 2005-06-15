@@ -1,10 +1,12 @@
-@@./security/DROP.sql
-@@./mapview/DROP.sql
-@@./scheme/DROP.sql
-@@./map/DROP.sql
-@@./measurement/DROP.sql
-@@./configuration/DROP.sql
-@@./resource/DROP.sql
-@@./administration/DROP.sql
-@@./general/DROP.sql
-@@./user/DROP.sql
+-- $Id: DROP.sql,v 1.9 2005/06/15 07:50:17 bass Exp $
+
+@@./security/DROP;
+@@./mapview/DROP;
+@@./scheme/DROP;
+@@./map/DROP;
+@@./measurement/DROP;
+@@./configuration/DROP;
+@@./resource/DROP;
+@@./administration/DROP;
+@@./general/DROP;
+@@./user/DROP;

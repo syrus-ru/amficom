@@ -1,4 +1,4 @@
--- $Id: user.sql,v 1.3 2005/06/09 14:40:12 max Exp $
+-- $Id: systemuser.sql,v 1.1 2005/06/15 07:50:19 bass Exp $
 
 CREATE TABLE SystemUser(
  id NUMBER(19),
@@ -21,5 +21,4 @@ CREATE TABLE SystemUser(
  CONSTRAINT user_login_uniq UNIQUE (login)
 );
 
-CREATE SEQUENCE systemuser_seq ORDER;
-
+CREATE SEQUENCE SystemUser_Seq ORDER;

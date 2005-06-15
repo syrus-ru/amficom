@@ -1,3 +1,5 @@
+-- $Id: measurementporttype.sql,v 1.9 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE MeasurementPortType (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -15,7 +17,7 @@ CREATE TABLE MeasurementPortType (
  CONSTRAINT mptype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT mptype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES systemUser (id) ON DELETE CASCADE
+  REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE MeasurementPortType_seq ORDER;

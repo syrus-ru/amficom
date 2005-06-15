@@ -1,6 +1,6 @@
--- $Id: link.sql,v 1.11 2005/06/15 07:50:18 bass Exp $
+-- $Id: cablelink.sql,v 1.1 2005/06/15 07:50:17 bass Exp $
 
-CREATE TABLE Link (
+CREATE TABLE CableLink (
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
@@ -22,17 +22,17 @@ CREATE TABLE Link (
  color VARCHAR(32),
  mark VARCHAR(32),
 --
- CONSTRAINT link_pk PRIMARY KEY (id),
- CONSTRAINT link_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT cablelink_pk PRIMARY KEY (id),
+ CONSTRAINT cablelink_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT link_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT cablelink_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
- CONSTRAINT link_domain_fk FOREIGN KEY (domain_id)
+ CONSTRAINT cablelink_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
- CONSTRAINT link_lnktype_fk FOREIGN KEY (type_id)
-  REFERENCES LinkType (id) ON DELETE CASCADE,
+ CONSTRAINT cablelink_lnktype_fk FOREIGN KEY (type_id)
+  REFERENCES CableLinkType (id) ON DELETE CASCADE,
 );
 
-CREATE SEQUENCE Link_Seq ORDER;
+CREATE SEQUENCE CableLink_Seq ORDER;

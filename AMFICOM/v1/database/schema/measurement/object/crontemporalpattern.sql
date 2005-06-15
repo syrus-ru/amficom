@@ -1,3 +1,5 @@
+-- $Id: crontemporalpattern.sql,v 1.3 2005/06/15 07:50:18 bass Exp $
+
 CREATE OR REPLACE TYPE CronStringArray AS TABLE OF VARCHAR2(64)
 /
 

@@ -1,3 +1,5 @@
+-- $Id: measurement.sql,v 1.10 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE Measurement (
  id NUMBER(19),
  created DATE NOT NULL,

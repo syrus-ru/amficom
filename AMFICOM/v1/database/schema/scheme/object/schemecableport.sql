@@ -1,4 +1,4 @@
--- $Id: schemecableport.sql,v 1.6 2005/06/09 14:40:12 max Exp $
+-- $Id: schemecableport.sql,v 1.7 2005/06/15 07:50:19 bass Exp $
 
 CREATE TABLE SchemeCablePort (
 	id NUMBER(19) NOT NULL,
@@ -21,9 +21,9 @@ CREATE TABLE SchemeCablePort (
 	CONSTRAINT schmcblprt_pk PRIMARY KEY(id),
 --
 	CONSTRAINT schmcblprt_creator_fk FOREIGN KEY(creator_id)
-		REFERENCES User(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 	CONSTRAINT schmcblprt_modifier_fk FOREIGN KEY(modifier_id)
-		REFERENCES User(id) ON DELETE CASCADE,
+		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmcblprt_cable_port_type_fk FOREIGN KEY(cable_port_type_id)
 		REFERENCES PortType(id) ON DELETE CASCADE,
@@ -43,6 +43,6 @@ CREATE TABLE SchemeCablePort (
 		AND cable_port_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeCablePort IS '$Id: schemecableport.sql,v 1.6 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeCablePort IS '$Id: schemecableport.sql,v 1.7 2005/06/15 07:50:19 bass Exp $';
 
 CREATE SEQUENCE SchemeCablePort_Seq ORDER;

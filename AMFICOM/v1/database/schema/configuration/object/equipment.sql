@@ -1,3 +1,5 @@
+-- $Id: equipment.sql,v 1.14 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE Equipment (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -34,8 +36,9 @@ CREATE TABLE Equipment (
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT eqp_epqtype_fk FOREIGN KEY (type_id)
-  REFERENCES EquipmentType (id) ON DELETE CASCADE
+  REFERENCES EquipmentType (id) ON DELETE CASCADE,
+ CONSTRAINT eqp_image_fk FOREIGN KEY (image_id)
+  REFERENCES ImageResource (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE equipment_seq ORDER;
-

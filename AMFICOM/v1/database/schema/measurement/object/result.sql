@@ -1,3 +1,5 @@
+-- $Id: result.sql,v 1.9 2005/06/15 07:50:18 bass Exp $
+
 CREATE TABLE Result (
  id NUMBER(19),
  created DATE NOT NULL,

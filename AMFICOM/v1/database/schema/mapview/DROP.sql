@@ -1,3 +1,3 @@
--- $Id: DROP.sql,v 1.2 2005/06/03 11:48:02 bass Exp $
+-- $Id: DROP.sql,v 1.3 2005/06/15 07:50:18 bass Exp $
 
-@@mapview/object/DROP.sql
+@@mapview/object/DROP;

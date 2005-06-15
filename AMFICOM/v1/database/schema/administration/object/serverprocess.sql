@@ -1,3 +1,5 @@
+-- $Id: serverprocess.sql,v 1.4 2005/06/15 07:50:17 bass Exp $
+
 CREATE TABLE ServerProcess (
  id NUMBER(19),
  created DATE NOT NULL,

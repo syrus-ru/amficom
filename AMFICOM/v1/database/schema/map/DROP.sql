@@ -1,4 +1,4 @@
--- $Id: DROP.sql,v 1.4 2005/06/03 11:48:02 bass Exp $
+-- $Id: DROP.sql,v 1.5 2005/06/15 07:50:18 bass Exp $
 
-@@map/object/DROP.sql
-@@map/type/DROP.sql
+@@map/object/DROP;
+@@map/type/DROP;

@@ -1,17 +1,17 @@
--- $Id: sitenodetype.sql,v 1.5 2005/06/09 14:40:11 max Exp $
+-- $Id: sitenodetype.sql,v 1.6 2005/06/15 07:50:18 bass Exp $
 
 CREATE TABLE SiteNodeType (
- id VARCHAR2(32),
+ id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id NUMBER(19) NOT NULL,
+ modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
  codename VARCHAR2(32) NOT NULL,
  name VARCHAR2(128),
  description VARCHAR2(256),
- image_id VARCHAR2(32) NOT NULL,
+ image_id NUMBER(19) NOT NULL,
  topological NUMBER(1),
 --
  CONSTRAINT sitnodetype_pk PRIMARY KEY (id),
@@ -19,9 +19,11 @@ CREATE TABLE SiteNodeType (
  CONSTRAINT sitnodetype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT sitnodetype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES SystemUser (id) ON DELETE CASCADE
+  REFERENCES SystemUser (id) ON DELETE CASCADE,
+ CONSTRAINT sitnodetype_image_fk FOREIGN KEY (image_id)
+  REFERENCES ImageResource (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.6 2005/06/15 07:50:18 bass Exp $';
 
 CREATE SEQUENCE SiteNodeType_Seq ORDER;

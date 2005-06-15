@@ -1,12 +1,12 @@
--- $Id: imageresource.sql,v 1.9 2005/06/09 14:40:11 max Exp $
+-- $Id: imageresource.sql,v 1.10 2005/06/15 07:50:19 bass Exp $
 
 CREATE TABLE ImageResource (
-	id VARCHAR2(32) NOT NULL,
+	id NUMBER(19) NOT NULL,
 --
 	created DATE NOT NULL,
 	modified DATE NOT NULL,
-	creator_id VARCHAR2(32) NOT NULL,
-	modifier_id VARCHAR2(32) NOT NULL,
+	creator_id NUMBER(19) NOT NULL,
+	modifier_id NUMBER(19) NOT NULL,
 	version NUMBER(19) NOT NULL,
 --
 	codename VARCHAR2(256),
@@ -21,6 +21,6 @@ CREATE TABLE ImageResource (
 	CONSTRAINT imgres_uniq UNIQUE(codename)
 );
 
-COMMENT ON TABLE ImageResource IS '$Id: imageresource.sql,v 1.9 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE ImageResource IS '$Id: imageresource.sql,v 1.10 2005/06/15 07:50:19 bass Exp $';
 
 CREATE SEQUENCE ImageResource_Seq ORDER;
