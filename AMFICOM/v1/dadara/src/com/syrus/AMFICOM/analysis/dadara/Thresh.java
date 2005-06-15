@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.15 2005/05/06 11:46:21 saa Exp $
+ * $Id: Thresh.java,v 1.16 2005/06/15 14:59:21 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/05/06 11:46:21 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/15 14:59:21 $
  * @module
  */
 
@@ -40,7 +40,14 @@ implements Cloneable
 	protected int xMax;
 
 	protected Thresh()
-	{ // do nothing
+	{ // do nothing -- for DIS reading
+	}
+	protected Thresh(Thresh that) // copy-constructor
+	{
+		this.eventId0 = that.eventId0;
+		this.eventId1 = that.eventId1;
+		this.xMin = that.xMin;
+		this.xMax = that.xMax;
 	}
 	protected Thresh(int eventId0, int eventId1, int xMin, int xMax)
 	{
