@@ -471,15 +471,15 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(
 					mainMeasurementSetupId, true);
 				if (measurementSetup1 != null) {
-					this.refreshMeasurementSetups();
-					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_SET, null,
-																				measurementSetup1.getParameterSet()));
+//					this.refreshMeasurementSetups();
+//					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_SET, null,
+//																				measurementSetup1.getParameterSet()));
 					// if (this.setEditor != null) {
 					// this.setEditor.setSet(measurementSetup1.getParameterSet());
 					// }
 					// this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
-//					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
-//																				null, measurementSetup1));
+					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
+																				null, measurementSetup1));
 				}
 			}
 
