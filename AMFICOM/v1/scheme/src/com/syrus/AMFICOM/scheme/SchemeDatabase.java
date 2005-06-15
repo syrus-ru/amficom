@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.6 2005/05/26 08:33:33 bass Exp $
+ * $Id: SchemeDatabase.java,v 1.7 2005/06/15 12:20:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/26 08:33:33 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/15 12:20:41 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {
@@ -100,7 +100,6 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 					+ SchemeWrapper.COLUMN_UGO_CELL_ID + COMMA
 					+ SchemeWrapper.COLUMN_SCHEME_CELL_ID + COMMA
 					+ SchemeWrapper.COLUMN_KIND + COMMA
-					+ SchemeWrapper.COLUMN_SCHEME_MONITORING_SOLUTION_ID + COMMA
 					+ SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID;
 		}
 		return columns;
@@ -117,7 +116,6 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -152,7 +150,6 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 				+ DatabaseIdentifier.toSQLString(scheme.getUgoCell().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getSchemeCell().getId()) + COMMA
 				+ APOSTOPHE + scheme.getKind().value() + COMMA
-				+ DatabaseIdentifier.toSQLString(scheme.getCurrentSchemeMonitoringSolution().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getParentSchemeElement().getId());
 		return sql;
 	}
@@ -181,7 +178,6 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getUgoCell().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getSchemeCell().getId());
 		preparedStatement.setInt(++startParameterNumber, scheme.getKind().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getCurrentSchemeMonitoringSolution().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getParentSchemeElement().getId());
 		return startParameterNumber;
 	}
@@ -199,7 +195,7 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 		if (storableObject == null) {
 			Date created = new Date();
 			scheme = new Scheme(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, null, null, 0, 0, null, null, null, null, null, null, null);
+					created, created, null, null, 0L, null, null, null, null, 0, 0, null, null, null, null, null, null);
 		} else {
 			scheme = fromStorableObject(storableObject);
 		}
@@ -219,7 +215,6 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SYMBOL_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_UGO_CELL_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SCHEME_CELL_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SCHEME_MONITORING_SOLUTION_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
 		return scheme;
 	}

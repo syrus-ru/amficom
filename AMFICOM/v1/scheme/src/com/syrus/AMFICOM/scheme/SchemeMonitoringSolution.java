@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.32 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.33 2005/06/15 12:20:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/15 12:20:41 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -51,6 +51,8 @@ public final class SchemeMonitoringSolution extends
 	private String description;
 
 	private int price;
+
+	private boolean active;
 
 	/**
 	 * May be void, as <code>SchemeMonitoringSolution</code> may be used
@@ -86,18 +88,20 @@ public final class SchemeMonitoringSolution extends
 	 * @param name
 	 * @param description
 	 * @param price
+	 * @param active
 	 * @param parentSchemeOptimizeInfo
 	 */
 	SchemeMonitoringSolution(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
-			final int price,
+			final int price, final boolean active,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
 		this.price = price;
+		this.active = active;
 		this.parentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
 	}
 
@@ -111,7 +115,7 @@ public final class SchemeMonitoringSolution extends
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, int, SchemeOptimizeInfo)}.
+	 * {@link #createInstance(Identifier, String, String, int, boolean, SchemeOptimizeInfo)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -120,7 +124,7 @@ public final class SchemeMonitoringSolution extends
 	public static SchemeMonitoringSolution createInstance(
 			final Identifier creatorId, final String name)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, null);
+		return createInstance(creatorId, name, "", 0, false, null);
 	}	
 
 	/**
@@ -128,12 +132,14 @@ public final class SchemeMonitoringSolution extends
 	 * @param name
 	 * @param description
 	 * @param price
+	 * @param active
 	 * @param parentSchemeOptimizeInfo can be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
 	public static SchemeMonitoringSolution createInstance(
 			final Identifier creatorId, final String name,
 			final String description, final int price,
+			final boolean active,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 			throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
@@ -146,7 +152,8 @@ public final class SchemeMonitoringSolution extends
 					IdentifierPool
 							.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
 					created, created, creatorId, creatorId,
-					0L, name, description, price, parentSchemeOptimizeInfo);
+					0L, name, description, price, active,
+					parentSchemeOptimizeInfo);
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
 		} catch (final IdentifierGenerationException ige) {
@@ -218,6 +225,13 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	/**
+	 * @todo Add sanity checks.
+	 */
+	public boolean isActive() {
+		return this.active;
+	}
+
+	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set getSchemePaths() {
@@ -235,7 +249,7 @@ public final class SchemeMonitoringSolution extends
 	public IDLEntity getTransferable() {
 		return new SchemeMonitoringSolution_Transferable(
 				super.getHeaderTransferable(), this.name,
-				this.description, this.price,
+				this.description, this.price, this.active,
 				(Identifier_Transferable) this.parentSchemeOptimizeInfoId.getTransferable());
 	}
 
@@ -254,13 +268,14 @@ public final class SchemeMonitoringSolution extends
 	 * @param name
 	 * @param description
 	 * @param price
+	 * @param active
 	 * @param parentSchemeOptimizeInfoId
 	 */
 	synchronized void setAttributes(final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
-			final int price,
+			final int price, final boolean active,
 			final Identifier parentSchemeOptimizeInfoId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
@@ -271,6 +286,7 @@ public final class SchemeMonitoringSolution extends
 		this.name = name;
 		this.description = description;
 		this.price = price;
+		this.active = active;
 		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
 	}
 
@@ -313,6 +329,16 @@ public final class SchemeMonitoringSolution extends
 		super.markAsChanged();
 	}
 
+	/**
+	 * @todo Add sanity checks.
+	 */
+	public void setActive(final boolean active) {
+		if (this.active == active)
+			return;
+		this.active = active;
+		super.markAsChanged();
+	}
+
 	public void setSchemePaths(final Set schemePaths) {
 		assert schemePaths != null: ErrorMessages.NON_NULL_EXPECTED;
 		for (final Iterator oldSchemePathIterator = getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
@@ -345,6 +371,7 @@ public final class SchemeMonitoringSolution extends
 		this.name = schemeMonitoringSolution.name;
 		this.description = schemeMonitoringSolution.description;
 		this.price = schemeMonitoringSolution.priceUsd;
+		this.active = schemeMonitoringSolution.active;
 		this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
 	}
 }

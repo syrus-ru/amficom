@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.4 2005/05/26 08:33:33 bass Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.5 2005/06/15 12:20:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:33 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/15 12:20:41 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase {
@@ -90,7 +90,8 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD+ COMMA
+					+ SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD + COMMA
+					+ SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE + COMMA
 					+ SchemeMonitoringSolutionWrapper.COLUMN_SCHEME_OPTIMIZE_INFO_ID;
 		}
 		return columns;
@@ -109,6 +110,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -124,7 +126,8 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		SchemeMonitoringSolution schemeMonitoringSolution = fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeMonitoringSolution.getPrice() + APOSTOPHE + COMMA
+				+ schemeMonitoringSolution.getPrice() + COMMA
+				+ (schemeMonitoringSolution.isActive() ? 1 : 0) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeOptimizeInfo().getId());
 		return sql;
 	}
@@ -145,6 +148,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.getPrice());
+		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.isActive() ? 1 : 0);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeOptimizeInfo().getId());
 		return startParameterNumber;
 	}
@@ -162,7 +166,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		if (storableObject == null) {
 			Date created = new Date();
 			schemeMonitoringSolution = new SchemeMonitoringSolution(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, 0, null);
+					created, created, null, null, 0L, null, null, 0, false, null);
 		} else {
 			schemeMonitoringSolution = fromStorableObject(storableObject);
 		}
@@ -174,6 +178,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				resultSet.getInt(SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD),
+				resultSet.getInt(SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE) != 0,
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeMonitoringSolutionWrapper.COLUMN_SCHEME_OPTIMIZE_INFO_ID));
 		return schemeMonitoringSolution;
 	}

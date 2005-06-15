@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeWrapper.java,v 1.3 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeWrapper.java,v 1.4 2005/06/15 12:20:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/15 12:20:41 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -31,7 +31,6 @@ public final class SchemeWrapper extends StorableObjectWrapper {
 //	ugo_cell_id VARCHAR2(32 CHAR),
 //	scheme_cell_id VARCHAR2(32 CHAR),
 //	sort NUMBER(1) NOT NULL,
-//	scheme_monitoring_solution_id VARCHAR2(32 CHAR),
 //	parent_scheme_element_id VARCHAR2(32 CHAR),
 
 	public static final String COLUMN_LABEL = "label";
@@ -44,7 +43,6 @@ public final class SchemeWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_UGO_CELL_ID = "ugo_cell_id";
 	public static final String COLUMN_SCHEME_CELL_ID = "scheme_cell_id";
 	public static final String COLUMN_KIND = "kind";
-	public static final String COLUMN_SCHEME_MONITORING_SOLUTION_ID = "scheme_monitoring_solution_id";
 	public static final String COLUMN_PARENT_SCHEME_ELEMENT_ID = "parent_scheme_element_id";
 
 	private static SchemeWrapper instance;

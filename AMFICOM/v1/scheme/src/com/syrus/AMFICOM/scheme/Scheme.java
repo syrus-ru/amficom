@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.35 2005/06/14 10:51:36 bass Exp $
+ * $Id: Scheme.java,v 1.36 2005/06/15 12:20:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/14 10:51:36 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/15 12:20:41 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -114,7 +114,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param symbol
 	 * @param ugoCell
 	 * @param schemeCell
-	 * @param currentSchemeMonitoringSolution
 	 * @param parentSchemeElement
 	 */
 	Scheme(final Identifier id, final Date created, final Date modified,
@@ -126,7 +125,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeMonitoringSolution currentSchemeMonitoringSolution,
 			final SchemeElement parentSchemeElement) {
 		super(id, created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
@@ -139,7 +137,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
-		this.currentSchemeMonitoringSolutionId = Identifier.possiblyVoid(currentSchemeMonitoringSolution);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
 		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ENTITY_CODE);
@@ -155,7 +152,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, int, int, Kind, Identifier, Map, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeMonitoringSolution, SchemeElement)}.
+	 * {@link #createInstance(Identifier, String, String, String, int, int, Kind, Identifier, Map, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -169,7 +166,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", "", DEFAULT_WIDTH,
 				DEFAULT_HEIGHT, kind, domainId, null, null,
-				null, null, null, null);
+				null, null, null);
 	}
 
 	/**
@@ -185,7 +182,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param symbol
 	 * @param ugoCell
 	 * @param schemeCell
-	 * @param currentSchemeMonitoringSolution
 	 * @param parentSchemeElement
 	 * @throws CreateObjectException
 	 */
@@ -196,7 +192,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final Map map, final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeMonitoringSolution currentSchemeMonitoringSolution,
 			final SchemeElement parentSchemeElement)
 			throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
@@ -215,7 +210,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 					0L, domainId, name, description, label, width,
 					height, kind, map, symbol,
 					ugoCell, schemeCell,
-					currentSchemeMonitoringSolution,
 					parentSchemeElement);
 			scheme.markAsChanged();
 			return scheme;
@@ -266,13 +260,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public SchemeMonitoringSolution getCurrentSchemeMonitoringSolution() {
-		assert this.currentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		try {
-			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.currentSchemeMonitoringSolutionId, true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
-			return null;
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -445,7 +433,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 				(Identifier_Transferable) this.symbolId.getTransferable(),
 				(Identifier_Transferable) this.ugoCellId.getTransferable(),
 				(Identifier_Transferable) this.schemeCellId.getTransferable(),
-				(Identifier_Transferable) this.currentSchemeMonitoringSolutionId.getTransferable(),
 				(Identifier_Transferable) this.parentSchemeElementId.getTransferable());
 	}
 
@@ -532,7 +519,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param symbolId
 	 * @param ugoCellId
 	 * @param schemeCellId
-	 * @param currentSchemeMonitoringSolutionId
 	 * @param parentSchemeElementId
 	 */
 	synchronized void setAttributes(final Date created, final Date modified,
@@ -544,7 +530,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final Identifier mapId, final Identifier symbolId,
 			final Identifier ugoCellId,
 			final Identifier schemeCellId,
-			final Identifier currentSchemeMonitoringSolutionId,
 			final Identifier parentSchemeElementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 
@@ -556,7 +541,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert ugoCellId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert schemeCellId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert currentSchemeMonitoringSolutionId != null: ErrorMessages.NON_NULL_EXPECTED;
 		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		this.name = name;
@@ -569,16 +553,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.symbolId = symbolId;
 		this.ugoCellId = ugoCellId;
 		this.schemeCellId = schemeCellId;
-		this.currentSchemeMonitoringSolutionId = currentSchemeMonitoringSolutionId;
 		this.parentSchemeElementId = parentSchemeElementId;
 	}
 
 	public void setCurrentSchemeMonitoringSolution(final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
-		final Identifier newCurrentSchemeMonitoringSolutionId = Identifier.possiblyVoid(currentSchemeMonitoringSolution);
-		if (this.currentSchemeMonitoringSolutionId.equals(newCurrentSchemeMonitoringSolutionId))
-			return;
-		this.currentSchemeMonitoringSolutionId = newCurrentSchemeMonitoringSolutionId;
-		super.markAsChanged();
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -773,7 +752,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.symbolId = new Identifier(scheme.symbolId);
 		this.ugoCellId = new Identifier(scheme.ugoCellId);
 		this.schemeCellId = new Identifier(scheme.schemeCellId);
-		this.currentSchemeMonitoringSolutionId = new Identifier(scheme.currentSchemeMonitoringSolutionId);
 		this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
 	}
 

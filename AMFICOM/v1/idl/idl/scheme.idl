@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.24 2005/06/15 09:56:11 bass Exp $
+ * $Id: scheme.idl,v 1.25 2005/06/15 12:20:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,6 @@ module com {
 						general::corba::Identifier symbolId;
 						general::corba::Identifier ugoCellId;
 						general::corba::Identifier schemeCellId;
-						general::corba::Identifier currentSchemeMonitoringSolutionId;
 						general::corba::Identifier parentSchemeElementId;
 					};
 
@@ -147,6 +146,7 @@ module com {
 						general::corba::WString32 name;
 						general::corba::WString256 description;
 						long priceUsd;
+						boolean active;
 
 						general::corba::Identifier parentSchemeOptimizeInfoId;
 					};
