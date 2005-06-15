@@ -804,6 +804,54 @@ return;
 // -------------------------------------------------------------------------------------------------
 // ѕосмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и
 // создать, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен -1.
+// —ейчас как коннектор опознаем комбинацию конн.вверх + первый конн.вниз,
+// а также конн.вверх + последний свар.вниз.
+// ѕоиск ведетс€ в пределах макс. прот€женности, завис€щей от ампл. конн.вверх,
+// и ограничиваетс€ любым (>=weld) всплеском вверх.
+int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
+{
+	int shift = -1;
+    Splash* sp1 = (Splash*)splashes[i]; // начальный всплеск
+	Splash* sp2 = 0; // конечный всплеск; sp2 == 0 тогда и только тогда, когда shift == -1
+	if (sp1->begin_conn == -1 || sp1->sign < 0)
+		return shift;
+	double distCrit = fabs(sp1->f_extr) > rACrit ? rSBig : rSSmall;
+	for (int j = i + 1; j < splashes.getLength(); j++) {
+		Splash *tmp = (Splash*)splashes[j];
+		if (fabs(tmp->begin_thr - sp1->end_thr) > distCrit) // достигли макс. прот€жености
+	break;
+		if (tmp->sign > 0) { // подъем
+			if (tmp->begin_thr != -1)
+	break; // подъем свар. и выше - это уже не наш коннектор
+			else
+	continue; // подъем меньше свар. - игнорируем
+		}
+		// спад в пределах макс. прот€женности
+		if (tmp->begin_conn != -1) {
+			// коннекторной амплитуды
+			shift = j - i;
+			sp2 = tmp;
+	break; // на нем и останавливаемс€
+		} else if (tmp->begin_weld != -1) {
+			// сварочной амплитуды - кандидат на спад
+			shift = j - i;
+			sp2 = tmp;
+	continue; // не останавливаемс€, продолжаем поиск
+		}
+		// всплески меньшие чем weld, игнорируем
+	}
+	if (shift == -1)
+		return shift;
+	ep = new EventParams;
+	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
+	correctConnectorFront(ep); // уточн€ем фронт коннекора
+#ifdef debug_lines
+	double begin = ep->begin, end = ep->end;
+	xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
+#endif
+	return shift;
+}
+/*
 // ¬ данный момент обрабатываетс€ так:
 // ≈сли на указанной на входе позиции находитс€ коннекторный всплеск вверх и в пределах reflSize находитс€
 // коннекторный вниз, то он и берЄтс€. ≈сли коннекторного нет, но есть хот€ бы сварочный вниз, то в качестве
@@ -871,7 +919,7 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
       }
     }
     return shift;//если коннектора не нашли, то shift = -1
-}
+}*/
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2 )
 {   double r1s, r1b, r2, r3s, r3b, rmin;
