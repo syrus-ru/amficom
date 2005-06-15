@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.23 2005/06/06 12:20:34 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.24 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,7 +30,7 @@ import java.awt.Point;
  * —тратеги€ управлени€ маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/06 12:20:34 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends AbstractMapStrategy 
@@ -100,7 +100,7 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 	{
 		MarkerController mc = (MarkerController)super.logicalNetLayer.getMapViewController().getController(this.marker);
 
-		MapCoordinatesConverter converter = super.logicalNetLayer;
+		MapCoordinatesConverter converter = super.logicalNetLayer.getConverter();
 
 		//ѕроверка того что маркер можно перемещать и его перемещение
 		if (super.logicalNetLayer.getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))

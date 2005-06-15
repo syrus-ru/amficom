@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.11 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: MarkController.java,v 1.12 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер метки.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public final class MarkController extends AbstractNodeController {
@@ -70,7 +71,7 @@ public final class MarkController extends AbstractNodeController {
 	 * {@inheritDoc}
 	 */
 	public Image getImage(AbstractNode node) {
-		Identifier creatorId = getLogicalNetLayer().getUserId();
+		Identifier creatorId = LoginManager.getUserId();
 
 		Identifier imageId = NodeTypeController.getImageId(
 			creatorId, 
@@ -101,7 +102,7 @@ public final class MarkController extends AbstractNodeController {
 		
 		super.paint(mapElement, g, visibleBounds);
 
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		Point p = converter.convertMapToScreen( mark.getLocation());
 
@@ -143,7 +144,7 @@ public final class MarkController extends AbstractNodeController {
 	 */
 	public void updateSizeInDoubleLt(Mark mark)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 		
 		mark.getPhysicalLink().sortNodes();
 		
@@ -168,7 +169,7 @@ public final class MarkController extends AbstractNodeController {
 	 */
 	public void moveToFromStartLt(Mark mark, double topologicalDistance)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		mark.getPhysicalLink().sortNodeLinks();
 		
@@ -211,7 +212,7 @@ public final class MarkController extends AbstractNodeController {
 	 */
 	public void adjustPosition(Mark mark, double screenDistance)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		Point sp = converter.convertMapToScreen(mark.getStartNode().getLocation());
 	

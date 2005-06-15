@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.74 2005/06/14 07:06:49 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.75 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,17 +79,17 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.74 $, $Date: 2005/06/14 07:06:49 $
+ * @version $Revision: 1.75 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v2
  */
-public abstract class LogicalNetLayer implements MapCoordinatesConverter
+public class LogicalNetLayer
 {
 	public static final double ZOOM_FACTOR = 2D;
 
 	protected CommandList commandList = new CommandList(20);
 	
 	/** Нить, управляющая анимацией на слое. */
-	protected AnimateThread animateThread = null;
+//	protected AnimateThread animateThread = null;
 
 	/** Перменная показывающая что сейчас отображать. */
 	protected MapState mapState = new MapState();
@@ -187,72 +187,108 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public static final double MOVE_CENTER_STEP_SIZE = 0.33;
 
+	private final MapCoordinatesConverter converter;
+
+	private final MapContext mapContext;
+
+	public LogicalNetLayer(MapCoordinatesConverter converter, MapContext mapContext) {
+		this.converter = converter;
+		this.mapContext = mapContext;
+	}
 	/**
 	 * Получить экранные координаты по географическим координатам.
 	 * @param point географическая координата
 	 * @return экранная координата
+	 * @deprecated use converter
 	 */
-	public abstract Point convertMapToScreen(DoublePoint point)
-		throws MapConnectionException, MapDataException;
+	public Point convertMapToScreen(DoublePoint point)
+		throws MapConnectionException, MapDataException {
+		return this.converter.convertMapToScreen(point);
+	}
 	
 	/**
 	 * Получить географические координаты по экранным.
 	 * @param point экранная координата
 	 * @return географическая координата
+	 * @deprecated use converter
 	 */
-	public abstract DoublePoint convertScreenToMap(Point point)
-		throws MapConnectionException, MapDataException;
+	public DoublePoint convertScreenToMap(Point point)
+		throws MapConnectionException, MapDataException {
+		return this.converter.convertScreenToMap(point);
+	}
 
 	/**
 	 * Получить дистанцию между двумя точками в географических координатах.
 	 * @param from географическая координата
 	 * @param to географическая координата
 	 * @return расстояние
+	 * @deprecated use converter
 	 */
-	public abstract double distance(DoublePoint from, DoublePoint to)
-		throws MapConnectionException, MapDataException;
+	public double distance(DoublePoint from, DoublePoint to)
+		throws MapConnectionException, MapDataException {
+		return this.converter.distance(from, to);
+	}
 
 	/**
 	 * Установить центральную точку вида карты.
 	 * @param center географическая координата центра
+	 * @deprecated use MapContext
 	 */
-	public abstract void setCenter(DoublePoint center)
-		throws MapConnectionException, MapDataException;
+	public void setCenter(DoublePoint center)
+		throws MapConnectionException, MapDataException {
+		this.mapContext.setCenter(center);
+	}
 
 	/**
 	 * Получить центральную точку вида карты.
 	 * @return географическая координата центра
+	 * @deprecated use MapContext
 	 */
-	public abstract DoublePoint getCenter()
-		throws MapConnectionException, MapDataException;
+	public DoublePoint getCenter()
+		throws MapConnectionException, MapDataException {
+		return this.mapContext.getCenter();
+	}
 
 	/**
 	 * Получить видимую область в географических координатах.
 	 * @return видимая область
+	 * @deprecated use netMapViewer
 	 */
-	public abstract Rectangle2D.Double getVisibleBounds()
-		throws MapConnectionException, MapDataException;
+	public Rectangle2D.Double getVisibleBounds()
+		throws MapConnectionException, MapDataException {
+		return this.viewer.getVisibleBounds();
+	}
 
 	/**
 	 * Произвести поиск географических объектов по подстроке.
 	 * @param searchText текст поиска
 	 * @return список найденных объектов ({@link SpatialObject})
+	 * @deprecated use MapImageLoader
 	 */
-	public abstract List findSpatialObjects(String searchText)
-		throws MapConnectionException, MapDataException;
+	public List findSpatialObjects(String searchText)
+		throws MapConnectionException, MapDataException {
+		throw new UnsupportedOperationException("findSpatialObjects deprecated use MapImageLoader");
+	}
 	
 	/**
 	 * Центрировать географический объект.
 	 * @param so географический объект
+	 * @deprecated use netMapViewer
 	 */
-	public abstract void centerSpatialObject(SpatialObject so)
-		throws MapConnectionException, MapDataException;
+	public void centerSpatialObject(SpatialObject so)
+		throws MapConnectionException, MapDataException {
+		this.viewer.centerSpatialObject(so);
+	}
 
 	/**
 	 * Освободить ресурсы компонента с картой и завершить отображение карты.
+	 * @deprecated use connection
 	 */
-	public abstract void release()
-		throws MapConnectionException, MapDataException;
+	public void release()
+		throws MapConnectionException, MapDataException {
+		throw new UnsupportedOperationException("release deprecated use connection");
+	}
+		
 
 	/**
 	 * Перерисовать содержимое компонента с картой.
@@ -260,87 +296,123 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * <code>true</code> - перерисовываются географические объекты и элементы
 	 * топологической схемы. <code>false</code> - перерисовываются только 
 	 * элементы топологической схемы.
+	 * @deprecated use netMapViewer
 	 */
-	public abstract void repaint(boolean fullRepaint)
-		throws MapConnectionException, MapDataException;
-	
+	public void repaint(boolean fullRepaint)
+		throws MapConnectionException, MapDataException {
+		this.viewer.repaint(fullRepaint);
+	}
+
 	/**
 	 * Устанавить курсор мыши на компоненте отображения карты.
 	 * @param cursor курсор
+	 * @deprecated use netMapViewer
 	 */
-	public abstract void setCursor(Cursor cursor);
+	public void setCursor(Cursor cursor) {
+		this.viewer.setCursor(cursor);
+	}
 
 	/**
 	 * Получить установленный курсор.
 	 * @return курсор
+	 * @deprecated use netMapViewer
 	 */
-	public abstract Cursor getCursor();
+	public Cursor getCursor() {
+		return this.viewer.getCursor();
+	}
 
 	/**
 	 * Получить текущий масштаб вида карты.
 	 * @return масштаб
+	 * @deprecated use MapContext
 	 */
-	public abstract double getScale()
-		throws MapConnectionException, MapDataException;
+	public double getScale()
+		throws MapConnectionException, MapDataException {
+		return this.mapContext.getScale(); 
+	}
 
 	/**
 	 * Установить заданный масштаб вида карты.
 	 * @param scale масштаб
+	 * @deprecated use MapContext
 	 */
-	public abstract void setScale(double scale)
-		throws MapConnectionException, MapDataException;
+	public void setScale(double scale)
+		throws MapConnectionException, MapDataException {
+		this.mapContext.setScale(scale);
+	}
 
 	/**
 	 * Установить масштаб вида карты с заданным коэффициентом.
-	 * @param scaleСoef коэффициент масштабирования
+	 * @param scaleCoef коэффициент масштабирования
+	 * @deprecated use MapContext
 	 */
-	public abstract void scaleTo(double scaleСoef)
-		throws MapConnectionException, MapDataException;
+	public void scaleTo(double scaleCoef)
+		throws MapConnectionException, MapDataException {
+		this.mapContext.scaleTo(scaleCoef);
+	}
 
 	/**
 	 * Приблизить вид карты со стандартным коэффициентом.
+	 * @deprecated use MapContext
 	 */
-	public abstract void zoomIn()
-		throws MapConnectionException, MapDataException;
+	public void zoomIn()
+		throws MapConnectionException, MapDataException {
+		this.mapContext.zoomIn();
+	}
 
 	/**
 	 * Отдалить вид карты со стандартным коэффициентом.
+	 * @deprecated use MapContext
 	 */
-	public abstract void zoomOut()
-		throws MapConnectionException, MapDataException;
+	public void zoomOut()
+		throws MapConnectionException, MapDataException {
+		this.mapContext.zoomOut();
+	}
 	
 	/**
 	 * Приблизить вид выделенного участка карты (в координатах карты)
 	 * по координатам угловых точек.
 	 * @param from географическая координата
 	 * @param to географическая координата
+	 * @deprecated use MapContext
 	 */
-	public abstract void zoomToBox(DoublePoint from, DoublePoint to)
-		throws MapConnectionException, MapDataException;
+	public void zoomToBox(DoublePoint from, DoublePoint to)
+		throws MapConnectionException, MapDataException {
+		this.mapContext.zoomToBox(from, to);
+	}
 
 	/**
 	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
 	 * передвинута мышь с нажатой клавишей.
 	 * @param me мышиное событие
+	 * @deprecated use netMapViewer
 	 */	
-	public abstract void handDragged(MouseEvent me)
-		throws MapConnectionException, MapDataException;
+	public void handDragged(MouseEvent me)
+		throws MapConnectionException, MapDataException {
+		this.viewer.handDragged(me);
+	}
 	
 	/**
 	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
 	 * передвинута мышь.
 	 * @param me мышиное событие
+	 * @deprecated use netMapViewer
 	 */	
-	public abstract void handMoved(MouseEvent me)
-		throws MapConnectionException, MapDataException;
+	public void handMoved(MouseEvent me)
+		throws MapConnectionException, MapDataException {
+		this.viewer.handMoved(me);
+	}
 
 	/**
 	 * В пустом режиме ({@link MapState#NULL_ACTION_MODE})
 	 * передвинута мышь.
 	 * @param me мышиное событие
+	 * @deprecated use netMapViewer
 	 */	
-	public abstract void mouseMoved(MouseEvent me)
-		throws MapConnectionException, MapDataException;
+	public void mouseMoved(MouseEvent me)
+		throws MapConnectionException, MapDataException {
+		this.viewer.mouseMoved(me);
+	}
 
 	/**
 	 * При изменении масштаба отображения карты необходимо обновить
@@ -418,8 +490,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapView(" + mapView + ")");
 
-		if(this.animateThread != null)
-			this.animateThread.stopRunning();
+//		if(this.animateThread != null)
+//			this.animateThread.stopRunning();
 
 		if(	getContext() != null
 			&& getContext().getDispatcher() != null)
@@ -456,8 +528,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				if(this.aContext.getApplicationModel() != null)
 					if (this.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
 				{
-					this.animateThread = new AnimateThread(this);
-					this.animateThread.start();
+//					this.animateThread = new AnimateThread(this);
+//					this.animateThread.start();
 				}
 		}
 
@@ -555,6 +627,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Получить текущую экранную точку.
 	 * @return текущая экранная точка
+	 * @deprecated use netMapViewer
 	 */
 	public Point getCurrentPoint()
 	{
@@ -564,6 +637,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Установить текущую экранную точку.
 	 * @param point текущая экранная точка
+	 * @deprecated use netMapViewer
 	 */
 	public void setCurrentPoint(Point point)
 	{
@@ -573,6 +647,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Передать команду на отображение координат текущей точки в окне координат.
 	 * @param point экранная координата мыши
+	 * @deprecated use mapFrame
 	 */	
 	public void showLatLong(Point point)
 		throws MapConnectionException, MapDataException
@@ -589,6 +664,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Получить запомненную начальную экранную точку.
 	 * @return начальная экранная точка
+	 * @deprecated use netMapViewer
 	 */
 	public Point getStartPoint()
 	{
@@ -598,6 +674,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Установить начальную экранную точку.
 	 * @param point начальная экранная точка
+	 * @deprecated use netMapViewer
 	 */
 	public void setStartPoint(Point point)
 	{
@@ -607,6 +684,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Получить запомненную конечную экранную точку.
 	 * @return конечная экранная точка
+	 * @deprecated use netMapViewer
 	 */
 	public Point getEndPoint()
 	{
@@ -616,6 +694,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Установить конечную экранную точку.
 	 * @param point конечная экранная точка
+	 * @deprecated use netMapViewer
 	 */
 	public void setEndPoint(Point point)
 	{
@@ -634,6 +713,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Получить флаг отображения контекстного меню.
 	 * @return флаг
+	 * @deprecated use netMapViewer
 	 */
 	public boolean isMenuShown()
 	{
@@ -643,6 +723,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Установить флаг отображения контекстного меню.
 	 * @param isMenuShown флаг
+	 * @deprecated use netMapViewer
 	 */	
 	public void setMenuShown(boolean isMenuShown)
 	{
@@ -1342,6 +1423,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Отправить событие карты. Чтобы не отправить событие себе самому, 
 	 * используется флаг {@link #performProcessing}
 	 * @param me событие карты
+	 * @deprecated use netMapViewer
 	 */
 	public void sendMapEvent(MapEvent me)
 	{
@@ -1357,6 +1439,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Генерация сообщеия о выборке элемента карты.
 	 * @param mapElement выбранный элемент карты
+	 * @deprecated use netMapViewer
 	 */
 	public void notifyMapEvent(MapElement mapElement)
 	{
@@ -1447,6 +1530,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Получить текущий фиксированный элемент.
 	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
 	 * @return текущий фиксированный элемент
+	 * @deprecated use netMapViewer
 	 */
 	public AbstractNode getFixedNode()
 	{
@@ -1457,7 +1541,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Получить Список узлов, соседних (через фрагменты) с фиксированным узлом.
 	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
 	 * @return список элементов. 
-	 * 
+	 * @deprecated use netMapViewer
 	 */
 	public List getFixedNodeList()
 	{
@@ -1659,19 +1743,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public boolean isSelectionEmpty()
 	{
-//		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isSelectionEmpty()");
-//		
-//		Iterator e = getMapView().getAllElements().iterator();
-//
-//		while (e.hasNext())
-//		{
-//			MapElement curElement = (MapElement)e.next();
-//			if (curElement.isSelected())
-//			{
-//				return false;
-//			}
-//		}
-//		return true;
 		return getMapView().getMap().getSelectedElements().isEmpty();
 	}
 
@@ -1826,46 +1897,23 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Получить идентификатор пользователя, от чьего имени создаются
 	 * новые объекты.
 	 * @return идентификатор пользователя
+	 * @deprecated use LoginManager.getUserId()
 	 */
 	public Identifier getUserId()
 	{
 		return this.userId;
 	}
+	/**
+	 * @return Returns the converter.
+	 */
+	public MapCoordinatesConverter getConverter() {
+		return this.converter;
+	}
+	/**
+	 * @return Returns the mapContext.
+	 */
+	public MapContext getMapContext() {
+		return this.mapContext;
+	}
 
-//	public Dimension getDiscreteShifts(int shiftX, int shiftY)
-//	{
-//		Dimension visSize = this.getMapViewer().getVisualComponent().getSize();
-//
-//		int discreteShiftX = 0;
-//		int discreteShiftY = 0;
-//		//Определяем угол смещения - если он ближе к Pi*n/2, n = 2k + 1 - тогда смещаем по диагонали 
-//		double angle = Math.toDegrees(Math.acos(shiftX / Math.sqrt(Math.pow(shiftX,2) + Math.pow(shiftY,2))));
-//		
-//		if (angle > 90)
-//			angle = 180 - angle;
-//		
-//		if ((22.5 < angle) && (angle < 67.5))
-//		{
-//			if (	(Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
-//					&&(Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE))
-//			{
-//				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
-//				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
-//			}
-//		}
-//		else if (angle <= 22.5)
-//		{
-//			if (Math.abs(shiftX) >= visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)			
-//				discreteShiftX = (int)Math.round(shiftX / Math.abs(shiftX) * visSize.getWidth() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);
-//			discreteShiftY = 0;			
-//		}
-//		else if (67.5 <= angle)
-//		{
-//			discreteShiftX = 0;
-//			if (Math.abs(shiftY) >= visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE)
-//				discreteShiftY = (int)Math.round(shiftY / Math.abs(shiftY) * visSize.getHeight() * LogicalNetLayer.MOVE_CENTER_STEP_SIZE);			
-//		}
-//		return new Dimension(discreteShiftX,discreteShiftY);
-//	}
-	
 }

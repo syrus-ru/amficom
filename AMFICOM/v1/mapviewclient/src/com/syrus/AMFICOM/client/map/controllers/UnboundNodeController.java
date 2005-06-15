@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.6 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.7 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер непривязанного узела (элемент схемы).
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:33 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public class UnboundNodeController extends SiteNodeController
@@ -72,7 +72,7 @@ public class UnboundNodeController extends SiteNodeController
 		
 		super.paint(unbound, g, visibleBounds);
 		
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 		
 		Point p = converter.convertMapToScreen(unbound.getLocation());
 

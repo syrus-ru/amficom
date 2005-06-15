@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.9 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.10 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -190,7 +190,7 @@ public final class NodeLinkController extends AbstractLinkController {
 
 		paint(nodeLink, g, visibleBounds, str, color);
 
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 		Point from = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
 		Point to = converter.convertMapToScreen(nodeLink.getEndNode().getLocation());
 
@@ -258,7 +258,7 @@ public final class NodeLinkController extends AbstractLinkController {
 
 		updateLengthLt(nodeLink);
 
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		Point from = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
 		Point to = converter.convertMapToScreen(nodeLink.getEndNode().getLocation());
@@ -349,7 +349,7 @@ public final class NodeLinkController extends AbstractLinkController {
 
 		NodeLink nodeLink = (NodeLink )mapElement;
 		
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		int[] xx = searchPolygon.xpoints;
 		int[] yy = searchPolygon.ypoints;
@@ -423,7 +423,7 @@ public final class NodeLinkController extends AbstractLinkController {
 	 */	
 	public void updateLengthLt(NodeLink nodeLink)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		if(converter != null)
 			nodeLink.setLengthLt(converter.distance(
@@ -467,7 +467,7 @@ public final class NodeLinkController extends AbstractLinkController {
 	 */
 	public double getScreenLength(NodeLink nodeLink)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 		
 		Point start = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
 		Point end = converter.convertMapToScreen(nodeLink.getEndNode().getLocation());
@@ -486,7 +486,7 @@ public final class NodeLinkController extends AbstractLinkController {
 	 */
 	public double[] calcScreenSlope(NodeLink nodeLink)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 		
 		Point start = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
 		Point end = converter.convertMapToScreen(nodeLink.getEndNode().getLocation());

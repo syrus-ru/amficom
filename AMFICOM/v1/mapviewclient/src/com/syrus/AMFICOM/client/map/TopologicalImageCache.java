@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.4 2005/06/14 12:44:35 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.5 2005/06/15 07:42:28 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/06/14 12:44:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/15 07:42:28 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -300,7 +300,7 @@ public class TopologicalImageCache implements MapImageRenderer
 		}
 	}
 
-	private void nulifyCache()
+	private void nulifyCache() throws MapConnectionException, MapDataException
 	{
 		Logger.log(" TIC - nulifying cache.");		
 //		this.requestToPaint = null;
@@ -750,9 +750,11 @@ public class TopologicalImageCache implements MapImageRenderer
 	 * подгрузиться, б)центр которых отступает от текущего центра более, чем на
 	 * TopologicalImageCache.SCALE_SIZE * MapFrame.MOVE_CENTER_STEP_SIZE *
 	 * _VisualComponent_.getSize();
+	 * @throws MapDataException 
+	 * @throws MapConnectionException 
 	 * 
 	 */
-	private void clearFarAndUnloadedSegments()
+	private void clearFarAndUnloadedSegments() throws MapConnectionException, MapDataException
 	{
 		Logger.log(" TIC - clearFarAndUnloadedSegments - just entered.");
 		

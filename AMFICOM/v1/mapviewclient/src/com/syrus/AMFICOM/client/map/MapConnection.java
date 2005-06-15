@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.6 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: MapConnection.java,v 1.7 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/15 07:42:28 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -32,6 +32,12 @@ public abstract class MapConnection {
 	public abstract String getPath();
 
 	public abstract String getView();
+	
+	public abstract MapImageLoader createImageLoader();
+	
+	public abstract MapCoordinatesConverter createCoordinatesConverter();
+	
+	public abstract MapContext createMapContext();
 
 	/**
 	 * Получить список названий доступных видов.

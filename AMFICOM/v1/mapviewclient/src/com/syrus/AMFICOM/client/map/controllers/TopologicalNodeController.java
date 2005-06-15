@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.16 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.17 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:20:33 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController {
@@ -119,7 +119,7 @@ public class TopologicalNodeController extends AbstractNodeController {
 	public void setActive(TopologicalNode node, boolean active) {
 		node.setActive(active);
 
-		Identifier creatorId = getLogicalNetLayer().getUserId();
+		Identifier creatorId = LoginManager.getUserId();
 		init(creatorId);
 
 		if(active)
@@ -130,7 +130,7 @@ public class TopologicalNodeController extends AbstractNodeController {
 
 	public Identifier getImageId(AbstractNode node) {
 		if(node.getImageId() == null) {
-			Identifier creatorId = getLogicalNetLayer().getUserId();
+			Identifier creatorId = LoginManager.getUserId();
 			init(creatorId);
 
 			TopologicalNode topologicalNode = (TopologicalNode )node;
@@ -203,7 +203,7 @@ public class TopologicalNodeController extends AbstractNodeController {
 		super.paint(node, g, visibleBounds);
 
 		if(node.isCanBind()) {
-			MapCoordinatesConverter converter = getLogicalNetLayer();
+			MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 			
 			Point p = converter.convertMapToScreen(node.getLocation());
 	

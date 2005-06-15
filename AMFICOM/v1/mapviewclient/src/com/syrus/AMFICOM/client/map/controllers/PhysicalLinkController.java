@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.16 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.17 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -206,7 +207,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 			nlc.paint(nodelink, g, visibleBounds, stroke, color);
 			
 			if(showName) {
-				MapCoordinatesConverter converter = getLogicalNetLayer();
+				MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 				Point from = converter.convertMapToScreen(nodelink.getStartNode().getLocation());
 				Point to = converter.convertMapToScreen(nodelink.getEndNode().getLocation());
 
@@ -290,14 +291,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 		PhysicalLink plink = (PhysicalLink )mapElement;
 
 		CharacteristicType cType = getCharacteristicType(
-			getLogicalNetLayer().getUserId(), 
+			LoginManager.getUserId(), 
 			AbstractLinkController.ATTRIBUTE_THICKNESS);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return Integer.parseInt(ea.getValue());
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getLineSize(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
+		return ltc.getLineSize(LoginManager.getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -310,14 +311,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 		PhysicalLink plink = (PhysicalLink )mapElement;
 
 		CharacteristicType cType = getCharacteristicType(
-			getLogicalNetLayer().getUserId(), 
+			LoginManager.getUserId(), 
 			AbstractLinkController.ATTRIBUTE_STYLE);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return ea.getValue();
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getStyle(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
+		return ltc.getStyle(LoginManager.getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -330,14 +331,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 		PhysicalLink plink = (PhysicalLink )mapElement;
 
 		CharacteristicType cType = getCharacteristicType(
-			getLogicalNetLayer().getUserId(), 
+			LoginManager.getUserId(), 
 			AbstractLinkController.ATTRIBUTE_STYLE);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return LineComboBox.getStrokeByType(ea.getValue());
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getStroke(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
+		return ltc.getStroke(LoginManager.getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -350,14 +351,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 		PhysicalLink plink = (PhysicalLink )mapElement;
 
 		CharacteristicType cType = getCharacteristicType(
-			getLogicalNetLayer().getUserId(), 
+			LoginManager.getUserId(), 
 			AbstractLinkController.ATTRIBUTE_COLOR);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return new Color(Integer.parseInt(ea.getValue()));
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getColor(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
+		return ltc.getColor(LoginManager.getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -370,14 +371,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 		PhysicalLink plink = (PhysicalLink )mapElement;
 
 		CharacteristicType cType = getCharacteristicType(
-			getLogicalNetLayer().getUserId(), 
+			LoginManager.getUserId(), 
 			AbstractLinkController.ATTRIBUTE_COLOR);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return new Color(Integer.parseInt(ea.getValue()));
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getAlarmedColor(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
+		return ltc.getAlarmedColor(LoginManager.getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -390,13 +391,13 @@ public class PhysicalLinkController extends AbstractLinkController {
 		PhysicalLink plink = (PhysicalLink )mapElement;
 
 		CharacteristicType cType = getCharacteristicType(
-			getLogicalNetLayer().getUserId(), 
+			LoginManager.getUserId(), 
 			AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return Integer.parseInt(ea.getValue());
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getAlarmedLineSize(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
+		return ltc.getAlarmedLineSize(LoginManager.getUserId(), (PhysicalLinkType )plink.getType());
 	}
 }

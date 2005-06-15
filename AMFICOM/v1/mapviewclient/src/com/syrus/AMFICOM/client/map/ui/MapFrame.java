@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.45 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapFrame.java,v 1.46 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,9 +26,15 @@ import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapContext;
+import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapImageLoader;
+import com.syrus.AMFICOM.client.map.MapImageRenderer;
+import com.syrus.AMFICOM.client.map.MapImageRendererFactory;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
@@ -75,7 +81,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.45 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/15 07:42:28 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -121,6 +127,8 @@ public class MapFrame extends JInternalFrame
 	 */
 	protected static MapFrame singleton;
 
+	private MapConnection mapConnection;
+
 	protected MapFrame(ApplicationContext aContext)
 		throws MapConnectionException, MapDataException
 	{
@@ -136,15 +144,30 @@ public class MapFrame extends JInternalFrame
 		// экземпляр обозревателя создается менеджером карты на основе
 		// данных, записанных в файле Map.properties
 
+		this.mapConnection = MapConnection.create(MapPropertiesManager.getConnectionClassName());
+		this.mapConnection.setPath(MapPropertiesManager.getDataBasePath());
+		this.mapConnection.setView(MapPropertiesManager.getDataBaseView());
+		this.mapConnection.setURL(MapPropertiesManager.getDataBaseURL());
+		this.mapConnection.connect();
+		
+		MapImageLoader loader = this.mapConnection.createImageLoader();
+		MapContext mapContext = this.mapConnection.createMapContext();
+		MapCoordinatesConverter converter = this.mapConnection.createCoordinatesConverter();
 
-		MapConnection mapConnection = MapConnection.create(MapPropertiesManager.getConnectionClassName());
-		mapConnection.setPath(MapPropertiesManager.getDataBasePath());
-		mapConnection.setView(MapPropertiesManager.getDataBaseView());
-		mapConnection.setURL(MapPropertiesManager.getDataBaseURL());
-		mapConnection.connect();
+		MapImageRenderer renderer = MapImageRendererFactory.create(
+				MapPropertiesManager.getMapImageRendererClassName(),
+				loader); 
 
-		this.mapViewer = NetMapViewer.create(MapPropertiesManager.getNetMapViewerClassName());
-		this.mapViewer.setConnection(mapConnection);
+		LogicalNetLayer logicalNetLayer = new LogicalNetLayer(
+				converter,
+				mapContext);
+		
+		this.mapViewer = NetMapViewer.create(
+				MapPropertiesManager.getNetMapViewerClassName(),
+				logicalNetLayer,
+				mapContext,
+				renderer);
+
 		this.mapViewer.init();
 
 		try
@@ -651,6 +674,13 @@ public class MapFrame extends JInternalFrame
 		{
 			this.adaptee.thisInternalFrameOpened(e);
 		}
+	}
+
+	/**
+	 * @return Returns the mapConnection.
+	 */
+	public MapConnection getMapConnection() {
+		return this.mapConnection;
 	}
 	
 }

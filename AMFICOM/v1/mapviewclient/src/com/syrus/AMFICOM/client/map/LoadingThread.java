@@ -1,6 +1,6 @@
 
 /**
- * $Id: LoadingThread.java,v 1.3 2005/06/14 14:32:20 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.4 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -157,7 +157,7 @@ public class LoadingThread extends Thread {
         lIt.add(requestToAdd);
     }
 
-    private void stopRendering() {
+    private void stopRendering() throws MapConnectionException, MapDataException {
         this.mapImageLoader.stopRendering();
     }
 
@@ -166,8 +166,10 @@ public class LoadingThread extends Thread {
      * 
      * @param requestToAdd
      *            Запрос
+     * @throws MapDataException 
+     * @throws MapConnectionException 
      */
-    public void addRequest(TopologicalRequest requestToAdd) {
+    public void addRequest(TopologicalRequest requestToAdd) throws MapConnectionException, MapDataException {
     		Logger.log(" TIC - loadingThread - addRequest - adding request ("
           + requestToAdd + ")");
     	
@@ -181,7 +183,7 @@ public class LoadingThread extends Thread {
         }
     }
 
-    public boolean removeRequest(TopologicalRequest request) {
+    public boolean removeRequest(TopologicalRequest request) throws MapConnectionException, MapDataException {
         synchronized (this.state) {
             if ((this.state.getValue() == State.STATE_RENDERING)
                     && (this.requestCurrentlyProcessed == request)) {
@@ -201,9 +203,11 @@ public class LoadingThread extends Thread {
      * Меняет приоритет невыполненного запроса в очереди
      * @param request Запрос
      * @param newPriority Новый приоритет
+     * @throws MapDataException 
+     * @throws MapConnectionException 
      */
     public void changeRequestPriority(TopologicalRequest request,
-            int newPriority)
+            int newPriority) throws MapConnectionException, MapDataException
     {
     	if (request.getPriority() == newPriority)
     	{
@@ -278,7 +282,7 @@ public class LoadingThread extends Thread {
         Logger.log(" TIC - loadingThread - setTheLowestPriorityForAll - done");        
     }
     
-    public void clearQueue() {
+    public void clearQueue() throws MapConnectionException, MapDataException {
       this.requestQueue.clear();    	
       synchronized (this.state) {
         if (this.state.getValue() == State.STATE_RENDERING)

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.11 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.12 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {
@@ -198,7 +198,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 			return;
 		}
 
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		Point p = converter.convertMapToScreen(node.getLocation());
 
@@ -245,7 +245,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 
 		AbstractNode node = (AbstractNode )mapElement;
 
-		MapCoordinatesConverter converter = getLogicalNetLayer();
+		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 
 		//Проверка того что курсор находиться в прямоугольнике
 		int width = (int )getBounds(node).getWidth();

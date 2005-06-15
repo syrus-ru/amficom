@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.7 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.8 2005/06/15 07:42:28 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
@@ -14,7 +14,7 @@ import java.awt.Point;
  * Конвертер географических и экранных координат для отображения элементов карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/15 07:42:28 $
  * @module maviewclient_v1
  */
 public interface MapCoordinatesConverter
@@ -35,24 +35,6 @@ public interface MapCoordinatesConverter
 	 * @return географические координаты
 	 */
 	DoublePoint convertScreenToMap(Point point)
-		throws MapConnectionException, MapDataException;
-
-	/**
-	 * Перевести экранную дистанцию в географическую.
-	 * 
-	 * @param screenDistance экранная дистанция
-	 * @return географическая дистанция
-	 */
-	double convertScreenToMap(double screenDistance)
-		throws MapConnectionException, MapDataException;
-
-	/**
-	 * Перевести географическую дистанцию в экранную.
-	 * 
-	 * @param topologicalDistance географическая дистанция
-	 * @return экранная дистанция
-	 */
-	double convertMapToScreen(double topologicalDistance)
 		throws MapConnectionException, MapDataException;
 
 	/**
@@ -79,4 +61,23 @@ public interface MapCoordinatesConverter
 	 */
 	double distance(DoublePoint from, DoublePoint to)
 		throws MapConnectionException, MapDataException;
+
+	/**
+	 * Перевести экранную дистанцию в географическую.
+	 * 
+	 * @param screenDistance экранная дистанция
+	 * @return географическая дистанция
+	 */
+//	double convertScreenToMap(double screenDistance)
+//		throws MapConnectionException, MapDataException;
+
+	/**
+	 * Перевести географическую дистанцию в экранную.
+	 * 
+	 * @param topologicalDistance географическая дистанция
+	 * @return экранная дистанция
+	 */
+//	double convertMapToScreen(double topologicalDistance)
+//		throws MapConnectionException, MapDataException;
+
 }

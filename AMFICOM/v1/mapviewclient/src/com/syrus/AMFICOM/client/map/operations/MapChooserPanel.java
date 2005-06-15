@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.4 2005/06/06 12:57:02 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.5 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/15 07:42:28 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -116,7 +116,7 @@ public class MapChooserPanel extends JPanel
 		List availableViews;
 		try
 		{
-			availableViews = this.mapFrame.getMapViewer().getConnection().getAvailableViews();
+			availableViews = this.mapFrame.getMapConnection().getAvailableViews();
 		}
 		catch(MapDataException e)
 		{
@@ -129,7 +129,7 @@ public class MapChooserPanel extends JPanel
 		{
 			this.combo.addItem(it.next());
 		}
-		String currentMap = this.mapFrame.getMapViewer().getConnection().getView();
+		String currentMap = this.mapFrame.getMapConnection().getView();
 		if (null == currentMap) 
 		{
 			if(this.combo.getModel().getSize() != 0)
@@ -156,17 +156,17 @@ public class MapChooserPanel extends JPanel
 	void changeMap() 
 	{
 		String name = (String )this.combo.getSelectedItem();
-		String previousView = this.mapFrame.getMapViewer().getConnection().getView(); 
+		String previousView = this.mapFrame.getMapConnection().getView(); 
 		try
 		{
-			this.mapFrame.getMapViewer().getConnection().setView(name);
-			this.mapFrame.getMapViewer().getConnection().connect();
+			this.mapFrame.getMapConnection().setView(name);
+			this.mapFrame.getMapConnection().connect();
 		}
 		catch(MapConnectionException e)
 		{
 			System.out.println("Cannot change view: " + e.getMessage());
 			e.printStackTrace();
-			this.mapFrame.getMapViewer().getConnection().setView(previousView);
+			this.mapFrame.getMapConnection().setView(previousView);
 		}
 	}
 }

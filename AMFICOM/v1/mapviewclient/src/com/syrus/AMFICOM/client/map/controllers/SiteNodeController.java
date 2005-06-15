@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.12 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.13 2005/06/15 07:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/06 12:20:33 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/15 07:42:28 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController {
@@ -83,7 +83,7 @@ public class SiteNodeController extends AbstractNodeController {
 		
 		//Если внешний узел то рисовать рамку
 		if (getLogicalNetLayer().getMapView().getMap().getExternalNodes().contains(site)) {
-			MapCoordinatesConverter converter = getLogicalNetLayer();
+			MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 			
 			Point p = converter.convertMapToScreen(site.getLocation());
 	
@@ -99,7 +99,7 @@ public class SiteNodeController extends AbstractNodeController {
 		}
 
 		if(MapPropertiesManager.isLayerLabelVisible(site.getType())) {
-			MapCoordinatesConverter converter = getLogicalNetLayer();
+			MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
 			
 			Point p = converter.convertMapToScreen(site.getLocation());
 	
