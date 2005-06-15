@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.8 2005/06/14 11:25:44 bob Exp $
+ * $Id: Environment.java,v 1.9 2005/06/15 11:27:36 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import java.util.logging.XMLFormatter;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.LookAndFeel;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -57,7 +58,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/06/14 11:25:44 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/15 11:27:36 $
  * @module commonclient_v1
  */
 public final class Environment {
@@ -516,18 +517,8 @@ public final class Environment {
 				return true;
 			ModuleCodeDialog sDialog = new ModuleCodeDialog(code[module_index], name[module_index]);
 
-			sDialog.setModal(true);
-
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			Dimension frameSize = sDialog.getSize();
-			sDialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-
-			sDialog.show();
-
-			switch (sDialog.getRetCode()) {
-				case ModuleCodeDialog.RET_CANCEL:
-					return false;
-				case ModuleCodeDialog.RET_OK:
+			switch (sDialog.getResult()) {
+				case JOptionPane.OK_OPTION:
 					return true;
 				default:
 					return false;
