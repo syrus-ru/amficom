@@ -302,13 +302,13 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	{
 		//XXX: Y shift performed here
 		//return (int)((maxY - value - minY - top) * scaleY + .5); // GUI shifts
-		return (int)Math.round((- value - top) * scaleY); // bellcore shifts
+		return (int)Math.round((maxY - value - top) * scaleY); // GUI makes no shift
 	}
 
 	protected double coord2value(int coord)
 	{
 		//XXX: Y shift performed here
 		//return maxY - minY - top - coord / scaleY; // GUI shifts
-		return - top - coord / scaleY; // bellcore shifts
+		return maxY - top - coord / scaleY; // GUI makes no shift
 	}
 }
