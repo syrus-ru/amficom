@@ -2,6 +2,8 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 import java.io.*;
 
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+
 /**
  * <p>Represents r/g modelling functions with native implementation.</p>
  *
@@ -20,7 +22,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.21 $, $Date: 2005/06/07 16:33:15 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/15 10:55:30 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -28,6 +30,10 @@ import java.io.*;
 public class ModelFunction {
 	private int shapeID; // тип кривой (внутренний идентификатор native-кода)
 	private double[] pars; // параметры кривой
+
+	static {
+		CoreAnalysisManager.loadDLL();
+	}
 
 	private native double nF(double x);
 	private native double[] nFArray(double x0, double step, int length);

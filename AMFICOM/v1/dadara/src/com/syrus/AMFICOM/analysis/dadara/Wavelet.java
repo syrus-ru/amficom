@@ -1,5 +1,5 @@
 /*-
- * $Id: Wavelet.java,v 1.3 2005/03/28 11:34:37 saa Exp $
+ * $Id: Wavelet.java,v 1.4 2005/06/15 10:55:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,24 @@
 
 package com.syrus.AMFICOM.analysis.dadara;
 
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+
 /**
  * Класс предоставляет самый минимальный набор функций работы с вейвлетами,
  * которые нужны в GUI анализа. Введен для того, чтобы можно было заменить
  * медленный Java-код на native-вызов.
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/03/28 11:34:37 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/15 10:55:31 $
  * @module
  */
 public class Wavelet
 {
 	public static final int TYPE_SINX = 0;
 	public static final int TYPE_ABSXSINX = 1;
+
+	static {
+		CoreAnalysisManager.loadDLL();
+	}
 
 	private static native double[] nMakeTransform(int type, int scale, double[] input, int iFrom, int iTo, double norm);
 	private static native double nGetNormStep(int type, int scale); 
