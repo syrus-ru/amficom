@@ -1,4 +1,4 @@
--- $Id: schemecablelink.sql,v 1.5 2005/06/09 14:40:12 max Exp $
+-- $Id: schemecablelink.sql,v 1.6 2005/06/15 09:28:25 bass Exp $
 
 CREATE TABLE SchemeCableLink (
 	id NUMBER(19) NOT NULL,
@@ -14,10 +14,13 @@ CREATE TABLE SchemeCableLink (
 --
 	physical_length BINARY_DOUBLE NOT NULL,
 	optical_length BINARY_DOUBLE NOT NULL,
+--
 	cable_link_type_id NUMBER(19),
 	cable_link_id NUMBER(19),
+--
 	source_scheme_cable_port_id NUMBER(19),
 	target_scheme_cable_port_id NUMBER(19),
+--
 	parent_scheme_id NUMBER(19) NOT NULL,
 --
 	CONSTRAINT schmcbllnk_pk PRIMARY KEY(id),
@@ -28,13 +31,15 @@ CREATE TABLE SchemeCableLink (
 		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmcbllnk_cbl_lnk_tp_fk FOREIGN KEY(cable_link_type_id)
-		REFERENCES LinkType(id) ON DELETE CASCADE,
+		REFERENCES CableLinkType(id) ON DELETE CASCADE,
 	CONSTRAINT schmcbllnk_cbl_lnk_fk FOREIGN KEY(cable_link_id)
-		REFERENCES Link(id) ON DELETE CASCADE,
+		REFERENCES CableLink(id) ON DELETE CASCADE,
+--
 	CONSTRAINT schmcbllnk_src_schm_cbl_prt_fk FOREIGN KEY(source_scheme_cable_port_id)
 		REFERENCES SchemeCablePort(id) ON DELETE CASCADE,
 	CONSTRAINT schmcbllnk_tgt_schm_cbl_prt_fk FOREIGN KEY(target_scheme_cable_port_id)
 		REFERENCES SchemeCablePort(id) ON DELETE CASCADE,
+--
 	CONSTRAINT schmcbllnk_prnt_scheme_fk FOREIGN KEY(parent_scheme_id)
 		REFERENCES Scheme(id) ON DELETE CASCADE,
 --
@@ -47,6 +52,6 @@ CREATE TABLE SchemeCableLink (
 		AND cable_link_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeCableLink IS '$Id: schemecablelink.sql,v 1.5 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeCableLink IS '$Id: schemecablelink.sql,v 1.6 2005/06/15 09:28:25 bass Exp $';
 
 CREATE SEQUENCE SchemeCableLink_Seq ORDER;

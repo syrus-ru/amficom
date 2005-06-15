@@ -1,4 +1,4 @@
--- $Id: schemelink.sql,v 1.6 2005/06/09 14:40:12 max Exp $
+-- $Id: schemelink.sql,v 1.7 2005/06/15 09:28:25 bass Exp $
 
 CREATE TABLE SchemeLink (
 	id NUMBER(19) NOT NULL,
@@ -18,9 +18,9 @@ CREATE TABLE SchemeLink (
 	link_type_id NUMBER(19),
 	link_id NUMBER(19),
 --
-	site_node_id NUMBER(19),
 	source_scheme_port_id NUMBER(19),
 	target_scheme_port_id NUMBER(19),
+	site_node_id NUMBER(19),
 --
 	parent_scheme_id NUMBER(19),
 	parent_scheme_element_id NUMBER(19),
@@ -38,12 +38,12 @@ CREATE TABLE SchemeLink (
 	CONSTRAINT schmlnk_lnk_fk FOREIGN KEY(link_id)
 		REFERENCES Link(id) ON DELETE CASCADE,
 --
-	CONSTRAINT schmlnk_site_node_fk FOREIGN KEY(site_node_id)
-		REFERENCES SiteNode(id) ON DELETE CASCADE,
 	CONSTRAINT schmlnk_source_scheme_port_fk FOREIGN KEY(source_scheme_port_id)
 		REFERENCES SchemePort(id) ON DELETE CASCADE,
 	CONSTRAINT schmlnk_target_scheme_port_fk FOREIGN KEY(target_scheme_port_id)
 		REFERENCES SchemePort(id) ON DELETE CASCADE,
+	CONSTRAINT schmlnk_site_node_fk FOREIGN KEY(site_node_id)
+		REFERENCES SiteNode(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmlnk_prnt_schm_fk FOREIGN KEY(parent_scheme_id)
 		REFERENCES Scheme(id) ON DELETE CASCADE,
@@ -72,6 +72,6 @@ CREATE TABLE SchemeLink (
 		AND parent_scheme_proto_element_id IS NOT NULL))
 );
 
-COMMENT ON TABLE SchemeLink IS '$Id: schemelink.sql,v 1.6 2005/06/09 14:40:12 max Exp $';
+COMMENT ON TABLE SchemeLink IS '$Id: schemelink.sql,v 1.7 2005/06/15 09:28:25 bass Exp $';
 
 CREATE SEQUENCE SchemeLink_Seq ORDER;

@@ -1,4 +1,4 @@
--- $Id: DROP.sql,v 1.8 2005/06/09 14:40:11 max Exp $
+-- $Id: DROP.sql,v 1.9 2005/06/15 09:28:25 bass Exp $
 
 -- 15. PathElement
 PROMPT 15. Dropping table PathElement...;
@@ -22,14 +22,11 @@ DROP SEQUENCE SchemeCableThread_Seq;
 
 -- 11. SchemeCableLink
 PROMPT 11. Dropping table SchemeCableLink...;
-DROP TRIGGER LinkTypeNatureUpdateCheck;
-DROP TRIGGER SchemeCableLinkUpdateCheck;
 DROP TABLE SchemeCableLink;
 DROP SEQUENCE SchemeCableLink_Seq;
 
 -- 10. SchemeLink
 PROMPT 10. Dropping table SchemeLink...;
-DROP TRIGGER SchemeLinkUpdateCheck;
 DROP TABLE SchemeLink;
 DROP SEQUENCE SchemeLink_Seq;
 
@@ -50,7 +47,6 @@ DROP SEQUENCE SchemeDevice_Seq;
 
 -- 06. SchemeMonitoringSolution
 PROMPT 06. Dropping table SchemeMonitoringSolution...;
-ALTER TABLE Scheme DROP CONSTRAINT scheme_schm_monitoring_sltn_fk;
 DROP TABLE SchemeMonitoringSolution;
 DROP SEQUENCE SchemeMonitoringSolution_Seq;
 

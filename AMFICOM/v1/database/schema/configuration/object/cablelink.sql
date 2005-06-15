@@ -1,4 +1,4 @@
--- $Id: cablelink.sql,v 1.1 2005/06/15 07:50:17 bass Exp $
+-- $Id: cablelink.sql,v 1.2 2005/06/15 09:28:25 bass Exp $
 
 CREATE TABLE CableLink (
  id NUMBER(19),
@@ -32,7 +32,7 @@ CREATE TABLE CableLink (
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT cablelink_lnktype_fk FOREIGN KEY (type_id)
-  REFERENCES CableLinkType (id) ON DELETE CASCADE,
+  REFERENCES CableLinkType (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE CableLink_Seq ORDER;

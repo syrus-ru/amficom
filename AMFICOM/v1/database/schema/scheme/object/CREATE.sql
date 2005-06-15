@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.8 2005/06/15 07:50:19 bass Exp $
+-- $Id: CREATE.sql,v 1.9 2005/06/15 09:28:25 bass Exp $
 
 -- 01. SchemeProtoGroup
 PROMPT 01. Creating table SchemeProtoGroup...;
@@ -39,13 +39,10 @@ PROMPT 09. Creating table SchemeCablePort...;
 -- 10. SchemeLink
 PROMPT 10. Creating table SchemeLink...;
 @@schemelink;
-@@schemelinkupdatecheck;
 
 -- 11. SchemeCableLink
 PROMPT 11. Creating table SchemeCableLink...;
 @@schemecablelink;
-@@schemecablelinkupdatecheck;
-@@linktypenatureupdatecheck;
 
 -- 12. SchemeCableThread
 PROMPT 12. Creating table SchemeCableThread...;

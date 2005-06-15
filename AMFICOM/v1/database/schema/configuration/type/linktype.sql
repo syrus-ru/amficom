@@ -1,4 +1,4 @@
--- $Id: linktype.sql,v 1.10 2005/06/15 07:50:18 bass Exp $
+-- $Id: linktype.sql,v 1.11 2005/06/15 09:28:25 bass Exp $
 
 CREATE TABLE LinkType (
  id NUMBER(19),
@@ -22,7 +22,7 @@ CREATE TABLE LinkType (
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT lkptype_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT cltype_image_fk FOREIGN KEY (image_id)
+ CONSTRAINT lkptype_image_fk FOREIGN KEY (image_id)
   REFERENCES ImageResource (id) ON DELETE CASCADE,
  CONSTRAINT lkptype_kind_chk CHECK (
   kind >= 0 AND kind <= 2)
