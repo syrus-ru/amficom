@@ -1,4 +1,4 @@
--- $Id: modelingtype.sql,v 1.5 2005/06/15 07:50:19 bass Exp $
+-- $Id: modelingtype.sql,v 1.6 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE ModelingType (
  id NUMBER(19),
@@ -8,8 +8,8 @@ CREATE TABLE ModelingType (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- codename VARCHAR2(32) NOT NULL,
- description VARCHAR2(256),
+ codename VARCHAR2(32 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
  CONSTRAINT modtype_pk PRIMARY KEY (id),
  CONSTRAINT modtype_uniq UNIQUE (codename),

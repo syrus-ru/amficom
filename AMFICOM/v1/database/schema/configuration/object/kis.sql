@@ -1,4 +1,4 @@
--- $Id: kis.sql,v 1.14 2005/06/15 07:50:18 bass Exp $
+-- $Id: kis.sql,v 1.15 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE KIS (
  id NUMBER(19),
@@ -9,9 +9,9 @@ CREATE TABLE KIS (
  version NUMBER(19) NOT NULL,
 --
  domain_id NUMBER(19),
- name VARCHAR2(128) NOT NULL,
- description VARCHAR2(256),
- hostname VARCHAR2(64),
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
+ hostname VARCHAR2(64 CHAR),
  tcp_port NUMBER(5,0),
  equipment_id NUMBER(19) NOT NULL,
  mcm_id NUMBER(19) NOT NULL,

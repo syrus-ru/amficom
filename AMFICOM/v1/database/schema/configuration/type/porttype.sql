@@ -1,4 +1,4 @@
--- $Id: porttype.sql,v 1.9 2005/06/15 07:50:18 bass Exp $
+-- $Id: porttype.sql,v 1.10 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE PortType (
  id NUMBER(19),
@@ -8,10 +8,10 @@ CREATE TABLE PortType (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- codename VARCHAR2(32) NOT NULL,
- description VARCHAR2(256),
+ codename VARCHAR2(32 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
- name VARCHAR2(128),
+ name VARCHAR2(128 CHAR),
  sort NUMBER(2,0) NOT NULL,
 --
  CONSTRAINT porttype_pk PRIMARY KEY (id),

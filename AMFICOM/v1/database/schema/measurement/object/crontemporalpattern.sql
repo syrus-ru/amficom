@@ -1,6 +1,6 @@
--- $Id: crontemporalpattern.sql,v 1.3 2005/06/15 07:50:18 bass Exp $
+-- $Id: crontemporalpattern.sql,v 1.4 2005/06/15 09:40:35 bass Exp $
 
-CREATE OR REPLACE TYPE CronStringArray AS TABLE OF VARCHAR2(64)
+CREATE OR REPLACE TYPE CronStringArray AS TABLE OF VARCHAR2(64 CHAR)
 /
 
 CREATE TABLE CronTemporalPattern (
@@ -11,7 +11,7 @@ CREATE TABLE CronTemporalPattern (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- description VARCHAR2(256),
+ description VARCHAR2(256 CHAR),
  value CronStringArray,
 --
  CONSTRAINT ctp_pk PRIMARY KEY (id),

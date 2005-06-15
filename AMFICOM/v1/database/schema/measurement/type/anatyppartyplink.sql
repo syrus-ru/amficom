@@ -1,9 +1,9 @@
--- $Id: anatyppartyplink.sql,v 1.7 2005/06/15 07:50:19 bass Exp $
+-- $Id: anatyppartyplink.sql,v 1.8 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE AnaTypParTypLink (
  analysis_type_id NUMBER(19) NOT NULL,
  parameter_type_id NUMBER(19) NOT NULL,
- parameter_mode VARCHAR2(3) NOT NULL,
+ parameter_mode VARCHAR2(3 CHAR) NOT NULL,
 --
  CONSTRAINT anatpartlnk_uniq
   UNIQUE (analysis_type_id, parameter_type_id),

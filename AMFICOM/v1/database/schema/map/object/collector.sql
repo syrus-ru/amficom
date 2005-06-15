@@ -1,4 +1,4 @@
--- $Id: collector.sql,v 1.5 2005/06/09 14:40:11 max Exp $
+-- $Id: collector.sql,v 1.6 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE Collector (
  id NUMBER(19),
@@ -8,8 +8,8 @@ CREATE TABLE Collector (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128),
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR),
+ description VARCHAR2(256 CHAR),
 --
  CONSTRAINT collector_pk PRIMARY KEY (id),
  CONSTRAINT collector_creator_fk FOREIGN KEY (creator_id)
@@ -18,6 +18,6 @@ CREATE TABLE Collector (
   REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE Collector IS '$Id: collector.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE Collector IS '$Id: collector.sql,v 1.6 2005/06/15 09:40:34 bass Exp $';
 
 CREATE SEQUENCE Collector_Seq ORDER;

@@ -1,4 +1,4 @@
--- $Id: evaluationtype.sql,v 1.7 2005/06/15 07:50:19 bass Exp $
+-- $Id: evaluationtype.sql,v 1.8 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE EvaluationType (
  id NUMBER(19),
@@ -8,8 +8,8 @@ CREATE TABLE EvaluationType (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- codename VARCHAR2(32) NOT NULL,
- description VARCHAR2(256),
+ codename VARCHAR2(32 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
  CONSTRAINT evatype_pk PRIMARY KEY (id),
  CONSTRAINT evatype_uniq UNIQUE (codename),

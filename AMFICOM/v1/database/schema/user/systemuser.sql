@@ -1,4 +1,4 @@
--- $Id: systemuser.sql,v 1.1 2005/06/15 07:50:19 bass Exp $
+-- $Id: systemuser.sql,v 1.2 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE SystemUser(
  id NUMBER(19),
@@ -8,10 +8,10 @@ CREATE TABLE SystemUser(
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- login VARCHAR2(32) NOT NULL,
+ login VARCHAR2(32 CHAR) NOT NULL,
  sort NUMBER(2, 0) NOT NULL,
- name VARCHAR2(128) NOT NULL,
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
  CONSTRAINT user_pk PRIMARY KEY (id),
  CONSTRAINT user_creator_fk FOREIGN KEY (creator_id)

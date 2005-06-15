@@ -1,4 +1,4 @@
--- $Id: measurement.sql,v 1.10 2005/06/15 07:50:18 bass Exp $
+-- $Id: measurement.sql,v 1.11 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE Measurement (
  id NUMBER(19),
@@ -10,13 +10,13 @@ CREATE TABLE Measurement (
 --
  type_id NUMBER(19) NOT NULL,
  monitored_element_id NUMBER(19) NOT NULL,
- name VARCHAR2(128),
+ name VARCHAR2(128 CHAR),
 --
  setup_id NUMBER(19) NOT NULL,
  start_time DATE NOT NULL,
  duration NUMBER(20) NOT NULL,
  status NUMBER(2, 0) NOT NULL,
- local_address VARCHAR2(64) NOT NULL,
+ local_address VARCHAR2(64 CHAR) NOT NULL,
  test_id NUMBER(19) NOT NULL,
 --
  CONSTRAINT measurement_pk PRIMARY KEY (id),

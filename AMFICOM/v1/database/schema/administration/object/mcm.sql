@@ -1,4 +1,4 @@
--- $Id: mcm.sql,v 1.7 2005/06/15 07:50:17 bass Exp $
+-- $Id: mcm.sql,v 1.8 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE MCM (
  id NUMBER(19),
@@ -12,9 +12,9 @@ CREATE TABLE MCM (
 --
  type_id NUMBER(19),
 --
- name VARCHAR2(128) NOT NULL,
- description VARCHAR2(256),
- hostname VARCHAR2(64) NOT NULL,
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
+ hostname VARCHAR2(64 CHAR) NOT NULL,
  user_id NUMBER(19) NOT NULL,
  server_id NUMBER(19) NOT NULL,
 --

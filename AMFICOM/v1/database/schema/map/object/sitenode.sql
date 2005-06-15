@@ -1,4 +1,4 @@
--- $Id: sitenode.sql,v 1.7 2005/06/15 07:50:18 bass Exp $
+-- $Id: sitenode.sql,v 1.8 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE SiteNode (
  id NUMBER(19),
@@ -8,15 +8,15 @@ CREATE TABLE SiteNode (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128),
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR),
+ description VARCHAR2(256 CHAR),
  longitude NUMBER(12, 6),
  latiude NUMBER(12, 6),
  image_id NUMBER(19) NOT NULL,
  site_node_type_id NUMBER(19) NOT NULL,
- city VARCHAR2(128),
- street VARCHAR2(128),
- building VARCHAR2(128),
+ city VARCHAR2(128 CHAR),
+ street VARCHAR2(128 CHAR),
+ building VARCHAR2(128 CHAR),
 --
  CONSTRAINT sitenode_pk PRIMARY KEY (id),
  CONSTRAINT sitenode_creator_fk FOREIGN KEY (creator_id)
@@ -29,6 +29,6 @@ CREATE TABLE SiteNode (
   REFERENCES ImageResource(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SiteNode IS '$Id: sitenode.sql,v 1.7 2005/06/15 07:50:18 bass Exp $';
+COMMENT ON TABLE SiteNode IS '$Id: sitenode.sql,v 1.8 2005/06/15 09:40:34 bass Exp $';
 
 CREATE SEQUENCE SiteNode_Seq ORDER;

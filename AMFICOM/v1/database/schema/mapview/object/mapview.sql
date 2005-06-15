@@ -1,4 +1,4 @@
--- $Id: mapview.sql,v 1.6 2005/06/09 14:40:11 max Exp $
+-- $Id: mapview.sql,v 1.7 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE MapView (
  id NUMBER(19),
@@ -9,8 +9,8 @@ CREATE TABLE MapView (
  version NUMBER(19) NOT NULL,
 --
  domain_id NUMBER(19),
- name VARCHAR2(128),
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR),
+ description VARCHAR2(256 CHAR),
  longitude NUMBER(12, 6),
  latitude NUMBER(12, 6),
  scale NUMBER(12, 6),
@@ -28,6 +28,6 @@ CREATE TABLE MapView (
   REFERENCES Map (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE MapView IS '$Id: mapview.sql,v 1.6 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE MapView IS '$Id: mapview.sql,v 1.7 2005/06/15 09:40:34 bass Exp $';
 
 CREATE SEQUENCE MapView_Seq ORDER;

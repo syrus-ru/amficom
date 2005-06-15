@@ -1,4 +1,4 @@
--- $Id: equipment.sql,v 1.14 2005/06/15 07:50:18 bass Exp $
+-- $Id: equipment.sql,v 1.15 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE Equipment (
  id NUMBER(19),
@@ -12,19 +12,19 @@ CREATE TABLE Equipment (
 --
  type_id NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128) NOT NULL,
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
  image_id NUMBER(19),
- supplier VARCHAR2(128),
- supplier_code VARCHAR2(32),
+ supplier VARCHAR2(128 CHAR),
+ supplier_code VARCHAR2(32 CHAR),
  latitude NUMBER,
  longitude NUMBER,
- hw_serial VARCHAR2(64),
- hw_version VARCHAR2(64),
- sw_serial VARCHAR2(64),
- sw_version VARCHAR2(64),
- inventory_number VARCHAR2(64),
+ hw_serial VARCHAR2(64 CHAR),
+ hw_version VARCHAR2(64 CHAR),
+ sw_serial VARCHAR2(64 CHAR),
+ sw_version VARCHAR2(64 CHAR),
+ inventory_number VARCHAR2(64 CHAR),
 --
  CONSTRAINT eqp_pk PRIMARY KEY (id),
  CONSTRAINT eqp_creator_fk FOREIGN KEY (creator_id)

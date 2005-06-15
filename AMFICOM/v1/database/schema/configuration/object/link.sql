@@ -1,4 +1,4 @@
--- $Id: link.sql,v 1.12 2005/06/15 09:28:25 bass Exp $
+-- $Id: link.sql,v 1.13 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE Link (
  id NUMBER(19),
@@ -12,12 +12,12 @@ CREATE TABLE Link (
 --
  type_id NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128) NOT NULL,
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
- inventory_no VARCHAR2(64),
- supplier VARCHAR2(128),
- supplier_code VARCHAR2(32),
+ inventory_no VARCHAR2(64 CHAR),
+ supplier VARCHAR2(128 CHAR),
+ supplier_code VARCHAR2(32 CHAR),
  link_id NUMBER(19),
  color VARCHAR(32),
  mark VARCHAR(32),

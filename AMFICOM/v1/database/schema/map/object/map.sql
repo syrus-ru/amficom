@@ -1,4 +1,4 @@
--- $Id: map.sql,v 1.5 2005/06/09 14:40:11 max Exp $
+-- $Id: map.sql,v 1.6 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE Map (
  id NUMBER(19),
@@ -8,8 +8,8 @@ CREATE TABLE Map (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128),
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR),
+ description VARCHAR2(256 CHAR),
  domain_id NUMBER(19),
 --
  CONSTRAINT map_pk PRIMARY KEY (id),
@@ -21,6 +21,6 @@ CREATE TABLE Map (
   REFERENCES Domain (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE Map IS '$Id: map.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE Map IS '$Id: map.sql,v 1.6 2005/06/15 09:40:34 bass Exp $';
 
 CREATE SEQUENCE Map_Seq ORDER;

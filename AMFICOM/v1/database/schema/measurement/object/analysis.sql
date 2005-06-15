@@ -1,4 +1,4 @@
--- $Id: analysis.sql,v 1.10 2005/06/15 07:50:18 bass Exp $
+-- $Id: analysis.sql,v 1.11 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE Analysis (
  id NUMBER(19),
@@ -11,7 +11,7 @@ CREATE TABLE Analysis (
  type_id NUMBER(19) NOT NULL,
  monitored_element_id NUMBER(19) NOT NULL,
  measurement_id NUMBER(19),
- name VARCHAR2(128),
+ name VARCHAR2(128 CHAR),
 --
  criteria_set_id NUMBER(19) NOT NULL,
 --

@@ -1,4 +1,4 @@
--- $Id: measurementsetup.sql,v 1.7 2005/06/15 07:50:18 bass Exp $
+-- $Id: measurementsetup.sql,v 1.8 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE MeasurementSetup (
  id NUMBER(19),
@@ -12,7 +12,7 @@ CREATE TABLE MeasurementSetup (
  criteria_set_id NUMBER(19),
  threshold_set_id NUMBER(19),
  etalon_id NUMBER(19),
- description VARCHAR2(256),
+ description VARCHAR2(256 CHAR),
  measurement_duration NUMBER(20),
 --
  CONSTRAINT mntsetup_pk PRIMARY KEY (id),

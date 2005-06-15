@@ -1,7 +1,7 @@
--- $Id: userlogin.sql,v 1.5 2005/06/15 07:50:19 bass Exp $
+-- $Id: userlogin.sql,v 1.6 2005/06/15 09:40:35 bass Exp $
 
 CREATE TABLE UserLogin (
- session_key VARCHAR2(128) NOT NULL,
+ session_key VARCHAR2(128 CHAR) NOT NULL,
  user_id NUMBER(19) NOT NULL,
  domain_id NUMBER(19),
  login_date DATE NOT NULL,

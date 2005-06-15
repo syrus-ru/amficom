@@ -1,4 +1,4 @@
--- $Id: transmissionpath.sql,v 1.14 2005/06/15 07:50:18 bass Exp $
+-- $Id: transmissionpath.sql,v 1.15 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE TransmissionPath (
  id NUMBER(19),
@@ -12,8 +12,8 @@ CREATE TABLE TransmissionPath (
 --
  type_id NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128) NOT NULL,
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
 --
  start_port_id NUMBER(19) NOT NULL,
  finish_port_id NUMBER(19) NOT NULL,

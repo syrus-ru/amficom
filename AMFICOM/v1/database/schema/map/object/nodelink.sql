@@ -1,4 +1,4 @@
--- $Id: nodelink.sql,v 1.5 2005/06/09 14:40:11 max Exp $
+-- $Id: nodelink.sql,v 1.6 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE NodeLink (
  id NUMBER(19),
@@ -8,7 +8,7 @@ CREATE TABLE NodeLink (
  modifier_id NUMBER(19) NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128),
+ name VARCHAR2(128 CHAR),
  physical_link_id NUMBER(19),
  start_node_id NUMBER(19),
  end_node_id NUMBER(19), 
@@ -23,6 +23,6 @@ CREATE TABLE NodeLink (
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE NodeLink IS '$Id: nodelink.sql,v 1.5 2005/06/09 14:40:11 max Exp $';
+COMMENT ON TABLE NodeLink IS '$Id: nodelink.sql,v 1.6 2005/06/15 09:40:34 bass Exp $';
 
 CREATE SEQUENCE NodeLink_Seq ORDER;

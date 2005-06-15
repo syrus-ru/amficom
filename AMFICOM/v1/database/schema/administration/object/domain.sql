@@ -1,4 +1,4 @@
--- $Id: domain.sql,v 1.10 2005/06/15 07:50:17 bass Exp $
+-- $Id: domain.sql,v 1.11 2005/06/15 09:40:34 bass Exp $
 
 CREATE TABLE Domain (
  id NUMBER(19),
@@ -11,8 +11,8 @@ CREATE TABLE Domain (
 --
  domain_id NUMBER(19),
 --
- name VARCHAR2(128) NOT NULL,
- description VARCHAR2(256),
+ name VARCHAR2(128 CHAR) NOT NULL,
+ description VARCHAR2(256 CHAR),
  owner_id NUMBER(19),
 --
  CONSTRAINT domain_pk PRIMARY KEY (id),
