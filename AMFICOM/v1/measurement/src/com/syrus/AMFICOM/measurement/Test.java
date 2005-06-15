@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.124 2005/06/03 21:02:18 arseniy Exp $
+ * $Id: Test.java,v 1.125 2005/06/15 09:49:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.124 $, $Date: 2005/06/03 21:02:18 $
+ * @version $Revision: 1.125 $, $Date: 2005/06/15 09:49:35 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -324,6 +324,10 @@ public class Test extends StorableObject {
 
 	public java.util.Set getMeasurementSetupIds() {
 		return Collections.unmodifiableSet(this.measurementSetupIds);
+	}
+
+	public Identifier getMainMeasurementSetupId() {
+		return this.mainMeasurementSetup.getId();
 	}
 
 	public Identifier getMeasurementTypeId() {
