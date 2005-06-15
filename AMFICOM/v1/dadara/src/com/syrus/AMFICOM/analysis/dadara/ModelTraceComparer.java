@@ -1,11 +1,13 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.15 2005/06/14 11:02:10 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.16 2005/06/15 15:08:40 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.analysis.dadara;
+
+import com.syrus.util.Log;
 
 /**
  * Performs comparison:
@@ -19,7 +21,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <li> ReliabilityModelTraceAndEvents to MTM
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/06/14 11:02:10 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/15 15:08:40 $
  * @module
  */
 public class ModelTraceComparer
@@ -102,6 +104,94 @@ public class ModelTraceComparer
             : null;
     }
 
+    /**
+     * Сравнивает кривую с порогами заданного уровня.
+     * @param yProbe сравниваемая кривая
+     * @param mtm эталонный mtm, по которому определяются пороги
+     * @param level уровень сравнения (0.0 - SOFT, 1.0 - HARD)
+     * @param alarm хранилище выходных параметров начала и конца аларма.
+     *   Модифицируется, если обнаружено превышение порогов.
+     * @return true, если обнаружено превышение порогов,
+     *   false, если превышения порогов заданного уровня нет.
+     */
+    private static boolean compareTraceToMTMAtLevel(double[] yProbe,
+    		ModelTraceManager mtm, double level, ReflectogramAlarm alarm)
+    {
+    	ModelTrace thMTU = mtm.getThresholdMTUpperByLevel(level);
+    	ModelTrace thMTL = mtm.getThresholdMTLowerByLevel(level);
+    	int alarmBegin = -1;
+    	int alarmEnd = -1;
+    	// compare to upper MT
+    	{
+			double[] yTh = thMTU.getYArray();
+			final int sign = 1;
+			int len = Math.min(yProbe.length, yTh.length);
+			int i;
+			for (i = 0; i < len; i++) {
+				if (yProbe[i] * sign > yTh[i] * sign)
+					break;
+			}
+			int beg2 = i;
+			for (; i < len; i++) {
+				if (yProbe[i] * sign <= yTh[i] * sign)
+					break;
+			}
+			int end2 = i;
+			if (beg2 < len && (alarmBegin < 0 || beg2 < alarmBegin)) {
+				alarmBegin = beg2;
+				alarmEnd = end2;
+			}
+    	}
+    	// compare to lower MT
+    	{
+			double[] yTh = thMTL.getYArray();
+			final int sign = -1;
+			int len = Math.min(yProbe.length, yTh.length);
+			int i;
+			for (i = 0; i < len; i++) {
+				if (yProbe[i] * sign > yTh[i] * sign)
+					break;
+			}
+			int beg2 = i;
+			for (; i < len; i++) {
+				if (yProbe[i] * sign <= yTh[i] * sign)
+					break;
+			}
+			int end2 = i;
+			if (beg2 < len && (alarmBegin < 0 || beg2 < alarmBegin)) {
+				alarmBegin = beg2;
+				alarmEnd = end2;
+			}
+    	}
+    	// apply results
+    	if (alarmBegin < 0)
+    		return false;
+    	alarm.pointCoord = alarmBegin;
+    	alarm.endPointCoord = alarmEnd;
+    	return true;
+    }
+
+    /**
+     * Определяет степень превышения кривой порогов
+     * @param y кривая
+     * @param mtm пороги
+     * @param alarm аларм, в котором будет вписана степень превышения
+     *   порогов  
+     */
+    private static void fillAlarmMismatch(double[] y,
+    		ModelTraceManager mtm, ReflectogramAlarm alarm)
+    {
+		ReflectogramAlarm tmpAlarm = new ReflectogramAlarm();
+		final int N = 10;
+		for (int i = 0; i <= N; i++) {
+			double level = i * 1.0 / N;
+			double levelNext = i == N ? 1.0 : (i + 1) * 1.0 / N;
+			if (compareTraceToMTMAtLevel(y, mtm, level, tmpAlarm)) {
+				alarm.setMismatch(level, levelNext);
+			}
+		}
+    }
+
     public static ReflectogramAlarm compareTraceToMTM(ModelTrace mt,
             ModelTraceManager mtm)
 	{
@@ -143,8 +233,16 @@ public class ModelTraceComparer
 				}
 			}
 		}
-		if (alarm.level > ReflectogramAlarm.LEVEL_NONE)
+		if (alarm.level > ReflectogramAlarm.LEVEL_NONE) {
+			fillAlarmMismatch(y, mtm, alarm);
+			Log.debugMessage("ModelTraceComparer.compareTraceToMTM | level " + alarm.level
+					+ " mismatch "
+					+ (alarm.hasMismatch()
+						? "" + alarm.getMinMismatch() + ".." + alarm.getMaxMismatch()
+						: "<absent>"),
+					Log.FINEST);
 			return alarm;
+		}
 		else
 			return null;
 	}
