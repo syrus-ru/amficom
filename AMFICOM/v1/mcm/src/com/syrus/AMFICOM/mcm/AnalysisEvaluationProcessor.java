@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.31 2005/06/01 15:42:32 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.32 2005/06/15 12:23:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/01 15:42:32 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/15 12:23:37 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -90,7 +90,7 @@ public class AnalysisEvaluationProcessor {
 					analysisType,
 					monitoredElementId,
 					measurement,
-					ANALYSIS_NAME + " '" + measurement.getId() + "'",
+					ANALYSIS_NAME + " " + measurement.getId(),
 					criteriaSet);
 			((AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE)).insert(analysis);
 			return analysis;
