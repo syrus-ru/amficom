@@ -24,7 +24,7 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/15 08:33:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -80,7 +80,7 @@ public final class CommonUIUtilities {
 	}
 	
 
-	public static void invokeAsynchronously(final Runnable doRun,
+	public static synchronized void invokeAsynchronously(final Runnable doRun,
 											final String dialogTitle) {
 		new Thread() {
 
@@ -94,9 +94,8 @@ public final class CommonUIUtilities {
 				((JPanel) (jDialog.getContentPane())).setPreferredSize(new Dimension(400, 0));
 				jDialog.pack();
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-				Dimension dialogSize = jDialog.getSize();
-				jDialog.setLocation((screenSize.width - dialogSize.width) / 2,
-					(screenSize.height - dialogSize.height) / 2);
+				jDialog.setLocation((screenSize.width - jDialog.getWidth()) / 2,
+					(screenSize.height - jDialog.getHeight()) / 2);
 
 				Thread targetThread = new Thread() {
 
