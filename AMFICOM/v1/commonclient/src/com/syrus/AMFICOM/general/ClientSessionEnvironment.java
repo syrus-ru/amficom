@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.13 2005/06/14 11:26:36 bob Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.14 2005/06/15 10:39:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/14 11:26:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/06/15 10:39:18 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -35,8 +35,8 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private String						xmlPath;
 
-	private static TIntObjectHashMap	kindInstanceMap;
-	private static LoginRestorer		loginRestorer;
+	private static TIntObjectHashMap kindInstanceMap;
+	private static LoginRestorer loginRestorer;
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,

@@ -12,7 +12,7 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mscharserver_interface.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar
+EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar:$(EXTLIBDIR)/trove.jar
 JDEVCLASSPATH=$(ORACLE_HOME)/lib/jdev-rt.zip
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
