@@ -7,12 +7,13 @@ JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
 
+JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 
-APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
