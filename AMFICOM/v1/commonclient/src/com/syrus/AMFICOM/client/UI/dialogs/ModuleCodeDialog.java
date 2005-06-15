@@ -1,173 +1,129 @@
+
 package com.syrus.AMFICOM.client.UI.dialogs;
 
-import java.awt.BorderLayout;
-import java.awt.event.*;
-import javax.swing.*;
-import oracle.jdeveloper.layout.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * TODO - rebuild !
- * @version $Revision: 1.2 $, $Date: 2005/06/01 16:55:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/06/15 11:27:19 $
+ * @author $Author: bob $
  * @module commonclient_v1
  */
-public class ModuleCodeDialog extends JDialog
-{
-	private static final long serialVersionUID = 4049639009691120440L;
+public class ModuleCodeDialog {
 
-	private JButton buttonCancel = new JButton();
-	private JButton buttonOk = new JButton();
-	private JLabel jLabel2 = new JLabel();
-	private JPanel jPanel1 = new JPanel();
-	private JPasswordField fieldPassword = new JPasswordField();
-	private XYLayout xYLayout1 = new XYLayout();
+	private static final long	serialVersionUID	= 4049639009691120440L;
 
-	private int retCode = 0;
+	private JPasswordField		fieldPassword;
 
-	public static final int RET_OK = 1;
-	public static final int RET_CANCEL = 2;
+	private JPanel				mainPanel;
 
-	private String stb;
-	private String title;
+	private int					result;
 
-	public ModuleCodeDialog(String stb, String module_title)
-	{
+	private String				stb;
+	private String				title;
+
+	public static void main(String[] args) {
+		ModuleCodeDialog moduleCodeDialog = new ModuleCodeDialog("pox", "title");		
+	}
+
+	public ModuleCodeDialog(String stb, String moduleTitle) {
 		this.stb = stb;
-		this.title = module_title;
-		try
-		{
-			jbInit();
-			pack();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.title = moduleTitle;
+		this.showOpenSessionDialog(null);
 	}
 
-	public int getRetCode() {
-		return this.retCode;
+	public int getResult() {
+		return this.result;
 	}
 
-	private void jbInit() throws Exception
-	{
-		this.setTitle("Введите код модуля '" + this.title + "'");
+	private void showOpenSessionDialog(final JFrame frame) {
+		if (this.mainPanel == null) {
+			this.mainPanel = new JPanel(new GridBagLayout());
+			final GridBagConstraints gbc1 = new GridBagConstraints();
 
-		this.setResizable(false);
-		this.jPanel1.setLayout(this.xYLayout1);
-		this.jPanel1.addKeyListener(new ModuleCodeDialog_jPanel1_keyAdapter(this));
-		this.xYLayout1.setWidth(370);
-		this.xYLayout1.setHeight(75);
-		this.jLabel2.setText("Код модуля");
-		this.fieldPassword.addKeyListener(new ModuleCodeDialog_fieldPassword_keyAdapter(this));
-		this.buttonOk.setText("Открыть модуль");
-		this.buttonOk.addActionListener(new ModuleCodeDialog_buttonOk_actionAdapter(this));
-		this.buttonCancel.setText("Отменить");
-		this.buttonCancel.addActionListener(new ModuleCodeDialog_buttonCancel_actionAdapter(this));
-		this.jPanel1.add(this.jLabel2, new XYConstraints(10, 13, -1, -1));
-		this.jPanel1.add(this.fieldPassword, new XYConstraints(90, 10, 270, 24));
-		this.jPanel1.add(this.buttonOk, new XYConstraints(10, 40, 140, 27));
-		this.jPanel1.add(this.buttonCancel, new XYConstraints(260, 40, 100, 27));
-		this.getContentPane().add(this.jPanel1, BorderLayout.CENTER);
-	}
+			gbc1.gridwidth = GridBagConstraints.REMAINDER;
 
-	void buttonOk_actionPerformed(ActionEvent e)
-	{
-		String sta = new String(this.fieldPassword.getPassword());
+			final JPanel textFieldsPanel = new JPanel(new GridBagLayout());
+			this.fieldPassword = new JPasswordField();
 
-		if(sta.equals(this.stb))
-		{
-			this.retCode = RET_OK;
-			dispose();
-			return;
+			{
+				final GridBagConstraints gbc = new GridBagConstraints();
+				gbc.gridwidth = GridBagConstraints.RELATIVE;
+				gbc.fill = GridBagConstraints.NONE;
+				gbc.insets = new Insets(5, 5, 5, 5);
+				gbc.weightx = 0.0;
+				gbc.anchor = GridBagConstraints.EAST;
+				textFieldsPanel.add(new JLabel(LangModelGeneral.getString("ModuleCode.Code") + ':'), gbc);
+				gbc.gridwidth = GridBagConstraints.REMAINDER;
+				gbc.fill = GridBagConstraints.HORIZONTAL;
+				gbc.weightx = 1.0;
+				gbc.anchor = GridBagConstraints.WEST;
+				textFieldsPanel.add(this.fieldPassword, gbc);
+			}
+
+			gbc1.gridwidth = GridBagConstraints.REMAINDER;
+
+			gbc1.weightx = 1.0;
+			gbc1.fill = GridBagConstraints.HORIZONTAL;
+			this.mainPanel.add(textFieldsPanel, gbc1);
+
 		}
-		this.fieldPassword.setText("");
-		JOptionPane.showMessageDialog(
-				this,
-				"Неправильный код",
-				"Код модуля '" + this.title + "'",
-				JOptionPane.ERROR_MESSAGE,
+
+		this.fieldPassword.requestFocus();
+		final String okButton = LangModelGeneral.getString("ModuleCode.Button.ok");
+		final String cancelButton = LangModelGeneral.getString("ModuleCode.Button.cancel");
+		final JOptionPane optionPane = new JOptionPane(this.mainPanel, JOptionPane.PLAIN_MESSAGE,
+														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
+																cancelButton}, null);
+
+		final JDialog dialog = optionPane.createDialog(frame, LangModelGeneral.getString("ModuleCode.Title") + " '"
+				+ this.title + '\'');
+		
+		final ActionListener actionListener = new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				optionPane.setValue(okButton);
+			}
+		};
+
+		this.fieldPassword.addActionListener(actionListener);
+
+		dialog.setModal(true);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frameSize = dialog.getSize();
+		dialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+		
+		dialog.show();
+		
+		while (optionPane.getValue() == okButton) {
+			if (new String(this.fieldPassword.getPassword()).equals(this.stb)) {
+				this.result = JOptionPane.OK_OPTION;
+				break;
+			}
+
+			this.fieldPassword.setText("");
+			this.fieldPassword.setCaretPosition(0);
+			JOptionPane.showMessageDialog(null, LangModelGeneral.getString("ModuleCode.IncorrectCode"),
+				LangModelGeneral.getString("ModuleCode.Title") + " '" + this.title + '\'', JOptionPane.ERROR_MESSAGE,
 				null);
-		return;
-	}
+			dialog.show();
+		}
 
-	void buttonCancel_actionPerformed(ActionEvent e)
-	{
-		this.retCode = RET_CANCEL;
-		dispose();
-	}
-
-	void fieldPassword_keyPressed(KeyEvent e)
-	{
-		if (e.getKeyCode() == KeyEvent.VK_ENTER)
-			this.buttonOk.doClick();
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-			this.buttonCancel.doClick();
-	}
-
-	void jPanel1_keyPressed(KeyEvent e)
-	{
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-			this.buttonCancel.doClick();
-	}
-
-}
-
-class ModuleCodeDialog_buttonOk_actionAdapter implements ActionListener
-{
-	ModuleCodeDialog adaptee;
-
-	ModuleCodeDialog_buttonOk_actionAdapter(ModuleCodeDialog adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		this.adaptee.buttonOk_actionPerformed(e);
-	}
-}
-class ModuleCodeDialog_buttonCancel_actionAdapter implements ActionListener
-{
-	ModuleCodeDialog adaptee;
-
-	ModuleCodeDialog_buttonCancel_actionAdapter(ModuleCodeDialog adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		this.adaptee.buttonCancel_actionPerformed(e);
-	}
-}
-
-class ModuleCodeDialog_jPanel1_keyAdapter extends KeyAdapter
-{
-	ModuleCodeDialog adaptee;
-
-	ModuleCodeDialog_jPanel1_keyAdapter(ModuleCodeDialog adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void keyPressed(KeyEvent e)
-	{
-		this.adaptee.jPanel1_keyPressed(e);
-	}
-}
-
-class ModuleCodeDialog_fieldPassword_keyAdapter extends KeyAdapter
-{
-	ModuleCodeDialog adaptee;
-
-	ModuleCodeDialog_fieldPassword_keyAdapter(ModuleCodeDialog adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void keyPressed(KeyEvent e)
-	{
-		this.adaptee.fieldPassword_keyPressed(e);
+		dialog.dispose();		
 	}
 }
