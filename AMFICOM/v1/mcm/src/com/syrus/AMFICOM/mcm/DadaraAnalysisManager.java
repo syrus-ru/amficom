@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.43 2005/06/15 09:40:59 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.44 2005/06/15 09:54:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/15 09:40:59 $
- * @author $Author: saa $
+ * @version $Revision: 1.44 $, $Date: 2005/06/15 09:54:55 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -116,12 +116,12 @@ public class DadaraAnalysisManager implements AnalysisManager
 		this.addSetParameters(this.etalonPars, etalon.getParameters());
 	}
 
-	private void addSetParameters(Map parsMap, final SetParameter[] setParameters) throws AnalysisException {
+	private void addSetParameters(final Map parsMap, final SetParameter[] setParameters) throws AnalysisException {
 		for (int i = 0; i < setParameters.length; i++)
 			this.addParameter(parsMap, setParameters[i]);
 	}
 
-	private void addParameter(Map parsMap, final SetParameter parameter) throws AnalysisException {
+	private void addParameter(final Map parsMap, final SetParameter parameter) throws AnalysisException {
 		String codename = parameter.getType().getCodename();
 		if (codename != null) {
 			if (! parsMap.containsKey(codename))
@@ -133,18 +133,18 @@ public class DadaraAnalysisManager implements AnalysisManager
 			throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
 	}
 
-	private boolean hasParameter(Map parsMap, final String codename) {
+	private boolean hasParameter(final Map parsMap, final String codename) {
 		return parsMap.get(codename) != null;
 	}
 
-	private byte[] getParameter(Map parsMap, final String codename) throws AnalysisException {
+	private byte[] getParameter(final Map parsMap, final String codename) throws AnalysisException {
 		byte[] rawData = (byte[]) parsMap.get(codename);
 		if (rawData == null)
 			throw new AnalysisException("Cannot get parameter of codename '" + codename + "'");
 		return rawData;
 	}
 
-	private ByteArray getParBA(Map parsMap, final String codename) throws AnalysisException {
+	private ByteArray getParBA(final Map parsMap, final String codename) throws AnalysisException {
 		byte[] rawData = this.getParameter(parsMap, codename);
 		return new ByteArray(rawData);
 	}
