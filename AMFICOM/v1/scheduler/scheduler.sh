@@ -11,11 +11,11 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
-$LIB/map.jar:\
-$LIB/mapview.jar:\
-$LIB/scheme.jar:\
-$LIB/filter.jar:\
 $LIB/resource.jar:\
+$LIB/map.jar:\
+$LIB/scheme.jar:\
+$LIB/mapview.jar:\
+$LIB/filter.jar:\
 $LIB/csbridge.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
