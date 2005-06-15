@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.80 2005/06/09 12:48:57 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.81 2005/06/15 15:04:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.80 $, $Date: 2005/06/09 12:48:57 $
+ * @version $Revision: 1.81 $, $Date: 2005/06/15 15:04:17 $
  * @module
  */
 public class ModelTraceManager
@@ -387,6 +387,47 @@ implements DataStreamable, Cloneable
 			thMTCache[key] = thMt;
 		}
 		return thMt;
+	}
+
+	/**
+	 * Выдает модельную кривую порога заданного уровня.
+	 * XXX: не кэширует.
+	 * @param isUpper true - нужен верхний порог, false - нижний
+	 * @param level уровень порога, от 0.0 до 1.0 включительно
+	 * @return запрошенная модельная кривая
+	 */
+	private ModelTrace getThresholdMTByLevel(boolean isUpper, double level) {
+		// создаем набор порогов
+		ThreshDX[] effX = new ThreshDX[tDX.length];
+		for (int i = 0; i < tDX.length; i++)
+			effX[i] = tDX[i].makeWeightedThresholds(level);
+		ThreshDY[] effY = new ThreshDY[tDY.length];
+		for (int i = 0; i < tDY.length; i++)
+			effY[i] = tDY[i].makeWeightedThresholds(level);
+		// генерируем пороговую кривую
+		ModelFunction tmp = getMF().copy();
+		tmp.changeByThresh(effX,
+				effY,
+				isUpper ? Thresh.SOFT_UP : Thresh.SOFT_DOWN);
+		return new ModelTraceImplMF(tmp, getTraceLength());
+	}
+
+	/**
+	 * Выдает верхнюю модельную кривую порога заданного уровня
+	 * @param level уровень порога, от 0.0 до 1.0 включительно
+	 * @return запрошенная модельная кривая
+	 */
+	public ModelTrace getThresholdMTUpperByLevel(double level) {
+		return getThresholdMTByLevel(true, level);
+	}
+
+	/**
+	 * Выдает нижнюю модельную кривую порога заданного уровня
+	 * @param level уровень порога, от 0.0 до 1.0 включительно
+	 * @return запрошенная модельная кривая
+	 */
+	public ModelTrace getThresholdMTLowerByLevel(double level) {
+		return getThresholdMTByLevel(false, level);
 	}
 
 	private int getTraceLength()
