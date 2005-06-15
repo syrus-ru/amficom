@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.42 2005/06/07 15:45:03 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.43 2005/06/15 09:40:59 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/07 15:45:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/06/15 09:40:59 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
@@ -67,7 +67,9 @@ public class DadaraAnalysisManager implements AnalysisManager
 
 	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
-	private final Map parametersMap;	//Map <String codename, SetParameter parameter>
+	private final Map tracePars;	//Map <String codename, SetParameter parameter>
+	private final Map criteriaPars;	//Map <String codename, SetParameter parameter>
+	private final Map etalonPars;	//Map <String codename, SetParameter parameter>
 
 	static {
 		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap();
@@ -106,22 +108,24 @@ public class DadaraAnalysisManager implements AnalysisManager
 	public DadaraAnalysisManager(final Result measurementResult,
 			final Analysis analysis,
 			final Set etalon) throws AnalysisException {
-		this.parametersMap = new HashMap();
-		this.addSetParameters(measurementResult.getParameters());
-		this.addSetParameters(analysis.getCriteriaSet().getParameters());
-		this.addSetParameters(etalon.getParameters());
+		this.tracePars = new HashMap();
+		this.criteriaPars = new HashMap();
+		this.etalonPars = new HashMap();
+		this.addSetParameters(this.tracePars, measurementResult.getParameters());
+		this.addSetParameters(this.criteriaPars, analysis.getCriteriaSet().getParameters());
+		this.addSetParameters(this.etalonPars, etalon.getParameters());
 	}
 
-	private void addSetParameters(final SetParameter[] setParameters) throws AnalysisException {
+	private void addSetParameters(Map parsMap, final SetParameter[] setParameters) throws AnalysisException {
 		for (int i = 0; i < setParameters.length; i++)
-			this.addParameter(setParameters[i]);
+			this.addParameter(parsMap, setParameters[i]);
 	}
 
-	private void addParameter(final SetParameter parameter) throws AnalysisException {
+	private void addParameter(Map parsMap, final SetParameter parameter) throws AnalysisException {
 		String codename = parameter.getType().getCodename();
 		if (codename != null) {
-			if (! this.parametersMap.containsKey(codename))
-				this.parametersMap.put(codename, parameter.getValue());
+			if (! parsMap.containsKey(codename))
+				parsMap.put(codename, parameter.getValue());
 			else
 				throw new AnalysisException("Parameter of codename '" + codename + "' already loaded");
 		}
@@ -129,25 +133,25 @@ public class DadaraAnalysisManager implements AnalysisManager
 			throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
 	}
 
-	private boolean hasParameter(final String codename) {
-		return this.parametersMap.get(codename) != null;
+	private boolean hasParameter(Map parsMap, final String codename) {
+		return parsMap.get(codename) != null;
 	}
 
-	private byte[] getParameter(final String codename) throws AnalysisException {
-		byte[] rawData = (byte[]) this.parametersMap.get(codename);
+	private byte[] getParameter(Map parsMap, final String codename) throws AnalysisException {
+		byte[] rawData = (byte[]) parsMap.get(codename);
 		if (rawData == null)
 			throw new AnalysisException("Cannot get parameter of codename '" + codename + "'");
 		return rawData;
 	}
 
-	private ByteArray getParBA(final String codename) throws AnalysisException {
-		byte[] rawData = this.getParameter(codename);
+	private ByteArray getParBA(Map parsMap, final String codename) throws AnalysisException {
+		byte[] rawData = this.getParameter(parsMap, codename);
 		return new ByteArray(rawData);
 	}
 
 	private ModelTraceManager obtainEtalonMTM() throws AnalysisException {
 		// read etalon r/g and its thresholds
-		byte[] etalonData = this.getParameter(CODENAME_DADARA_ETALON_MTM);
+		byte[] etalonData = this.getParameter(this.etalonPars, CODENAME_DADARA_ETALON_MTM);
 		try {
 			return (ModelTraceManager) DataStreamableUtil.readDataStreamableFromBA(etalonData, ModelTraceManager.getReader());
 		}
@@ -158,9 +162,9 @@ public class DadaraAnalysisManager implements AnalysisManager
 
 	// may return null if no such parameter
 	private AnalysisParameters obtainAnalysisParameters() throws AnalysisException {
-		if (!hasParameter(CODENAME_DADARA_CRITERIA))
+		if (!hasParameter(this.criteriaPars, CODENAME_DADARA_CRITERIA))
 			return null;
-		byte[] bar = this.getParameter(CODENAME_DADARA_CRITERIA);
+		byte[] bar = this.getParameter(this.criteriaPars, CODENAME_DADARA_CRITERIA);
 		try {
 			return (AnalysisParameters) DataStreamableUtil.readDataStreamableFromBA(bar, AnalysisParameters.getReader());
 		}
@@ -174,12 +178,12 @@ public class DadaraAnalysisManager implements AnalysisManager
 		Map outParameters = new HashMap(); // Map <String codename, byte[] rawData>
 
 		// Получаем рефлектограмму
-		BellcoreStructure bs = (new BellcoreReader()).getData(this.getParameter(CODENAME_REFLECTOGRAMMA));
+		BellcoreStructure bs = (new BellcoreReader()).getData(this.getParameter(this.tracePars, CODENAME_REFLECTOGRAMMA));
 
 		// Получаем из эталона уровень обнаружения обрыва
 		double breakThresh = 0;
 		try {
-			breakThresh = this.getParBA(CODENAME_DADARA_ETALON_BREAK_THRESH).toDouble();
+			breakThresh = this.getParBA(this.etalonPars, CODENAME_DADARA_ETALON_BREAK_THRESH).toDouble();
 		}
 		catch (IOException ioe) {
 			throw new AnalysisException("Couldn't get " + CODENAME_DADARA_ETALON_BREAK_THRESH + ": " + ioe + ", " + ioe.getMessage());
