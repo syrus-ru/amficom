@@ -2,11 +2,15 @@ package com.syrus.AMFICOM.Client.Schedule;
 
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
-import com.syrus.util.Application;
 
 public class Schedule extends AbstractApplication {
 	private static final String APPLICATION_NAME = "scheduler";
 
+	
+	public Schedule() {
+		super(APPLICATION_NAME);
+	}
+	
 	protected void init() {
 		super.init();
 		super.aContext.setApplicationModel(new SchedulerModel(super.aContext));				
@@ -14,7 +18,6 @@ public class Schedule extends AbstractApplication {
 	}
 
 	public static void main(String[] args) {
-		Application.init(APPLICATION_NAME);
 		new Schedule();
 	}
 }
