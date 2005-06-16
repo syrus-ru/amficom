@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.9 2005/06/06 13:04:56 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.10 2005/06/16 14:44:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,14 +12,22 @@ import java.util.List;
 
 import com.ofx.base.SxEnvironment;
 import com.ofx.component.swing.JMapViewer;
+import com.ofx.mapViewer.SxMapLayer;
+import com.ofx.mapViewer.SxMapLayerInterface;
+import com.ofx.mapViewer.SxMapViewer;
+import com.ofx.mapViewer.SxMarkerLayer;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapContext;
+import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.9 $, $Date: 2005/06/06 13:04:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/16 14:44:28 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -38,6 +46,19 @@ public class OfxConnection extends MapConnection
 	
 	protected static boolean dbset = false;
 
+	/**
+	 * Объект-слой, содержищий объекты топографической схемы
+	 */
+	SxMapLayer spatialLayer = null;
+
+	/**
+	 * Ссылка на компонент, отображающий карту
+	 */
+	SxMapViewer sxMapViewer = null;
+
+	// TODO this is really bad!!
+	private OfxNetMapViewer ofxLayerPainter;
+	
 	public OfxConnection()
 	{
 		Environment.log(
@@ -175,6 +196,28 @@ public class OfxConnection extends MapConnection
 			if(!dbset)
 				this.jMapViewer.setDBName(sessionName);
 			this.jMapViewer.setMapName(this.dataBaseView);
+
+			this.sxMapViewer = this.jMapViewer.getSxMapViewer();
+			
+			this.spatialLayer = new AMFICOMSxMapLayer(this);
+
+			this.sxMapViewer.addLayer( "Network layer", this.spatialLayer);
+
+			try 
+			{
+				SxMarkerLayer markerLayer = (SxMarkerLayer) 
+						this.sxMapViewer.getLayer(SxMapLayerInterface.MARKER);
+				markerLayer.listenForMapEvents( false );
+				markerLayer.setEnabled(false);
+			} 
+			catch (Exception ex) 
+			{
+					ex.printStackTrace();
+			} 
+			
+			this.sxMapViewer.removeNamedLayer("OFX LOGO");
+			this.sxMapViewer.removeNamedLayer("OFX COPYRIGHT");
+
 		}
 		catch(Exception e)
 		{
@@ -192,6 +235,7 @@ public class OfxConnection extends MapConnection
 				getClass().getName(), 
 				"release()");
 
+		this.spatialLayer.release();
 		try
 		{
 			SxEnvironment.singleton().getQuery().close();
@@ -224,5 +268,41 @@ public class OfxConnection extends MapConnection
 	public JMapViewer getJMapViewer()
 	{
 		return this.jMapViewer;
+	}
+
+	public MapImageLoader createImageLoader() {
+		return new OfxImageLoader(this);
+	}
+
+	public MapCoordinatesConverter createCoordinatesConverter() {
+		return new OfxCoordinatesConverter(this);
+	}
+
+	public MapContext createMapContext() {
+		return new OfxContext(this);
+	}
+
+	/**
+	 * @return Returns the sxMapViewer.
+	 */
+	public SxMapViewer getSxMapViewer() {
+		return this.sxMapViewer;
+	}
+
+	/**
+	 * @return Returns the spatialLayer.
+	 */
+	public SxMapLayer getSpatialLayer() {
+		return this.spatialLayer;
+	}
+
+	// TODO this is really bad!!
+	public void setOfxLayerPainter(OfxNetMapViewer viewer) {
+		this.ofxLayerPainter = viewer;
+	}
+
+	// TODO this is really bad!!
+	public OfxNetMapViewer getOfxLayerPainter() {
+		return this.ofxLayerPainter;
 	}
 }

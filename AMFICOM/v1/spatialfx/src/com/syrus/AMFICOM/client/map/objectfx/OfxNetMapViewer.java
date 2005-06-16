@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.7 2005/06/06 13:04:56 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.8 2005/06/16 14:44:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,81 +12,55 @@
 package com.syrus.AMFICOM.client.map.objectfx;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
 
 import com.ofx.component.swing.JMapViewer;
-import com.ofx.mapViewer.SxMapLayerInterface;
-import com.ofx.mapViewer.SxMapViewer;
-import com.ofx.mapViewer.SxMarkerLayer;
+import com.ofx.geometry.SxDoublePoint;
+import com.ofx.geometry.SxRectangle;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapConnection;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.map.ui.MapDropTargetListener;
 import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
 import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
 import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
 import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
-import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * 
- * @version $Revision: 1.7 $, $Date: 2005/06/06 13:04:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/16 14:44:29 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
 public class OfxNetMapViewer extends NetMapViewer
 {
-	protected OfxLogicalNetLayer logicalNetLayer = null;
+	OfxConnection mapConnection;
 
-	protected OfxConnection mapConnection = null;
-	
 	protected DropTarget dropTarget = null;
-	protected DropTargetListener dtl = null;
-	protected MapToolTippedPanel mttp = null;
-	protected ToolTipManager ttm = null;
-	protected MouseListener ml = null;
-	protected MouseMotionListener mml = null;
-	protected MapKeyAdapter mka = null;
 
 	protected JPanel visualComponent = null;
 
-	public JMapViewer getJMapViewer()
-	{
-		return this.mapConnection.getJMapViewer();
-	}
-	
-	public JComponent getVisualComponent()
-	{
-		return this.visualComponent;
-	}
+	public OfxNetMapViewer(LogicalNetLayer logicalNetLayer, MapContext mapContext, MapImageRenderer renderer) throws MapDataException, MapConnectionException {
+		super(logicalNetLayer, mapContext, renderer);
 
-	public void init() throws MapDataException
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"init()");
+		OfxContext ofxContext = (OfxContext )mapContext;
+		this.mapConnection = (OfxConnection )ofxContext.getMapConnection();
+		//TODO how spatialLayer should be repainted?
+		this.mapConnection.setOfxLayerPainter(this);
 		
-		super.init();
-		
-		if(this.mapConnection == null)
-			throw new MapDataException("Нет соединения.");
-
 		JMapViewer jMapViewer = this.mapConnection.getJMapViewer();
 		
 		if(jMapViewer == null)
@@ -95,159 +69,115 @@ public class OfxNetMapViewer extends NetMapViewer
 		this.visualComponent = new JPanel();
 		this.visualComponent.setLayout(new BorderLayout());
 		this.visualComponent.add(jMapViewer);
-		
-		if(this.logicalNetLayer != null)
-		{
-			jMapViewer.removeMouseListener(this.mttp.toolTippedPanelListener);
-			jMapViewer.removeMouseMotionListener(this.mttp.toolTippedPanelListener);
-			this.dropTarget.setActive(false);
-			this.ttm.unregisterComponent(this.mttp);
-		}
+	}
+	
+	public void init() throws MapDataException {
+		super.init();
 		try
 		{
-			this.logicalNetLayer = new OfxLogicalNetLayer(this);
+			JMapViewer jMapViewer = this.mapConnection.getJMapViewer();
 
-			this.logicalNetLayer.setCenter(MapPropertiesManager.getCenter());
-			this.logicalNetLayer.setScale(MapPropertiesManager.getZoom());
-
-			this.dtl = new MapDropTargetListener(this.logicalNetLayer);
 			this.dropTarget = new DropTarget( jMapViewer.getMapCanvas(), this.dtl);
 			this.dropTarget.setActive(true);
 
-			this.mttp = new MapToolTippedPanel(this);
 			jMapViewer.addMouseListener(this.mttp.toolTippedPanelListener);
 			jMapViewer.addMouseMotionListener(this.mttp.toolTippedPanelListener);
 
-			this.mka = new MapKeyAdapter(this.logicalNetLayer);
 			this.visualComponent.addKeyListener(this.mka);
 			this.visualComponent.grabFocus();
 
-			this.ttm = ToolTipManager.sharedInstance();
-			this.ttm.registerComponent(this.mttp);
-
-			SxMapViewer anSxMapViewer = jMapViewer.getSxMapViewer();
-	
-			anSxMapViewer.addLayer( "Network layer", this.logicalNetLayer.spatialLayer);
-
-			try 
-			{
-				SxMarkerLayer markerLayer = (SxMarkerLayer) 
-						anSxMapViewer.getLayer(SxMapLayerInterface.MARKER);
-				markerLayer.listenForMapEvents( false );
-				markerLayer.setEnabled(false);
-			} 
-			catch (Exception ex) 
-			{
-					ex.printStackTrace();
-			} 
-			
-			anSxMapViewer.removeNamedLayer("OFX LOGO");
-			anSxMapViewer.removeNamedLayer("OFX COPYRIGHT");
-
-			this.logicalNetLayer.repaint(true);
+			jMapViewer.addMouseListener(this.ml);
+			jMapViewer.addMouseMotionListener(this.mml);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 			throw new MapDataException("abracadabra");
 		}
-		if(this.ml == null)
-		{
-			this.ml = new MapMouseListener(this.logicalNetLayer);
-			jMapViewer.addMouseListener(this.ml);
-		}
-		if(this.mml == null)
-		{
-			this.mml = new MapMouseMotionListener(this.logicalNetLayer);
-			jMapViewer.addMouseMotionListener(this.mml);
-		}
 	}
 
-	public void saveConfig()
+	public void dispose()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"saveConfig()");
+		JMapViewer jMapViewer = this.mapConnection.getJMapViewer();
+		jMapViewer.removeMouseListener(this.mttp.toolTippedPanelListener);
+		jMapViewer.removeMouseMotionListener(this.mttp.toolTippedPanelListener);
+		this.dropTarget.setActive(false);
+		super.dispose();
+	}
 		
-		MapPropertiesManager.setCenter(this.logicalNetLayer.getCenter());
-		MapPropertiesManager.setZoom(this.logicalNetLayer.getScale());
-		MapPropertiesManager.saveIniFile();
+	public JComponent getVisualComponent()
+	{
+		return this.visualComponent;
 	}
 
-	public MapConnection getConnection()
+	/**
+	 * Перерисовать содержимое компонента с картой
+	 */
+	public void repaint(boolean fullRepaint)
 	{
-		return this.mapConnection;
-	}
-
-	public void setConnection(MapConnection conn)
-		throws MapDataException
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setConnection(" + conn + ")");
-		
-		try
-		{
-			this.mapConnection = (OfxConnection )conn;
-			
-		}
-		catch (ClassCastException e)
-		{
-			throw new MapDataException(e);
-		}
+		this.mapConnection.getSpatialLayer().postDirtyEvent();
+		this.mapConnection.getSpatialLayer().postPaintEvent();
 	}
 	
-	public LogicalNetLayer getLogicalNetLayer()
+	public Rectangle2D.Double getVisibleBounds()
 	{
-		return this.logicalNetLayer;
+		SxRectangle sxRect = this.mapConnection.getSxMapViewer().getMapCanvas().getGroundRect();
+		sxRect = this.mapConnection.getSxMapViewer().convertDBToLatLong(sxRect);
+		Rectangle2D.Double rect = new Rectangle2D.Double(
+			sxRect.getBottomLeft().getX(),
+			sxRect.getBottomLeft().getY(),
+			sxRect.getWidth(),
+			sxRect.getHeight());
+		return rect;
 	}
 
-	public List getLayers()
+	/**
+	 * Устанавить курсор мыши на компоненте отображения карты
+	 */
+	public void setCursor(Cursor cursor)
 	{
-		List returnList = new LinkedList();
-
-		int sortOrder = 301;// as used in Ofx.JMapLegend
-		
-		SxMapViewer sxMapViewer = this.mapConnection.getJMapViewer().getSxMapViewer();
-		
-		{
-		Vector vector = sxMapViewer.getForegroundClasses(sortOrder);
-		for(Iterator it = vector.iterator(); it.hasNext();)
-		{
-			String s = (String )it.next();
-			SpatialLayer sl = new OfxSpatialLayer(sxMapViewer, s);
-			returnList.add(sl);
-			Vector vector2 = sxMapViewer.classBinNames(s);
-			for(Iterator it2 = vector2.iterator(); it2.hasNext();)
-			{
-				String s2 = (String )it2.next();
-				SpatialLayer sl2 = new OfxSpatialLayer(sxMapViewer, s2);
-				returnList.add(sl2);
-			}
-		}
-		}
-
-		{
-		Vector vector = sxMapViewer.getBackgroundClasses();
-		for(Iterator it = vector.iterator(); it.hasNext();)
-		{
-			String s = (String )it.next();
-			SpatialLayer sl = new OfxSpatialLayer(sxMapViewer, s);
-			returnList.add(sl);
-			Vector vector2 = sxMapViewer.classBinNames(s);
-			for(Iterator it2 = vector2.iterator(); it2.hasNext();)
-			{
-				String s2 = (String )it2.next();
-				SpatialLayer sl2 = new OfxSpatialLayer(sxMapViewer, s2);
-				returnList.add(sl2);
-			}
-		}
-		}
-
-		return returnList;
+		this.mapConnection.getSxMapViewer().getMapCanvas().setCursor(cursor);
 	}
+
+	public Cursor getCursor()
+	{
+		return this.mapConnection.getSxMapViewer().getMapCanvas().getCursor();
+	}
+
+	public void handDragged(MouseEvent me)
+	{
+		java.awt.Point point = new Point(
+				me.getX() - (int )this.logicalNetLayer.getStartPoint().getX(), 
+				me.getY() - (int )this.logicalNetLayer.getStartPoint().getY());
+		this.mapConnection.getSxMapViewer().getMapCanvas().setBufferOffset(point);
+		this.mapConnection.getSxMapViewer().getMapCanvas().repaint();
+	}
+	
+	public void handMoved(MouseEvent me) throws MapConnectionException, MapDataException {
+		// nothing
+	}
+
+	public void mouseMoved(MouseEvent me) throws MapConnectionException, MapDataException {
+		// nothing
+	}
+
+	public void centerSpatialObject(SpatialObject so)
+	{
+		try 
+		{
+			OfxSpatialObject oso = (OfxSpatialObject)so;
+			SxDoublePoint center = oso.getSxSpatialObject().geometry.getCenter();
+			System.out.print("Center " + center.getX() + ", " + center.getY());
+			center = this.mapConnection.getSxMapViewer().convertLatLongToMap(center);
+			System.out.println(" --> " + center.getX() + ", " + center.getY());
+			this.mapConnection.getSxMapViewer().setCenter(center.getX(), center.getY());
+		} 
+		catch (Exception ex) 
+		{
+			System.out.println("Cannot center object: ");
+			ex.printStackTrace();
+			
+		} 
+	}
+
 }
