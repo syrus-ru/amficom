@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.43 2005/06/05 18:40:16 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.44 2005/06/16 10:20:31 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/05 18:40:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/06/16 10:20:31 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -208,6 +208,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					case ObjectEntities.MCM_ENTITY_CODE:
 						condition = super.conditionTest(test.getMCMId());
 						break;
+					case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
+						condition = super.conditionTest(test.getMeasurementSetupIds());
 					case ObjectEntities.TEST_ENTITY_CODE:
 						condition = super.conditionTest(test.getGroupTestId());
 						break;
