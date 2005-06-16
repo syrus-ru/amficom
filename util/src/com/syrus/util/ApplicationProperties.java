@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.9 2005/05/18 10:49:17 bass Exp $
+ * $Id: ApplicationProperties.java,v 1.10 2005/06/16 10:47:55 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,20 +37,27 @@ public class ApplicationProperties {
 		applicationResourceBundle = createResourceBundle(applicationFileName);
 	}
 
-	private static ResourceBundle createResourceBundle(String fileName) {
+	private static ResourceBundle createResourceBundle(final String fileName) {
 		ResourceBundle resourceBundle = null;
-		try {
-			FileInputStream fis = new FileInputStream(DOT + File.separator + fileName);
-			resourceBundle = new PropertyResourceBundle(fis);
-			fis.close();
+		String filepath = DOT + File.separator + fileName;
+		File file = new File(filepath);
+		String absolutePath = file.getAbsolutePath();
+		System.out.println("Reading file:" + absolutePath);
+		if (file.exists()) {
+			try {
+				FileInputStream fis = new FileInputStream(filepath);
+				resourceBundle = new PropertyResourceBundle(fis);
+				fis.close();
+			} catch (FileNotFoundException fnfe) {
+				System.err.println("Cannot find file: " + absolutePath);
+			} catch (IOException ioe) {
+				System.err.println("Exception while reading file " + absolutePath + ": " + ioe.getMessage());
+				ioe.printStackTrace();
+			}
+		} else {
+			System.err.println("Cannot find file: " + absolutePath);
 		}
-		catch (FileNotFoundException fnfe) {
-			System.err.println("Cannot find file: " + fileName);
-		}
-		catch (IOException ioe) {
-			System.err.println("Exception while reading file " + fileName + ": " + ioe.getMessage());
-			ioe.printStackTrace();
-		}
+		
 		return resourceBundle;
 	}
 
