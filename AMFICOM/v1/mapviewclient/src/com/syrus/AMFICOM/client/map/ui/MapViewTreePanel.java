@@ -140,7 +140,7 @@ public final class MapViewTreePanel extends JPanel
 			if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE)) {
 				MapNavigateEvent mne = (MapNavigateEvent )pce;
 				if(mne.isMapElementSelected()) {
-					MapElement mapElement = (MapElement )mne.getSource();
+					MapElement mapElement = (MapElement )mne.getNewValue();
 					Item node = this.model.findNode(this.root, mapElement);
 					if(node != null) {
 						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
@@ -149,7 +149,7 @@ public final class MapViewTreePanel extends JPanel
 					}
 				}
 				else if (mne.isMapElementDeselected()) {
-					MapElement mapElement = (MapElement )mne.getSource();
+					MapElement mapElement = (MapElement )mne.getNewValue();
 					Item node = this.model.findNode(this.root, mapElement);
 					if(node != null) {
 						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));

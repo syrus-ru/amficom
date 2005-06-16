@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.5 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.6 2005/06/16 14:41:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.5 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/16 14:41:24 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -81,7 +81,7 @@ public abstract class MapAbstractPropertiesFrame extends
 		if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE)) {
 			MapNavigateEvent event = (MapNavigateEvent )pce;
 			if(event.isMapElementSelected()) {
-				MapElement mapElement = (MapElement )event.getSource();
+				MapElement mapElement = (MapElement )event.getNewValue();
 				VisualManager vm = MapVisualManager.getVisualManager(mapElement);
 				if(vm instanceof MarkerEditor) {
 					MarkerEditor markerEditor = (MarkerEditor)vm;
