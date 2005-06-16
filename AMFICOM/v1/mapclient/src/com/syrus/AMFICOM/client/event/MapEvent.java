@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.1 2005/06/06 12:45:30 krupenn Exp $
+ * $Id: MapEvent.java,v 1.2 2005/06/16 11:00:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/06/06 12:45:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/16 11:00:07 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -72,5 +72,10 @@ public class MapEvent extends PropertyChangeEvent
 	public MapEvent(Object source, String type)
 	{	
 		super(source, type, null, null);
+	}
+
+	public MapEvent(Object source, String type, Object newValue)
+	{	
+		super(source, type, null, newValue);
 	}
 }
