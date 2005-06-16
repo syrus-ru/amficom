@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.6 2005/06/15 07:33:40 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.7 2005/06/16 09:12:54 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/06/15 07:33:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/16 09:12:54 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -295,6 +295,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         boolean printTiming = true;
         if (printTiming) {
             long dtAn = fails.getTimeAcc();
+            System.out.println();
+            System.out.println("--------------");
             System.out.println("Analysis time :  " + dtAn);
             System.out.println("TestCase time :  " + (time1 - time0 - dtAn));
             System.out.println("Total time    :  " + (time1 - time0));
