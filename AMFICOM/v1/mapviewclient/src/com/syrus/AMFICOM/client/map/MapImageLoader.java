@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageLoader.java,v 1.3 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: MapImageLoader.java,v 1.4 2005/06/16 14:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,12 +12,15 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/16 14:39:05 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public interface MapImageLoader
 {
+	public abstract MapConnection getMapConnection()
+		throws MapConnectionException;
+
 	/**
 	 * ѕосылает запрос на рендеринг изображени€ на сервере
 	 */

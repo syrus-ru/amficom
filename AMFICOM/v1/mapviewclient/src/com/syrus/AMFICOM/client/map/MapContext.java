@@ -1,5 +1,5 @@
 /**
- * $Id: MapContext.java,v 1.2 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: MapContext.java,v 1.3 2005/06/16 14:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,9 @@ import java.util.List;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public interface MapContext {
+
+	public abstract MapConnection getMapConnection()
+		throws MapConnectionException;
 
 	/**
 	 * Установить центральную точку вида карты.
@@ -68,7 +71,6 @@ public interface MapContext {
 	 */
 	public abstract void zoomToBox(DoublePoint from, DoublePoint to)
 			throws MapConnectionException, MapDataException;
-
 
 	/**
 	 * Получить список географических слоев.

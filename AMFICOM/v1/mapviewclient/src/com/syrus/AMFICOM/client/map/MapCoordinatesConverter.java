@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.8 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.9 2005/06/16 14:39:05 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
@@ -14,11 +14,14 @@ import java.awt.Point;
  * Конвертер географических и экранных координат для отображения элементов карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/16 14:39:05 $
  * @module maviewclient_v1
  */
 public interface MapCoordinatesConverter
 {
+	public abstract MapConnection getMapConnection()
+		throws MapConnectionException;
+
 	/**
 	 * Перевести географические координаты в экранные.
 	 * 
