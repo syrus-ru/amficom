@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.30 2005/06/15 14:20:13 bob Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.31 2005/06/16 08:23:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/15 14:20:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/06/16 08:23:10 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -66,20 +66,21 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
 	}
 
-	public static void init(GeneralObjectLoader gObjectLoader1, Class cacheClass, final int size) {
+	/**
+	 * @param objectLoader
+	 * @param cacheClass
+	 * @param size
+	 */
+	public static void init(final GeneralObjectLoader objectLoader,
+			final Class cacheClass, final int size) {
 		if (size > 0) {
-			Class clazz = null;
-			try {
-				clazz = Class.forName(cacheClass.getName());
-				instance = new GeneralStorableObjectPool(clazz);
-			}
-			catch (ClassNotFoundException e) {
-				Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
-				instance = new GeneralStorableObjectPool();
-			}
-			init(gObjectLoader1, size);
-		} else {
-			init(gObjectLoader1, cacheClass);
+			instance = cacheClass == null
+					? new GeneralStorableObjectPool()
+					: new GeneralStorableObjectPool(cacheClass);
+			init(objectLoader, size);
+		}
+		else {
+			init(objectLoader, cacheClass);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.28 2005/06/15 14:53:52 bob Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.29 2005/06/16 08:23:11 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.28 $, $Date: 2005/06/15 14:53:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/06/16 08:23:11 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -63,20 +63,20 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, IMAGERESOURCE_OBJECT_POOL_SIZE);
 	}
 
-	public static void init(ResourceObjectLoader rObjectLoader1, Class cacheClass, final int size) {
+	/**
+	 * @param objectLoader
+	 * @param cacheClass
+	 * @param size
+	 */
+	public static void init(final ResourceObjectLoader objectLoader,
+			final Class cacheClass, final int size) {
 		if (size > 0) {
-			Class clazz = null;
-			try {
-				clazz = Class.forName(cacheClass.getName());
-				instance = new ResourceStorableObjectPool(clazz);
-			}
-			catch (ClassNotFoundException e) {
-				Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
-				instance = new ResourceStorableObjectPool();
-			}
-			init(rObjectLoader1, size);
+			instance = cacheClass == null
+					? new ResourceStorableObjectPool()
+					: new ResourceStorableObjectPool(cacheClass);
+			init(objectLoader, size);
 		} else {
-			init(rObjectLoader1, cacheClass);
+			init(objectLoader, cacheClass);
 		}
 	}
 

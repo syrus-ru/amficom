@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.23 2005/06/03 15:55:06 arseniy Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.24 2005/06/16 08:23:11 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/06/03 15:55:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/16 08:23:11 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -150,20 +150,20 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * @param schemeObjectLoader1
+	 * @param objectLoader
 	 * @param cacheClass
 	 * @param size
 	 */
-	public static void init(final SchemeObjectLoader schemeObjectLoader1, final Class cacheClass, final int size) {
-		final String cacheClassName = cacheClass.getName();
-		try {
-			instance = new SchemeStorableObjectPool(Class.forName(cacheClassName));
-		} catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName
-					+ "' cannot be found, using default");
-			instance = new SchemeStorableObjectPool();
+	public static void init(final SchemeObjectLoader objectLoader,
+			final Class cacheClass, final int size) {
+		if (size > 0) {
+			instance = cacheClass == null
+					? new SchemeStorableObjectPool()
+					: new SchemeStorableObjectPool(cacheClass);
+			init(objectLoader, size);
+		} else {
+			init(objectLoader, cacheClass);
 		}
-		init(schemeObjectLoader1, size);
 	}
 
 	public static void init(final SchemeObjectLoader schemeObjectLoader1, final Class cacheClass) {

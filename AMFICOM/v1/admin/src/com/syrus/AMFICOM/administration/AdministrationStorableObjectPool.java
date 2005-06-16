@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.33 2005/06/15 14:20:00 bob Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.34 2005/06/16 08:23:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/15 14:20:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2005/06/16 08:23:10 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -84,20 +84,21 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, PERMATTR_OBJECT_POOL_SIZE);
 	}
 
-	public static void init(AdministrationObjectLoader aObjectLoader1, Class cacheClass, final int size) {
+	/**
+	 * @param objectLoader
+	 * @param cacheClass
+	 * @param size
+	 */
+	public static void init(final AdministrationObjectLoader objectLoader,
+			final Class cacheClass, final int size) {
 		if (size > 0) {
-			Class clazz = null;
-			try {
-				clazz = Class.forName(cacheClass.getName());
-				instance = new AdministrationStorableObjectPool(clazz);
-			}
-			catch (ClassNotFoundException e) {
-				Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
-				instance = new AdministrationStorableObjectPool();
-			}
-			init(aObjectLoader1, size);
-		} else {
-			init (aObjectLoader1, cacheClass);
+			instance = cacheClass == null
+					? new AdministrationStorableObjectPool()
+					: new AdministrationStorableObjectPool(cacheClass);
+			init(objectLoader, size);
+		}
+		else {
+			init (objectLoader, cacheClass);
 		}
 	}
 

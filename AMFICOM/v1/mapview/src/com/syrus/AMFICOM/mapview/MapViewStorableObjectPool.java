@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.21 2005/06/03 15:54:22 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.22 2005/06/16 08:23:10 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Ïâèàïð-æåéïêàåõìêë çåïæô.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/03 15:54:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/06/16 08:23:10 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -67,17 +67,21 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, MAPVIEW_OBJECT_POOL_SIZE);
 	}
 
-	public static void init(MapViewObjectLoader mvObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new MapViewStorableObjectPool(clazz);
+	/**
+	 * @param objectLoader
+	 * @param cacheClass
+	 * @param size
+	 */
+	public static void init(final MapViewObjectLoader objectLoader,
+			final Class cacheClass, final int size) {
+		if (size > 0) {
+			instance = cacheClass == null
+					? new MapViewStorableObjectPool()
+					: new MapViewStorableObjectPool(cacheClass);
+			init(objectLoader, size);
+		} else {
+			init(objectLoader, cacheClass);
 		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
-			instance = new MapViewStorableObjectPool();
-		}
-		init(mvObjectLoader1, size);
 	}
 
 	public static void init(MapViewObjectLoader mvObjectLoader1, Class cacheClass) {

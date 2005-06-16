@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.30 2005/06/15 14:55:04 bob Exp $
+ * $Id: EventStorableObjectPool.java,v 1.31 2005/06/16 08:23:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,12 +21,12 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/15 14:55:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/06/16 08:23:11 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
-public class EventStorableObjectPool extends StorableObjectPool {
+public final class EventStorableObjectPool extends StorableObjectPool {
 	private static final int OBJECT_POOL_MAP_SIZE = 4;		/* Number of entities  */
 
 	private static final int EVENTTYPE_OBJECT_POOL_SIZE = 2;
@@ -73,20 +73,21 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENTSOURCE_OBJECT_POOL_SIZE);
 	}
 
-	public static void init(EventObjectLoader eObjectLoader1, Class cacheClass, final int size) {
+	/**
+	 * @param objectLoader
+	 * @param cacheClass
+	 * @param size
+	 */
+	public static void init(final EventObjectLoader objectLoader,
+			final Class cacheClass, final int size) {
 		if (size > 0) {
-			Class clazz = null;
-			try {
-				clazz = Class.forName(cacheClass.getName());
-				instance = new EventStorableObjectPool(clazz);
-			}
-			catch (ClassNotFoundException e) {
-				Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
-				instance = new EventStorableObjectPool();
-			}
-			init(eObjectLoader1, size);
-		} else {
-			init(eObjectLoader1, cacheClass);
+			instance = cacheClass == null
+					? new EventStorableObjectPool()
+					: new EventStorableObjectPool(cacheClass);
+			init(objectLoader, size);
+		}
+		else {
+			init(objectLoader, cacheClass);
 		}
 	}
 

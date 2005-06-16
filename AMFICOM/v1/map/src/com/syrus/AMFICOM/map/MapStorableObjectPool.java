@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.25 2005/06/03 15:52:38 arseniy Exp $
+ * $Id: MapStorableObjectPool.java,v 1.26 2005/06/16 08:23:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/03 15:52:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/06/16 08:23:10 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -111,21 +111,21 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * @param mapObjectLoader1
+	 * @param objectLoader
 	 * @param cacheClass
 	 *          class must extend LRUMap
 	 * @param size
 	 */
-	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass, final int size) {
-		final String cacheClassName = cacheClass.getName();
-		try {
-			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
+	public static void init(final MapObjectLoader objectLoader,
+			final Class cacheClass, final int size) {
+		if (size > 0) {
+			instance = cacheClass == null
+					? new MapStorableObjectPool()
+					: new MapStorableObjectPool(cacheClass);
+			init(objectLoader, size);
+		} else {
+			init(objectLoader, cacheClass);
 		}
-		catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default");
-			instance = new MapStorableObjectPool();
-		}
-		init(mapObjectLoader1, size);
 	}
 
 	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass) {
