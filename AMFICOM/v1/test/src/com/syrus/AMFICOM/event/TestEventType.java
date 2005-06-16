@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.4 2005/05/30 12:47:18 arseniy Exp $
+ * $Id: TestEventType.java,v 1.5 2005/06/16 13:26:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.event.corba.AlertKind;
 import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -29,11 +29,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/30 12:47:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/16 13:26:44 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -122,11 +122,11 @@ public class TestEventType extends CommonTest {
 		EventType eventType = (EventType) StorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next();
 		System.out.println("Event type: '" + eventType.getId() + "'");
 
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SYSTEM_USER_ENTITY_CODE);
 		Set users = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 
 		for (final Iterator it = users.iterator(); it.hasNext();) {
-			final User user = (User) it.next();
+			final SystemUser user = (SystemUser) it.next();
 			final Identifier userId = user.getId();
 			eventType.removeAlertKindsFromUser(userId);
 		}

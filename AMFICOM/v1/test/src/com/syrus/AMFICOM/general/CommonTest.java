@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.6 2005/06/09 14:40:06 arseniy Exp $
+ * $Id: CommonTest.java,v 1.7 2005/06/16 13:26:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.UserDatabase;
-import com.syrus.AMFICOM.administration.UserWrapper;
+import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.SystemUserDatabase;
+import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
@@ -56,9 +56,9 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
+import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/09 14:40:06 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/16 13:26:44 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -81,7 +81,7 @@ public abstract class CommonTest extends TestCase {
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
 
-	protected static User creatorUser;
+	protected static SystemUser creatorUser;
 
 	public CommonTest(String name) {
 		super(name);
@@ -134,7 +134,7 @@ public abstract class CommonTest extends TestCase {
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
-		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new SystemUserDatabase());
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new MCMDatabase());
@@ -166,7 +166,7 @@ public abstract class CommonTest extends TestCase {
 		DatabaseContext.registerDatabase(new ModelingDatabase());
 		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new ResultDatabase());
-		DatabaseContext.registerDatabase(new SetDatabase());
+		DatabaseContext.registerDatabase(new ParameterSetDatabase());
 		DatabaseContext.registerDatabase(new TestDatabase());
 		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
@@ -181,8 +181,8 @@ public abstract class CommonTest extends TestCase {
 
 	private static void initStorableObjectPools() {
 		try {
-			UserDatabase userDatabase = (UserDatabase) DatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
-			User sysUser = userDatabase.retrieveForLogin(UserWrapper.SYS_LOGIN);
+			SystemUserDatabase userDatabase = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEM_USER_ENTITY_CODE);
+			SystemUser sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
 			creatorUser = sysUser;
 			DatabaseObjectLoader.init(sysUser.getId());
 		}
