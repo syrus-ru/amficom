@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.10 2005/06/07 13:18:51 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.11 2005/06/16 10:41:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/07 13:18:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:41:43 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 
@@ -24,7 +24,7 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 	/* Load multiple objects*/
 
-	public Set loadUsers(Set ids) throws ApplicationException {
+	public Set loadSystemUsers(Set ids) throws ApplicationException {
 		return loadStorableObjects(ids);
 	}
 
@@ -46,7 +46,7 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 	/* Load multiple objects but ids*/
 
-	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadSystemUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
@@ -68,7 +68,7 @@ public class DatabaseAdministrationObjectLoader extends DatabaseObjectLoader imp
 
 	/* Save multiple objects*/
 
-	public void saveUsers(Set objects, boolean force) throws ApplicationException {
+	public void saveSystemUsers(Set objects, boolean force) throws ApplicationException {
 		saveStorableObjects(objects, force);
 	}
 

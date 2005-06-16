@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.10 2005/06/07 13:18:51 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.11 2005/06/16 10:41:42 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/07 13:18:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:41:42 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 
@@ -60,7 +60,7 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 		return loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadParameterSets(java.util.Set ids) throws ApplicationException {
 		return loadStorableObjects(ids);
 	}
 
@@ -122,7 +122,7 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
-	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadParameterSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
@@ -184,7 +184,7 @@ public class DatabaseMeasurementObjectLoader extends DatabaseObjectLoader implem
 		saveStorableObjects(objects, force);
 	}
 
-	public void saveSets(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveParameterSets(java.util.Set objects, boolean force) throws ApplicationException {
 		saveStorableObjects(objects, force);
 	}
 

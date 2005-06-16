@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.5 2005/05/23 12:56:33 bass Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.6 2005/06/16 10:41:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/23 12:56:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/16 10:41:43 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -104,11 +104,11 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public User loadUser(Identifier id) throws ApplicationException {
-		return (User) this.loadStorableObject(id);
+	public SystemUser loadUser(Identifier id) throws ApplicationException {
+		return (SystemUser) this.loadStorableObject(id);
 	}
 
-	public Set loadUsers(Set ids) throws ApplicationException {
+	public Set loadSystemUsers(Set ids) throws ApplicationException {
 		Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -117,7 +117,7 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 		return objects;
 	}
 
-	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadSystemUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -177,12 +177,12 @@ public class XMLAdministrationObjectLoader extends XMLObjectLoader implements Ad
 
 	}
 
-	public void saveUser(User user, boolean force) throws ApplicationException {
+	public void saveUser(SystemUser user, boolean force) throws ApplicationException {
 		this.saveStorableObject(user, force);
 		this.administrationXML.flush();
 	}
 
-	public void saveUsers(Set collection, boolean force) throws ApplicationException {
+	public void saveSystemUsers(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.4 2005/05/23 12:56:33 bass Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.5 2005/06/16 10:41:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:33 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/16 10:41:42 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -123,11 +123,11 @@ public class XMLMeasurementObjectLoader extends XMLObjectLoader implements Measu
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadParameterSets(java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	public java.util.Set loadParameterSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -215,7 +215,7 @@ public class XMLMeasurementObjectLoader extends XMLObjectLoader implements Measu
 		this.saveStorableObjects(objects, force);
 	}
 
-	public void saveSets(java.util.Set objects, boolean force) throws ApplicationException {
+	public void saveParameterSets(java.util.Set objects, boolean force) throws ApplicationException {
 		this.saveStorableObjects(objects, force);
 
 	}
