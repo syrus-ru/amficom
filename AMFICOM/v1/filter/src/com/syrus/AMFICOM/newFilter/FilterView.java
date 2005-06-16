@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.6 2005/04/15 16:41:57 max Exp $
+ * $Id: FilterView.java,v 1.7 2005/06/16 10:26:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/15 16:41:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/16 10:26:26 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -38,6 +38,9 @@ public interface FilterView {
 	Object removeConditionRef();
 	Object addConditionRef();
 	Object createLogicalSchemeRef();
+	Object createdConditionListRef();
+	Object startDayButtonRef();
+	Object endDayButtonRef();
 	
 	void setNumberCondition(NumberCondition intCondition);
 	void setStringCondition(StringCondition stringCondition);
@@ -47,7 +50,10 @@ public interface FilterView {
 	void refreshFilteredEntities(String[] filteredNames);
 	void refreshCreatedConditions(Object[] conditionNames);
 	void refreshResultConditionString(String stringCondition);
-	void enableChangeDisableAdd(boolean b);
+	void enableAdd(boolean b);
+	void enableRemoveButton(boolean b);
+	void createStartCalendar();
+	void createEndCalendar();
 	
 	
 }
