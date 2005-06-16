@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.12 2005/06/14 11:31:28 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.13 2005/06/16 14:34:47 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -139,12 +139,12 @@ public final class SchemeSampleData {
 		cport4.add(cport40);
 		cport4.add(cport41);
 
-		dev00.setSchemePorts(port0);
-		dev00.setSchemeCablePorts(cport0);
-		dev10.setSchemeCablePorts(cport1);
-		dev20.setSchemeCablePorts(cport2);
-		dev30.setSchemeCablePorts(cport3);
-		dev40.setSchemeCablePorts(cport4);
+//		dev00.setSchemePorts(port0);
+//		dev00.setSchemeCablePorts(cport0);
+//		dev10.setSchemeCablePorts(cport1);
+//		dev20.setSchemeCablePorts(cport2);
+//		dev30.setSchemeCablePorts(cport3);
+//		dev40.setSchemeCablePorts(cport4);
 
 		SchemeElement el0 = SchemeElement.createInstance(userId, "Один элемент", scheme);
 		el0.setDescription("Описалово");
@@ -363,10 +363,10 @@ public final class SchemeSampleData {
 		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId, "Каборт два", AbstractSchemePortDirectionType._OUT, dev10);
 		cport1.add(cport10);
 
-		dev00.setSchemePorts(port0);
-		dev00.setSchemeCablePorts(cport0);
-		dev10.setSchemePorts(port1);
-		dev10.setSchemeCablePorts(cport1);
+//		dev00.setSchemePorts(port0);
+//		dev00.setSchemeCablePorts(cport0);
+//		dev10.setSchemePorts(port1);
+//		dev10.setSchemeCablePorts(cport1);
 		
 		SchemeElement el0 = SchemeElement.createInstance(userId, "Один элемент", scheme);
 		el0.setDescription("Описалово");
