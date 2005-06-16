@@ -521,29 +521,26 @@ return;
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes, int dzMaxDist)
 {//* мёртвую зону ищём  чуть иначе
-    int shift = 0;
-    if( splashes.getLength() <=2 )
+    if( splashes.getLength() <=2 ) // FIXME: вредный код
 return;
-	Splash* sp1 = (Splash*)splashes[0];
-    Splash* sp2;
-    shift = processDeadZone(splashes, dzMaxDist);// ищем мёртвую зону
+    int i0 = processDeadZone(splashes, dzMaxDist);// ищем мёртвую зону
 	// ищем остальные коннекторы  и сварки
-    for(int i = shift+1; i<splashes.getLength()-1; i++)
+    for(int i = i0; i<splashes.getLength()-1; i++) // XXX: < or <= ?
     {
 	  EventParams *ep = 0;
 	  int len = findConnector(i, splashes, ep);
-      if(len != -1)// если коннектор был найден
-      { i+= len;
+      if(len != 0)// если коннектор был найден
+      { i+= len - 1;
 	    events->add(ep);
     continue;
       }
 	  len = processIfIsNonId(i, splashes);
-	  if (len != -1) // если нашли неид. область
-      { i+= len;
+	  if (len != 0) // если нашли неид. область
+      { i+= len - 1;
     continue;
       }
-      sp1 = (Splash*)splashes[i];
-      sp2 = (Splash*)splashes[i+1];
+      Splash* sp1 = (Splash*)splashes[i];
+      Splash* sp2 = (Splash*)splashes[i+1];
       int dist = abs(sp2->begin_weld - sp1->end_weld);
       // две сварки "+" и "-" очень близко
       if( dist<rSSmall			// если всплески очень близко
@@ -567,7 +564,6 @@ return;
     }
 }
 //-------------------------------------------------------------------------------------------------
-//*
 int InitialAnalysis::processDeadZone(ArrList& splashes, int maxDist)
 {
 	int i;
@@ -588,7 +584,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes, int maxDist)
 		if (data[i + 1] < data[i])
 			break;
 	if (i > lastPoint)
-		return -1; // м.з. не найдена - XXX: как обрабатывать?
+		return 0; // м.з. не найдена - XXX: как обрабатывать?
 	// ищем абс. макс. до спада на DY2
 	int dzMaxBeg = i;
 	int dzMaxEnd = i;
@@ -622,55 +618,8 @@ int InitialAnalysis::processDeadZone(ArrList& splashes, int maxDist)
       if(ep->end > lastPoint){ ep->end = lastPoint;}
       events->add(ep);
     }
-	return i - 1;
+	return i;
 }
-//-------------------------------------------------------------------------------------------------
-/*/int InitialAnalysis::processDeadZone(ArrList& splashes, int dummy)
-{   int i, shift = 0;
-	int begin = 0, end = -1;
-    double f_max = 0, f_min = 0;
-	Splash* sp1 = (Splash*)splashes[0];
-    Splash* sp2 = (Splash*)splashes[1];
-    if(sp1->sign<0) // если сигнал сразу вниз, то считаем, что это мёртваязона и есть
-    { begin = 0;
-      end  = sp1->end_thr;
-    }
-    else // иначе на расстоянии rSBig от начала ищём максимальный всплеск вверх и поcле него минимальный всплеск вниз
-    { for(i = 0; sp2->begin_thr<rSBig && i+1<splashes.getLength(); i++)
-      { sp1 = (Splash*)splashes[i];
-        sp2 = (Splash*)splashes[i+1];
-        if(sp1->sign>0 && f_max<sp1->f_extr )
-        { f_max = sp1->f_extr;
-          begin = sp1->begin_thr;
-		  // сбрасываем запомненный слева мнимум, так как максимум сдвинулся вправо
-          end = -1;
-          f_min = 0;
-        }
-        if(sp2->sign<0 && f_min>sp2->f_extr && sp2->end_thr>begin)
-        { f_min = sp2->f_extr;
-          end = sp2->end_thr;
-          shift = i+1;
-        }
-      }
-    }
-    if(end == -1)// если не нашли колебание вверх-вниз в пределах rSBig, то ищем первый вниз
-    { for( ; i<splashes.getLength(); i++)
-      { sp1 = (Splash*)splashes[i];
-        if(sp1->sign<0)
-        { end = sp1->end_thr;
-          shift = i;
-        }
-      }
-    }
-    if(end !=-1 )
-    { EventParams *ep = new EventParams;
-      ep->type = EventParams::DEADZONE;
-      ep->begin = begin; ep->end = end;
-      if(ep->end > lastPoint){ ep->end = lastPoint;}
-      events->add(ep);
-    }
-    return shift;
-}//*/
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setSpliceParamsBySplash(EventParams& ep, Splash& sp)
 {   if(sp.sign>0) { ep.type = EventParams::GAIN; }
@@ -803,18 +752,18 @@ return;
 }
 // -------------------------------------------------------------------------------------------------
 // Посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и
-// создать, изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен -1.
+// создать, изменив значение i и вернув сдвиг; если ничего не нашли, то возвращает 0.
 // Сейчас как коннектор опознаем комбинацию конн.вверх + первый конн.вниз,
 // а также конн.вверх + последний свар.вниз.
 // Поиск ведется в пределах макс. протяженности, зависящей от ампл. конн.вверх,
 // и ограничивается любым (>=weld) всплеском вверх.
 int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 {
-	int shift = -1;
+	int ret = 0;
     Splash* sp1 = (Splash*)splashes[i]; // начальный всплеск
-	Splash* sp2 = 0; // конечный всплеск; sp2 == 0 тогда и только тогда, когда shift == -1
+	Splash* sp2 = 0; // конечный всплеск; sp2 == 0 тогда и только тогда, когда ret == 0
 	if (sp1->begin_conn == -1 || sp1->sign < 0)
-		return shift;
+		return ret;
 	double distCrit = fabs(sp1->f_extr) > rACrit ? rSBig : rSSmall;
 	for (int j = i + 1; j < splashes.getLength(); j++) {
 		Splash *tmp = (Splash*)splashes[j];
@@ -829,19 +778,19 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 		// спад в пределах макс. протяженности
 		if (tmp->begin_conn != -1) {
 			// коннекторной амплитуды
-			shift = j - i;
+			ret = j - i + 1;
 			sp2 = tmp;
 	break; // на нем и останавливаемся
 		} else if (tmp->begin_weld != -1) {
 			// сварочной амплитуды - кандидат на спад
-			shift = j - i;
+			ret = j - i + 1;
 			sp2 = tmp;
 	continue; // не останавливаемся, продолжаем поиск
 		}
 		// всплески меньшие чем weld, игнорируем
 	}
-	if (shift == -1)
-		return shift;
+	if (ret == 0)
+		return ret;
 	ep = new EventParams;
 	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
 	correctConnectorFront(ep); // уточняем фронт коннекора
@@ -849,77 +798,8 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 	double begin = ep->begin, end = ep->end;
 	xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
 #endif
-	return shift;
+	return ret;
 }
-/*
-// В данный момент обрабатывается так:
-// Если на указанной на входе позиции находится коннекторный всплеск вверх и в пределах reflSize находится
-// коннекторный вниз, то он и берётся. Если коннекторного нет, но есть хотя бы сварочный вниз, то в качестве
-// граничного берётся самый дальний ( в пределах reflSize ) сварочный.
-int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
-{   int shift = -1;
-    Splash* sp1 = (Splash*)splashes[i];
-    Splash* sp2, *sp_tmp;
-    // если начинается с большого всплеска вверх, то ищём, где же сплеск вниз
-    if(sp1->begin_conn !=-1 && sp1->sign>0)
-    { // если до конца встретится коннекторный минимум, то нас больше ничего не интерсует
-      for(int j=i+1; j<splashes.getLength(); j++)
-      { sp2 = (Splash*)splashes[j];
-      	if(sp2->begin_conn == -1){// ищем только коннекторный вниз
-      continue;}
-        // если всплески далеко друг от друга , то это не коннектор
-        double dist = fabs(sp2->begin_weld - sp1->end_conn);
-        if(dist > rSBig){
-      break;}
-        if(sp2->begin_conn!=-1 && sp2->sign<0 && dist<=rSSmall ) // если нашли всплеск вниз, то значит коннектор локализован
-        { shift = j-i;
-      break;
-        }
-        if(fabs(sp1->f_extr)>=rACrit && dist<=rSBig && sp2->begin_conn!=-1 && sp2->sign<0 ) // если всплески далеко, но оба очень большие
-        { shift = j-i;
-      break;
-        }
-        if(sp2->begin_conn!=-1 && sp2->sign>0)// если нашли коннекторный вверх, то значит найдено начало нового коннектора
-        { shift = j-i;
-          shift--;// чтобы этот же всплеск был началом следующего коннектора
-		  // saa: FIXME: скорее всего, в этом случае sp2 будет указывать не на тот всплеск
-    break;
-        }
-      }
-      // если коннекорного ни вниз ни вверх так и не было, то ищем последний сварочный
-      if(shift==-1)
-      { for(int j=i+1; j<splashes.getLength(); j++)
-        { sp_tmp = (Splash*)splashes[j];
-		  if(sp_tmp->begin_weld == -1){
-        continue;}
-		  double dist = fabs(sp_tmp->begin_weld - sp1->end_conn);
-          if(dist > rSBig){
-        break;}
-          if(fabs(sp1->f_extr)>=rACrit && dist<rSBig && sp_tmp->begin_weld!=-1 && sp_tmp->sign<0)// ищем последний сварочный вниз на отрезке rsBig
-          { shift = j-i;
-            sp2 = (Splash*)splashes[i+shift];
-        continue;
-          }
-          else if(fabs(sp1->f_extr)<rACrit && dist<rSSmall && sp_tmp->begin_weld!=-1 && sp_tmp->sign<0)// ищем последний сварочный вниз на отрезке rSSmall
-          { shift = j-i;
-            sp2 = (Splash*)splashes[i+shift];
-        continue;
-          }
-        }
-      }
-      //  если таки нашли коннектор, то добавляем это в события
-      if(shift!=-1 )
-      { ep = new EventParams;
-        setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
-        correctConnectorFront(ep); // уточняем фронт коннекора
-#ifdef debug_lines
-		double begin = ep->begin, end = ep->end;
-        xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
-#endif
-      }
-    }
-    return shift;//если коннектора не нашли, то shift = -1
-}*/
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2 )
 {   double r1s, r1b, r2, r3s, r3b, rmin;
@@ -1021,7 +901,6 @@ return;
 // к этому моменту уже известно, что перед нами не коннектор
 int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
 {
-    int shift = -1;
 	double mult = 1.0; // множитель для масштаба при определения дистанции связывания событий
 	double amplMagn = 5.0; // множитель для определения, что всплеск не связан с неид. соб.,т.к. его ампл. много больше ампл. неид.
     Splash* cur = (Splash*)splashes[i];
@@ -1038,8 +917,8 @@ int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
 	int j;
 	for(j = i + 1; j<splashes.getLength(); j++) {
 		EventParams *ep;
-		int shift2 = findConnector(j, splashes, ep);
-		if (shift2 >= 0) {
+		int conLen = findConnector(j, splashes, ep);
+		if (conLen > 0) {
 			delete ep;
 			// распознав коннектор, никак его не испольуем, а только лишь прерываем связывание неид. события
 			// XXX: в таком случае, создание коннектора будет запрошено дважды - здесь, и по возврату в findEventsBySplashes
@@ -1060,7 +939,7 @@ int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
 		eventEnd = cur->end_thr;
 	}
 	if (countPlus + countMinus < 3)
-		return -1; // не связываем события (маленький коннектор будет определен как неид. и без этого кода)
+		return 0; // не связываем события (маленький коннектор будет определен как неид. и без этого кода)
 
 	// создаем неид. событие
 	EventParams &ep = *new EventParams;
@@ -1070,7 +949,7 @@ int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
     ep.end = eventEnd;
     if(ep.end>lastPoint) {ep.end=lastPoint;}
 	events->add(&ep);
-	return j - i - 1;
+	return j - i;
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
