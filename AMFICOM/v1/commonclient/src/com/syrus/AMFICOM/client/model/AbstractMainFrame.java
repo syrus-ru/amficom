@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.9 2005/06/16 09:57:48 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.10 2005/06/16 11:11:03 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import javax.swing.JViewport;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.StatusBar;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
@@ -48,8 +48,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/16 09:57:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/06/16 11:11:03 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -157,7 +157,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 						final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance(ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1));
 						this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
 
-						User user = (User) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
+						SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
 						this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
 					} catch (ApplicationException e) {
 						// TODO Auto-generated catch block
