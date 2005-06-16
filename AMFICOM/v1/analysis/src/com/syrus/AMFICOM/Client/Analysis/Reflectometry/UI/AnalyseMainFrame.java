@@ -44,8 +44,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 	public static final String	HISTOGRAMM_FRAME			= "HistogrammFrame";
 
-	public static final String	WINDOW_ARRANGER				= "analysisExtWindowArranger";
-
 	UIDefaults					frames;
 
 	CreateAnalysisReportCommand	analysisReportCommand;
@@ -56,19 +54,17 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 				.getApplicationModel()), new AnalyseMainToolBar());
 
 		this.addComponentListener(new ComponentAdapter() {
-
+			/* (non-Javadoc)
+			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
+			 */
 			public void componentShown(ComponentEvent e) {
 				initModule();
-				desktopPane.setPreferredSize(desktopPane.getSize());
-				SwingUtilities.invokeLater(new Runnable() {
-
-					public void run() {
-						arrange();
-					}
-				});
-
+				AnalyseMainFrame.this.desktopPane.setPreferredSize(AnalyseMainFrame.this.desktopPane.getSize());
+				AnalyseMainFrame.this.windowArranger.arrange();
 			}
-		});
+		}
+			);
+		
 		this.addWindowListener(new WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
@@ -154,11 +150,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			}
 		});
 
-		this.frames.put(WINDOW_ARRANGER, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | WINDOW_ARRANGER", Log.FINEST);
-				return new WindowArranger(AnalyseMainFrame.this) {
+		super.setWindowArranger(new WindowArranger(AnalyseMainFrame.this) {
 
 					public void arrange() {
 						AnalyseMainFrame f = (AnalyseMainFrame) this.mainframe;
@@ -219,10 +211,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 						dhf.setLocation(eventsFrame.getWidth() + detailedEvFrame.getWidth(), minh
 								+ analysisFrame.getHeight());
 					}
-
-				};
-			}
-		});
+			});
 
 		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
 
@@ -350,17 +339,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		// ReportTemplate.rtt_Survey);
 		aModel.setCommand("menuReportCreate", this.analysisReportCommand);
 
-		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new WindowArranger(this) {
-
-			private WindowArranger	windowArranger;
-
-			public void arrange() {
-				if (this.windowArranger == null) {
-					this.windowArranger = (WindowArranger) frames.get(WINDOW_ARRANGER);
-				}
-				this.windowArranger.arrange();
-			}
-		}));
+		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
 
 		aModel.setCommand("menuWindowTraceSelector", this.getLazyCommand(SELECTOR_FRAME));
 		aModel.setCommand("menuWindowPrimaryParameters", this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
@@ -422,13 +401,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setVisible("menuSaveThresholds", false);
 		aModel.setVisible("menuWindowThresholdsSelection", false);
 		aModel.setVisible("menuWindowThresholds", false);
-	}
-
-	void arrange() {
-		WindowArranger analysisExtWindowArranger = (WindowArranger) this.frames.get(WINDOW_ARRANGER);
-		analysisExtWindowArranger.arrange();
-		AnalysisFrame analysisFrame = (AnalysisFrame) this.frames.get(ANALYSIS_FRAME);
-		analysisFrame.grabFocus();
 	}
 
 	public void setDomainSelected() {
