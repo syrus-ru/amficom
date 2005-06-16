@@ -84,7 +84,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		this.tModel = new ThresholdTableModel(
 			new String[] {
-					"",
+					" ",
 					LangModelAnalyse.getString("thresholdsUpWarning"),
 					LangModelAnalyse.getString("thresholdsUpAlarm"),
 					LangModelAnalyse.getString("thresholdsDownWarning"),
