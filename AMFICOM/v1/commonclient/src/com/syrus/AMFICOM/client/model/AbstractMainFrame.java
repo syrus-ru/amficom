@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.8 2005/06/14 14:59:10 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.9 2005/06/16 09:57:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/14 14:59:10 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/16 09:57:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -328,13 +328,16 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	}
 
 	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
-			Environment.setActiveWindow(this);
-		}
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			this.disposeModule();
-		}
 		super.processWindowEvent(e);
+		int id = e.getID();
+		switch(id) {
+			case WindowEvent.WINDOW_ACTIVATED:
+				Environment.setActiveWindow(this);
+				break;
+			case WindowEvent.WINDOW_CLOSING:
+				this.disposeModule();
+				break;
+		}		
 	}
 
 	public static void showErrorMessage(Component component,
@@ -404,6 +407,7 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
 		this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
+		Environment.disposeWindow(this);
 	}
 
 	protected void setDefaultModel(ApplicationModel aModel) {
