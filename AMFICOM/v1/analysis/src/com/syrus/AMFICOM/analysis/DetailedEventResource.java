@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.6 2005/06/10 08:02:53 stas Exp $
+ * $Id: DetailedEventResource.java,v 1.7 2005/06/16 10:58:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/06/10 08:02:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/16 10:58:00 $
  * @module analysis_v1
  */
 
@@ -171,8 +171,8 @@ public class DetailedEventResource {
 			setEtalonMaxDeviation(difference + " " + LangModelAnalyse.getString("dB"));
 			setEtalonMeanDeviation(meanDeviation1 + " " + LangModelAnalyse.getString("dB"));
 		} else {
-			setMaxDeviation(DASH);
-			setMeanDeviation(DASH);
+			setEtalonMaxDeviation(DASH);
+			setEtalonMeanDeviation(DASH);
 		}
 
 		if (dataEvent != null && etalonEvent != null) {
