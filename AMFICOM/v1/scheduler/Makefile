@@ -16,7 +16,7 @@ JIKESFLAGS = -target 1.4.2
 include ../tools/Makefile.inc
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
-
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 $(call checkenve,JAVA_HOME)
@@ -50,7 +50,7 @@ cleanmach:
 #		$(shell find . -name *java)
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
 		$(shell find . -name *java)
 	touch $@
 
