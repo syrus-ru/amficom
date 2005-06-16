@@ -1,5 +1,5 @@
 /*-
- * $Id: CMMeasurementReceive.java,v 1.20 2005/06/05 18:32:30 arseniy Exp $
+ * $Id: CMMeasurementReceive.java,v 1.21 2005/06/16 10:46:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,13 +24,13 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/05 18:32:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/06/16 10:46:10 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementReceive extends CMConfigurationReceive {
@@ -116,12 +116,12 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		return super.receiveStorableObjects(ObjectEntities.RESULT_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveSets(
-			final Set_Transferable transferables[],
+	public final StorableObject_Transferable[] receiveParameterSets(
+			final ParameterSet_Transferable transferables[],
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SET_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.PARAMETER_SET_ENTITY_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveTests(

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.31 2005/06/02 14:32:41 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.32 2005/06/16 10:46:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.UserDatabase;
+import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
@@ -45,12 +45,12 @@ import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.SetDatabase;
+import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/02 14:32:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/06/16 10:46:10 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -64,7 +64,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
-		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new SystemUserDatabase());
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new MCMDatabase());
@@ -96,7 +96,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new ModelingDatabase());
 		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new ResultDatabase());
-		DatabaseContext.registerDatabase(new SetDatabase());
+		DatabaseContext.registerDatabase(new ParameterSetDatabase());
 		DatabaseContext.registerDatabase(new TestDatabase());
 		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());

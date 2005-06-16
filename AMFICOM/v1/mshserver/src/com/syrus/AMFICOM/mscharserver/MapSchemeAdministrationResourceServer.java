@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.3 2005/06/08 09:53:18 max Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.4 2005/06/16 10:47:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/08 09:53:18 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/06/16 10:47:47 $
+ * @author $Author: bass $
  * @module mscharserver_v1
  */
 public class MapSchemeAdministrationResourceServer {
@@ -127,7 +127,7 @@ public class MapSchemeAdministrationResourceServer {
 		try {
 			final Server server = new Server(serverId);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE)).retrieveForServerAndCodename(serverId, processCodename);
-			final User user = new User(serverProcess.getUserId());
+			final SystemUser user = new SystemUser(serverProcess.getUserId());
 			login = user.getLogin();
 
 			/*
