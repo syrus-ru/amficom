@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.35 2005/06/16 10:31:25 bass Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.36 2005/06/16 12:30:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -21,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/16 10:31:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/16 12:30:43 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -41,10 +42,6 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	private static AdministrationStorableObjectPool instance;
 
 
-	private AdministrationStorableObjectPool() {
-		this(LRUMap.class);
-	}
-
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
 
@@ -56,23 +53,35 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 //		registerFactory(ObjectEntities.PERMATTR_ENTITY_CODE, new PermissionAttributesFactory());
 	}
 
-	public static void init(AdministrationObjectLoader aObjectLoader1, final int size) {
-		if (instance == null)
-			instance = new AdministrationStorableObjectPool();
 
-		aObjectLoader = aObjectLoader1;
-
-		instance.addObjectPool(ObjectEntities.SYSTEM_USER_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SERVERPROCESS_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);
+	/**
+	 * Init with default pool class and default pool sizes
+	 * @param aObjectLoader1
+	 */
+	public static void init(final AdministrationObjectLoader aObjectLoader1) {
+		init(aObjectLoader1, LRUMap.class);
 	}
 
-	public static void init(AdministrationObjectLoader aObjectLoader1) {
+	/**
+	 * Init with default pool class and given pool sizes
+	 * @param aObjectLoader1
+	 * @param size
+	 */
+	public static void init(final AdministrationObjectLoader aObjectLoader1, final int size) {
+		init(aObjectLoader1, LRUMap.class, size);
+	}
+
+	/**
+	 * Init with given pool class and default pool sizes
+	 * @param aObjectLoader1
+	 * @param cacheClass
+	 */
+	public static void init(final AdministrationObjectLoader aObjectLoader1, final Class cacheClass) {
+		assert aObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (instance == null)
-			instance = new AdministrationStorableObjectPool();
+			instance = new AdministrationStorableObjectPool(cacheClass);
 
 		aObjectLoader = aObjectLoader1;
 
@@ -85,37 +94,35 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * @param objectLoader
+	 * Init with given pool class and given pool sizes
+	 * @param gObjectLoader1
 	 * @param cacheClass
 	 * @param size
 	 */
-	public static void init(final AdministrationObjectLoader objectLoader,
-			final Class cacheClass, final int size) {
+	public static void init(final AdministrationObjectLoader aObjectLoader1, final Class cacheClass, final int size) {
+		assert aObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (size > 0) {
-			instance = cacheClass == null
-					? new AdministrationStorableObjectPool()
-					: new AdministrationStorableObjectPool(cacheClass);
-			init(objectLoader, size);
+			if (instance == null)
+				instance = new AdministrationStorableObjectPool(cacheClass);
+
+			aObjectLoader = aObjectLoader1;
+
+			instance.addObjectPool(ObjectEntities.SYSTEM_USER_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SERVERPROCESS_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);
 		}
 		else {
-			init (objectLoader, cacheClass);
+			init(aObjectLoader1, cacheClass);
 		}
 	}
 
-	public static void init(AdministrationObjectLoader aObjectLoader1, Class cacheClass) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new AdministrationStorableObjectPool(clazz);
-		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
-			instance = new AdministrationStorableObjectPool();
-		}
-		init(aObjectLoader1);
-	}
 
-	protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException{
+	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException{
 		return aObjectLoader.refresh(storableObjects);
 	}
 
@@ -135,38 +142,32 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
 //				return aObjectLoader.loadPermissionAttributes(ids);
 			default:
-				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
 
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		Set loadedObjects = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.SYSTEM_USER_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadSystemUsersButIds(condition, ids);
-				break;
+				return aObjectLoader.loadSystemUsersButIds(condition, ids);
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadDomainsButIds(condition, ids);
-				break;
+				return aObjectLoader.loadDomainsButIds(condition, ids);
 			case ObjectEntities.SERVER_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadServersButIds(condition, ids);
-				break;
+				return aObjectLoader.loadServersButIds(condition, ids);
 			case ObjectEntities.MCM_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadMCMsButIds(condition, ids);
-				break;
+				return aObjectLoader.loadMCMsButIds(condition, ids);
 			case ObjectEntities.SERVERPROCESS_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadServerProcessesButIds(condition, ids);
-				break;
-//			case ObjectEntities.PERMATTR_ENTITY_CODE:
-//				loadedList = aObjectLoader.loadPermissionAttributessButIds(condition, ids);
-//				break;
+				return aObjectLoader.loadServerProcessesButIds(condition, ids);
+			case ObjectEntities.PERMATTR_ENTITY_CODE:
+//				return aObjectLoader.loadPermissionAttributessButIds(condition, ids);
 			default:				
-				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedObjects = null;
+				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+				return Collections.EMPTY_SET;
 		}
-		return loadedObjects;
 	}
 
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
@@ -191,7 +192,8 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 				aObjectLoader.saveServerProcesses(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("AdministrationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("AdministrationStorableObjectPool.saveStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
