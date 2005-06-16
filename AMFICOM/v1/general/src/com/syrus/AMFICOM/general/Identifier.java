@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.38 2005/06/16 10:29:05 bass Exp $
+ * $Id: Identifier.java,v 1.39 2005/06/16 12:19:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.38 $, $Date: 2005/06/16 10:29:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/06/16 12:19:59 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
@@ -198,6 +198,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * with exception to those, containing in set <code>identifiables2</code>
 	 * @param identifiables1
 	 * @param identifiables2
+	 * @return Set of identifiers
 	 */
 	public static final Set createSubstractionIdentifiers(final Set identifiables1, final Set identifiables2) {
 		assert identifiables1 != null : ErrorMessages.NON_NULL_EXPECTED;
