@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.31 2005/06/16 08:23:11 bass Exp $
+ * $Id: EventStorableObjectPool.java,v 1.32 2005/06/16 12:58:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -21,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/16 08:23:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/06/16 12:58:32 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -37,10 +38,6 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 	private static EventStorableObjectPool instance;
 
 
-	private EventStorableObjectPool() {
-		this(LRUMap.class);
-	}
-
 	private EventStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
 
@@ -49,21 +46,35 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.EVENTSOURCE_ENTITY_CODE, new EventSourceFactory());
 	}
 
-	public static void init(EventObjectLoader eObjectLoader1, final int size) {
-		if (instance == null)
-			instance = new EventStorableObjectPool();
 
-		eObjectLoader = eObjectLoader1;
-
-		instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, size);
-
-		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, size);
+	/**
+	 * Init with default pool class and default pool sizes
+	 * @param eObjectLoader1
+	 */
+	public static void init(final EventObjectLoader eObjectLoader1) {
+		init(eObjectLoader1, LRUMap.class);
 	}
 
-	public static void init(EventObjectLoader eObjectLoader1) {
+	/**
+	 * Init with default pool class and given pool sizes
+	 * @param eObjectLoader1
+	 * @param size
+	 */
+	public static void init(final EventObjectLoader eObjectLoader1, final int size) {
+		init(eObjectLoader1, LRUMap.class, size);
+	}
+
+	/**
+	 * Init with given pool class and default pool sizes
+	 * @param eObjectLoader1
+	 * @param cacheClass
+	 */
+	public static void init(final EventObjectLoader eObjectLoader1, final Class cacheClass) {
+		assert eObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (instance == null)
-			instance = new EventStorableObjectPool();
+			instance = new EventStorableObjectPool(cacheClass);
 
 		eObjectLoader = eObjectLoader1;
 
@@ -74,37 +85,33 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * @param objectLoader
+	 * Init with given pool class and given pool sizes
+	 * @param eObjectLoader1
 	 * @param cacheClass
 	 * @param size
 	 */
-	public static void init(final EventObjectLoader objectLoader,
-			final Class cacheClass, final int size) {
+	public static void init(final EventObjectLoader eObjectLoader1, final Class cacheClass, final int size) {
+		assert eObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (size > 0) {
-			instance = cacheClass == null
-					? new EventStorableObjectPool()
-					: new EventStorableObjectPool(cacheClass);
-			init(objectLoader, size);
+			if (instance == null)
+				instance = new EventStorableObjectPool(cacheClass);
+
+			eObjectLoader = eObjectLoader1;
+
+			instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, size);
+
+			instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, size);
 		}
 		else {
-			init(objectLoader, cacheClass);
+			init(eObjectLoader1, cacheClass);
 		}
 	}
 
-	public static void init(EventObjectLoader eObjectLoader1, Class cacheClass) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new EventStorableObjectPool(clazz);
-		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
-			instance = new EventStorableObjectPool();
-		}
-		init(eObjectLoader1);
-	}
 
-	protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws ApplicationException {
+	protected java.util.Set refreshStorableObjects(final java.util.Set storableObjects) throws ApplicationException {
 		return eObjectLoader.refresh(storableObjects);
 	}
 
@@ -118,29 +125,26 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
 				return eObjectLoader.loadEventSources(ids);
 			default:
-				Log.errorMessage("EventStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("EventStorableObjectPool.loadStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
 
-	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		Set loadedObjects = null;
-		short entityCode = condition.getEntityCode().shortValue();
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
-				loadedObjects = eObjectLoader.loadEventTypesButIds(condition, ids);
-				break;
+				return eObjectLoader.loadEventTypesButIds(condition, ids);
 			case ObjectEntities.EVENT_ENTITY_CODE:
-				loadedObjects = eObjectLoader.loadEventsButIds(condition, ids);
-				break;
+				return eObjectLoader.loadEventsButIds(condition, ids);
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
-				loadedObjects = eObjectLoader.loadEventSourcesButIds(condition, ids);
-				break;
+				return eObjectLoader.loadEventSourcesButIds(condition, ids);
 			default:
-				Log.errorMessage("EventStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedObjects = null;
+				Log.errorMessage("EventStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+				return Collections.EMPTY_SET;
 		}
-		return loadedObjects;
 	}
 
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
@@ -159,7 +163,8 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 				eObjectLoader.saveEventSources(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("EventStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("EventStorableObjectPool.saveStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 

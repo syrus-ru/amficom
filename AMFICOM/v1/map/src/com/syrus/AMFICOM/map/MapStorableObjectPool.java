@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.26 2005/06/16 08:23:10 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.27 2005/06/16 12:59:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -21,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/16 08:23:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/06/16 12:59:03 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -31,36 +32,21 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	 */
 	private static final int OBJECT_POOL_MAP_SIZE = 9;
 
-
 	private static final int SITE_NODE_OBJECT_POOL_SIZE = 10;
-
 	private static final int TOPOLOGICAL_NODE_OBJECT_POOL_SIZE = 10;
-
 	private static final int NODE_LINK_OBJECT_POOL_SIZE = 10;
-
 	private static final int MARK_OBJECT_POOL_SIZE = 10;
-
 	private static final int PHYSICAL_LINK_OBJECT_POOL_SIZE = 10;
-
 	private static final int COLLECTOR_OBJECT_POOL_SIZE = 10;
-
 	private static final int MAP_OBJECT_POOL_SIZE = 10;
 
-
 	private static final int SITE_NODE_TYPE_OBJECT_POOL_SIZE = 10;
-
 	private static final int PHYSICAL_LINK_TYPE_OBJECT_POOL_SIZE = 10;
 
-
 	private static MapObjectLoader mapObjectLoader;
-
 	
 	private static MapStorableObjectPool instance;
 
-
-	private MapStorableObjectPool() {
-		this(LRUMap.class);
-	}
 
 	private MapStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAP_GROUP_CODE, cacheMapClass);
@@ -76,26 +62,35 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.MAP_ENTITY_CODE, new MapFactory());
 	}
 
-	public static void init(final MapObjectLoader mapObjectLoader1, final int size) {
-		if (instance == null)
-			instance = new MapStorableObjectPool();
 
-		mapObjectLoader = mapObjectLoader1;
-
-		instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SITE_NODE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.NODE_LINK_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MARK_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, size);
+	/**
+	 * Init with default pool class and default pool sizes
+	 * @param mapObjectLoader1
+	 */
+	public static void init(final MapObjectLoader mapObjectLoader1) {
+		init(mapObjectLoader1, LRUMap.class);
 	}
 
-	public static void init(final MapObjectLoader mapObjectLoader1) {
+	/**
+	 * Init with default pool class and given pool sizes
+	 * @param mapObjectLoader1
+	 * @param size
+	 */
+	public static void init(final MapObjectLoader mapObjectLoader1, final int size) {
+		init(mapObjectLoader1, LRUMap.class, size);
+	}
+
+	/**
+	 * Init with given pool class and default pool sizes
+	 * @param mapObjectLoader1
+	 * @param cacheClass
+	 */
+	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass) {
+		assert mapObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (instance == null)
-			instance = new MapStorableObjectPool();
+			instance = new MapStorableObjectPool(cacheClass);
 
 		mapObjectLoader = mapObjectLoader1;
 
@@ -111,34 +106,36 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * @param objectLoader
+	 * Init with given pool class and given pool sizes
+	 * @param mapObjectLoader1
 	 * @param cacheClass
-	 *          class must extend LRUMap
 	 * @param size
 	 */
-	public static void init(final MapObjectLoader objectLoader,
-			final Class cacheClass, final int size) {
+	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass, final int size) {
+		assert mapObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (size > 0) {
-			instance = cacheClass == null
-					? new MapStorableObjectPool()
-					: new MapStorableObjectPool(cacheClass);
-			init(objectLoader, size);
-		} else {
-			init(objectLoader, cacheClass);
+			if (instance == null)
+				instance = new MapStorableObjectPool(cacheClass);
+
+			mapObjectLoader = mapObjectLoader1;
+
+			instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SITE_NODE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.NODE_LINK_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.MARK_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, size);
+		}
+		else {
+			init(mapObjectLoader1, cacheClass);
 		}
 	}
 
-	public static void init(final MapObjectLoader mapObjectLoader1, final Class cacheClass) {
-		final String cacheClassName = cacheClass.getName();
-		try {
-			instance = new MapStorableObjectPool(Class.forName(cacheClassName));
-		}
-		catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName + "' cannot be found, using default");
-			instance = new MapStorableObjectPool();
-		}
-		init(mapObjectLoader1);
-	}
 
 	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
 		return mapObjectLoader.refresh(storableObjects);
@@ -166,16 +163,13 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MAP_ENTITY_CODE:
 				return mapObjectLoader.loadMaps(ids);
 			default:
-				Log.errorMessage("MapStorableObjectPool.loadStorableObjects | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
+				Log.errorMessage("MapStorableObjectPool.loadStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
 
-	protected Set loadStorableObjectsButIds(
-			final StorableObjectCondition storableObjectCondition,
-			final Set ids)
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition storableObjectCondition, final Set ids)
 			throws ApplicationException {
 		final short entityCode = storableObjectCondition.getEntityCode().shortValue();
 		switch (entityCode) {
@@ -198,21 +192,18 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MAP_ENTITY_CODE:
 				return mapObjectLoader.loadMapsButIds(storableObjectCondition, ids);
 			default:
-				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
+				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
 
-	protected void saveStorableObjects(final Set storableObjects,
-			final boolean force)
-			throws ApplicationException {
+	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		switch (entityCode) {				
+		switch (entityCode) {
 			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
 				mapObjectLoader.saveSiteNodeTypes(storableObjects, force);
 				break;
@@ -241,9 +232,8 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 				mapObjectLoader.saveMaps(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
+				Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
