@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.13 2005/06/15 08:09:45 max Exp $
+ * $Id: FilterController.java,v 1.14 2005/06/16 10:24:34 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,26 +7,6 @@
  */
 
 package com.syrus.AMFICOM.newFilter;
-
-import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.ConditionWrapper;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
-import com.syrus.AMFICOM.newFilter.ConditionKey;
-import com.syrus.AMFICOM.newFilter.DateCondition;
-import com.syrus.AMFICOM.newFilter.Filter;
-import com.syrus.AMFICOM.newFilter.FilterView;
-import com.syrus.AMFICOM.newFilter.ListCondition;
-import com.syrus.AMFICOM.newFilter.NumberCondition;
-import com.syrus.AMFICOM.newFilter.StringCondition;
-import com.syrus.util.Log;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,19 +19,34 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+
+import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.ConditionWrapper;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.util.Log;
 
 
 
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/15 08:09:45 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/16 10:24:34 $
  * @author $Author: max $
  * @module filter_v1
  */
-public class FilterController implements ActionListener, PopupMenuListener {
+public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
 	
 	private Filter model;
 	private FilterView view;
@@ -96,13 +91,30 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			addConditionToModel();		
 		else if (source == this.view.changeKeyRef())
 			changeKey();
-		else if (source == this.view.removeConditionRef()) {
+		else if (source == this.view.removeConditionRef())
 			removeConditionInModelAndInScheme();			
-		}
 		else if (source == this.view.createLogicalSchemeRef())
 			createLogicalScheme();
+		else if (source == this.view.startDayButtonRef())
+			this.view.createStartCalendar();
+		else if (source == this.view.endDayButtonRef())
+			this.view.createEndCalendar();
 	}
 	
+	public void valueChanged(ListSelectionEvent e) {
+		Object source = e.getSource();
+		if (source == this.view.createdConditionListRef())
+			changeRemoveState();
+	}
+	
+	private void changeRemoveState() {
+		String[] selectedNames = this.view.getSelectedConditionNames();
+		if(selectedNames.length > 0)
+			this.view.enableRemoveButton(true);
+		else
+			this.view.enableRemoveButton(false);
+	}
+
 	private void changeKey() {
 		int keyIndex = this.view.getSelectedKeyIndex();
 		ConditionKey key = (ConditionKey) this.model.getKeys().get(keyIndex);
@@ -163,9 +175,9 @@ public class FilterController implements ActionListener, PopupMenuListener {
 
 	private void setActiveButton(String name) {
 		if(this.model.getConditionNames().contains(name))
-			this.view.enableChangeDisableAdd(true);
+			this.view.enableAdd(true);
 		else
-			this.view.enableChangeDisableAdd(false);
+			this.view.enableAdd(false);
 	}
 
 	private void addConditionToModel() {
@@ -400,5 +412,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			Log.errorMessage("FilterController.saveTempConditions | Unsupported condition type");			
 		}		
 	}
+
+	
 	
 }
