@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.100 2005/06/16 10:54:57 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.99 2005/06/14 12:01:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/06/16 10:54:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2005/06/14 12:01:58 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -186,7 +186,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 		try {
 			final MCM mcm = new MCM(mcmId);
-			final SystemUser user = new SystemUser(mcm.getUserId());
+			final User user = new User(mcm.getUserId());
 			final Server server = new Server(mcm.getServerId());
 			login = user.getLogin();
 	

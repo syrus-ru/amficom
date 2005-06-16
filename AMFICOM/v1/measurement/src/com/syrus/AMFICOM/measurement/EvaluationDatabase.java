@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.54 2005/06/16 10:34:04 bass Exp $
+ * $Id: EvaluationDatabase.java,v 1.53 2005/05/26 14:15:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/05/26 14:15:57 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -107,13 +107,13 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 					this.fromStorableObject(storableObject);
 		EvaluationType evaluationType;
 		Measurement measurement = null;
-		ParameterSet thresholdSet;
+		Set thresholdSet;
 		try {
 			evaluationType = (EvaluationType)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != null)
 				measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
-			thresholdSet = (ParameterSet)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_THRESHOLD_SET_ID), true);
+			thresholdSet = (Set)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_THRESHOLD_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

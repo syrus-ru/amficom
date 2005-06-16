@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.12 2005/06/16 10:31:25 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.11 2005/06/09 10:00:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/16 10:31:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/09 10:00:35 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -96,8 +96,8 @@ final class TypicalConditionImpl extends TypicalCondition {
 
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
-		if (storableObject instanceof SystemUser)
-			wrapper = SystemUserWrapper.getInstance();
+		if (storableObject instanceof User)
+			wrapper = UserWrapper.getInstance();
 		else
 			if (storableObject instanceof Domain)
 				wrapper = DomainWrapper.getInstance();

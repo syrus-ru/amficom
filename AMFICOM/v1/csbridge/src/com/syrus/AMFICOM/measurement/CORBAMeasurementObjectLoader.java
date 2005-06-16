@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMeasurementObjectLoader.java,v 1.20 2005/06/16 10:41:42 bass Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.19 2005/06/14 11:46:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,13 +36,13 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/16 10:41:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/06/14 11:46:28 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implements MeasurementObjectLoader {
@@ -175,14 +175,14 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public Set loadParameterSets(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PARAMETER_SET_ENTITY_CODE, ids, new TransmitProcedure() {
+	public Set loadSets(Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ObjectEntities.SET_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitParameterSets(idsT, sessionKey);
+				return ((CMServer) server).transmitSets(idsT, sessionKey);
 			}
 		});
 	}
@@ -369,15 +369,15 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public Set loadParameterSetsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_SET_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+	public Set loadSetsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SET_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).transmitParameterSetsButIdsByCondition(idsT, conditionT, sessionKey);
+				return ((CMServer) server).transmitSetsButIdsByCondition(idsT, conditionT, sessionKey);
 			}
 		});
 	}
@@ -558,14 +558,14 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		});
 	}
 
-	public void saveParameterSets(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.PARAMETER_SET_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+	public void saveSets(final Set storableObjects, final boolean force) throws ApplicationException {
+		super.saveStorableObjects(ObjectEntities.SET_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveParameterSets((ParameterSet_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveSets((Set_Transferable[]) transferables, force, sessionKey);
 			}
 		});
 	}

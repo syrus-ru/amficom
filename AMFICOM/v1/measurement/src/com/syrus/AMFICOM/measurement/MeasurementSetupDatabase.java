@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.91 2005/06/16 10:34:03 bass Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.90 2005/06/05 18:31:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2005/06/05 18:31:27 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -79,9 +79,9 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {		
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
-		ParameterSet thresholdSet = measurementSetup.getThresholdSet();
-		ParameterSet etalon = measurementSetup.getEtalon();
+		Set criteriaSet = measurementSetup.getCriteriaSet();
+		Set thresholdSet = measurementSetup.getThresholdSet();
+		Set etalon = measurementSetup.getEtalon();
 		String values = DatabaseIdentifier.toSQLString(measurementSetup.getParameterSet().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : null) + COMMA
 			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : null) + COMMA
@@ -94,9 +94,9 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	protected int  setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
-		ParameterSet thresholdSet = measurementSetup.getThresholdSet();
-		ParameterSet etalon = measurementSetup.getEtalon();
+		Set criteriaSet = measurementSetup.getCriteriaSet();
+		Set thresholdSet = measurementSetup.getThresholdSet();
+		Set etalon = measurementSetup.getEtalon();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurementSetup.getParameterSet().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (criteriaSet != null) ? criteriaSet.getId() : null);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (thresholdSet != null) ? thresholdSet.getId() : null);
@@ -120,20 +120,20 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 						0,
 						null,
 						null) : this.fromStorableObject(storableObject);	
-		ParameterSet parameterSet;
-		ParameterSet criteriaSet;
-		ParameterSet thresholdSet;
-		ParameterSet etalon;
+		Set parameterSet;
+		Set criteriaSet;
+		Set thresholdSet;
+		Set etalon;
 		Identifier id;
 		try {
-			parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			parameterSet = (Set) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID), true);			
 			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_CRITERIA_SET_ID);
-			criteriaSet = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;
+			criteriaSet = (id != null) ? (Set) StorableObjectPool.getStorableObject(id, true) : null;
 			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_THRESHOLD_SET_ID);
-			thresholdSet = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;			
+			thresholdSet = (id != null) ? (Set) StorableObjectPool.getStorableObject(id, true) : null;			
 			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_ETALON_ID);
-			etalon = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;
+			etalon = (id != null) ? (Set) StorableObjectPool.getStorableObject(id, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

@@ -1,5 +1,5 @@
 /*
- * $Id: administration.idl,v 1.8 2005/06/16 10:23:50 bass Exp $
+ * $Id: administration.idl,v 1.7 2005/05/04 15:05:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,22 +19,23 @@ module corba {
 
 //////////////////////////////////// User /////////////////////////////////
 
+	enum UserSort {
+		USER_SORT_SYSADMIN,
+		USER_SORT_REGULAR,
+		USER_SORT_SERVERPROCESS,
+		USER_SORT_MCM
+	};
 
-	typedef struct SystemUser_Transferable {
+	struct User_Transferable {
 		general::corba::StorableObject header;
 	
 		general::corba::WString32 login;
-		enum SystemUserSort {
-			USER_SORT_SYSADMIN,
-			USER_SORT_REGULAR,
-			USER_SORT_SERVERPROCESS,
-			USER_SORT_MCM
-		} sort;
+		UserSort sort;
 		general::corba::WString128 name;
 		general::corba::WString256 description;
-	} SystemUser;
-
-	typedef sequence<SystemUser> SystemUserSeq;
+	};
+	
+	typedef sequence <User_Transferable> UserSeq_Transferable;
 
 /////////////////////////////////// Domain ////////////////////////////////
 	struct Domain_Transferable {

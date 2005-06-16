@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.9 2005/06/16 10:34:04 bass Exp $
+ * $Id: ResultWrapper.java,v 1.8 2005/04/11 11:49:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/04/11 11:49:13 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class ResultWrapper extends StorableObjectWrapper {
@@ -78,7 +78,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_SORT))
 				return new Integer(result.getSort().value());
 			if (key.equals(LINK_FIELD_RESULT_PARAMETERS)) {
-				Parameter[] parameters = result.getParameters();
+				SetParameter[] parameters = result.getParameters();
 				Map values = new HashMap(parameters.length * 3);
 				for (int i = 0; i < parameters.length; i++) {
 					values.put(COLUMN_ID + i, parameters[i].getId());
@@ -106,14 +106,14 @@ public class ResultWrapper extends StorableObjectWrapper {
 				else
 					if (key.equals(LINK_FIELD_RESULT_PARAMETERS)) {
 						Map resultParametersMap = (Map) value;
-						/* there are 3*N keys for N Parameter */
-						Parameter[] resultParameters = new Parameter[resultParametersMap.size() / 3];
+						/* there are 3*N keys for N SetParameter */
+						SetParameter[] resultParameters = new SetParameter[resultParametersMap.size() / 3];
 						for (int i = 0; i < resultParameters.length; i++) {
 							Identifier parameterId = (Identifier) resultParametersMap.get(COLUMN_ID + i);
 							ParameterType parameterType = (ParameterType) resultParametersMap.get(COLUMN_TYPE_ID + i);
 							byte[] resultParameterValue = (byte[]) resultParametersMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 
-							resultParameters[i] = new Parameter(parameterId, parameterType, resultParameterValue);
+							resultParameters[i] = new SetParameter(parameterId, parameterType, resultParameterValue);
 
 						}
 						result.setParameters(resultParameters);

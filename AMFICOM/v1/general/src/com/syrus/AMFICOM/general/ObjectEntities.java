@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.70 2005/06/16 10:29:05 bass Exp $
+ * $Id: ObjectEntities.java,v 1.69 2005/06/05 18:39:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/06/16 10:29:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.69 $, $Date: 2005/06/05 18:39:13 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -65,7 +65,7 @@ public final class ObjectEntities {
 //	public static final String ALARM_ENTITY = "Alarm";
 
 	/*	Administration	*/
-	public static final String SYSTEM_USER_ENTITY = "SystemUser";
+	public static final String USER_ENTITY = "User";
 	public static final String DOMAIN_ENTITY = "Domain";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
@@ -85,8 +85,8 @@ public final class ObjectEntities {
 	public static final String CABLETHREAD_ENTITY = "CableThread";
 
 	/*	Measurement	*/
-	public static final String PARAMETER_SET_ENTITY = "ParameterSet";
-	public static final String PARAMETER_ENTITY = "Parameter";
+	public static final String SET_ENTITY = "Set";
+	public static final String SETPARAMETER_ENTITY = "SetParameter";
 	public static final String SETMELINK_ENTITY = "SetMELink";
 	public static final String MEASUREMENTSETUP_ENTITY = "MeasurementSetup";
 	public static final String MSMELINK_ENTITY = "MeasurementSetupMELink";
@@ -188,7 +188,7 @@ public final class ObjectEntities {
 	 */
 	public static final short ADMINISTRATION_MIN_ENTITY_CODE = 0x0101;
 
-	public static final short SYSTEM_USER_ENTITY_CODE = ADMINISTRATION_MIN_ENTITY_CODE;
+	public static final short USER_ENTITY_CODE = ADMINISTRATION_MIN_ENTITY_CODE;
 	public static final short DOMAIN_ENTITY_CODE = 0x0102;
 	public static final short SERVER_ENTITY_CODE = 0x0103;
 	public static final short MCM_ENTITY_CODE = 0x0104;
@@ -229,8 +229,8 @@ public final class ObjectEntities {
 	 */
 	public static final short MEASUREMENT_MIN_ENTITY_CODE = 0x0201;
 
-	public static final short PARAMETER_SET_ENTITY_CODE = MEASUREMENT_MIN_ENTITY_CODE;
-	public static final short PARAMETER_ENTITY_CODE = 0x0202;
+	public static final short SET_ENTITY_CODE = MEASUREMENT_MIN_ENTITY_CODE;
+	public static final short SETPARAMETER_ENTITY_CODE = 0x0202;
 	public static final short MEASUREMENTSETUP_ENTITY_CODE = 0x0203;
 	public static final short MEASUREMENT_ENTITY_CODE = 0x0204;
 	public static final short ANALYSIS_ENTITY_CODE = 0x0205;
@@ -363,7 +363,7 @@ public final class ObjectEntities {
 		registerEntity(EVENT_ENTITY_CODE, EVENT_ENTITY);
 //		registerEntity(ALARM_ENTITY_CODE, ALARM_ENTITY);
 
-		registerEntity(SYSTEM_USER_ENTITY_CODE, SYSTEM_USER_ENTITY);
+		registerEntity(USER_ENTITY_CODE, USER_ENTITY);
 		registerEntity(DOMAIN_ENTITY_CODE, DOMAIN_ENTITY);
 		registerEntity(SERVER_ENTITY_CODE, SERVER_ENTITY);
 		registerEntity(MCM_ENTITY_CODE, MCM_ENTITY);
@@ -381,8 +381,8 @@ public final class ObjectEntities {
 		registerEntity(LINK_ENTITY_CODE, LINK_ENTITY);
 		registerEntity(CABLETHREAD_ENTITY_CODE, CABLETHREAD_ENTITY);
 
-		registerEntity(PARAMETER_SET_ENTITY_CODE, PARAMETER_SET_ENTITY);
-		registerEntity(PARAMETER_ENTITY_CODE, PARAMETER_ENTITY);
+		registerEntity(SET_ENTITY_CODE, SET_ENTITY);
+		registerEntity(SETPARAMETER_ENTITY_CODE, SETPARAMETER_ENTITY);
 		registerEntity(MEASUREMENTSETUP_ENTITY_CODE, MEASUREMENTSETUP_ENTITY);
 		registerEntity(MEASUREMENT_ENTITY_CODE, MEASUREMENT_ENTITY);
 		registerEntity(ANALYSIS_ENTITY_CODE, ANALYSIS_ENTITY);

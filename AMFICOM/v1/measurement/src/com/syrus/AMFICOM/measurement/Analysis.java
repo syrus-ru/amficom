@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.63 2005/06/16 10:34:04 bass Exp $
+ * $Id: Analysis.java,v 1.62 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.62 $, $Date: 2005/06/03 20:38:04 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -42,7 +42,7 @@ public class Analysis extends Action {
 	private static final long	serialVersionUID	= 3979266967062721849L;
 
 	private String name;
-	private ParameterSet criteriaSet;
+	private Set criteriaSet;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -81,7 +81,7 @@ public class Analysis extends Action {
 			final Identifier monitoredElementId,
 			final Measurement measurement,
 			final String name,
-			final ParameterSet criteriaSet) {
+			final Set criteriaSet) {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -107,7 +107,7 @@ public class Analysis extends Action {
 		super.parentAction = (at.measurement_id.identifier_string.length() != 0)
 				? (Measurement) StorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
 
-		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
+		this.criteriaSet = (Set) StorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -157,12 +157,12 @@ public class Analysis extends Action {
 		super.markAsChanged();
 	}
 
-	public void setCriteriaSet(final ParameterSet criteriaSet) {
+	public void setCriteriaSet(final Set criteriaSet) {
 		this.criteriaSet = criteriaSet;
 		super.markAsChanged();
 	}
 	
-	public ParameterSet getCriteriaSet() {
+	public Set getCriteriaSet() {
 		return this.criteriaSet;
 	}
 
@@ -178,7 +178,7 @@ public class Analysis extends Action {
 			final Identifier monitoredElementId,
 			final Measurement measurement,
 			final String name,
-			final ParameterSet criteriaSet) {
+			final Set criteriaSet) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -207,7 +207,7 @@ public class Analysis extends Action {
 			final Identifier monitoredElementId,
 			final Measurement measurement,
 			final String name,
-			final ParameterSet criteriaSet) throws CreateObjectException {
+			final Set criteriaSet) throws CreateObjectException {
 		try {
 			Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
 				creatorId,
@@ -229,7 +229,7 @@ public class Analysis extends Action {
 		}
 	}
 
-	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
+	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
 			throws CreateObjectException {
 		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_ANALYSIS, resultParameters);
 	}

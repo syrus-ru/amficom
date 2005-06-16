@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.33 2005/06/16 10:34:04 bass Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.32 2005/05/01 17:28:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/05/01 17:28:27 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -43,7 +43,7 @@ public interface MeasurementObjectLoader {
 
 	java.util.Set loadResults(java.util.Set ids) throws ApplicationException;
 
-	java.util.Set loadParameterSets(java.util.Set ids) throws ApplicationException;
+	java.util.Set loadSets(java.util.Set ids) throws ApplicationException;
 
 	java.util.Set loadTests(java.util.Set ids) throws ApplicationException;
 
@@ -78,7 +78,7 @@ public interface MeasurementObjectLoader {
 
 	java.util.Set loadResultsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
 
-	java.util.Set loadParameterSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
+	java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
 
 	java.util.Set loadTestsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException;
 
@@ -113,7 +113,7 @@ public interface MeasurementObjectLoader {
 
 	void saveResults(java.util.Set objects, boolean force) throws ApplicationException;
 
-	void saveParameterSets(java.util.Set objects, boolean force) throws ApplicationException;
+	void saveSets(java.util.Set objects, boolean force) throws ApplicationException;
 
 	void saveTests(java.util.Set objects, boolean force) throws ApplicationException;
 

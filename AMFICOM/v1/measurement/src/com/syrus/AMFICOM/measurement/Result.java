@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.59 2005/06/16 10:34:03 bass Exp $
+ * $Id: Result.java,v 1.58 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/06/03 20:38:04 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -45,7 +45,7 @@ public class Result extends StorableObject {
 	private static final long	serialVersionUID	= 3256999964965286967L;
 	private Action action;
 	private int sort;
-	private Parameter[] parameters;
+	private SetParameter[] parameters;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -84,7 +84,7 @@ public class Result extends StorableObject {
 			final long version,
 			final Action action,
 			final int sort,
-			final Parameter[] parameters) {
+			final SetParameter[] parameters) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -121,9 +121,9 @@ public class Result extends StorableObject {
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
 		}
 
-		this.parameters = new Parameter[rt.parameters.length];
+		this.parameters = new SetParameter[rt.parameters.length];
 		for (int i = 0; i < this.parameters.length; i++)
-			this.parameters[i] = new Parameter(rt.parameters[i]);
+			this.parameters[i] = new SetParameter(rt.parameters[i]);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -191,7 +191,7 @@ public class Result extends StorableObject {
 		super.markAsChanged();
 	}
 
-	public Parameter[] getParameters() {
+	public SetParameter[] getParameters() {
 		return this.parameters;
 	}
 
@@ -220,7 +220,7 @@ public class Result extends StorableObject {
 	protected static Result createInstance(final Identifier creatorId,
 			final Action action,
 			final ResultSort sort,
-			final Parameter[] parameters) throws CreateObjectException {
+			final SetParameter[] parameters) throws CreateObjectException {
 		try {
 			Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
 				creatorId,
@@ -243,11 +243,11 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameters0(final Parameter[] parameters) {
+	protected synchronized void setParameters0(final SetParameter[] parameters) {
 		this.parameters = parameters;
 	}
 
-	public void setParameters(final Parameter[] parameters) {
+	public void setParameters(final SetParameter[] parameters) {
 		this.setParameters0(parameters);
 		super.markAsChanged();
 	}

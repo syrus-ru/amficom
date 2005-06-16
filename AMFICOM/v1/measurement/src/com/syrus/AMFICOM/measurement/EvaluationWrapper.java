@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationWrapper.java,v 1.7 2005/06/16 10:34:03 bass Exp $
+ * $Id: EvaluationWrapper.java,v 1.6 2005/04/11 11:49:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/04/11 11:49:13 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class EvaluationWrapper extends StorableObjectWrapper {
@@ -82,7 +82,7 @@ public class EvaluationWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_MEASUREMENT_ID))
 				evaluation.setMeasurement((Measurement) value);
 			else if (key.equals(COLUMN_THRESHOLD_SET_ID))
-				evaluation.setThresholdSet((ParameterSet) value);
+				evaluation.setThresholdSet((Set) value);
 		}
 	}
 

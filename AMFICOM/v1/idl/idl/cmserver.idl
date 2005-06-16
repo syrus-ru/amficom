@@ -35,7 +35,7 @@ module corba {
 
 /////////////////////////////////////////// Administration Recieve ////////////////////////////////////////////
 
-		general::corba::StorableObjectSeq receiveSystemUsers(in administration::corba::SystemUserSeq users_Transferable,
+		general::corba::StorableObjectSeq receiveUsers(in administration::corba::UserSeq_Transferable users_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -199,7 +199,7 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq receiveParameterSets(in measurement::corba::ParameterSetSeq sets,
+		general::corba::StorableObjectSeq receiveSets(in measurement::corba::SetSeq_Transferable sets,
 						in boolean force,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -271,7 +271,7 @@ module corba {
 
 		/* Transmit multiple objects*/
 
-		administration::corba::SystemUserSeq transmitSystemUsers(
+		administration::corba::UserSeq_Transferable transmitUsers(
 						in general::corba::IdentifierSeq idsT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -299,7 +299,7 @@ module corba {
 
 		/* Transmit multiple objects but ids by condition*/
 
-		administration::corba::SystemUserSeq transmitSystemUsersButIdsByCondition(
+		administration::corba::UserSeq_Transferable transmitUsersButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)
@@ -560,7 +560,7 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::ParameterSetSeq transmitParameterSets(
+		measurement::corba::SetSeq_Transferable transmitSets(
 						in general::corba::IdentifierSeq idsT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -650,7 +650,7 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::ParameterSetSeq transmitParameterSetsButIdsByCondition(
+		measurement::corba::SetSeq_Transferable transmitSetsButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)

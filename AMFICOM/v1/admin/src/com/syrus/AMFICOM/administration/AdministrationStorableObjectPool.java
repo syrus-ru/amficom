@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.35 2005/06/16 10:31:25 bass Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.34 2005/06/16 08:23:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/16 10:31:25 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/16 08:23:10 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -48,7 +48,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
 
-		registerFactory(ObjectEntities.SYSTEM_USER_ENTITY_CODE, new SystemUserFactory());
+		registerFactory(ObjectEntities.USER_ENTITY_CODE, new UserFactory());
 		registerFactory(ObjectEntities.DOMAIN_ENTITY_CODE, new DomainFactory());
 		registerFactory(ObjectEntities.SERVER_ENTITY_CODE, new ServerFactory());
 		registerFactory(ObjectEntities.MCM_ENTITY_CODE, new MCMFactory());
@@ -62,7 +62,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 		aObjectLoader = aObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.SYSTEM_USER_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.USER_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
@@ -76,7 +76,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 		aObjectLoader = aObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.SYSTEM_USER_ENTITY_CODE, USER_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.USER_ENTITY_CODE, USER_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, DOMAIN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, SERVER_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, MCM_OBJECT_POOL_SIZE);
@@ -122,8 +122,8 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
-			case ObjectEntities.SYSTEM_USER_ENTITY_CODE:
-				return aObjectLoader.loadSystemUsers(ids);
+			case ObjectEntities.USER_ENTITY_CODE:
+				return aObjectLoader.loadUsers(ids);
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
 				return aObjectLoader.loadDomains(ids);
 			case ObjectEntities.SERVER_ENTITY_CODE:
@@ -144,8 +144,8 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		Set loadedObjects = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-			case ObjectEntities.SYSTEM_USER_ENTITY_CODE:
-				loadedObjects = aObjectLoader.loadSystemUsersButIds(condition, ids);
+			case ObjectEntities.USER_ENTITY_CODE:
+				loadedObjects = aObjectLoader.loadUsersButIds(condition, ids);
 				break;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
 				loadedObjects = aObjectLoader.loadDomainsButIds(condition, ids);
@@ -175,8 +175,8 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
-			case ObjectEntities.SYSTEM_USER_ENTITY_CODE:
-				aObjectLoader.saveSystemUsers(storableObjects, force);
+			case ObjectEntities.USER_ENTITY_CODE:
+				aObjectLoader.saveUsers(storableObjects, force);
 				break;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
 				aObjectLoader.saveDomains(storableObjects, force);

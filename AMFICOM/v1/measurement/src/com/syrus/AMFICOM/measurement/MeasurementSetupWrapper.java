@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.14 2005/06/16 10:34:03 bass Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.13 2005/05/23 12:49:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/05/23 12:49:46 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
@@ -100,7 +100,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		return value;
 	}
 	
-	private void addSetParameterInfo(StringBuffer buffer, String title, Parameter[] parameters) {
+	private void addSetParameterInfo(StringBuffer buffer, String title, SetParameter[] parameters) {
 		if (parameters.length == 0)
 			return;
 		buffer.append(title);
@@ -132,9 +132,9 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 	}
 	
 	private String getMeasurementSetupInfo(MeasurementSetup measurementSetup) {
-		ParameterSet parameterSet = measurementSetup.getParameterSet();
-		ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
-		ParameterSet etalon = measurementSetup.getEtalon();
+		Set parameterSet = measurementSetup.getParameterSet();
+		Set criteriaSet = measurementSetup.getCriteriaSet();
+		Set etalon = measurementSetup.getEtalon();
 		StringBuffer buffer = new StringBuffer();
 		if (parameterSet != null) {
 			this.addSetParameterInfo(buffer, LangModelMeasurement.getString("Measurement parameters") + ':',  parameterSet.getParameters());
@@ -160,13 +160,13 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 			MeasurementSetup measurementSetup = (MeasurementSetup) object;
 
 			if (key.equals(COLUMN_PARAMETER_SET_ID))
-				measurementSetup.setParameterSet((ParameterSet) value);
+				measurementSetup.setParameterSet((Set) value);
 			else if (key.equals(COLUMN_CRITERIA_SET_ID))
-				measurementSetup.setCriteriaSet((ParameterSet) value);
+				measurementSetup.setCriteriaSet((Set) value);
 			else if (key.equals(COLUMN_THRESHOLD_SET_ID))
-				measurementSetup.setThresholdSet((ParameterSet) value);
+				measurementSetup.setThresholdSet((Set) value);
 			else if (key.equals(COLUMN_ETALON_ID))
-				measurementSetup.setEtalon((ParameterSet) value);
+				measurementSetup.setEtalon((Set) value);
 			if (key.equals(COLUMN_DESCRIPTION))
 				measurementSetup.setDescription((String) value);
 			if (key.equals(COLUMN_MEASUREMENT_DURAION))

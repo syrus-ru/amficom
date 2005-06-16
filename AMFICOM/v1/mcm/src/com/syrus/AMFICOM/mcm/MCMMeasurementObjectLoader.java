@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.61 2005/06/16 10:54:57 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.60 2005/06/07 17:33:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/16 10:54:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/06/07 17:33:11 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends MCMObjectLoader implements MeasurementObjectLoader {
@@ -98,12 +98,12 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		return DatabaseObjectLoader.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadParameterSets(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PARAMETER_SET_ENTITY_CODE, ids, new TransmitProcedure() {
+	public java.util.Set loadSets(final java.util.Set ids) throws ApplicationException {
+		return super.loadStorableObjects(ObjectEntities.SET_ENTITY_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitParameterSets(idsT, sessionKey);
+				return ((MServer) server).transmitSets(idsT, sessionKey);
 			}
 		});
 	}
@@ -227,9 +227,9 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
-	public java.util.Set loadParameterSetsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public java.util.Set loadSetsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_SET_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SET_ENTITY_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -237,7 +237,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 							Identifier_Transferable[] idsT,
 							SessionKey_Transferable sessionKey,
 							StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
-						return ((MServer) server).transmitParameterSetsButIdsByCondition(idsT, conditionT, sessionKey);
+						return ((MServer) server).transmitSetsButIdsByCondition(idsT, conditionT, sessionKey);
 					}
 				});
 	}
@@ -380,7 +380,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveParameterSets(final java.util.Set objects, final boolean force) {
+	public void saveSets(final java.util.Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 

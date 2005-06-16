@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisManager.java,v 1.10 2005/06/16 10:54:57 bass Exp $
+ * $Id: AnalysisManager.java,v 1.9 2004/07/21 18:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,14 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.SetParameter;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/16 10:54:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2004/07/21 18:43:32 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public interface AnalysisManager {
-	Parameter[] analyse() throws AnalysisException;
+	SetParameter[] analyse() throws AnalysisException;
 }

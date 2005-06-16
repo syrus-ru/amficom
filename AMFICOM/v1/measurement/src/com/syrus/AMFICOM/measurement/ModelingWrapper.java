@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingWrapper.java,v 1.6 2005/06/16 10:34:03 bass Exp $
+ * $Id: ModelingWrapper.java,v 1.5 2005/04/11 11:49:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/04/11 11:49:13 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class ModelingWrapper extends StorableObjectWrapper {
@@ -79,7 +79,7 @@ public class ModelingWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
 				modeling.setMonitoredElementId((Identifier) value);
 			else if (key.equals(COLUMN_ARGUMENT_SET_ID))
-				modeling.setArgumentSet((ParameterSet) value);
+				modeling.setArgumentSet((Set) value);
 			else if (key.equals(COLUMN_NAME))
 				modeling.setName((String) value);
 		}

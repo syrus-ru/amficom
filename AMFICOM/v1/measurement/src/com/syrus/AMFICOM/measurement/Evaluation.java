@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.60 2005/06/16 10:34:04 bass Exp $
+ * $Id: Evaluation.java,v 1.59 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.59 $, $Date: 2005/06/03 20:38:04 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -41,7 +41,7 @@ public class Evaluation extends Action {
 	 */
 	private static final long	serialVersionUID	= 3617570505297703480L;
 
-	private ParameterSet thresholdSet;
+	private Set thresholdSet;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -81,7 +81,7 @@ public class Evaluation extends Action {
 			final EvaluationType type,
 			final Identifier monitoredElementId,
 			final Measurement measurement,
-			final ParameterSet thresholdSet) {
+			final Set thresholdSet) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -106,7 +106,7 @@ public class Evaluation extends Action {
 		super.parentAction = (et.measurement_id.identifier_string.length() != 0)
 				? (Measurement) StorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
 
-		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
+		this.thresholdSet = (Set) StorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -148,11 +148,11 @@ public class Evaluation extends Action {
 		super.markAsChanged();
 	}
 
-	public ParameterSet getThresholdSet() {
+	public Set getThresholdSet() {
 		return this.thresholdSet;
 	}
 	
-	public void setThresholdSet(final ParameterSet thresholdSet) {
+	public void setThresholdSet(final Set thresholdSet) {
 		this.thresholdSet = thresholdSet;
 		super.markAsChanged();
 	}
@@ -168,7 +168,7 @@ public class Evaluation extends Action {
 			final EvaluationType type,
 			final Identifier monitoredElementId,
 			final Measurement measurement,
-			final ParameterSet thresholdSet) {
+			final Set thresholdSet) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -194,7 +194,7 @@ public class Evaluation extends Action {
 			final EvaluationType type,
 			final Identifier monitoredElementId,
 			final Measurement measurement,
-			final ParameterSet thresholdSet) throws CreateObjectException {
+			final Set thresholdSet) throws CreateObjectException {
 		try {
 			Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
 				creatorId,
@@ -215,7 +215,7 @@ public class Evaluation extends Action {
 		}
 	}
 
-	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
+	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
 			throws CreateObjectException {
 		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_EVALUATION, resultParameters);
 	}

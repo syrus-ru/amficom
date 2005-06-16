@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.44 2005/06/16 10:34:04 bass Exp $
+ * $Id: Modeling.java,v 1.43 2005/06/03 20:38:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2005/06/03 20:38:04 $
+ * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
  */
@@ -43,7 +43,7 @@ public class Modeling extends Action {
 	private static final long serialVersionUID = -7265091663685378139L;
 
 	private String name;
-	private ParameterSet argumentSet;
+	private Set argumentSet;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -83,7 +83,7 @@ public class Modeling extends Action {
 			final ModelingType type,
 			final Identifier monitoredElementId,
 			final String name,
-			final ParameterSet argumentSet) {
+			final Set argumentSet) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -106,7 +106,7 @@ public class Modeling extends Action {
 
 		super.type = (ModelingType) StorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
 
-		this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
+		this.argumentSet = (Set) StorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
 
 		this.name = mt.name;
 		
@@ -134,7 +134,7 @@ public class Modeling extends Action {
 		return this.name;
 	}
 
-	public ParameterSet getArgumentSet() {
+	public Set getArgumentSet() {
 		return this.argumentSet;
 	}
 
@@ -149,7 +149,7 @@ public class Modeling extends Action {
 			final ModelingType type,
 			final Identifier monitoredElementId,
 			final String name,
-			final ParameterSet argumentSet) {
+			final Set argumentSet) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -176,7 +176,7 @@ public class Modeling extends Action {
 			final ModelingType type,
 			final Identifier monitoredElementId,
 			final String name,
-			final ParameterSet argumentSet) throws CreateObjectException{
+			final Set argumentSet) throws CreateObjectException{
 		try {
 			Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
 					creatorId,
@@ -197,7 +197,7 @@ public class Modeling extends Action {
 		}
 	}
 
-	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
+	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
 			throws CreateObjectException {
 		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_MODELING, resultParameters);
 	}
@@ -226,7 +226,7 @@ public class Modeling extends Action {
 	/**
 	 * @param argumentSet The argumentSet to set.
 	 */
-	public void setArgumentSet(final ParameterSet argumentSet) {
+	public void setArgumentSet(final Set argumentSet) {
 		this.argumentSet = argumentSet;
 		super.markAsChanged();
 	}

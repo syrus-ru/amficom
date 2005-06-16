@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.99 2005/06/16 10:34:04 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.98 2005/06/16 08:23:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/06/16 10:34:04 $
+ * @version $Revision: 1.98 $, $Date: 2005/06/16 08:23:11 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -61,7 +61,7 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, new AnalysisTypeFactory());
 		registerFactory(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new EvaluationTypeFactory());
 		registerFactory(ObjectEntities.MODELINGTYPE_ENTITY_CODE, new ModelingTypeFactory());
-		registerFactory(ObjectEntities.PARAMETER_SET_ENTITY_CODE, new ParameterSetFactory());
+		registerFactory(ObjectEntities.SET_ENTITY_CODE, new SetFactory());
 		registerFactory(ObjectEntities.MODELING_ENTITY_CODE, new ModelingFactory());
 		registerFactory(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, new MeasurementSetupFactory());
 		registerFactory(ObjectEntities.MEASUREMENT_ENTITY_CODE, new MeasurementFactory());
@@ -85,7 +85,7 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MODELINGTYPE_ENTITY_CODE, size);
 
-		instance.addObjectPool(ObjectEntities.PARAMETER_SET_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
@@ -109,7 +109,7 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MODELINGTYPE_ENTITY_CODE, MODELINGTYPE_OBJECT_POOL_SIZE);
 
-		instance.addObjectPool(ObjectEntities.PARAMETER_SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, MODELING_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
@@ -168,8 +168,8 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 				return mObjectLoader.loadEvaluationTypes(ids);
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
 				return mObjectLoader.loadModelingTypes(ids);
-			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
-				return mObjectLoader.loadParameterSets(ids);
+			case ObjectEntities.SET_ENTITY_CODE:
+				return mObjectLoader.loadSets(ids);
 			case ObjectEntities.MODELING_ENTITY_CODE:
 				return mObjectLoader.loadModelings(ids);
 			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
@@ -212,8 +212,8 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
 				loadedCollection = mObjectLoader.loadModelingTypesButIds(condition, ids);
 				break;
-			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadParameterSetsButIds(condition, ids);
+			case ObjectEntities.SET_ENTITY_CODE:
+				loadedCollection = mObjectLoader.loadSetsButIds(condition, ids);
 				break;
 			case ObjectEntities.MODELING_ENTITY_CODE:
 				loadedCollection = mObjectLoader.loadModelingsButIds(condition, ids);
@@ -267,8 +267,8 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				mObjectLoader.saveEvaluationTypes(storableObjects, force);
 				break;
-			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
-				mObjectLoader.saveParameterSets(storableObjects, force);
+			case ObjectEntities.SET_ENTITY_CODE:
+				mObjectLoader.saveSets(storableObjects, force);
 				break;
 			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
 				mObjectLoader.saveMeasurementSetups(storableObjects, force);

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.2 2005/06/16 10:47:47 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.1 2005/06/07 16:47:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.mscharserver;
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.SystemUserDatabase;
+import com.syrus.AMFICOM.administration.UserDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/16 10:47:47 $
+ * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
  * @module mscharserver_v1
  */
 final class DatabaseContextSetup {
@@ -58,7 +58,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 
-		DatabaseContext.registerDatabase(new SystemUserDatabase());
+		DatabaseContext.registerDatabase(new UserDatabase());
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
