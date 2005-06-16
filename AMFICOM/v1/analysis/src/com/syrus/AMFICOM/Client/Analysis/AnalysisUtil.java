@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.corba.SetSort;
+import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
@@ -104,7 +104,7 @@ public class AnalysisUtil
 		 * </ul>
 		 */
 
-		Set criteriaSet = ms.getCriteriaSet();
+		ParameterSet criteriaSet = ms.getCriteriaSet();
 		if (criteriaSet != null)
         {
 		    setParamsFromCriteriaSet(criteriaSet);
@@ -125,12 +125,12 @@ public class AnalysisUtil
 	 */
 	public static void load_Etalon(MeasurementSetup ms) throws DataFormatException
 	{
-		Set etalon = ms.getEtalon();
-		Set metas = ms.getParameterSet();
+		ParameterSet etalon = ms.getEtalon();
+		ParameterSet metas = ms.getParameterSet();
 
 		BellcoreStructure bsEt = null;
 
-		SetParameter[] params = etalon.getParameters();
+		Parameter[] params = etalon.getParameters();
 		for (int i = 0; i < params.length; i++)
 		{
 			ParameterType type = (ParameterType)params[i].getType();
@@ -159,26 +159,26 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createCriteriaSet(Identifier userId, java.util.Set meIds)
+	public static ParameterSet createCriteriaSet(Identifier userId, java.util.Set meIds)
     throws ApplicationException
 	{
 		AnalysisParameters analysisParams = Heap.getMinuitAnalysisParams();
 		if (analysisParams == null)
 			analysisParams = Heap.getMinuitDefaultParams();
 
-        SetParameter[] params = new SetParameter[1];
+        Parameter[] params = new Parameter[1];
 
 		{
 			ParameterType ptype = getParameterType(
 				ParameterTypeCodenames.DADARA_CRITERIA, DataType.DATA_TYPE_RAW);
-			params[0] = SetParameter.createInstance(ptype,
+			params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(analysisParams));
 		}
 
 		{
-			Set criteriaSet = Set.createInstance(
+			ParameterSet criteriaSet = ParameterSet.createInstance(
 				userId,
-				SetSort.SET_SORT_ANALYSIS_CRITERIA,
+				ParameterSetSort.SET_SORT_ANALYSIS_CRITERIA,
 				"",
 				params,
 				meIds);
@@ -187,39 +187,39 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createEtalon(Identifier userId, java.util.Set meIds,
+	public static ParameterSet createEtalon(Identifier userId, java.util.Set meIds,
             ModelTraceManager mtm) throws ApplicationException
 	{
-		SetParameter[] params = new SetParameter[3];
+		Parameter[] params = new Parameter[3];
 
 		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
-		params[0] = SetParameter.createInstance(ptype,
+		params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(mtm));
 
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
 		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
-		params[1] = SetParameter.createInstance(ptype,
+		params[1] = Parameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
 
         ptype = getParameterType(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL, DataType.DATA_TYPE_DOUBLE);
-        params[2] = SetParameter.createInstance(ptype,
+        params[2] = Parameter.createInstance(ptype,
                 ByteArray.toByteArray(Heap.getMinTraceLevel()));
 
-		Set etalon = Set.createInstance(
+		ParameterSet etalon = ParameterSet.createInstance(
 				userId,
-				SetSort.SET_SORT_ETALON,
+				ParameterSetSort.SET_SORT_ETALON,
 				"",
 				params,
 				meIds);
 		return etalon;
 	}
 
-	public static void setParamsFromCriteriaSet(Set criteriaSet)
+	public static void setParamsFromCriteriaSet(ParameterSet criteriaSet)
     throws DataFormatException
 	{
 		AnalysisParameters analysisParams = null;
-        SetParameter[] params = criteriaSet.getParameters();
+        Parameter[] params = criteriaSet.getParameters();
         for (int i = 0; i < params.length; i++)
         {
             ParameterType p = (ParameterType)params[i].getType();

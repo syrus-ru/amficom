@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.io.BellcoreStructure;
 
 public class SaveTestSetupCommand extends AbstractCommand
@@ -61,7 +61,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 
 		// создаем новый MS
 
-		Set criteriaSet = null;
+		ParameterSet criteriaSet = null;
 		try
 		{
 			if ((type & CRITERIA) != 0)
@@ -75,7 +75,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 			return false;
 		}
 
-		Set etalonSet = null;
+		ParameterSet etalonSet = null;
 		try
 		{
 			if ((type & ETALON) != 0)

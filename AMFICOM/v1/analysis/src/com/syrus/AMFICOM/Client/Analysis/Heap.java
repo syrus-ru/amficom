@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.67 2005/06/10 10:13:43 saa Exp $
+ * $Id: Heap.java,v 1.68 2005/06/16 11:31:11 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * нужен, а на refAnalysisPrimary - в случаях, когда refAnalysisPrimary нужен.
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
- * @author $Author: saa $
- * @version $Revision: 1.67 $, $Date: 2005/06/10 10:13:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.68 $, $Date: 2005/06/16 11:31:11 $
  * @module
  */
 public class Heap
@@ -326,7 +326,7 @@ public class Heap
         bsHash.remove(id);
     }
 
-    public static void setEtalonEtalonMetas(Set metas) {
+    public static void setEtalonEtalonMetas(ParameterSet metas) {
         // @todo: may be required in Survey
         // Pool.put("etalon", ETALON, metas);
     }

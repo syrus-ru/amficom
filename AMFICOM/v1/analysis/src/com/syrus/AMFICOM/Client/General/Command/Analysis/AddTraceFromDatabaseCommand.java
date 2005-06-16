@@ -58,10 +58,10 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 
 		BellcoreStructure bs = null;
 
-		SetParameter[] parameters = result.getParameters();
+		Parameter[] parameters = result.getParameters();
 		for (int i = 0; i < parameters.length; i++)
 		{
-			SetParameter param = parameters[i];
+			Parameter param = parameters[i];
 			ParameterType type = (ParameterType)param.getType();
 			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 				bs = new BellcoreReader().getData(param.getValue());

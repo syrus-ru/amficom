@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
 import com.syrus.io.ByteArrayCollector;
@@ -112,13 +112,13 @@ public class SaveAnalysisCommand extends AbstractCommand
 			return;
 		}
 
-		SetParameter[] params = new SetParameter[2];
+		Parameter[] params = new Parameter[2];
 		try
 		{
-			params[0] = SetParameter.createInstance(ptype0,
+			params[0] = Parameter.createInstance(ptype0,
 					new BellcoreWriter().write(bs));
 
-			params[1] = SetParameter.createInstance(ptype1,
+			params[1] = Parameter.createInstance(ptype1,
 				DataStreamableUtil.writeDataStreamableToBA(mtae));
 		}
 		catch (CreateObjectException e)

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.18 2005/05/25 15:15:09 stas Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.19 2005/06/16 11:31:11 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,15 +40,15 @@ import com.syrus.AMFICOM.logic.PopulatableItem;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/25 15:15:09 $
- * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2005/06/16 11:31:11 $
+ * @author $Author: bass $
  * @module analysis_v1
  */
 public class ReflectogrammLoadDialog extends JDialog {
@@ -216,9 +216,9 @@ public class ReflectogrammLoadDialog extends JDialog {
 		if (this.result == null)
 			return null;
 
-		SetParameter[] parameters = this.result.getParameters();
+		Parameter[] parameters = this.result.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
-			SetParameter param = parameters[i];
+			Parameter param = parameters[i];
 			ParameterType type = (ParameterType) param.getType();
 			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 				bs = new BellcoreReader().getData(param.getValue());
