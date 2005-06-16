@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.9 2005/06/15 11:27:36 bob Exp $
+ * $Id: Environment.java,v 1.10 2005/06/16 09:57:05 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,8 @@
 
 package com.syrus.AMFICOM.client.model;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -27,29 +20,9 @@ import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.XMLFormatter;
 
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.LookAndFeel;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.metal.MetalTheme;
 
-//import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
-import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-
-import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
-
-import com.syrus.AMFICOM.client.UI.AMFICOMMetalTheme;
-import com.syrus.AMFICOM.client.UI.dialogs.ModuleCodeDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.resource.LangModel;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.IniFile;
@@ -58,7 +31,7 @@ import com.syrus.io.IniFile;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/06/15 11:27:36 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/16 09:57:05 $
  * @module commonclient_v1
  */
 public final class Environment {
@@ -72,25 +45,7 @@ public final class Environment {
 
 	private static JFrame		activeWindow				= null;
 
-	/** Run */
-	private static final String	FIELD_RUN					= "run";
-
 	private static final String	RUN_INSTALLED				= "installed";
-	private static final String	RUN_NO						= "no";
-	private static final String	RUN_YES						= "yes";
-
-	private static String		checkRun					= RUN_NO;
-
-	/** Look and feel */
-	private static final String	FIELD_LOOK_AND_FEEL			= "lookAndFeel";
-
-	private static final String	LOOK_AND_FEEL_GTK			= "GTK";
-	private static final String	LOOK_AND_FEEL_KUNSTSTOFF	= "Kunststoff";
-	private static final String	LOOK_AND_FEEL_METAL			= "Metal";
-	private static final String	LOOK_AND_FEEL_MOTIF			= "Motif";
-	private static final String	LOOK_AND_FEEL_WINDOWS		= "Windows";
-
-	private static String		lookAndFeel;
 
 	/** Domain */
 	private static final String	FIELD_DOMAIN				= "domain";
@@ -146,29 +101,11 @@ public final class Environment {
 	public static final Level	LOG_LEVEL_FINER				= Level.FINER;
 	public static final Level	LOG_LEVEL_FINEST			= Level.FINEST;
 
-	private static LookAndFeel	lookAndFeel2;
-
 	static {
-
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		JDialog.setDefaultLookAndFeelDecorated(true);
-		MetalTheme metalTheme = new AMFICOMMetalTheme();
-		MetalLookAndFeel.setCurrentTheme(metalTheme);
-		KunststoffLookAndFeel.setCurrentTheme(metalTheme);
 
 		// load values from properties file
 		try {
 			iniFile = new IniFile(iniFileName);
-			checkRun = iniFile.getValue(FIELD_RUN);
-			lookAndFeel = iniFile.getValue(FIELD_LOOK_AND_FEEL);
-
-			lookAndFeel2 = getLookAndFeel2();
-			try {
-				UIManager.setLookAndFeel(lookAndFeel2);
-			} catch (UnsupportedLookAndFeelException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 
 			try {
 				domainId = new Identifier(iniFile.getValue(FIELD_DOMAIN));
@@ -182,124 +119,14 @@ public final class Environment {
 			String lf_val = iniFile.getValue(FIELD_LOG_FORMATTER);
 			String ll_val = iniFile.getValue(FIELD_LOG_LEVEL);
 			String lh_val = iniFile.getValue(FIELD_LOG_HANDLER);
-			initLog(lh_val, ll_val, lf_val);
-			initUIConstats();
+			initLog(lh_val, ll_val, lf_val);			
 		} catch (IOException e) {
 			System.out.println("Error opening " + iniFileName + " - setting defaults");
-			setDefaults();
 		}
 	}
 
 	private Environment() {
 		assert false;
-	}
-
-	private static void initUIConstats() {
-		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, new SimpleDateFormat(LangModel
-				.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
-		
-		UIManager.put(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT, new SimpleDateFormat(LangModel
-			.getString(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
-		
-		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		
-		UIManager.put(ResourceKeys.ICON_CLOSE_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/close_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		
-		UIManager.put(ResourceKeys.ICON_DOMAIN_SELECTION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/domains.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		
-		UIManager.put(ResourceKeys.ICON_GENERAL, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/general.gif")));
-		UIManager.put(ResourceKeys.ICON_DELETE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/delete.gif")));
-
-		UIManager.put(ResourceKeys.ICON_OPEN_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/openfile.gif")));
-
-		UIManager.put(ResourceKeys.ICON_ADD_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/addfile.gif")));
-		UIManager.put(ResourceKeys.ICON_REMOVE_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/removefile.gif")));
-
-		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/pathmode.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
-		UIManager.put(ResourceKeys.ICON_MINI_FOLDER, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/folder.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
-
-		UIManager.put(ResourceKeys.ICON_MINI_PORT, new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage("images/port.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
-		UIManager.put(ResourceKeys.ICON_MINI_TESTING, new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/testing.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
-		
-		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/testsetup.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.ICON_MINI_RESULT, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/result.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-
-		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				return new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/logo2.jpg"));
-			}
-		});
-
-		UIManager.put(ResourceKeys.INSETS_NULL, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				return new Insets(0, 0, 0, 0);
-			}
-		});
-
-		UIManager.put(ResourceKeys.INSETS_ICONED_BUTTON, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				return new Insets(1, 1, 1, 1);
-			}
-		});
-
-		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				return new EmptyBorder(1, 2, 1, 2);
-			}
-		});
-
-		UIManager.put(ResourceKeys.SIZE_BUTTON, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				return new Dimension(24, 24);
-			}
-		});
-
-		UIManager.put(ResourceKeys.SIZE_NULL, new Dimension(0, 0));
-
-		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
-
-		defaults.put("Table.background", Color.WHITE);
-		defaults.put("Table.foreground", Color.BLACK);
-		defaults.put("Table.gridColor", Color.BLACK);
-		defaults.put("Viewport.background", Color.WHITE);
-
-//		Font font = new Font("Dialog", Font.PLAIN, 10);
-
-		{
-			Font font = defaults.getFont("TextField.font");
-			font = new Font(font.getFamily(), font.getStyle(), 12);
-			defaults.put("TextField.font", font);
-		}
-
-//		defaults.put("ComboBox.font", font);
-		defaults.put("ComboBox.background", defaults.get("window"));
-		defaults.put("ComboBox.disabledBackground", defaults.get("window"));
-
-		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
 	}
 
 	public static Identifier getDomainId() {
@@ -400,50 +227,9 @@ public final class Environment {
 		handler.publish(logRecord);
 	}
 
-	public static void setDefaults() {
-		checkRun = RUN_YES;
-		lookAndFeel = LOOK_AND_FEEL_WINDOWS;
-	}
-
 	public static boolean isDebugMode() {
 		return debugMode;
-	}
-
-	private static LookAndFeel getLookAndFeel2() {
-		try {
-			LookAndFeel plaf = null;
-			if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_METAL))
-				plaf = (LookAndFeel) (MetalLookAndFeel.class.newInstance());
-			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF))
-				plaf = (LookAndFeel) (KunststoffLookAndFeel.class.newInstance());
-			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_WINDOWS))
-				plaf = (LookAndFeel) (WindowsLookAndFeel.class.newInstance());
-			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF))
-				plaf = (LookAndFeel) (MotifLookAndFeel.class.newInstance());
-//			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
-//				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
-			else
-				return getDefaultLookAndFeel();
-			if (plaf.isSupportedLookAndFeel())
-				return plaf;
-			return getDefaultLookAndFeel();
-		} catch (IllegalAccessException iae) {
-			return getDefaultLookAndFeel();
-		} catch (InstantiationException ie) {
-			return getDefaultLookAndFeel();
-		}
-	}
-
-	/**
-	 * Returns a fail-safe pluggable look-and-feel.
-	 */
-	private static LookAndFeel getDefaultLookAndFeel() {
-		try {
-			return (LookAndFeel) (Class.forName(UIManager.getSystemLookAndFeelClassName()).newInstance());
-		} catch (Exception e) {
-			return UIManager.getLookAndFeel();
-		}
-	}
+	}		
 
 	public static Dispatcher getDispatcher() {
 		return theDispatcher;
@@ -458,6 +244,10 @@ public final class Environment {
 		System.out.println("close window " + window.getName());
 		windows.remove(window);
 		window.dispose();
+		checkForExit();
+	}
+	
+	public static void checkForExit() {
 		if (windows.isEmpty()) {
 			System.out.println("exit process");
 			saveProperties();
@@ -484,46 +274,75 @@ public final class Environment {
 		return activeWindow;
 	}
 
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_ADMINISTRATE	= 0;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_CONFIGURE	= 1;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_COMPONENTS	= 2;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_SCHEMATICS	= 3;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_MAP			= 4;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_OPTIMIZE		= 5;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_MODEL		= 6;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_SCHEDULE		= 7;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_ANALYSE		= 8;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_EVALUATE		= 9;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_SURVEY		= 10;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_OBSERVE		= 11;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_MAINTAIN		= 12;
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	public static final int			MODULE_PROGNOSIS	= 13;
 
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	protected static final String[]	code				= { "abyrvalg", "", "kirgudu", "", "", "piyavka", "merchen",
 			"", "", "opanki", "iiyama", "", "", "parol"	};
 
+	/**
+	 * @deprecated as moved to {@link AbstractApplication}
+	 */
 	protected static final String[]	name				= { "Администрирование", "Конфигурирование",
 			"Редактор компонентов", "Редактор схем", "Редакторо топологических схем", "Проектирование",
 			"Моделирование", "Планирование", "Анализ", "Оценка", "Исследование", "Наблюдение", "Сопровождение",
 			"Прогнозирование"							};
-
-	public static boolean canRun(int module_index) {
-		if (checkRun == null)
-			return false;
-		if (checkRun.equals(RUN_NO))
-			return true;
-		if (checkRun.equals(RUN_INSTALLED)) {
-			if (code[module_index].length() == 0)
-				return true;
-			ModuleCodeDialog sDialog = new ModuleCodeDialog(code[module_index], name[module_index]);
-
-			switch (sDialog.getResult()) {
-				case JOptionPane.OK_OPTION:
-					return true;
-				default:
-					return false;
-			}
-		}
-		return false;
-	}
+	
 }
