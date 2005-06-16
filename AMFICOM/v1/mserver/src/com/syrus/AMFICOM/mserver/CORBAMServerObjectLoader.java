@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.4 2005/06/14 11:26:44 arseniy Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.5 2005/06/16 10:54:57 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/14 11:26:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 final class CORBAMServerObjectLoader {
@@ -53,8 +53,8 @@ final class CORBAMServerObjectLoader {
 
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.4 $, $Date: 2005/06/14 11:26:44 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.5 $, $Date: 2005/06/16 10:54:57 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -65,8 +65,8 @@ final class CORBAMServerObjectLoader {
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.4 $, $Date: 2005/06/14 11:26:44 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.5 $, $Date: 2005/06/16 10:54:57 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -88,7 +88,7 @@ final class CORBAMServerObjectLoader {
 	 * @param entityCode
 	 * @param ids
 	 * @param transmitProcedure
-	 * @return <code>Set</code> of <code>StorableObject</code>
+	 * @return <code>ParameterSet</code> of <code>StorableObject</code>
 	 * @throws ApplicationException
 	 */
 	protected static final Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
@@ -229,7 +229,7 @@ final class CORBAMServerObjectLoader {
 	 * @param ids
 	 * @param condition
 	 * @param transmitButIdsByConditionProcedure
-	 * @return <code>Set</code> of <code>StorableObject</code>
+	 * @return <code>ParameterSet</code> of <code>StorableObject</code>
 	 * @throws ApplicationException
 	 */
 	protected static final Set loadStorableObjectsButIdsByCondition(final short entityCode,

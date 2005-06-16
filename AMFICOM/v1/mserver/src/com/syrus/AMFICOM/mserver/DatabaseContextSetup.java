@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.32 2005/05/26 08:33:29 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.33 2005/06/16 10:54:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
-import com.syrus.AMFICOM.administration.UserDatabase;
+import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
@@ -43,11 +43,11 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.SetDatabase;
+import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/05/26 08:33:29 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/16 10:54:57 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -89,10 +89,10 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new ResultDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
-		DatabaseContext.registerDatabase(new SetDatabase());
+		DatabaseContext.registerDatabase(new ParameterSetDatabase());
 		DatabaseContext.registerDatabase(new TestDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
-		DatabaseContext.registerDatabase(new UserDatabase());
+		DatabaseContext.registerDatabase(new SystemUserDatabase());
 	}
 }

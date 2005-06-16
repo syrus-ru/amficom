@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.16 2005/06/14 09:45:34 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.17 2005/06/16 10:50:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.UserWrapper;
+import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/14 09:45:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/06/16 10:50:38 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -52,7 +52,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	private ShadowDatabase shadowDatabase;
 
 	protected LoginServerImplementation() {
-		this.tc = new TypicalCondition("", OperationSort.OPERATION_EQUALS, ObjectEntities.USER_ENTITY_CODE, UserWrapper.COLUMN_LOGIN);
+		this.tc = new TypicalCondition("", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEM_USER_ENTITY_CODE, SystemUserWrapper.COLUMN_LOGIN);
 		this.userLoginDatabase = new UserLoginDatabase();
 		this.shadowDatabase = new ShadowDatabase();
 	}
@@ -71,7 +71,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		if (set.isEmpty())
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_LOGIN_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Illegal login -- '" + login + "'");
 
-		final User user = (User) set.iterator().next();
+		final SystemUser user = (SystemUser) set.iterator().next();
 		final Identifier userId = user.getId();
 		String localPassword = null;
 		try {

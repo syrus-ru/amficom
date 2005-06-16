@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.45 2005/06/15 11:20:54 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.46 2005/06/16 10:54:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/06/15 11:20:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
@@ -66,9 +66,9 @@ public class DadaraAnalysisManager implements AnalysisManager {
 
 	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
-	private final Map tracePars;	//Map <String codename, SetParameter parameter>
-	private final Map criteriaPars;	//Map <String codename, SetParameter parameter>
-	private final Map etalonPars;	//Map <String codename, SetParameter parameter>
+	private final Map tracePars;	//Map <String codename, Parameter parameter>
+	private final Map criteriaPars;	//Map <String codename, Parameter parameter>
+	private final Map etalonPars;	//Map <String codename, Parameter parameter>
 
 	static {
 		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap();
@@ -113,7 +113,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 	 */
 	private DadaraAnalysisManager(final Result measurementResult,
 			final Analysis analysis,
-			final Set etalon) throws AnalysisException {
+			final ParameterSet etalon) throws AnalysisException {
 		this.tracePars = new HashMap();
 		this.criteriaPars = new HashMap();
 		this.etalonPars = new HashMap();
@@ -122,12 +122,12 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		this.addSetParameters(this.etalonPars, etalon.getParameters());
 	}
 
-	private void addSetParameters(final Map parsMap, final SetParameter[] setParameters) throws AnalysisException {
+	private void addSetParameters(final Map parsMap, final Parameter[] setParameters) throws AnalysisException {
 		for (int i = 0; i < setParameters.length; i++)
 			this.addParameter(parsMap, setParameters[i]);
 	}
 
-	private void addParameter(final Map parsMap, final SetParameter parameter) throws AnalysisException {
+	private void addParameter(final Map parsMap, final Parameter parameter) throws AnalysisException {
 		String codename = parameter.getType().getCodename();
 		if (codename != null) {
 			if (! parsMap.containsKey(codename))
@@ -179,8 +179,8 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		}
 	}
 
-	public SetParameter[] analyse() throws AnalysisException {
-		// output parameters (not SetParameter[] yet)
+	public Parameter[] analyse() throws AnalysisException {
+		// output parameters (not Parameter[] yet)
 		Map outParameters = new HashMap(); // Map <String codename, byte[] rawData>
 
 		// Получаем рефлектограмму
@@ -209,7 +209,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		outParameters.put(CODENAME_ALARMS, ReflectogramAlarm.alarmsToByteArray(alarms));
 
 		// формируем результаты анализа
-		SetParameter[] ret = new SetParameter[outParameters.size()];
+		Parameter[] ret = new Parameter[outParameters.size()];
 		int i = 0;
 		try {
 			for (final Iterator it = outParameters.keySet().iterator(); it.hasNext(); i++) {
@@ -218,7 +218,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
 				if (parameterType != null) {
 					try {
-						ret[i] = SetParameter.createInstance(parameterType, (byte[]) outParameters.get(codename));
+						ret[i] = Parameter.createInstance(parameterType, (byte[]) outParameters.get(codename));
 					}
 					catch (CreateObjectException coe) {
 						throw new AnalysisException("Cannot create parameter -- " + coe.getMessage(), coe);

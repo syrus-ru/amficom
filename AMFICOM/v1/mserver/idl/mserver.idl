@@ -136,7 +136,7 @@ module corba {
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::SetSeq_Transferable transmitSets(in general::corba::IdentifierSeq idsT,
+		measurement::corba::ParameterSetSeq transmitParameterSets(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -203,7 +203,7 @@ module corba {
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::SetSeq_Transferable transmitSetsButIdsByCondition(
+		measurement::corba::ParameterSetSeq transmitParameterSetsButIdsByCondition(
 			in general::corba::IdentifierSeq idsT,
 			in general::corba::StorableObjectCondition conditionT,
 			in security::corba::SessionKey sessionKeyT)

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.54 2005/06/10 15:16:53 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.55 2005/06/16 10:54:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/06/10 15:16:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
@@ -106,13 +106,13 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static String processCodename;
 
 	/*	Map of tests to transmit to MCMs	*/
-	private static Map mcmTestQueueMap;	// Map <Identifier mcmId, Set <Test> testQueue >
+	private static Map mcmTestQueueMap;	// Map <Identifier mcmId, ParameterSet <Test> testQueue >
 
 	private boolean running;
 
 	/*	Variables for method processFall()	(abort tests, ...)*/
 	/*	Identifiers of MCMs on which cannot transmit tests	*/
-	private static Set mcmIdsToAbortTests;	//Set <Identifier mcmId>
+	private static Set mcmIdsToAbortTests;	//ParameterSet <Identifier mcmId>
 
 
 	public MeasurementServer() {
@@ -156,7 +156,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		try {
 			final Server server = new Server(serverId);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE)).retrieveForServerAndCodename(serverId, processCodename);
-			final User user = new User(serverProcess.getUserId());
+			final SystemUser user = new SystemUser(serverProcess.getUserId());
 			final Set mcmIds = Identifier.createIdentifiers(((MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE)).retrieveForServer(serverId));
 			login = user.getLogin();
 			

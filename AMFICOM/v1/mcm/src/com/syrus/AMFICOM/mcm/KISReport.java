@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.37 2005/06/07 15:45:04 arseniy Exp $
+ * $Id: KISReport.java,v 1.38 2005/06/16 10:54:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,12 +30,12 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/07 15:45:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -92,11 +92,11 @@ public class KISReport {
 		try {
 			final Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(this.measurementId, true);
 
-			final SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
+			final Parameter[] parameters = new Parameter[this.parameterCodenames.length];
 			for (int i = 0; i < parameters.length; i++) {
 				final Identifier parameterTypeId = (Identifier) OUT_PARAMETER_TYPE_IDS_MAP.get(this.parameterCodenames[i]);
 				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
-				parameters[i] = SetParameter.createInstance(parameterType, this.parameterValues[i]);
+				parameters[i] = Parameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 
 			Result result = measurement.createResult(LoginManager.getUserId(), parameters);

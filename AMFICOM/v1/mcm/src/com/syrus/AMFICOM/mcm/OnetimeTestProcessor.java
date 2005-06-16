@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.25 2005/04/13 17:32:58 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.26 2005/06/16 10:54:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/13 17:32:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -33,7 +33,7 @@ public class OnetimeTestProcessor extends TestProcessor {
 		super.lastMeasurementAcquisition = (super.test.getNumberOfMeasurements() > 0);
 
 		this.startTime = test.getStartTime();
-		Log.debugMessage("Set lastMeasurementAcquisition: " + this.lastMeasurementAcquisition + "; startTime: " + this.startTime + ", current: " + (new Date(System.currentTimeMillis())), Log.DEBUGLEVEL08);
+		Log.debugMessage("ParameterSet lastMeasurementAcquisition: " + this.lastMeasurementAcquisition + "; startTime: " + this.startTime + ", current: " + (new Date(System.currentTimeMillis())), Log.DEBUGLEVEL08);
 	}
 
 	public void run() {

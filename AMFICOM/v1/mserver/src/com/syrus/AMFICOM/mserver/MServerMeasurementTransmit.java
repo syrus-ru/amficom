@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.11 2005/06/10 19:12:54 arseniy Exp $
+ * $Id: MServerMeasurementTransmit.java,v 1.12 2005/06/16 10:54:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,13 +22,13 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/10 19:12:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
@@ -101,11 +101,11 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Set_Transferable[] transmitSets(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public ParameterSet_Transferable[] transmitParameterSets(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
-		final Set_Transferable[] ret = new Set_Transferable[length];
+		final ParameterSet_Transferable[] ret = new ParameterSet_Transferable[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}
@@ -222,12 +222,12 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		return ret;
 	}
 
-	public Set_Transferable[] transmitSetsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public ParameterSet_Transferable[] transmitParameterSetsButIdsByCondition(final Identifier_Transferable[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
-		final Set_Transferable[] ret = new Set_Transferable[length];
+		final ParameterSet_Transferable[] ret = new ParameterSet_Transferable[length];
 		System.arraycopy(storableObjects, 0, ret, 0, length);
 		return ret;
 	}

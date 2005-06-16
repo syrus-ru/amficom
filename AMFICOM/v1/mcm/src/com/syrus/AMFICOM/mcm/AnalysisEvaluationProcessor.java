@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.32 2005/06/15 12:23:37 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.33 2005/06/16 10:54:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,14 +24,14 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/15 12:23:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -81,7 +81,7 @@ public class AnalysisEvaluationProcessor {
 	private static Analysis createAnalysis(AnalysisType analysisType,
 			Identifier monitoredElementId,
 			Measurement measurement,
-			Set criteriaSet) throws AnalysisException {
+			ParameterSet criteriaSet) throws AnalysisException {
 		if (criteriaSet == null)
 			throw new AnalysisException("Criteria set is NULL");
 
@@ -104,7 +104,7 @@ public class AnalysisEvaluationProcessor {
 	private static void loadAnalysisAndEvaluationManager(String analysisCodename,
 			Result measurementResult,
 			Analysis analysis,
-			Set etalon) throws AnalysisException {
+			ParameterSet etalon) throws AnalysisException {
 		String className = null;
 		Constructor constructor = null;
 
@@ -116,7 +116,7 @@ public class AnalysisEvaluationProcessor {
 		try {
 			constructor = Class.forName(className).getDeclaredConstructor(new Class[] {Result.class,
 					Analysis.class,
-					Set.class});
+					ParameterSet.class});
 			constructor.setAccessible(true);
 			analysisManager = (AnalysisManager) constructor.newInstance(new Object[] {measurementResult, analysis, etalon});
 		}
@@ -146,14 +146,14 @@ public class AnalysisEvaluationProcessor {
 		}
 	}
 
-	private static Result analyseAndEvaluate(Result measurementResult, Analysis analysis, Set etalon)
+	private static Result analyseAndEvaluate(Result measurementResult, Analysis analysis, ParameterSet etalon)
 			throws AnalysisException {
 
 		String analysisCodename = analysis.getType().getCodename();
 
 		loadAnalysisAndEvaluationManager(analysisCodename, measurementResult, analysis, etalon);
 
-		SetParameter[] arParameters = analysisManager.analyse();
+		Parameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
 		try {
 			analysisResult = analysis.createResult(LoginManager.getUserId(), arParameters);

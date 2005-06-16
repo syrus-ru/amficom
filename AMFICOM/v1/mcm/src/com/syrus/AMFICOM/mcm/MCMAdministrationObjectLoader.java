@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.26 2005/06/07 13:25:35 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.27 2005/06/16 10:54:57 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/07 13:25:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMAdministrationObjectLoader extends MCMObjectLoader implements AdministrationObjectLoader {
@@ -63,7 +63,7 @@ final class MCMAdministrationObjectLoader extends MCMObjectLoader implements Adm
 	 * MCM do not need in all below methods
 	 * */
 
-	public Set loadUsers(final Set ids) {
+	public Set loadSystemUsers(final Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
@@ -78,7 +78,7 @@ final class MCMAdministrationObjectLoader extends MCMObjectLoader implements Adm
 
 
 
-	public Set loadUsersButIds(final StorableObjectCondition condition, final Set ids) {
+	public Set loadSystemUsersButIds(final StorableObjectCondition condition, final Set ids) {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
@@ -102,7 +102,7 @@ final class MCMAdministrationObjectLoader extends MCMObjectLoader implements Adm
 
 
 
-	public void saveUsers(final Set objects, boolean force) {
+	public void saveSystemUsers(final Set objects, boolean force) {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
