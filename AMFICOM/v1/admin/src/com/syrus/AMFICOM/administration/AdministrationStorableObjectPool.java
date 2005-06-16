@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.36 2005/06/16 12:30:43 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.37 2005/06/16 12:57:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/16 12:30:43 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/16 12:57:46 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -149,7 +149,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		short entityCode = condition.getEntityCode().shortValue();
+		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.SYSTEM_USER_ENTITY_CODE:
 				return aObjectLoader.loadSystemUsersButIds(condition, ids);

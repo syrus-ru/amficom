@@ -1,5 +1,5 @@
 /*-
- * $Id: GeneralStorableObjectPool.java,v 1.32 2005/06/16 12:18:06 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.33 2005/06/16 12:57:43 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/16 12:18:06 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/16 12:57:43 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -40,6 +40,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 		registerFactory(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new CharacteristicFactory());
 	}
+
 
 	/**
 	 * Init with default pool class and default pool sizes
@@ -126,7 +127,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		short entityCode = condition.getEntityCode().shortValue();
+		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 				return gObjectLoader.loadParameterTypesButIds(condition, ids);
