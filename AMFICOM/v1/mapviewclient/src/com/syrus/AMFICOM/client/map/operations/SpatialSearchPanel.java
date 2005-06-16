@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.6 2005/06/06 12:57:02 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.7 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.6 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -174,7 +174,7 @@ import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 	{
 		this.searchButton.setEnabled(false);
 		try {
-			List found = this.mapFrame.getMapViewer().getLogicalNetLayer().findSpatialObjects(this.searchText);
+			List found = this.mapFrame.getMapViewer().getRenderer().getLoader().findSpatialObjects(this.searchText);
 			this.foundList.setListData(found.toArray());
 		} catch(MapConnectionException e) {
 			this.foundList.setListData(new String[] {e.getMessage()});
@@ -195,8 +195,8 @@ import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 	{
 		try {
 			SpatialObject so = (SpatialObject )this.foundList.getSelectedValue();
-			this.mapFrame.getMapViewer().getLogicalNetLayer().centerSpatialObject(so);
-			this.mapFrame.getMapViewer().getLogicalNetLayer().repaint(true);
+			this.mapFrame.getMapViewer().centerSpatialObject(so);
+			this.mapFrame.getMapViewer().repaint(true);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

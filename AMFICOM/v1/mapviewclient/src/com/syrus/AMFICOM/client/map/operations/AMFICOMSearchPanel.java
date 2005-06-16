@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.11 2005/06/09 11:32:12 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.12 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.11 $, $Date: 2005/06/09 11:32:12 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/16 10:57:20 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -344,9 +344,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 					new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));		
 		}
 		
-		Command centerCommand = new CenterSelectionCommand(this.mapFrame.getMapViewer().getLogicalNetLayer());
-		centerCommand.setParameter("applicationModel", this.mapFrame.getContext().getApplicationModel());
-		centerCommand.setParameter("logicalNetLayer", this.mapFrame.getMapViewer().getLogicalNetLayer());
+		Command centerCommand = new CenterSelectionCommand(this.mapFrame.getContext().getApplicationModel(), this.mapFrame.getMapViewer());
 		centerCommand.execute();
 	}
 }

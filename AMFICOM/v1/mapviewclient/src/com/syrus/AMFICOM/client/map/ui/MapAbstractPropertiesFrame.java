@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.4 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.5 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,12 +14,16 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.JDesktopPane;
 import javax.swing.event.ChangeEvent;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.props.MapViewVisualManager;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
+import com.syrus.AMFICOM.client.map.props.MarkerEditor;
 import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -29,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -79,6 +83,11 @@ public abstract class MapAbstractPropertiesFrame extends
 			if(event.isMapElementSelected()) {
 				MapElement mapElement = (MapElement )event.getSource();
 				VisualManager vm = MapVisualManager.getVisualManager(mapElement);
+				if(vm instanceof MarkerEditor) {
+					MarkerEditor markerEditor = (MarkerEditor)vm;
+					markerEditor.setLogicalNetLayer(
+							MapDesktopCommand.findMapFrame((JDesktopPane)this.getParent()).getMapViewer().getLogicalNetLayer());
+				}
 				super.setVisualManager(vm);
 				if(this.editor != null)
 					this.editor.setObject(mapElement);

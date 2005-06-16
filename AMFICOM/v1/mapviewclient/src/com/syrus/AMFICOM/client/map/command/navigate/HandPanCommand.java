@@ -1,5 +1,5 @@
 /**
- * $Id: HandPanCommand.java,v 1.10 2005/06/06 12:20:31 krupenn Exp $ 
+ * $Id: HandPanCommand.java,v 1.11 2005/06/16 10:57:20 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный 
@@ -12,6 +12,8 @@ import java.awt.Cursor;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 
 /**
@@ -20,21 +22,22 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
  * карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:20 $
  * @module mpviewclient_v1
  */
 public class HandPanCommand extends MapNavigateCommand {
-	public HandPanCommand(LogicalNetLayer logicalNetLayer) {
-		super(logicalNetLayer);
+	public HandPanCommand(ApplicationModel aModel, NetMapViewer netMapViewer) {
+		super(aModel, netMapViewer);
 	}
 
 	public void execute() {
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		if(this.aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN)) {
-			this.logicalNetLayer.getMapState().setActionMode(
+			logicalNetLayer.getMapState().setActionMode(
 					MapState.NULL_ACTION_MODE);
-			this.logicalNetLayer.getMapState().setOperationMode(
+			logicalNetLayer.getMapState().setOperationMode(
 					MapState.NO_OPERATION);
-			this.logicalNetLayer.setCursor(Cursor.getDefaultCursor());
+			this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 
 			this.aModel.setSelected(
 					MapApplicationModel.OPERATION_HAND_PAN,
@@ -64,9 +67,9 @@ public class HandPanCommand extends MapNavigateCommand {
 						false);
 				this.aModel.fireModelChanged();
 
-				this.logicalNetLayer.getMapState().setOperationMode(
+				logicalNetLayer.getMapState().setOperationMode(
 						MapState.MOVE_HAND);
-				this.logicalNetLayer.setCursor(Cursor
+				this.netMapViewer.setCursor(Cursor
 						.getPredefinedCursor(Cursor.HAND_CURSOR));
 			}
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCollectorCommandAtomic.java,v 1.11 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: CreateCollectorCommandAtomic.java,v 1.12 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,13 +14,14 @@ package com.syrus.AMFICOM.client.map.command.action;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Collector;
 
 /**
  * создание коллектора, внесение его в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class CreateCollectorCommandAtomic extends MapActionCommand
@@ -53,7 +54,7 @@ public class CreateCollectorCommandAtomic extends MapActionCommand
 		try
 		{
 			this.collector = Collector.createInstance(
-					this.logicalNetLayer.getUserId(),
+					LoginManager.getUserId(),
 					this.logicalNetLayer.getMapView().getMap(),
 					this.name,
 					"");

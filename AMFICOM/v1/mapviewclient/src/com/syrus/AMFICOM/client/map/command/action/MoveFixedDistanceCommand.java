@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.8 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.9 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/06 12:20:30 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
@@ -60,8 +60,8 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 		super.setLogicalNetLayer(logicalNetLayer);
 
 		try {
-			this.fixedScreenPoint = logicalNetLayer.convertMapToScreen(this.fixedNode.getLocation());
-			Point movedScreenPoint = logicalNetLayer.convertMapToScreen(this.movedNode.getLocation());
+			this.fixedScreenPoint = logicalNetLayer.getConverter().convertMapToScreen(this.fixedNode.getLocation());
+			Point movedScreenPoint = logicalNetLayer.getConverter().convertMapToScreen(this.movedNode.getLocation());
 			this.fixedScreenDistance = Math.sqrt(
 					(movedScreenPoint.x - this.fixedScreenPoint.x) 
 						* (movedScreenPoint.x - this.fixedScreenPoint.x) 
@@ -106,8 +106,8 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 			Point targetScreenPoint = new Point(
 				(int )(this.fixedScreenPoint.x + cosB1 * this.fixedScreenDistance),
 				(int )(this.fixedScreenPoint.y + sinB1 * this.fixedScreenDistance));
-			DoublePoint targetMapPoint = this.logicalNetLayer.convertScreenToMap(targetScreenPoint);
-			DoublePoint startMapPoint = this.logicalNetLayer.convertScreenToMap(super.startPoint);
+			DoublePoint targetMapPoint = this.logicalNetLayer.getConverter().convertScreenToMap(targetScreenPoint);
+			DoublePoint startMapPoint = this.logicalNetLayer.getConverter().convertScreenToMap(super.startPoint);
 			super.deltaX = targetMapPoint.getX() - startMapPoint.getX();
 			super.deltaY = targetMapPoint.getY() - startMapPoint.getY();
 		} catch(MapConnectionException e) {

@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.17 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.18 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -35,7 +36,7 @@ import java.util.List;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -108,9 +109,9 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 						this.link.getStartNode(),
 						this.link.getEndNode());
 				unbound.setCablePath(cablePath);
-				cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, this.logicalNetLayer.getUserId()));
+				cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, LoginManager.getUserId()));
 			}
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 		catch(Throwable e)
 		{

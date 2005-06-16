@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.21 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.22 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends AbstractCommand {
@@ -125,8 +125,8 @@ public class ViewMapWindowCommand extends AbstractCommand {
 		mvnc.execute();
 		if(mvnc.getResult() == Command.RESULT_OK) {
 			mapView = mvnc.getMapView();
-			mapView.setCenter(this.mapFrame.getMapViewer().getLogicalNetLayer().getCenter());
-			mapView.setScale(this.mapFrame.getMapViewer().getLogicalNetLayer().getScale());
+			mapView.setCenter(this.mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getCenter());
+			mapView.setScale(this.mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getScale());
 		}
 		else
 			return;

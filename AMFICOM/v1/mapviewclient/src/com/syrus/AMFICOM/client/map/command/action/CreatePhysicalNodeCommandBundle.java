@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.13 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.14 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.13 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -66,7 +65,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 					"method call", 
 					getClass().getName(), 
 					"execute()");
-			DoublePoint coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
+			DoublePoint coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			// получить линию связи, которой принадлежит фрагмент
 			PhysicalLink physicalLink = this.nodeLink.getPhysicalLink();
@@ -91,10 +90,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 			physicalLink.addNodeLink(link2);
 			super.registerStateChange(physicalLink, pls, physicalLink.getState());
 			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-						node, 
-						MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(node);
 			this.logicalNetLayer.notifySchemeEvent(node);
 			setResult(Command.RESULT_OK);

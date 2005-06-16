@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapElementController.java,v 1.3 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: AbstractMapElementController.java,v 1.4 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,11 +10,12 @@
 package com.syrus.AMFICOM.client.map.controllers;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 
 /**
  * Контроллер элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractMapElementController implements
@@ -24,17 +25,31 @@ public abstract class AbstractMapElementController implements
 	 */
 	protected LogicalNetLayer logicalNetLayer;
 
+	protected NetMapViewer netMapViewer;
+	
+	public AbstractMapElementController(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+	}
+
 	/**
-	 * {@inheritDoc}
+	 * @param netMapViewer The netMapViewer to set.
 	 */
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
-		this.logicalNetLayer = logicalNetLayer;
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public LogicalNetLayer getLogicalNetLayer() {
-		return this.logicalNetLayer;
-	}
+//	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
+//		this.logicalNetLayer = logicalNetLayer;
+//	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+//	public LogicalNetLayer getLogicalNetLayer() {
+//		return this.logicalNetLayer;
+//	}
 }

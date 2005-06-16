@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.13 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.14 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,13 +20,14 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController {
@@ -41,13 +42,13 @@ public class SiteNodeController extends AbstractNodeController {
 	/**
 	 * Instance
 	 */
-	private static SiteNodeController instance = null;
+//	private static SiteNodeController instance = null;
 
 	/**
 	 * Private constructor.
 	 */
-	protected SiteNodeController() {
-		// empty
+	protected SiteNodeController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -55,10 +56,12 @@ public class SiteNodeController extends AbstractNodeController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new SiteNodeController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new SiteNodeController(netMapViewer);
 	}
 
 	/**
@@ -82,8 +85,8 @@ public class SiteNodeController extends AbstractNodeController {
 		super.paint(site, g, visibleBounds);
 		
 		//Если внешний узел то рисовать рамку
-		if (getLogicalNetLayer().getMapView().getMap().getExternalNodes().contains(site)) {
-			MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		if (this.logicalNetLayer.getMapView().getMap().getExternalNodes().contains(site)) {
+			MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 			
 			Point p = converter.convertMapToScreen(site.getLocation());
 	
@@ -99,7 +102,7 @@ public class SiteNodeController extends AbstractNodeController {
 		}
 
 		if(MapPropertiesManager.isLayerLabelVisible(site.getType())) {
-			MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+			MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 			
 			Point p = converter.convertMapToScreen(site.getLocation());
 	

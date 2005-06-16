@@ -112,7 +112,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 		try
 		{
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		}
 		catch(MapConnectionException e)
 		{
@@ -146,7 +146,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 			super.generatePathCabling(this.path, proto);
 			try
 			{
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			}
 			catch(MapConnectionException e)
 			{

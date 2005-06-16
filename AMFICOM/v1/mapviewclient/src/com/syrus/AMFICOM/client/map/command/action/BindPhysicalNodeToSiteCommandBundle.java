@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.22 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.23 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -32,7 +33,7 @@ import java.util.Iterator;
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:19 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -118,7 +119,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			// single cpath, as long as link is UnboundLink
 			CablePath cpath = (CablePath)(this.mapView.getCablePaths(link).get(0));
 			// нова€ лини€ добавл€етс€ в кабельный путь
-			cpath.addLink(newLink, CableController.generateCCI(cpath, newLink, this.logicalNetLayer.getUserId()));
+			cpath.addLink(newLink, CableController.generateCCI(cpath, newLink, LoginManager.getUserId()));
 			newLink.setCablePath(cpath);
 			// переносим фрагменты в новую линию пока не наткнемс€ на
 			// созданный узел
@@ -131,7 +132,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 					null);
 			link.setStartNode(this.site);
 			cpath.sortLinks();
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 		catch(Throwable e)
 		{

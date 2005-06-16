@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.18 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.19 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,10 +13,10 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * или по координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -61,6 +61,8 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	 * географическа€ точка, в которой размещаетс€ элемент
 	 */
 	DoublePoint coordinatePoint = null;
+
+	protected NetMapViewer netMapViewer;
 
 	public PlaceSchemeElementCommand(
 			SchemeElement schemeElement,
@@ -94,13 +96,13 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 		try {
 			// если географическа€ точка не задана, получить ее из экранной точки
 			if(this.coordinatePoint == null)
-				this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
+				this.coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
 			this.site = mapView.findElement(this.schemeElement);
 			if(this.site == null)
 			{
-				MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point);
+				MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point, this.netMapViewer.getVisibleBounds());
 				
 				if(mapElement instanceof SiteNode
 					&& !(mapElement instanceof UnboundNode))
@@ -117,10 +119,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 				this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.getParentScheme());
 			}
 			// операци€ закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					this.site, 
-					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			this.logicalNetLayer.notifySchemeEvent(this.site);
 		} catch(Throwable e) {
@@ -129,5 +128,13 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			e.printStackTrace();
 		}
 
+	}
+
+
+	/**
+	 * @param netMapViewer The netMapViewer to set.
+	 */
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
 	}
 }

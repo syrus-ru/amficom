@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.24 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.25 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,25 +13,25 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -91,7 +91,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			// идем по всем узлам кабельного пути от начального
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам привязки кабеля.
-			Identifier userId = this.logicalNetLayer.getUserId();
+			Identifier userId = LoginManager.getUserId();
 			for(Iterator iter = this.schemeCableLink.getCableChannelingItems().iterator(); iter.hasNext();) {
 				CableChannelingItem cci = (CableChannelingItem )iter.next();
 				SiteNode smsne = cci.getStartSiteNode();
@@ -166,10 +166,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				unbound.setCablePath(this.cablePath);
 			}
 			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					this.cablePath, 
-					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.cablePath);
 			this.logicalNetLayer.notifySchemeEvent(this.cablePath);
 		} catch(Throwable e) {

@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.17 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.18 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.ui.LineComboBox;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -44,13 +45,13 @@ public class PhysicalLinkController extends AbstractLinkController {
 	/**
 	 * Instance
 	 */
-	private static PhysicalLinkController instance = null;
+//	private static PhysicalLinkController instance = null;
 
 	/**
 	 * Private constructor.
 	 */
-	protected PhysicalLinkController() {
-		// empty
+	protected PhysicalLinkController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -58,10 +59,12 @@ public class PhysicalLinkController extends AbstractLinkController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new PhysicalLinkController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new PhysicalLinkController(netMapViewer);
 	}
 
 	/**
@@ -133,7 +136,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 		boolean vis = false;
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodelink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer()
+			NodeLinkController nlc = (NodeLinkController )this.logicalNetLayer
 					.getMapViewController().getController(nodelink);
 			if(nlc.isElementVisible(nodelink, visibleBounds)) {
 				vis = true;
@@ -202,12 +205,12 @@ public class PhysicalLinkController extends AbstractLinkController {
 		link.setSelectionVisible(selectionVisible);
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodelink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
+			NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer
 				.getMapViewController().getController(nodelink);
 			nlc.paint(nodelink, g, visibleBounds, stroke, color);
 			
 			if(showName) {
-				MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+				MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 				Point from = converter.convertMapToScreen(nodelink.getStartNode().getLocation());
 				Point to = converter.convertMapToScreen(nodelink.getEndNode().getLocation());
 
@@ -258,7 +261,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nl = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
+			NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer
 				.getMapViewController().getController(nl);
 			if(nlc.isMouseOnElement(nl, currentMousePoint))
 				return true;
@@ -275,7 +278,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 			throws MapConnectionException, MapDataException {
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodeLink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer()
+			NodeLinkController nlc = (NodeLinkController )this.logicalNetLayer
 					.getMapViewController().getController(nodeLink);
 			nlc.updateLengthLt(nodeLink);
 		}

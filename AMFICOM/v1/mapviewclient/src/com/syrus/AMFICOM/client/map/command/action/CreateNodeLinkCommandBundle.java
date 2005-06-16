@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.16 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.17 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -61,6 +61,8 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 	private NodeLink nodeLink;
 
+	private NetMapViewer netMapViewer;
+
 	/**
 	 * 
 	 * @param startNode
@@ -69,6 +71,11 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	{
 		super();
 		this.startNode = startNode;
+	}
+
+	public void setNetMapViewer(NetMapViewer netMapViewer)
+	{
+		this.netMapViewer = netMapViewer;
 	}
 
 	public void setParameter(String field, Object value)
@@ -247,13 +254,13 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 					getClass().getName(), 
 					"execute()");
 			// анализируется элемент в точке, в которой отпущена мышка		
-			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint);
+			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint, this.netMapViewer.getVisibleBounds());
 			// если мышка отпущена на том же элементе, то линию не рисовать
 			if(curElementAtPoint.equals(this.startNode))
 				return;
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			AbstractNode endNode = null;
-			DoublePoint mapEndPoint = this.logicalNetLayer.convertScreenToMap(this.endPoint);
+			DoublePoint mapEndPoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.endPoint);
 			// если в конечной точке уже есть элемент, проверяем, какой это узел
 			if ( curElementAtPoint != null
 				&& curElementAtPoint instanceof AbstractNode)
@@ -329,10 +336,8 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 					createNodeToNode((TopologicalNode )endNode);
 				}
 			}
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-				this.startNode, 
-				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
+			this.logicalNetLayer.sendMapSelectedEvent(this.startNode);
 			setResult(Command.RESULT_OK);
 		}
 		catch(Throwable e)

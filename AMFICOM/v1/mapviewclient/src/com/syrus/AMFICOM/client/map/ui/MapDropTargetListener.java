@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.22 2005/06/06 12:20:35 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.23 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,9 +22,11 @@ import java.awt.dnd.DropTargetListener;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
@@ -46,27 +48,28 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2005/06/06 12:20:35 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapDropTargetListener implements DropTargetListener
 {
-	LogicalNetLayer logicalNetLayer;
+	NetMapViewer netMapViewer;
 
-	public MapDropTargetListener(LogicalNetLayer logicalNetLayer)
+	public MapDropTargetListener(NetMapViewer netMapViewer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
+		this.netMapViewer = netMapViewer;
 	}
 
 	//Здесь мы получаем объект который пользователь переносит с панели
 	public void drop(DropTargetDropEvent dtde)
 	{
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		Object or = null;
 
 		Point point = dtde.getLocation();
 
-		if ( this.logicalNetLayer.getMapView() != null)
+		if ( logicalNetLayer.getMapView() != null)
 		{
 			DataFlavor[] df = dtde.getCurrentDataFlavors();
 			Transferable transferable = dtde.getTransferable();
@@ -106,7 +109,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 				dtde.getDropTargetContext().dropComplete(true);
-				this.logicalNetLayer.repaint(false);
+				logicalNetLayer.sendMapEvent(MapEvent.NEED_REPAINT);
 
 //				this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 			}
@@ -120,15 +123,17 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void mapElementDropped(SiteNodeType nodeType, Point point)
 	{
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(nodeType, point);
-		cmd.setLogicalNetLayer(this.logicalNetLayer);
-		this.logicalNetLayer.getCommandList().add(cmd);
-		this.logicalNetLayer.getCommandList().execute();
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(cmd);
+		logicalNetLayer.getCommandList().execute();
 	}
 
 	protected void schemeElementDropped(SchemeElement schemeElement, Point point)
 	{
-		MapView mapView = this.logicalNetLayer.getMapView();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		MapView mapView = logicalNetLayer.getMapView();
 		Map map = mapView.getMap();
 		SiteNode site = mapView.findElement(schemeElement);
 		if(site != null)
@@ -136,14 +141,14 @@ public final class MapDropTargetListener implements DropTargetListener
 			if(site instanceof UnboundNode)
 			{
 				try {
-					this.logicalNetLayer.deselectAll();
+					logicalNetLayer.deselectAll();
 					map.setSelected(site, true);
-					Point pt = this.logicalNetLayer.convertMapToScreen(site.getLocation());
+					Point pt = logicalNetLayer.getConverter().convertMapToScreen(site.getLocation());
 					MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
-					cmd.setLogicalNetLayer(this.logicalNetLayer);
+					cmd.setLogicalNetLayer(logicalNetLayer);
 					cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
-					this.logicalNetLayer.getCommandList().add(cmd);
-					this.logicalNetLayer.getCommandList().execute();
+					logicalNetLayer.getCommandList().add(cmd);
+					logicalNetLayer.getCommandList().execute();
 				} catch(MapConnectionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -160,15 +165,17 @@ public final class MapDropTargetListener implements DropTargetListener
 		else
 		{
 			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(schemeElement, point);
-			cmd.setLogicalNetLayer(this.logicalNetLayer);
-			this.logicalNetLayer.getCommandList().add(cmd);
-			this.logicalNetLayer.getCommandList().execute();
+			cmd.setLogicalNetLayer(logicalNetLayer);
+			cmd.setNetMapViewer(this.netMapViewer);
+			logicalNetLayer.getCommandList().add(cmd);
+			logicalNetLayer.getCommandList().execute();
 		}
 	}
 
 	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink)
 	{
-		MapView mapView = this.logicalNetLayer.getMapView();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		MapView mapView = logicalNetLayer.getMapView();
 		Map map = mapView.getMap();
 		CablePath cablePath = mapView.findCablePath(schemeCableLink);
 		if(cablePath != null)
@@ -177,8 +184,8 @@ public final class MapDropTargetListener implements DropTargetListener
 		}
 		else
 		{
-			SiteNode startNode = this.logicalNetLayer.getMapView().getStartNode(schemeCableLink);
-			SiteNode endNode = this.logicalNetLayer.getMapView().getEndNode(schemeCableLink);
+			SiteNode startNode = logicalNetLayer.getMapView().getStartNode(schemeCableLink);
+			SiteNode endNode = logicalNetLayer.getMapView().getEndNode(schemeCableLink);
 	
 			if(startNode == null || endNode == null)
 			{
@@ -191,9 +198,9 @@ public final class MapDropTargetListener implements DropTargetListener
 			}
 
 			PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(schemeCableLink);
-			cmd.setLogicalNetLayer(this.logicalNetLayer);
-			this.logicalNetLayer.getCommandList().add(cmd);
-			this.logicalNetLayer.getCommandList().execute();
+			cmd.setLogicalNetLayer(logicalNetLayer);
+			logicalNetLayer.getCommandList().add(cmd);
+			logicalNetLayer.getCommandList().execute();
 		}
 	}
 /*					

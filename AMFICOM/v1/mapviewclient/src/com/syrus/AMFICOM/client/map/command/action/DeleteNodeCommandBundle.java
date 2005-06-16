@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.27 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.28 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -135,7 +136,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 						left.getOtherNode(site),
 						right.getOtherNode(site));
 				unbound.setCablePath(cablePath);
-				cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, this.logicalNetLayer.getUserId()));
+				cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, LoginManager.getUserId()));
 
 				// если "левая" была непмривязанной, она удаляется (вместе 
 				// со своими фрагментами
@@ -456,7 +457,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			{
 				this.deleteMarker((Marker)this.node);
 			}
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);

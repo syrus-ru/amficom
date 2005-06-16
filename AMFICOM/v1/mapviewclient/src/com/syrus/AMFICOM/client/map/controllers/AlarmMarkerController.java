@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.10 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.11 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,8 +12,10 @@ package com.syrus.AMFICOM.client.map.controllers;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
@@ -27,7 +29,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class AlarmMarkerController extends MarkerController {
@@ -57,13 +59,13 @@ public final class AlarmMarkerController extends MarkerController {
 	/**
 	 * Instance.
 	 */
-	private static AlarmMarkerController instance = null;
+//	private static AlarmMarkerController instance = null;
 	
 	/**
 	 * Private constructor.
 	 */
-	private AlarmMarkerController() {
-		// empty
+	private AlarmMarkerController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -71,10 +73,12 @@ public final class AlarmMarkerController extends MarkerController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new AlarmMarkerController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new AlarmMarkerController(netMapViewer);
 	}
 
 	/**
@@ -100,7 +104,7 @@ public final class AlarmMarkerController extends MarkerController {
 	 * {@inheritDoc}
 	 */
 	public Image getAlarmedImage(AbstractNode node) {
-		Identifier creatorId = getLogicalNetLayer().getUserId();
+		Identifier creatorId = LoginManager.getUserId();
 
 		return MapPropertiesManager.getScaledImage(
 				NodeTypeController.getImageId(
@@ -118,7 +122,7 @@ public final class AlarmMarkerController extends MarkerController {
 			Rectangle2D.Double visibleBounds)
 			throws MapConnectionException, MapDataException {
 		if(needInit) {
-			Identifier creatorId = getLogicalNetLayer().getUserId();
+			Identifier creatorId = LoginManager.getUserId();
 
 			MapPropertiesManager.setOriginalImage(
 				NodeTypeController.getImageId(

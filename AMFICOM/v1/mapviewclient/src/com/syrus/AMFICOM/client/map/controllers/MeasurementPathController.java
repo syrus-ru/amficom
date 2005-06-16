@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.22 2005/06/14 10:53:43 bass Exp $
+ * $Id: MeasurementPathController.java,v 1.23 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -42,8 +43,8 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/14 10:53:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -51,13 +52,13 @@ public final class MeasurementPathController extends AbstractLinkController {
 	/**
 	 * Instance.
 	 */
-	private static MeasurementPathController instance = null;
+//	private static MeasurementPathController instance = null;
 
 	/**
 	 * Private constructor.
 	 */
-	private MeasurementPathController() {
-		// empty
+	private MeasurementPathController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -65,10 +66,12 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new MeasurementPathController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new MeasurementPathController(netMapViewer);
 	}
 
 	/**
@@ -98,7 +101,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 		boolean vis = false;
 		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
 			CablePath cpath = (CablePath )it.next();
-			CableController cc = (CableController)getLogicalNetLayer().getMapViewController().getController(cpath);
+			CableController cc = (CableController)this.logicalNetLayer.getMapViewController().getController(cpath);
 			if(cc.isElementVisible(cpath, visibleBounds)) {
 				vis = true;
 				break;
@@ -201,7 +204,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 
 		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
 			CablePath cpath = (CablePath)it.next();
-			CableController cc = (CableController)getLogicalNetLayer().getMapViewController().getController(cpath);
+			CableController cc = (CableController)this.logicalNetLayer.getMapViewController().getController(cpath);
 			cc.paint(cpath, g, visibleBounds, stroke, color, selectionVisible);
 		}
 	}
@@ -222,7 +225,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 
 		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
 			CablePath cpath = (CablePath)it.next();
-			CableController cc = (CableController)getLogicalNetLayer().getMapViewController().getController(cpath);
+			CableController cc = (CableController)this.logicalNetLayer.getMapViewController().getController(cpath);
 			if(cc.isMouseOnElement(cpath, currentMousePoint))
 				return true;
 		}
@@ -237,7 +240,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 */
 	public MapElement getMapElement(MeasurementPath path, PathElement pe) {
 		MapElement me = null;
-		MapView mapView = getLogicalNetLayer().getMapView();
+		MapView mapView = this.logicalNetLayer.getMapView();
 		switch(pe.getKind().value()) {
 			case Kind._SCHEME_ELEMENT:
 				SchemeElement se = (SchemeElement )pe.getAbstractSchemeElement();

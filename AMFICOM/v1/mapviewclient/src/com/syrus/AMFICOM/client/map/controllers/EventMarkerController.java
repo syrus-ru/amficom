@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarkerController.java,v 1.10 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: EventMarkerController.java,v 1.11 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,8 +12,10 @@ package com.syrus.AMFICOM.client.map.controllers;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.EventMarker;
 
@@ -25,7 +27,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера события.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class EventMarkerController extends MarkerController {
@@ -44,13 +46,13 @@ public final class EventMarkerController extends MarkerController {
 	/**
 	 * Instace.
 	 */
-	private static EventMarkerController instance = null;
+//	private static EventMarkerController instance = null;
 	
 	/**
 	 * Private constructor.
 	 */
-	private EventMarkerController() {
-		// empty
+	private EventMarkerController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -58,10 +60,12 @@ public final class EventMarkerController extends MarkerController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new EventMarkerController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new EventMarkerController(netMapViewer);
 	}
 
 	/**
@@ -90,7 +94,7 @@ public final class EventMarkerController extends MarkerController {
 			Rectangle2D.Double visibleBounds)
 			throws MapConnectionException, MapDataException {
 		if(needInit) {
-			Identifier creatorId = getLogicalNetLayer().getUserId();
+			Identifier creatorId = LoginManager.getUserId();
 
 			MapPropertiesManager.setOriginalImage(
 				NodeTypeController.getImageId(

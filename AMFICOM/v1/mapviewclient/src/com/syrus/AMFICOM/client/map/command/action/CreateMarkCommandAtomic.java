@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.13 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.14 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,13 +14,14 @@ import java.awt.Point;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.controllers.MarkController;
 import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
  *  оманда создани€ метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class CreateMarkCommandAtomic extends MapActionCommand
@@ -80,6 +81,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 			if ( !getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 				return;
+			MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			this.link.sortNodeLinks();
 			this.distance = 0.0;
@@ -92,8 +94,8 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 
 				if(nlc.isMouseOnElement(mnle, this.point))
 				{
-					DoublePoint dpoint = this.logicalNetLayer.convertScreenToMap(this.point);
-					this.distance += this.logicalNetLayer.distance(node.getLocation(), dpoint);
+					DoublePoint dpoint = converter.convertScreenToMap(this.point);
+					this.distance += converter.distance(node.getLocation(), dpoint);
 					break;
 				}
 				nlc.updateLengthLt(mnle);
@@ -107,7 +109,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 			try
 			{
 				this.mark = Mark.createInstance(
-						this.logicalNetLayer.getUserId(),
+						LoginManager.getUserId(),
 						this.link, 
 						this.distance);
 			}
@@ -119,10 +121,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 			MarkController mc = (MarkController)getLogicalNetLayer().getMapViewController().getController(this.mark);
 			mc.updateScaleCoefficient(this.mark);
 			// операци€ закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-						this.mark,
-						MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.mark);
 			setResult(Command.RESULT_OK);
 		}

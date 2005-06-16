@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.75 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.76 2005/06/16 10:57:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,22 +12,20 @@ package com.syrus.AMFICOM.client.map;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveNodeCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
@@ -35,20 +33,13 @@ import com.syrus.AMFICOM.client.map.controllers.AbstractNodeController;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapElementController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
-import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandList;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -61,17 +52,11 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.EventMarker;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * Управляет отображением логической структуры сети.
@@ -79,7 +64,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.75 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.76 $, $Date: 2005/06/16 10:57:18 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -105,10 +90,10 @@ public class LogicalNetLayer
 	 * событий следует проверять этот флаг, и если он равен false, то обработку
 	 * этого события не производить.
 	 */
-	protected boolean performProcessing = true;
+//	protected boolean performProcessing = true;
 	
 	/** Флаг отправки сообщений. */
-	protected boolean doNotify = true;
+//	protected boolean doNotify = true;
 	
 	/** Текущий элемент. */
 	protected MapElement currentMapElement = null;
@@ -141,10 +126,7 @@ public class LogicalNetLayer
 	protected ApplicationContext aContext = null;
 
 	/** Идентификатор пользователя. Используется для создания новых объектов. */
-	protected Identifier userId = null;
-
-	/** Объект, ответственный за управление отображением карты. */
-	protected NetMapViewer viewer = null;
+//	protected Identifier userId = null;
 
 	/**
 	 * Начальная точка для операций пользователя на карте с помощью мыши.
@@ -161,10 +143,6 @@ public class LogicalNetLayer
 	 * текущего положения мыши.
 	 */
 	protected Point endPoint = new Point(0, 0);
-
-	/** Флаг того, что контекстное меню отображено. */	
-	
-	protected boolean menuShown = false;
 
 	/**
 	 * Список отображаемых элементов.
@@ -190,230 +168,14 @@ public class LogicalNetLayer
 	private final MapCoordinatesConverter converter;
 
 	private final MapContext mapContext;
+	
+	private MapViewController mapViewController;
 
 	public LogicalNetLayer(MapCoordinatesConverter converter, MapContext mapContext) {
 		this.converter = converter;
 		this.mapContext = mapContext;
 	}
-	/**
-	 * Получить экранные координаты по географическим координатам.
-	 * @param point географическая координата
-	 * @return экранная координата
-	 * @deprecated use converter
-	 */
-	public Point convertMapToScreen(DoublePoint point)
-		throws MapConnectionException, MapDataException {
-		return this.converter.convertMapToScreen(point);
-	}
 	
-	/**
-	 * Получить географические координаты по экранным.
-	 * @param point экранная координата
-	 * @return географическая координата
-	 * @deprecated use converter
-	 */
-	public DoublePoint convertScreenToMap(Point point)
-		throws MapConnectionException, MapDataException {
-		return this.converter.convertScreenToMap(point);
-	}
-
-	/**
-	 * Получить дистанцию между двумя точками в географических координатах.
-	 * @param from географическая координата
-	 * @param to географическая координата
-	 * @return расстояние
-	 * @deprecated use converter
-	 */
-	public double distance(DoublePoint from, DoublePoint to)
-		throws MapConnectionException, MapDataException {
-		return this.converter.distance(from, to);
-	}
-
-	/**
-	 * Установить центральную точку вида карты.
-	 * @param center географическая координата центра
-	 * @deprecated use MapContext
-	 */
-	public void setCenter(DoublePoint center)
-		throws MapConnectionException, MapDataException {
-		this.mapContext.setCenter(center);
-	}
-
-	/**
-	 * Получить центральную точку вида карты.
-	 * @return географическая координата центра
-	 * @deprecated use MapContext
-	 */
-	public DoublePoint getCenter()
-		throws MapConnectionException, MapDataException {
-		return this.mapContext.getCenter();
-	}
-
-	/**
-	 * Получить видимую область в географических координатах.
-	 * @return видимая область
-	 * @deprecated use netMapViewer
-	 */
-	public Rectangle2D.Double getVisibleBounds()
-		throws MapConnectionException, MapDataException {
-		return this.viewer.getVisibleBounds();
-	}
-
-	/**
-	 * Произвести поиск географических объектов по подстроке.
-	 * @param searchText текст поиска
-	 * @return список найденных объектов ({@link SpatialObject})
-	 * @deprecated use MapImageLoader
-	 */
-	public List findSpatialObjects(String searchText)
-		throws MapConnectionException, MapDataException {
-		throw new UnsupportedOperationException("findSpatialObjects deprecated use MapImageLoader");
-	}
-	
-	/**
-	 * Центрировать географический объект.
-	 * @param so географический объект
-	 * @deprecated use netMapViewer
-	 */
-	public void centerSpatialObject(SpatialObject so)
-		throws MapConnectionException, MapDataException {
-		this.viewer.centerSpatialObject(so);
-	}
-
-	/**
-	 * Освободить ресурсы компонента с картой и завершить отображение карты.
-	 * @deprecated use connection
-	 */
-	public void release()
-		throws MapConnectionException, MapDataException {
-		throw new UnsupportedOperationException("release deprecated use connection");
-	}
-		
-
-	/**
-	 * Перерисовать содержимое компонента с картой.
-	 * @param fullRepaint производить ли полную перерисовку.
-	 * <code>true</code> - перерисовываются географические объекты и элементы
-	 * топологической схемы. <code>false</code> - перерисовываются только 
-	 * элементы топологической схемы.
-	 * @deprecated use netMapViewer
-	 */
-	public void repaint(boolean fullRepaint)
-		throws MapConnectionException, MapDataException {
-		this.viewer.repaint(fullRepaint);
-	}
-
-	/**
-	 * Устанавить курсор мыши на компоненте отображения карты.
-	 * @param cursor курсор
-	 * @deprecated use netMapViewer
-	 */
-	public void setCursor(Cursor cursor) {
-		this.viewer.setCursor(cursor);
-	}
-
-	/**
-	 * Получить установленный курсор.
-	 * @return курсор
-	 * @deprecated use netMapViewer
-	 */
-	public Cursor getCursor() {
-		return this.viewer.getCursor();
-	}
-
-	/**
-	 * Получить текущий масштаб вида карты.
-	 * @return масштаб
-	 * @deprecated use MapContext
-	 */
-	public double getScale()
-		throws MapConnectionException, MapDataException {
-		return this.mapContext.getScale(); 
-	}
-
-	/**
-	 * Установить заданный масштаб вида карты.
-	 * @param scale масштаб
-	 * @deprecated use MapContext
-	 */
-	public void setScale(double scale)
-		throws MapConnectionException, MapDataException {
-		this.mapContext.setScale(scale);
-	}
-
-	/**
-	 * Установить масштаб вида карты с заданным коэффициентом.
-	 * @param scaleCoef коэффициент масштабирования
-	 * @deprecated use MapContext
-	 */
-	public void scaleTo(double scaleCoef)
-		throws MapConnectionException, MapDataException {
-		this.mapContext.scaleTo(scaleCoef);
-	}
-
-	/**
-	 * Приблизить вид карты со стандартным коэффициентом.
-	 * @deprecated use MapContext
-	 */
-	public void zoomIn()
-		throws MapConnectionException, MapDataException {
-		this.mapContext.zoomIn();
-	}
-
-	/**
-	 * Отдалить вид карты со стандартным коэффициентом.
-	 * @deprecated use MapContext
-	 */
-	public void zoomOut()
-		throws MapConnectionException, MapDataException {
-		this.mapContext.zoomOut();
-	}
-	
-	/**
-	 * Приблизить вид выделенного участка карты (в координатах карты)
-	 * по координатам угловых точек.
-	 * @param from географическая координата
-	 * @param to географическая координата
-	 * @deprecated use MapContext
-	 */
-	public void zoomToBox(DoublePoint from, DoublePoint to)
-		throws MapConnectionException, MapDataException {
-		this.mapContext.zoomToBox(from, to);
-	}
-
-	/**
-	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
-	 * передвинута мышь с нажатой клавишей.
-	 * @param me мышиное событие
-	 * @deprecated use netMapViewer
-	 */	
-	public void handDragged(MouseEvent me)
-		throws MapConnectionException, MapDataException {
-		this.viewer.handDragged(me);
-	}
-	
-	/**
-	 * В режиме перемещения карты "лапкой" ({@link MapState#MOVE_HAND})
-	 * передвинута мышь.
-	 * @param me мышиное событие
-	 * @deprecated use netMapViewer
-	 */	
-	public void handMoved(MouseEvent me)
-		throws MapConnectionException, MapDataException {
-		this.viewer.handMoved(me);
-	}
-
-	/**
-	 * В пустом режиме ({@link MapState#NULL_ACTION_MODE})
-	 * передвинута мышь.
-	 * @param me мышиное событие
-	 * @deprecated use netMapViewer
-	 */	
-	public void mouseMoved(MouseEvent me)
-		throws MapConnectionException, MapDataException {
-		this.viewer.mouseMoved(me);
-	}
-
 	/**
 	 * При изменении масштаба отображения карты необходимо обновить
 	 * масштаб отображения всех объектов на карте.
@@ -445,10 +207,10 @@ public class LogicalNetLayer
 		this.aContext = aContext;
 
 		if(aContext != null) {
-			this.userId = LoginManager.getUserId();
+			Identifier userId = LoginManager.getUserId();
 
-			LinkTypeController.createDefaults(this.userId);
-			NodeTypeController.createDefaults(this.userId);
+			LinkTypeController.createDefaults(userId);
+			NodeTypeController.createDefaults(userId);
 		}
 	}
 
@@ -459,26 +221,6 @@ public class LogicalNetLayer
 	public ApplicationContext getContext()
 	{
 		return this.aContext;
-	}
-
-	/**
-	 * Установить отображатель.
-	 * @param mapViewer отображатель
-	 */
-	public void setMapViewer(NetMapViewer mapViewer)
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapViewer(" + mapViewer + ")");
-		
-		this.viewer = mapViewer;
-	}
-
-	/**
-	 * Получить отображатель.
-	 * @return отображатель
-	 */
-	public NetMapViewer getMapViewer()
-	{
-		return this.viewer;
 	}
 
 	/**
@@ -521,9 +263,6 @@ public class LogicalNetLayer
 		}
 		else
 		{
-			setScale(this.mapView.getScale());
-			setCenter(this.mapView.getCenter());
-
 			if(this.aContext != null)
 				if(this.aContext.getApplicationModel() != null)
 					if (this.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
@@ -539,8 +278,6 @@ public class LogicalNetLayer
 		this.currentMapElement = VoidElement.getInstance(this.mapView);
 
 		this.commandList.flush();
-
-		repaint(true);
 	}
 
 	/**
@@ -627,7 +364,6 @@ public class LogicalNetLayer
 	/**
 	 * Получить текущую экранную точку.
 	 * @return текущая экранная точка
-	 * @deprecated use netMapViewer
 	 */
 	public Point getCurrentPoint()
 	{
@@ -637,7 +373,6 @@ public class LogicalNetLayer
 	/**
 	 * Установить текущую экранную точку.
 	 * @param point текущая экранная точка
-	 * @deprecated use netMapViewer
 	 */
 	public void setCurrentPoint(Point point)
 	{
@@ -645,26 +380,8 @@ public class LogicalNetLayer
 	}
 	
 	/**
-	 * Передать команду на отображение координат текущей точки в окне координат.
-	 * @param point экранная координата мыши
-	 * @deprecated use mapFrame
-	 */	
-	public void showLatLong(Point point)
-		throws MapConnectionException, MapDataException
-	{
-		if(this.aContext == null)
-			return;
-		Dispatcher disp = this.aContext.getDispatcher();
-		if(disp == null)
-			return;
-		DoublePoint doublePoint = this.convertScreenToMap(point);
-		disp.firePropertyChange(new MapEvent(doublePoint, MapEvent.MAP_VIEW_CENTER_CHANGED));
-	}
-
-	/**
 	 * Получить запомненную начальную экранную точку.
 	 * @return начальная экранная точка
-	 * @deprecated use netMapViewer
 	 */
 	public Point getStartPoint()
 	{
@@ -674,7 +391,6 @@ public class LogicalNetLayer
 	/**
 	 * Установить начальную экранную точку.
 	 * @param point начальная экранная точка
-	 * @deprecated use netMapViewer
 	 */
 	public void setStartPoint(Point point)
 	{
@@ -684,7 +400,6 @@ public class LogicalNetLayer
 	/**
 	 * Получить запомненную конечную экранную точку.
 	 * @return конечная экранная точка
-	 * @deprecated use netMapViewer
 	 */
 	public Point getEndPoint()
 	{
@@ -694,7 +409,6 @@ public class LogicalNetLayer
 	/**
 	 * Установить конечную экранную точку.
 	 * @param point конечная экранная точка
-	 * @deprecated use netMapViewer
 	 */
 	public void setEndPoint(Point point)
 	{
@@ -711,30 +425,10 @@ public class LogicalNetLayer
 	}
 
 	/**
-	 * Получить флаг отображения контекстного меню.
-	 * @return флаг
-	 * @deprecated use netMapViewer
-	 */
-	public boolean isMenuShown()
-	{
-		return this.menuShown;
-	}
-
-	/**
-	 * Установить флаг отображения контекстного меню.
-	 * @param isMenuShown флаг
-	 * @deprecated use netMapViewer
-	 */	
-	public void setMenuShown(boolean isMenuShown)
-	{
-		this.menuShown = isMenuShown;
-	}
-
-	/**
 	 * Отрисовать все элементы логического слоя топологической схемы.
 	 * @param g графический контекст
 	 */
-	public void paint(Graphics g)
+	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
 		Graphics2D p = (Graphics2D )g;
@@ -757,20 +451,20 @@ public class LogicalNetLayer
 //		}
 //		System.out.println("--------------------------------------");
 //		f = System.currentTimeMillis();
-		drawLines(p);
+		drawLines(p, visibleBounds);
 //		d = System.currentTimeMillis();
 //		detailedDateFormat.format(new Date(System.currentTimeMillis()))
 //		System.out.println("draw lines in " + String.valueOf(d - f) + " ms");
 //		f = System.currentTimeMillis();
-		drawNodes(p);
+		drawNodes(p, visibleBounds);
 //		d = System.currentTimeMillis();
 //		System.out.println("draw nodes in " + String.valueOf(d - f) + " ms");
 //		f = System.currentTimeMillis();
-		drawSelection(p);
+		drawSelection(p, visibleBounds);
 //		d = System.currentTimeMillis();
 //		System.out.println("draw selection in " + String.valueOf(d - f) + " ms");
 //		f = System.currentTimeMillis();
-		drawTempLines(p);
+		drawTempLines(p, visibleBounds);
 //		d = System.currentTimeMillis();
 //		System.out.println("draw temp lines in " + String.valueOf(d - f) + " ms");
 //		System.out.println("--------------------------------------");
@@ -786,21 +480,17 @@ public class LogicalNetLayer
 	 * Отрисовать линейные объекты.
 	 * @param g графический контекст
 	 */
-	public void drawLines(Graphics g)
+	public void drawLines(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
 		Iterator e;
 	
-		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
-		
 		this.elementsToDisplay.clear();
 
 		//Если режим показа nodeLink не разрешён, то включам режим показа physicalLink
 		if (! this.aContext.getApplicationModel().isEnabled(MapApplicationModel.MODE_NODE_LINK))
 		{
 			Command com = getContext().getApplicationModel().getCommand(MapApplicationModel.MODE_LINK);
-			com.setParameter("applicationModel", this.aContext.getApplicationModel());
-			com.setParameter("logicalNetLayer", this);
 			com.execute();
 		}
 
@@ -875,11 +565,9 @@ public class LogicalNetLayer
 	 * Отрисовать узлы.
 	 * @param g графический контекст
 	 */
-	public void drawNodes(Graphics g)
+	public void drawNodes(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
-		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
-
 		boolean showNodes = MapPropertiesManager.isShowPhysicalNodes();
 		Iterator e = getMapView().getMap().getNodes().iterator();
 		while (e.hasNext())
@@ -918,7 +606,7 @@ public class LogicalNetLayer
 	 *      - прямоугольник масштабирования
 	 * @param g графический контекст
 	 */
-	public void drawTempLines(Graphics g)
+	public void drawTempLines(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		Graphics2D p = ( Graphics2D )g;
 		int startX = getStartPoint().x;
@@ -968,11 +656,9 @@ public class LogicalNetLayer
 	 * Отрисовать выделенные элементы.
 	 * @param g графический контекст
 	 */
-	public void drawSelection(Graphics g)
+	public void drawSelection(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
-		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
-
 		Iterator e = getMapView().getMap().getSelectedElements().iterator();
 		while (e.hasNext())
 		{
@@ -982,478 +668,41 @@ public class LogicalNetLayer
 	}
 
 	/**
-	 * Обработка событий.
-	 * @param pce событие
-	 */
-	public void propertyChange(PropertyChangeEvent pce)
-	{
-		if(!this.performProcessing)
-			return;
-
-		try
-		{
-			if(pce.getPropertyName().equals(MapEvent.NEED_FULL_REPAINT))
-			{
-				repaint(true);
-			}
-			else
-			if(pce.getPropertyName().equals(MapEvent.NEED_REPAINT))
-			{
-				repaint(false);
-			}
-			else
-			if(pce.getPropertyName().equals(MapEvent.DESELECT_ALL))
-			{
-				this.deselectAll();
-			}
-			else
-			if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CHANGED))
-			{
-//			getMapView().setChanged(true);
-			}
-			else
-			if(pce.getPropertyName().equals(MapEvent.MAP_CHANGED))
-			{
-				Set selectedElements = getMapView().getMap().getSelectedElements();
-				if(selectedElements.size() > 1)
-				{
-					Selection sel;
-					if(! (getCurrentMapElement() instanceof Selection))
-					{
-						sel = new Selection();
-						setCurrentMapElement(sel);
-					}
-					else
-						sel = (Selection)getCurrentMapElement();
-
-					sel.clear();
-					sel.addAll(selectedElements);
-//					this.sendMapEvent(new MapEvent(sel, MapEvent.MAP_ELEMENT_SELECTED));
-				}
-				else
-				if(selectedElements.size() == 1)
-				{
-//				if(getCurrentMapElement() instanceof MapSelection)
-//				{
-						MapElement me = (MapElement)selectedElements.iterator().next();
-						setCurrentMapElement(me);
-//						this.sendMapEvent(new MapEvent(me, MapEvent.MAP_ELEMENT_SELECTED));
-//				}
-				}
-				else
-				//selectedElements.size() == 0
-				{
-//				if(getCurrentMapElement() instanceof MapSelection)
-//				{
-						setCurrentMapElement(com.syrus.AMFICOM.mapview.VoidElement.getInstance(getMapView()));
-//						this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
-//				}
-				}
-				updateZoom();
-				repaint(false);
-			}
-			else
-			if(pce.getPropertyName().equals(MapEvent.MAP_ELEMENT_CHANGED))
-			{
-				Object me = pce.getSource();
-				if(me instanceof SchemeElement)
-				{
-					getMapViewController().scanElement((SchemeElement )me);
-					getMapViewController().scanCables(((SchemeElement )me).getParentScheme());
-				}
-				else
-				if(me instanceof SchemeCableLink)
-				{
-					getMapViewController().scanCable((SchemeCableLink )me);
-					getMapViewController().scanPaths(((SchemeCableLink )me).getParentScheme());
-				}
-				else
-				if(me instanceof CablePath)
-				{
-					getMapViewController().scanCable(((CablePath)me).getSchemeCableLink());
-					getMapViewController().scanPaths(((CablePath)me).getSchemeCableLink().getParentScheme());
-				}
-				else
-				if(me instanceof SiteNode)
-				{
-					SiteNode site = (SiteNode)me;
-					SiteNodeController snc = (SiteNodeController)getMapViewController().getController(site);
-					snc.updateScaleCoefficient(site);
-				}
-
-				repaint(false);
-			}
-			else
-			if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
-			{
-				MapNavigateEvent mne = (MapNavigateEvent )pce;
-
-				//Здесь принимаюттся собитыя по создению и управлению маркером
-				if(mne.isDataMarkerCreated())
-				{
-					MeasurementPath path;
-					try
-					{
-						path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
-					}
-					catch (ApplicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-
-					if(path != null)
-					{
-						Marker marker = new Marker(
-							mne.getMarkerId(),
-							getUserId(),
-			                getMapView(),
-							mne.getDistance(),
-							path,
-							mne.getMeId(),
-							LangModelMap.getString("Marker"));
-						this.mapView.addMarker(marker);
-
-						MarkerController mc = (MarkerController)getMapViewController().getController(marker);
-						mc.moveToFromStartLo(marker, mne.getDistance());
-					}
-				}
-				else
-				if(mne.isDataEventMarkerCreated())
-				{
-					MeasurementPath path;
-					try
-					{
-						path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
-					}
-					catch (ApplicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-
-					if(path != null)
-					{
-						EventMarker marker = new EventMarker(
-							mne.getMarkerId(),
-							getUserId(),
-			                getMapView(),
-							mne.getDistance(),
-							path,
-							mne.getMeId(),
-							LangModelMap.getString("Event"));
-						this.mapView.addMarker(marker);
-
-						MarkerController mc = (MarkerController)getMapViewController().getController(marker);
-
-						mc.moveToFromStartLo(marker, mne.getDistance());
-					}
-				}
-				else
-				if(mne.isDataAlarmMarkerCreated())
-				{
-					MeasurementPath path;
-					try
-					{
-						path = getMapViewController().getMeasurementPathByMonitoredElementId(mne.getMeId());
-					}
-					catch (ApplicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-
-					AlarmMarker marker = null;
-					if(path != null)
-					{
-						for(Iterator it = this.mapView.getMarkers().iterator(); it.hasNext();)
-						{
-							try
-							{
-								marker = (AlarmMarker)it.next();
-								if(marker.getMeasurementPath().equals(path))
-									break;
-								marker = null;
-							}
-							catch(Exception ex)
-							{
-								ex.printStackTrace();
-							}
-						}
-						if(marker == null)
-						{
-							marker = new AlarmMarker(
-								mne.getMarkerId(),
-								getUserId(),
-								getMapView(),
-								mne.getDistance(),
-								path,
-								mne.getMeId(),
-								LangModelMap.getString("Alarm"));
-							this.mapView.addMarker(marker);
-						}
-						else
-						{
-							marker.setId(mne.getMarkerId());
-						}
-
-						MarkerController mc = (MarkerController)getMapViewController().getController(marker);
-
-						mc.moveToFromStartLo(marker, mne.getDistance());
-					}
-/*
-					boolean found = false;
-
-					MapPhysicalLinkElement link = 
-					getMapView().findCablePath(mne.getSchemePathElementId());
-					if(link != null)
-					{
-						link.setAlarmState(true);
-						link.select();
-					}
-					else
-					{
-						MapSiteNodeElement node = findMapElementByCableLink(mne.linkID);
-						if(node != null)
-						{
-							node.setAlarmState(true);
-							node.select();
-						}
-					}
-*/
-				}
-				else
-				if(mne.isDataMarkerMoved())
-				{
-					Marker marker = this.mapView.getMarker(mne.getMarkerId());
-					if(marker != null)
-					{
-						final MeasurementPath measurementPath = marker.getMeasurementPath();
-						if (measurementPath.getSchemePath() == null)
-							measurementPath.setSchemePath((SchemePath) mne.getSchemePath());
-
-						MarkerController mc = (MarkerController)getMapViewController().getController(marker);
-
-						mc.moveToFromStartLo(marker, mne.getDistance());
-					}
-				}
-				else
-				if(mne.isDataMarkerSelected())
-				{
-					Marker marker = this.mapView.getMarker(mne.getMarkerId());
-					if(marker != null)
-						this.mapView.getMap().setSelected(marker, true);
-				}
-				else
-				if(mne.isDataMarkerDeselected())
-				{
-					Marker marker = this.mapView.getMarker(mne.getMarkerId());
-					if(marker != null)
-						this.mapView.getMap().setSelected(marker, false);
-				}
-				else
-				if(mne.isDataMarkerDeleted())
-				{
-					Marker marker = this.mapView.getMarker(mne.getMarkerId());
-					if(marker != null)
-						this.mapView.removeMarker(marker);
-					if(marker instanceof AlarmMarker)
-					{
-/*
-						AlarmMarker amarker = (AlarmMarker)marker;
-						MapPhysicalLinkElement link = findMapLinkByCableLink(marker.link_id);
-						if(link != null)
-						{
-							link.setAlarmState(false);
-							link.deselect();
-						}
-						else
-						{
-							MapSiteNodeElement node = findMapElementByCableLink(marker.link_id);
-							if(node != null)
-							{
-								node.setAlarmState(false);
-								node.deselect();
-							}
-						}
-*/
-					}
-				}
-				else
-				if(mne.isMapElementSelected())
-				{
-					if(this.performProcessing)
-					{
-						MapElement me = (MapElement)mne.getSource();
-						if(me != null)
-							this.mapView.getMap().setSelected(me, true);
-					}
-				}
-				else
-				if(mne.isMapElementDeselected())
-				{
-					if(this.performProcessing)
-					{
-						MapElement me = (MapElement)mne.getSource();
-						if(me != null)
-							this.mapView.getMap().setSelected(me, false);
-					}
-				}
-
-				repaint(false);
-			}
-//			else
-//			if(pce.getPropertyName().equals(TreeDataSelectionEvent.type))
-//			{
-//				TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)pce;
-//
-//				List data = tdse.getList();
-//				int n = tdse.getSelectionNumber();
-//
-//				if (n != -1)
-//				{
-//					try 
-//					{
-//						MapElement me = (MapElement)data.get(n);
-//						this.mapView.getMap().setSelected(me, true);
-//						repaint(false);
-//					} 
-//					catch (Exception ex) 
-//					{
-//						ex.printStackTrace();
-//					} 
-//				}
-//			}
-//			else
-//			if(pce.getPropertyName().equals(TreeListSelectionEvent.typ))
-//			{
-//				if(pce.getSource() instanceof MapElement)
-//				{
-//					MapElement me = (MapElement)pce.getSource();
-//					this.mapView.getMap().setSelected(me, true);
-//					repaint(false);
-//				} 
-//			}
-
-			else
-			if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE))
-			{
-				if(this.performProcessing)
-				{
-					ObjectSelectedEvent selectEvent = (ObjectSelectedEvent )pce;
-					if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT))
-					{
-						SchemeElement schemeElement = (SchemeElement )selectEvent.getSelectedObject();
-
-						SiteNode site = this.mapView.findElement(schemeElement);
-						if(site != null)
-							this.mapView.getMap().setSelected(site, true);
-					}
-					else
-					if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_PATH))
-					{
-						SchemePath schemePath = (SchemePath )selectEvent.getSelectedObject();
-						
-						MeasurementPath measurementPath = this.mapView.findMeasurementPath(schemePath);
-						if(measurementPath != null)
-							this.mapView.getMap().setSelected(measurementPath, true);
-					}
-					else
-					if(selectEvent.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK))
-					{
-						SchemeCableLink schemeCableLink = (SchemeCableLink )selectEvent.getSelectedObject();
-						CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
-						if(cablePath != null)
-							this.mapView.getMap().setSelected(cablePath, true);
-					}
-/*
-					else
-					if(sne.SCHEME_ELEMENT_DESELECTED)
-					{
-						SchemeElement[] ses = (SchemeElement[] )sne.getSource();
-
-						for(int i = 0; i < ses.length; i++)
-						{
-							SiteNode site = this.mapView.findElement(ses[i]);
-							if(site != null)
-								this.mapView.getMap().setSelected(site, false);
-						}
-					}
-
-					if(sne.SCHEME_PATH_DESELECTED)
-					{
-						SchemePath[] sps = (SchemePath[] )sne.getSource();
-
-						for(int i = 0; i < sps.length; i++)
-						{
-							MeasurementPath measurementPath = this.mapView.findMeasurementPath(sps[i]);
-							if(measurementPath != null)
-								this.mapView.getMap().setSelected(measurementPath, false);
-						}
-					}
-
-					if(sne.SCHEME_CABLE_LINK_DESELECTED)
-					{
-						SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
-						for(int i = 0; i < scs.length; i++)
-						{
-							CablePath cablePath = this.mapView.findCablePath(scs[i]);
-							if(cablePath != null)
-								this.mapView.getMap().setSelected(cablePath, false);
-						}
-					}
-*/
-					repaint(false);
-				}
-			}
-		}
-		catch(MapConnectionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(MapDataException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Отправить событие карты. Чтобы не отправить событие себе самому, 
 	 * используется флаг {@link #performProcessing}
-	 * @param me событие карты
-	 * @deprecated use netMapViewer
 	 */
-	public void sendMapEvent(MapEvent me)
+	public void sendMapEvent(String eventString)
 	{
 		if(getContext() != null)
 			if(getContext().getDispatcher() != null)
 		{
-			this.performProcessing = false;
-			getContext().getDispatcher().firePropertyChange(me);
-			this.performProcessing = true;
+			getContext().getDispatcher().firePropertyChange(new MapEvent(this, eventString));
 		}
 	}
 
 	/**
 	 * Генерация сообщеия о выборке элемента карты.
-	 * @param mapElement выбранный элемент карты
-	 * @deprecated use netMapViewer
+	 * @param selectedElement выбранный элемент карты
 	 */
-	public void notifyMapEvent(MapElement mapElement)
+	public void sendMapSelectedEvent(MapElement selectedElement)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifyMapEvent(" + mapElement + ")");
-
-		if(this.doNotify)
+		if(getContext() != null)
+			if(getContext().getDispatcher() != null)
 		{
-			Dispatcher disp = getContext().getDispatcher();
-			if(disp != null)
-			{
-				this.performProcessing = false;
-				disp.firePropertyChange(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-				this.performProcessing = true;
-			}
+			getContext().getDispatcher().firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT, selectedElement));
+		}
+	}
+
+	/**
+	 * Генерация сообщеия о развыборке элемента карты.
+	 * @param deselectedElement развыбранный элемент карты
+	 */
+	public void sendMapDeselectedEvent(MapElement deselectedElement)
+	{
+		if(getContext() != null)
+			if(getContext().getDispatcher() != null)
+		{
+			getContext().getDispatcher().firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT, deselectedElement));
 		}
 	}
 
@@ -1530,7 +779,6 @@ public class LogicalNetLayer
 	 * Получить текущий фиксированный элемент.
 	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
 	 * @return текущий фиксированный элемент
-	 * @deprecated use netMapViewer
 	 */
 	public AbstractNode getFixedNode()
 	{
@@ -1541,7 +789,6 @@ public class LogicalNetLayer
 	 * Получить Список узлов, соседних (через фрагменты) с фиксированным узлом.
 	 * Используется в режиме {@link MapState#MOVE_FIXDIST}.
 	 * @return список элементов. 
-	 * @deprecated use netMapViewer
 	 */
 	public List getFixedNodeList()
 	{
@@ -1595,7 +842,7 @@ public class LogicalNetLayer
 			return;
 		if(! (curMapElement instanceof Selection))
 			this.mapView.getMap().setSelected(curMapElement, true);
-		notifyMapEvent(this.currentMapElement);
+		sendMapSelectedEvent(this.currentMapElement);
 		notifySchemeEvent(this.currentMapElement);
 	}
 
@@ -1604,7 +851,7 @@ public class LogicalNetLayer
 	 * @param point экранная координата
 	 * @return элемент в точке
 	 */
-	public MapElement getMapElementAtPoint(Point point)
+	public MapElement getMapElementAtPoint(Point point, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapElementAtPoint(" + point + ")");
@@ -1612,8 +859,6 @@ public class LogicalNetLayer
 		int showMode = getMapState().getShowMode();
 		MapElement curME = VoidElement.getInstance(this.getMapView());
 
-		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
-		
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
 		Iterator e = this.mapView.getAllElements().iterator();
@@ -1706,7 +951,7 @@ public class LogicalNetLayer
 			MapElement mapElement = (MapElement )it.next();
 			mapElement.setSelected(false);
 			
-			sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));			
+			sendMapDeselectedEvent(mapElement);			
 		}
 		this.mapView.getMap().clearSelection();
 	}
@@ -1814,7 +1059,6 @@ public class LogicalNetLayer
 		command.setLogicalNetLayer(this);
 		this.commandList.add(command);
 		this.commandList.execute();
-		repaint(false);
 	}
 
 	/**
@@ -1824,8 +1068,7 @@ public class LogicalNetLayer
 		throws MapConnectionException, MapDataException
 	{
 		this.commandList.undo();
-		repaint(false);
-		sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 	
 	/**
@@ -1835,8 +1078,7 @@ public class LogicalNetLayer
 		throws MapConnectionException, MapDataException
 	{
 		this.commandList.redo();
-		repaint(false);
-		sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 	
 	/**
@@ -1890,19 +1132,14 @@ public class LogicalNetLayer
 	 */
 	public MapViewController getMapViewController()
 	{
-		return MapViewController.getInstance(this);
+		return this.mapViewController;
 	}
 
-	/**
-	 * Получить идентификатор пользователя, от чьего имени создаются
-	 * новые объекты.
-	 * @return идентификатор пользователя
-	 * @deprecated use LoginManager.getUserId()
-	 */
-	public Identifier getUserId()
+	public void setMapViewController(MapViewController mapViewController )
 	{
-		return this.userId;
+		this.mapViewController = mapViewController ;
 	}
+
 	/**
 	 * @return Returns the converter.
 	 */

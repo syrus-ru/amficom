@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.18 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.19 2005/06/16 10:57:19 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -8,12 +8,12 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * вставить сетевой узел вместо топологического узла
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -142,7 +142,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 
 					cablePath.addLink(
 							this.newLink, 
-							CableController.generateCCI(cablePath, this.newLink, this.logicalNetLayer.getUserId()));
+							CableController.generateCCI(cablePath, this.newLink, LoginManager.getUserId()));
 					if(this.newLink instanceof UnboundLink)
 						((UnboundLink )this.newLink).setCablePath(cablePath);
 					else
@@ -151,12 +151,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 			}
 			super.registerStateChange(this.link, pls, this.link.getState());
 			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(
-					this,
-					MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					this.site,
-					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			this.logicalNetLayer.notifySchemeEvent(this.site);
 		} catch(Throwable e) {

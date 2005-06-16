@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.12 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.13 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,13 +24,14 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {
@@ -55,6 +56,10 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 * вхождения центра элемента в видимую область.
 	 */
 	protected static Rectangle searchBounds = new Rectangle();
+
+	public AbstractNodeController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
+	}
 
 	/**
 	 * Получить размер пиктограммы поумолчанию.
@@ -94,8 +99,8 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 		}
 		AbstractNode node = (AbstractNode )mapElement;
 
-		double scaleCoefficient = getLogicalNetLayer().getDefaultScale() 
-				/ getLogicalNetLayer().getCurrentScale();
+		double scaleCoefficient = this.logicalNetLayer.getDefaultScale() 
+				/ this.logicalNetLayer.getCurrentScale();
 
 		int w = (int )(getDefaultBounds().getWidth() * scaleCoefficient);
 		int h = (int )(getDefaultBounds().getHeight() * scaleCoefficient);
@@ -198,7 +203,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 			return;
 		}
 
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		Point p = converter.convertMapToScreen(node.getLocation());
 
@@ -245,7 +250,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 
 		AbstractNode node = (AbstractNode )mapElement;
 
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		//Проверка того что курсор находиться в прямоугольнике
 		int width = (int )getBounds(node).getWidth();

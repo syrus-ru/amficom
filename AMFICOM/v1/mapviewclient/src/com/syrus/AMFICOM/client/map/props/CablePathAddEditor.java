@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -501,7 +502,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(this.cablePath);
-			this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
+			this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, LoginManager.getUserId()));
 			link.getBinding().remove(this.cablePath);
 		}
 		this.model.setValues(this.cablePath.getLinks());
@@ -519,7 +520,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
-		this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, this.logicalNetLayer.getUserId()));
+		this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, LoginManager.getUserId()));
 		unbound.setCablePath(this.cablePath);
 
 		this.model.fireTableDataChanged();
@@ -562,7 +563,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					nl.setEndNode(link.getOtherNode(fromSite));
 			}
 		}
-		this.cablePath.addLink(link, CableController.generateCCI(this.cablePath, link, this.logicalNetLayer.getUserId()));
+		this.cablePath.addLink(link, CableController.generateCCI(this.cablePath, link, LoginManager.getUserId()));
 		link.getBinding().add(this.cablePath);
 	}
 

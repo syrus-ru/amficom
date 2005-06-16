@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.28 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.29 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -103,7 +103,7 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Private constructor.
 	 */
 	private LinkTypeController() {
-		// empty
+		super(null);
 	}
 
 	/**

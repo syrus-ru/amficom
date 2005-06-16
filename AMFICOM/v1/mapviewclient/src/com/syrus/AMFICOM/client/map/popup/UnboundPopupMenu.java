@@ -66,12 +66,12 @@ public class UnboundPopupMenu extends MapPopupMenu {
 
 	void removeUnbound() {
 		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(this.unbound);
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,12 +86,12 @@ public class UnboundPopupMenu extends MapPopupMenu {
 		if(site != null) {
 			BindUnboundNodeToSiteCommandBundle command = 
 				new BindUnboundNodeToSiteCommandBundle(this.unbound, site);
-			command.setLogicalNetLayer(this.logicalNetLayer);
-			this.logicalNetLayer.getCommandList().add(command);
-			this.logicalNetLayer.getCommandList().execute();
+			command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
 			try {
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

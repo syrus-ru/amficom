@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.15 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.16 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,12 +13,12 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class CreateSiteCommandAtomic extends MapActionCommand
@@ -91,13 +91,13 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 				return;
 			if(this.coordinatePoint == null)
-				this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
+				this.coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			// создать новый узел
 			try
 			{
 				this.site = SiteNode.createInstance(
-						this.logicalNetLayer.getUserId(),
+						LoginManager.getUserId(),
 						this.coordinatePoint,
 						this.proto);
 			}
@@ -109,10 +109,7 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 			snc.updateScaleCoefficient(this.site);
 			this.map.addNode(this.site);
 			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-						this.site, 
-						MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			this.logicalNetLayer.notifySchemeEvent(this.site);
 			setResult(Command.RESULT_OK);

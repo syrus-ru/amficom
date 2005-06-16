@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageRenderer.java,v 1.4 2005/06/14 14:23:35 peskovsky Exp $
+ * $Id: MapImageRenderer.java,v 1.5 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,8 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/14 14:23:35 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.5 $, $Date: 2005/06/16 10:57:19 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public interface MapImageRenderer {
@@ -33,5 +33,7 @@ public interface MapImageRenderer {
 	 * @param point 
 	 * @return Ближайший центр
 	 */
-	public DoublePoint getNearestCenter(DoublePoint point);
+	DoublePoint getNearestCenter(DoublePoint point);
+
+	MapImageLoader getLoader();
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MoveToCenterCommand.java,v 1.10 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MoveToCenterCommand.java,v 1.11 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,26 +13,29 @@ import java.awt.Cursor;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 
 /**
  * Командавключения/выключения режима центрирования по точке 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class MoveToCenterCommand extends MapNavigateCommand {
-	public MoveToCenterCommand(LogicalNetLayer logicalNetLayer) {
-		super(logicalNetLayer);
+	public MoveToCenterCommand(ApplicationModel aModel, NetMapViewer netMapViewer) {
+		super(aModel, netMapViewer);
 	}
 
 	public void execute() {
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		if(this.aModel.isSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER)) {
-			this.logicalNetLayer.getMapState().setActionMode(
+			logicalNetLayer.getMapState().setActionMode(
 					MapState.NULL_ACTION_MODE);
-			this.logicalNetLayer.getMapState().setOperationMode(
+			logicalNetLayer.getMapState().setOperationMode(
 					MapState.NO_OPERATION);
-			this.logicalNetLayer.setCursor(Cursor.getDefaultCursor());
+			this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 
 			this.aModel.setSelected(
 					MapApplicationModel.OPERATION_MOVE_TO_CENTER,
@@ -63,9 +66,9 @@ public class MoveToCenterCommand extends MapNavigateCommand {
 						false);
 				this.aModel.fireModelChanged();
 
-				this.logicalNetLayer.getMapState().setOperationMode(
+				logicalNetLayer.getMapState().setOperationMode(
 						MapState.MOVE_TO_CENTER);
-				this.logicalNetLayer.setCursor(Cursor
+				this.netMapViewer.setCursor(Cursor
 						.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			}
 	}

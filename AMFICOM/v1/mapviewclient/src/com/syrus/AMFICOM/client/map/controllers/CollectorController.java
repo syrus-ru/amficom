@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.8 2005/06/06 12:20:32 krupenn Exp $
+ * $Id: CollectorController.java,v 1.9 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -26,20 +27,20 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 /**
  * Контроллер коллектора.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/06 12:20:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class CollectorController extends AbstractLinkController {
 	/**
 	 * Instance.
 	 */
-	private static CollectorController instance = null;
+//	private static CollectorController instance = null;
 	
 	/**
 	 * Private constructor.
 	 */
-	private CollectorController() {
-		// empty
+	private CollectorController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -47,10 +48,12 @@ public final class CollectorController extends AbstractLinkController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new CollectorController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new CollectorController(netMapViewer);
 	}
 
 	/**
@@ -87,7 +90,7 @@ public final class CollectorController extends AbstractLinkController {
 		boolean vis = false;
 		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)getLogicalNetLayer().getMapViewController().getController(link);
+			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
 			if(plc.isElementVisible(link, visibleBounds)) {
 				vis = true;
 				break;
@@ -124,7 +127,7 @@ public final class CollectorController extends AbstractLinkController {
 
 		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)getLogicalNetLayer().getMapViewController().getController(link);
+			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
 			plc.paint(link, g, visibleBounds, str, color, false);
 		}
 	}

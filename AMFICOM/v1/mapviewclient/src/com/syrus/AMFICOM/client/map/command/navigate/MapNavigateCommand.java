@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateCommand.java,v 1.3 2005/06/06 12:20:31 krupenn Exp $ 
+ * $Id: MapNavigateCommand.java,v 1.4 2005/06/16 10:57:20 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный 
@@ -8,35 +8,26 @@
 
 package com.syrus.AMFICOM.client.map.command.navigate;
 
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
-public class MapNavigateCommand extends AbstractCommand {
-	LogicalNetLayer logicalNetLayer;
+public abstract class MapNavigateCommand extends AbstractCommand {
 
-	ApplicationModel aModel;
+	protected ApplicationModel aModel;
 
 	protected Throwable exception = null;
 
-	public MapNavigateCommand(LogicalNetLayer logicalNetLayer) {
-		this.logicalNetLayer = logicalNetLayer;
-	}
+	protected NetMapViewer netMapViewer;
 
-	public void setParameter(String field, Object value) {
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationModel"))
-			this.aModel = (ApplicationModel )value;
-	}
-
-	protected LogicalNetLayer getLogicalNetLayer() {
-		return this.logicalNetLayer;
+	public MapNavigateCommand(ApplicationModel aModel, NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.aModel = aModel;
 	}
 
 	public Throwable getException() {

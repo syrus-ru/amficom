@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.10 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: ShowNodesCommand.java,v 1.11 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,24 +13,25 @@ import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 
 /**
  * Команда включения/выключения режима отображения топологических узлов на карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class ShowNodesCommand extends MapNavigateCommand {
 	AbstractButton button;
 
-	public ShowNodesCommand(LogicalNetLayer logicalNetLayer) {
-		super(logicalNetLayer);
+	public ShowNodesCommand(ApplicationModel aModel, NetMapViewer netMapViewer) {
+		super(aModel, netMapViewer);
 	}
 
 	public void setParameter(String field, Object value) {
@@ -59,7 +60,7 @@ public class ShowNodesCommand extends MapNavigateCommand {
 				MapPropertiesManager.isShowPhysicalNodes());
 		this.aModel.fireModelChanged();
 		try {
-			this.logicalNetLayer.repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);

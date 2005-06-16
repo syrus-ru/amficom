@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.7 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.8 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
@@ -27,7 +28,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер непривязанного узела (элемент схемы).
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class UnboundNodeController extends SiteNodeController
@@ -35,13 +36,13 @@ public class UnboundNodeController extends SiteNodeController
 	/**
 	 * Instace.
 	 */
-	private static UnboundNodeController instance = null;
+//	private static UnboundNodeController instance = null;
 	
 	/**
 	 * Private constructor.
 	 */
-	private UnboundNodeController() {
-		// empty
+	private UnboundNodeController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 	
 	/**
@@ -49,10 +50,12 @@ public class UnboundNodeController extends SiteNodeController
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new UnboundNodeController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new UnboundNodeController(netMapViewer);
 	}
 
 	/**
@@ -72,7 +75,7 @@ public class UnboundNodeController extends SiteNodeController
 		
 		super.paint(unbound, g, visibleBounds);
 		
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 		
 		Point p = converter.convertMapToScreen(unbound.getLocation());
 

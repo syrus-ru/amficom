@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.22 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.23 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -70,7 +70,7 @@ public class NodeTypeController extends AbstractNodeController {
 	 * Private constructor.
 	 */
 	protected NodeTypeController() {
-		// empty
+		super(null);
 	}
 
 	/**

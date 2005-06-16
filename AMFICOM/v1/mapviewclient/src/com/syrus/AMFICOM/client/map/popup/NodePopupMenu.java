@@ -64,7 +64,7 @@ public final class NodePopupMenu extends MapPopupMenu {
 //		getLogicalNetLayer().getCommandList().execute();
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -80,7 +80,7 @@ public final class NodePopupMenu extends MapPopupMenu {
 			super.insertSiteInPlaceOfANode(this.node, proto);
 
 			try {
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.21 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.22 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
  *  Уже существующая привязка сохраняется. По непривязанным элементам 
  *  генерируются сетевые узла и схемные элементы привязываются к ним.
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -118,13 +119,13 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 						mnle.setPhysicalLink(link);
 						link.addNodeLink(mnle);
 					}
-					this.path.addLink(link, CableController.generateCCI(this.path, link, this.logicalNetLayer.getUserId()));
+					this.path.addLink(link, CableController.generateCCI(this.path, link, LoginManager.getUserId()));
 					link.getBinding().add(this.path);
 				}
 
 				startsite = endsite;
 			}
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);

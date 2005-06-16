@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.17 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.18 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController {
@@ -68,13 +69,13 @@ public class TopologicalNodeController extends AbstractNodeController {
 	/**
 	 * Instace.
 	 */
-	private static TopologicalNodeController instance = null;
+//	private static TopologicalNodeController instance = null;
 
 	/**
 	 * Private constructor.
 	 */
-	private TopologicalNodeController() {
-		// empty
+	private TopologicalNodeController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -82,10 +83,12 @@ public class TopologicalNodeController extends AbstractNodeController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new TopologicalNodeController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new TopologicalNodeController(netMapViewer);
 	}
 
 	/**
@@ -203,7 +206,7 @@ public class TopologicalNodeController extends AbstractNodeController {
 		super.paint(node, g, visibleBounds);
 
 		if(node.isCanBind()) {
-			MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+			MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 			
 			Point p = converter.convertMapToScreen(node.getLocation());
 	

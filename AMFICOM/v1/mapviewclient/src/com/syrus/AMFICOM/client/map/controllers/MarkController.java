@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.12 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: MarkController.java,v 1.13 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер метки.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class MarkController extends AbstractNodeController {
@@ -47,13 +48,13 @@ public final class MarkController extends AbstractNodeController {
 	/**
 	 * Instance.
 	 */
-	private static MarkController instance = null;
+//	private static MarkController instance = null;
 
 	/**
 	 * Private constructor.
 	 */
-	private MarkController() {
-		// empty
+	private MarkController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -61,10 +62,12 @@ public final class MarkController extends AbstractNodeController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new MarkController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new MarkController(netMapViewer);
 	}
 
 	/**
@@ -102,7 +105,7 @@ public final class MarkController extends AbstractNodeController {
 		
 		super.paint(mapElement, g, visibleBounds);
 
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		Point p = converter.convertMapToScreen( mark.getLocation());
 
@@ -144,7 +147,7 @@ public final class MarkController extends AbstractNodeController {
 	 */
 	public void updateSizeInDoubleLt(Mark mark)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 		
 		mark.getPhysicalLink().sortNodes();
 		
@@ -169,7 +172,7 @@ public final class MarkController extends AbstractNodeController {
 	 */
 	public void moveToFromStartLt(Mark mark, double topologicalDistance)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		mark.getPhysicalLink().sortNodeLinks();
 		
@@ -185,7 +188,7 @@ public final class MarkController extends AbstractNodeController {
 		
 		for(Iterator it = mark.getPhysicalLink().getNodeLinks().iterator(); it.hasNext();) {
 			mark.setNodeLink((NodeLink )it.next());
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mark.getNodeLink());
+			NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer.getMapViewController().getController(mark.getNodeLink());
 			nlc.updateLengthLt(mark.getNodeLink());
 			if(cumulativeDistance + mark.getNodeLink().getLengthLt() > topologicalDistance) {
 				double distanceFromStart = topologicalDistance - cumulativeDistance;
@@ -212,7 +215,7 @@ public final class MarkController extends AbstractNodeController {
 	 */
 	public void adjustPosition(Mark mark, double screenDistance)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		Point sp = converter.convertMapToScreen(mark.getStartNode().getLocation());
 	

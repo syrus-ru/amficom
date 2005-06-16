@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapStrategy.java,v 1.3 2005/06/06 12:20:34 krupenn Exp $
+ * $Id: AbstractMapStrategy.java,v 1.4 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.MapElement;
@@ -30,7 +31,7 @@ import javax.swing.SwingUtilities;
  * или изменением состояния мыши и клавиатуры.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:34 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/16 10:57:21 $
  * @module mapviewclient_v1
  */
 abstract class AbstractMapStrategy implements MapStrategy
@@ -39,6 +40,8 @@ abstract class AbstractMapStrategy implements MapStrategy
 	 * логический слой.
 	 */
 	protected LogicalNetLayer logicalNetLayer;
+
+	protected NetMapViewer netMapViewer;
 	/**
 	 * контекст приложения.
 	 */
@@ -52,10 +55,11 @@ abstract class AbstractMapStrategy implements MapStrategy
 	/**
 	 * @inheritDoc
 	 */
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
+	public void setNetMapViewer(NetMapViewer netMapViewer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = netMapViewer.getLogicalNetLayer();
+		this.aContext = this.logicalNetLayer.getContext();
 	}
 
 	/**

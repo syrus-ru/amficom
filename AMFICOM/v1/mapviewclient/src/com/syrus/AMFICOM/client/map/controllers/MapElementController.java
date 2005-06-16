@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementController.java,v 1.7 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapElementController.java,v 1.8 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,20 +9,20 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.map.MapElement;
-
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Интерфейс контроллера элемента карты. Позволяет управлять отображением
  * элементов карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public interface MapElementController 
@@ -31,13 +31,14 @@ public interface MapElementController
 	 * Установить логический слой .
 	 * @param lnl логический слой
 	 */
-	void setLogicalNetLayer(LogicalNetLayer lnl);
-	
+//	void setLogicalNetLayer(LogicalNetLayer lnl);
+	void setNetMapViewer(NetMapViewer netMapViewer);
+
 	/**
 	 * Получить логический слой.
 	 * @return логический слой
 	 */
-	LogicalNetLayer getLogicalNetLayer();
+//	LogicalNetLayer getLogicalNetLayer();
 
 	/**
 	 * Отрисовать элемент. При отрисовке необходимо производить проверку 

@@ -57,8 +57,8 @@ public final class SitePopupMenu extends MapPopupMenu {
 
 	void showProperties() {
 		super.showProperties(this.site);
-		getLogicalNetLayer().sendMapEvent(
-				new MapEvent(this.site, MapEvent.MAP_ELEMENT_CHANGED));
+		this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
+				new MapEvent(this.netMapViewer.getLogicalNetLayer(), MapEvent.MAP_ELEMENT_CHANGED, this.site));
 	}
 
 	void removeSite() {
@@ -69,7 +69,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 		// getLogicalNetLayer().getCommandList().execute();
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

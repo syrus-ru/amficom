@@ -37,7 +37,7 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 	public void setElement(Object me) {
 		this.path = (MeasurementPath )me;
 
-		this.addMarkerMenuItem.setVisible(getLogicalNetLayer().getContext()
+		this.addMarkerMenuItem.setVisible(this.netMapViewer.getLogicalNetLayer().getContext()
 				.getApplicationModel().isEnabled(
 						MapApplicationModel.ACTION_USE_MARKER));
 	}
@@ -68,12 +68,11 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 		CreateMarkerCommandAtomic command = new CreateMarkerCommandAtomic(
 				this.path,
 				this.point);
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
-		try {
-			getLogicalNetLayer().repaint(false);
+		try {this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

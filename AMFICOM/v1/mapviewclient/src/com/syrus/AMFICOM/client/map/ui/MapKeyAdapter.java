@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.6 2005/06/06 12:20:35 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.7 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -23,17 +24,17 @@ import java.awt.event.KeyEvent;
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * @version $Revision: 1.6 $, $Date: 2005/06/06 12:20:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapKeyAdapter extends KeyAdapter 
 {
-	LogicalNetLayer logicalNetLayer;
+	private final NetMapViewer viewer;
 
-	public MapKeyAdapter(LogicalNetLayer adaptee)
+	public MapKeyAdapter(NetMapViewer viewer)
 	{
-		this.logicalNetLayer = adaptee;
+		this.viewer = viewer;
 	}
 
 	public void keyPressed(KeyEvent ke)
@@ -42,7 +43,7 @@ public final class MapKeyAdapter extends KeyAdapter
 
 		if (ke.isAltDown())
 		{
-			this.logicalNetLayer.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
+			this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
 		}
 
 //		if (ke.isShiftDown() && ke.isControlDown())
@@ -53,26 +54,29 @@ public final class MapKeyAdapter extends KeyAdapter
 //		{
 			if (ke.isShiftDown())
 			{
-				this.logicalNetLayer.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
+				this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
 			}
 			if(ke.isControlDown())
 			{
-				this.logicalNetLayer.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
+				this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
 			}
 //		}
 
 		try {
 			if (code == KeyEvent.VK_DELETE)
 			{
-				this.logicalNetLayer.delete();
+				this.viewer.getLogicalNetLayer().delete();
+				this.viewer.repaint(false);
 			}
 			if(ke.isControlDown() && code == KeyEvent.VK_Z)
 			{
-				this.logicalNetLayer.undo();
+				this.viewer.getLogicalNetLayer().undo();
+				this.viewer.repaint(false);
 			}
 			if(ke.isControlDown() && code == KeyEvent.VK_Y)
 			{
-				this.logicalNetLayer.redo();
+				this.viewer.getLogicalNetLayer().redo();
+				this.viewer.repaint(false);
 			}
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
@@ -85,7 +89,7 @@ public final class MapKeyAdapter extends KeyAdapter
 
 	public void keyReleased(KeyEvent ke)
 	{
-		this.logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
+		this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 	}
 
 	public void keyTyped(KeyEvent ke)

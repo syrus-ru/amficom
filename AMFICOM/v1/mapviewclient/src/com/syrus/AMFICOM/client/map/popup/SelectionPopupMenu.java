@@ -117,12 +117,12 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 
 	void removeSelection() {
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,7 +141,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 			}
 
 			try {
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -200,7 +200,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 			super.addLinksToCollector(collector, this.selection.getElements());
 
 			try {
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -209,8 +209,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				e.printStackTrace();
 			}
 
-			getLogicalNetLayer().sendMapEvent(
-					new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
@@ -220,7 +219,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 			super.addLinksToCollector(collector, this.selection.getElements());
 
 			try {
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -229,8 +228,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				e.printStackTrace();
 			}
 
-			getLogicalNetLayer().sendMapEvent(
-					new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
@@ -238,14 +236,14 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
 			Collector collector = 
-				this.logicalNetLayer.getMapView().getMap().getCollector(link);
+				this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(link);
 			if(collector != null) {
 				super.removeLinkFromCollector(collector, link);
 			}
 		}
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -254,15 +252,14 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 			e.printStackTrace();
 		}
 
-		getLogicalNetLayer().sendMapEvent(
-				new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void removeCollector() {
 		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
 			Collector collector = 
-				this.logicalNetLayer.getMapView().getMap().getCollector(link);
+				this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(link);
 			if(collector != null) {
 				super.removeLinksFromCollector(collector, collector
 						.getPhysicalLinks());
@@ -271,7 +268,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		}
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -280,8 +277,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 			e.printStackTrace();
 		}
 
-		getLogicalNetLayer().sendMapEvent(
-				new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 }

@@ -48,11 +48,11 @@ public final class MarkerPopupMenu extends MapPopupMenu {
 	void removeMark() {
 		super.removeMapElement(this.marker);
 		
-		MarkerController markerController = (MarkerController)getLogicalNetLayer().getMapViewController().getController(this.marker);
+		MarkerController markerController = (MarkerController)this.netMapViewer.getLogicalNetLayer().getMapViewController().getController(this.marker);
 		markerController.notifyMarkerDeleted(this.marker);
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

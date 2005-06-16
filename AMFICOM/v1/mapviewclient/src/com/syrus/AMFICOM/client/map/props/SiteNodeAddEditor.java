@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -238,7 +239,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(cablePath);
 
-			cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, this.logicalNetLayer.getUserId()));
+			cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, LoginManager.getUserId()));
 		}
 		
 		this.elementsTree.updateUI();

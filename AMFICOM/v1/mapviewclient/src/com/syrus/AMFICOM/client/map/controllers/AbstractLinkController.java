@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.22 2005/06/07 07:32:41 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.23 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.ui.LineComboBox;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -23,6 +24,7 @@ import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -36,7 +38,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/07 07:32:41 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -51,6 +53,10 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thickness";
 	/** Кодовое имя атрибута "Цвет при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color";
+
+	public AbstractLinkController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
+	}
 
 	/**
 	 * Определить, видна ли рамка выделения элемента карты.
@@ -134,13 +140,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public void setLineSize(MapElement mapElement, int size) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_THICKNESS);
 		Characteristic attribute = getCharacteristic(mapElement, cType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
-						getLogicalNetLayer().getUserId(),
+						LoginManager.getUserId(),
 						cType,
 						"name",
 						"1",
@@ -175,7 +181,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public int getLineSize(MapElement mapElement) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_THICKNESS);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea == null) {
@@ -193,13 +199,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public void setStyle(MapElement mapElement, String style) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_STYLE);
 		Characteristic attribute = getCharacteristic(mapElement, cType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
-						getLogicalNetLayer().getUserId(),
+						LoginManager.getUserId(),
 						cType,
 						"name",
 						"1",
@@ -234,7 +240,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public String getStyle(MapElement mapElement) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_STYLE);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea == null) {
@@ -253,7 +259,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public Stroke getStroke(MapElement mapElement) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_STYLE);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea == null) {
@@ -271,13 +277,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public void setColor(MapElement mapElement, Color color) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_COLOR);
 		Characteristic attribute = getCharacteristic(mapElement, cType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
-						getLogicalNetLayer().getUserId(),
+						LoginManager.getUserId(),
 						cType,
 						"name",
 						"1",
@@ -312,7 +318,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public Color getColor(MapElement mapElement) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_COLOR);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea == null) {
@@ -330,13 +336,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public void setAlarmedColor(MapElement mapElement, Color color) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
 		Characteristic attribute = getCharacteristic(mapElement, cType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
-						getLogicalNetLayer().getUserId(),
+						LoginManager.getUserId(),
 						cType,
 						"name",
 						"1",
@@ -371,7 +377,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public Color getAlarmedColor(MapElement mapElement) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(), 
+				LoginManager.getUserId(), 
 				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea == null) {
@@ -389,13 +395,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public void setAlarmedLineSize(MapElement mapElement, int size) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(),
+				LoginManager.getUserId(),
 				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
 		Characteristic attribute = getCharacteristic(mapElement, cType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
-						getLogicalNetLayer().getUserId(),
+						LoginManager.getUserId(),
 						cType,
 						"name",
 						"1",
@@ -430,7 +436,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 */
 	public int getAlarmedLineSize(MapElement mapElement) {
 		CharacteristicType cType = getCharacteristicType(
-				getLogicalNetLayer().getUserId(),
+				LoginManager.getUserId(),
 				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
 		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea == null) {

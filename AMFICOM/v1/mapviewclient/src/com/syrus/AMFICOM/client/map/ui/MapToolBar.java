@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.24 2005/06/06 12:57:03 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.25 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,11 +36,12 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.24 $, $Date: 2005/06/06 12:57:03 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -75,37 +76,20 @@ public final class MapToolBar extends JPanel
 	private static Dimension buttonSize = new Dimension(24, 24);
 
 	public NodeSizePanel nodeSizePanel;
+
+	NetMapViewer netMapViewer;
 	
 //	private MapPenBarPanel penp;
 
-	private LogicalNetLayer logicalNetLayer;
-
-	public MapToolBar(LogicalNetLayer logicalNetLayer)
-	{
-		this();
-		setLogicalNetLayer(logicalNetLayer);
-	}
-	
-	public MapToolBar()
+	public MapToolBar(NetMapViewer netMapViewer)
 	{
 		super();
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.nodeSizePanel.setLogicalNetLayer(logicalNetLayer);
+		this.netMapViewer = netMapViewer;
+		jbInit();
+		this.nodeSizePanel.setLogicalNetLayer(netMapViewer.getLogicalNetLayer());
 //		penp.setLogicalNetLayer(logicalNetLayer);
 	}
-
+	
 	private void jbInit()
 	{
 		MapToolBarActionAdapter actionAdapter =
@@ -236,7 +220,7 @@ public final class MapToolBar extends JPanel
 					mod.setModal(true);
 					mod.setVisible(true);
 					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
-						getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
+						MapToolBar.this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.NEED_REPAINT);
 				}
 			}); 
 		this.optionsButton.setToolTipText(LangModelMap.getString("Options"));
@@ -256,7 +240,7 @@ public final class MapToolBar extends JPanel
 					mod.setModal(true);
 					mod.setVisible(true);
 					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
-						getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
+						MapToolBar.this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.NEED_REPAINT);
 				}
 			}); 
 		this.layersButton.setToolTipText(LangModelMap.getString("Layers"));
@@ -278,7 +262,7 @@ public final class MapToolBar extends JPanel
 					JDialog dialog = new JDialog(
 							Environment.getActiveWindow(),
 							true);
-					Image image = getLogicalNetLayer().getMapViewer().getMapShot();
+					Image image = MapToolBar.this.netMapViewer.getMapShot();
 //					JPanel panel = new JPanel();
 					JLabel label = new JLabel(new ImageIcon(image));
 //					panel.add(label);
@@ -291,7 +275,7 @@ public final class MapToolBar extends JPanel
 				}
 			});
 	
-		this.nodeSizePanel = new NodeSizePanel(this.logicalNetLayer);
+		this.nodeSizePanel = new NodeSizePanel(this.netMapViewer.getLogicalNetLayer());
 //		this.penp = new MapPenBarPanel(this.logicalNetLayer);
 
 		this.setBorder(BorderFactory.createEtchedBorder());
@@ -359,36 +343,6 @@ public final class MapToolBar extends JPanel
 	public void setModel(ApplicationModel a)
 	{
 		this.aModel = a;
-
-		this.aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("applicationModel", this.aModel);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("applicationModel", this.aModel);
-
-		this.aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("logicalNetLayer", this.logicalNetLayer);
-		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("logicalNetLayer", this.logicalNetLayer);
 
 		Command command = this.aModel.getCommand(MapApplicationModel.MODE_NODES);
 		command.setParameter("button", this.showNodesButton);
@@ -473,16 +427,9 @@ public final class MapToolBar extends JPanel
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = this.aModel.getCommand(s);
-		command.setParameter("applicationModel", this.aModel);
-		command.setParameter("logicalNetLayer", getLogicalNetLayer());
 		command.execute();
 	}
 	
-	public LogicalNetLayer getLogicalNetLayer()
-	{
-		return this.logicalNetLayer;
-	}
-
 	private class MapToolBarActionAdapter implements java.awt.event.ActionListener
 	{
 		MapToolBar adaptee;

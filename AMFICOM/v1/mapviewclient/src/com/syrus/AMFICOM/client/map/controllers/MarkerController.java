@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.24 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: MarkerController.java,v 1.25 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController {
@@ -65,13 +66,13 @@ public class MarkerController extends AbstractNodeController {
 	/**
 	 * Instance.
 	 */
-	private static MarkerController instance = null;
+//	private static MarkerController instance = null;
 
 	/**
 	 * Private constructor.
 	 */
-	protected MarkerController() {
-		// empty
+	protected MarkerController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -79,10 +80,12 @@ public class MarkerController extends AbstractNodeController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new MarkerController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new MarkerController(netMapViewer);
 	}
 
 	/**
@@ -137,7 +140,7 @@ public class MarkerController extends AbstractNodeController {
 		DoublePoint from = marker.getStartNode().getLocation();
 		DoublePoint to = marker.getLocation();
 
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 		return converter.distance(from, to);
 	}
 
@@ -152,7 +155,7 @@ public class MarkerController extends AbstractNodeController {
 		DoublePoint from = marker.getEndNode().getLocation();
 		DoublePoint to = marker.getLocation();
 
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 		return converter.distance(from, to);
 	}
 
@@ -225,7 +228,7 @@ public class MarkerController extends AbstractNodeController {
 //	public void moveToFromStartLt(MapMarker marker, double distance)
 //	{
 /*
-		LogicalNetLayer lnl = getLogicalNetLayer();
+		LogicalNetLayer lnl = this.logicalNetLayer;
 		if ( lnl.mapMainFrame
 				.aContext.getApplicationModel().isEnabled(
 					MapApplicationModel.ACTION_USE_MARKER))
@@ -344,7 +347,7 @@ public class MarkerController extends AbstractNodeController {
 		double localDistance = 0.0;
 		
 		MeasurementPathController pathController = (MeasurementPathController )
-			getLogicalNetLayer().getMapViewController().getController(measurementPath);
+			this.logicalNetLayer.getMapViewController().getController(measurementPath);
 
 		SortedSet pathElements = measurementPath.getSchemePath().getPathElements();
 		for(Iterator iterator = pathElements.iterator(); iterator.hasNext();) {
@@ -409,7 +412,7 @@ public class MarkerController extends AbstractNodeController {
 	 */
 	public void setRelativeToCablePath(Marker marker, double physicalDistance)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		CablePath cablePath = marker.getCablePath();
 
@@ -455,7 +458,7 @@ public class MarkerController extends AbstractNodeController {
 	 */
 	public void adjustPosition(Marker marker, double screenDistance)
 			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = getLogicalNetLayer().getConverter();
+		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		Point sp = converter.convertMapToScreen(marker.getStartNode().getLocation());
 	
@@ -624,7 +627,7 @@ public class MarkerController extends AbstractNodeController {
 	 * @param marker маркер
 	 */
 	public void notifyMarkerCreated(Marker marker) {
-		getLogicalNetLayer().sendMapEvent(
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(
 			new MapNavigateEvent(
 				this,
 				MapNavigateEvent.MAP_MARKER_CREATED_EVENT,
@@ -639,7 +642,7 @@ public class MarkerController extends AbstractNodeController {
 	 * @param marker маркер
 	 */
 	public void notifyMarkerDeleted(Marker marker) {
-		getLogicalNetLayer().sendMapEvent(
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(
 			new MapNavigateEvent(
 				this,
 				MapNavigateEvent.MAP_MARKER_DELETED_EVENT,
@@ -654,7 +657,7 @@ public class MarkerController extends AbstractNodeController {
 	 * @param marker маркер
 	 */
 	public void notifyMarkerMoved(Marker marker) {
-		getLogicalNetLayer().sendMapEvent(
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(
 			new MapNavigateEvent(
 				this,
 				MapNavigateEvent.MAP_MARKER_MOVED_EVENT,

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.42 2005/06/14 11:32:11 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.43 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import javax.swing.JPopupMenu;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
@@ -58,20 +59,16 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/06/14 11:32:11 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/16 10:57:21 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {
-	protected LogicalNetLayer logicalNetLayer;
 
 	protected Point point;
+	protected NetMapViewer netMapViewer;
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
-		this.logicalNetLayer = logicalNetLayer;
-	}
-
-	public LogicalNetLayer getLogicalNetLayer() {
-		return this.logicalNetLayer;
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
 	}
 
 	public void setPoint(Point point) {
@@ -94,7 +91,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 // MapElementState mes2 = me.getState();
 //			if(! mes.equals(mes2))
 			{
-				Dispatcher disp = this.logicalNetLayer.getContext().getDispatcher();
+				Dispatcher disp = this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher();
 				if(disp != null)
 					disp.firePropertyChange(new MapEvent(this, MapEvent.MAP_CHANGED));
 			}
@@ -105,7 +102,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	public abstract void setElement(Object me);
 
 	protected Collector selectCollector() {
-		Collection list = this.logicalNetLayer.getMapView().getMap().getAllCollectors();
+		Collection list = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getAllCollectors();
 		return (Collector )WrapperedComboChooserDialog.showChooserDialog(list);
 	}
 	
@@ -123,7 +120,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		SiteNode site = null;
 
 		List list = new LinkedList();
-		for(Iterator it = getLogicalNetLayer().getMapView().getMap()
+		for(Iterator it = this.netMapViewer.getLogicalNetLayer().getMapView().getMap()
 				.getAllSiteNodes().iterator(); it.hasNext();) {
 			SiteNode s = (SiteNode)it.next();
 			if(!( s instanceof UnboundNode))
@@ -134,7 +131,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	}
 
 	protected PhysicalLink selectPhysicalLinkAt(UnboundLink unbound) {
-		Map map = this.logicalNetLayer.getMapView().getMap();
+		Map map = this.netMapViewer.getLogicalNetLayer().getMapView().getMap();
 		
 		PhysicalLink link = null;
 		
@@ -162,9 +159,9 @@ public abstract class MapPopupMenu extends JPopupMenu {
 				"Коллектор1");
 		if(inputValue != null) {
 			CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic(inputValue);
-			command.setLogicalNetLayer(this.logicalNetLayer);
-			getLogicalNetLayer().getCommandList().add(command);
-			getLogicalNetLayer().getCommandList().execute();
+			command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 			
 			return command.getCollector();
 		}
@@ -183,7 +180,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	protected void addLinkToCollector(Collector collector, PhysicalLink mple) {
 		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_COLLECTOR);
 
-		Collector prevCollector = this.logicalNetLayer.getMapView().getMap().getCollector(mple);
+		Collector prevCollector = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(mple);
 		if(prevCollector != null)
 			prevCollector.removePhysicalLink(mple);
 	
@@ -193,9 +190,9 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		mple.setType(collectorType);
 
 		MapElementStateChangeCommand command2 = new MapElementStateChangeCommand(mple, state, mple.getState());
-		command2.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command2);
-		getLogicalNetLayer().getCommandList().execute();
+		command2.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command2);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 	}
 
 	protected void removeLinksFromCollector(Collector collector, Set links) {
@@ -216,9 +213,9 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		mple.setType(LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL));
 
 		MapElementStateChangeCommand command = new MapElementStateChangeCommand(mple, state, mple.getState());
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 		
 		if(collector.getPhysicalLinks().size() == 0)
 			removeCollector(collector);
@@ -226,25 +223,25 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	
 	protected void removeCollector(Collector collector) {
 		RemoveCollectorCommandAtomic command = new RemoveCollectorCommandAtomic(collector);
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 	}
 
 	protected void removeMapElement(MapElement me) {
-		getLogicalNetLayer().deselectAll();
-		getLogicalNetLayer().getMapView().getMap().setSelected(me, true);
+		this.netMapViewer.getLogicalNetLayer().deselectAll();
+		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().setSelected(me, true);
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 	}
 
 	protected void insertSiteInPlaceOfANode(TopologicalNode node, SiteNodeType proto) {
 		InsertSiteCommandBundle command = new InsertSiteCommandBundle(node, proto);
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 	}
 
 	protected void convertUnboundNodeToSite(UnboundNode unbound, SiteNodeType proto) {
@@ -252,19 +249,19 @@ public abstract class MapPopupMenu extends JPopupMenu {
 			return;
 
 		CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, unbound.getLocation());
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 		
 		SiteNode site = command.getSite();
 
 		BindUnboundNodeToSiteCommandBundle command2 = new BindUnboundNodeToSiteCommandBundle(unbound, site);
-		command2.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command2);
-		getLogicalNetLayer().getCommandList().execute();
+		command2.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command2);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 		
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -277,12 +274,12 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	protected void generatePathCabling(CablePath path, SiteNodeType proto) {
 		GenerateCablePathCablingCommandBundle command = 
 				new GenerateCablePathCablingCommandBundle(path, proto);
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -295,12 +292,12 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	protected void convertUnboundLinkToPhysicalLink(UnboundLink unbound) {
 		GenerateUnboundLinkCablingCommandBundle command = 
 				new GenerateUnboundLinkCablingCommandBundle(unbound);
-		command.setLogicalNetLayer(this.logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.46 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: MapFrame.java,v 1.47 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.client.map.command.navigate.ZoomBoxCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ZoomInCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ZoomOutCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ZoomToPointCommand;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
@@ -81,7 +82,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.46 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.47 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -169,20 +170,12 @@ public class MapFrame extends JInternalFrame
 				renderer);
 
 		this.mapViewer.init();
+		
+		logicalNetLayer.setMapViewController(MapViewController.createInstance(this.mapViewer));
 
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		jbInit();
 
 		initModule();
-
-		this.mapToolBar.setLogicalNetLayer(this.mapViewer.getLogicalNetLayer());
-		this.mapStatusbar.setLogicalNetLayer(this.mapViewer.getLogicalNetLayer());		
 	}
 	
 	/**
@@ -216,8 +209,8 @@ public class MapFrame extends JInternalFrame
 		// компонент в себе
 		mapVisualComponent = this.mapViewer.getVisualComponent();
 
-		this.mapToolBar = new MapToolBar();
-		this.mapStatusbar = new MapStatusBar();
+		this.mapToolBar = new MapToolBar(this.mapViewer);
+		this.mapStatusbar = new MapStatusBar(this.mapViewer);
 		this.mapElementsPanel = new MapElementsBarPanel();
 		
 //		mapPanel.setLayout(new BorderLayout());
@@ -259,20 +252,20 @@ public class MapFrame extends JInternalFrame
 
 	public void setCommands(ApplicationModel aModel)
 	{
-		aModel.setCommand(MapApplicationModel.OPERATION_CENTER_SELECTION, new CenterSelectionCommand(null));
-		aModel.setCommand(MapApplicationModel.MODE_NODE_LINK, new MapModeCommand(null, MapApplicationModel.MODE_NODE_LINK, MapState.SHOW_NODE_LINK));
-		aModel.setCommand(MapApplicationModel.MODE_LINK, new MapModeCommand(null, MapApplicationModel.MODE_LINK, MapState.SHOW_PHYSICAL_LINK));
-		aModel.setCommand(MapApplicationModel.MODE_CABLE_PATH, new MapModeCommand(null, MapApplicationModel.MODE_CABLE_PATH, MapState.SHOW_CABLE_PATH));
-		aModel.setCommand(MapApplicationModel.MODE_PATH, new MapModeCommand(null, MapApplicationModel.MODE_PATH, MapState.SHOW_MEASUREMENT_PATH));
-		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_IN, new ZoomInCommand(null));
-		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_OUT, new ZoomOutCommand(null));
-		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT, new ZoomToPointCommand(null));
-		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_BOX, new ZoomBoxCommand(null));
-		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER, new MoveToCenterCommand(null));
-		aModel.setCommand(MapApplicationModel.MODE_NODES, new ShowNodesCommand(null));
-		aModel.setCommand(MapApplicationModel.OPERATION_HAND_PAN, new HandPanCommand(null));
-		aModel.setCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE, new MeasureDistanceCommand(null));
-		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_FIXED, new MoveFixedCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_CENTER_SELECTION, new CenterSelectionCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.MODE_NODE_LINK, new MapModeCommand(aModel, this.mapViewer, MapApplicationModel.MODE_NODE_LINK, MapState.SHOW_NODE_LINK));
+		aModel.setCommand(MapApplicationModel.MODE_LINK, new MapModeCommand(aModel, this.mapViewer, MapApplicationModel.MODE_LINK, MapState.SHOW_PHYSICAL_LINK));
+		aModel.setCommand(MapApplicationModel.MODE_CABLE_PATH, new MapModeCommand(aModel, this.mapViewer, MapApplicationModel.MODE_CABLE_PATH, MapState.SHOW_CABLE_PATH));
+		aModel.setCommand(MapApplicationModel.MODE_PATH, new MapModeCommand(aModel, this.mapViewer, MapApplicationModel.MODE_PATH, MapState.SHOW_MEASUREMENT_PATH));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_IN, new ZoomInCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_OUT, new ZoomOutCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT, new ZoomToPointCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_BOX, new ZoomBoxCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER, new MoveToCenterCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.MODE_NODES, new ShowNodesCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.OPERATION_HAND_PAN, new HandPanCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE, new MeasureDistanceCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_FIXED, new MoveFixedCommand(aModel, this.mapViewer));
 
 		aModel.fireModelChanged();
 	}
@@ -396,7 +389,7 @@ public class MapFrame extends JInternalFrame
 		}
 		else
 		{
-			getMapViewer().getLogicalNetLayer().propertyChange(pce);
+			getMapViewer().propertyChange(pce);
 		}
 	}
 
@@ -404,6 +397,12 @@ public class MapFrame extends JInternalFrame
 		throws MapConnectionException, MapDataException
 	{
 		getMapViewer().getLogicalNetLayer().setMapView(mapView);
+		if(mapView != null) {
+			this.mapViewer.getMapContext().setScale(mapView.getScale());
+			this.mapViewer.getMapContext().setCenter(mapView.getCenter());
+
+		}
+		this.mapViewer.repaint(true);
 	}
 
 	 void setMap( Map map)

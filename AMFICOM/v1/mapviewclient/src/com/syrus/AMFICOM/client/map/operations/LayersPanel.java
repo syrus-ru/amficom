@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.8 2005/06/06 12:57:02 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.9 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.8 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -189,7 +189,7 @@ public class LayersPanel extends JPanel
 			Component imageLabel = null;
 		
 			int i = 0;
-			for(Iterator it = this.mapFrame.getMapViewer().getLayers().iterator(); it.hasNext();) {
+			for(Iterator it = this.mapFrame.getMapViewer().getMapContext().getLayers().iterator(); it.hasNext();) {
 				SpatialLayer sl = (SpatialLayer )it.next();
 				
 				LayerVisibilityCheckBox lvCheckBox = new LayerVisibilityCheckBox(sl);

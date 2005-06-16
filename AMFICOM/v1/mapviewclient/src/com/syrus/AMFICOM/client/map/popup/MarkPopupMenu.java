@@ -48,7 +48,7 @@ public final class MarkPopupMenu extends MapPopupMenu {
 		super.removeMapElement(this.mark);
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

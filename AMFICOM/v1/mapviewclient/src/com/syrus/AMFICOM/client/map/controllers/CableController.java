@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.21 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: CableController.java,v 1.22 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -42,20 +43,20 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController {
 	/**
 	 * Instance.
 	 */
-	private static CableController instance = null;
+//	private static CableController instance = null;
 
 	/**
 	 * Private constructor.
 	 */
-	private CableController() {
-		// empty
+	private CableController(NetMapViewer netMapViewer) {
+		super(netMapViewer);
 	}
 
 	/**
@@ -63,10 +64,12 @@ public final class CableController extends AbstractLinkController {
 	 * 
 	 * @return instance
 	 */
-	public static MapElementController getInstance() {
-		if(instance == null)
-			instance = new CableController();
-		return instance;
+//	public static MapElementController getInstance() {
+//		return instance;
+//	}
+
+	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+		return new CableController(netMapViewer);
 	}
 
 	/**
@@ -80,9 +83,9 @@ public final class CableController extends AbstractLinkController {
 
 		boolean isv = cpath.isSelected();
 		if(!isv) {
-			for(Iterator it = getLogicalNetLayer().getMapView().getMeasurementPaths(cpath).iterator(); it.hasNext();) {
+			for(Iterator it = this.logicalNetLayer.getMapView().getMeasurementPaths(cpath).iterator(); it.hasNext();) {
 				MeasurementPath mp = (MeasurementPath )it.next();
-				MeasurementPathController mpc = (MeasurementPathController )getLogicalNetLayer().getMapViewController().getController(mp);
+				MeasurementPathController mpc = (MeasurementPathController )this.logicalNetLayer.getMapViewController().getController(mp);
 				if(mpc.isSelectionVisible(mp)) {
 					isv = true;
 					break;
@@ -107,7 +110,7 @@ public final class CableController extends AbstractLinkController {
 		boolean vis = false;
 		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
-			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);
+			PhysicalLinkController plc = (PhysicalLinkController )this.logicalNetLayer.getMapViewController().getController(link);
 			if(plc.isElementVisible(link, visibleBounds)) {
 				vis = true;
 				break;
@@ -213,7 +216,7 @@ public final class CableController extends AbstractLinkController {
 
 		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink)it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)getLogicalNetLayer().getMapViewController().getController(link);
+			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
 			plc.paint(link, g, visibleBounds, stroke, color, selectionVisible);
 		}
 	}
@@ -232,7 +235,7 @@ public final class CableController extends AbstractLinkController {
 
 		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink)it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)getLogicalNetLayer().getMapViewController().getController(link);
+			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
 			if(plc.isMouseOnElement(link, currentMousePoint))
 				return true;
 		}
@@ -308,10 +311,10 @@ public final class CableController extends AbstractLinkController {
 		cpath.sortNodeLinks();
 		for(Iterator it = cpath.getSortedNodeLinks().iterator(); it.hasNext();) {
 			NodeLink mnle = (NodeLink)it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
+			NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer.getMapViewController().getController(mnle);
 			if(nlc.isMouseOnElement(mnle, pt)) {
-				DoublePoint dpoint = getLogicalNetLayer().convertScreenToMap(pt);
-				distance += getLogicalNetLayer().distance(dpoint, node.getLocation());
+				DoublePoint dpoint = this.logicalNetLayer.getConverter().convertScreenToMap(pt);
+				distance += this.logicalNetLayer.getConverter().distance(dpoint, node.getLocation());
 				break;
 			}
 

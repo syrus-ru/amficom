@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.22 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.23 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,24 +11,23 @@
 
 package com.syrus.AMFICOM.client.map.strategy;
 
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
+import java.awt.Point;
+
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
-import java.awt.Point;
-
 /**
  * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:21 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends AbstractMapStrategy 
@@ -81,7 +80,7 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 		int actionMode = mapState.getActionMode();
 		Map map = super.logicalNetLayer.getMapView().getMap(); 
 
-		MapElement mapElement = super.logicalNetLayer.getMapElementAtPoint(point);
+		MapElement mapElement = super.logicalNetLayer.getMapElementAtPoint(point, super.netMapViewer.getVisibleBounds());
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
 			if (!(mapElement instanceof VoidElement))
@@ -91,7 +90,7 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 					map.setSelected(mapElement, false);
 					this.selection.remove(mapElement);
 					
-					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+					super.logicalNetLayer.sendMapDeselectedEvent(mapElement);
 					
 					if (this.selection.getElements().size() == 0)
 					{
@@ -107,7 +106,7 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 					map.setSelected(mapElement, true);
 					this.selection.add(mapElement);
 					
-					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+					super.logicalNetLayer.sendMapSelectedEvent(mapElement);
 				}// ! mel.isSelected()
 			}// ! mel instanceof VoidElement
 		}//MapState.SELECT_ACTION_MODE

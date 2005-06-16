@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.16 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.17 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * убрать кабельный путь с привязкой из карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -63,7 +63,7 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			super.removeCablePathLinks(this.cablePath);
 			super.removeCablePath(this.cablePath);
 			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);

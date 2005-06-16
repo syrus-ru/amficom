@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
@@ -38,6 +39,8 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 	private JTextField distanceTextField = new JTextField();
 
 	Marker marker;
+
+	private LogicalNetLayer logicalNetLayer;
 
 	public MarkerEditor() {
 		try {
@@ -107,7 +110,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 			this.distanceTextField.setText("");
 		}
 		else {
-			MarkerController markerController = (MarkerController)MarkerController.getInstance();
+			MarkerController markerController = (MarkerController )this.logicalNetLayer.getMapViewController().getController(this.marker);
 
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.marker.getName());
@@ -134,12 +137,16 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 	public void commitChanges() {
 		try {
 			double distance = Double.parseDouble(this.distanceTextField.getText());
-			MarkerController markerController = (MarkerController )MarkerController.getInstance();
+			MarkerController markerController = (MarkerController )this.logicalNetLayer.getMapViewController().getController(this.marker);
 			markerController.moveToFromStartLf(this.marker, distance);
 		} catch(NumberFormatException ex) {
 			System.out.println(ex.getMessage());
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
+		this.logicalNetLayer = logicalNetLayer;
 	}
 }

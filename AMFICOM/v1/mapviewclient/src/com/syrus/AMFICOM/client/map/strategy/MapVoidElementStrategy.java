@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.27 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.28 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,11 @@
 
 package com.syrus.AMFICOM.client.map.strategy;
 
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.Iterator;
+import java.util.Set;
+
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
@@ -24,16 +28,10 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/16 10:57:21 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -149,12 +147,12 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 		while (e.hasNext())
 		{
 			AbstractNode node = (AbstractNode)e.next();
-			Point p = super.logicalNetLayer.convertMapToScreen(node.getLocation());
+			Point p = super.logicalNetLayer.getConverter().convertMapToScreen(node.getLocation());
 
 			if (selectionRect.contains(p))
 			{
 				this.map.setSelected(node, true);
-				super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(node, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+				super.logicalNetLayer.sendMapSelectedEvent(node);
 			}
 			else
 			{
@@ -172,14 +170,14 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 				NodeLink nodeLink = (NodeLink)e.next();
 				if (
 					selectionRect.contains(
-						super.logicalNetLayer.convertMapToScreen(
+						super.logicalNetLayer.getConverter().convertMapToScreen(
 							nodeLink.getStartNode().getLocation())) 
 					&& selectionRect.contains(
-						super.logicalNetLayer.convertMapToScreen(
+						super.logicalNetLayer.getConverter().convertMapToScreen(
 							nodeLink.getEndNode().getLocation())))
 				{
 					this.map.setSelected(nodeLink, true);
-					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(nodeLink, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));					
+					super.logicalNetLayer.sendMapSelectedEvent(nodeLink);					
 				}
 				else
 				{
@@ -199,10 +197,10 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 					NodeLink nodeLink = (NodeLink)it2.next();
 					if (! (
 						selectionRect.contains(
-							super.logicalNetLayer.convertMapToScreen(
+							super.logicalNetLayer.getConverter().convertMapToScreen(
 								nodeLink.getStartNode().getLocation())) 
 						&& selectionRect.contains(
-							super.logicalNetLayer.convertMapToScreen(
+							super.logicalNetLayer.getConverter().convertMapToScreen(
 								nodeLink.getEndNode().getLocation()))))
 					{ 
 						select = false;
@@ -210,7 +208,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 				}
 				this.map.setSelected(link, select);
 				if (select)
-					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(link, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));				
+					super.logicalNetLayer.sendMapSelectedEvent(link);				
 			}
 		}
 		

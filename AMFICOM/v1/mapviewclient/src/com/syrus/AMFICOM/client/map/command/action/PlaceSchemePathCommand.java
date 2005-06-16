@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.25 2005/06/14 10:53:43 bass Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.26 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,7 +14,6 @@ import java.awt.Point;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.Map;
@@ -35,8 +34,8 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * –азместить элемент типа mpe на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/06/14 10:53:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -118,10 +117,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 				}
 			}
 			// операци€ закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					this.measurementPath, 
-					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.measurementPath);
 			this.logicalNetLayer.notifySchemeEvent(this.measurementPath);
 		} catch(Throwable e) {

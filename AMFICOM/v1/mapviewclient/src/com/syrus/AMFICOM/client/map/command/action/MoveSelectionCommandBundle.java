@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.12 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.13 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.Mark;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
@@ -130,8 +130,8 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	protected void setShift()
 	{
 		try {
-			DoublePoint sp = this.logicalNetLayer.convertScreenToMap(this.startPoint);
-			DoublePoint ep = this.logicalNetLayer.convertScreenToMap(this.endPoint);
+			DoublePoint sp = this.logicalNetLayer.getConverter().convertScreenToMap(this.startPoint);
+			DoublePoint ep = this.logicalNetLayer.getConverter().convertScreenToMap(this.endPoint);
 			this.deltaX = ep.getX() - sp.getX();
 			this.deltaY = ep.getY() - sp.getY();
 		} catch(MapConnectionException e) {
@@ -171,6 +171,6 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	public void execute()
 	{
 		super.execute();
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 }

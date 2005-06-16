@@ -48,7 +48,7 @@ public final class NodeLinkPopupMenu extends MapPopupMenu {
 		super.removeMapElement(this.link);
 
 		try {
-			getLogicalNetLayer().repaint(false);
+			this.netMapViewer.repaint(false);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

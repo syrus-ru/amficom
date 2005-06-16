@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
@@ -298,7 +299,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		cablePath.addLink(unbound, CableController.generateCCI(
 				cablePath,
 				unbound,
-				this.logicalNetLayer.getUserId()));
+				LoginManager.getUserId()));
 		this.physicalLink.getBinding().remove(cablePath);
 
 		((WrapperedListModel )this.cableList.getModel()).removeElement(cablePath);

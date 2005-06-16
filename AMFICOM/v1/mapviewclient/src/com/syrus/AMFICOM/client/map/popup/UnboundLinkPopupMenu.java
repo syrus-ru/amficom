@@ -64,12 +64,12 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 			BindUnboundLinkToPhysicalLinkCommandBundle command = new BindUnboundLinkToPhysicalLinkCommandBundle(
 					this.unbound,
 					link);
-			command.setLogicalNetLayer(this.logicalNetLayer);
-			this.logicalNetLayer.getCommandList().add(command);
-			this.logicalNetLayer.getCommandList().execute();
+			command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
 			try {
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

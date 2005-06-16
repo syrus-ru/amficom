@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.7 2005/06/06 12:57:03 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.8 2005/06/16 10:57:21 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,17 +22,17 @@ import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:57:03 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/16 10:57:21 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel {
-	LogicalNetLayer logicalNetLayer;
 
 	private JLabel latitudeLabel = new JLabel();
 	JTextField latitudeTextField = new JTextField();
@@ -42,23 +42,16 @@ public final class MapStatusBar extends JPanel {
 	JTextField scaleField = new JTextField();
 
 	private static Dimension fieldSize = new Dimension(120, 24);
+	private final NetMapViewer netMapViewer;
 
-	public MapStatusBar(LogicalNetLayer logicalNetLayer) {
-		this();
-		setLogicalNetLayer(logicalNetLayer);
-	}
-
-	public MapStatusBar() {
+	public MapStatusBar(NetMapViewer netMapViewer) {
 		super();
+		this.netMapViewer = netMapViewer;
 		try {
 			jbInit();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
-		this.logicalNetLayer = logicalNetLayer;
 	}
 
 	public void showLatLong(double latitude, double longitude) {
@@ -117,8 +110,8 @@ public final class MapStatusBar extends JPanel {
 						double scale = Double.parseDouble(
 								MapStatusBar.this.scaleField.getText());
 						if(scale > 0) {
-							MapStatusBar.this.logicalNetLayer.setScale(scale);
-							MapStatusBar.this.logicalNetLayer.repaint(true);
+							MapStatusBar.this.netMapViewer.getMapContext().setScale(scale);
+							MapStatusBar.this.netMapViewer.repaint(true);
 						}
 					} catch(Exception ex) {
 						System.out.println("Wring number format");
@@ -135,9 +128,9 @@ public final class MapStatusBar extends JPanel {
 							MapStatusBar.this.longitudeField.getText());
 						double lat = Double.parseDouble(
 							MapStatusBar.this.latitudeTextField.getText());
-						MapStatusBar.this.logicalNetLayer.setCenter(
+						MapStatusBar.this.netMapViewer.getMapContext().setCenter(
 							new DoublePoint(lon, lat));
-						MapStatusBar.this.logicalNetLayer.repaint(true);
+						MapStatusBar.this.netMapViewer.repaint(true);
 					} catch(Exception ex) {
 						System.out.println(ex.getMessage());
 					}

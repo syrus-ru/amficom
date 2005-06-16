@@ -62,11 +62,11 @@ public class VoidElementPopupMenu extends MapPopupMenu {
 	}
 
 	void showMapProperties() {
-		super.showProperties(getLogicalNetLayer().getMapView().getMap());
+		super.showProperties(this.netMapViewer.getLogicalNetLayer().getMapView().getMap());
 	}
 
 	void showMapViewProperties() {
-		super.showProperties(getLogicalNetLayer().getMapView());
+		super.showProperties(this.netMapViewer.getLogicalNetLayer().getMapView());
 	}
 
 	void addSite() {
@@ -75,12 +75,12 @@ public class VoidElementPopupMenu extends MapPopupMenu {
 		if(proto != null) {
 			CreateSiteCommandAtomic command = 
 				new CreateSiteCommandAtomic(proto, this.point);
-			command.setLogicalNetLayer(this.logicalNetLayer);
-			getLogicalNetLayer().getCommandList().add(command);
-			getLogicalNetLayer().getCommandList().execute();
+			command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
 			try {
-				getLogicalNetLayer().repaint(false);
+				this.netMapViewer.repaint(false);
 			} catch(MapConnectionException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapStrategy.java,v 1.10 2005/06/06 12:20:34 krupenn Exp $
+ * $Id: MapStrategy.java,v 1.11 2005/06/16 10:57:21 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -9,13 +9,13 @@ package com.syrus.AMFICOM.client.map.strategy;
 
 import java.awt.event.MouseEvent;
 
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:20:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:21 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -29,9 +29,9 @@ public interface MapStrategy {
 	/**
 	 * ”становить ссылку на логический слой, на котором выполн€ютс€
 	 * действи€ стратегии.
-	 * @param logicalNetLayer логический слой
+	 * @param netMapViewer логический слой
 	 */
-	public abstract void setLogicalNetLayer(LogicalNetLayer logicalNetLayer);
+	public abstract void setNetMapViewer(NetMapViewer netMapViewer);
 
 	/**
 	 * ѕрименить стратегию действий к элементу карты.

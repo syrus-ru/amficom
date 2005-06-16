@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.18 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.19 2005/06/16 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,14 +15,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.controllers.MeasurementPathController;
 import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
  *  оманда создани€ метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/16 10:57:19 $
  * @module mapviewclient_v1
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand
@@ -82,6 +83,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 			if ( !getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 				return;
+			MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 			this.mapView = this.logicalNetLayer.getMapView();
 			AbstractNode node = this.path.getStartNode();
 			this.path.sortPathElements();
@@ -95,12 +97,12 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 
 				if(nlc.isMouseOnElement(mnle, this.point))
 				{
-					DoublePoint dpoint = this.logicalNetLayer.convertScreenToMap(this.point);
+					DoublePoint dpoint = converter.convertScreenToMap(this.point);
 
 					try
 					{
 						this.marker = Marker.createInstance(
-								this.logicalNetLayer.getUserId(),
+								LoginManager.getUserId(),
 								this.mapView, 
 								node,
 								mnle.getOtherNode(node),
@@ -130,10 +132,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 				node = mnle.getOtherNode(node);
 			}
 			// операци€ закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-						this.marker,
-						MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.marker);
 			setResult(Command.RESULT_OK);
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.27 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapViewController.java,v 1.28 2005/06/16 10:57:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemePathCommand;
@@ -60,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/16 10:57:20 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -109,10 +110,10 @@ public final class MapViewController {
 	}
 
 	/** Хэш-таблица контроллеров элементов карты. */
-	private static java.util.Map ctlMap = new HashMap();
+	private java.util.Map ctlMap = new HashMap();
 	
 	/** Instance. */
-	private static MapViewController instance = null;
+//	private static MapViewController instance = null;
 	
 	/** Ссылка на логический слой, на котором отображается вид. */
 	protected LogicalNetLayer logicalNetLayer = null;
@@ -120,50 +121,72 @@ public final class MapViewController {
 	/** Хранимый объект. */
 	private MapView mapView;
 
+	private NetMapViewer netMapViewer;
+
 	/**
 	 * Приветный конструктор. Использовать 
-	 * {@link MapViewController#getInstance(LogicalNetLayer)}.
-	 * @param logicalNetLayer логический слой
+	 * {@link MapViewController#getInstance()}.
+	 * @param netMapViewer логический слой
 	 */
-	private MapViewController(LogicalNetLayer logicalNetLayer) {
-		this.logicalNetLayer = logicalNetLayer;
+	private MapViewController(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+
+		this.ctlMap.put(TopologicalNode.class,
+			TopologicalNodeController.createInstance(netMapViewer));
+		this.ctlMap.put(SiteNode.class,
+			SiteNodeController.createInstance(netMapViewer));
+		this.ctlMap.put(NodeLink.class,
+			NodeLinkController.createInstance(netMapViewer));
+		this.ctlMap.put(PhysicalLink.class,
+			PhysicalLinkController.createInstance(netMapViewer));
+		this.ctlMap.put(Mark.class,
+			MarkController.createInstance(netMapViewer));
+		this.ctlMap.put(Collector.class,
+			CollectorController.createInstance(netMapViewer));
+
+		this.ctlMap.put(CablePath.class,
+			CableController.createInstance(netMapViewer));
+		this.ctlMap.put(MeasurementPath.class,
+			MeasurementPathController.createInstance(netMapViewer));
+		this.ctlMap.put(UnboundNode.class,
+			UnboundNodeController.createInstance(netMapViewer));
+		this.ctlMap.put(UnboundLink.class,
+			UnboundLinkController.createInstance(netMapViewer));
+		this.ctlMap.put(Marker.class,
+			MarkerController.createInstance(netMapViewer));
 	}
 	
 	/**
 	 * Instance getter.
-	 * @param logicalNetLayer логический слой
 	 * @return контроллер вида
 	 */
-	public static MapViewController getInstance(LogicalNetLayer logicalNetLayer) {
-		if(instance == null)
-			instance = new MapViewController(logicalNetLayer);
+//	private static MapViewController getInstance() {
+//		return instance;
+//	}
+
+	public static MapViewController createInstance(NetMapViewer netMapViewer) {
+//		if(instance != null)
+//		{
+//			instance.setNetMapViewer(netMapViewer);
+//
+//			TopologicalNodeController.getInstance().setNetMapViewer(netMapViewer);
+//			SiteNodeController.getInstance().setNetMapViewer(netMapViewer);
+//			NodeLinkController.getInstance().setNetMapViewer(netMapViewer);
+//			PhysicalLinkController.getInstance().setNetMapViewer(netMapViewer);
+//			MarkController.getInstance().setNetMapViewer(netMapViewer);
+//			CollectorController.getInstance().setNetMapViewer(netMapViewer);
+//
+//			CableController.getInstance().setNetMapViewer(netMapViewer);
+//			MeasurementPathController.getInstance().setNetMapViewer(netMapViewer);
+//			UnboundNodeController.getInstance().setNetMapViewer(netMapViewer);
+//			UnboundLinkController.getInstance().setNetMapViewer(netMapViewer);
+//			MarkerController.getInstance().setNetMapViewer(netMapViewer);
+//			return instance;
+//		}
+		MapViewController instance = new MapViewController(netMapViewer);
+
 		return instance;
-	}
-
-	static {
-		ctlMap.put(TopologicalNode.class,
-			TopologicalNodeController.getInstance());
-		ctlMap.put(SiteNode.class,
-			SiteNodeController.getInstance());
-		ctlMap.put(NodeLink.class,
-			NodeLinkController.getInstance());
-		ctlMap.put(PhysicalLink.class,
-			PhysicalLinkController.getInstance());
-		ctlMap.put(Mark.class,
-			MarkController.getInstance());
-		ctlMap.put(Collector.class,
-			CollectorController.getInstance());
-
-		ctlMap.put(CablePath.class,
-			CableController.getInstance());
-		ctlMap.put(MeasurementPath.class,
-			MeasurementPathController.getInstance());
-		ctlMap.put(UnboundNode.class,
-			UnboundNodeController.getInstance());
-		ctlMap.put(UnboundLink.class,
-			UnboundLinkController.getInstance());
-		ctlMap.put(Marker.class,
-			MarkerController.getInstance());
 	}
 
 	/**
@@ -172,10 +195,7 @@ public final class MapViewController {
 	 * @return контроллер
 	 */
 	public MapElementController getController(MapElement me) {
-		MapElementController controller = (MapElementController)ctlMap.get(me.getClass());
-		if(controller != null)
-			controller.setLogicalNetLayer(this.logicalNetLayer);
-		return controller;
+		return (MapElementController)ctlMap.get(me.getClass());
 	}
 
 
@@ -239,14 +259,14 @@ public final class MapViewController {
 	 * Установить вид, с которым будет работать контроллер.
 	 * @param mapView вид
 	 */
-	public void setMapView(com.syrus.AMFICOM.mapview.MapView mapView)
+	public void setMapView(MapView mapView)
 			throws MapConnectionException, MapDataException {
 		this.mapView = mapView;
 
-		this.mapView.setLongitude(this.logicalNetLayer.getCenter().getX());
-		this.mapView.setLatitude(this.logicalNetLayer.getCenter().getY());
+		this.mapView.setLongitude(this.logicalNetLayer.getMapContext().getCenter().getX());
+		this.mapView.setLatitude(this.logicalNetLayer.getMapContext().getCenter().getY());
 
-		this.mapView.setScale(this.logicalNetLayer.getScale());
+		this.mapView.setScale(this.logicalNetLayer.getMapContext().getScale());
 
 		this.mapView.revert();
 	}
@@ -510,6 +530,7 @@ public final class MapViewController {
 	public void placeElement(SchemeElement se, DoublePoint point) {
 		PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(se, point);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
+		cmd.setNetMapViewer(this.netMapViewer);
 		cmd.execute();
 	}
 
@@ -565,6 +586,13 @@ public final class MapViewController {
 		UnPlaceSchemePathCommand cmd = new UnPlaceSchemePathCommand(mp);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
+	}
+
+	/**
+	 * @param netMapViewer The netMapViewer to set.
+	 */
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
 	}
 
 /* from SiteNode
