@@ -78,7 +78,6 @@ public class TimeParametersFrame extends JInternalFrame {
 
 		TimeSpinner			startTimeSpinner;
 		DateSpinner			startDateSpinner;
-		boolean skipChanging = false;
 
 		private JLabel interavalLabel;
 //		private JLabel monthIntervalLabel;
@@ -125,6 +124,8 @@ public class TimeParametersFrame extends JInternalFrame {
 		public static final long MINUTE_LONG = 60L * 1000L;
 		public static final long HOUR_LONG = 60L * MINUTE_LONG;
 		public static final long DAY_LONG = 24L * HOUR_LONG;
+
+		PropertyChangeEvent	propertyChangeEvent;
 		
 		
 
@@ -282,7 +283,7 @@ public class TimeParametersFrame extends JInternalFrame {
 								this.thread.start();
 								this.startedThread = true;
 							}
-							this.waiting = !TimeParametersPanel.this.skipChanging && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
+							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 								.getSelectedTest());
 						}
 						this.previousEventTime = System.currentTimeMillis();						
@@ -418,7 +419,7 @@ public class TimeParametersFrame extends JInternalFrame {
 									this.thread.start();
 									this.startedThread = true;
 								}
-								this.waiting = !TimeParametersPanel.this.skipChanging &&  TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
+								this.waiting = TimeParametersPanel.this.propertyChangeEvent == null &&  TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 									.getSelectedTest());
 							}
 							this.previousEventTime = System.currentTimeMillis();						
@@ -552,7 +553,7 @@ public class TimeParametersFrame extends JInternalFrame {
 								this.thread.start();
 								this.startedThread = true;
 							}
-							this.waiting = !TimeParametersPanel.this.skipChanging && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
+							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 								.getSelectedTest());
 						}
 						this.previousEventTime = System.currentTimeMillis();						
@@ -1031,42 +1032,31 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		
-		public void propertyChange(PropertyChangeEvent e) {
-			String propertyName = e.getPropertyName();
-			Object newValue = e.getNewValue();
+		public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+			this.propertyChangeEvent = propertyChangeEvent;
+			String propertyName = propertyChangeEvent.getPropertyName();
+			Object newValue = propertyChangeEvent.getNewValue();
 			if (propertyName.equals(SchedulerModel.COMMAND_DATE_OPERATION)) {
-				/* TODO remove dummy skipChanging */
-				this.skipChanging = true;
 				Date date = (Date) newValue;
-				// if (!date.equals(this.getStartDate())){
-				Log.debugMessage("TimeParametersPanel.propertyChange | startDateSpinner ", Log.FINEST);
 				this.startDateSpinner.getModel().setValue(date);
 				this.startTimeSpinner.getModel().setValue(date);
-				this.skipChanging = false;
-				// }
 			} else if (propertyName.equals(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS)) {
-//				if (!this.skip) {
 					this.setTestTemporalStamps((TestTemporalStamps) newValue);				
 			} else if (propertyName.equals(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS)){
 				TestTemporalStamps testTemporalStamps = getTestTemporalStamps();
 				if (testTemporalStamps != null) {
-//					this.skip = true;
 					TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, null, testTemporalStamps));
 					if (TimeParametersPanel.this.groupRadioButton.isSelected()) {
 						TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_GROUP_TEST, null, testTemporalStamps));
 					}
-//					this.skip = false;
 				}
 			} else if(propertyName.equals(SchedulerModel.COMMAND_SET_START_GROUP_TIME)){
 				TimeParametersPanel.this.groupRadioButton.doClick();
-				this.skipChanging = true;
 				Date date = (Date) newValue;
-				// if (!date.equals(this.getStartDate())){
-				Log.debugMessage("TimeParametersPanel.propertyChange | startDateSpinner ", Log.FINEST);
 				TimeParametersPanel.this.startDateSpinner.getModel().setValue(date);
 				TimeParametersPanel.this.startTimeSpinner.getModel().setValue(date);
-				this.skipChanging = false;
 			}
+			this.propertyChangeEvent = null;
 		}
 		
 		void setOneDateEnable(boolean enable) {
@@ -1250,9 +1240,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 		}
 		
-		public void setTestTemporalStamps(TestTemporalStamps testTemporalStamps) {		
-
-			this.skipChanging = true;
+		private void setTestTemporalStamps(TestTemporalStamps testTemporalStamps) {		
 			Date startTime = testTemporalStamps.getStartTime();
 			this.startDateSpinner.getModel().setValue(startTime);
 			this.startTimeSpinner.getModel().setValue(startTime);
@@ -1289,7 +1277,6 @@ public class TimeParametersFrame extends JInternalFrame {
 					break;
 
 			}
-			this.skipChanging = false;
 		}		
 		
 		public void setTemporalPatterns(Collection temporalPatterns) {
