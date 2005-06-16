@@ -1,5 +1,5 @@
 /*-
- * $Id: MapJLocalRenderer.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MapJLocalRenderer.java,v 1.2 2005/06/16 14:10:47 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,12 @@ import com.mapinfo.util.DoubleRect;
 import com.mapinfo.xmlprot.mxtj.ImageRequestComposer;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/06/16 14:10:47 $
  * @module mscharserver_v1
  */
 public class MapJLocalRenderer
@@ -38,6 +39,8 @@ public class MapJLocalRenderer
 	// Render preferences
 	public static final int NUM_OF_COLORS = 256;
 	public static final Color BACKGROUND_COLOR = Color.WHITE;
+	private static final String	MAPINFO_DEFINITION_FILE_LOCATION_KEY	= "MapinfoDefinitionFile";
+	private static final String	DEFAULT_MDF_FILE_LOCATION	= "../lib/mapinfo/cb.mdf";
 	/**
 	 * MapInfo data to image renderer
 	 */
@@ -62,8 +65,7 @@ public class MapJLocalRenderer
 	public MapJLocalRenderer()
 		throws IllegalDataException  
 	{
-		// TODO: use property file
-		String fileToLoad = new String("/home/max/src/amficom/lib/mapinfo/cb.mdf");
+		String fileToLoad = ApplicationProperties.getString(MAPINFO_DEFINITION_FILE_LOCATION_KEY, DEFAULT_MDF_FILE_LOCATION);
 		Log.debugMessage("MapJLocalRenderer<init> | RunningThread - Constructor - Initializing MapJ.", Log.DEBUGLEVEL07);		 
 		this.mapJObject = createMapJ(fileToLoad);
 	}
