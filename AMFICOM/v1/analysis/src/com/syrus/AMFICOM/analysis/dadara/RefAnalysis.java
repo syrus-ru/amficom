@@ -137,14 +137,12 @@ public class RefAnalysis
 		// long t0 = System.currentTimeMillis();
 		for (int i = 0; i < de.length; i++)
 		{
-			// for(int j = re[i].getBegin(); j < y.length; j++) -- changed just
-			// because was too slow -- saa
 			int posFrom = de[i].getBegin();
 			int posTo = de[i].getEnd();
 			double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
 			for (int j = posFrom; j < posTo && j < veryLastPoint; j++)
 			{
-                filtered[j] = Math.max(0, yArrMT[j - posFrom]);
+                filtered[j] = yArrMT[j - posFrom];
 				if (j < lastPoint)
 					noise[j] = Math.abs(y[j] - filtered[j]);
 			}
