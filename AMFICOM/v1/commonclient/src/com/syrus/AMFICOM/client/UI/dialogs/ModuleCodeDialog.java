@@ -19,7 +19,7 @@ import javax.swing.JPasswordField;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/15 11:27:19 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/16 09:54:07 $
  * @author $Author: bob $
  * @module commonclient_v1
  */
@@ -36,9 +36,6 @@ public class ModuleCodeDialog {
 	private String				stb;
 	private String				title;
 
-	public static void main(String[] args) {
-		ModuleCodeDialog moduleCodeDialog = new ModuleCodeDialog("pox", "title");		
-	}
 
 	public ModuleCodeDialog(String stb, String moduleTitle) {
 		this.stb = stb;
@@ -108,6 +105,7 @@ public class ModuleCodeDialog {
 		Dimension frameSize = dialog.getSize();
 		dialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 		
+		this.result = JOptionPane.CANCEL_OPTION;
 		dialog.show();
 		
 		while (optionPane.getValue() == okButton) {
@@ -121,6 +119,7 @@ public class ModuleCodeDialog {
 			JOptionPane.showMessageDialog(null, LangModelGeneral.getString("ModuleCode.IncorrectCode"),
 				LangModelGeneral.getString("ModuleCode.Title") + " '" + this.title + '\'', JOptionPane.ERROR_MESSAGE,
 				null);
+			this.result = JOptionPane.CANCEL_OPTION;
 			dialog.show();
 		}
 
