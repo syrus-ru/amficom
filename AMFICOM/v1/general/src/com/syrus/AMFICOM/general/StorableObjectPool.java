@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.104 2005/06/10 19:24:37 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.105 2005/06/16 12:16:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/06/10 19:24:37 $
+ * @version $Revision: 1.105 $, $Date: 2005/06/16 12:16:08 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -62,18 +62,35 @@ public abstract class StorableObjectPool {
 	 */
 	static final TShortObjectHashMap ENTITY_CODE_FACTORY_MAP = new TShortObjectHashMap();
 
+	/**
+	 * @deprecated
+	 * @param objectPoolMapSize
+	 * @param selfGroupCode
+	 */
 	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode) {
 		this(objectPoolMapSize, selfGroupCode, LRUMap.class);
 	}
 
-	public StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode, final Class cacheMapClass) {
+	/**
+	 * Called only from descendants
+	 * @param objectPoolMapSize
+	 * @param selfGroupCode
+	 * @param cacheMapClass
+	 */
+	protected StorableObjectPool(final int objectPoolMapSize, final short selfGroupCode, final Class cacheMapClass) {
 		this.objectPoolMap = new TShortObjectHashMap(objectPoolMapSize);
 
 		this.selfGroupCode = selfGroupCode;
 		this.selfGroupName = ObjectGroupEntities.codeToString(this.selfGroupCode).replaceAll("Group$", "");
 		registerPool(this.selfGroupCode, this);
 
-		this.cacheMapClass = cacheMapClass;
+		try {
+			this.cacheMapClass = Class.forName(cacheMapClass.getName());
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheMapClass.getName() + "' cannot be found, using default");
+			this.cacheMapClass = LRUMap.class;
+		}
 
 		this.savingObjectsMap = Collections.synchronizedMap(new HashMap());
 		this.savingObjectIds = Collections.synchronizedSet(new HashSet());
@@ -1127,7 +1144,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.104 $, $Date: 2005/06/10 19:24:37 $
+	 * @version $Revision: 1.105 $, $Date: 2005/06/16 12:16:08 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
