@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.47 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapFrame.java,v 1.48 2005/06/16 14:41:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.47 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/16 14:41:53 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -176,6 +176,11 @@ public class MapFrame extends JInternalFrame
 		jbInit();
 
 		initModule();
+
+		mapContext.setCenter(MapPropertiesManager.getCenter());
+		mapContext.setScale(MapPropertiesManager.getZoom());
+
+//		this.logicalNetLayer.repaint(true);
 	}
 	
 	/**
