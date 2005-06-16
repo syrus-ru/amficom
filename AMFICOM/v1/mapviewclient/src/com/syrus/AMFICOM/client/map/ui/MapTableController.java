@@ -8,7 +8,7 @@ import java.util.List;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
@@ -82,7 +82,7 @@ public final class MapTableController implements Wrapper {
 		else
 		if(key.equals(KEY_USER)) {
 			try {
-				User user = (User )StorableObjectPool.getStorableObject(map.getCreatorId(), false);
+				SystemUser user = (SystemUser )StorableObjectPool.getStorableObject(map.getCreatorId(), false);
 				result = user.getName();
 			} catch(ApplicationException e) {
 				result = "";

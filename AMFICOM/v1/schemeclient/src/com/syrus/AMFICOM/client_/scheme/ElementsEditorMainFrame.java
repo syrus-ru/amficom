@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.4 2005/05/26 07:40:51 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.5 2005/06/16 11:43:31 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/16 11:43:31 $
  * @module schemeclient_v1
  */
 
@@ -275,7 +275,7 @@ public class ElementsEditorMainFrame extends JFrame implements PropertyChangeLis
 				statusBar.setText("status", LangModel.getString("statusReady"));
 				statusBar.setText("session", sdf.format(ClientSessionEnvironment.getInstance().getSessionEstablishDate()));
 				try {
-					User user = (User)StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
+					SystemUser user = (SystemUser)StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
 					statusBar.setText("user", user.getName());
 				} catch (ApplicationException e) {
 					Log.errorException(e);

@@ -80,7 +80,7 @@ public final class SchemeController extends ObjectResourceController
 		}
 		else if (key.equals(KEY_USER)) {
 			try {
-				User user = (User)ConfigurationStorableObjectPool.getStorableObject(
+				SystemUser user = (SystemUser)ConfigurationStorableObjectPool.getStorableObject(
 						sc.getCreatorId(), true);
 				result = user.getName();
 			}

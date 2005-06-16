@@ -13,7 +13,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -99,7 +99,7 @@ public final class SchemeTableController extends StorableObjectWrapper
 			try
 			{
 				Identifier id = sc.getCreatorId();
-				result = (User )StorableObjectPool.getStorableObject(id, false);
+				result = (SystemUser )StorableObjectPool.getStorableObject(id, false);
 			}
 			catch (Exception e)
 			{
