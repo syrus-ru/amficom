@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.17 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.18 2005/06/16 14:40:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -71,13 +71,13 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/16 14:40:18 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
-	private LogicalNetLayer logicalNetLayer;
-	private MapContext mapContext;
-	private MapImageRenderer renderer;
+	protected LogicalNetLayer logicalNetLayer;
+	protected MapContext mapContext;
+	protected MapImageRenderer renderer;
 
 	private Dimension lastVisCompSize;
 	private Image mapShotImage;
@@ -120,20 +120,36 @@ public abstract class NetMapViewer {
 		this.mka = new MapKeyAdapter(null);
 	}
 
+	public void dispose() {
+		this.ttm.unregisterComponent(this.mttp);
+	}
+	
 	/**
 	 * Осуществляет сохранение текущик параметров отображения карты для 
 	 * следующей сессии.
 	 */
-	public void saveConfig() {
-		//empty
+	public void saveConfig()
+	{
+		try {
+			MapPropertiesManager.setCenter(this.mapContext.getCenter());
+			MapPropertiesManager.setZoom(this.mapContext.getScale());
+			MapPropertiesManager.saveIniFile();
+		} catch(MapConnectionException e) {
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			e.printStackTrace();
+		}
 	}
+
 
 	/**
 	 * Получить логический слой.
 	 * @return 
 	 * логический слой
 	 */
-	public abstract LogicalNetLayer getLogicalNetLayer();
+	public LogicalNetLayer getLogicalNetLayer() {
+		return this.logicalNetLayer;
+	}
 
 	/**
 	 * Получить графический компонент, в котором отображается картография.
@@ -271,7 +287,7 @@ public abstract class NetMapViewer {
 				return;
 			}
 
-			if(!pce.getSource().equals(this.logicalNetLayer))
+			if(pce.getSource().equals(this.logicalNetLayer))
 				return;
 
 			MapView mapView = this.logicalNetLayer.getMapView();
@@ -553,14 +569,14 @@ public abstract class NetMapViewer {
 				else
 				if(mne.isMapElementSelected())
 				{
-					MapElement me = (MapElement)mne.getSource();
+					MapElement me = (MapElement)mne.getNewValue();
 					if(me != null)
 						mapView.getMap().setSelected(me, true);
 				}
 				else
 				if(mne.isMapElementDeselected())
 				{
-					MapElement me = (MapElement)mne.getSource();
+					MapElement me = (MapElement)mne.getNewValue();
 					if(me != null)
 						mapView.getMap().setSelected(me, false);
 				}
@@ -705,7 +721,7 @@ public abstract class NetMapViewer {
 						&& parameterTypes[2].equals(MapImageRenderer.class)) {
 					Constructor constructor = constructors[i];
 					constructor.setAccessible(true);
-					Object[] initArgs = new Object[2];
+					Object[] initArgs = new Object[3];
 					initArgs[0] = logicalNetLayer;
 					initArgs[1] = mapContext;
 					initArgs[2] = renderer;
