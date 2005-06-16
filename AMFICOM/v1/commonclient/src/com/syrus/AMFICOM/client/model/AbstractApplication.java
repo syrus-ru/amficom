@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.3 2005/06/16 10:19:02 bob Exp $
+ * $Id: AbstractApplication.java,v 1.4 2005/06/16 10:49:02 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,38 +50,45 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/16 10:19:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/16 10:49:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
  */
 public abstract class AbstractApplication {
 
-	public static final String KEY_MODULE_CODE = "ModuleCode";
-	public static final String KEY_MODULE_TITLE = "ModuleTitle";
-	
-	public static final String KEY_LOOK_AND_FEEL = "LookAndFeel";
-	
-	public static final String	LOOK_AND_FEEL_KUNSTSTOFF	= "Kunststoff";
-	public static final String	LOOK_AND_FEEL_METAL			= "Metal";
-	public static final String	LOOK_AND_FEEL_MOTIF			= "Motif";
-	public static final String	LOOK_AND_FEEL_WINDOWS		= "Windows";
-	
+	public static final String		KEY_MODULE_CODE				= "Module.Code";
+	public static final String		KEY_MODULE_TITLE			= "Module.Title.I18NKey";
+
+	public static final String		KEY_LOOK_AND_FEEL			= "LookAndFeel";
+
+	public static final String		LOOK_AND_FEEL_KUNSTSTOFF	= "Kunststoff";
+	public static final String		LOOK_AND_FEEL_METAL			= "Metal";
+	public static final String		LOOK_AND_FEEL_MOTIF			= "Motif";
+	public static final String		LOOK_AND_FEEL_WINDOWS		= "Windows";
+
 	protected ApplicationContext	aContext;
 
 	protected Dispatcher			dispatcher;
 
 	private static LoginRestorer	loginRestorer;
 
-	protected String applicationTitle;
-	protected String applicationCode;
-	
-	private static boolean resourcesInitialized = false;
-	private static boolean themeInitialized = false;
-	
-	public AbstractApplication(String applicationName, String applicationTitle, String applicationCode) {
+	protected String				applicationCode;
+
+	private static boolean			resourcesInitialized		= false;
+	private static boolean			themeInitialized			= false;
+
+	public AbstractApplication(String applicationName, String applicationCode) {
 		Application.init(applicationName);
-		this.applicationTitle = applicationTitle;
+		this.setApplicationCode(applicationCode);
+	}
+
+	public AbstractApplication(String applicationName) {
+		Application.init(applicationName);
+		this.setApplicationCode(ApplicationProperties.getString(KEY_MODULE_CODE, null));
+	}
+	
+	private void setApplicationCode(String applicationCode) {
 		this.applicationCode = applicationCode;
 		this.initTheme();
 		if (this.isLaunchable()) {
@@ -92,18 +99,14 @@ public abstract class AbstractApplication {
 		} else {
 			Environment.checkForExit();
 		}
-	}
-	
-	public AbstractApplication(String applicationName) {
-		this(applicationName, ApplicationProperties.getString(KEY_MODULE_TITLE, ""), ApplicationProperties.getString(KEY_MODULE_CODE, null));
-	}
-	
+	}	
+
 	private void initResources() {
 		if (!resourcesInitialized) {
-			synchronized(this) {
+			synchronized (this) {
 				if (!resourcesInitialized) {
 					this.initTheme();
-					this.initUIConstats();					
+					this.initUIConstats();
 					resourcesInitialized = true;
 				}
 			}
@@ -127,7 +130,7 @@ public abstract class AbstractApplication {
 			}
 		}
 	}
-	
+
 	private LookAndFeel getLookAndFeel() {
 		String lookAndFeel = ApplicationProperties.getString(KEY_LOOK_AND_FEEL, LOOK_AND_FEEL_WINDOWS);
 		LookAndFeel lnf = null;
@@ -142,15 +145,13 @@ public abstract class AbstractApplication {
 		} else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF)) {
 			lnf = new MotifLookAndFeel();
 		}
-//			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK)) {
-//				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
-//		}
+		// else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK)) {
+		// plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
+		// }
 		else {
 			return this.getDefaultLookAndFeel();
 		}
-		if (lnf.isSupportedLookAndFeel()) {
-			return lnf;
-		}
+		if (lnf.isSupportedLookAndFeel()) { return lnf; }
 		return this.getDefaultLookAndFeel();
 	}
 
@@ -164,27 +165,27 @@ public abstract class AbstractApplication {
 			return UIManager.getLookAndFeel();
 		}
 	}
-	
+
 	private void initUIConstats() {
 		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, new SimpleDateFormat(LangModel
 				.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
-		
+
 		UIManager.put(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT, new SimpleDateFormat(LangModel
-			.getString(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
-		
+				.getString(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
+
 		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		
+
 		UIManager.put(ResourceKeys.ICON_CLOSE_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/close_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		
+			"images/close_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+
 		UIManager.put(ResourceKeys.ICON_DOMAIN_SELECTION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/domains.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		
+			"images/domains.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+
 		UIManager.put(ResourceKeys.ICON_GENERAL, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/general.gif")));
-		UIManager.put(ResourceKeys.ICON_DELETE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/delete.gif")));
+		UIManager.put(ResourceKeys.ICON_DELETE,
+			new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif")));
 
 		UIManager.put(ResourceKeys.ICON_OPEN_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/openfile.gif")));
@@ -196,18 +197,16 @@ public abstract class AbstractApplication {
 
 		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/pathmode.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
+
 		UIManager.put(ResourceKeys.ICON_MINI_FOLDER, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		"images/folder.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
+			"images/folder.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
 		UIManager.put(ResourceKeys.ICON_MINI_PORT, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/port.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
-		UIManager.put(ResourceKeys.ICON_MINI_TESTING, new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/testing.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
-		
-		
+
+		UIManager.put(ResourceKeys.ICON_MINI_TESTING, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/testing.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+
 		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/testsetup.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
@@ -258,7 +257,7 @@ public abstract class AbstractApplication {
 		defaults.put("Table.gridColor", Color.BLACK);
 		defaults.put("Viewport.background", Color.WHITE);
 
-//		Font font = new Font("Dialog", Font.PLAIN, 10);
+		// Font font = new Font("Dialog", Font.PLAIN, 10);
 
 		{
 			Font font = defaults.getFont("TextField.font");
@@ -266,17 +265,17 @@ public abstract class AbstractApplication {
 			defaults.put("TextField.font", font);
 		}
 
-//		defaults.put("ComboBox.font", font);
+		// defaults.put("ComboBox.font", font);
 		defaults.put("ComboBox.background", defaults.get("window"));
 		defaults.put("ComboBox.disabledBackground", defaults.get("window"));
 
 		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
 	}
-	
+
 	protected void init() {
-		
+
 		this.initResources();
-		
+
 		if (loginRestorer == null) {
 			synchronized (this) {
 				if (loginRestorer == null) {
@@ -307,14 +306,14 @@ public abstract class AbstractApplication {
 			clientSessionEnvironment1 = ClientSessionEnvironment.getInstance(ApplicationProperties.getInt(
 				ClientSessionEnvironment.SESSION_KIND_KEY, -1));
 		} catch (CommunicationException e) {
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER,
-																		LangModelGeneral
-																				.getString("StatusBar.ConnectionError")));
+			this.dispatcher
+					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER, LangModelGeneral
+							.getString("StatusBar.ConnectionError")));
 			return;
 		} catch (IllegalDataException e) {
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER,
-																		LangModelGeneral
-																				.getString("StatusBar.IllegalSessionKind")));
+			this.dispatcher
+					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER, LangModelGeneral
+							.getString("StatusBar.IllegalSessionKind")));
 			return;
 		}
 		final ClientSessionEnvironment clientSessionEnvironment = clientSessionEnvironment1;
@@ -343,15 +342,14 @@ public abstract class AbstractApplication {
 
 	private final boolean isLaunchable() {
 		// TODO just only development bypass
-		if (this.applicationCode == null) {
-			return true;
-		}
-		
-		ModuleCodeDialog sDialog = new ModuleCodeDialog(this.applicationCode, this.applicationTitle);
+		if (this.applicationCode == null) { return true; }
+
+		ModuleCodeDialog sDialog = new ModuleCodeDialog(this.applicationCode, LangModelGeneral
+				.getString(ApplicationProperties.getString(KEY_MODULE_TITLE, "")));
 
 		return sDialog.getResult() == JOptionPane.OK_OPTION;
 	}
-	
+
 	public void startMainFrame(	final AbstractMainFrame mainFrame,
 								Image image) {
 		mainFrame.setIconImage(image);
