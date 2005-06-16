@@ -116,7 +116,7 @@ public class RefAnalysis
                     y, noiseStart, y.length, 0.98) - maxY;
                 // ур. шума по RMS (отрицателен) - относительно maxY
                 noiseRMS = ReflectogramMath.getRMSValue(
-                    y, noiseStart, y.length) - maxY;
+                    y, noiseStart, y.length, minY) - maxY;
             } else {
                 noise98 = minY - maxY;
                 noiseRMS = minY - maxY;
