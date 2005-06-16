@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.66 2005/05/13 10:51:23 bob Exp $
+ * $Id: measurement.idl,v 1.67 2005/06/16 10:23:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -78,33 +78,32 @@ module corba {
 
 /////////////////// Parameter and Set /////////////////////
 
-	struct Parameter_Transferable {
+	typedef struct Parameter_Transferable {
 		general::corba::Identifier id;
 		general::corba::Identifier type_id;
 		sequence <octet> value;
-	};
+	} Parameter;
 
-	typedef sequence <Parameter_Transferable> ParameterSeq_Transferable;
+	typedef sequence <Parameter> ParameterSeq;
 
-	enum SetSort {
-		SET_SORT_MEASUREMENT_PARAMETERS,
-		SET_SORT_ANALYSIS_CRITERIA,
-		SET_SORT_EVALUATION_THRESHOLDS,
-		SET_SORT_ETALON,
-		SET_SORT_MODELING_PARAMETERS,
-		SET_SORT_PREDICTION_PARAMETERS
-	};
 
-	struct Set_Transferable {
+	typedef struct ParameterSet_Transferable {
 		general::corba::StorableObject header;
 
-		SetSort sort;
+		enum ParameterSetSort {
+			SET_SORT_MEASUREMENT_PARAMETERS,
+			SET_SORT_ANALYSIS_CRITERIA,
+			SET_SORT_EVALUATION_THRESHOLDS,
+			SET_SORT_ETALON,
+			SET_SORT_MODELING_PARAMETERS,
+			SET_SORT_PREDICTION_PARAMETERS
+		} sort;
 		general::corba::WString256 description;
-		ParameterSeq_Transferable parameters;
+		ParameterSeq parameters;
 		general::corba::IdentifierSeq monitored_element_ids;
-	};
+	} ParameterSet;
 
-	typedef sequence <Set_Transferable> SetSeq_Transferable;
+	typedef sequence <ParameterSet> ParameterSetSeq;
 
 /////////////////// Modeling /////////////////////
 
