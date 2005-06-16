@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.8 2005/06/08 13:49:06 bass Exp $
+ * $Id: ApplicationLogger.java,v 1.9 2005/06/16 10:48:15 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,5 +19,6 @@ public final class ApplicationLogger extends AbstractLogger {
 		super.thisLevelOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_THIS_LEVEL_ONLY, DEFAULT_LOG_ONLY_THIS_LEVEL)).booleanValue();
 		super.logDebugLevel = ApplicationProperties.getInt(KEY_LOG_DEBUG_LEVEL, DEFAULT_LOG_DEBUG_LEVEL);
 		super.baseLogPath = ApplicationProperties.getString(KEY_LOG_PATH, DEFAULT_LOG_PATH);
+		System.out.println("ApplicationLogger.initSpec | logDebugLevel is " + super.logDebugLevel);
 	}
 }
