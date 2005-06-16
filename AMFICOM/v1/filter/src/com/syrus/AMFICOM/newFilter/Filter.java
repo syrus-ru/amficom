@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.12 2005/06/15 08:09:45 max Exp $
+ * $Id: Filter.java,v 1.13 2005/06/16 10:21:36 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.LinkedConditionLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/15 08:09:45 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/16 10:21:36 $
  * @author $Author: max $
  * @module misc
  */
@@ -112,5 +112,9 @@ public class Filter {
 	
 	public LogicalScheme getLogicalScheme() {
 		return this.logicalScheme;
+	}
+	
+	public StorableObjectCondition getCondition() {
+		return this.logicalScheme.getResultCondition();
 	}
 }
