@@ -1,6 +1,6 @@
-/*
- * $Id: GeneralStorableObjectPool.java,v 1.31 2005/06/16 08:23:10 bass Exp $
- *
+/*-
+ * $Id: GeneralStorableObjectPool.java,v 1.32 2005/06/16 12:18:06 arseniy Exp $
+ * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -15,8 +15,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/16 08:23:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/06/16 12:18:06 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -26,78 +26,86 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	private static final int PARAMETERTYPE_OBJECT_POOL_SIZE = 9;
 	private static final int CHARACTERISTICTYPE_OBJECT_POOL_SIZE = 9;
+
 	private static final int CHARACTERISTIC_OBJECT_POOL_SIZE = 4;
 
 	private static GeneralObjectLoader gObjectLoader;
 	private static GeneralStorableObjectPool instance;
 
-
-	private GeneralStorableObjectPool() {
-		this(LRUMap.class);
-	}
-
-	private GeneralStorableObjectPool(Class cacheMapClass) {
+	private GeneralStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.GENERAL_GROUP_CODE, cacheMapClass);
 
 		registerFactory(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, new ParameterTypeFactory());
 		registerFactory(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, new CharacteristicTypeFactory());
+
 		registerFactory(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, new CharacteristicFactory());
 	}
 
-	public static void init(GeneralObjectLoader gObjectLoader1, final int size) {
-		if (instance == null)
-			instance = new GeneralStorableObjectPool();
-
-		gObjectLoader = gObjectLoader1;
-
-		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
+	/**
+	 * Init with default pool class and default pool sizes
+	 * @param gObjectLoader1
+	 */
+	public static void init(final GeneralObjectLoader gObjectLoader1) {
+		init(gObjectLoader1, LRUMap.class);
 	}
 
-	public static void init(GeneralObjectLoader gObjectLoader1) {
+	/**
+	 * Init with default pool class and given pool sizes
+	 * @param gObjectLoader1
+	 * @param size
+	 */
+	public static void init(final GeneralObjectLoader gObjectLoader1, final int size) {
+		init(gObjectLoader1, LRUMap.class, size);
+	}
+
+	/**
+	 * Init with given pool class and default pool sizes
+	 * @param gObjectLoader1
+	 * @param cacheClass
+	 */
+	public static void init(final GeneralObjectLoader gObjectLoader1, final Class cacheClass) {
+		assert gObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (instance == null)
-			instance = new GeneralStorableObjectPool();
+			instance = new GeneralStorableObjectPool(cacheClass);
 
 		gObjectLoader = gObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
+
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
 	}
 
 	/**
-	 * @param objectLoader
+	 * Init with given pool class and given pool sizes
+	 * @param gObjectLoader1
 	 * @param cacheClass
 	 * @param size
 	 */
-	public static void init(final GeneralObjectLoader objectLoader,
-			final Class cacheClass, final int size) {
+	public static void init(final GeneralObjectLoader gObjectLoader1, final Class cacheClass, final int size) {
+		assert gObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (size > 0) {
-			instance = cacheClass == null
-					? new GeneralStorableObjectPool()
-					: new GeneralStorableObjectPool(cacheClass);
-			init(objectLoader, size);
+			if (instance == null)
+				instance = new GeneralStorableObjectPool(cacheClass);
+
+			gObjectLoader = gObjectLoader1;
+
+			instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
+
+			instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
 		}
 		else {
-			init(objectLoader, cacheClass);
+			init(gObjectLoader1, cacheClass);
 		}
 	}
 
-	public static void init(GeneralObjectLoader gObjectLoader1, Class cacheClass) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new GeneralStorableObjectPool(clazz);
-		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
-			instance = new GeneralStorableObjectPool();
-		}
-		init(gObjectLoader1);
-	}
 
-	protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException {
+	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
 		return gObjectLoader.refresh(storableObjects);
 	}
 
@@ -111,29 +119,26 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				return gObjectLoader.loadCharacteristics(ids);
 			default:
-				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
 
-	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		Set loadedObjects = null;
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedObjects = gObjectLoader.loadParameterTypesButIds(condition, ids);
-				break;
+				return gObjectLoader.loadParameterTypesButIds(condition, ids);
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				loadedObjects = gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
-				break;
+				return gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				loadedObjects = gObjectLoader.loadCharacteristicsButIds(condition, ids);
-				break;
-			default:				
-				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedObjects = null;
+				return gObjectLoader.loadCharacteristicsButIds(condition, ids);
+			default:
+				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+				return Collections.EMPTY_SET;
 		}
-		return loadedObjects;
 	}
 
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
@@ -152,7 +157,8 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 				gObjectLoader.saveCharacteristics(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("GeneralStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("GeneralStorableObjectPool.saveStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
