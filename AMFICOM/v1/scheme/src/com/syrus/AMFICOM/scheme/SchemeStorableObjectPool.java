@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.24 2005/06/16 08:23:11 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.25 2005/06/16 12:56:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -21,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/16 08:23:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/16 12:56:55 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -73,10 +74,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	private static SchemeStorableObjectPool instance;
 
 
-	private SchemeStorableObjectPool() {
-		this(LRUMap.class);
-	}
-
 	private SchemeStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE, cacheMapClass);
 
@@ -99,34 +96,35 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new PathElementFactory());
 	}
 
-	public static void init(final SchemeObjectLoader schemeObjectLoader1, final int size) {
-		if (instance == null)
-			instance = new SchemeStorableObjectPool();
 
-		schemeObjectLoader = schemeObjectLoader1;
-
-		instance.addObjectPool(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_PORT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_LINK_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SCHEME_PATH_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, size);
+	/**
+	 * Init with default pool class and default pool sizes
+	 * @param schemeObjectLoader1
+	 */
+	public static void init(final SchemeObjectLoader schemeObjectLoader1) {
+		init(schemeObjectLoader1, LRUMap.class);
 	}
 
-	public static void init(final SchemeObjectLoader schemeObjectLoader1) {
+	/**
+	 * Init with default pool class and given pool sizes
+	 * @param schemeObjectLoader1
+	 * @param size
+	 */
+	public static void init(final SchemeObjectLoader schemeObjectLoader1, final int size) {
+		init(schemeObjectLoader1, LRUMap.class, size);
+	}
+
+	/**
+	 * Init with given pool class and default pool sizes
+	 * @param schemeObjectLoader1
+	 * @param cacheClass
+	 */
+	public static void init(final SchemeObjectLoader schemeObjectLoader1, final Class cacheClass) {
+		assert schemeObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (instance == null)
-			instance = new SchemeStorableObjectPool();
+			instance = new SchemeStorableObjectPool(cacheClass);
 
 		schemeObjectLoader = schemeObjectLoader1;
 
@@ -150,33 +148,44 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	}
 
 	/**
-	 * @param objectLoader
+	 * Init with given pool class and given pool sizes
+	 * @param schemeObjectLoader1
 	 * @param cacheClass
 	 * @param size
 	 */
-	public static void init(final SchemeObjectLoader objectLoader,
-			final Class cacheClass, final int size) {
+	public static void init(final SchemeObjectLoader schemeObjectLoader1, final Class cacheClass, final int size) {
+		assert schemeObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (size > 0) {
-			instance = cacheClass == null
-					? new SchemeStorableObjectPool()
-					: new SchemeStorableObjectPool(cacheClass);
-			init(objectLoader, size);
-		} else {
-			init(objectLoader, cacheClass);
+			if (instance == null)
+				instance = new SchemeStorableObjectPool(cacheClass);
+
+			schemeObjectLoader = schemeObjectLoader1;
+
+			instance.addObjectPool(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_PORT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_LINK_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_PATH_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, size);
+		}
+		else {
+			init(schemeObjectLoader1, cacheClass);
 		}
 	}
 
-	public static void init(final SchemeObjectLoader schemeObjectLoader1, final Class cacheClass) {
-		final String cacheClassName = cacheClass.getName();
-		try {
-			instance = new SchemeStorableObjectPool(Class.forName(cacheClassName));
-		} catch (final ClassNotFoundException cnfe) {
-			Log.errorMessage("Cache class '" + cacheClassName
-					+ "' cannot be found, using default");
-			instance = new SchemeStorableObjectPool();
-		}
-		init(schemeObjectLoader1);
-	}
 
 	/**
 	 * @param storableObjects
@@ -229,9 +238,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
 				return schemeObjectLoader.loadPathElements(ids);
 			default:
-				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjects | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
+				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -241,9 +249,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param ids
 	 * @throws ApplicationException
 	 */
-	protected Set loadStorableObjectsButIds(
-			final StorableObjectCondition storableObjectCondition,
-			final Set ids)
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition storableObjectCondition, final Set ids)
 			throws ApplicationException {
 		final short entityCode = storableObjectCondition.getEntityCode().shortValue();
 		switch (entityCode) {
@@ -282,9 +288,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
 				return schemeObjectLoader.loadPathElementsButIds(storableObjectCondition, ids);
 			default:
-				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
+				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
@@ -295,9 +300,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @throws ApplicationException
 	 * @see StorableObjectPool#saveStorableObjects(Set, boolean)
 	 */
-	protected void saveStorableObjects(final Set storableObjects,
-			final boolean force)
-			throws ApplicationException {
+	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
 
@@ -355,9 +358,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 				schemeObjectLoader.savePathElements(storableObjects, force);
 				break;
 			default:
-				Log.errorMessage("SchemeStorableObjectPool.saveStorableObjects | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode)
-						+ " (" + entityCode + ')');
+				Log.errorMessage("SchemeStorableObjectPool.saveStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 

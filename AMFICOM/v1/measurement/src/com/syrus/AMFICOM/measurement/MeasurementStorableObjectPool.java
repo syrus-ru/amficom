@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.99 2005/06/16 10:34:04 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.100 2005/06/16 12:55:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -20,8 +21,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.100 $, $Date: 2005/06/16 12:55:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -34,25 +35,21 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static final int EVALUATIONTYPE_OBJECT_POOL_SIZE = 1;
 	private static final int MODELINGTYPE_OBJECT_POOL_SIZE = 1;
 
-	private static final int SET_OBJECT_POOL_SIZE = 4;
-	private static final int MODELING_OBJECT_POOL_SIZE = 4;
-	private static final int MS_OBJECT_POOL_SIZE = 4;
 	private static final int MEASUREMENT_OBJECT_POOL_SIZE = 4;
 	private static final int ANALYSIS_OBJECT_POOL_SIZE = 4;
 	private static final int EVALUATION_OBJECT_POOL_SIZE = 4;
-	private static final int TEST_OBJECT_POOL_SIZE = 2;
+	private static final int MODELING_OBJECT_POOL_SIZE = 4;
+	private static final int MS_OBJECT_POOL_SIZE = 4;
 	private static final int RESULT_OBJECT_POOL_SIZE = 4;
-	private static final int TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
-	private static final int INTERVALS_TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
-	private static final int PERIODIC_TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
+	private static final int SET_OBJECT_POOL_SIZE = 4;
+	private static final int TEST_OBJECT_POOL_SIZE = 2;
+	private static final int CRONTEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
+	private static final int INTERVALSTEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
+	private static final int PERIODICTEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
 
 	private static MeasurementObjectLoader mObjectLoader;
 	private static MeasurementStorableObjectPool instance;
 
-
-	private MeasurementStorableObjectPool() {
-		this(LRUMap.class);
-	}
 
 	private MeasurementStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE, cacheMapClass);
@@ -61,46 +58,49 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, new AnalysisTypeFactory());
 		registerFactory(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, new EvaluationTypeFactory());
 		registerFactory(ObjectEntities.MODELINGTYPE_ENTITY_CODE, new ModelingTypeFactory());
-		registerFactory(ObjectEntities.PARAMETER_SET_ENTITY_CODE, new ParameterSetFactory());
-		registerFactory(ObjectEntities.MODELING_ENTITY_CODE, new ModelingFactory());
-		registerFactory(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, new MeasurementSetupFactory());
+
 		registerFactory(ObjectEntities.MEASUREMENT_ENTITY_CODE, new MeasurementFactory());
 		registerFactory(ObjectEntities.ANALYSIS_ENTITY_CODE, new AnalysisFactory());
 		registerFactory(ObjectEntities.EVALUATION_ENTITY_CODE, new EvaluationFactory());
+		registerFactory(ObjectEntities.MODELING_ENTITY_CODE, new ModelingFactory());
+		registerFactory(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, new MeasurementSetupFactory());
+		registerFactory(ObjectEntities.RESULT_ENTITY_CODE, new ResultFactory());
+		registerFactory(ObjectEntities.PARAMETER_SET_ENTITY_CODE, new ParameterSetFactory());
 		registerFactory(ObjectEntities.TEST_ENTITY_CODE, new TestFactory());
 		registerFactory(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, new CronTemporalPatternFactory());
 		registerFactory(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, new IntervalsTemporalPatternFactory());
 		registerFactory(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, new PeriodicalTemporalPatternFactory());
-		registerFactory(ObjectEntities.RESULT_ENTITY_CODE, new ResultFactory());
 	}
 
+
+	/**
+	 * Init with default pool class and default pool sizes
+	 * @param mObjectLoader1
+	 */
+	public static void init(final MeasurementObjectLoader mObjectLoader1) {
+		init(mObjectLoader1, LRUMap.class);
+	}
+
+	/**
+	 * Init with default pool class and given pool sizes
+	 * @param mObjectLoader1
+	 * @param size
+	 */
 	public static void init(final MeasurementObjectLoader mObjectLoader1, final int size) {
-		if (instance == null)
-			instance = new MeasurementStorableObjectPool();
-
-		mObjectLoader = mObjectLoader1;
-
-		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MODELINGTYPE_ENTITY_CODE, size);
-
-		instance.addObjectPool(ObjectEntities.PARAMETER_SET_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
+		init(mObjectLoader1, LRUMap.class, size);
 	}
 
-	public static void init(MeasurementObjectLoader mObjectLoader1) {
+	/**
+	 * Init with given pool class and default pool sizes
+	 * @param mObjectLoader1
+	 * @param cacheClass
+	 */
+	public static void init(final MeasurementObjectLoader mObjectLoader1, final Class cacheClass) {
+		assert mObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (instance == null)
-			instance = new MeasurementStorableObjectPool();
+			instance = new MeasurementStorableObjectPool(cacheClass);
 
 		mObjectLoader = mObjectLoader1;
 
@@ -109,51 +109,59 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MODELINGTYPE_ENTITY_CODE, MODELINGTYPE_OBJECT_POOL_SIZE);
 
-		instance.addObjectPool(ObjectEntities.PARAMETER_SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, MODELING_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, INTERVALS_TEMPORALPATTERN_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PERIODIC_TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, MODELING_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PARAMETER_SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, CRONTEMPORALPATTERN_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, INTERVALSTEMPORALPATTERN_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PERIODICTEMPORALPATTERN_OBJECT_POOL_SIZE);
 	}
 
 	/**
-	 * @param objectLoader
+	 * Init with given pool class and given pool sizes
+	 * @param mObjectLoader1
 	 * @param cacheClass
 	 * @param size
 	 */
-	public static void init(final MeasurementObjectLoader objectLoader,
-			final Class cacheClass, final int size) {
+	public static void init(final MeasurementObjectLoader mObjectLoader1, final Class cacheClass, final int size) {
+		assert mObjectLoader1 != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert cacheClass != null : ErrorMessages.NON_NULL_EXPECTED;
+
 		if (size > 0) {
-			instance = cacheClass == null
-					? new MeasurementStorableObjectPool()
-					: new MeasurementStorableObjectPool(cacheClass);
-			init(objectLoader, size);
+			if (instance == null)
+				instance = new MeasurementStorableObjectPool(cacheClass);
+
+			mObjectLoader = mObjectLoader1;
+
+			instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.MODELINGTYPE_ENTITY_CODE, size);
+
+			instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.PARAMETER_SET_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, size);
 		}
 		else {
-			init(objectLoader, cacheClass);
+			init(mObjectLoader1, cacheClass);
 		}
 	}
 
-	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new MeasurementStorableObjectPool(clazz);
-		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, using default");
-			instance = new MeasurementStorableObjectPool();
-		}
-		init(mObjectLoader1);
-	}
 
-	protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws ApplicationException {
+	protected java.util.Set refreshStorableObjects(final java.util.Set storableObjects) throws ApplicationException {
 		return mObjectLoader.refresh(storableObjects);
 	}
 
@@ -168,22 +176,23 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 				return mObjectLoader.loadEvaluationTypes(ids);
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
 				return mObjectLoader.loadModelingTypes(ids);
-			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
-				return mObjectLoader.loadParameterSets(ids);
-			case ObjectEntities.MODELING_ENTITY_CODE:
-				return mObjectLoader.loadModelings(ids);
-			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
-				return mObjectLoader.loadMeasurementSetups(ids);
+
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				return mObjectLoader.loadMeasurements(ids);
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
 				return mObjectLoader.loadAnalyses(ids);
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
 				return mObjectLoader.loadEvaluations(ids);
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				return mObjectLoader.loadMeasurements(ids);
-			case ObjectEntities.TEST_ENTITY_CODE:
-				return mObjectLoader.loadTests(ids);
+			case ObjectEntities.MODELING_ENTITY_CODE:
+				return mObjectLoader.loadModelings(ids);
+			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
+				return mObjectLoader.loadMeasurementSetups(ids);
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				return mObjectLoader.loadResults(ids);
+			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
+				return mObjectLoader.loadParameterSets(ids);
+			case ObjectEntities.TEST_ENTITY_CODE:
+				return mObjectLoader.loadTests(ids);
 			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
 				return mObjectLoader.loadCronTemporalPatterns(ids);
 			case ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
@@ -191,65 +200,51 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
 				return mObjectLoader.loadPeriodicalTemporalPatterns(ids);
 			default:
-				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.EMPTY_SET;
 		}
 	}
 
 	protected java.util.Set loadStorableObjectsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		java.util.Set loadedCollection = null;
-		short entityCode = condition.getEntityCode().shortValue();
+		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadMeasurementTypesButIds(condition, ids);
-				break;
+				return mObjectLoader.loadMeasurementTypesButIds(condition, ids);
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadAnalysisTypesButIds(condition, ids);
-				break;
+				return mObjectLoader.loadAnalysisTypesButIds(condition, ids);
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadEvaluationTypesButIds(condition, ids);
-				break;
+				return mObjectLoader.loadEvaluationTypesButIds(condition, ids);
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadModelingTypesButIds(condition, ids);
-				break;
-			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadParameterSetsButIds(condition, ids);
-				break;
-			case ObjectEntities.MODELING_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadModelingsButIds(condition, ids);
-				break;						
-			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadMeasurementSetupsButIds(condition, ids);
-				break;
-			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadAnalysesButIds(condition, ids);
-				break;
-			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadEvaluationsButIds(condition, ids);
-				break;
+				return mObjectLoader.loadModelingTypesButIds(condition, ids);
+
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadMeasurementsButIds(condition, ids);
-				break;
-			case ObjectEntities.TEST_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadTestsButIds(condition, ids);
-				break;
+				return mObjectLoader.loadMeasurementsButIds(condition, ids);
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				return mObjectLoader.loadAnalysesButIds(condition, ids);
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				return mObjectLoader.loadEvaluationsButIds(condition, ids);
+			case ObjectEntities.MODELING_ENTITY_CODE:
+				return mObjectLoader.loadModelingsButIds(condition, ids);
+			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
+				return mObjectLoader.loadMeasurementSetupsButIds(condition, ids);
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadResultsButIds(condition, ids);
-				break;
+				return mObjectLoader.loadResultsButIds(condition, ids);
+			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
+				return mObjectLoader.loadParameterSetsButIds(condition, ids);
+			case ObjectEntities.TEST_ENTITY_CODE:
+				return mObjectLoader.loadTestsButIds(condition, ids);
 			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadCronTemporalPatternsButIds(condition, ids);
-				break;
+				return mObjectLoader.loadCronTemporalPatternsButIds(condition, ids);
 			case ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadIntervalsTemporalPatternsButIds(condition, ids);
-				break;
+				return mObjectLoader.loadIntervalsTemporalPatternsButIds(condition, ids);
 			case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
-				loadedCollection = mObjectLoader.loadPeriodicalTemporalPatternsButIds(condition, ids);
-				break;
+				return mObjectLoader.loadPeriodicalTemporalPatternsButIds(condition, ids);
 			default:
-				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedCollection = null;
+				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+				return Collections.EMPTY_SET;
 		}
-		return loadedCollection;
 	}
 
 	protected void saveStorableObjects(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
@@ -267,11 +262,12 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				mObjectLoader.saveEvaluationTypes(storableObjects, force);
 				break;
-			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
-				mObjectLoader.saveParameterSets(storableObjects, force);
+			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
+				mObjectLoader.saveModelingTypes(storableObjects, force);
 				break;
-			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
-				mObjectLoader.saveMeasurementSetups(storableObjects, force);
+
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				mObjectLoader.saveMeasurements(storableObjects, force);
 				break;
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
 				mObjectLoader.saveAnalyses(storableObjects, force);
@@ -279,14 +275,20 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
 				mObjectLoader.saveEvaluations(storableObjects, force);
 				break;
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				mObjectLoader.saveMeasurements(storableObjects, force);
+			case ObjectEntities.MODELING_ENTITY_CODE:
+				mObjectLoader.saveModelings(storableObjects, force);
 				break;
-			case ObjectEntities.TEST_ENTITY_CODE:
-				mObjectLoader.saveTests(storableObjects, force);
+			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
+				mObjectLoader.saveMeasurementSetups(storableObjects, force);
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				mObjectLoader.saveResults(storableObjects, force);
+				break;
+			case ObjectEntities.PARAMETER_SET_ENTITY_CODE:
+				mObjectLoader.saveParameterSets(storableObjects, force);
+				break;
+			case ObjectEntities.TEST_ENTITY_CODE:
+				mObjectLoader.saveTests(storableObjects, force);
 				break;
 			case ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE:
 				mObjectLoader.saveCronTemporalPatterns(storableObjects, force);
@@ -298,7 +300,8 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 				mObjectLoader.savePeriodicalTemporalPatterns(storableObjects, force);
 				break;				
 			default:
-				Log.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entity: '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
