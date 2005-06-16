@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.2 2005/06/16 09:54:34 bob Exp $
+ * $Id: AbstractApplication.java,v 1.3 2005/06/16 10:19:02 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,11 +45,12 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginRestorer;
+import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/16 09:54:34 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/16 10:19:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -78,7 +79,8 @@ public abstract class AbstractApplication {
 	private static boolean resourcesInitialized = false;
 	private static boolean themeInitialized = false;
 	
-	public AbstractApplication(String applicationTitle, String applicationCode) {
+	public AbstractApplication(String applicationName, String applicationTitle, String applicationCode) {
+		Application.init(applicationName);
 		this.applicationTitle = applicationTitle;
 		this.applicationCode = applicationCode;
 		this.initTheme();
@@ -92,8 +94,8 @@ public abstract class AbstractApplication {
 		}
 	}
 	
-	public AbstractApplication() {
-		this(ApplicationProperties.getString(KEY_MODULE_TITLE, ""), ApplicationProperties.getString(KEY_MODULE_CODE, null));
+	public AbstractApplication(String applicationName) {
+		this(applicationName, ApplicationProperties.getString(KEY_MODULE_TITLE, ""), ApplicationProperties.getString(KEY_MODULE_CODE, null));
 	}
 	
 	private void initResources() {
