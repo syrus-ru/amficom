@@ -421,11 +421,11 @@ public class ReflectogramMath
     /**
      * used to find RMS Value of noise
      */
-    public static double getRMSValue(double[]y, int iFrom, int iToEx) {
+    public static double getRMSValue(double[]y, int iFrom, int iToEx, double y0) {
         double acc = 0;
         for (int i = iFrom; i < iToEx; i++) {
-            acc += y[i] * y[i];
+            acc += (y[i] - y0) * (y[i] - y0);
         }
-        return Math.sqrt(acc / (iToEx - iFrom));
+        return y0 + Math.sqrt(acc / (iToEx - iFrom));
     }
 }
