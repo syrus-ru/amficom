@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.measurement.EvaluationTypeWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupController;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
-import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
@@ -390,8 +390,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 		return measurementSetup1;
 	}
 
-	public Set getSet() {
-		Set set = null;
+	public ParameterSet getSet() {
+		ParameterSet set = null;
 		if (this.tabbedPane.getSelectedIndex() == 1) {
 			set = this.parametersTestPanel != null ? this.parametersTestPanel.getSet() : null;
 		}
@@ -518,7 +518,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
-	public void setSet(Set set) {
+	public void setSet(ParameterSet set) {
 		if (set != null && this.parametersTestPanel != null) {
 			// this.parametersTestPanel.setSet(set);
 		}
@@ -593,7 +593,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
 			this.setMeasurementSetups((Collection) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_SET)) {
-			this.setSet((Set) newValue);
+			this.setSet((ParameterSet) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
 			Identifier analysisTypeId = this.getAnalysisTypeId();
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE,
@@ -611,7 +611,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 																	null, measurementSetup1));
 			}
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_SET)) {
-			Set set = getSet();
+			ParameterSet set = getSet();
 			if (set != null) {
 				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_SET, null,
 																			set));

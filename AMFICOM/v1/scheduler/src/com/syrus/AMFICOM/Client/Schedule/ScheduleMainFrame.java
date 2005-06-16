@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.client.model.LazyCommand;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.util.Log;
 
 public class ScheduleMainFrame extends AbstractMainFrame {
 
@@ -219,7 +218,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_ENTITY_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SET_ENTITY_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PARAMETER_SET_ENTITY_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
 
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));

@@ -5,7 +5,7 @@
  */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.ParameterSet;
 
 /**
  * @author Vladimir Dolzhenko
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.measurement.Set;
  */
 public interface ParametersTest {
 
-	Set getSet();
+	ParameterSet getSet();
 	
-	void setSet(Set set);
+	void setSet(ParameterSet set);
 }

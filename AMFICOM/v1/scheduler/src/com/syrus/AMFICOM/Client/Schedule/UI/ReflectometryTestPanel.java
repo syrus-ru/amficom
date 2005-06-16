@@ -59,15 +59,15 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.SetSort;
+import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/15 14:24:42 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/16 13:47:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -184,13 +184,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.createGUI();
 	}
 
-	public synchronized Set getSet() {
-		Set set = null;
+	public synchronized ParameterSet getSet() {
+		ParameterSet set = null;
 		if (this.setId != null) {
 			try {
-				set = (Set) StorableObjectPool.getStorableObject(this.setId, true);
+				set = (ParameterSet) StorableObjectPool.getStorableObject(this.setId, true);
 				if (!set.isChanged()) {
-					SetParameter[] parameters = set.getParameters();
+					Parameter[] parameters = set.getParameters();
 					for (int i = 0; i < parameters.length; i++) {
 						ParameterType type = (ParameterType) parameters[i].getType();
 						String codename = type.getCodename();
@@ -251,7 +251,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					this.unchangedObjects.clear();
 				}
 
-				SetParameter[] params = new SetParameter[6 + (this.gsFlagParameterType != null ? 1 : 0)
+				Parameter[] params = new Parameter[6 + (this.gsFlagParameterType != null ? 1 : 0)
 						+ (this.lfdFlagParameterType != null ? 1 : 0)];
 
 				ByteArray byteArray;
@@ -266,7 +266,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 				byteArray = this.getByteArray(waveStr, this.wvlenParameterType);
 
-				params[0] = SetParameter.createInstance(this.wvlenParameterType, byteArray.getBytes());
+				params[0] = Parameter.createInstance(this.wvlenParameterType, byteArray.getBytes());
 
 				Object distance = this.maxDistanceComboBox.getSelectedItem();
 				if (distance == null)
@@ -277,7 +277,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					throw new IllegalArgumentException(LangModelSchedule.getString("Error.DistanceIsNotSet")); //$NON-NLS-1$
 				byteArray = this.getByteArray(distanceStr, this.trclenParameterType);
 
-				params[1] = SetParameter.createInstance(this.trclenParameterType, byteArray.getBytes());
+				params[1] = Parameter.createInstance(this.trclenParameterType, byteArray.getBytes());
 
 				Object resolution = this.resolutionComboBox.getSelectedItem();
 				if (resolution == null)
@@ -287,7 +287,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					throw new IllegalArgumentException(LangModelSchedule.getString("Error.ResolutionIsNotSet")); //$NON-NLS-1$
 				byteArray = this.getByteArray(resolutionStr, this.resParameterType);
 
-				params[2] = SetParameter.createInstance(this.resParameterType, byteArray.getBytes());
+				params[2] = Parameter.createInstance(this.resParameterType, byteArray.getBytes());
 
 				if (this.pulseWidthCheckBox.isSelected()) {
 					Object pulse = this.pulseWidthHiResComboBox.getSelectedItem();
@@ -299,7 +299,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					byteArray = this.getByteArray(pulseStr, this.pulswdHiResParameterType);
 
-					params[3] = SetParameter.createInstance(this.pulswdHiResParameterType, byteArray.getBytes());
+					params[3] = Parameter.createInstance(this.pulswdHiResParameterType, byteArray.getBytes());
 				} else {
 					Object pulse = this.pulseWidthLowResComboBox.getSelectedItem();
 					if (pulse == null)
@@ -310,7 +310,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					byteArray = this.getByteArray(pulseStr, this.pulswdLowResParameterType);
 
-					params[3] = SetParameter.createInstance(this.pulswdLowResParameterType, byteArray.getBytes());
+					params[3] = Parameter.createInstance(this.pulswdLowResParameterType, byteArray.getBytes());
 				}
 
 				String refract = this.refractTextField.getText();
@@ -318,7 +318,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					throw new IllegalArgumentException(LangModelSchedule.getString("Error.IndexOfRefractionIsNotSet")); //$NON-NLS-1$
 				byteArray = this.getByteArray(refract, this.iorParameterType);
 
-				params[4] = SetParameter.createInstance(this.iorParameterType, byteArray.getBytes());
+				params[4] = Parameter.createInstance(this.iorParameterType, byteArray.getBytes());
 
 				Object average = this.averageQuantityComboBox.getSelectedItem();
 				if (average == null)
@@ -329,7 +329,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 				byteArray = this.getByteArray(averageStr, this.scansParameterType);
 
-				params[5] = SetParameter.createInstance(this.scansParameterType, byteArray.getBytes());
+				params[5] = Parameter.createInstance(this.scansParameterType, byteArray.getBytes());
 
 				if (this.meId == null)
 					throw new IllegalArgumentException(LangModelSchedule.getString(LangModelSchedule
@@ -338,19 +338,19 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				if (this.gsFlagParameterType != null) {
 					byteArray = this.getByteArray(Boolean.toString(this.gsOptionBox.isSelected()),
 						this.gsFlagParameterType);
-					params[6] = SetParameter.createInstance(this.gsFlagParameterType, byteArray.getBytes());
+					params[6] = Parameter.createInstance(this.gsFlagParameterType, byteArray.getBytes());
 				}
 
 				if (this.lfdFlagParameterType != null) {
 					byteArray = this.getByteArray(Boolean.toString(this.lfdOptionBox.isSelected()),
 						this.lfdFlagParameterType);
-					params[7] = SetParameter.createInstance(this.lfdFlagParameterType, byteArray.getBytes());
+					params[7] = Parameter.createInstance(this.lfdFlagParameterType, byteArray.getBytes());
 				}
 
-				set = Set
+				set = ParameterSet
 						.createInstance(
 							LoginManager.getUserId(),
-							SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
+							ParameterSetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 							LangModelSchedule.getString("Text.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
 				StorableObjectPool.putStorableObject(set);
 				this.setId = set.getId();
@@ -368,7 +368,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			// Log.debugMessage("ReflectometryTestPanel.getSet | set.isChanged()
 			// " + set.isChanged(), Log.FINEST);
 			if (set.isChanged()) {
-				SetParameter[] parameters = set.getParameters();
+				Parameter[] parameters = set.getParameters();
 				for (int i = 0; i < parameters.length; i++) {
 					ParameterType type = (ParameterType) parameters[i].getType();
 					String codename = type.getCodename();
@@ -388,7 +388,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							value = this.pulseWidthLowResComboBox.getSelectedItem();
 							ByteArray byteArray = this.getByteArray(value.toString(), this.pulswdLowResParameterType);
 							try {
-								SetParameter setParameter = SetParameter.createInstance(this.pulswdLowResParameterType,
+								Parameter setParameter = Parameter.createInstance(this.pulswdLowResParameterType,
 									byteArray.getBytes());
 								parameters[i] = setParameter;
 							} catch (CreateObjectException e) {
@@ -403,7 +403,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							value = this.pulseWidthHiResComboBox.getSelectedItem();
 							ByteArray byteArray = this.getByteArray(value.toString(), this.pulswdHiResParameterType);
 							try {
-								SetParameter setParameter = SetParameter.createInstance(this.pulswdHiResParameterType,
+								Parameter setParameter = Parameter.createInstance(this.pulswdHiResParameterType,
 									byteArray.getBytes());
 								parameters[i] = setParameter;
 							} catch (CreateObjectException e) {
@@ -424,7 +424,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					if (value != null && !this.unchangedObjects.get(codename).equals(value)) {
 						ByteArray byteArray = this.getByteArray(value.toString(), type);
 						try {
-							parameters[i] = SetParameter.createInstance(type, byteArray.getBytes());
+							parameters[i] = Parameter.createInstance(type, byteArray.getBytes());
 						} catch (CreateObjectException e) {
 							AbstractMainFrame.showErrorMessage(this, e);
 						}
@@ -935,7 +935,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	synchronized void refreshTestsSet() {
 		java.util.Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
-			Set parameterSet = this.getSet();
+			ParameterSet parameterSet = this.getSet();
 			if (parameterSet.isChanged()) {
 				try {
 					java.util.Set storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
@@ -1002,7 +1002,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		}
 	}
 
-	public void setSet(Set set) {
+	public void setSet(ParameterSet set) {
 		if (this.skip) {
 			return;
 		}		
@@ -1021,7 +1021,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.gsOptionBox.setSelected(false);
 		this.lfdOptionBox.setSelected(false);
 
-		SetParameter[] setParameters = set.getParameters();
+		Parameter[] setParameters = set.getParameters();
 		for (int i = 0; i < setParameters.length; i++) {
 			StorableObjectType type = setParameters[i].getType();
 			if (type instanceof ParameterType) {

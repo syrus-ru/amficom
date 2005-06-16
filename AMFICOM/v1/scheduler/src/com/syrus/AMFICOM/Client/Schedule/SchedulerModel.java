@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -142,7 +142,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	MonitoredElement			monitoredElement					= null;
 	private Identifier			analysisTypeId						= null;
 	private Identifier			evaluationTypeId					= null;
-	private Set					set									= null;
+	private ParameterSet		set									= null;
 	private MeasurementSetup	measurementSetup					= null;
 	private TestReturnType		returnType							= null;
 	private TestTemporalStamps	testTimeStamps						= null;
@@ -306,7 +306,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.monitoredElement = (MonitoredElement) evt.getNewValue();
 			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_SET)) {
-			this.set = (Set) evt.getNewValue();
+			this.set = (ParameterSet) evt.getNewValue();
 			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.measurementSetup = (MeasurementSetup) evt.getNewValue();
@@ -471,9 +471,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(
 					mainMeasurementSetupId, true);
 				if (measurementSetup1 != null) {
-//					this.refreshMeasurementSetups();
-//					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_SET, null,
-//																				measurementSetup1.getParameterSet()));
+					// this.refreshMeasurementSetups();
+					// this.dispatcher.firePropertyChange(new
+					// PropertyChangeEvent(this, COMMAND_SET_SET, null,
+					// measurementSetup1.getParameterSet()));
 					// if (this.setEditor != null) {
 					// this.setEditor.setSet(measurementSetup1.getParameterSet());
 					// }
@@ -981,15 +982,15 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.addGroupTests();
 	}
 
-	public void moveSelectedTests(Date startDate) {		
-		
+	public void moveSelectedTests(Date startDate) {
+
 		try {
 			throw new Exception();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Log.FINEST);
 		long t0 = System.currentTimeMillis();
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
@@ -1055,9 +1056,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_START_GROUP_TIME, null,
 																		selectedTest.getStartTime()));
 		}
-		
+
 		long t1 = System.currentTimeMillis();
-		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1-t0), Log.FINEST);
+		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1 - t0), Log.FINEST);
 	}
 
 	private void addGroupTests() {

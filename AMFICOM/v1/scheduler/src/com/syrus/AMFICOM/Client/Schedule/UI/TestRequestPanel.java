@@ -15,10 +15,10 @@ import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -118,7 +118,7 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 					test.getMeasurementTypeId(), true);
 				this.typeTextField.setText(measurementType.getDescription());
 
-				User user = (User) StorableObjectPool.getStorableObject(test.getCreatorId(), true);
+				SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(test.getCreatorId(), true);
 				this.ownerTextField.setText(user.getName());
 
 				MonitoredElement me = test.getMonitoredElement();

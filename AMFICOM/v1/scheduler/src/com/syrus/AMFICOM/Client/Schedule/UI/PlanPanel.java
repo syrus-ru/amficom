@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.util.Log;
 
 public class PlanPanel extends JPanel implements 
 // TestsEditor, TestEditor, IntervalsEditor, 
