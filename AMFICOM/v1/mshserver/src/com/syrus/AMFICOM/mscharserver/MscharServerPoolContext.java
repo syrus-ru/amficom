@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerPoolContext.java,v 1.2 2005/06/15 15:55:59 arseniy Exp $
+ * $Id: MscharServerPoolContext.java,v 1.3 2005/06/16 07:45:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,25 +32,38 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/06/15 15:55:59 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/16 07:45:22 $
  * @module mscharserver_v1
  */
 final class MscharServerPoolContext extends PoolContext {
 	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; 
+
 	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
+
 	public static final String KEY_RESOURCE_POOL_SIZE = "ResourcePoolSize";
+
 	public static final String KEY_MAP_POOL_SIZE = "MapPoolSize";
+
 	public static final String KEY_SCHEME_POOL_SIZE = "SchemePoolSize";
-	public static final String KEY_MAPVIEW_POOL_SIZE = "MapViewPoolSize";
+
+	public static final String KEY_MAP_VIEW_POOL_SIZE = "MapViewPoolSize";
+
 	public static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
 
+
 	public static final int GENERAL_POOL_SIZE = 1000;
+
 	public static final int ADMINISTRATION_POOL_SIZE = 1000;
+
 	public static final int RESOURCE_POOL_SIZE = 1000;
+
 	public static final int MAP_POOL_SIZE = 1000;
+
 	public static final int SCHEME_POOL_SIZE = 1000;
-	public static final int MAPVIEW_POOL_SIZE = 1000;
+
+	public static final int MAP_VIEW_POOL_SIZE = 1000;
+
 	public static final String DATABASE_LOADER_ONLY = "false";
 
 	/**
@@ -73,8 +86,7 @@ final class MscharServerPoolContext extends PoolContext {
 			mapObjectLoader = new MscharServerMapObjectLoader();
 			schemeObjectLoader = new MscharServerSchemeObjectLoader();
 			mapViewObjectLoader = new MscharServerMapViewObjectLoader();
-		}
-		else {
+		} else {
 			generalObjectLoader = new DatabaseGeneralObjectLoader();
 			administrationObjectLoader = new DatabaseAdministrationObjectLoader();
 			resourceObjectLoader = new DatabaseResourceObjectLoader();
@@ -90,7 +102,7 @@ final class MscharServerPoolContext extends PoolContext {
 		final int resourcePoolSize = ApplicationProperties.getInt(KEY_RESOURCE_POOL_SIZE, RESOURCE_POOL_SIZE);
 		final int mapPoolSize = ApplicationProperties.getInt(KEY_MAP_POOL_SIZE, MAP_POOL_SIZE);
 		final int schemePoolSize = ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, SCHEME_POOL_SIZE);
-		final int mapViewPoolSize = ApplicationProperties.getInt(KEY_MAPVIEW_POOL_SIZE, MAPVIEW_POOL_SIZE);
+		final int mapViewPoolSize = ApplicationProperties.getInt(KEY_MAP_VIEW_POOL_SIZE, MAP_VIEW_POOL_SIZE);
 
 		GeneralStorableObjectPool.init(generalObjectLoader, lruMapClass, generalPoolSize);
 		AdministrationStorableObjectPool.init(administrationObjectLoader, lruMapClass, administrationPoolSize);
