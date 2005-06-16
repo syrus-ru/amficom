@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.89 2005/05/26 14:15:58 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.1 2005/06/16 10:34:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,12 +41,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/05/26 14:15:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/06/16 10:34:03 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public final class SetDatabase extends StorableObjectDatabase {
+public final class ParameterSetDatabase extends StorableObjectDatabase {
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
@@ -54,16 +54,12 @@ public final class SetDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {
-		return ObjectEntities.SET_ENTITY_CODE;
-	}
-
-	protected String getEntityName() {
-		return '"' + super.getEntityName() + '"';
+		return ObjectEntities.PARAMETER_SET_ENTITY_CODE;
 	}
 
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = SetWrapper.COLUMN_SORT  + COMMA
+			columns = ParameterSetWrapper.COLUMN_SORT  + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
@@ -78,7 +74,7 @@ public final class SetDatabase extends StorableObjectDatabase {
 	}	
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Set set = this.fromStorableObject(storableObject);
+		ParameterSet set = this.fromStorableObject(storableObject);
 		String values = Integer.toString(set.getSort().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
@@ -86,22 +82,22 @@ public final class SetDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		Set set = this.fromStorableObject(storableObject);
+		ParameterSet set = this.fromStorableObject(storableObject);
 		preparedStatement.setInt(++startParameterNumber, set.getSort().value());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
-	private Set fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Set)
-			return (Set)storableObject;
-		throw new IllegalDataException("SetDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	private ParameterSet fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+		if (storableObject instanceof ParameterSet)
+			return (ParameterSet)storableObject;
+		throw new IllegalDataException("ParameterSetDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		Set set = (storableObject == null) ?
-				new Set(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, 0, null, null, null) :			
+		ParameterSet set = (storableObject == null) ?
+				new ParameterSet(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, 0, null, null, null) :			
 				this.fromStorableObject(storableObject);
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -109,13 +105,13 @@ public final class SetDatabase extends StorableObjectDatabase {
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 						  resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-						  resultSet.getInt(SetWrapper.COLUMN_SORT),
+						  resultSet.getInt(ParameterSetWrapper.COLUMN_SORT),
 						  (description != null) ? description : "");
 		return set;
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Set set = this.fromStorableObject(storableObject);
+		ParameterSet set = this.fromStorableObject(storableObject);
 		this.retrieveEntity(set);
 		this.retrieveSetParametersByOneQuery(Collections.singleton(set));
 		this.retrieveSetMELinksByOneQuery(Collections.singleton(set));
@@ -128,11 +124,11 @@ public final class SetDatabase extends StorableObjectDatabase {
 		StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-				+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
-				+ SetWrapper.LINK_COLUMN_SET_ID
-				+ SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+				+ ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
+				+ ParameterSetWrapper.LINK_COLUMN_SET_ID
+				+ SQL_FROM + ObjectEntities.PARAMETER_ENTITY
 				+ SQL_WHERE);
-		sql.append(idsEnumerationString(sets, SetWrapper.LINK_COLUMN_SET_ID, true));
+		sql.append(idsEnumerationString(sets, ParameterSetWrapper.LINK_COLUMN_SET_ID, true));
 
 		Map setParametersMap = new HashMap();
 		Identifier setId;
@@ -143,11 +139,11 @@ public final class SetDatabase extends StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("ParameterSetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			ParameterType parameterType;
-			SetParameter parameter;
+			Parameter parameter;
 			while (resultSet.next()) {
 				try {
 					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
@@ -155,10 +151,10 @@ public final class SetDatabase extends StorableObjectDatabase {
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 														parameterType,
-														ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
-				setId = DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_SET_ID);
+														ByteArrayDatabase.toByteArray(resultSet.getBlob(ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
+				setId = DatabaseIdentifier.getIdentifier(resultSet, ParameterSetWrapper.LINK_COLUMN_SET_ID);
 				setParameters = (java.util.Set) setParametersMap.get(setId);
 				if (setParameters == null) {
 					setParameters = new HashSet();
@@ -168,7 +164,7 @@ public final class SetDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for set -- "
+			String mesg = "ParameterSetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for set -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
@@ -189,16 +185,16 @@ public final class SetDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		Set set;
+		ParameterSet set;
 		for (Iterator it = sets.iterator(); it.hasNext();) {
-			set = (Set) it.next();
+			set = (ParameterSet) it.next();
 			setId = set.getId();
 			setParameters = (java.util.Set) setParametersMap.get(setId);
 
 			if (setParameters != null)
-				set.setParameters0((SetParameter[]) setParameters.toArray(new SetParameter[setParameters.size()]));
+				set.setParameters0((Parameter[]) setParameters.toArray(new Parameter[setParameters.size()]));
 			else
-				set.setParameters0(new SetParameter[0]);
+				set.setParameters0(new Parameter[0]);
 		}
 
 	}
@@ -210,14 +206,14 @@ public final class SetDatabase extends StorableObjectDatabase {
 		Map meIdsMap = null;
 		meIdsMap = this.retrieveLinkedEntityIds(sets,
 				ObjectEntities.SETMELINK_ENTITY,
-				SetWrapper.LINK_COLUMN_SET_ID,
-				SetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+				ParameterSetWrapper.LINK_COLUMN_SET_ID,
+				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
-		Set set;
+		ParameterSet set;
 		Identifier setId;
 		java.util.Set meIds;
 		for (Iterator it = sets.iterator(); it.hasNext();) {
-			set = (Set) it.next();
+			set = (ParameterSet) it.next();
 			setId = set.getId();
 			meIds = (java.util.Set) meIdsMap.get(setId);
 
@@ -226,7 +222,7 @@ public final class SetDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		Set set = this.fromStorableObject(storableObject);
+		ParameterSet set = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  set.getId() + "'; argument: " + arg);
@@ -235,14 +231,14 @@ public final class SetDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		Log.debugMessage("SetDatabase.insert | 1 ", Log.DEBUGLEVEL01);
-		Set set = this.fromStorableObject(storableObject);
+		Log.debugMessage("ParameterSetDatabase.insert | 1 ", Log.DEBUGLEVEL01);
+		ParameterSet set = this.fromStorableObject(storableObject);
 		try {
-			Log.debugMessage("SetDatabase.insert | before insertEntity ", Log.DEBUGLEVEL01);
+			Log.debugMessage("ParameterSetDatabase.insert | before insertEntity ", Log.DEBUGLEVEL01);
 			super.insertEntity(set);
-			Log.debugMessage("SetDatabase.insert | before insertSetParameters ", Log.DEBUGLEVEL01);
+			Log.debugMessage("ParameterSetDatabase.insert | before insertSetParameters ", Log.DEBUGLEVEL01);
 			this.insertSetParameters(set);
-			Log.debugMessage("SetDatabase.insert | after insertSetParameters ", Log.DEBUGLEVEL01);
+			Log.debugMessage("ParameterSetDatabase.insert | after insertSetParameters ", Log.DEBUGLEVEL01);
 			this.updateSetMELinks(Collections.singleton(set));
 		}
 		catch (CreateObjectException coe) {
@@ -256,10 +252,10 @@ public final class SetDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
-		Log.debugMessage("SetDatabase.insert | many ", Log.DEBUGLEVEL01);
+		Log.debugMessage("ParameterSetDatabase.insert | many ", Log.DEBUGLEVEL01);
 		super.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			Set set = this.fromStorableObject((StorableObject) it.next());
+			ParameterSet set = this.fromStorableObject((StorableObject) it.next());
 			this.insertSetParameters(set);
 		}
 		try {
@@ -270,25 +266,25 @@ public final class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertSetParameters(Set set) throws CreateObjectException {
-		Log.debugMessage("SetDatabase.insertSetParameters | ", Log.DEBUGLEVEL01);
+	private void insertSetParameters(ParameterSet set) throws CreateObjectException {
+		Log.debugMessage("ParameterSetDatabase.insertSetParameters | ", Log.DEBUGLEVEL01);
 		Identifier setId = set.getId();		
-		SetParameter[] setParameters = set.getParameters();
-		Log.debugMessage("SetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
+		Parameter[] setParameters = set.getParameters();
+		Log.debugMessage("ParameterSetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.SETPARAMETER_ENTITY
+			+ ObjectEntities.PARAMETER_ENTITY
 			+ OPEN_BRACKET
 			+ StorableObjectWrapper.COLUMN_ID  + COMMA
 			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA
-			+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE + CLOSE_BRACKET
+			+ ParameterSetWrapper.LINK_COLUMN_SET_ID + COMMA
+			+ ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE + CLOSE_BRACKET
 			+ SQL_VALUES
 			+ OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
-		Log.debugMessage("SetDatabase.insertSetParameters | try:" + sql, Log.DEBUGLEVEL01);
+		Log.debugMessage("ParameterSetDatabase.insertSetParameters | try:" + sql, Log.DEBUGLEVEL01);
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
@@ -302,19 +298,19 @@ public final class SetDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, setId);
 
-				Log.debugMessage("SetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString()
+				Log.debugMessage("ParameterSetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString()
 						+ " for set '" + setId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 											 connection,
-											 ObjectEntities.SETPARAMETER_ENTITY,
-											 SetWrapper.LINK_COLUMN_PARAMETER_VALUE,
+											 ObjectEntities.PARAMETER_ENTITY,
+											 ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE,
 											 StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
+			String mesg = "ParameterSetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
 					+ "' of type '" + parameterTypeId.toString() + "' for set '" + setId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
@@ -360,7 +356,7 @@ public final class SetDatabase extends StorableObjectDatabase {
 			return;
 
 		Map meIdsMap = new HashMap();
-		Set set;
+		ParameterSet set;
 		java.util.Set meIds;
 		for (Iterator it = sets.iterator(); it.hasNext();) {
 			set = this.fromStorableObject((StorableObject) it.next());
@@ -370,12 +366,12 @@ public final class SetDatabase extends StorableObjectDatabase {
 
 		super.updateLinkedEntityIds(meIdsMap,
 				ObjectEntities.SETMELINK_ENTITY,
-				SetWrapper.LINK_COLUMN_SET_ID,
-				SetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+				ParameterSetWrapper.LINK_COLUMN_SET_ID,
+				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() == ObjectEntities.SET_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() == ObjectEntities.PARAMETER_SET_ENTITY_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String setIdStr = DatabaseIdentifier.toSQLString(id);
@@ -385,10 +381,10 @@ public final class SetDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.SETMELINK_ENTITY
-					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);
+					+ SQL_WHERE + ParameterSetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.SETPARAMETER_ENTITY
-					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);									
+					+ ObjectEntities.PARAMETER_ENTITY
+					+ SQL_WHERE + ParameterSetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);									
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ this.getEntityName()
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + setIdStr);

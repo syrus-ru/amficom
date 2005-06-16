@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.71 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: ParameterSet.java,v 1.1 2005/06/16 10:34:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,17 +29,17 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
-import com.syrus.AMFICOM.measurement.corba.SetSort;
-import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/06/16 10:34:03 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public final class Set extends StorableObject {
+public final class ParameterSet extends StorableObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -47,7 +47,7 @@ public final class Set extends StorableObject {
 
 	private int sort;
 	private String description;
-	private SetParameter[] parameters;
+	private Parameter[] parameters;
 
 	private java.util.Set monitoredElementIds;
 
@@ -58,12 +58,12 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Set(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+	ParameterSet(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.monitoredElementIds = new HashSet();
 		
-		SetDatabase database = (SetDatabase) DatabaseContext.getDatabase(ObjectEntities.SET_ENTITY_CODE);
+		ParameterSetDatabase database = (ParameterSetDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETER_SET_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -76,7 +76,7 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set(final Set_Transferable st) throws CreateObjectException {
+	public ParameterSet(final ParameterSet_Transferable st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
 		}
@@ -89,12 +89,12 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Set(final Identifier id,
+	ParameterSet(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final int sort,
 			final String description,
-			final SetParameter[] parameters,
+			final Parameter[] parameters,
 			final java.util.Set monitoredElementIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
@@ -119,14 +119,14 @@ public final class Set extends StorableObject {
 	 * @param monitoredElementIds
 	 * @throws CreateObjectException
 	 */
-	public static Set createInstance(final Identifier creatorId,
-			final SetSort sort,
+	public static ParameterSet createInstance(final Identifier creatorId,
+			final ParameterSetSort sort,
 			final String description,
-			final SetParameter[] parameters,
+			final Parameter[] parameters,
 			final java.util.Set monitoredElementIds) throws CreateObjectException {
 
 		try {
-			Set set = new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
+			ParameterSet set = new ParameterSet(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_SET_ENTITY_CODE),
 					creatorId,
 					0L,
 					sort.value(),
@@ -151,14 +151,14 @@ public final class Set extends StorableObject {
 	 * </p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Set_Transferable st = (Set_Transferable)transferable;
+		ParameterSet_Transferable st = (ParameterSet_Transferable)transferable;
 		super.fromTransferable(st.header);
 		this.sort = st.sort.value();
 		this.description = st.description;
 
-		this.parameters = new SetParameter[st.parameters.length];
+		this.parameters = new Parameter[st.parameters.length];
 		for (int i = 0; i < this.parameters.length; i++) {
-			this.parameters[i] = new SetParameter(st.parameters[i]);
+			this.parameters[i] = new Parameter(st.parameters[i]);
 		}
 
 		this.monitoredElementIds = Identifier.fromTransferables(st.monitored_element_ids);
@@ -177,8 +177,8 @@ public final class Set extends StorableObject {
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
 
 		Identifier_Transferable[] meIds = Identifier.createTransferables(this.monitoredElementIds);
-		return new Set_Transferable(super.getHeaderTransferable(),
-				SetSort.from_int(this.sort),
+		return new ParameterSet_Transferable(super.getHeaderTransferable(),
+				ParameterSetSort.from_int(this.sort),
 				this.description,
 				pts,
 				meIds);
@@ -208,18 +208,18 @@ public final class Set extends StorableObject {
 	}
 
 	public short getEntityCode() {
-		return ObjectEntities.SET_ENTITY_CODE;
+		return ObjectEntities.PARAMETER_SET_ENTITY_CODE;
 	}
 
-	public SetSort getSort() {
-		return SetSort.from_int(this.sort);
+	public ParameterSetSort getSort() {
+		return ParameterSetSort.from_int(this.sort);
 	}
 
 	public String getDescription() {
 		return this.description;
 	}
 
-	public SetParameter[] getParameters() {
+	public Parameter[] getParameters() {
 		return this.parameters;
 	}
 
@@ -249,11 +249,11 @@ public final class Set extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameters0(final SetParameter[] parameters) {
+	protected synchronized void setParameters0(final Parameter[] parameters) {
 		this.parameters = parameters;
 	}
 
-	public void setParameters(final SetParameter[] parameters) {
+	public void setParameters(final Parameter[] parameters) {
 		this.setParameters0(parameters);
 		super.markAsChanged();
 	}
@@ -297,15 +297,15 @@ public final class Set extends StorableObject {
 	/**
 	 * @param sort The sort to set.
 	 */
-	public void setSort(final SetSort sort) {
+	public void setSort(final ParameterSetSort sort) {
 		this.sort = sort.value();
 		super.markAsChanged();
 	}
 
 	public boolean equals(Object obj) {
 		boolean equals = (obj==this);
-		if ((!equals)&&(obj instanceof Set)){
-			Set set = (Set)obj;
+		if ((!equals)&&(obj instanceof ParameterSet)){
+			ParameterSet set = (ParameterSet)obj;
 			if ((this.id.equals(set.id))&&
 				 HashCodeGenerator.equalsDate(this.created,set.created) &&
 				 (this.creatorId.equals(set.creatorId))&&
@@ -367,7 +367,7 @@ public final class Set extends StorableObject {
 		}
 		else {
 			for (int i = 0; i < this.parameters.length; i++) {
-				SetParameter param = this.parameters[i];
+				Parameter param = this.parameters[i];
 				buffer.append(ID_PARAMETERS);
 				buffer.append(OPEN_BLOCK);
 				buffer.append(param.toString());

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.72 2005/06/07 15:44:09 arseniy Exp $
+ * $Id: Measurement.java,v 1.73 2005/06/16 10:34:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/06/07 15:44:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.73 $, $Date: 2005/06/16 10:34:04 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -288,7 +288,7 @@ public class Measurement extends Action {
 		}
 	}
 
-	public Result createResult(final Identifier resultCreatorId, final SetParameter[] resultParameters)
+	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
 			throws CreateObjectException {
 		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_MEASUREMENT, resultParameters);
 	}

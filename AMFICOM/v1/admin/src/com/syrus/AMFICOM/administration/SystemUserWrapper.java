@@ -1,5 +1,5 @@
 /*
- * $Id: UserWrapper.java,v 1.7 2005/06/08 09:34:03 arseniy Exp $
+ * $Id: SystemUserWrapper.java,v 1.1 2005/06/16 10:31:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.administration.corba.UserSort;
+import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/08 09:34:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/06/16 10:31:25 $
+ * @author $Author: bass $
  * @module admin_v1
  */
-public class UserWrapper extends StorableObjectWrapper {
+public class SystemUserWrapper extends StorableObjectWrapper {
 	public static final String	SYS_LOGIN		= "sys";
 	public static final String LOGINPROCESSOR_LOGIN = "loginprocessor";
 	public static final String EVENTPROCESSOR_LOGIN = "eventprocessor";
@@ -36,20 +36,20 @@ public class UserWrapper extends StorableObjectWrapper {
 	// sort NUMBER(2, 0) NOT NULL,
 	public static final String	COLUMN_SORT			= "sort";
 
-	private static UserWrapper	instance;
+	private static SystemUserWrapper	instance;
 
 	private List				keys;
 
-	private UserWrapper() {
+	private SystemUserWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_LOGIN, COLUMN_NAME, COLUMN_SORT};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
-	public static UserWrapper getInstance() {
+	public static SystemUserWrapper getInstance() {
 		if (instance == null)
-			instance = new UserWrapper();
+			instance = new SystemUserWrapper();
 		return instance;
 	}
 
@@ -63,8 +63,8 @@ public class UserWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof User) {
-			User user = (User) object;
+		if (object instanceof SystemUser) {
+			SystemUser user = (SystemUser) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return user.getDescription();
 			if (key.equals(COLUMN_LOGIN))
@@ -82,8 +82,8 @@ public class UserWrapper extends StorableObjectWrapper {
 	}
 
 	public void setValue(Object object, final String key, final Object value) {
-		if (object instanceof User) {
-			User user = (User) object;
+		if (object instanceof SystemUser) {
+			SystemUser user = (SystemUser) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				user.setDescription((String) value);
 			else if (key.equals(COLUMN_LOGIN))
@@ -91,7 +91,7 @@ public class UserWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_NAME))
 				user.setName((String) value);
 			else if (key.equals(COLUMN_SORT))
-				user.setSort(UserSort.from_int(((Integer) value).intValue()));
+				user.setSort(SystemUserSort.from_int(((Integer) value).intValue()));
 		}
 	}
 

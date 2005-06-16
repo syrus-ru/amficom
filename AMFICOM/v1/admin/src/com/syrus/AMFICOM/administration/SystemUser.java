@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.25 2005/06/03 20:37:40 arseniy Exp $
+ * $Id: SystemUser.java,v 1.1 2005/06/16 10:31:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.UserSort;
-import com.syrus.AMFICOM.administration.corba.User_Transferable;
+import com.syrus.AMFICOM.administration.corba.SystemUser_Transferable;
+import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -31,12 +31,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/03 20:37:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/06/16 10:31:25 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
-public final class User extends StorableObject {
+public final class SystemUser extends StorableObject {
 	private static final long serialVersionUID = 7173419705878464356L;
 	
 	private String login;
@@ -47,10 +47,10 @@ public final class User extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public User(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	public SystemUser(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		UserDatabase database = (UserDatabase) DatabaseContext.getDatabase(ObjectEntities.USER_ENTITY_CODE);
+		SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEM_USER_ENTITY_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -64,14 +64,14 @@ public final class User extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	User(final User_Transferable ut) {
+	SystemUser(final SystemUser_Transferable ut) {
 		this.fromTransferable(ut);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	User(final Identifier id,
+	SystemUser(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final String login,
@@ -94,7 +94,7 @@ public final class User extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		User_Transferable ut = (User_Transferable) transferable;
+		SystemUser_Transferable ut = (SystemUser_Transferable) transferable;
 		try {
 			super.fromTransferable(ut.header);
 		}
@@ -115,9 +115,9 @@ public final class User extends StorableObject {
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return new User_Transferable(super.getHeaderTransferable(),
+		return new SystemUser_Transferable(super.getHeaderTransferable(),
 				this.login,
-				UserSort.from_int(this.sort),
+				SystemUserSort.from_int(this.sort),
 				this.name,
 				this.description);
 	}
@@ -138,8 +138,8 @@ public final class User extends StorableObject {
 		return this.login;
 	}
 
-	public UserSort getSort() {
-		return UserSort.from_int(this.sort);
+	public SystemUserSort getSort() {
+		return SystemUserSort.from_int(this.sort);
 	}
 
 	public String getName() {
@@ -164,14 +164,14 @@ public final class User extends StorableObject {
 	 * @param description
 	 * @throws CreateObjectException
 	 */
-	public static User createInstance(final Identifier creatorId,
+	public static SystemUser createInstance(final Identifier creatorId,
 			final String login,
-			final UserSort sort,
+			final SystemUserSort sort,
 			final String name,
 			final String description) throws CreateObjectException {
 		try {
-			Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.USER_ENTITY_CODE);
-			User user = new User(generatedIdentifier,
+			Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEM_USER_ENTITY_CODE);
+			SystemUser user = new SystemUser(generatedIdentifier,
 					creatorId != null ? creatorId : generatedIdentifier,
 					0L,
 					login,
@@ -232,7 +232,7 @@ public final class User extends StorableObject {
 		super.markAsChanged();
 	}
 	
-	public void setSort(final UserSort sort) {
+	public void setSort(final SystemUserSort sort) {
 		this.sort = sort.value();
 		super.markAsChanged();
 	}

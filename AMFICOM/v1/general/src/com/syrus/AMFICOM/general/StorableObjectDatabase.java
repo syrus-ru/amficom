@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.145 2005/06/15 13:17:16 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.146 2005/06/16 10:29:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.145 $, $Date: 2005/06/15 13:17:16 $
+ * @version $Revision: 1.146 $, $Date: 2005/06/16 10:29:05 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -103,11 +103,7 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract short getEntityCode();
 
-	/**
-	 * Overridden by databases whose corresponding table name is not
-	 * all-uppercase. Currently, the above is true for "User" and "Set".
-	 */
-	protected String getEntityName() {
+	protected final String getEntityName() {
 		return ObjectEntities.codeToString(this.getEntityCode());
 	}
 

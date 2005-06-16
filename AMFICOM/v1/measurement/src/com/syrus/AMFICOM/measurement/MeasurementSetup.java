@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.73 2005/06/05 18:31:27 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.74 2005/06/16 10:34:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/06/05 18:31:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/06/16 10:34:03 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -43,10 +43,10 @@ public final class MeasurementSetup extends StorableObject {
 	 */
 	private static final long	serialVersionUID	= 3256442525404443446L;
 
-	private Set parameterSet;
-	private Set criteriaSet;
-	private Set thresholdSet;
-	private Set etalon;
+	private ParameterSet parameterSet;
+	private ParameterSet criteriaSet;
+	private ParameterSet thresholdSet;
+	private ParameterSet etalon;
 	private String description;
 	private long measurementDuration;
 
@@ -91,10 +91,10 @@ public final class MeasurementSetup extends StorableObject {
 	MeasurementSetup(final Identifier id,
 			final Identifier creatorId,
 			final long version,
-			final Set parameterSet,
-			final Set criteriaSet,
-			final Set thresholdSet,
-			final Set etalon,
+			final ParameterSet parameterSet,
+			final ParameterSet criteriaSet,
+			final ParameterSet thresholdSet,
+			final ParameterSet etalon,
 			final String description,
 			final long measurementDuration,
 			final java.util.Set monitoredElementIds,
@@ -132,10 +132,10 @@ public final class MeasurementSetup extends StorableObject {
 	 * @throws CreateObjectException
 	 */
 	public static MeasurementSetup createInstance(final Identifier creatorId,
-			final Set parameterSet,
-			final Set criteriaSet,
-			final Set thresholdSet,
-			final Set etalon,
+			final ParameterSet parameterSet,
+			final ParameterSet criteriaSet,
+			final ParameterSet thresholdSet,
+			final ParameterSet etalon,
 			final String description,
 			final long measurementDuration,
 			final java.util.Set monitoredElementIds,
@@ -172,25 +172,25 @@ public final class MeasurementSetup extends StorableObject {
 		MeasurementSetup_Transferable mst = (MeasurementSetup_Transferable)transferable;
 		super.fromTransferable(mst.header);
 
-		this.parameterSet = (Set) StorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
+		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
 		this.criteriaSet = (mst.criteria_set_id.identifier_string.length() != 0)
-				? (Set) StorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
+				? (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
 		this.thresholdSet = (mst.threshold_set_id.identifier_string.length() != 0)
-				? (Set) StorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
+				? (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string
 		 *       to identifier_code
 		 */
 		this.etalon = (mst.etalon_id.identifier_string.length() != 0)
-				? (Set) StorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
+				? (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
 
 		this.description = mst.description;
 		this.measurementDuration = mst.measurement_duration;
@@ -235,19 +235,19 @@ public final class MeasurementSetup extends StorableObject {
         return ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE;
     }
 
-    public Set getParameterSet() {
+    public ParameterSet getParameterSet() {
 		return this.parameterSet;
 	}
 
-	public Set getCriteriaSet() {
+	public ParameterSet getCriteriaSet() {
 		return this.criteriaSet;
 	}
 
-	public Set getThresholdSet() {
+	public ParameterSet getThresholdSet() {
 		return this.thresholdSet;
 	}
 
-	public Set getEtalon() {
+	public ParameterSet getEtalon() {
 		return this.etalon;
 	}
 
@@ -268,7 +268,7 @@ public final class MeasurementSetup extends StorableObject {
 	}
 
 	public String[] getParameterTypeCodenames() {
-		SetParameter[] parameters = this.parameterSet.getParameters();
+		Parameter[] parameters = this.parameterSet.getParameters();
 		String[] parameterTypeCodenames = new String[parameters.length];
 		for (int i = 0; i < parameters.length; i++)
 			parameterTypeCodenames[i] = parameters[i].getType().getCodename();
@@ -276,7 +276,7 @@ public final class MeasurementSetup extends StorableObject {
 	}
 
 	public byte[][] getParameterValues() {
-		SetParameter[] parameters = this.parameterSet.getParameters();
+		Parameter[] parameters = this.parameterSet.getParameters();
 		byte[][] parameterValues = new byte[parameters.length][];
 		for (int i = 0; i < parameters.length; i++)
 			parameterValues[i] = parameters[i].getValue();
@@ -291,10 +291,10 @@ public final class MeasurementSetup extends StorableObject {
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final long version,
-			final Set parameterSet,
-			final Set criteriaSet,
-			final Set thresholdSet,
-			final Set etalon,
+			final ParameterSet parameterSet,
+			final ParameterSet criteriaSet,
+			final ParameterSet thresholdSet,
+			final ParameterSet etalon,
 			final String description,
 			final long measurementDuration) {
 		super.setAttributes(created,
@@ -370,7 +370,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * @param criteriaSet
 	 *          The criteriaSet to set.
 	 */
-	public void setCriteriaSet(final Set criteriaSet) {
+	public void setCriteriaSet(final ParameterSet criteriaSet) {
 		this.criteriaSet = criteriaSet;
 		super.markAsChanged();
 	}
@@ -392,7 +392,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * @param etalon
 	 *            The etalon to set.
 	 */
-	public void setEtalon(final Set etalon) {
+	public void setEtalon(final ParameterSet etalon) {
 		this.etalon = etalon;
 		super.markAsChanged();
 	}
@@ -414,7 +414,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * @param parameterSet
 	 *            The parameterSet to set.
 	 */
-	public void setParameterSet(final Set parameterSet) {
+	public void setParameterSet(final ParameterSet parameterSet) {
 		this.parameterSet = parameterSet;
 		super.markAsChanged();
 	}
@@ -425,7 +425,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * @param thresholdSet
 	 *            The thresholdSet to set.
 	 */
-	public void setThresholdSet(final Set thresholdSet) {
+	public void setThresholdSet(final ParameterSet thresholdSet) {
 		this.thresholdSet = thresholdSet;
 		super.markAsChanged();
 	}

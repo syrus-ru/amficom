@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.32 2005/05/20 21:11:39 arseniy Exp $
+ * $Id: Parameter.java,v 1.1 2005/06/16 10:34:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,12 +35,12 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/05/20 21:11:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/06/16 10:34:03 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class SetParameter implements TransferableObject, TypedObject, Identifiable {
+public class Parameter implements TransferableObject, TypedObject, Identifiable {
 	private Identifier id;
 	private ParameterType type;
 	private byte[] value;	
@@ -50,7 +50,7 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public SetParameter(Parameter_Transferable pt) throws ApplicationException {
+	public Parameter(Parameter_Transferable pt) throws ApplicationException {
 		this.id = new Identifier(pt.id);
 		this.type = (ParameterType) StorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 		this.value = new byte[pt.value.length];
@@ -63,7 +63,7 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected SetParameter(Identifier id,
+	protected Parameter(Identifier id,
 								ParameterType type,
 								byte[] value) {
 		this.id = id;
@@ -71,9 +71,9 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 		this.value = value;
 	}
 
-	public static SetParameter createInstance(ParameterType type, byte[] value) throws CreateObjectException {
+	public static Parameter createInstance(ParameterType type, byte[] value) throws CreateObjectException {
 		try {
-			SetParameter setParameter = new SetParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE), type, value);
+			Parameter setParameter = new Parameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_ENTITY_CODE), type, value);
 			assert setParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			return setParameter;
 		}
@@ -117,8 +117,8 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 //	
 //	public boolean equals(Object obj) {
 //		boolean equals = (obj == this);
-//		if ((!equals) && (obj instanceof SetParameter)) {
-//			SetParameter setParameter = (SetParameter) obj;
+//		if ((!equals) && (obj instanceof Parameter)) {
+//			Parameter setParameter = (Parameter) obj;
 //			if ((this.id.equals(setParameter.id))
 //					&& (this.type.equals(setParameter.type))
 //					&& HashCodeGenerator.equalsArray(this.value, setParameter.value))
@@ -204,13 +204,13 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 		return string;
 	}
 
-	public static byte[] getValueByTypeCodename(SetParameter[] params, String keyCodename) throws ObjectNotFoundException {
+	public static byte[] getValueByTypeCodename(Parameter[] params, String keyCodename) throws ObjectNotFoundException {
 		for (int i = 0; i < params.length; i++) {
 			ParameterType p = (ParameterType) params[i].getType();
 			if (p.getCodename().equals(keyCodename))
 				return params[i].getValue();
 		}
-		throw new ObjectNotFoundException("SetParameter.getValueByTypeCodename | cannot find set parameter for type codename '"
+		throw new ObjectNotFoundException("Parameter.getValueByTypeCodename | cannot find set parameter for type codename '"
 				+ keyCodename + '\'');
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.58 2005/05/26 14:15:57 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.59 2005/06/16 10:34:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/05/26 14:15:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/06/16 10:34:03 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -114,13 +114,13 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 					this.fromStorableObject(storableObject);
 		AnalysisType analysisType;
 		Measurement measurement = null;
-		Set criteriaSet;
+		ParameterSet criteriaSet;
 		try {
 			analysisType = (AnalysisType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != null)
 				measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
-			criteriaSet = (Set) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_CRITERIA_SET_ID), true);
+			criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_CRITERIA_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

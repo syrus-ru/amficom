@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.18 2005/05/23 13:07:57 bass Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.19 2005/06/16 10:31:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/23 13:07:57 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/16 10:31:25 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -23,7 +23,7 @@ public interface AdministrationObjectLoader {
 
 	/* Load multiple objects*/
 
-	Set loadUsers(Set ids) throws ApplicationException;
+	Set loadSystemUsers(Set ids) throws ApplicationException;
 
 	Set loadDomains(Set ids) throws ApplicationException;
 
@@ -39,7 +39,7 @@ public interface AdministrationObjectLoader {
 
 	/* Load multiple objects but ids*/
 
-	Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadSystemUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
 	Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
@@ -55,7 +55,7 @@ public interface AdministrationObjectLoader {
 
 	/* Save multiple objects*/
 
-	void saveUsers(Set objects, boolean force) throws ApplicationException;
+	void saveSystemUsers(Set objects, boolean force) throws ApplicationException;
 
 	void saveDomains(Set objects, boolean force) throws ApplicationException;
 

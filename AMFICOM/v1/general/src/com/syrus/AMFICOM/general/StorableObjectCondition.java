@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.12 2005/04/04 13:07:03 bass Exp $
+ * $Id: StorableObjectCondition.java,v 1.13 2005/06/16 10:29:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/04 13:07:03 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/16 10:29:05 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -25,7 +25,7 @@ public interface StorableObjectCondition extends TransferableObject {
 	 *
 	 * @param storableObjects objects present in the local pool.
 	 * @return true if certain objects need to be loaded, false otherwise.
-	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Set, StorableObjectCondition, boolean)
+	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Set, StorableObjectCondition, boolean, boolean)
 	 */
 	boolean isNeedMore(final Set storableObjects);
 
