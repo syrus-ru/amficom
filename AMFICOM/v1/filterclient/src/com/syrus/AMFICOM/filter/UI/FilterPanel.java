@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.1 2005/06/15 08:13:01 max Exp $
+ * $Id: FilterPanel.java,v 1.2 2005/06/16 10:31:38 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.filter.UI;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -15,7 +16,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.Toolkit;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -24,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -49,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/15 08:13:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/16 10:31:38 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -180,6 +184,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		JScrollPane filterScroller = 	new JScrollPane(this.filteredList);
 		JScrollPane conditionScroller =	new JScrollPane(this.conditions);
 		
+		this.removeButton.setEnabled(false);
 		//TODO: all setIcons move to Enviroment.java
 		JRadioButton eqRadioButton = new JRadioButton();
 		eqRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
@@ -377,7 +382,10 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		this.createSchemeButton.addActionListener(this.controller);
 		this.addButton.addActionListener(this.controller);
 		this.removeButton.addActionListener(this.controller);
-				
+		this.conditions.addListSelectionListener(this.controller);
+		this.startDayButton.addActionListener(this.controller);
+		this.endDayButton.addActionListener(this.controller);
+		
 		this.getViewport().add(this.mainPanel);
 	}
 		
@@ -409,8 +417,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	public void drawDateCondition(DateCondition dateCondition) {
 		this.startDateSpinner.setValue(dateCondition.getStartDate());
 		this.startTimeSpinner.setValue(dateCondition.getStartDate());
-		this.endDateSpinner.setValue(dateCondition.getStartDate());
-		this.endTimeSpinner.setValue(dateCondition.getStartDate());	
+		this.endDateSpinner.setValue(dateCondition.getEndDate());
+		this.endTimeSpinner.setValue(dateCondition.getEndDate());	
 		CardLayout cardLayout = (CardLayout) this.conditionPanel.getLayout();
 		cardLayout.show(this.conditionPanel, DATE_CARD);
 	}
@@ -418,8 +426,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	public void showErrorMessage(String string) {
 		JOptionPane.showMessageDialog(this,
 			    string,
-			    "Inane error",
-			    JOptionPane.ERROR_MESSAGE);		
+			    "",
+			    JOptionPane.INFORMATION_MESSAGE);		
 	}
 	
 	public Object changeKeyRef() {
@@ -437,11 +445,23 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	public Object createLogicalSchemeRef() {
 		return this.createSchemeButton;
 	}
-
+	
+	public Object createdConditionListRef() {
+		return this.conditions;
+	}
+	
+	public Object startDayButtonRef() {
+		return this.startDayButton;		
+	}
+	
+	public Object endDayButtonRef() {
+		return this.endDayButton;		
+	}
+	
 	public int getSelectedKeyIndex() {
 		return this.keysCombo.getSelectedIndex();		
 	}
-
+	
 	public String[] getSelectedConditionNames() {
 		int[] indices = this.conditions.getSelectedIndices();
 		String[] selectedNames = new String[indices.length];
@@ -472,14 +492,34 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	}
 	
 	public void setDateCondition(DateCondition dateCondition) {
-		long startYearMonthDay = ((Date)this.startDateSpinner.getValue()).getTime();
-		long startTime = ((Date)this.startTimeSpinner.getValue()).getTime();
-		long endYearMonthDay = ((Date)this.endDateSpinner.getValue()).getTime();
-		long endTime = ((Date)this.endTimeSpinner.getValue()).getTime();
-		Date start = new Date(startYearMonthDay + startTime);
-		Date end = new Date(endYearMonthDay + endTime);
-		dateCondition.setStartDate(start);
-		dateCondition.setEndDate(end);		
+		
+		Calendar startYearMonthDay = Calendar.getInstance();
+		startYearMonthDay.setTime((Date)this.startDateSpinner.getValue());
+		Calendar startTime = Calendar.getInstance();
+		startTime.setTime((Date)this.startTimeSpinner.getValue());
+		Calendar startDate = Calendar.getInstance();
+		startDate.set(Calendar.YEAR, startYearMonthDay.get(Calendar.YEAR));
+		startDate.set(Calendar.MONTH, startYearMonthDay.get(Calendar.MONTH));
+		startDate.set(Calendar.DAY_OF_MONTH, startYearMonthDay.get(Calendar.DAY_OF_MONTH));
+		startDate.set(Calendar.HOUR_OF_DAY, startTime.get(Calendar.HOUR_OF_DAY));
+		startDate.set(Calendar.MINUTE, startTime.get(Calendar.MINUTE));
+		startDate.set(Calendar.SECOND, startTime.get(Calendar.SECOND));
+		
+		Calendar endYearMonthDay = Calendar.getInstance();
+		endYearMonthDay.setTime((Date)this.endDateSpinner.getValue());
+		Calendar endTime = Calendar.getInstance();
+		endTime.setTime((Date)this.endTimeSpinner.getValue());
+		Calendar endDate = Calendar.getInstance();
+		endDate.set(Calendar.YEAR, endYearMonthDay.get(Calendar.YEAR));
+		endDate.set(Calendar.MONTH, endYearMonthDay.get(Calendar.MONTH));
+		endDate.set(Calendar.DAY_OF_MONTH, endYearMonthDay.get(Calendar.DAY_OF_MONTH));
+		endDate.set(Calendar.HOUR_OF_DAY, endTime.get(Calendar.HOUR_OF_DAY));
+		endDate.set(Calendar.MINUTE, endTime.get(Calendar.MINUTE));
+		endDate.set(Calendar.SECOND, endTime.get(Calendar.SECOND));
+		
+		dateCondition.setStartDate(startDate.getTime());
+		dateCondition.setEndDate(endDate.getTime());
+		System.out.println();
 	}
 
 	public void refreshCreatedConditions(Object[] conditionNames1) {
@@ -499,9 +539,43 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		this.resultConditionTextField.setText(stringCondition);
 	}
 
-	public void enableChangeDisableAdd(boolean b) {
+	public void enableAdd(boolean b) {
 		this.addButton.setEnabled(!b);
 		this.changeButton.setEnabled(b);
+	}
+	
+	public void enableRemoveButton(boolean b) {
+		this.removeButton.setEnabled(b);		
+	}
+	
+	public void createStartCalendar() {
+		createCalendar(this.startDayButton, this.startDateSpinner);
+	}
+
+	public void createEndCalendar() {
+		createCalendar(this.endDayButton, this.endDateSpinner);
+	}
+	
+	private void createCalendar(JButton button, DateSpinner dateSpiner) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime((Date)dateSpiner.getValue());
+		JDialog calendarDialog = CalendarUI.createDialogInstance((JFrame)getParentFrame(this), cal, true, true);
+		calendarDialog.pack();
+		Point buttonUpperLeft = button.getLocationOnScreen();
+		Dimension buttonSize = button.getSize();
+		Dimension calendarSize = calendarDialog.getSize();
+		calendarDialog.setLocation(buttonUpperLeft.x - (calendarSize.width - buttonSize.width)/2,
+				buttonUpperLeft.y - (calendarSize.height - buttonSize.height)/2);
+		calendarDialog.setVisible(true);
+		
+		dateSpiner.setValue(cal.getTime());
+	}
+
+	private Component getParentFrame(Component component) {
+		if(component instanceof JFrame) {
+			return component;
+		}
+		return getParentFrame(component.getParent());
 	}
 }
 
