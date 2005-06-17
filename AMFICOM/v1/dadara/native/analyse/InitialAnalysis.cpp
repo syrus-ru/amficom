@@ -17,6 +17,8 @@ static	SineWavelet wavelet; // используемый вейвлет
 #define xsign(f) ((f)>=0?1:-1)
 inline double fmin(double a, double b) { return a < b ? a : b; }
 inline double fmax(double a, double b) { return a > b ? a : b; }
+inline int imin(int a, int b) { return a < b ? a : b; }
+inline int imax(int a, int b) { return a > b ? a : b; }
 //------------------------------------------------------------------------------------------------------------
 // Construction/Destruction
 InitialAnalysis::InitialAnalysis(
@@ -336,6 +338,7 @@ return;}
 
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 	findEventsBySplashes(TEMP, accSpl, scaleB); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
+	processEventsBeginsEnds(TEMP); // уточнить границы событий (может использовать accSpl через ссылки из EventParams)
 	// используем ArrList и его объекты
 	accSpl.disposeAll(); // очищаем массив ArrList
 
@@ -557,11 +560,45 @@ return;
       if( sp1->begin_weld!= -1 && fabs(sp1->end_weld-sp1->begin_weld)>1) //сварка
       {	EventParams *ep = new EventParams;
         setSpliceParamsBySplash(*ep, *sp1 );
-        correctSpliceCoords(f_wletTEMP, sp1->scale, ep);
+        //correctSpliceCoords(f_wletTEMP, ep->spliceSplash->scale, ep);
         events->add(ep);
 	continue;
       }
     }
+}
+//-----
+void InitialAnalysis::processEventsBeginsEnds(double *f_wletTEMP)
+{
+	int i;
+	int pass;
+	for (pass = 0; pass < 2; pass++)
+	for (i = 0; i < events->getLength(); i++)
+	{
+		EventParams *ep = (EventParams*) ((*events)[i]);
+
+		// определяем пределы допустимых перемещений границ события
+		int minBegin = i > 0
+			? ((EventParams*) ((*events)[i - 1]))->end - 1 // разрешено наползание на 1 точку
+			: 0;
+		int maxEnd = i < events->getLength() - 1
+			? ((EventParams*) ((*events)[i + 1]))->begin + 1
+			: lastPoint;
+		if (minBegin < 0)
+			minBegin = 0;
+		if (maxEnd > lastPoint)
+			maxEnd = lastPoint;
+
+		int type = ep->type;
+		if (pass) {
+			if (type == EventParams.GAIN || type == EventParams.LOSS)
+				correctSpliceCoords(f_wletTEMP, ep->spliceSplash->scale, ep, minBegin, maxEnd);
+		}
+		else
+		{
+			if (type == EventParams.CONNECTOR || type == EventParams.ENDOFTRACE)
+				correctConnectorFront(ep);
+		}
+	}
 }
 //-------------------------------------------------------------------------------------------------
 int InitialAnalysis::processDeadZone(ArrList& splashes, int maxDist)
@@ -638,13 +675,16 @@ void InitialAnalysis::setSpliceParamsBySplash(EventParams& ep, Splash& sp)
     //}
     //ep.R = max;
 	ep.R = sp.r_weld;
+
+	ep.spliceSplash = &sp;
 }
 //------------------------------------------------------------------------------------------------------------
 // Проводим разномасштабный авейвлет-анализ для уточнения положения сварок
 // ф-я ПОРТИТ f_wlet - вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
-// Уточнение может только сужать сварки, но никак не расширять
-void InitialAnalysis::correctSpliceCoords(double* f_wlet /*TEMP space*/, int wlet_width, EventParams* splice)
-{   EventParams& ev = *splice;
+// Уточнение может сужать сварки и расширять в заданных на входе пределах
+void InitialAnalysis::correctSpliceCoords(double* f_wlet /*TEMP space*/, int scale0, EventParams* splice, int minBegin, int maxEnd)
+{
+	EventParams& ev = *splice;
 	// если это не сварка, то выход
     if( !(ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
 return;
@@ -654,12 +694,17 @@ return;
     const double angle_factor = 1.5; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
 	const double factor = 1.2; // множитель геометрической прогрессии
 	const int nscale = 20; // количество разных масштабов
-	int width = wlet_width; // frame-width: ширина окна (относительно границы события), в котором мы проводим дополнительный анализ
+	int width = scale0; // frame-width: ширина окна (относительно границы события), в котором мы проводим дополнительный анализ
 	int w_l = ev.begin, w_r = ev.end; // w_l - wavelet_left: границы вейвлет-образа на текущем масштабе
+
+	const int sign = ev.spliceSplash->sign;
 
 	// для первого масштаба не ограничиваемся "световым конусом", т.к. начальные w_l, w_r не соответствуют нашему здешнему критерию
     //int left_cross = (int)(w_l+width*angle_factor), right_cross = (int)(w_r-width*angle_factor); // точки пересечения световым конусом оси ОХ (по сути эквивалентно запоминанию масштаба, при котором это произошло, потому что точка X, где вейвлет пересёк порог, запоминается отдельно)
-    int left_cross = (int)(w_r+width*angle_factor), right_cross = (int)(w_l-width*angle_factor);
+    int left_cross  = (int) ceil(w_r+width*angle_factor);
+	int	right_cross = (int)floor(w_l-width*angle_factor);
+    int left_cr2    = (int)floor(w_l-width*angle_factor);
+	int	right_cr2   = (int) ceil(w_r+width*angle_factor);
 
 	int i;
 #ifdef debug_lines
@@ -676,13 +721,18 @@ return;
     	if(width<=1)
     break;
 	    double wn = getWLetNorma(width);
-		assert(w_r <= lastPoint);
-		performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
+		//assert(w_r <= lastPoint);
+		//performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
+		int minL = imax((int) ceil(left_cr2  + width * angle_factor), minBegin);
+		int maxR = imin((int)floor(right_cr2 - width * angle_factor), maxEnd);
+		//printf("minBegin %d maxEnd %d   w_l %d w_r %d   minL %d maxR %d\n",
+		//	minBegin, maxEnd, w_l, w_r, minL, maxR); fflush(stdout);
+		performTransformationAndCenter(data, minL, maxR + 1, f_wlet, width, wn);
 		// сначала ищём положение экстремума при данном масштабе
         int i_max = w_l;
         double f_max = f_wlet[i_max];
         for(i=w_l; i<w_r; i++) // saa: <=w_r ?
-        {	if( fabs(f_wlet[i])>fabs(f_max) ) // поскольку образ в пределах одного события знакопостояный, то можем работать с модулями
+        {	if( f_wlet[i] * sign > f_max * sign ) // поскольку образ в пределах одного события знакопостояный, то можем работать с модулями
         	{	i_max = i; f_max = f_wlet[i_max];
             }
         }
@@ -700,29 +750,78 @@ return;
 		const int BUGGY_SHIFT = 0; // было 1; но так границы события могут расширяться и выйти за пределы массива и сломать систему
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
 		// XXX: но только если на этом масштабе сигнал/шум достаточно велик
-		if (level_factor * fabs(f_max) > fabs(df_left) * 2)
-          for(i=w_l; i<i_max && i+width*angle_factor<=left_cross; i++)
-        {	//if(fabs(f_wlet[i])>= minimalThreshold+noise[i]*noise_factor+df_left)
-	        if(fabs(f_wlet[i]) >= level_factor*fabs(f_max))// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
-        	{	w_l=i-BUGGY_SHIFT;//w_l=i;
-            	w_lr_ch = true;
-	            if(w_l+width*angle_factor<left_cross){ left_cross = (int)(w_l+width*angle_factor);}
-        break;
-            }
+		if (level_factor * f_max * sign > df_left * 2)
+		{
+			if(f_wlet[w_l] * sign >= level_factor * f_max * sign)
+			{
+				//fprintf(stdout, "LLa(%d) %d lim %d\n", width, w_l, minL);
+				// расширяем границы
+				for(i = w_l - 1; i >= minL; i--)
+				{
+					if(f_wlet[i] * sign < level_factor * f_max * sign)
+	        		{
+						w_l=i + 1;
+            			w_lr_ch = true;
+				break;
+					}
+				}
+				//fprintf(stdout, "LLb(%d) %d\n", width, i);
+			}
+			else
+			{
+				//fprintf(stdout, "LRa(%d) %d lim %g\n", width, w_l, left_cross-width*angle_factor);
+				// сужаем границы
+				for(i=w_l; i<i_max && i<=left_cross-width*angle_factor; i++)
+				{
+					if(f_wlet[i] * sign >= level_factor * f_max * sign)
+	        		{
+						w_l=i-BUGGY_SHIFT;//w_l=i;
+            			w_lr_ch = true;
+				break;
+					}
+				}
+				//fprintf(stdout, "LRb(%d) %d\n", width, i);
+			}
+			if(w_l+width*angle_factor<left_cross){ left_cross = (int)ceil(w_l+width*angle_factor);}
+			if(w_l-width*angle_factor>left_cr2)  { left_cr2  = (int)floor(w_l-width*angle_factor);}
         }
    		// ищем пересечение справа
 		// XXX: но только если на этом масштабе сигнал/шум достаточно велик
-		if (level_factor * fabs(f_max) > fabs(df_right) * 2)
-          for(int j=w_r; j>i_max && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повёрнутой на 45 СК
-        {	//if(fabs(f_wlet[j])>=minimalThreshold+noise[j]*noise_factor+df_right)
-            if(fabs(f_wlet[j])>= level_factor*fabs(f_max))// &&... - сигнал должен превышать свой шум ( за шум принимаем степень немонотонности )
-        	{	w_r=j+BUGGY_SHIFT;//w_r=j;
-                w_lr_ch = true;
-	            if(w_r-width*angle_factor>right_cross)
-                { right_cross = (int)(w_r-width*angle_factor);}
-        break;
-            }
-        }
+		if (level_factor * f_max * sign > df_right * 2)
+		{
+			if(f_wlet[w_r] * sign >= level_factor * f_max * sign)
+			{
+				//fprintf(stdout, "RRa(%d) %d lim %d\n", width, w_r, maxR);
+				// расширяем
+				for (i = w_r + 1; i <= maxR; i++)
+				{
+					if(f_wlet[i] * sign < level_factor * f_max * sign)
+					{
+				break;
+					}
+				}
+				w_r = i - 1;
+				w_lr_ch = true;
+				//fprintf(stdout, "RRb(%d) %d\n", width, i);
+			}
+			else
+			{
+				//fprintf(stdout, "RLa(%d) %d lim %g\n", width, w_r, right_cross+width*angle_factor);
+				// сужаем
+				for(i=w_r; i>i_max && i>=right_cross+width*angle_factor; i--)
+				{
+					if(f_wlet[i] * sign >= level_factor * f_max * sign)
+        			{
+				break;
+					}
+				}
+				w_r=i+BUGGY_SHIFT;//w_r=i;
+				w_lr_ch = true;
+				//fprintf(stdout, "RLb(%d) %d\n", width, i);
+			}
+			if(w_r-width*angle_factor>right_cross){ right_cross = (int)floor(w_r-width*angle_factor);}
+			if(w_r+width*angle_factor<right_cr2)  { right_cr2    = (int)ceil(w_r+width*angle_factor);}
+		}
 #ifdef debug_lines //рисуем вейвлет образы для данного масштаба
 		{ coln++;
           for(int i=ev.begin; i<ev.end; i++)
@@ -737,13 +836,20 @@ return;
 		w_lr_ch = false;
     }  // for(int step=0; step<=nscale;...
 	//prf_b("correctSpliceCoords: scales done");
-	if( w_l < w_r  )
-    {   double old_left = ev.begin;
-        double old_right = ev.end;
-		// можем только сужать события
-    	if(w_l>old_left && w_l<old_right ) { ev.begin = w_l;}
-    	if(w_r<old_right && w_r>old_left)  { ev.end = w_r;}
-    }
+
+	//printf("correctSpliceCoords: scale %d..%d begin %d end %d minBegin %d maxEnd %d -- begin %d end %d\n",
+	//	scale0, width, ev.begin, ev.end, minBegin, maxEnd, w_l, w_r);
+
+	ev.begin = w_l;
+	ev.end = w_r;
+	
+	//if( w_l < w_r  )
+    //{   double old_left = ev.begin;
+    //    double old_right = ev.end;
+	//	// можем только сужать события
+    //	if(w_l>old_left && w_l<old_right ) { ev.begin = w_l;}
+    //	if(w_r<old_right && w_r>old_left)  { ev.end = w_r;}
+    //}
 #ifdef debug_VCL
     double wn = getWLetNorma(wlet_width);
   	performTransformationAndCenter(data, 0, lastPoint + 1, f_wlet, wlet_width, wn);
@@ -793,7 +899,7 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 		return ret;
 	ep = new EventParams;
 	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
-	correctConnectorFront(ep); // уточняем фронт коннекора
+	//correctConnectorFront(ep); // уточняем фронт коннекора
 #ifdef debug_lines
 	double begin = ep->begin, end = ep->end;
 	xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
@@ -845,6 +951,8 @@ void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1,
     double t3 = r2<t2 ? r2:t2;
 	rmin = t1<t3 ? t1:t3;
     ep.R = rmin;
+
+	ep.spliceSplash = 0;
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::correctConnectorFront(EventParams* ev)
@@ -958,6 +1066,7 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& 
    if(ep.begin<0){ep.begin=0;}
    ep.end = sp2.end_thr;
    if(ep.end>lastPoint){ep.end = lastPoint;}
+   ep.spliceSplash = 0;
 }
 // -------------------------------------------------------------------------------------------------
 //

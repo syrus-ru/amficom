@@ -96,7 +96,7 @@ private:
 
 	// выполнение вейвлет-преобразования
 	int getMinScale();
-	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma);
+	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma); // end: exclusive; @todo: make end inclusive
 	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
 	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1);
 
@@ -119,7 +119,10 @@ private:
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
     void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2);
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
-	void correctSpliceCoords(double *f_wletTMP, int wlet_width, EventParams* splice);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
+
+	// этап 3.2. - уточнение начал и концов
+	void processEventsBeginsEnds(double *f_wletTEMP); // уточняет начала и концы событий
+	void correctSpliceCoords(double *f_wletTMP, int scale0, EventParams* splice, int minBegin, int maxEnd);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 	void correctConnectorFront(EventParams* connector);
 
 	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
