@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.41 2005/06/17 13:06:59 bass Exp $
+ * $Id: Identifier.java,v 1.42 2005/06/17 15:08:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.41 $, $Date: 2005/06/17 13:06:59 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/17 15:08:41 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -34,26 +34,35 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 
 	private static final long serialVersionUID = 1721559813677093072L;
 
-	private String identifierString;
+	private static final int MINOR_SIZE_BITS = 48;
+
+	private static final long MAJOR_MASK = 0xffffl << MINOR_SIZE_BITS;
+
+	private static final long MINOR_MASK = MAJOR_MASK ^ -1;
 
 	private short major;
 	private long minor;
 
-	public Identifier(IdlIdentifier id_t) {
-		this(id_t.identifier_string);
+	public Identifier(final IdlIdentifier idlId) {
+		this(idlId.identifierCode);
 	}
 
-	public Identifier(String identifierString) {
-		this.major = ObjectEntities.stringToCode(identifierString.substring(0, identifierString.indexOf(SEPARATOR)));
-		this.minor = Long.parseLong(identifierString.substring(identifierString.indexOf(SEPARATOR) + 1));
-		this.identifierString = identifierString;
+	public Identifier(final String identifierString) {
+		this(ObjectEntities.stringToCode(identifierString.substring(0, identifierString.indexOf(SEPARATOR))),
+				Long.parseLong(identifierString.substring(identifierString.indexOf(SEPARATOR) + 1)));
+	}
+
+	Identifier(final long identifierCode) {
+		this((short) ((identifierCode & MAJOR_MASK) >> MINOR_SIZE_BITS),
+				identifierCode & MINOR_MASK);
 	}
 
 	/*	Only for IdentifierGenerator	*/
-	protected Identifier(short major, long minor) {
+	Identifier(short major, long minor) {
+		assert (minor & MAJOR_MASK) == 0;
+
 		this.major = major;
 		this.minor = minor;
-		this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
 	}
 
 	/**
@@ -85,7 +94,11 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	public String getIdentifierString() {
-		return this.identifierString;
+		return ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
+	}
+
+	public long getIdentifierCode() {
+		return (((long) this.major) << MINOR_SIZE_BITS) | this.minor;
 	}
 
 	public short getMajor() {
@@ -97,14 +110,13 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	public IDLEntity getTransferable() {
-		return new IdlIdentifier(this.identifierString);
+		return new IdlIdentifier(this.getIdentifierCode());
 	}
 
 	public int hashCode() {
 		int ret = 17;
 		ret = 37 * ret + this.major;
 		ret = 37 * ret + (int)(this.minor ^ (this.minor >>> 32));
-		ret = 37 * ret + this.identifierString.hashCode();
 		return ret;
 	}
 
@@ -113,7 +125,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	public String toString() {
-		return this.identifierString;
+		return this.getIdentifierString();
 	}
 
 	public static final Set createStrings(final Collection identifiables) {

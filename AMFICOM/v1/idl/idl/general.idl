@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.90 2005/06/17 13:07:00 bass Exp $
+ * $Id: general.idl,v 1.91 2005/06/17 15:08:41 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,12 +36,7 @@ module corba {
 	typedef wstring<256> WString256;
 
 	typedef struct IdlIdentifier {
-#ifdef NUMERIC_IDENTIFIER
-		short major;
-		long long minor;
-#else // NUMERIC_IDENTIFIER
-		wstring identifier_string;
-#endif // NUMERIC_IDENTIFIER
+		long long identifierCode;
 	} Identifier;
 
 	typedef sequence<Identifier> IdentifierSeq;
