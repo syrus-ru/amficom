@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.56 2005/06/17 11:01:10 bass Exp $
+ * $Id: MonitoredElement.java,v 1.57 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.57 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -54,8 +54,7 @@ public class MonitoredElement extends DomainMember {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITOREDELEMENT_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -125,8 +124,7 @@ public class MonitoredElement extends DomainMember {
 			monitoredElement.markAsChanged();
 
 			return monitoredElement;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

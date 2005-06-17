@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.58 2005/06/17 11:01:10 bass Exp $
+ * $Id: MeasurementPort.java,v 1.59 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.59 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -61,8 +61,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -70,8 +69,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	public MeasurementPort(final MeasurementPort_Transferable mpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mpt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -133,8 +131,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 			measurementPort.markAsChanged();
 
 			return measurementPort;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

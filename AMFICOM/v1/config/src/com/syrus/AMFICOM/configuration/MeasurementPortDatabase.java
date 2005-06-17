@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.52 2005/06/17 11:01:10 bass Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.53 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -117,8 +117,7 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
 			measurementPortType = (measurementPortTypeId != null)
 					? (MeasurementPortType) StorableObjectPool.getStorableObject(measurementPortTypeId, true) : null;
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 

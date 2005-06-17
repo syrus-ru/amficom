@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.56 2005/06/17 11:01:09 bass Exp $
+ * $Id: Link.java,v 1.57 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/06/17 11:01:09 $
+ * @version $Revision: 1.57 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -66,8 +66,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		LinkDatabase database = (LinkDatabase) DatabaseContext.getDatabase(ObjectEntities.LINK_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -75,8 +74,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 	Link(final Link_Transferable lt) throws CreateObjectException  {
 		try {
 			this.fromTransferable(lt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -162,8 +160,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 			link.markAsChanged();
 
 			return link;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.94 2005/06/17 11:01:10 bass Exp $
+ * $Id: Equipment.java,v 1.95 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.95 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -71,8 +71,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -80,8 +79,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	Equipment(final Equipment_Transferable et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -193,8 +191,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			equipment.markAsChanged();
 
 			return equipment;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -451,8 +448,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PORT_CODE),
 					true,
 					breakOnLoadError);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.86 2005/06/17 11:01:09 bass Exp $
+ * $Id: EquipmentDatabase.java,v 1.87 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/06/17 11:01:09 $
+ * @version $Revision: 1.87 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -179,8 +179,7 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 			equipmentType = (EquipmentType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_TYPE_ID),
 					true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		equipment.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),

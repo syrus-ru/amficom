@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.27 2005/06/17 11:01:10 bass Exp $
+ * $Id: CableThread.java,v 1.28 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -50,8 +50,7 @@ public class CableThread extends DomainMember implements TypedObject {
 		CableThreadDatabase database = (CableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -59,8 +58,7 @@ public class CableThread extends DomainMember implements TypedObject {
 	public CableThread(final CableThread_Transferable ctt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ctt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -106,8 +104,7 @@ public class CableThread extends DomainMember implements TypedObject {
 			cableThread.markAsChanged();
 
 			return cableThread;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.65 2005/06/17 11:01:10 bass Exp $
+ * $Id: EquipmentType.java,v 1.66 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.66 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -57,8 +57,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -66,8 +65,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 	EquipmentType(final EquipmentType_Transferable ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -127,8 +125,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 			equipmentType.markAsChanged();
 
 			return equipmentType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.69 2005/06/17 11:01:10 bass Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.70 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.70 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -286,8 +286,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 		try {
 			super.insertEntity(monitoredElement);
 			this.insertMonitoredDomainMemberIds(monitoredElement);
-		}
-		catch (CreateObjectException coe) {
+		} catch (CreateObjectException coe) {
 			this.delete(monitoredElement.getId());
 			throw coe;
 		}
@@ -359,25 +358,21 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '"
 					+ meId.getIdentifierString()
 					+ "' and monitored domain member '"
 					+ mdmId.getIdentifierString()
 					+ "'";
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -449,8 +444,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 			}
 
 			super.updateLinkedEntityIds(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new UpdateObjectException("Cannot update monitored element domain members ids -- "  + ide.getMessage(), ide);
 		}
 	}
@@ -494,28 +488,22 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 				Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL09);
 				statement.executeUpdate(sql2);
 				connection.commit();
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				try {
 					if (statement != null)
 						statement.close();
 					statement = null;
-				}
-				catch (SQLException sqle1) {
+				} catch (SQLException sqle1) {
 					Log.errorException(sqle1);
-				}
-				finally {
+				} finally {
 					DatabaseConnection.releaseConnection(connection);
 				}
 			}
-		}
-		catch (RetrieveObjectException e) {
+		} catch (RetrieveObjectException e) {
 			Log.errorException(e);
-		}
-		catch (ObjectNotFoundException e) {
+		} catch (ObjectNotFoundException e) {
 			Log.errorException(e);
 		}
 	}

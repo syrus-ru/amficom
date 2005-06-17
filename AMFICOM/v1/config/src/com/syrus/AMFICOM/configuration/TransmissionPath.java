@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.68 2005/06/17 11:01:10 bass Exp $
+ * $Id: TransmissionPath.java,v 1.69 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -60,8 +60,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		TransmissionPathDatabase database = (TransmissionPathDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -69,8 +68,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	TransmissionPath(final TransmissionPath_Transferable tpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tpt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -132,8 +130,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 			transmissionPath.markAsChanged();
 
 			return transmissionPath;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

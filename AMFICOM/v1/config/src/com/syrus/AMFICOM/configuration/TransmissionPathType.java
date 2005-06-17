@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.51 2005/06/17 11:01:10 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.52 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.52 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -56,8 +56,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -65,8 +64,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	TransmissionPathType(final TransmissionPathType_Transferable tptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tptt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -117,8 +115,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 			transmissionPathType.markAsChanged();
 
 			return transmissionPathType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

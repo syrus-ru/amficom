@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/06/17 11:01:11 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:11 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -47,8 +47,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = true;
 				}
 			}
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.errorException(ae);
 		}
 		return condition;
@@ -136,8 +135,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						try {
 							Equipment equipment1 = (Equipment) StorableObjectPool.getStorableObject(port.getEquipmentId(), true);
 							condition = this.checkDomain(equipment1);
-						}
-						catch (ApplicationException ae) {
+						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
 						break;
@@ -157,8 +155,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						try {
 							KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 							condition = super.conditionTest(kis1.getMCMId());
-						}
-						catch (ApplicationException ae) {
+						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
 						break;
@@ -166,8 +163,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						try {
 							KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 							condition = this.checkDomain(kis1);
-						}
-						catch (ApplicationException ae) {
+						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
 						break;

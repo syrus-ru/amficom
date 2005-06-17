@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.44 2005/06/17 11:01:10 bass Exp $
+ * $Id: CableLinkType.java,v 1.45 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -59,8 +59,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -68,8 +67,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	CableLinkType(final CableLinkType_Transferable cltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cltt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -139,8 +137,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 			cableLinkType.markAsChanged();
 
 			return cableLinkType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -248,8 +245,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		Set cableThreadTypes;
 		try {
 			cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(lic, true, breakOnLoadError);
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			cableThreadTypes = Collections.EMPTY_SET;
 		}

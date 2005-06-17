@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.52 2005/06/17 11:01:10 bass Exp $
+ * $Id: LinkType.java,v 1.53 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -61,8 +61,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		LinkTypeDatabase database = (LinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.LINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -70,8 +69,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	LinkType(final LinkType_Transferable ltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ltt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -140,8 +138,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 			linkType.markAsChanged();
 
 			return linkType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

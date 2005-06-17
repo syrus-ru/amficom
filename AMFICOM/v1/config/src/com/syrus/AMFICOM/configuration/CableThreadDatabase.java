@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.28 2005/06/17 11:01:10 bass Exp $
+ * $Id: CableThreadDatabase.java,v 1.29 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -110,8 +110,7 @@ public final class CableThreadDatabase extends StorableObjectDatabase  {
 			cableThreadType = (CableThreadType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_TYPE_ID),
 					true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		cableThread.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),

@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.75 2005/06/17 11:01:10 bass Exp $
+ * $Id: KISDatabase.java,v 1.76 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/06/17 11:01:10 $
+ * @version $Revision: 1.76 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -181,17 +181,14 @@ public final class KISDatabase extends CharacterizableDatabase {
 			while (resultSet.next()) {
 				try {
 					monitoredElements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true));
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "KISDatabase.retrieveMonitoredElements | Cannot retrieve monitored elements for kis " + kisIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -199,8 +196,7 @@ public final class KISDatabase extends CharacterizableDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
                 DatabaseConnection.releaseConnection(connection);
@@ -265,12 +261,10 @@ public final class KISDatabase extends CharacterizableDatabase {
 			}
 
 			return meIdMap;
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "KISDatabase.retrieveKISMonitoredElementsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -278,11 +272,9 @@ public final class KISDatabase extends CharacterizableDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

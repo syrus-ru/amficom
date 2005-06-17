@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.39 2005/06/17 11:01:09 bass Exp $
+ * $Id: CableThreadType.java,v 1.40 2005/06/17 12:32:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.39 $, $Date: 2005/06/17 11:01:09 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/17 12:32:20 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -61,8 +61,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (final IllegalDataException ide) {
+		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -70,8 +69,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	CableThreadType(final CableThreadType_Transferable cttt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cttt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -133,8 +131,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			cableThreadType.markAsChanged();
 
 			return cableThreadType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
