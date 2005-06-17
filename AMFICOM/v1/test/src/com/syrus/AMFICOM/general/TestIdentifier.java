@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.1 2005/06/10 15:17:44 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.2 2005/06/17 20:18:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/10 15:17:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 20:18:20 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -48,7 +48,41 @@ public class TestIdentifier extends CommonTest {
 		//Nothing
 	}
 
-	public void testCreateSumIdentifiers() throws ApplicationException {
+	public void testEquals() {
+		final Identifier id1 = new Identifier("Measurement_1");
+		Identifier id2 = new Identifier(ObjectEntities.MEASUREMENT_CODE, 1);
+		assertEquals(id1, id2);
+
+		id2 = new Identifier(id1.getIdentifierCode());
+		assertEquals(id1, id2);
+
+		id2 = new Identifier(id1.getIdentifierString());
+		assertEquals(id1, id2);
+
+		id2 = new Identifier(ObjectEntities.EQUIPMENT_CODE, 1);
+		assertFalse("Different majors", id1.equals(id2));
+
+		id2 = new Identifier("Measurement_2");
+		assertFalse("Different minors", id1.equals(id2));
+	}
+
+	public void testIllegalMajor() {
+		Identifier id = new Identifier(StorableObjectPool.БАЙАН + "_1");
+		System.out.println("major: " + id.getMajor() + ", minor: " + id.getMinor()
+				+ ", code: " + id.getIdentifierCode() + ", string: " + id.getIdentifierString());
+	}
+
+	public void testIllegalMinor() {
+		try {
+			new Identifier("Measurement_100000000000000000");
+			fail("Illegal minor");
+		}
+		catch (AssertionError ae) {
+			//ok
+		}
+	}
+
+	public void _testCreateSumIdentifiers() throws ApplicationException {
 		final Set ids = new HashSet();
 
 		//1
@@ -80,7 +114,7 @@ public class TestIdentifier extends CommonTest {
 				&& sumIds.size() >= identifiables1.size());
 	}
 
-	public void testCreateSubstractionIdentifiers() throws ApplicationException {
+	public void _testCreateSubstractionIdentifiers() throws ApplicationException {
 		final Set ids = new HashSet();
 
 		//1

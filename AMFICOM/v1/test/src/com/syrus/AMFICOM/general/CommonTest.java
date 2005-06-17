@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.8 2005/06/17 16:36:12 arseniy Exp $
+ * $Id: CommonTest.java,v 1.9 2005/06/17 20:18:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/17 16:36:12 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/17 20:18:20 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -76,10 +76,12 @@ public abstract class CommonTest extends TestCase {
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String SERVER_HOST_NAME = "localhost";
 
 	protected static SystemUser creatorUser;
 

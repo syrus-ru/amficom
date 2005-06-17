@@ -1,5 +1,5 @@
 /*
- * $Id: TestSystemUser.java,v 1.1 2005/06/17 17:14:10 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.2 2005/06/17 20:18:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,27 +7,43 @@
  */
 package com.syrus.AMFICOM.administration;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.security.ShadowDatabase;
+import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/17 17:14:10 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 20:18:20 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class TestSystemUser extends CommonTest {
+	private static final String SYS_PASSWORD = SystemUserWrapper.SYS_LOGIN;
+
 	public TestSystemUser(String name) {
 		super(name);
 	}
@@ -36,31 +52,22 @@ public final class TestSystemUser extends CommonTest {
 		return suiteWrapper(TestSystemUser.class);
 	}
 
-	public void testCreateSysUser() throws ApplicationException {
+	public void _testCreateSysUser() throws ApplicationException {
 		final Identifier sysUserId = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
-		SystemUser sysUser = new SystemUser(sysUserId,
+		final SystemUser sysUser = new SystemUser(sysUserId,
 				sysUserId,
 				0,
 				SystemUserWrapper.SYS_LOGIN,
 				SystemUserSort._USER_SORT_SYSADMIN,
 				"sys",
 				"System administrator");
-		SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+		final SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
 		database.insert(sysUser);
 	}
 
 	public void _testCreateInstance() throws ApplicationException {
-//	Retrieve sys user
-		TypicalCondition tc = new TypicalCondition(SystemUserWrapper.SYS_LOGIN,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SYSTEMUSER_CODE,
-				SystemUserWrapper.COLUMN_LOGIN);
-		Set users = StorableObjectPool.getStorableObjectsByCondition(tc, true);
-		SystemUser sysUser = (SystemUser) users.iterator().next();
-		System.out.println("Sys user: '" + sysUser.getLogin() + "', id: '" + sysUser.getId() + "'");
-
 //	1
-		SystemUser loginUser = SystemUser.createInstance(sysUser.getId(),
+		final SystemUser loginUser = SystemUser.createInstance(creatorUser.getId(),
 				SystemUserWrapper.LOGINPROCESSOR_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Login Processorovich Serverov",
@@ -68,7 +75,7 @@ public final class TestSystemUser extends CommonTest {
 		System.out.println("Login user: '" + loginUser.getLogin() + "', id: '" + loginUser.getId() + "'");
 
 //	2
-		SystemUser eventUser = SystemUser.createInstance(sysUser.getId(),
+		final SystemUser eventUser = SystemUser.createInstance(creatorUser.getId(),
 				SystemUserWrapper.EVENTPROCESSOR_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Event Processorovich Serverov",
@@ -76,7 +83,7 @@ public final class TestSystemUser extends CommonTest {
 		System.out.println("Event user: '" + eventUser.getLogin() + "', id: '" + eventUser.getId() + "'");
 
 //	3
-		SystemUser mserverUser = SystemUser.createInstance(sysUser.getId(),
+		final SystemUser mserverUser = SystemUser.createInstance(creatorUser.getId(),
 				SystemUserWrapper.MSERVER_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Measurement Serverov",
@@ -84,7 +91,7 @@ public final class TestSystemUser extends CommonTest {
 		System.out.println("MServer user: '" + mserverUser.getLogin() + "', id: '" + mserverUser.getId() + "'");
 
 //	4
-		SystemUser cmserverUser = SystemUser.createInstance(sysUser.getId(),
+		final SystemUser cmserverUser = SystemUser.createInstance(creatorUser.getId(),
 				SystemUserWrapper.CMSERVER_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"Client Measurementovich Serverov",
@@ -92,7 +99,7 @@ public final class TestSystemUser extends CommonTest {
 		System.out.println("CMServer user: '" + cmserverUser.getLogin() + "', id: '" + cmserverUser.getId() + "'");
 
 //	5
-		SystemUser mshserverUser = SystemUser.createInstance(sysUser.getId(),
+		final SystemUser mshserverUser = SystemUser.createInstance(creatorUser.getId(),
 				SystemUserWrapper.MSCHARSERVER_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
 				"mЫsh-server",
@@ -103,13 +110,120 @@ public final class TestSystemUser extends CommonTest {
 		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, true);
 	}
 
-	public void _testUpdate() throws ApplicationException {
-		final TypicalCondition tc = new TypicalCondition(SystemUserWrapper.MSCHARSERVER_LOGIN,
+	public void _testCreateMCMUsers() throws ApplicationException {
+		final SystemUser mcmUser = SystemUser.createInstance(creatorUser.getId(),
+				SystemUserWrapper.MCM_LOGIN,
+				SystemUserSort.USER_SORT_SERVERPROCESS,
+				"mcm",
+				"Need for MCM");
+		System.out.println("MCM user: '" + mcmUser.getLogin() + "', id: '" + mcmUser.getId() + "'");
+
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, true);
+	}
+
+	public void testSetSysUserPassword() throws ApplicationException {
+		final ShadowDatabase shadowDatabase = new ShadowDatabase();
+		shadowDatabase.updateOrInsert(creatorUser.getId(), SYS_PASSWORD);
+	}
+
+	public void testSetPassword() throws ApplicationException, AMFICOMRemoteException {
+		final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
+		final String contextName = ContextNameFactory.generateContextName(serverHostName);
+		final CORBAServer corbaServer = new CORBAServer(contextName);
+		final LoginServer loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
+
+		final IdlIdentifierHolder userIdTH = new IdlIdentifierHolder();
+		final SessionKey_Transferable sessionKeyT = loginServerRef.login(SystemUserWrapper.SYS_LOGIN, SYS_PASSWORD, userIdTH);
+
+//	login user
+		TypicalCondition tc = new TypicalCondition(SystemUserWrapper.LOGINPROCESSOR_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SYSTEMUSER_CODE,
 				SystemUserWrapper.COLUMN_LOGIN);
-		final Set set = StorableObjectPool.getStorableObjectsByCondition(tc, true);
-		final SystemUser user = (SystemUser) set.iterator().next();
-		System.out.println("User: " + user.getLogin() + ", '" + user.getId() + "'");
+
+//	event user
+		TypicalCondition tc1 = new TypicalCondition(SystemUserWrapper.EVENTPROCESSOR_LOGIN,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SYSTEMUSER_CODE,
+				SystemUserWrapper.COLUMN_LOGIN);
+
+//	Create compound condition
+		final CompoundCondition cc = new CompoundCondition(tc, CompoundConditionSort.OR, tc1);
+
+//	mserver user
+		tc1 = new TypicalCondition(SystemUserWrapper.MSERVER_LOGIN,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SYSTEMUSER_CODE,
+				SystemUserWrapper.COLUMN_LOGIN);
+		cc.addCondition(tc1);
+
+//	cmserver user
+		tc1 = new TypicalCondition(SystemUserWrapper.CMSERVER_LOGIN,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SYSTEMUSER_CODE,
+				SystemUserWrapper.COLUMN_LOGIN);
+		cc.addCondition(tc1);
+
+//	mscharserver user
+		tc1 = new TypicalCondition(SystemUserWrapper.MSCHARSERVER_LOGIN,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SYSTEMUSER_CODE,
+				SystemUserWrapper.COLUMN_LOGIN);
+		cc.addCondition(tc1);
+
+//	mcm user
+		tc1 = new TypicalCondition(SystemUserWrapper.MCM_LOGIN,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SYSTEMUSER_CODE,
+				SystemUserWrapper.COLUMN_LOGIN);
+		cc.addCondition(tc1);
+
+		final Set users = StorableObjectPool.getStorableObjectsByCondition(cc, true);
+		final Map usersMap = new HashMap(users.size());
+		for (Iterator it = users.iterator(); it.hasNext();) {
+			final SystemUser user = (SystemUser) it.next();
+			System.out.println("User: " + user.getId() + ", " + user.getLogin());
+			usersMap.put(user.getLogin(), user);
+		}
+
+		SystemUser systemUser;
+
+//	login user
+		systemUser = (SystemUser) usersMap.get(SystemUserWrapper.LOGINPROCESSOR_LOGIN);
+		loginServerRef.setPassword(sessionKeyT,
+				(IdlIdentifier) systemUser.getId().getTransferable(),
+				ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
+
+//	event user
+		systemUser = (SystemUser) usersMap.get(SystemUserWrapper.EVENTPROCESSOR_LOGIN);
+		loginServerRef.setPassword(sessionKeyT,
+				(IdlIdentifier) systemUser.getId().getTransferable(),
+				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
+
+//	mserver user
+		systemUser = (SystemUser) usersMap.get(SystemUserWrapper.MSERVER_LOGIN);
+		loginServerRef.setPassword(sessionKeyT,
+				(IdlIdentifier) systemUser.getId().getTransferable(),
+				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
+
+//	cmserver user
+		systemUser = (SystemUser) usersMap.get(SystemUserWrapper.CMSERVER_LOGIN);
+		loginServerRef.setPassword(sessionKeyT,
+				(IdlIdentifier) systemUser.getId().getTransferable(),
+				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME);
+
+//	mscharserver user
+		systemUser = (SystemUser) usersMap.get(SystemUserWrapper.MSCHARSERVER_LOGIN);
+		loginServerRef.setPassword(sessionKeyT,
+				(IdlIdentifier) systemUser.getId().getTransferable(),
+				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
+
+//	mcm user
+		systemUser = (SystemUser) usersMap.get(SystemUserWrapper.MCM_LOGIN);
+		loginServerRef.setPassword(sessionKeyT,
+				(IdlIdentifier) systemUser.getId().getTransferable(),
+				SystemUserWrapper.MCM_LOGIN);
+
+		loginServerRef.logout(sessionKeyT);
 	}
 }

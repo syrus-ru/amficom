@@ -1,7 +1,7 @@
 # Simple Makefile to compile single test class
 
-TEST_CLASS = TestReflectogramma
-TEST_PACKAGE = com.syrus.AMFICOM.analysis.dadara
+TEST_CLASS = TestSystemUser
+TEST_PACKAGE = com.syrus.AMFICOM.administration
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
@@ -9,11 +9,12 @@ CLASS_SUFFIX = .class
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
+ENCODING=KOI8-R
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/leserver.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 JUNITCLASSPATH=$(ECLIPSE_HOME)/plugins/org.junit_3.8.1/junit.jar
 
