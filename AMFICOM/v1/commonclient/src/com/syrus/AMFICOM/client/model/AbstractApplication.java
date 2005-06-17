@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.5 2005/06/17 08:13:35 bob Exp $
+ * $Id: AbstractApplication.java,v 1.6 2005/06/17 12:40:17 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 08:13:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 12:40:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -316,26 +316,10 @@ public abstract class AbstractApplication {
 		if (loginRestorer == null) {
 			synchronized (this) {
 				if (loginRestorer == null) {
-					loginRestorer = new LoginRestorer() {
-
-						// TODO rebuild
-						public String getLogin() {
-							return null;
-						}
-
-						public String getPassword() {
-							return null;
-						}
-
-						public boolean restoreLogin() {
-							return false;
-						}
-					};
+					loginRestorer = new LoginRestoreCommand(null);
+					ClientSessionEnvironment.setLoginRestorer(loginRestorer);
 				}
-			}
-
-			ClientSessionEnvironment.setLoginRestorer(loginRestorer);
-
+			}			
 		}
 
 		ClientSessionEnvironment clientSessionEnvironment1;
