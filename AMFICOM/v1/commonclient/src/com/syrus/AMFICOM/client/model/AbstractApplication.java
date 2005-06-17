@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.4 2005/06/16 10:49:02 bob Exp $
+ * $Id: AbstractApplication.java,v 1.5 2005/06/17 08:13:35 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/16 10:49:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 08:13:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -85,7 +85,8 @@ public abstract class AbstractApplication {
 
 	public AbstractApplication(String applicationName) {
 		Application.init(applicationName);
-		this.setApplicationCode(ApplicationProperties.getString(KEY_MODULE_CODE, null));
+		this.setApplicationCode(
+			ApplicationProperties.getString(KEY_MODULE_CODE, null));
 	}
 	
 	private void setApplicationCode(String applicationCode) {
@@ -132,7 +133,8 @@ public abstract class AbstractApplication {
 	}
 
 	private LookAndFeel getLookAndFeel() {
-		String lookAndFeel = ApplicationProperties.getString(KEY_LOOK_AND_FEEL, LOOK_AND_FEEL_WINDOWS);
+		String lookAndFeel = ApplicationProperties.getString(KEY_LOOK_AND_FEEL, 
+				LOOK_AND_FEEL_WINDOWS);
 		LookAndFeel lnf = null;
 		if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_METAL)) {
 			MetalLookAndFeel.setCurrentTheme(new AMFICOMMetalTheme());
@@ -160,85 +162,120 @@ public abstract class AbstractApplication {
 	 */
 	private LookAndFeel getDefaultLookAndFeel() {
 		try {
-			return (LookAndFeel) (Class.forName(UIManager.getSystemLookAndFeelClassName()).newInstance());
+			return (LookAndFeel) (Class.forName(
+					UIManager.getSystemLookAndFeelClassName()).newInstance());
 		} catch (Exception e) {
 			return UIManager.getLookAndFeel();
 		}
 	}
 
 	private void initUIConstats() {
-		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, new SimpleDateFormat(LangModel
-				.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
+		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, 
+			new SimpleDateFormat(
+				LangModel.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
 
-		UIManager.put(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT, new SimpleDateFormat(LangModel
-				.getString(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
+		UIManager.put(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT, 
+			new SimpleDateFormat(
+				LangModel.getString(
+					ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
 
-		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, 
+			new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage(
+						"images/open_session.gif")
+					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_CLOSE_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/close_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_CLOSE_SESSION, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage(
+							"images/close_session.gif")
+						.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_DOMAIN_SELECTION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/domains.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_DOMAIN_SELECTION, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/domains.gif")
+						.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_GENERAL, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/general.gif")));
+		UIManager.put(ResourceKeys.ICON_GENERAL, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		UIManager.put(ResourceKeys.ICON_DELETE,
-			new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif")));
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/delete.gif")));
 
-		UIManager.put(ResourceKeys.ICON_OPEN_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/openfile.gif")));
+		UIManager.put(ResourceKeys.ICON_OPEN_FILE, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/openfile.gif")));
 
-		UIManager.put(ResourceKeys.ICON_ADD_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/addfile.gif")));
-		UIManager.put(ResourceKeys.ICON_REMOVE_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/removefile.gif")));
+		UIManager.put(ResourceKeys.ICON_ADD_FILE, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/addfile.gif")));
+		UIManager.put(ResourceKeys.ICON_REMOVE_FILE, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/removefile.gif")));
 
-		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/pathmode.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")
+						.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_MINI_FOLDER, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/folder.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_MINI_FOLDER, 
+			new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage("images/folder.gif")
+					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_MINI_PORT, new ImageIcon(Toolkit.getDefaultToolkit()
-				.getImage("images/port.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_MINI_PORT, 
+			new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage("images/port.gif")
+					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_MINI_TESTING, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/testing.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_MINI_TESTING, 
+			new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage("images/testing.gif")
+					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/testsetup.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP, 
+			new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage("images/testsetup.gif")
+					.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.ICON_MINI_RESULT, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/result.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_MINI_RESULT, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/result.gif")
+						.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
-		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, new UIDefaults.LazyValue() {
+		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, 
+			new UIDefaults.LazyValue() {
 
-			public Object createValue(UIDefaults table) {
-				return new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/logo2.jpg"));
-			}
+				public Object createValue(UIDefaults table) {
+					return new ImageIcon(
+						Toolkit.getDefaultToolkit().getImage(
+							"images/main/logo2.jpg"));
+				}
 		});
 
-		UIManager.put(ResourceKeys.INSETS_NULL, new UIDefaults.LazyValue() {
+		UIManager.put(ResourceKeys.INSETS_NULL, 
+			new UIDefaults.LazyValue() {
 
-			public Object createValue(UIDefaults table) {
-				return new Insets(0, 0, 0, 0);
-			}
+				public Object createValue(UIDefaults table) {
+					return new Insets(0, 0, 0, 0);
+				}
 		});
 
-		UIManager.put(ResourceKeys.INSETS_ICONED_BUTTON, new UIDefaults.LazyValue() {
+		UIManager.put(ResourceKeys.INSETS_ICONED_BUTTON, 
+			new UIDefaults.LazyValue() {
 
-			public Object createValue(UIDefaults table) {
-				return new Insets(1, 1, 1, 1);
-			}
+				public Object createValue(UIDefaults table) {
+					return new Insets(1, 1, 1, 1);
+				}
 		});
 
-		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, new UIDefaults.LazyValue() {
+		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, 
+			new UIDefaults.LazyValue() {
 
-			public Object createValue(UIDefaults table) {
-				return new EmptyBorder(1, 2, 1, 2);
-			}
+				public Object createValue(UIDefaults table) {
+					return new EmptyBorder(1, 2, 1, 2);
+				}
 		});
 
 		UIManager.put(ResourceKeys.SIZE_BUTTON, new UIDefaults.LazyValue() {
@@ -303,20 +340,23 @@ public abstract class AbstractApplication {
 
 		ClientSessionEnvironment clientSessionEnvironment1;
 		try {
-			clientSessionEnvironment1 = ClientSessionEnvironment.getInstance(ApplicationProperties.getInt(
-				ClientSessionEnvironment.SESSION_KIND_KEY, -1));
+			clientSessionEnvironment1 = 
+				ClientSessionEnvironment.getInstance(
+					ApplicationProperties.getInt(
+						ClientSessionEnvironment.SESSION_KIND_KEY, -1));
 		} catch (CommunicationException e) {
-			this.dispatcher
-					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER, LangModelGeneral
-							.getString("StatusBar.ConnectionError")));
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
+				StatusMessageEvent.STATUS_SERVER, 
+				LangModelGeneral.getString("StatusBar.ConnectionError")));
 			return;
 		} catch (IllegalDataException e) {
-			this.dispatcher
-					.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER, LangModelGeneral
-							.getString("StatusBar.IllegalSessionKind")));
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
+				StatusMessageEvent.STATUS_SERVER, 
+				LangModelGeneral.getString("StatusBar.IllegalSessionKind")));
 			return;
 		}
-		final ClientSessionEnvironment clientSessionEnvironment = clientSessionEnvironment1;
+		final ClientSessionEnvironment clientSessionEnvironment = 
+				clientSessionEnvironment1;
 
 		final Dispatcher dispatcher1 = this.dispatcher;
 
@@ -325,13 +365,13 @@ public abstract class AbstractApplication {
 			public void propertyChange(PropertyChangeEvent evt) {
 				Boolean boolean1 = (Boolean) evt.getNewValue();
 				if (boolean1.booleanValue()) {
-					dispatcher1.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER,
-																			clientSessionEnvironment.getServerName()));
+					dispatcher1.firePropertyChange(new StatusMessageEvent(this, 
+						StatusMessageEvent.STATUS_SERVER,
+						clientSessionEnvironment.getServerName()));
 				} else {
-					dispatcher1
-							.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER,
-																		LangModelGeneral
-																				.getString("StatusBar.ConnectionError")));
+					dispatcher1.firePropertyChange(new StatusMessageEvent(this, 
+						StatusMessageEvent.STATUS_SERVER,
+						LangModelGeneral.getString("StatusBar.ConnectionError")));
 				}
 
 			}
@@ -342,10 +382,13 @@ public abstract class AbstractApplication {
 
 	private final boolean isLaunchable() {
 		// TODO just only development bypass
-		if (this.applicationCode == null) { return true; }
+		if (this.applicationCode == null) { 
+			return true; 
+		}
 
-		ModuleCodeDialog sDialog = new ModuleCodeDialog(this.applicationCode, LangModelGeneral
-				.getString(ApplicationProperties.getString(KEY_MODULE_TITLE, "")));
+		ModuleCodeDialog sDialog = new ModuleCodeDialog(this.applicationCode, 
+				LangModelGeneral.getString(
+					ApplicationProperties.getString(KEY_MODULE_TITLE, "")));
 
 		return sDialog.getResult() == JOptionPane.OK_OPTION;
 	}
