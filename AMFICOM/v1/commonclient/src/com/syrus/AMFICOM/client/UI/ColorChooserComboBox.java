@@ -1,5 +1,5 @@
 /*-
- * $Id: ColorChooserComboBox.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: ColorChooserComboBox.java,v 1.2 2005/06/17 11:50:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:50:08 $
  * @module commonclient_v1
  */
 
@@ -85,8 +85,7 @@ public class ColorChooserComboBox extends JComboBox {
 			Color color = (Color)newColor;
 			if (!conatainsColor(color)) {
 				this.model.insertElementAt(color, getItemCount() > 0 ? getItemCount() - 1 : 0);
-			}
-			else {
+			} else {
 				setSelectedItem(color);
 			}
 		}

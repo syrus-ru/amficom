@@ -29,14 +29,12 @@ public class LangModelAnalyse
 		try
 		{
 			string = RESOURCE_BUNDLE.getString(keyName1);
-		}
-		catch (MissingResourceException e)
+		} catch (MissingResourceException e)
 		{
 			try
 			{
 				string = RESOURCE_BUNDLE.getString(keyName1 + "Text");
-			}
-			catch (MissingResourceException mre)
+			} catch (MissingResourceException mre)
 			{
 				string = keyName;
 				try
@@ -45,13 +43,11 @@ public class LangModelAnalyse
 						+ keyName1 + "Text"
 						+ "' "
 						+ "not found");
-				}
-				catch (Exception exc)
+				} catch (Exception exc)
 				{
 					exc.printStackTrace();
 				}
-			}
-			catch (Exception exc)
+			} catch (Exception exc)
 			{
 				exc.printStackTrace();
 			}

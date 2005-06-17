@@ -54,8 +54,7 @@ public class TraceEvent
 			data = new double[data_length];
 			for (int i = 0; i < data_length; i++)
 				data[i] = dis.readDouble();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -79,8 +78,7 @@ public class TraceEvent
 			for (int i = 0; i < data.length; i++)
 				dos.writeDouble(data[i]);
 			dos.flush();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;

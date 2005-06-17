@@ -17,8 +17,7 @@ implements PropertyChangeListener
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}

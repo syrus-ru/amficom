@@ -73,8 +73,7 @@ public class PathElementsFrame extends AnalysisFrame
 					}
 				}
 				setTitle(me.getName());
-			}
-			catch(Exception ex)
+			} catch(Exception ex)
 			{
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
@@ -86,8 +85,7 @@ public class PathElementsFrame extends AnalysisFrame
 
 			if (path != null)
 				((PathElementsPanel)p).setPath(path);
-		}
-		else
+		} else
 			p = new SimpleGraphPanel(y, deltaX);
 		p.setColorModel(id);
 		((PathElementsLayeredPanel)panel).addGraphPanel(p);

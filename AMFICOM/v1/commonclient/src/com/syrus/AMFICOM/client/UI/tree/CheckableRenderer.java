@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableRenderer.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: CheckableRenderer.java,v 1.2 2005/06/17 11:50:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import javax.swing.tree.TreeCellRenderer;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:50:08 $
  * @module generalclient_v1
  */
 
@@ -55,8 +55,7 @@ public class CheckableRenderer extends JCheckBox implements TreeCellRenderer {
 		if (!selected) {
 			setForeground(tree.getForeground());
 			setBackground(tree.getBackground());
-		}
-		else {
+		} else {
 			setForeground(selectedForeground);
 			setBackground(selectedBackground);
 		}

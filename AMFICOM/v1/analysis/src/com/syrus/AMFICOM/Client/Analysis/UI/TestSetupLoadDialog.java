@@ -31,8 +31,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -113,8 +112,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 				okButton.setEnabled(true);
 				data = ev.getList();
 				resource = (MeasurementSetup )data.get(ev.getSelectionNumber());
-			}
-			else
+			} else
 			{
 				okButton.setEnabled(false);
 			}

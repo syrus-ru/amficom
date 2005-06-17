@@ -37,8 +37,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -220,8 +219,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			{
 				AlarmMarker m = (AlarmMarker )it.next();
 				return m;
-			}
-			catch(Exception ex)
+			} catch(Exception ex)
 			{
 			}
 		}
@@ -288,8 +286,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 						alarms[i].pointCoord * deltaX,
 						scheme_path_id,
 						monitored_element_id);
-				}
-				else
+				} else
 				{
 					mne = new MapNavigateEvent(
 						this,
@@ -405,8 +402,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 				m.pos * deltaX,
 				scheme_path_id,
 				monitored_element_id);
-		}
-		else
+		} else
 		{
 			mne = new MapNavigateEvent (
 				this,

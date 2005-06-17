@@ -38,8 +38,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, 
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -100,8 +99,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, 
 			if (lsm.isSelectionEmpty())
 			{
 						//no rows are selected
-			}
-			else
+			} else
 			{
 				if (here)
 					here = false;

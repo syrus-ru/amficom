@@ -29,8 +29,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}

@@ -29,8 +29,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -88,8 +87,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 							if(am == null)
 							{
 								((MapMarkersPanel)panel).createAlarmMarker("", mne.getMarkerId(), dist);
-							}
-							else
+							} else
 							{
 								am.setId(mne.getMarkerId());
 								((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);

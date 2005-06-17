@@ -45,8 +45,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (alarms1 != null)
 		{
 			draw_alarms = true;
-		}
-		else
+		} else
 			draw_alarms = false;
 	}
 
@@ -124,8 +123,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (draw_events)
 		{
 			paint_reflectogram_events(g);
-		}
-		else
+		} else
 		{
 			paint_trace(g);
 		}
@@ -141,8 +139,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			paint_noise_level(g);
 			paint_min_trace_level(g);
-		}
-		else if (draw_noise_level && draw_events)
+		} else if (draw_noise_level && draw_events)
 			paint_noise_level(g);
 
 		paint_scale_digits(g);

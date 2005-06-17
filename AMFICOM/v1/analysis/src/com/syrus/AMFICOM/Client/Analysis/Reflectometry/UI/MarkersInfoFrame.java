@@ -55,8 +55,7 @@ implements PropertyChangeListener, BsHashChangeListener
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -139,13 +138,11 @@ implements PropertyChangeListener, BsHashChangeListener
 			res.setAReflectance(MarkerResource.DASH);
 			res.setAAttenuation(MarkerResource.DASH);
 			res.setACumulativeLoss(MarkerResource.DASH);
-		}
-		else
+		} else
 		{
 			if (mInfo.a_type == MarkersInfo.NONREFLECTIVE) {// потери в А
 				res.setALoss(MathRef.round_4(mInfo.a_loss) + dB);
-			}
-			else if (mInfo.a_type == MarkersInfo.REFLECTIVE) {// отражение в А
+			} else if (mInfo.a_type == MarkersInfo.REFLECTIVE) {// отражение в А
 				if (mInfo.a_reflectance > 0)
 					res.setAReflectance(MathRef.round_4(MathRef.calcReflectance(sigma, mInfo.a_reflectance)) + dB);
 				else

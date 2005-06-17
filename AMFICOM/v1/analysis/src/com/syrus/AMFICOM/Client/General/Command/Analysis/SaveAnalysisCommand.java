@@ -72,8 +72,7 @@ public class SaveAnalysisCommand extends AbstractCommand
 		{
 			m = (Measurement)StorableObjectPool.getStorableObject(
 						 new Identifier(bs.measurementId), true);
-		}
-		catch(ApplicationException ex)
+		} catch(ApplicationException ex)
 		{
 			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
 			ex.printStackTrace();
@@ -120,8 +119,7 @@ public class SaveAnalysisCommand extends AbstractCommand
 
 			params[1] = Parameter.createInstance(ptype1,
 				DataStreamableUtil.writeDataStreamableToBA(mtae));
-		}
-		catch (CreateObjectException e)
+		} catch (CreateObjectException e)
 		{
 			System.err.println("SaveAnalysisCommand: CreateObjectException.");
             GUIUtil.showCreateObjectProblemError();

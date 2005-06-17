@@ -32,8 +32,7 @@ implements BsHashChangeListener, CurrentTraceChangeListener, ReportTable
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

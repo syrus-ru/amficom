@@ -42,8 +42,7 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 		if(Heap.getRLDialogByKey(parent.getName()) != null)
 		{
 			dialog = Heap.getRLDialogByKey(parent.getName());
-		}
-		else
+		} else
 		{
 			dialog = new ReflectogrammLoadDialog (aContext);
 			Heap.setRLDialogByKey(parent.getName(), dialog);

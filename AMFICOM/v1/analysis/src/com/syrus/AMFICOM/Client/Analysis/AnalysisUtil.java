@@ -147,8 +147,7 @@ public class AnalysisUtil
                 bsEt = new BellcoreReader().getData(params[i].getValue());
                 Heap.setBSEtalonTrace(bsEt);
                 bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // XXX: externalized string
-            }
-            else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL))
+            } else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL))
             {
                 try {
                     Heap.setMinTraceLevel(new ByteArray(params[i].getValue()).toDouble());

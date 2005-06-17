@@ -1,5 +1,5 @@
 /*
- * $Id: MscharClientPoolContext.java,v 1.4 2005/06/15 15:52:22 arseniy Exp $
+ * $Id: MscharClientPoolContext.java,v 1.5 2005/06/17 11:50:08 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.scheme.XMLSchemeObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/15 15:52:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:50:08 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
 final class MscharClientPoolContext extends ClientPoolContext {
@@ -62,8 +62,7 @@ final class MscharClientPoolContext extends ClientPoolContext {
 			mapObjectLoader = new CORBAMapObjectLoader(this.mscharClientServantManager);
 			schemeObjectLoader = new CORBASchemeObjectLoader(this.mscharClientServantManager);
 			mapViewObjectLoader = new CORBAMapViewObjectLoader(this.mscharClientServantManager);
-		}
-		else {
+		} else {
 			resourceObjectLoader = new XMLResourceObjectLoader(this.xmlFile);
 			mapObjectLoader = new XMLMapObjectLoader(this.xmlFile);
 			schemeObjectLoader = new XMLSchemeObjectLoader(this.xmlFile);

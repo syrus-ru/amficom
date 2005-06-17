@@ -13,8 +13,7 @@ public class ScalableFrame extends SimpleResizableFrame
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -45,8 +44,7 @@ public class ScalableFrame extends SimpleResizableFrame
 		{
 			((ScalableLayeredPanel)panel).removeAllGraphPanels();
 			panels = new HashMap();
-		}
-		else
+		} else
 		{
 			SimpleGraphPanel p = (SimpleGraphPanel)panels.get(id);
 			if (p != null)

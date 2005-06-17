@@ -200,8 +200,7 @@ public class AnalysisPanel extends MapMarkersPanel
 					if(reflection_analysis)
 						paint_reflection_ana(g);
 				}
-			}
-			else
+			} else
 			{
 				//repaint old marker place
 				int x = index2coord(prev_pos - 1) - 1;
@@ -234,8 +233,7 @@ public class AnalysisPanel extends MapMarkersPanel
 
 						parent.repaint(x, Math.min(Math.min(y1, y2), Math.min(y3, y4)),
 													 x2 - x, Math.max(Math.max(y1, y2), Math.max(y3, y4)));
-					}
-					else if (reflection_analysis)
+					} else if (reflection_analysis)
 					{
 						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 5;
 						x = Math.min(x, n_x) - delta_left;
@@ -291,8 +289,7 @@ public class AnalysisPanel extends MapMarkersPanel
 						paint_loss_ana(g);
 					else
 						paint_reflection_ana(g);
-				}
-				else
+				} else
 				{
 					//parent.repaint();
 					if (loss_analysis)
@@ -364,8 +361,7 @@ public class AnalysisPanel extends MapMarkersPanel
 							Heap.setCurrentEvent(activeEvent);
 							moved_here = false;
 						}
-					}
-					else if (SwingUtilities.isLeftMouseButton(e))
+					} else if (SwingUtilities.isLeftMouseButton(e))
 					{
 						int pos = coord2index(currpos.x);
 						moveMarker (markerA, pos);
@@ -396,8 +392,7 @@ public class AnalysisPanel extends MapMarkersPanel
 			{
 				mInfo.a_type = MarkersInfo.NONREFLECTIVE;
 				mInfo.a_loss = ( (lines[0].factor[0]*m.pos + lines[0].factor[1]) - (lines[1].factor[0]*m.pos + lines[1].factor[1]) );
-			}
-			else if (reflection_analysis)
+			} else if (reflection_analysis)
 			{
 				mInfo.a_type = MarkersInfo.REFLECTIVE;
 				mInfo.a_reflectance = ( y[lines[1].point[0]] - (lines[0].factor[0]*m.pos + lines[0].factor[1]) );
@@ -406,14 +401,12 @@ public class AnalysisPanel extends MapMarkersPanel
 			{
 				mInfo.a_attfactor = -(1000d * lines[0].factor[0] / deltaX);
 				mInfo.a_cumulative_loss = start_y - y[mInfo.a_pos];
-			}
-			else
+			} else
 				mInfo.a_type = MarkersInfo.NOANALYSIS;
 
 			mInfo.a_pos = m.pos;
 			mInfo.a_pos_m = m.pos * deltaX;
-		}
-		else if (m.equals(markerB)) // update marker B
+		} else if (m.equals(markerB)) // update marker B
 		{
 			mInfo.b_activeEvent = marker_to_event();
 			mInfo.b_pos = m.pos;
@@ -619,8 +612,7 @@ class AnaLine
 			{
 				point[1] = Math.min(point[0] + min_dist, max);
 				point[0] = Math.max(point[1] - min_dist, min);
-			}
-			else
+			} else
 			{
 				point[0] = Math.max(point[1] - min_dist, min);
 				point[1] = Math.min(point[0] + min_dist, max);

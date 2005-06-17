@@ -47,12 +47,10 @@ public class CreateAnalysisReportCommand extends AbstractCommand
 		if (key.equals(TABLE) && value instanceof ReportTable)
 		{
 			tableFrames.add(value);
-		}
-		else if (key.equals(PANEL) && value instanceof SimpleResizableFrame)
+		} else if (key.equals(PANEL) && value instanceof SimpleResizableFrame)
 		{
 			panels.add(value);
-		}
-		else if (key.equals(TYPE))
+		} else if (key.equals(TYPE))
 		{
 			type = (String)value;
 		}

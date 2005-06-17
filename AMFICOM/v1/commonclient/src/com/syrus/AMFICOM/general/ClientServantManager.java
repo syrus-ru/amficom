@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.5 2005/06/07 17:58:14 bass Exp $
+ * $Id: ClientServantManager.java,v 1.6 2005/06/17 11:50:08 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/07 17:58:14 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 11:50:08 $
  * @author $Author: bass $
  * @module commonclient_v1
  */
@@ -52,8 +52,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	public LoginServer getLoginServerReference() throws CommunicationException {
 		try {
 			return (LoginServer) super.getVerifiableReference(this.loginServerServantName);
-		}
-		catch (final IllegalDataException ide) {
+		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
 			 */
@@ -65,8 +64,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	public EventServer getEventServerReference() throws CommunicationException {
 		try {
 			return (EventServer) super.getVerifiableReference(this.eventServerServantName);
-		}
-		catch (final IllegalDataException ide) {
+		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
 			 */
@@ -78,8 +76,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
 		try {
 			return (IdentifierGeneratorServer) super.getVerifiableReference(this.commonServerServantName);
-		}
-		catch (final IllegalDataException ide) {
+		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
 			 */
@@ -91,8 +88,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	public CommonServer getServerReference() throws CommunicationException {
 		try {
 			return (CommonServer) super.getVerifiableReference(this.commonServerServantName);
-		}
-		catch (final IllegalDataException ide) {
+		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
 			 */

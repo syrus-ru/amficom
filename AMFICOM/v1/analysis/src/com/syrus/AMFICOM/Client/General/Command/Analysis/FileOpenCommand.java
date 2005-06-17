@@ -42,8 +42,7 @@ public class FileOpenCommand extends AbstractCommand
             bs = tr.getData(file);
             if (bs != null)
                 return bs;
-        }
-        catch (UnsatisfiedLinkError e)
+        } catch (UnsatisfiedLinkError e)
         {
             // XXX: exceptions: UnsatisfiedLinkError thrown while reading BS 
         }
@@ -75,8 +74,7 @@ public class FileOpenCommand extends AbstractCommand
                 // FIXME: exceptions: Auto-generated catch block
                 e1.printStackTrace();
             }
-        }
-        else
+        } else
         {
             bs = tr.getData(file); // second attempt
         }
@@ -91,8 +89,7 @@ public class FileOpenCommand extends AbstractCommand
 		{
 			properties.load(new FileInputStream(propertiesFileName));
 			lastDir = properties.getProperty("lastdir");
-		}
-		catch (IOException ex)
+		} catch (IOException ex)
 		{
 		}
 
@@ -145,8 +142,7 @@ public class FileOpenCommand extends AbstractCommand
 			{
 				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
 				properties.store(new FileOutputStream(propertiesFileName), null);
-			}
-			catch (IOException ex)
+			} catch (IOException ex)
 			{
 			}
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

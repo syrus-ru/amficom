@@ -34,8 +34,7 @@ public class TraceOpenReferenceCommand extends AbstractCommand
 		{
 			properties.load(new FileInputStream(propertiesFileName));
 			lastDir = properties.getProperty("lastdir");
-		}
-		catch (IOException ex)
+		} catch (IOException ex)
 		{
 		}
 
@@ -67,8 +66,7 @@ public class TraceOpenReferenceCommand extends AbstractCommand
 			{
 				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
 				properties.store(new FileOutputStream(propertiesFileName), null);
-			}
-			catch (IOException ex)
+			} catch (IOException ex)
 			{
 			}
 		}

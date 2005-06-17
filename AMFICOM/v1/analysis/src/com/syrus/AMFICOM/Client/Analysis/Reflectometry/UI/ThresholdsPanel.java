@@ -147,8 +147,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 				// перемещаем курсор
 				r.mouseMove(currpos.x + p.x, currpos.y + p.y);
-			}
-			catch (AWTException ex)
+			} catch (AWTException ex)
 			{
 				System.out.println("ThresholdsPanel: Warning: MouseMove failed");
 				ex.printStackTrace();
@@ -178,8 +177,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 			dispatcher.firePropertyChange(new RefUpdateEvent(this,
 					RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-		}
-		else
+		} else
 			// иначе выделяем область квадратиком
 			super.this_mouseDragged(e);
 	}
@@ -189,8 +187,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (!edit_thresholds || Heap.getMTMEtalon() == null || c_TH == null)
 		{
 			super.this_mouseReleased(e);
-		}
-		else
+		} else
 		{
 			if (c_TH != null)
 			{
@@ -230,8 +227,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (draw_events)
 		{
 			paint_reflectogram_events(g);
-		}
-		else
+		} else
 		{
 			paint_trace(g);
 		}
@@ -247,8 +243,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		{
 			paint_noise_level(g);
 			paint_min_trace_level(g);
-		}
-		else if (draw_noise_level && draw_events)
+		} else if (draw_noise_level && draw_events)
 			paint_noise_level(g);
 
 		paint_scale_digits(g);

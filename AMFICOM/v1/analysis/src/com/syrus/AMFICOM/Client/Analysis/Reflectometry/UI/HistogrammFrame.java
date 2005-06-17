@@ -21,8 +21,7 @@ implements BsHashChangeListener, AnalysisParametersListener
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}

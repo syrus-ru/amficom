@@ -49,8 +49,7 @@ public class WeightsDialog extends JDialog
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -222,8 +221,7 @@ public class WeightsDialog extends JDialog
 			if(!canBeInteger((String)(v.get(i))))
 			{
 				return "false";
-			}
-			else
+			} else
 			{
 				ret = ret + (String)v.get(i) + " ";
 			}
@@ -277,8 +275,7 @@ public class WeightsDialog extends JDialog
 				return true;
 			else
 				return false;
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			return false;
 		}
@@ -294,8 +291,7 @@ public class WeightsDialog extends JDialog
 				return true;
 			else
 				return false;
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			return false;
 		}
@@ -376,8 +372,7 @@ class ParametersTable extends AbstractTableModel
 			try
 			{
 				r.exec(command);
-			}
-			catch(Exception e)
+			} catch(Exception e)
 			{
 				System.out.println("Ошибка выполнения команды  <"+command+">.");
 			}

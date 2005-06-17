@@ -46,8 +46,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

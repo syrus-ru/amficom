@@ -28,8 +28,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -82,8 +81,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
 			((ThresholdsPanel)p).draw_min_trace_level = true;
-		}
-		else
+		} else
 		{
 			p = new SimpleGraphPanel(y, deltaX);
 		}
@@ -104,8 +102,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		{
 			((ThresholdsLayeredPanel)panel).removeAllGraphPanels();
 			traces = new HashMap();
-		}
-		else
+		} else
 		{
 			SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
 			if (p != null)

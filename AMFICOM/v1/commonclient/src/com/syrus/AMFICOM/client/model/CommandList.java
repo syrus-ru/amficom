@@ -1,5 +1,5 @@
 /**
- * $Id: CommandList.java,v 1.1 2005/06/06 14:51:21 bob Exp $
+ * $Id: CommandList.java,v 1.2 2005/06/17 11:50:08 bass Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.client.model;
 
 /**
- * @version $Revision: 1.1 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
 public class CommandList extends AbstractCommand {
@@ -44,8 +44,7 @@ public class CommandList extends AbstractCommand {
 			if(commandHolder != null) {
 				this.current = commandHolder;
 				this.current.getCommand().execute();
-			}
-			else
+			} else
 				return;
 		}
 	}
@@ -71,8 +70,7 @@ public class CommandList extends AbstractCommand {
 			if(commandHolder != null) {
 				this.current = commandHolder;
 				this.current.getCommand().redo();
-			}
-			else
+			} else
 				return;
 		}
 	}
@@ -121,8 +119,7 @@ public class CommandList extends AbstractCommand {
 					this.current = this.top.getNext();
 				this.top = this.top.getNext();
 				this.count--;
-			}
-			else
+			} else
 				break;
 		}
 		if(this.top != null)
@@ -140,8 +137,7 @@ public class CommandList extends AbstractCommand {
 					this.current = null;
 				this.bottom = this.bottom.getPrevious();
 				this.count--;
-			}
-			else
+			} else
 				break;
 		}
 

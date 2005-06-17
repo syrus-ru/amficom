@@ -1,5 +1,5 @@
 /*
- * $Id: MClientPoolContext.java,v 1.10 2005/06/15 15:52:22 arseniy Exp $
+ * $Id: MClientPoolContext.java,v 1.11 2005/06/17 11:50:08 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.measurement.XMLMeasurementObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/15 15:52:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 11:50:08 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
 final class MClientPoolContext extends ClientPoolContext {
@@ -36,8 +36,7 @@ final class MClientPoolContext extends ClientPoolContext {
 		MeasurementObjectLoader measurementObjectLoader;
 		if (super.xmlFile == null) {
 			measurementObjectLoader = new CORBAMeasurementObjectLoader(this.clientServantManager);
-		}
-		else {
+		} else {
 			measurementObjectLoader = new XMLMeasurementObjectLoader(super.xmlFile);
 		}
 

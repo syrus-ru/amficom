@@ -22,8 +22,7 @@ public class Marker
 		this.name = name;
 		try {
 			id = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
-		}
-		catch (ApplicationException ex) {
+		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
 	}

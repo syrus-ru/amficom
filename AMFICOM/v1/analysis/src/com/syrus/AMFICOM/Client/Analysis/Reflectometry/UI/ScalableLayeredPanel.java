@@ -32,8 +32,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -236,8 +235,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		{
 			horizontalBar.setMaximum((int)horizontalMax);
 			horizontalBar.setValue((int)(Math.max(horizontalBar.getMinimum(), horizontalBar.getValue()*kx + hwidth * kx * rx - hwidth * .5)));
-		}
-		else if (kx < 1)
+		} else if (kx < 1)
 		{
 			horizontalBar.setValue((int)(Math.max(horizontalBar.getMinimum(), horizontalBar.getValue()*kx + hwidth * kx * rx - hwidth * .5)));
 			horizontalBar.setMaximum((int)horizontalMax);
@@ -248,8 +246,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		{
 			verticalBar.setMaximum((int)verticalMax);
 			verticalBar.setValue((int)(Math.max(verticalBar.getMinimum(), verticalBar.getValue()*ky + vheight * ky * ry - vheight * .5)));
-		}
-		else if (ky < 1)
+		} else if (ky < 1)
 		{
 			verticalBar.setValue((int)(Math.max(verticalBar.getMinimum(), verticalBar.getValue()*ky + vheight * ky * ry - vheight * .5)));
 			verticalBar.setMaximum((int)verticalMax);

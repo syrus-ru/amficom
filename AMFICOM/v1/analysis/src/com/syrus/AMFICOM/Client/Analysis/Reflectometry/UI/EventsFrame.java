@@ -158,8 +158,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -565,14 +564,11 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     	
     	if (showPrimary && showEtalon) {
     		view.setViewMode(TableView.COMP);
-    	}
-    	else if (showPrimary) {
+    	} else if (showPrimary) {
             view.setViewMode(TableView.PRIM);
-    	}
-    	else if (showEtalon) {
+    	} else if (showEtalon) {
             view.setViewMode(TableView.ETAL);
-    	}
-    	else 
+    	} else 
     		return;
     	setTableModel();
     }

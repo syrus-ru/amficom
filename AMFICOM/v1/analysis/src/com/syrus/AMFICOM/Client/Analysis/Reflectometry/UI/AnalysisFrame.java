@@ -27,8 +27,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -88,8 +87,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 				MonitoredElement me = (MonitoredElement)StorableObjectPool.getStorableObject(
 								new Identifier(bs.monitoredElementId), true);
 				setTitle(me.getName());
-			}
-			catch(Exception ex)
+			} catch(Exception ex)
 			{
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
@@ -98,8 +96,7 @@ public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener
 			((AnalysisPanel)p).updEvents(id);
 			((AnalysisPanel)p).updateNoiseLevel();
 			((AnalysisPanel)p).draw_noise_level = true;
-		}
-		else
+		} else
 			p = new SimpleGraphPanel(y, deltaX);
 		p.setColorModel(id);
 		((AnalysisLayeredPanel)panel).addGraphPanel(p);

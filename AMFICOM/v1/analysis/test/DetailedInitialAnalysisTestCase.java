@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.7 2005/06/16 09:12:54 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.8 2005/06/17 11:48:01 bass Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -29,8 +29,8 @@ import junit.framework.TestCase;
 /**
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
- * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/06/16 09:12:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:48:01 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -462,8 +462,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                 + " T=" + re[k].getEventType()
                                 + " B=" + re[k].getBegin()
                                 + " km=" + re[k].getBegin()*dxkm);
-                }
-                else if (rcomp.getProbeIdByEtalonId(et) != k) {
+                } else if (rcomp.getProbeIdByEtalonId(et) != k) {
                     // new event: etalon2probe mapping gives another probe event
                     if (verbose)
                         level = ets[i][et].getNewLevel();
@@ -681,8 +680,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 fails.incConnBegin(roughness);
             else
                 fails.incPosition(roughness);
-        }
-        else {
+        } else {
             if (et.getEventType()
                     == SimpleReflectogramEvent.CONNECTOR)
                 fails.incConnEnd(roughness);

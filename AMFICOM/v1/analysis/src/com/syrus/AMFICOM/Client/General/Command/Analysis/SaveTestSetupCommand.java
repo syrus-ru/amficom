@@ -88,8 +88,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 					return false;
 				}
 				etalonSet = AnalysisUtil.createEtalon(LoginManager.getUserId(), msTest.getMonitoredElementIds(), mtm);
-			}
-			else
+			} else
 				etalonSet = msTest.getEtalon();
 		} catch (ApplicationException e1)
 		{
@@ -112,13 +111,11 @@ public class SaveTestSetupCommand extends AbstractCommand
 					msTest.getMonitoredElementIds(),
                     msTest.getMeasurementTypeIds());
 			StorableObjectPool.putStorableObject(measurementSetup);
-		}
-		catch (CreateObjectException e)
+		} catch (CreateObjectException e)
 		{
             GUIUtil.showCreateObjectProblemError();
 			return false;
-		}
-		catch(IllegalObjectEntityException e)
+		} catch(IllegalObjectEntityException e)
 		{
 			// FIXME: exceptions: IllegalObjectEntityException
 			System.err.println("CreateTestSetupCommand: IllegalObjectEntityException.");
@@ -134,8 +131,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 			StorableObjectPool.flushGroup(
                     ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
                     true);
-		}
-		catch(ApplicationException ex)
+		} catch(ApplicationException ex)
 		{ // FIXME: exceptions: process exception
 		}
 

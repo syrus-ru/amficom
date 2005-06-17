@@ -46,8 +46,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -122,8 +121,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 				double rx = (double)Math.max(0, Math.min(currpos.x, startpos.x)) / (double)(getWidth()) + 1d / (kx * 2d);
 				double ry = (double)Math.max(0, Math.min(currpos.y, startpos.y)) / (double)(getHeight()) + 1d / (ky * 2d);
 				parent.updScale(kx, ky, rx, ry);
-			}
-			else
+			} else
 				parent.repaint();
 
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -190,8 +188,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 			x = (int)(((int)(top * Ky / m) ) * delta - top * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)
 				g.drawLine(0, (int)(i * delta + x - 1), jw,	(int)(i * delta + x - 1));
-		}
-		else
+		} else
 		{
 			x = (int)(((int)(bottom * Ky / m) ) * delta - bottom * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)
@@ -221,8 +218,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 			x = (int) (((int)(top * Ky / m) ) * delta - top * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)
 				g.drawString(String.valueOf(MathRef.round_4 (grid_shift_y + (i + (int)(top * Ky / m) ) * m )), 1, (int)(i * delta + x + 10));
-		}
-		else
+		} else
 		{
 			x = (int) (((int)(bottom * Ky / m) ) * delta - bottom * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)

@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelGeneral.java,v 1.2 2005/06/06 14:52:47 bob Exp $
+ * $Id: LangModelGeneral.java,v 1.3 2005/06/17 11:50:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/06/06 14:52:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 11:50:08 $
  * @module commonclient_v1
  */
 
@@ -31,8 +31,7 @@ public class LangModelGeneral {
 		String string;
 		try {
 			string = RESOURCE_BUNDLE.getString(keyName);
-		}
-		catch (MissingResourceException e) {
+		} catch (MissingResourceException e) {
 			string = "!" + keyName + "!";
 			try {
 				String s = "key '"
@@ -40,8 +39,7 @@ public class LangModelGeneral {
 						+ "' "
 						+ "not found";
 				throw new Exception(s);
-			}
-			catch (Exception exc) {
+			} catch (Exception exc) {
 				exc.printStackTrace();
 			}
 		}

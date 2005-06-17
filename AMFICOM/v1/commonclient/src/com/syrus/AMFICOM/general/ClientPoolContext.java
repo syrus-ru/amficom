@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.10 2005/06/15 15:52:22 arseniy Exp $
+ * $Id: ClientPoolContext.java,v 1.11 2005/06/17 11:50:08 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.configuration.XMLConfigurationObjectLoader;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/15 15:52:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 11:50:08 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
 class ClientPoolContext extends PoolContext {
@@ -51,8 +51,7 @@ class ClientPoolContext extends PoolContext {
 			generalObjectLoader = new CORBAGeneralObjectLoader(this.clientServantManager);
 			administrationObjectLoader = new CORBAAdministrationObjectLoader(this.clientServantManager);
 			configurationObjectLoader = new CORBAConfigurationObjectLoader(this.clientServantManager);
-		}
-		else {
+		} else {
 			generalObjectLoader = new XMLGeneralObjectLoader(this.xmlFile);
 			administrationObjectLoader = new XMLAdministrationObjectLoader(this.xmlFile);
 			configurationObjectLoader = new XMLConfigurationObjectLoader(this.xmlFile);

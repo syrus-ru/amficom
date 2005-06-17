@@ -32,8 +32,7 @@ public class ResizableLayeredPanel extends JPanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -63,8 +62,7 @@ public class ResizableLayeredPanel extends JPanel
 				JToolBar.Separator s = new JToolBar.Separator();
 				s.setOrientation(toolbar.getOrientation() == SwingConstants.VERTICAL ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
 				toolbar.add(s);
-			}
-			else
+			} else
 				toolbar.add((Component)commands.get(buttons[i]));
 		}
 

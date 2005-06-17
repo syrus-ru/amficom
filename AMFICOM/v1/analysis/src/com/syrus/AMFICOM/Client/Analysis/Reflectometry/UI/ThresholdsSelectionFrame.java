@@ -54,8 +54,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -392,8 +391,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 						Double.valueOf(value.toString()).doubleValue());
 				dispatcher.firePropertyChange(new RefUpdateEvent(this,
 						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-			}
-			catch(NumberFormatException e)
+			} catch(NumberFormatException e)
 			{
 				// ignore invalid input
 			}

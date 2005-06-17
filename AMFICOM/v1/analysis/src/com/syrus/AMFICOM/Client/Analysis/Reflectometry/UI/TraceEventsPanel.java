@@ -58,8 +58,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 		if (draw_events)
 		{
 			paint_events(g);
-		}
-		else
+		} else
 		{
 			paint_trace(g);
 		}

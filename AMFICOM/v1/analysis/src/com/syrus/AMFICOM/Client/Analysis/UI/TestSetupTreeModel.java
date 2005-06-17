@@ -41,8 +41,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 						 new Identifier(bs.monitoredElementId), true);
 			return new ObjectResourceTreeNode("root", "Шаблоны на \"" +
 					(me.getName().equals("") ? me.getId().getIdentifierString() : me.getName()) + "\"", true);
-		}
-		catch(ApplicationException ex)
+		} catch(ApplicationException ex)
 		{
 			return new ObjectResourceTreeNode("root", "Шаблоны", true);
 		}
@@ -141,8 +140,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 							ortn = new ObjectResourceTreeNode(t, t.getDescription(), true, true);
 							vec.add(ortn);
 						}
-					}
-					catch(ApplicationException ex1)
+					} catch(ApplicationException ex1)
 					{
 					}
 				}
