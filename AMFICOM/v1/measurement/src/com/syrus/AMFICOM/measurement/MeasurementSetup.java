@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.77 2005/06/17 13:06:57 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.78 2005/06/17 20:46:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/06/17 13:06:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2005/06/17 20:46:25 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -166,20 +166,29 @@ public final class MeasurementSetup extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		MeasurementSetup_Transferable mst = (MeasurementSetup_Transferable)transferable;
+		MeasurementSetup_Transferable mst = (MeasurementSetup_Transferable) transferable;
 		super.fromTransferable(mst.header);
 
 		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
-		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true);
-		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true);
-		this.etalon = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true);
+
+		Identifier setId = new Identifier(mst.criteria_set_id);
+		this.criteriaSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
+				true) : null;
+
+		setId = new Identifier(mst.threshold_set_id);
+		this.thresholdSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
+				true) : null;
+
+		setId = new Identifier(mst.etalon_id);
+		this.etalon = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
+				true) : null;
 
 		this.description = mst.description;
 		this.measurementDuration = mst.measurement_duration;
 
 		this.monitoredElementIds = Identifier.fromTransferables(mst.monitored_element_ids);
 		this.measurementTypeIds = Identifier.fromTransferables(mst.measurement_type_ids);
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -188,22 +197,26 @@ public final class MeasurementSetup extends StorableObject {
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
-		IdlIdentifier[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
+
+		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
+		final IdlIdentifier[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
+
+		final IdlIdentifier voidIdlIdentifier = (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable();
 		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
-												 (IdlIdentifier) this.parameterSet.getId().getTransferable(),
-												 (this.criteriaSet != null) ? (IdlIdentifier) this.criteriaSet.getId().getTransferable() : (new IdlIdentifier("")),
-												 (this.thresholdSet != null) ? (IdlIdentifier) this.thresholdSet.getId().getTransferable() : (new IdlIdentifier("")),
-												 (this.etalon != null) ? (IdlIdentifier) this.etalon.getId().getTransferable() : (new IdlIdentifier("")),
-												 this.description,
-												 this.measurementDuration,
-												 meIds,
-												 mtIds);
+				(IdlIdentifier) this.parameterSet.getId().getTransferable(),
+				(this.criteriaSet != null) ? (IdlIdentifier) this.criteriaSet.getId().getTransferable() : voidIdlIdentifier,
+				(this.thresholdSet != null) ? (IdlIdentifier) this.thresholdSet.getId().getTransferable() : voidIdlIdentifier,
+				(this.etalon != null) ? (IdlIdentifier) this.etalon.getId().getTransferable() : voidIdlIdentifier,
+				this.description,
+				this.measurementDuration,
+				meIds,
+				mtIds);
 	}
 	
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	protected boolean isValid() {
 		return super.isValid()

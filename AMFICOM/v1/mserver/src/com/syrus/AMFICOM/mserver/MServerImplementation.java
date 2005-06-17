@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.61 2005/06/17 13:07:01 bass Exp $
+ * $Id: MServerImplementation.java,v 1.62 2005/06/17 20:45:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,15 +17,15 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/17 13:07:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.62 $, $Date: 2005/06/17 20:45:54 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 public class MServerImplementation extends MServerMeasurementTransmit {
@@ -33,8 +33,8 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 	private static final long serialVersionUID = 395371850379497709L;
 
 	protected void validateAccess(final SessionKey_Transferable sessionKeyT,
-			final Identifier_TransferableHolder userId,
-			final Identifier_TransferableHolder domainId) throws AMFICOMRemoteException {
+			final IdlIdentifierHolder userId,
+			final IdlIdentifierHolder domainId) throws AMFICOMRemoteException {
 		try {
 			MServerSessionEnvironment.getInstance().getMServerServantManager().getLoginServerReference().validateAccess(sessionKeyT,
 					userId,
@@ -56,8 +56,8 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 	}
 
 	public void deleteTests(IdlIdentifier[] ids, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
-		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
+		final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 		this.validateAccess(sessionKeyT, userId, domainId);
 
 		Set testIds = Identifier.fromTransferables(ids);

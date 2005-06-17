@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.66 2005/06/17 13:06:57 bass Exp $
+ * $Id: Analysis.java,v 1.67 2005/06/17 20:46:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/06/17 13:06:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/06/17 20:46:25 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -103,10 +103,12 @@ public class Analysis extends Action {
 		super.fromTransferable(at.header, null, new Identifier(at.monitored_element_id), null);
 
 		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
-		super.parentAction = (Measurement) StorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true);
+		final Identifier parentActionId = new Identifier(at.measurement_id);
+		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
+				? (Action) StorableObjectPool.getStorableObject(parentActionId, true) : null;
 
 		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -114,20 +116,22 @@ public class Analysis extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public IDLEntity getTransferable() {
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		return new Analysis_Transferable(super.getHeaderTransferable(),
 				(IdlIdentifier) super.type.getId().getTransferable(),
 				(IdlIdentifier) super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? (IdlIdentifier) super.parentAction.getId().getTransferable()
-						: new IdlIdentifier(""),
+						: (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable(),
 				this.name != null ? this.name : "",
 				(IdlIdentifier) this.criteriaSet.getId().getTransferable());
 	}
 	
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
 	 */
 	protected boolean isValid() {
 		return super.isValid() && this.name != null && this.criteriaSet != null;

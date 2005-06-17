@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.4 2005/06/14 11:13:09 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.5 2005/06/17 20:49:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.mscharserver;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/14 11:13:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 20:49:26 $
+ * @author $Author: arseniy $
  * @module mscharserver_v1
  */
 public final class MscharServerImpl extends MscharServerSchemeTransmit {
@@ -36,8 +36,8 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
 	 */
 	protected void validateAccess(final SessionKey_Transferable sessionKey,
-			final Identifier_TransferableHolder userId,
-			final Identifier_TransferableHolder domainId)
+			final IdlIdentifierHolder userId,
+			final IdlIdentifierHolder domainId)
 			throws AMFICOMRemoteException {
 		try {
 			MscharServerSessionEnvironment.getInstance()

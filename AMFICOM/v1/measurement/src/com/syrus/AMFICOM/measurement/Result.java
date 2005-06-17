@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.62 2005/06/17 13:06:57 bass Exp $
+ * $Id: Result.java,v 1.63 2005/06/17 20:46:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/17 13:06:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/06/17 20:46:25 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -102,22 +102,24 @@ public class Result extends StorableObject {
 		super.fromTransferable(rt.header);
 
 		this.sort = rt.sort.value();
+		Identifier actionId = null;
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				this.action = (Measurement) StorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
+				actionId = new Identifier(rt.measurement_id);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				this.action = (Analysis) StorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
+				actionId = new Identifier(rt.analysis_id);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				this.action = (Evaluation) StorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
+				actionId = new Identifier(rt.evaluation_id);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				this.action = (Modeling) StorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
+				actionId = new Identifier(rt.modeling_id);
 				break;
 			default:
-				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
+				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id + "'");
 		}
+		this.action = (Action) StorableObjectPool.getStorableObject(actionId, true);
 
 		this.parameters = new Parameter[rt.parameters.length];
 		for (int i = 0; i < this.parameters.length; i++)
@@ -135,15 +137,17 @@ public class Result extends StorableObject {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
+
+		final IdlIdentifier voidIdlIdentifier = (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable();
 		return new Result_Transferable(super.getHeaderTransferable(),
 				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT) ? (IdlIdentifier) this.action.getId().getTransferable()
-						: (new IdlIdentifier("")),
+						: voidIdlIdentifier,
 				(this.sort == ResultSort._RESULT_SORT_ANALYSIS) ? (IdlIdentifier) this.action.getId().getTransferable()
-						: (new IdlIdentifier("")),
+						: voidIdlIdentifier,
 				(this.sort == ResultSort._RESULT_SORT_EVALUATION) ? (IdlIdentifier) this.action.getId().getTransferable()
-						: (new IdlIdentifier("")),
+						: voidIdlIdentifier,
 				(this.sort == ResultSort._RESULT_SORT_MODELING) ? (IdlIdentifier) this.action.getId().getTransferable()
-						: (new IdlIdentifier("")),
+						: voidIdlIdentifier,
 				ResultSort.from_int(this.sort),
 				pts);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.63 2005/06/17 13:06:57 bass Exp $
+ * $Id: Evaluation.java,v 1.64 2005/06/17 20:46:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/17 13:06:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.64 $, $Date: 2005/06/17 20:46:25 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -101,10 +101,12 @@ public class Evaluation extends Action {
 		super.fromTransferable(et.header, null, new Identifier(et.monitored_element_id), null);
 
 		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-		super.parentAction = (Measurement) StorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true);
+		final Identifier parentActionId = new Identifier(et.measurement_id);
+		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
+				? (Action) StorableObjectPool.getStorableObject(parentActionId, true) : null;
 
 		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -113,15 +115,18 @@ public class Evaluation extends Action {
 	 */
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		return new Evaluation_Transferable(super.getHeaderTransferable(),
-										   (IdlIdentifier)super.type.getId().getTransferable(),
-										   (IdlIdentifier)super.monitoredElementId.getTransferable(),
-										   (super.parentAction != null) ? (IdlIdentifier) super.parentAction.getId().getTransferable() : new IdlIdentifier(""),
-										   (IdlIdentifier)this.thresholdSet.getId().getTransferable());
+				(IdlIdentifier) super.type.getId().getTransferable(),
+				(IdlIdentifier) super.monitoredElementId.getTransferable(),
+				(super.parentAction != null) ? (IdlIdentifier) super.parentAction.getId().getTransferable()
+						: (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable(),
+				(IdlIdentifier) this.thresholdSet.getId().getTransferable());
 	}
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.measurement.Action#isValid()
 	 */
 	/**

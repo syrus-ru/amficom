@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.128 2005/06/17 13:06:57 bass Exp $
+ * $Id: Test.java,v 1.129 2005/06/17 20:46:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/06/17 13:06:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.129 $, $Date: 2005/06/17 20:46:25 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -352,17 +352,17 @@ public class Test extends StorableObject {
 
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
+
+		final IdlIdentifier voidIdlIdentifier = (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable();
 		return new Test_Transferable(super.getHeaderTransferable(),
 				TestTemporalType.from_int(this.temporalType),
 				this.timeStamps.getTransferable(),
 				(IdlIdentifier) this.measurementTypeId.getTransferable(),
-				(this.analysisTypeId != null) ? (IdlIdentifier) this.analysisTypeId.getTransferable()
-						: (new IdlIdentifier("")),
-				(this.evaluationTypeId != null) ? (IdlIdentifier) this.evaluationTypeId.getTransferable()
-						: (new IdlIdentifier("")),
-				(IdlIdentifier)(this.groupTestId != null ? this.groupTestId : Identifier.VOID_IDENTIFIER).getTransferable(),
+				(this.analysisTypeId != null) ? (IdlIdentifier) this.analysisTypeId.getTransferable() : voidIdlIdentifier,
+				(this.evaluationTypeId != null) ? (IdlIdentifier) this.evaluationTypeId.getTransferable() : voidIdlIdentifier,
+				(this.groupTestId != null) ? (IdlIdentifier) this.groupTestId.getTransferable() : voidIdlIdentifier,
 				TestStatus.from_int(this.status),
 				(IdlIdentifier) this.monitoredElement.getId().getTransferable(),
 				TestReturnType.from_int(this.returnType),
