@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.34 2005/06/17 11:01:07 bass Exp $
+* $Id: MapView.java,v 1.35 2005/06/17 12:38:52 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/17 11:01:07 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/17 12:38:52 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -166,8 +166,7 @@ public class MapView extends DomainMember implements Namable {
 					map);
 			mapView.markAsChanged();
 			return mapView;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -193,15 +192,13 @@ public class MapView extends DomainMember implements Namable {
 		Identifier mapId = new Identifier(mvt.mapId);
 		try {
 			this.map = (Map) StorableObjectPool.getStorableObject(mapId, true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get map " + mapId.toString(), ae);
 		}
 
 		try {
 			this.schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
 	}
@@ -453,8 +450,7 @@ public class MapView extends DomainMember implements Namable {
 					return findElement(se);
 				}
 			}
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -487,8 +483,7 @@ public class MapView extends DomainMember implements Namable {
 					return findElement(se);
 				}
 			}
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -518,8 +513,7 @@ public class MapView extends DomainMember implements Namable {
 					return findElement(se);
 				}
 			}
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -549,8 +543,7 @@ public class MapView extends DomainMember implements Namable {
 					return findElement(se);
 				}
 			}
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}

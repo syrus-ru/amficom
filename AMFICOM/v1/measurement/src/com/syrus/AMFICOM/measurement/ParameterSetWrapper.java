@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.1 2005/06/16 10:34:03 bass Exp $
+ * $Id: ParameterSetWrapper.java,v 1.2 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -99,8 +99,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 				else
 					if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
 						set.setMonitoredElementIds((java.util.Set) value);
-					}
-					else
+					} else
 						if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
 							Map setParameterMap = (Map) value;
 							/* there are 3*N keys for N Parameter */

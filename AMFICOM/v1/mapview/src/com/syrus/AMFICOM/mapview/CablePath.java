@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.19 2005/05/26 15:31:15 bass Exp $
+ * $Id: CablePath.java,v 1.20 2005/06/17 12:38:52 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/05/26 15:31:15 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/17 12:38:52 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -511,8 +511,7 @@ public class CablePath implements MapElement
 						cci.setEndSiteNode((SiteNode )link.getEndNode());
 						canSort = true;
 						break;
-					}
-					else
+					} else
 					if(link.getEndNode().equals(smne))
 					{
 						list.add(link);
@@ -549,8 +548,7 @@ public class CablePath implements MapElement
 		{
 			if(this.getLinks().size() != 0)
 				ret = (PhysicalLink)this.getLinks().get(0);
-		}
-		else
+		} else
 		{
 			int index = this.getLinks().indexOf(physicalLink);
 			if(index != this.getLinks().size() - 1 && index != -1)
@@ -572,8 +570,7 @@ public class CablePath implements MapElement
 		{
 			if(this.getLinks().size() != 0)
 				ret = (PhysicalLink)this.getLinks().get(this.getLinks().size() - 1);
-		}
-		else
+		} else
 		{
 			int index = this.getLinks().indexOf(physicalLink);
 			if(index > 0)

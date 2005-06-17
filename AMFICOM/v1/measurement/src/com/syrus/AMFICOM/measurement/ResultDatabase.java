@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.91 2005/06/17 11:01:00 bass Exp $
+ * $Id: ResultDatabase.java,v 1.92 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.92 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -200,8 +200,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				try {
 					action = (Measurement) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							ResultWrapper.COLUMN_MEASUREMENT_ID), true);
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				break;
@@ -209,8 +208,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				try {
 					action = (Analysis) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							ResultWrapper.COLUMN_ANALYSIS_ID), true);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
 				break;
@@ -218,8 +216,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				try {
 					action = (Evaluation) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							ResultWrapper.COLUMN_EVALUATION_ID), true);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
 				break;
@@ -227,8 +224,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				try {
 					action = (Modeling) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							ResultWrapper.COLUMN_MODELING_ID), true);
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
 				break;
@@ -334,8 +330,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				try {
 					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_TYPE_ID), true);
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -349,12 +344,10 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				}
 				resultParameters.add(parameter);
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "ResultDatabase.retrieveResultParametersByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -362,11 +355,9 @@ public final class ResultDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -400,8 +391,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		try {
 			super.insertEntity(result);
 			this.insertResultParameters(result);
-		}
-		catch (CreateObjectException e) {
+		} catch (CreateObjectException e) {
 			this.delete(result);
 			throw e;
 		}
@@ -454,22 +444,18 @@ public final class ResultDatabase extends StorableObjectDatabase {
 						StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '" + parameterId.toString()
 					+ "' of type '" + parameterTypeId.toString() + "' for result '" + resultId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -489,20 +475,16 @@ public final class ResultDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + resultIdStr);
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.86 2005/06/17 11:00:59 bass Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.87 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.87 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -153,8 +153,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 		try {
 			super.updateParameterTypeIds(Collections.singleton(storableObject));
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -164,8 +163,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 		try {
 			super.updateParameterTypeIds(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -176,8 +174,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 		super.updateParameterTypeIds(Collections.singleton(storableObject));
 		try {
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -188,8 +185,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 		super.updateParameterTypeIds(storableObjects);
 		try {
 			this.updateMeasurementTypeIds(storableObjects);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -229,20 +225,16 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 					+ ObjectEntities.EVALUATION_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + evaluationTypeIdStr);
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

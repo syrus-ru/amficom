@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.26 2005/06/14 10:53:42 bass Exp $
+ * $Id: MeasurementPath.java,v 1.27 2005/06/17 12:38:52 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * Элемент пути.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/06/14 10:53:42 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 12:38:52 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -484,8 +484,7 @@ public class MeasurementPath implements MapElement
 			{
 				this.sortedNodeLinks.addAll(cpath.getSortedNodeLinks());
 				this.sortedNodes.addAll(cpath.getSortedNodes());
-			}
-			else
+			} else
 			{
 				List reversedSortedNodeLinks = new ArrayList(cpath.getSortedNodeLinks());
 				Collections.reverse(reversedSortedNodeLinks);

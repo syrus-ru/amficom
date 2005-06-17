@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.60 2005/06/17 11:00:59 bass Exp $
+ * $Id: AnalysisDatabase.java,v 1.61 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.61 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -121,8 +121,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 			if (measurementId != null)
 				measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
 			criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_CRITERIA_SET_ID), true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),

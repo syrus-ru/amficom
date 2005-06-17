@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.43 2005/06/17 11:00:59 bass Exp $
+ * $Id: ModelingDatabase.java,v 1.44 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.44 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module module_name
  */
@@ -105,8 +105,7 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 					StorableObjectWrapper.COLUMN_TYPE_ID), true);
 			argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					ModelingWrapper.COLUMN_ARGUMENT_SET_ID), true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.98 2005/06/17 11:01:00 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.99 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.99 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -152,8 +152,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		try {
 			super.updateParameterTypeIds(Collections.singleton(storableObject));
 			this.updateMeasurementPortTypeIds(Collections.singleton(storableObject));
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -163,8 +162,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		try {
 			super.updateParameterTypeIds(storableObjects);
 			this.updateMeasurementPortTypeIds(storableObjects);
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -175,8 +173,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		super.updateParameterTypeIds(Collections.singleton(storableObject));
 		try {
 			this.updateMeasurementPortTypeIds(Collections.singleton(storableObject));
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -187,8 +184,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		super.updateParameterTypeIds(storableObjects);
 		try {
 			this.updateMeasurementPortTypeIds(storableObjects);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -232,20 +228,16 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + measurementTypeIdStr);
 
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if(statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch(SQLException sqle1) {
+			} catch(SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

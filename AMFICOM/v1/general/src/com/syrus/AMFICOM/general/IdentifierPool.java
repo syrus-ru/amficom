@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.21 2005/06/09 09:36:56 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.22 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/09 09:36:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/06/17 12:38:53 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class IdentifierPool {
@@ -81,8 +81,7 @@ public class IdentifierPool {
 		IdentifierGeneratorServer igServer = null;
 		try {
 			igServer = igsConnectionMananger.getIGSReference();
-		}
-		catch (CommunicationException ce) {
+		} catch (CommunicationException ce) {
 			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
 		}
 
@@ -91,8 +90,7 @@ public class IdentifierPool {
 		/*	Do not wait more than MAX_TIME_WAIT*/
 		try {
 			identifierLoader.join(MAX_TIME_WAIT);
-		}
-		catch (InterruptedException ie) {
+		} catch (InterruptedException ie) {
 			Log.errorException(ie);
 		}
 	}

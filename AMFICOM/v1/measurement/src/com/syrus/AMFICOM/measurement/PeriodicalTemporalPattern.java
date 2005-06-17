@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.8 2005/06/17 11:01:00 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.9 2005/06/17 12:38:56 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -66,8 +66,7 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	public PeriodicalTemporalPattern(final PeriodicalTemporalPattern_Transferable itpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(itpt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}	
@@ -102,8 +101,7 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 			periodicalTemporalPattern.markAsChanged();
 
 			return periodicalTemporalPattern;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

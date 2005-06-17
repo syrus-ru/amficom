@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.20 2005/06/17 11:01:14 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.21 2005/06/17 12:38:54 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/06/17 11:01:14 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/17 12:38:54 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -94,8 +94,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 			schemeImageResource.markAsChanged();
 
 			return schemeImageResource;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -173,8 +172,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 			out = new ObjectOutputStream(new GZIPOutputStream(subOut));
 			out.writeObject(data1);
 			out.flush();
-		}
-		finally {
+		} finally {
 			if (out != null)
 				out.close();
 		}
@@ -187,8 +185,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	private byte[] safePack(final List data1) {
 		try {
 			return pack(data1);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			Log.errorException(ioe);
 		}
 		return new byte[0];
@@ -200,11 +197,9 @@ public final class SchemeImageResource extends AbstractImageResource {
 	private List safeUnpack(final byte packedData[]) {
 		try {
 			return unpack(packedData);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			Log.errorException(ioe);
-		}
-		catch (ClassNotFoundException cnfe) {
+		} catch (ClassNotFoundException cnfe) {
 			Log.errorException(cnfe);
 		}
 		return Collections.EMPTY_LIST;
@@ -215,8 +210,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 		try {
 			in = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(packedData)));
 			return (List) in.readObject();
-		}
-		finally {
+		} finally {
 			if (in != null)
 				in.close();
 		}

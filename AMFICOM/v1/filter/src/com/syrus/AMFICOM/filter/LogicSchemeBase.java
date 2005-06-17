@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeBase.java,v 1.6 2005/05/18 12:42:49 bass Exp $
+ * $Id: LogicSchemeBase.java,v 1.7 2005/06/17 12:38:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/18 12:42:49 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 12:38:54 $
  * @module filter_v1
  */
 public class LogicSchemeBase implements Serializable
@@ -574,8 +574,7 @@ public class LogicSchemeBase implements Serializable
 
 				int condIndex = Integer.parseInt(numbString);
 				return condIndex;
-			}
-			catch (Exception exc)
+			} catch (Exception exc)
 			{
 				return 0;
 			}

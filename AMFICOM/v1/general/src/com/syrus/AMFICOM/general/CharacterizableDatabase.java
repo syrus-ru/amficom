@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.16 2005/06/17 11:00:57 bass Exp $
+ * $Id: CharacterizableDatabase.java,v 1.17 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -112,8 +112,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		try {
 			this.updateCharacteristics(this.fromStorableObject(storableObject));
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			String mesg = "Illegal storable object " + this.getEntityName() + " '" + storableObject.getId() + "' -- " + ide.getMessage();
 			throw new UpdateObjectException(mesg, ide);
 		}
@@ -135,8 +134,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
 			characteristics = characteristicDatabase.retrieveByCondition(sql);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new UpdateObjectException("Cannot retrieve from database characteristics for " + this.getEntityName()
 					+ " '" + cdIdStr + "' -- " + ae.getMessage(), ae);
 		}
@@ -178,8 +176,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		try {
 			characteristicDatabase.insert(insertCharacteristics);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new UpdateObjectException("Cannot insert characteristics for " + this.getEntityName()
 					+ " " + cdIdStr + " -- " + ae.getMessage(), ae);
 		}
@@ -196,8 +193,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		final StorableObjectDatabase characteristicDatabase = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
 			characteristics = characteristicDatabase.retrieveByCondition(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true).toString());
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new UpdateObjectException(ae);
 		}
 
@@ -212,8 +208,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			try {
 				characterizable = this.fromStorableObject((StorableObject) it.next());
-			}
-			catch (IllegalDataException ide) {
+			} catch (IllegalDataException ide) {
 				throw new UpdateObjectException(ide);
 			}
 			characteristics.addAll(characterizable.getCharacteristics());
@@ -248,8 +243,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		try {
 			characteristicDatabase.insert(insertCharacteristics);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			String mesg = "Cannot insert characteristics for multiple " + this.getEntityName() + " -- " + ae.getMessage();
 			throw new UpdateObjectException(mesg, ae);
 		}

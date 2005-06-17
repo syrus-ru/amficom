@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.19 2005/06/17 11:01:07 bass Exp $
+ * $Id: Marker.java,v 1.20 2005/06/17 12:38:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.19 $, $Date: 2005/06/17 11:01:07 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/17 12:38:52 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -173,8 +173,7 @@ public class Marker extends AbstractNode
 				path,
 				monitoredElementId,
 				dpoint);
-		}
-		catch (IdentifierGenerationException e)
+		} catch (IdentifierGenerationException e)
 		{
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}
@@ -256,8 +255,7 @@ public class Marker extends AbstractNode
 				path,
 				monitoredElementId,
 				name);
-		}
-		catch (IdentifierGenerationException e)
+		} catch (IdentifierGenerationException e)
 		{
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}

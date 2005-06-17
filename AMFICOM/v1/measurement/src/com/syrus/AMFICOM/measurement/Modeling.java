@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.45 2005/06/17 11:01:00 bass Exp $
+ * $Id: Modeling.java,v 1.46 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
@@ -54,8 +54,7 @@ public class Modeling extends Action {
 		ModelingDatabase database = (ModelingDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		
@@ -68,8 +67,7 @@ public class Modeling extends Action {
 	Modeling(final Modeling_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -191,8 +189,7 @@ public class Modeling extends Action {
 			modeling.markAsChanged();
 
 			return modeling;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

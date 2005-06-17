@@ -1,5 +1,5 @@
 /*-
- * $Id: MapJLocalRenderer.java,v 1.2 2005/06/16 14:10:47 max Exp $
+ * $Id: MapJLocalRenderer.java,v 1.3 2005/06/17 12:38:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/06/16 14:10:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:52 $
  * @module mscharserver_v1
  */
 public class MapJLocalRenderer
@@ -216,8 +216,7 @@ public class MapJLocalRenderer
 			try
 			{
 				this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				Log.errorMessage("MapJLocalRenderer.setCenter | RunningThread - ERROR!!! - Failed setting center. Reason" + e.getMessage());
 			}
@@ -237,8 +236,7 @@ public class MapJLocalRenderer
 			{
 				if (scale != 0.0D)
 					this.mapJObject.setZoom(scale);
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 				Log.errorMessage("MapJLocalRenderer.setScale| RunningThread - ERROR!!! - Failed setting scale.");
 			}
@@ -266,8 +264,7 @@ public class MapJLocalRenderer
 				
 				layer.setEnabled(layerVisible);
 				layer.setAutoLabel(layerLabelsVisible);
-			}
-			catch (Exception exc)
+			} catch (Exception exc)
 			{
 				Log.errorMessage("MapJLocalRenderer.setLayerVisibility | RunningThread - ERROR!!! - Failed setting layer visibility. Reason: " + exc.getMessage());
 			}

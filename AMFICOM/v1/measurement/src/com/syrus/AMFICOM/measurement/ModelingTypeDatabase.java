@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.40 2005/06/17 11:00:59 bass Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.41 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -133,8 +133,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		super.insertEntity(modelingType);
 		try {
 			super.updateParameterTypeIds(Collections.singleton(storableObject));
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -143,8 +142,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypeIds(storableObjects);
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -177,20 +175,16 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 					+ ObjectEntities.MODELING_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + modelingTypeIdStr);
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

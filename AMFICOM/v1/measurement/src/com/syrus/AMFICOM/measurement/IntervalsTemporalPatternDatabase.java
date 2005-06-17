@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.5 2005/06/17 11:01:00 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.6 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -152,29 +152,24 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				
 			}
 		return tableMap;
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "IntervalsTemporalPatternDatabase.getMapsFromDB | Cannot retrieve " + getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (resultSet != null)
 						resultSet.close();
-				}
-				finally {
+				} finally {
 					try {
 						if (statement != null)
 							statement.close();
-					}
-					finally {
+					} finally {
 						DatabaseConnection.releaseConnection(connection);
 					}
 				}
-			}
-			catch (SQLException sqle) {
+			} catch (SQLException sqle) {
 				Log.errorException(sqle);
 			}
 		}
@@ -217,22 +212,18 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			Log.debugMessage("IntervalsTemporalPatternDatabase.remove | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "IntervalsTemporalPatternDatabase.remove | Cannot remove " + this.getEntityName()
 					+ " '" + id + "' -- " + sqle.getMessage();
 			Log.errorMessage(mesg);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -348,22 +339,18 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			}
 
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "IntervalsTemporalPatternDatabase.updateDB | Cannot update " + this.getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -401,22 +388,18 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			}
 
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "IntervalsTemporalPatternDatabase.removeFromDB | Cannot remove " + this.getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

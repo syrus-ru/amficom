@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.105 2005/06/16 12:16:08 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.106 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/06/16 12:16:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.106 $, $Date: 2005/06/17 12:38:53 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -86,8 +86,7 @@ public abstract class StorableObjectPool {
 
 		try {
 			this.cacheMapClass = Class.forName(cacheMapClass.getName());
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			Log.errorMessage("Cache class '" + cacheMapClass.getName() + "' cannot be found, using default");
 			this.cacheMapClass = LRUMap.class;
 		}
@@ -127,32 +126,25 @@ public abstract class StorableObjectPool {
 				this.objectPoolMap.put(objectEntityCode, objectPool);
 				Log.debugMessage("StorableObjectPool.addObjectPool | Pool for '" + ObjectEntities.codeToString(objectEntityCode)
 						+ "'/" + objectEntityCode + " of size " + poolSize + " added", Log.DEBUGLEVEL07);
-			}
-			else
+			} else
 				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
 						+ this.cacheMapClass.getName() + " must extend LRUMap");
-		}
-		catch (SecurityException e) {
+		} catch (SecurityException e) {
 			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
 					+ this.cacheMapClass.getName() + " SecurityException " + e.getMessage());
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
 					+ this.cacheMapClass.getName() + " IllegalArgumentException " + e.getMessage());
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
 					+ this.cacheMapClass.getName() + " NoSuchMethodException " + e.getMessage());
-		}
-		catch (InstantiationException e) {
+		} catch (InstantiationException e) {
 			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
 					+ this.cacheMapClass.getName() + " InstantiationException " + e.getMessage());
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
 					+ this.cacheMapClass.getName() + " IllegalAccessException " + e.getMessage());
-		}
-		catch (final InvocationTargetException ite) {
+		} catch (final InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
@@ -160,8 +152,7 @@ public abstract class StorableObjectPool {
 					assert false;
 				else
 					assert false : message;
-			}
-			else
+			} else
 				throw new UnsupportedOperationException(this.selfGroupName + "StorableObjectPool.addObjectPool | CacheMapClass "
 						+ this.cacheMapClass.getName() + " InvocationTargetException " + ite.getMessage());
 		}
@@ -304,8 +295,7 @@ public abstract class StorableObjectPool {
 				if (storableObject != null)
 					try {
 						this.putStorableObjectImpl(storableObject);
-					}
-					catch (final IllegalObjectEntityException ioee) {
+					} catch (final IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);
 					}
 			}
@@ -363,8 +353,7 @@ public abstract class StorableObjectPool {
 						}
 						objectQueue.add(id);
 					}
-			}
-			else
+			} else
 				Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '"
 						+ id + "', entity code: '" + ObjectEntities.codeToString(entityCode) + "'");
 		}
@@ -393,8 +382,7 @@ public abstract class StorableObjectPool {
 						this.putStorableObjectImpl(storableObject);
 						storableObjects.add(storableObject);
 					}
-				}
-				catch (final IllegalObjectEntityException ioee) {
+				} catch (final IllegalObjectEntityException ioee) {
 					Log.errorException(ioee);
 				}
 			}
@@ -470,8 +458,7 @@ public abstract class StorableObjectPool {
 
 			try {
 				loadedObjects = this.loadStorableObjectsButIds(condition, loadButIds);
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				if (breakOnLoadError)
 					throw ae;
 				Log.errorException(ae);
@@ -670,8 +657,7 @@ public abstract class StorableObjectPool {
 			 */
 			if (pool != null) {
 				pool.deleteImpl(identifiables);
-			}
-			else {
+			} else {
 				Log.debugMessage("StorableObjectPool.delete | Unable to delete identifiables of group: "
 						+ ObjectGroupEntities.codeToString(groupCode) + '(' + groupCode
 						+ ") since the corresponding pool is not registered", Log.SEVERE);
@@ -934,8 +920,7 @@ public abstract class StorableObjectPool {
 		if (objectPool != null) {
 			for (Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();)
 				this.checkChangedWithDependencies((StorableObject) poolIterator.next(), 0);
-		}
-		else
+		} else
 			Log.errorMessage(this.selfGroupName
 					+ "StorableObjectPool.checkChangedWithDependenciesEntity | Cannot find object pool for entity code: '"
 					+ ObjectEntities.codeToString(entityCode) + "'");
@@ -1020,8 +1005,7 @@ public abstract class StorableObjectPool {
 								+ ", dependency level " + (-dependencyKey.intValue()));
 
 				}
-			}
-			else
+			} else
 				Log.errorMessage("Cannot find levelSavingMap for dependency level " + (-dependencyKey.intValue()));
 
 		}
@@ -1143,8 +1127,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.105 $, $Date: 2005/06/16 12:16:08 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.106 $, $Date: 2005/06/17 12:38:53 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
@@ -1154,8 +1138,7 @@ public abstract class StorableObjectPool {
 			try {
 				((StorableObjectPool) object).refreshImpl();
 				return true;
-			}
-			catch (final ApplicationException ae) {
+			} catch (final ApplicationException ae) {
 				this.applicationException = ae;
 				return false;
 			}
@@ -1203,8 +1186,7 @@ public abstract class StorableObjectPool {
 			for (final Iterator storableObjectIterator = this.loadStorableObjects(returnedStorableObjectsIds).iterator(); storableObjectIterator.hasNext();)
 				try {
 					this.putStorableObjectImpl((StorableObject) storableObjectIterator.next());
-				}
-				catch (final IllegalObjectEntityException ioee) {
+				} catch (final IllegalObjectEntityException ioee) {
 					Log.errorException(ioee);
 				}
 		}
@@ -1240,8 +1222,7 @@ public abstract class StorableObjectPool {
 			if (keys != null) {
 				try {
 					this.getStorableObjectsImpl(keys, true);
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					Log.errorMessage(this.selfGroupName + "StorableObjectPool.deserializeImpl | Cannot get entity '"
 							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 					Log.errorException(ae);

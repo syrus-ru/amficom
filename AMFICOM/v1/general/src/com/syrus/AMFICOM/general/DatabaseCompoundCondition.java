@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.7 2005/06/04 16:56:18 bass Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.8 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/04 16:56:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -42,26 +42,19 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 			Constructor constructor = clazz.getConstructor(new Class[] {condition.getClass()});
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			Log.errorException(e);
-		}
-		catch (SecurityException e) {
+		} catch (SecurityException e) {
 			Log.errorException(e);
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			Log.errorException(e);
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			Log.errorException(e);
-		}
-		catch (InstantiationException e) {
+		} catch (InstantiationException e) {
 			Log.errorException(e);
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			Log.errorException(e);
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
@@ -69,8 +62,7 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 					assert false;
 				else
 					assert false : message;
-			}
-			else {
+			} else {
 				Log.errorException(e);
 			}
 		}
@@ -92,8 +84,7 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 				buffer.append(StorableObjectDatabase.OPEN_BRACKET);
 				buffer.append(query);
 				buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-			}
-			else {
+			} else {
 				switch (this.delegate.getOperation()) {
 					case CompoundConditionSort._AND:
 						buffer.append(StorableObjectDatabase.SQL_AND);

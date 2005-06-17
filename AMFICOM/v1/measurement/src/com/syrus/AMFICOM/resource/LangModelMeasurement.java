@@ -1,5 +1,5 @@
 /*
- * $Id: LangModelMeasurement.java,v 1.4 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: LangModelMeasurement.java,v 1.5 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @version $ $, $Date: 2005/01/19 20:52:56 $
- * @author $Author: arseniy $
+ * @version $ $, $Date: 2005/06/17 12:38:56 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -31,8 +31,7 @@ public class LangModelMeasurement {
 		String string;
 		try {
 			string = RESOURCE_BUNDLE.getString(keyName);
-		}
-		catch (MissingResourceException e) {
+		} catch (MissingResourceException e) {
 			string = "!" + keyName + "!";
 			try {
 				String s = "key '"
@@ -40,8 +39,7 @@ public class LangModelMeasurement {
 						+ "' "
 						+ "not found";
 				throw new Exception(s);
-			}
-			catch (Exception exc) {
+			} catch (Exception exc) {
 				exc.printStackTrace();
 			}
 		}

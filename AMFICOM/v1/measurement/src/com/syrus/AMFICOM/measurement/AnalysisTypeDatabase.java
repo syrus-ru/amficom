@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.91 2005/06/17 11:00:59 bass Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.92 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.92 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -144,8 +144,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 		try {
 			super.updateParameterTypeIds(Collections.singleton(storableObject));
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -155,8 +154,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 		try {
 			super.updateParameterTypeIds(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -167,8 +165,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 		super.updateParameterTypeIds(Collections.singleton(storableObject));
 		try {
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -179,8 +176,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 		super.updateParameterTypeIds(storableObjects);
 		try {
 			this.updateMeasurementTypeIds(storableObjects);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -220,20 +216,16 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 					+ ObjectEntities.ANALYSIS_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + analysisTypeIdStr);
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

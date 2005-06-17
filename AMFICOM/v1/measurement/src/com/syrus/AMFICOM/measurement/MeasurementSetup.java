@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.75 2005/06/17 11:00:59 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.76 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.76 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -65,8 +65,7 @@ public final class MeasurementSetup extends StorableObject {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		
@@ -79,8 +78,7 @@ public final class MeasurementSetup extends StorableObject {
 	public MeasurementSetup(final MeasurementSetup_Transferable mst) throws CreateObjectException {
 		try {
 			this.fromTransferable(mst);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -159,8 +157,7 @@ public final class MeasurementSetup extends StorableObject {
 			measurementSetup.markAsChanged();
 
 			return measurementSetup;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

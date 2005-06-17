@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.10 2005/06/17 11:00:59 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.11 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -794,8 +794,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 		final CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -803,8 +802,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	public CronTemporalPattern(final CronTemporalPattern_Transferable ctpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ctpt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -866,8 +864,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			cronTemporalPattern.markAsChanged();
 
 			return cronTemporalPattern;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -890,8 +887,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			cronTemporalPattern.markAsChanged();
 
 			return cronTemporalPattern;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.64 2005/06/17 11:01:00 bass Exp $
+ * $Id: Analysis.java,v 1.65 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.65 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -53,8 +53,7 @@ public class Analysis extends Action {
 		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -223,8 +222,7 @@ public class Analysis extends Action {
 			analysis.markAsChanged();
 
 			return analysis;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

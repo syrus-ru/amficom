@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.146 2005/06/16 10:29:05 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.147 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.146 $, $Date: 2005/06/16 10:29:05 $
+ * @version $Revision: 1.147 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -183,8 +183,7 @@ public abstract class StorableObjectDatabase {
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEntityName());
 			this.retrieveQuery = buffer.toString();
-		}
-		else
+		} else
 			buffer = new StringBuffer(this.retrieveQuery);
 
 		if (condition != null && condition.trim().length() > 0) {
@@ -267,8 +266,7 @@ public abstract class StorableObjectDatabase {
 			while (lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
 				try {
 					Thread.sleep(LOCK_TIME_WAIT);
-				}
-				catch (InterruptedException ie) {
+				} catch (InterruptedException ie) {
 					Log.errorException(ie);
 				}
 			}
@@ -287,8 +285,7 @@ public abstract class StorableObjectDatabase {
 				stringBuffer.append(NOT_EQUALS);
 				stringBuffer.append(storableObject.getVersion());
 				stringBuffer.append(CLOSE_BRACKET);
-			}
-			else {
+			} else {
 				lockedObjectIds.removeAll(refreshObjectIds);
 				throw new RetrieveObjectException("Cannot obtain lock on object " + this.getEntityName() + " '" + id + "'");
 			}
@@ -311,12 +308,10 @@ public abstract class StorableObjectDatabase {
 				if (storableObject.hasOlderVersion(dbversion))
 					changedObjectsIds.add(id);
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName() + "Database.refresh | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			lockedObjectIds.removeAll(refreshObjectIds);
 
 			try {
@@ -326,11 +321,9 @@ public abstract class StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -361,29 +354,24 @@ public abstract class StorableObjectDatabase {
 				this.updateEntityFromResultSet(storableObject, resultSet);
 			else
 				throw new ObjectNotFoundException("No such " + getEntityName() + ": " + strorableObjectIdStr);
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName() + "Database.retrieveEntity | Cannot retrieve " + getEntityName()
 					+ " '" + strorableObjectIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (resultSet != null)
 						resultSet.close();
-				}
-				finally {
+				} finally {
 					try {
 						if (statement != null)
 							statement.close();
-					}
-					finally {
+					} finally {
 						DatabaseConnection.releaseConnection(connection);
 					}
 				}
-			}
-			catch (SQLException sqle) {
+			} catch (SQLException sqle) {
 				Log.errorException(sqle);
 			}
 		}
@@ -408,12 +396,10 @@ public abstract class StorableObjectDatabase {
 				StorableObject storableObject = this.updateEntityFromResultSet(null, resultSet);
 				storableObjects.add(storableObject);
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName() + "Database.retrieveByCondition | Cannot execute query -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -421,11 +407,9 @@ public abstract class StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -451,8 +435,7 @@ public abstract class StorableObjectDatabase {
 		Set objects = null;
 		try {
 			objects = this.retrieveByCondition((String) null);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
 		}
 		return objects;
@@ -513,14 +496,12 @@ public abstract class StorableObjectDatabase {
 			}
 
 			return linkedEntityIdsMap;
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName()
 					+ "Database.retrieveLinkedEntityIds | Cannot retrieve linked entity identifiers for entity -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -528,11 +509,9 @@ public abstract class StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -559,29 +538,24 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEntityName() + "Database.insertEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName() + "Database.insertEntity | Cannot insert " + this.getEntityName()
 					+ " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
 			try {
 				connection.rollback();
-			}
-			catch (SQLException sqle2) {
+			} catch (SQLException sqle2) {
 				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle2);
 			}
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -632,22 +606,18 @@ public abstract class StorableObjectDatabase {
 			}
 
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "StorableObejctDatabase.insertEntities | Cannot insert " + this.getEntityName()
 					+ " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -691,23 +661,19 @@ public abstract class StorableObjectDatabase {
 				}
 			}
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName()
 					+ "Database.insertLinkedEntityIds | Cannot insert linked entity  '" + linkedId
 					+ "' for " + id + " -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -758,38 +724,31 @@ public abstract class StorableObjectDatabase {
 			if (resultSet.next()) {
 				try {
 					dbstorableObject = this.updateEntityFromResultSet(dbstorableObject, resultSet);
-				}
-				catch (RetrieveObjectException roe) {
+				} catch (RetrieveObjectException roe) {
 					String mesg = "Cannot retrieve corresponding object from datebase for updating object '"
 							+ this.getEntityName() + "', id: " + idStr;
 					throw new UpdateObjectException(mesg, roe);
-				}
-				catch (IllegalDataException ide) {
+				} catch (IllegalDataException ide) {
 					String mesg = "Cannot update entity from result set -- " + ide.getMessage();
 					throw new UpdateObjectException(mesg, ide);
 				}
-			}
-			else {
+			} else {
 				String mesg = this.getEntityName() + "Database.checkAndUpdateEntity | No such object '" + id + "'; will try to insert";
 				Log.debugMessage(mesg, Log.DEBUGLEVEL08);
 				try {
 					this.insert(storableObject);
 					return;
-				}
-				catch (CreateObjectException coe) {
+				} catch (CreateObjectException coe) {
 					throw new UpdateObjectException("Cannot insert object " + idStr, coe);
-				}
-				catch (IllegalDataException ide) {
+				} catch (IllegalDataException ide) {
 					throw new UpdateObjectException("Cannot insert object " + idStr, ide);
 				}
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "Cannot retrieve from database object, corresponding for updating object '"
 					+ this.getEntityName() + "', id: " + idStr;
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -797,11 +756,9 @@ public abstract class StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -810,8 +767,7 @@ public abstract class StorableObjectDatabase {
 		while (force && lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
 			try {
 				Thread.sleep(LOCK_TIME_WAIT);
-			}
-			catch (InterruptedException ie) {
+			} catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
 		}
@@ -827,12 +783,10 @@ public abstract class StorableObjectDatabase {
 					throw new VersionCollisionException("Cannot update " + this.getEntityName() + " '" + id + "' -- version conflict",
 							dbversion,
 							version);
-			}
-			finally {
+			} finally {
 				lockedObjectIds.remove(id);
 			}
-		}
-		else
+		} else
 			throw new UpdateObjectException("Cannot obtain lock on object " + this.getEntityName() + " '" + id + "'");
 	}
 
@@ -854,8 +808,7 @@ public abstract class StorableObjectDatabase {
 		Set dbstorableObjects = null;
 		try {
 			dbstorableObjects = this.retrieveByIdsByCondition(storableObjectIds, null);
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			throw new UpdateObjectException(e);
 		}
 		Map dbstorableObjectsMap = new HashMap();
@@ -877,8 +830,7 @@ public abstract class StorableObjectDatabase {
 				while (force && lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
 					try {
 						Thread.sleep(LOCK_TIME_WAIT);
-					}
-					catch (InterruptedException ie) {
+					} catch (InterruptedException ie) {
 						Log.errorException(ie);
 					}
 				}
@@ -894,8 +846,7 @@ public abstract class StorableObjectDatabase {
 						if (updateObjects == null)
 							updateObjects = new HashSet();
 						updateObjects.add(storableObject);
-					}
-					else {
+					} else {
 						lockedObjectIds.remove(id);
 						if (updateObjectsIds != null)
 							lockedObjectIds.removeAll(updateObjectsIds);
@@ -903,15 +854,13 @@ public abstract class StorableObjectDatabase {
 								dbversion,
 								version);
 					}
-				}
-				else {
+				} else {
 					if (updateObjectsIds != null)
 						lockedObjectIds.removeAll(updateObjectsIds);
 					throw new UpdateObjectException("Cannot obtain lock on object " + this.getEntityName() + " '" + id + "'");
 				}
 
-			}
-			else {
+			} else {
 				if (insertObjects == null)
 					insertObjects = new HashSet();
 				insertObjects.add(storableObject);
@@ -921,8 +870,7 @@ public abstract class StorableObjectDatabase {
 		if (updateObjects != null) {
 			try {
 				this.updateEntities(updateObjects, modifierId);
-			}
-			finally {
+			} finally {
 				lockedObjectIds.removeAll(updateObjectsIds);
 			}
 		}
@@ -930,8 +878,7 @@ public abstract class StorableObjectDatabase {
 		if (insertObjects != null) {
 			try {
 				this.insert(insertObjects);
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				throw new UpdateObjectException(ae);
 			}
 		}
@@ -945,8 +892,7 @@ public abstract class StorableObjectDatabase {
 		String[] values = null;
 		try {
 			values = this.parseStringValues(this.getUpdateSingleSQLValues(storableObject, MODE_UPDATE), cols.length);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			storableObject.rollbackUpdate();
 			throw new UpdateObjectException("Cannot parce insert string values for storable object '" + storableObject.getId() + "'",
 					ide);
@@ -980,29 +926,24 @@ public abstract class StorableObjectDatabase {
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 			storableObject.cleanupUpdate();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			storableObject.rollbackUpdate();
 			try {
 				connection.rollback();
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
 			String mesg = this.getEntityName() + "Database.updateEntity | Cannot update " + this.getEntityName()
 					+ storableObjectIdStr + " -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1061,14 +1002,12 @@ public abstract class StorableObjectDatabase {
 				try {
 					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
 					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
-				}
-				catch (IllegalDataException ide) {
+				} catch (IllegalDataException ide) {
 					for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
 						((StorableObject) it1.next()).rollbackUpdate();
 					try {
 						connection.rollback();
-					}
-					catch (SQLException sqle1) {
+					} catch (SQLException sqle1) {
 						Log.errorException(sqle1);
 					}
 					throw new UpdateObjectException("Cannot set entity for prepared statement -- " + ide.getMessage(), ide);
@@ -1082,30 +1021,25 @@ public abstract class StorableObjectDatabase {
 			connection.commit();
 			for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
 				((StorableObject) it1.next()).cleanupUpdate();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
 				((StorableObject) it1.next()).rollbackUpdate();
 			try {
 				connection.rollback();
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
 			String mesg = this.getEntityName() + "Database.updateEntities | Cannot update " + this.getEntityName()
 					+ " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1152,12 +1086,10 @@ public abstract class StorableObjectDatabase {
 				}
 				dbLinkedObjIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName));
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName() + "Database.updateLinkedEntities | SQLException: " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -1165,11 +1097,9 @@ public abstract class StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1212,8 +1142,7 @@ public abstract class StorableObjectDatabase {
 					}
 				}
 
-			}
-			else
+			} else
 				insertIdsMap.put(id, linkedObjIds);
 
 		}
@@ -1221,8 +1150,7 @@ public abstract class StorableObjectDatabase {
 		try {
 			this.insertLinkedEntityIds(insertIdsMap, tableName, idColumnName, linkedIdColumnName);
 			this.deleteLinkedEntityIds(deleteIdsMap, tableName, idColumnName, linkedIdColumnName);
-		}
-		catch (CreateObjectException e) {
+		} catch (CreateObjectException e) {
 			throw new UpdateObjectException(e);
 		}
 	}
@@ -1242,20 +1170,16 @@ public abstract class StorableObjectDatabase {
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
 			Log.debugMessage(this.getEntityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1275,20 +1199,16 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEntityName() + "Database.delete(List) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			statement.executeUpdate(stringBuffer.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1319,20 +1239,16 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEntityName() + "Database.deleteLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1425,8 +1341,7 @@ public abstract class StorableObjectDatabase {
 		String conditionQuery;
 		try {
 			conditionQuery = databaseStorableObjectCondition.getSQLQuery();
-		}
-		catch (IllegalObjectEntityException ioee) {
+		} catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
 			conditionQuery = DatabaseStorableObjectCondition.TRUE_CONDITION;
 		}
@@ -1449,26 +1364,19 @@ public abstract class StorableObjectDatabase {
 			Constructor constructor = clazz.getDeclaredConstructor(new Class[] {condition.getClass()});
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			Log.errorException(e);
-		}
-		catch (SecurityException e) {
+		} catch (SecurityException e) {
 			Log.errorException(e);
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			Log.errorException(e);
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			Log.errorException(e);
-		}
-		catch (InstantiationException e) {
+		} catch (InstantiationException e) {
 			Log.errorException(e);
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			Log.errorException(e);
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
@@ -1476,8 +1384,7 @@ public abstract class StorableObjectDatabase {
 					assert false;
 				else
 					assert false : message;
-			}
-			else {
+			} else {
 				Log.errorException(e);
 			}
 		}

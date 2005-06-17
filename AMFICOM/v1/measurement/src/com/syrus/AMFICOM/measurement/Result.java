@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.60 2005/06/17 11:00:59 bass Exp $
+ * $Id: Result.java,v 1.61 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.61 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -56,8 +56,7 @@ public class Result extends StorableObject {
 		ResultDatabase database = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		
@@ -70,8 +69,7 @@ public class Result extends StorableObject {
 	public Result(final Result_Transferable rt) throws CreateObjectException {
 		try {
 			this.fromTransferable(rt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}	
@@ -234,8 +232,7 @@ public class Result extends StorableObject {
 			result.markAsChanged();
 
 			return result;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

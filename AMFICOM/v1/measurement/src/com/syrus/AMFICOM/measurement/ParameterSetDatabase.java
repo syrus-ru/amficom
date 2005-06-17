@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.2 2005/06/17 11:00:59 bass Exp $
+ * $Id: ParameterSetDatabase.java,v 1.3 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -147,8 +147,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 			while (resultSet.next()) {
 				try {
 					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -162,13 +161,11 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 				}
 				setParameters.add(parameter);
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "ParameterSetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for set -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -176,11 +173,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -240,12 +235,10 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 			this.insertSetParameters(set);
 			Log.debugMessage("ParameterSetDatabase.insert | after insertSetParameters ", Log.DEBUGLEVEL01);
 			this.updateSetMELinks(Collections.singleton(set));
-		}
-		catch (CreateObjectException coe) {
+		} catch (CreateObjectException coe) {
 			this.delete(set);
 			throw coe;
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			this.delete(set);
 			throw new CreateObjectException(uoe);
 		}
@@ -260,8 +253,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 		try {
 			this.updateSetMELinks(storableObjects);
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -308,22 +300,18 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 											 StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "ParameterSetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
 					+ "' of type '" + parameterTypeId.toString() + "' for set '" + setId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -334,8 +322,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		super.update(storableObject, modifierId, updateKind);
 		try {
 			this.updateSetMELinks(Collections.singleton(storableObject));
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -345,8 +332,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
 			this.updateSetMELinks(storableObjects);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -389,20 +375,16 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 					+ this.getEntityName()
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + setIdStr);
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if(statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch(SQLException sqle1) {
+			} catch(SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.2 2005/06/17 11:00:59 bass Exp $
+ * $Id: Parameter.java,v 1.3 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -76,8 +76,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 			Parameter setParameter = new Parameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_CODE), type, value);
 			assert setParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			return setParameter;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -158,8 +157,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 			case DataType._DATA_TYPE_INTEGER:
 				try {
 					string = Integer.toString(byteArray.toInt());
-				}
-				catch (IOException ioe) {
+				} catch (IOException ioe) {
 					// Never
 					Log.errorException(ioe);
 				}
@@ -167,8 +165,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 			case DataType._DATA_TYPE_DOUBLE:
 				try {
 					string = Double.toString(byteArray.toDouble());
-				}
-				catch (IOException ioe) {
+				} catch (IOException ioe) {
 					// Never
 					Log.errorException(ioe);
 				}
@@ -176,8 +173,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 			case DataType._DATA_TYPE_STRING:
 				try {
 					string = byteArray.toUTFString();
-				}
-				catch (IOException ioe) {
+				} catch (IOException ioe) {
 					// Never
 					Log.errorException(ioe);
 				}
@@ -185,8 +181,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 			case DataType._DATA_TYPE_LONG:
 				try {
 					string = Long.toString(byteArray.toLong());
-				}
-				catch (IOException ioe) {
+				} catch (IOException ioe) {
 					// Never
 					Log.errorException(ioe);
 				}
@@ -194,8 +189,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 			case DataType._DATA_TYPE_BOOLEAN:
 				try {
 					string = LangModelMeasurement.getString(byteArray.toBoolean() ? "on" : "off");
-				}
-				catch (IOException ioe) {
+				} catch (IOException ioe) {
 					// Never
 					Log.errorException(ioe);
 				}

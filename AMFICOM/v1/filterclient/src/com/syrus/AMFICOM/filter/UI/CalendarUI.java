@@ -1,5 +1,5 @@
 /*-
- * $Id: CalendarUI.java,v 1.2 2005/06/14 07:33:04 arseniy Exp $
+ * $Id: CalendarUI.java,v 1.3 2005/06/17 12:38:54 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import javax.swing.SwingConstants;
 import com.syrus.AMFICOM.client.resource.LangModel;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/14 07:33:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:54 $
+ * @author $Author: bass $
  * @module filterclient_v1
  */
 public class CalendarUI extends JPanel {
@@ -70,8 +70,7 @@ public class CalendarUI extends JPanel {
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -250,8 +249,7 @@ public class CalendarUI extends JPanel {
 		if (cal.get(Calendar.MONTH) == cal.getMaximum(Calendar.MONTH)) {
 			cal.set(Calendar.MONTH, cal.getMinimum(Calendar.MONTH));
 			cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + 1);
-		}
-		else
+		} else
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
 
 		this.mCanvas.reinit();
@@ -263,8 +261,7 @@ public class CalendarUI extends JPanel {
 		if (cal.get(Calendar.MONTH) == cal.getMinimum(Calendar.MONTH)) {
 			cal.set(Calendar.MONTH, cal.getMaximum(Calendar.MONTH));
 			cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
-		}
-		else
+		} else
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
 
 		this.mCanvas.reinit();

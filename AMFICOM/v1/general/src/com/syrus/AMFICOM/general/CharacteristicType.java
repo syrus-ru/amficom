@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.33 2005/06/17 11:00:57 bass Exp $
+ * $Id: CharacteristicType.java,v 1.34 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.Ch
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -41,8 +41,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -85,8 +84,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 		CharacteristicType_Transferable ctt = (CharacteristicType_Transferable) transferable;
 		try {
 			super.fromTransferable(ctt.header, ctt.codename, ctt.description);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			// Never
 			Log.errorException(ae);
 		}
@@ -128,8 +126,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 			characteristicType.markAsChanged();
 
 			return characteristicType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

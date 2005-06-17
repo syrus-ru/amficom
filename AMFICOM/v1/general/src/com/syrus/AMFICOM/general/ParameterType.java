@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.33 2005/06/17 11:00:57 bass Exp $
+ * $Id: ParameterType.java,v 1.34 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -45,8 +45,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETER_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		
@@ -59,8 +58,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	public ParameterType(final ParameterType_Transferable ptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ptt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -117,8 +115,7 @@ public final class ParameterType extends StorableObjectType implements Character
 			parameterType.markAsChanged();
 
 			return parameterType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -140,8 +137,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
 		try {
 			super.fromTransferable(ptt.header, ptt.codename, ptt.description);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			// Never
 			Log.errorException(ae);
 		}

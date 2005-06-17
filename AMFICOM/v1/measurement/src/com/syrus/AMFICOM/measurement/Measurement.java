@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.74 2005/06/17 11:01:00 bass Exp $
+ * $Id: Measurement.java,v 1.75 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.75 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -65,8 +65,7 @@ public class Measurement extends Action {
 		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		
@@ -79,8 +78,7 @@ public class Measurement extends Action {
 	public Measurement(final Measurement_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -282,8 +280,7 @@ public class Measurement extends Action {
 			measurement.markAsChanged();
 
 			return measurement;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -307,8 +304,7 @@ public class Measurement extends Action {
 		java.util.Set results = null;
 		try {
 			results = StorableObjectPool.getStorableObjectsByCondition(condition, true, breakOnLoadError);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 		return results;

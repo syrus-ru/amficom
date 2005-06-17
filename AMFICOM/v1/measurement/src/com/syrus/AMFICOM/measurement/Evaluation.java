@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.61 2005/06/17 11:01:00 bass Exp $
+ * $Id: Evaluation.java,v 1.62 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.62 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -52,8 +52,7 @@ public class Evaluation extends Action {
 		EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		
@@ -66,8 +65,7 @@ public class Evaluation extends Action {
 	public Evaluation(final Evaluation_Transferable et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -209,8 +207,7 @@ public class Evaluation extends Action {
 			evaluation.markAsChanged();
 
 			return evaluation;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

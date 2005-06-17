@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.18 2005/06/17 11:01:14 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.19 2005/06/17 12:38:54 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/06/17 11:01:14 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 12:38:54 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -84,8 +84,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 			bitmapImageResource.markAsChanged();
 
 			return bitmapImageResource;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

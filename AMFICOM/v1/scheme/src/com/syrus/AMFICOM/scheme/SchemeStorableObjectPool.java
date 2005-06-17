@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.26 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.27 2005/06/17 12:39:10 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 12:39:10 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -180,8 +180,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			instance.addObjectPool(ObjectEntities.CABLECHANNELINGITEM_CODE, size);
 			instance.addObjectPool(ObjectEntities.SCHEMEPATH_CODE, size);
 			instance.addObjectPool(ObjectEntities.PATHELEMENT_CODE, size);
-		}
-		else {
+		} else {
 			init(schemeObjectLoader1, cacheClass);
 		}
 	}

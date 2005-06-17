@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.5 2005/05/27 18:34:24 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.6 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/27 18:34:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 12:38:56 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public abstract class ActionTypeDatabase extends StorableObjectDatabase {
@@ -99,12 +99,10 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 			}
 
 			return dbParTypeIdsMap;
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "Cannot retrieve parameter types -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -112,11 +110,9 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -129,8 +125,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		Map dbParameterTypeIdsMap = null;
 		try {
 			dbParameterTypeIdsMap = this.retrieveDBParameterTypeIdsMap(actionTypes);
-		}
-		catch (RetrieveObjectException roe) {
+		} catch (RetrieveObjectException roe) {
 			throw new UpdateObjectException(roe);
 		}
 
@@ -187,8 +182,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 								altParameterTypeIds.add(parameterTypeId);
 							}
 						}
-					}
-					else {
+					} else {
 						//Insert all par typ ids for this mode and this action type id
 						altParameterTypeIdsModeMap = (Map) insertParameterTypeIdsMap.get(actionTypeId);
 						if (altParameterTypeIdsModeMap == null) {
@@ -210,8 +204,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 						altParameterTypeIds.addAll((java.util.Set) dbParameterTypeIdsModeMap.get(parameterMode));
 					}
 				}
-			}
-			else {
+			} else {
 				//Insert all par type ids for this action type id
 				altParameterTypeIdsModeMap = new HashMap();
 				altParameterTypeIdsModeMap.putAll(parameterTypeIdsModeMap);
@@ -226,8 +219,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 					this.getActionTypeColumnName(),
 					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 			this.insertParameterTypes(insertParameterTypeIdsMap);
-		}
-		catch (CreateObjectException coe) {
+		} catch (CreateObjectException coe) {
 			throw new UpdateObjectException(coe);
 		}
 	}
@@ -274,20 +266,16 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 				}
 			}
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			throw new CreateObjectException("Cannot insert parameter type ids -- " + sqle.getMessage(), sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

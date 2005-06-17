@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.25 2005/06/17 11:00:57 bass Exp $
+ * $Id: CompoundCondition.java,v 1.26 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.25 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -71,12 +71,10 @@ public final class CompoundCondition implements StorableObjectCondition {
 				if (code == ObjectEntities.UNKNOWN_CODE) {
 					this.entityCode = condition.getEntityCode();
 					code = this.entityCode.shortValue();
-				}
-				else
+				} else
 					if (code != condition.getEntityCode().shortValue())
 						throw new CreateObjectException("Unable to create CompoundCondition for conditions for different entities");
-			}
-			else
+			} else
 				throw new CreateObjectException("Unable to create CompoundCondition for conditions containing not StorableObjectCondition objects");
 		}
 		
@@ -128,8 +126,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 			if (firstItem) {
 				result = condition.isConditionTrue(storableObject);
 				firstItem = false;
-			}
-			else {
+			} else {
 				result = this.doCompare(result, condition.isConditionTrue(storableObject));
 			}
 		}
@@ -146,8 +143,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 			if (firstItem) {
 				result = condition.isNeedMore(storableObjects);
 				firstItem = false;
-			}
-			else {
+			} else {
 				result = this.doCompare(result, condition.isNeedMore(storableObjects));
 			}
 		}

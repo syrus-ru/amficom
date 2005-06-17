@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.25 2005/06/17 11:01:07 bass Exp $
+* $Id: MapViewDatabase.java,v 1.26 2005/06/17 12:38:52 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/17 11:01:07 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/17 12:38:52 $
  * @author $Author: bass $
  * @module mapview_v1
  */
@@ -183,8 +183,7 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 					resultSet.getDouble(COLUMN_DEFAULTSCALE),
 					(com.syrus.AMFICOM.map.Map) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							COLUMN_MAP_ID), true));
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(this.getEntityName() + "Database.updateEntityFromResultSet | cannot retrieve map", ae);
 		}
 		return map;
@@ -270,8 +269,7 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 			try {
 				MapView map = (MapView) StorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
 			}
 		}
@@ -303,8 +301,7 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 				if (it.hasNext()) {
 					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
 						linkBuffer.append(COMMA);
-					}
-					else {
+					} else {
 						linkBuffer.append(CLOSE_BRACKET);
 						linkBuffer.append(SQL_AND);
 						linkBuffer.append(LINK_COLUMN_SCHEME_ID);
@@ -324,20 +321,16 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE + linkBuffer.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

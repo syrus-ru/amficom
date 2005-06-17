@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.99 2005/06/17 11:00:59 bass Exp $
+ * $Id: TestDatabase.java,v 1.100 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.100 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -178,8 +178,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		try {			
 			Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
 			monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(monitoredElementId, true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
@@ -222,12 +221,10 @@ public final class TestDatabase extends StorableObjectDatabase {
 			while (resultSet.next()){
 				msList.add(DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID));
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveMeasurementSetupTestLinks | Cannot retrieve measurement setup ids for test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -235,8 +232,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}  finally {
 				DatabaseConnection.releaseConnection(connection);
@@ -307,15 +303,12 @@ public final class TestDatabase extends StorableObjectDatabase {
 				measurements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 						StorableObjectWrapper.COLUMN_ID), true));
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test '" + testIdStr + "' and status " + Integer.toString(measurementStatus.value()) + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -323,8 +316,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
 				DatabaseConnection.releaseConnection(connection);
@@ -358,17 +350,14 @@ public final class TestDatabase extends StorableObjectDatabase {
 				try {
 					return (Measurement) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_ID), true);
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 			throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -376,8 +365,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
 				DatabaseConnection.releaseConnection(connection);
@@ -408,12 +396,10 @@ public final class TestDatabase extends StorableObjectDatabase {
 			if (resultSet.next())
 				return new Integer(resultSet.getInt("count"));
 			throw new ObjectNotFoundException("No number of results for test '" + testIdStr + "' of result sort " + resultSort.value());
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of results for test '" + testIdStr + "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -421,8 +407,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
 				DatabaseConnection.releaseConnection(connection);
@@ -435,8 +420,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		super.insertEntity(test);
 		try {
 			this.updateMeasurementSetupIds(Collections.singleton(test));
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 		
@@ -449,8 +433,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		super.insertEntities(storableObjects);
 		try {
 			this.updateMeasurementSetupIds(storableObjects);
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -460,8 +443,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		super.update(storableObject, modifierId, updateKind);
 		try {
 			this.updateMeasurementSetupIds(Collections.singleton(storableObject));
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -471,8 +453,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
 			this.updateMeasurementSetupIds(storableObjects);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: GeneralStorableObjectPool.java,v 1.34 2005/06/17 11:00:57 bass Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.35 2005/06/17 12:38:53 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -99,8 +99,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 			instance.addObjectPool(ObjectEntities.CHARACTERISTIC_TYPE_CODE, size);
 
 			instance.addObjectPool(ObjectEntities.CHARACTERISTIC_CODE, size);
-		}
-		else {
+		} else {
 			init(gObjectLoader1, cacheClass);
 		}
 	}

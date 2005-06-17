@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.126 2005/06/17 11:00:59 bass Exp $
+ * $Id: Test.java,v 1.127 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.126 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.127 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -86,8 +86,7 @@ public class Test extends StorableObject {
 		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -114,8 +113,7 @@ public class Test extends StorableObject {
 					startTime,
 					this.monitoredElement.getLocalAddress(),
 					this.id);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException("Cannot create measurement for test '" + this.id + "' -- " + ae.getMessage(), ae);
 		}
 		super.modified = new Date(System.currentTimeMillis());
@@ -219,8 +217,7 @@ public class Test extends StorableObject {
 			test.markAsChanged();
 
 			return test;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 
@@ -232,8 +229,7 @@ public class Test extends StorableObject {
 	public Test(final Test_Transferable tt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -270,8 +266,7 @@ public class Test extends StorableObject {
 		if (!this.measurementSetupIds.isEmpty()) {
 			Identifier msId = (Identifier) this.measurementSetupIds.iterator().next();
 			this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
-		}
-		else
+		} else
 			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -390,13 +385,11 @@ public class Test extends StorableObject {
 			Measurement measurement = (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 			try {
 				StorableObjectPool.putStorableObject(measurement);
-			}
-			catch (IllegalObjectEntityException ioee) {
+			} catch (IllegalObjectEntityException ioee) {
 				Log.errorException(ioee);
 			}
 			return measurement;
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
@@ -405,8 +398,7 @@ public class Test extends StorableObject {
 		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
 			return ((Integer) database.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -548,8 +540,7 @@ public class Test extends StorableObject {
 			try {
 				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject((Identifier) this.measurementSetupIds.iterator().next(),
 						true);
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
 	}
@@ -565,8 +556,7 @@ public class Test extends StorableObject {
 				MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(this.getMonitoredElement().getMeasurementPortId(),
 						true);
 				this.kisId = measurementPort.getKISId();
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
 		}
@@ -578,8 +568,7 @@ public class Test extends StorableObject {
 			try {
 				KIS kis = (KIS) StorableObjectPool.getStorableObject(this.getKISId(), true);
 				this.mcmId = kis.getMCMId();
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.92 2005/06/17 11:00:59 bass Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.93 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.93 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -134,8 +134,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 			thresholdSet = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;			
 			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_ETALON_ID);
 			etalon = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
@@ -224,8 +223,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		try {
 			this.updateMeasurementSetupMELinks(Collections.singleton(measurementSetup));
 			this.updateMeasurementTypeIds(Collections.singleton(measurementSetup));
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -235,8 +233,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		try {
 			this.updateMeasurementSetupMELinks(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);
-		}
-		catch (UpdateObjectException uoe) {
+		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
 	}
@@ -247,8 +244,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		try {
 			this.updateMeasurementSetupMELinks(Collections.singleton(storableObject));
 			this.updateMeasurementTypeIds(Collections.singleton(storableObject));
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
@@ -259,8 +255,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		try {
 			this.updateMeasurementSetupMELinks(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);
-		}
-		catch (IllegalDataException ide) {
+		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}

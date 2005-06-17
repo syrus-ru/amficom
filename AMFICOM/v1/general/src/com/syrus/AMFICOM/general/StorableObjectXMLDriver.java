@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.20 2005/05/18 11:07:39 bass Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.21 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.20 $, $Date: 2005/05/18 11:07:39 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -380,8 +380,7 @@ public class StorableObjectXMLDriver {
 				Node children = sizeList.item(i);
 				this.root.removeChild(children);
 			}
-		}
-		catch (TransformerException te) {
+		} catch (TransformerException te) {
 			Log.errorException(te);
 		}
 	}

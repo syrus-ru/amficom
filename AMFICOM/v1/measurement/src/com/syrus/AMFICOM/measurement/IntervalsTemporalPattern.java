@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.20 2005/06/17 11:01:00 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.21 2005/06/17 12:38:56 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -95,8 +95,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			intervalsTemporalPattern.markAsChanged();
 
 			return intervalsTemporalPattern;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -119,8 +118,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 
 		try {
 			this.fromTransferable(itpt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -168,8 +166,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			if (abstractTemporalPatternId != null && !abstractTemporalPatternId.isVoid()) {
 				try {
 					temporalPattern = (AbstractTemporalPattern) StorableObjectPool.getStorableObject(abstractTemporalPatternId, true);
-				}
-				catch (ApplicationException e) {
+				} catch (ApplicationException e) {
 					// nothing do, just ignore temporal pattern
 					Log.errorException(e);
 				}
@@ -210,13 +207,11 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		if (startDate != null) {
 			if (temporalPattern == null) {
 				super.times.add(startDate);
-			}
-			else {
+			} else {
 				Date endDate2 = null;
 				if (duration == null) {
 					endDate2 = endDate;
-				}
-				else {
+				} else {
 					long time = startDate.getTime() + duration.longValue();
 					// Log.debugMessage("IntervalsTemporalPattern.addTimeItem | duration
 					// occur " + duration +" , "+ new Date(time) +" \n\ttime <
@@ -240,8 +235,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 
 		if (this.intervalsAbstractTemporalPatternMap == null) {
 			this.intervalsAbstractTemporalPatternMap = new TreeMap();
-		}
-		else {
+		} else {
 			this.intervalsAbstractTemporalPatternMap.clear();
 		}
 
@@ -262,8 +256,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 
 		if (this.intervalsDuration == null) {
 			this.intervalsDuration = new TreeMap();
-		}
-		else {
+		} else {
 			this.intervalsDuration.clear();
 		}
 
@@ -390,8 +383,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		Set keys = this.intervalsAbstractTemporalPatternMap.keySet();
 		if (keys.contains(milliseconds)) {
 			ms = milliseconds;
-		}
-		else {
+		} else {
 			for (Iterator it = keys.iterator(); it.hasNext();) {
 				Long time = (Long) it.next();
 				if (ms != null && ms.longValue() < long2 && long2 < time.longValue()) {
@@ -413,8 +405,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 				nextMs = (Long) it.next();
 				if (nextMs.longValue() == ms) {
 					nextMs = null;
-				}
-				else {
+				} else {
 					break;
 				}
 			}
@@ -480,8 +471,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		{
 			if (this.intervalsDuration == null) {
 				durationsT = new ITP_Interval_Duration[0];
-			}
-			else {
+			} else {
 				java.util.Set keys = this.intervalsDuration.keySet();
 				durationsT = new ITP_Interval_Duration[keys.size()];
 				int i = 0;
@@ -605,8 +595,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		if (this.intervalsAbstractTemporalPatternMap != null) {
 			if (this.undoIntervalsAbstractTemporalPatternMap == null) {
 				this.undoIntervalsAbstractTemporalPatternMap = new TreeMap();
-			}
-			else {
+			} else {
 				this.undoIntervalsAbstractTemporalPatternMap.clear();
 			}
 			// Log.debugMessage("IntervalsTemporalPattern.saveState | 2", Log.FINEST);
@@ -616,8 +605,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		if (this.intervalsDuration != null) {
 			if (this.undoIntervalsDuration == null) {
 				this.undoIntervalsDuration = new TreeMap();
-			}
-			else {
+			} else {
 				this.undoIntervalsDuration.clear();
 			}
 			// Log.debugMessage("IntervalsTemporalPattern.saveState | 3", Log.FINEST);
@@ -653,22 +641,19 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 
 			if (this.undoIntervalsAbstractTemporalPatternMap == null) {
 				this.undoIntervalsAbstractTemporalPatternMap = map;
-			}
-			else {
+			} else {
 				this.undoIntervalsAbstractTemporalPatternMap.clear();
 				this.undoIntervalsAbstractTemporalPatternMap.putAll(map);
 			}
 
 			if (this.undoIntervalsDuration == null) {
 				this.undoIntervalsDuration = map2;
-			}
-			else {
+			} else {
 				this.undoIntervalsDuration.clear();
 				this.undoIntervalsDuration.putAll(map2);
 			}
 
-		}
-		else {
+		} else {
 			assert false : "Cannot undo due to haven't any actions yet";
 		}
 	}

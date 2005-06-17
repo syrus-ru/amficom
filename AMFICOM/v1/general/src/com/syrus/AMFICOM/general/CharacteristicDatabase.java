@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.36 2005/06/17 11:00:57 bass Exp $
+ * $Id: CharacteristicDatabase.java,v 1.37 2005/06/17 12:38:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/17 12:38:53 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -120,8 +120,7 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 			characteristicType = (CharacteristicType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_TYPE_ID),
 					true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 

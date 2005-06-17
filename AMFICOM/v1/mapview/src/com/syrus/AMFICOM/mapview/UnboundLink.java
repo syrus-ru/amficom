@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.16 2005/06/17 11:01:07 bass Exp $
+ * $Id: UnboundLink.java,v 1.17 2005/06/17 12:38:52 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/06/17 11:01:07 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/17 12:38:52 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -94,8 +94,7 @@ public class UnboundLink extends PhysicalLink
 				type);
 			unboundLink.markAsChanged();
 			return unboundLink;
-		}
-		catch (IdentifierGenerationException e)
+		} catch (IdentifierGenerationException e)
 		{
 			throw new CreateObjectException("UnboundLink.createInstance | cannot generate identifier ", e);
 		}

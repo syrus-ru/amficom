@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.101 2005/06/17 11:01:00 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.102 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.102 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -154,8 +154,7 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 			instance.addObjectPool(ObjectEntities.CRONTEMPORALPATTERN_CODE, size);
 			instance.addObjectPool(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE, size);
 			instance.addObjectPool(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, size);
-		}
-		else {
+		} else {
 			init(mObjectLoader1, cacheClass);
 		}
 	}

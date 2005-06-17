@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.5 2005/06/17 11:00:59 bass Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.6 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -143,8 +143,7 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 			+ this.getInsertMultipleSQLValues()
 			+ CLOSE_BRACKET;
 			preparedStatement = connection.prepareStatement(sql);
-		}
-		finally {
+		} finally {
 			DatabaseConnection.releaseConnection(connection);
 		}
 		return preparedStatement;
@@ -167,22 +166,18 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 			this.setEntityForPreparedStatement(temporalPattern, preparedStatement, MODE_INSERT);
 			Log.debugMessage("CronTemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
-		}
-		catch (IllegalDataException ide){
+		} catch (IllegalDataException ide){
 			String mesg = "CronTemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + ide.getMessage();
 			throw new CreateObjectException(mesg, ide);
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = "CronTemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.31 2005/06/17 11:01:14 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.32 2005/06/17 12:38:54 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:14 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/17 12:38:54 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -94,8 +94,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			rObjectLoader = rObjectLoader1;
 
 			instance.addObjectPool(ObjectEntities.IMAGERESOURCE_CODE, size);
-		}
-		else {
+		} else {
 			init(rObjectLoader1, cacheClass);
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.18 2005/06/17 11:01:07 bass Exp $
+ * $Id: UnboundNode.java,v 1.19 2005/06/17 12:38:52 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/06/17 11:01:07 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 12:38:52 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -122,8 +122,7 @@ public class UnboundNode extends SiteNode
 				nodeType);
 			unboundNode.markAsChanged();
 			return unboundNode;
-		}
-		catch (IdentifierGenerationException e)
+		} catch (IdentifierGenerationException e)
 		{
 			throw new CreateObjectException("UnboundNode.createInstance | cannot generate identifier ", e);
 		}

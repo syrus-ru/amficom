@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.45 2005/06/17 11:01:00 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.46 2005/06/17 12:38:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/06/17 11:01:00 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/17 12:38:56 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -190,8 +190,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							break;
 						}
 					}
-				}
-				else
+				} else
 					throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
 							+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
 							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
@@ -259,8 +258,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							id = (Identifier) it.next();
 							try {
 								test = (Test) StorableObjectPool.getStorableObject(id, false);
-							}
-							catch (ApplicationException ae) {
+							} catch (ApplicationException ae) {
 								Log.errorException(ae);
 								continue;
 							}

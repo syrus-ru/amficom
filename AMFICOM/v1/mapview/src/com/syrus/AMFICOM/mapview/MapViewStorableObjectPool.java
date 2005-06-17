@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.24 2005/06/17 11:01:07 bass Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.25 2005/06/17 12:38:52 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -22,7 +22,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:07 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/17 12:38:52 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -95,8 +95,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 			mvObjectLoader = mvObjectLoader1;
 
 			instance.addObjectPool(ObjectEntities.MAPVIEW_CODE, size);
-		}
-		else {
+		} else {
 			init(mvObjectLoader1, cacheClass);
 		}
 	}

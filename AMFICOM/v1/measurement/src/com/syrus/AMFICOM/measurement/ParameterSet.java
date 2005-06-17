@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.2 2005/06/17 11:00:59 bass Exp $
+ * $Id: ParameterSet.java,v 1.3 2005/06/17 12:38:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.Para
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:00:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -66,8 +66,7 @@ public final class ParameterSet extends StorableObject {
 		ParameterSetDatabase database = (ParameterSetDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERSET_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -79,8 +78,7 @@ public final class ParameterSet extends StorableObject {
 	public ParameterSet(final ParameterSet_Transferable st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -139,8 +137,7 @@ public final class ParameterSet extends StorableObject {
 			set.markAsChanged();
 
 			return set;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -348,8 +345,7 @@ public final class ParameterSet extends StorableObject {
 			buffer.append(ID_MONITORED_ELEMENTS_IDS);
 			buffer.append(NULL);
 			buffer.append(EOSL);
-		}
-		else {
+		} else {
 			for (Iterator it = this.monitoredElementIds.iterator(); it.hasNext();) {
 				Identifier id1 = (Identifier) it.next();
 				buffer.append(ID_MONITORED_ELEMENTS_IDS);
@@ -364,8 +360,7 @@ public final class ParameterSet extends StorableObject {
 			buffer.append(ID_PARAMETERS);
 			buffer.append(NULL);
 			buffer.append(EOSL);
-		}
-		else {
+		} else {
 			for (int i = 0; i < this.parameters.length; i++) {
 				Parameter param = this.parameters[i];
 				buffer.append(ID_PARAMETERS);
