@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.3 2005/06/06 14:52:47 bob Exp $
+ * $Id: ApplicationModel.java,v 1.4 2005/06/17 14:32:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * производить с системой
  * 
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 14:32:06 $
  * @module generalclient_v1
  */
 public class ApplicationModel {
@@ -45,8 +45,6 @@ public class ApplicationModel {
 	public static final String	MENU_SESSION_CLOSE				= "menuSessionClose";
 
 	public static final String	MENU_SESSION_OPTIONS			= "menuSessionOptions";
-
-	public static final String	MENU_SESSION_CONNECTION			= "menuSessionConnection";
 
 	public static final String	MENU_SESSION_CHANGE_PASSWORD	= "menuSessionChangePassword";
 
@@ -351,7 +349,7 @@ public class ApplicationModel {
 	 * параметров нет, так как элемент определяется идентификатором
 	 * 
 	 * @author $Author: bob $
-	 * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
+	 * @version $Revision: 1.4 $, $Date: 2005/06/17 14:32:06 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry {

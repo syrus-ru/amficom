@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.10 2005/06/16 11:11:03 bass Exp $
+ * $Id: AbstractMainFrame.java,v 1.11 2005/06/17 14:32:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,15 +45,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.ApplicationProperties;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/16 11:11:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 14:32:06 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
-public abstract class AbstractMainFrame extends JFrame implements PropertyChangeListener {
+public abstract class AbstractMainFrame extends JFrame 
+implements PropertyChangeListener {
 
 	protected ApplicationContext		aContext;
 	protected JDesktopPane				desktopPane;
@@ -114,9 +114,12 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		this.mainPanel.add(this.statusBarPanel, BorderLayout.SOUTH);
 		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 
-		GraphicsEnvironment localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		Rectangle maximumWindowBounds = localGraphicsEnvironment.getMaximumWindowBounds();
-		this.setSize(new Dimension(maximumWindowBounds.width, maximumWindowBounds.height));
+		GraphicsEnvironment localGraphicsEnvironment = 
+			GraphicsEnvironment.getLocalGraphicsEnvironment();
+		Rectangle maximumWindowBounds = 
+			localGraphicsEnvironment.getMaximumWindowBounds();
+		this.setSize(new Dimension(maximumWindowBounds.width, 
+			maximumWindowBounds.height));
 		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 
 		Environment.addWindow(this);
@@ -138,76 +141,85 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
-//		Log.debugMessage("AbstractMainFrame.propertyChange | propertyName " + propertyName, Log.FINEST);
-//		if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
-//			StatusMessageEvent sme = (StatusMessageEvent) evt;
-//			this.statusBar.setText(StatusBar.FIELD_STATUS, sme.getText());
-//		} else 
 		if (propertyName.equals(ContextChangeEvent.TYPE)) {
 			ContextChangeEvent cce = (ContextChangeEvent) evt;
 			if (cce.isSessionOpened()) {
-//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionOpened() ", Log.FINEST);
 				this.setSessionOpened();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, 
+						LangModelGeneral.getString("StatusBar.Ready"));
 				
-				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				{
-					try {
-						final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance(ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1));
-						this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
+				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(
+						ResourceKeys.SIMPLE_DATE_FORMAT);
+				try {
+					final ClientSessionEnvironment clientSessionEnvironment = 
+						ClientSessionEnvironment.getInstance(
+							ApplicationProperties.getInt(
+								ClientSessionEnvironment.SESSION_KIND_KEY,
+								-1));
+					this.statusBar.setText(StatusBar.FIELD_SESSION, 
+						sdf.format(
+							clientSessionEnvironment.getSessionEstablishDate()));
 
-						SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
-						this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
-					} catch (ApplicationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					SystemUser user = 
+						(SystemUser) StorableObjectPool.getStorableObject(
+							LoginManager.getUserId(), 
+							true);
+					this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
+				} catch (ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			if (cce.isSessionClosed()) {
-//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isSessionClosed() ", Log.FINEST);
 				this.setSessionClosed();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));				
-				this.statusBar.setText(StatusBar.FIELD_SESSION, LangModelGeneral.getString("StatusBar.NoSession"));
-				this.statusBar.setText(StatusBar.FIELD_USER, LangModelGeneral.getString("StatusBar.NoUser"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, 
+						LangModelGeneral.getString("StatusBar.Ready"));				
+				this.statusBar.setText(StatusBar.FIELD_SESSION, 
+						LangModelGeneral.getString("StatusBar.NoSession"));
+				this.statusBar.setText(StatusBar.FIELD_USER, 
+						LangModelGeneral.getString("StatusBar.NoUser"));
 			}
 			if (cce.isConnectionOpened()) {
-				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isConnectionOpened() ", Log.FINEST);
 				this.setConnectionOpened();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, 
+						LangModelGeneral.getString("StatusBar.Ready"));
 				try {
-					final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment
-							.getInstance(ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1));
-					this.statusBar.setText(StatusBar.FIELD_SERVER, clientSessionEnvironment.getServerName());
+					final ClientSessionEnvironment clientSessionEnvironment = 
+						ClientSessionEnvironment.getInstance(
+							ApplicationProperties.getInt(
+								ClientSessionEnvironment.SESSION_KIND_KEY, -1));
+					this.statusBar.setText(StatusBar.FIELD_SERVER, 
+							clientSessionEnvironment.getServerName());
 				} catch (ApplicationException ce) {
 					// TODO Auto-generated catch block
 					ce.printStackTrace();
 				}
-
-				// this.statusBar.setText("server",
-				// ConnectionInterface.getInstance().getServerName());
 			}
 			if (cce.isConnectionClosed()) {
-//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isConnectionClosed() ", Log.FINEST);
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.ConnectionError"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, 
+						LangModelGeneral.getString("StatusBar.Error"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, 
+						LangModelGeneral.getString("StatusBar.ConnectionError"));
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Disconnected"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.NoConnection"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, 
+						LangModelGeneral.getString("StatusBar.Disconnected"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, 
+						LangModelGeneral.getString("StatusBar.NoConnection"));
 
 				this.setConnectionClosed();
 			}
 			if (cce.isConnectionFailed()) {
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.ConnectionError"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, 
+						LangModelGeneral.getString("StatusBar.Error"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, 
+						LangModelGeneral.getString("StatusBar.ConnectionError"));
 
 				this.setConnectionFailed();
 			}
 			if (cce.isDomainSelected()) {
-//				Log.debugMessage("AbstractMainFrame.propertyChange | cce.isDomainSelected()() ", Log.FINEST);
 				this.setDomainSelected();
 			}
 		}
@@ -215,7 +227,6 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	}
 
 	public void setConnectionClosed() {
-//		Log.debugMessage("AbstractMainFrame.setConnectionClosed | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
@@ -237,11 +248,9 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	}
 
 	public void setConnectionOpened() {
-//		Log.debugMessage("AbstractMainFrame.setConnectionOpened | ", Log.FINEST);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CONNECTION, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
 		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
 		aModel.fireModelChanged();
@@ -262,7 +271,9 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		aModel.fireModelChanged();
 
 		try {
-			Domain domain = (Domain) StorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
+			Domain domain = (Domain) StorableObjectPool.getStorableObject(
+					LoginManager.getDomainId(), 
+					true);
 			this.statusBar.setText(StatusBar.FIELD_DOMAIN, domain.getName());
 		} catch (ApplicationException e) {
 			showErrorMessage(this, e);
@@ -282,9 +293,12 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 
 	private void addListeners(	ApplicationModel aModel,
 								List applicationModelListeners) {
-		if (applicationModelListeners != null && !applicationModelListeners.isEmpty()) {
-			for (Iterator iterator = applicationModelListeners.iterator(); iterator.hasNext();) {
-				ApplicationModelListener listener = (ApplicationModelListener) iterator.next();
+		if (applicationModelListeners != null && 
+				!applicationModelListeners.isEmpty()) {
+			for (Iterator iterator = applicationModelListeners.iterator(); 
+					iterator.hasNext();) {
+				ApplicationModelListener listener = 
+					(ApplicationModelListener) iterator.next();
 				aModel.addListener(listener);
 			}
 		}
@@ -300,18 +314,14 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 
 		aModel.fireModelChanged();
 
-		this.statusBar.setText(StatusBar.FIELD_DOMAIN, LangModelGeneral.getString("StatusBar.NoDomain"));
+		this.statusBar.setText(StatusBar.FIELD_DOMAIN, 
+				LangModelGeneral.getString("StatusBar.NoDomain"));
 	}
 
 	public void setSessionOpened() {
+		// TODO check ?
 		// this.checker = new
 		// Checker(aContext.getDataSourceInterface());
-
-		// Dispatcher dispatcher = this.aContext.getDispatcher();
-//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral
-//				.getString("Loading_DB")));
-//		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelGeneral
-//				.getString("Loding_DB_finished")));
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, true);
@@ -322,8 +332,9 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		aModel.fireModelChanged();
 		Identifier domainId = LoginManager.getDomainId();
 		if (domainId != null && !domainId.isVoid()) {
-			this.dispatcher.firePropertyChange(new ContextChangeEvent(domainId,
-																		ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+			this.dispatcher.firePropertyChange(
+					new ContextChangeEvent(domainId,
+						ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 		}
 	}
 
@@ -343,14 +354,15 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	public static void showErrorMessage(Component component,
 										Exception exception) {
 		exception.printStackTrace();
-		JOptionPane.showMessageDialog(component, exception.getMessage(), LangModelGeneral.getString("Error.ErrorOccur"),
+		JOptionPane.showMessageDialog(component, 
+			exception.getMessage(),
+			LangModelGeneral.getString("Error.ErrorOccur"),
 			JOptionPane.OK_OPTION);
 	}
 
 	protected void initModule() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		// this.statusBar.distribute();
 		this.statusBar.setWidth(StatusBar.FIELD_STATUS, 300);
 		this.statusBar.setWidth(StatusBar.FIELD_SERVER, 250);
 		this.statusBar.setWidth(StatusBar.FIELD_SESSION, 200);
@@ -358,18 +370,19 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		this.statusBar.setWidth(StatusBar.FIELD_DOMAIN, 150);
 		this.statusBar.setWidth(StatusBar.FIELD_TIME, 50);
 
-		this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
-		this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.NoConnection"));
-		this.statusBar.setText(StatusBar.FIELD_SESSION, LangModelGeneral.getString("StatusBar.NoSession"));
-		this.statusBar.setText(StatusBar.FIELD_USER, LangModelGeneral.getString("StatusBar.NoUser"));
-		this.statusBar.setText(StatusBar.FIELD_DOMAIN, LangModelGeneral.getString("StatusBar.NoDomain"));
+		this.statusBar.setText(StatusBar.FIELD_STATUS, 
+				LangModelGeneral.getString("StatusBar.Ready"));
+		this.statusBar.setText(StatusBar.FIELD_SERVER, 
+				LangModelGeneral.getString("StatusBar.NoConnection"));
+		this.statusBar.setText(StatusBar.FIELD_SESSION, 
+				LangModelGeneral.getString("StatusBar.NoSession"));
+		this.statusBar.setText(StatusBar.FIELD_USER, 
+				LangModelGeneral.getString("StatusBar.NoUser"));
+		this.statusBar.setText(StatusBar.FIELD_DOMAIN, 
+				LangModelGeneral.getString("StatusBar.NoDomain"));
 		this.statusBar.setText(StatusBar.FIELD_TIME, " ");
-		// this.statusBar.organize();
 
 		this.aContext.setDispatcher(this.dispatcher);
-//		this.dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_MESSAGE, this);
-		// this.dispatcher.addPropertyChangeListener(COMMAND_CHANGE_STATUSBAR_STATE,
-		// this);
 
 		this.dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 		Dispatcher theDispatcher = Environment.getDispatcher();
@@ -378,14 +391,16 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		
 		theDispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
-		aModel.setCommand(ApplicationModel.MENU_SESSION_NEW, new OpenSessionCommand(theDispatcher));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_CLOSE, new SessionCloseCommand(theDispatcher));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_CONNECTION, new SessionConnectionCommand(theDispatcher,
-																									this.aContext));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_NEW, 
+				new OpenSessionCommand(theDispatcher));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_CLOSE, 
+				new SessionCloseCommand(theDispatcher));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_OPTIONS, 
+				new SessionOptionsCommand(this.aContext));
 		aModel.setCommand(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD,
-			new SessionChangePasswordCommand(theDispatcher, this.aContext));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_DOMAIN, new SessionDomainCommand(theDispatcher, this.aContext));
+				new SessionChangePasswordCommand(theDispatcher, this.aContext));
+		aModel.setCommand(ApplicationModel.MENU_SESSION_DOMAIN, 
+				new SessionDomainCommand(theDispatcher));
 		aModel.setCommand(ApplicationModel.MENU_EXIT, new ExitCommand(this));
 
 		// this.setWindowArranger(this.windowArranger);
@@ -393,7 +408,8 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		// aModel.setCommand(AbstractMainMenuBar.MENU_VIEW_ARRANGE, new
 		// ArrangeWindowCommand(this.windowArranger));
 		// }
-		aModel.setCommand(ApplicationModel.MENU_HELP_ABOUT, new HelpAboutCommand(this));
+		aModel.setCommand(ApplicationModel.MENU_HELP_ABOUT, 
+				new HelpAboutCommand(this));
 
 		setDefaultModel(aModel);
 
@@ -404,9 +420,12 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	protected void disposeModule() {
 		this.statusBar.removeDispatcher(this.dispatcher);
 		this.statusBar.removeDispatcher(Environment.getDispatcher());
-		this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-		this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
+		this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, 
+				this);
+		Environment.getDispatcher().removePropertyChangeListener(
+				ContextChangeEvent.TYPE, this);
+		this.aContext.getApplicationModel().getCommand(
+			ApplicationModel.MENU_EXIT).execute();
 		Environment.disposeWindow(this);
 	}
 
@@ -414,7 +433,6 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 		aModel.setAllItemsEnabled(false);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CONNECTION, true);
 		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
 		aModel.setEnabled(ApplicationModel.MENU_EXIT, true);
 
@@ -425,7 +443,8 @@ public abstract class AbstractMainFrame extends JFrame implements PropertyChange
 	public void setWindowArranger(WindowArranger windowArranger) {
 		if (windowArranger != null) {
 			ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setCommand(ApplicationModel.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(windowArranger));
+			aModel.setCommand(ApplicationModel.MENU_VIEW_ARRANGE, 
+				new ArrangeWindowCommand(windowArranger));
 			this.windowArranger = windowArranger;
 		}
 	}

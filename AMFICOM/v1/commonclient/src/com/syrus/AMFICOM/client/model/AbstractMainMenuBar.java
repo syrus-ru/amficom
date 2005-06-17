@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.5 2005/06/14 11:24:19 bob Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.6 2005/06/17 14:32:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/14 11:24:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 14:32:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -75,11 +75,6 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 		menuSessionOptions.setName(ApplicationModel.MENU_SESSION_OPTIONS);
 		menuSessionOptions.addActionListener(this.actionAdapter);
 
-		final JMenuItem menuSessionConnection = new JMenuItem();
-		menuSessionConnection.setText(LangModelGeneral.getString("Menu.Session.ConnectionProperties"));
-		menuSessionConnection.setName(ApplicationModel.MENU_SESSION_CONNECTION);
-		menuSessionConnection.addActionListener(this.actionAdapter);
-
 		final JMenuItem menuSessionChangePassword = new JMenuItem();
 		menuSessionChangePassword.setText(LangModelGeneral.getString("Menu.Session.ChangePassword"));
 		menuSessionChangePassword.setName(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
@@ -100,7 +95,6 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 		menuSession.add(menuSessionOptions);
 		menuSession.add(menuSessionChangePassword);
 		menuSession.addSeparator();
-		menuSession.add(menuSessionConnection);
 		menuSession.addSeparator();
 		menuSession.add(menuSessionDomain);
 		menuSession.addSeparator();
@@ -139,8 +133,6 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 				menuSessionClose.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_CLOSE));
 				menuSessionOptions.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_OPTIONS));
 				menuSessionOptions.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_OPTIONS));
-				menuSessionConnection.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_CONNECTION));
-				menuSessionConnection.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_CONNECTION));
 				menuSessionChangePassword.setVisible(AbstractMainMenuBar.this.applicationModel
 						.isVisible(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
 				menuSessionChangePassword.setEnabled(AbstractMainMenuBar.this.applicationModel
