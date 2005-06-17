@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.3 2005/05/18 13:29:31 bass Exp $
+ * $Id: UserLogin.java,v 1.4 2005/06/17 20:11:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 13:29:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 20:11:59 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class UserLogin {
@@ -33,7 +33,7 @@ public final class UserLogin {
 
 	public static UserLogin createInstance(Identifier userId) {
 		Date date = new Date(System.currentTimeMillis());
-		return new UserLogin(SessionKeyGenerator.generateSessionKey(userId), userId, null, date, date);
+		return new UserLogin(SessionKeyGenerator.generateSessionKey(userId), userId, Identifier.VOID_IDENTIFIER, date, date);
 	}
 
 	public SessionKey getSessionKey() {
