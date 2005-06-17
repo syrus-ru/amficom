@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,11 +25,15 @@ public class SessionDomainCommand extends AbstractCommand {
 
 	private Dispatcher	dispatcher;
 
-	private ApplicationContext aContext;
-
+	/**
+	 * @deprecated use {@link #SessionDomainCommand(Dispatcher)}
+	 */
 	public SessionDomainCommand(Dispatcher dispatcher, ApplicationContext aContext) {
+		this(dispatcher);
+	}
+
+	public SessionDomainCommand(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.aContext = aContext;
 	}
 
 	public void setParameter(	String field,
@@ -37,86 +41,114 @@ public class SessionDomainCommand extends AbstractCommand {
 		if (field.equals("dispatcher")) {
 			setDispatcher((Dispatcher) value);
 		}
-		// else if (field.equals("aContext"))
-		// setApplicationContext((ApplicationContext) value);
 	}
 
 	public void setDispatcher(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
-	// public void setApplicationContext(ApplicationContext aContext) {
-	// this.aContext = aContext;
-	// }
-
 	public void execute() {
 		Set availableDomains;
 		try {
 			availableDomains = LoginManager.getAvailableDomains();
-			if (availableDomains == null) {
-				/* TODO infrom user ? */
+			if (availableDomains == null || availableDomains.isEmpty()) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						LangModelGeneral.getString("Error.NoDomains"),
+						LangModelGeneral.getString("Error.ErrorOccur"), 
+						JOptionPane.ERROR_MESSAGE, 
+						null);
 				return;
 			}
 		} catch (CommunicationException e) {
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																		"Нет сессии!"));
+			this.dispatcher.firePropertyChange(
+				new StatusMessageEvent(this, 
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("StatusBar.NoSession")));
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModel.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
-				JOptionPane.ERROR_MESSAGE, null);
+					LangModelGeneral.getString("Error.ServerConnection"), 
+					LangModelGeneral.getString("Error.ErrorOccur"),
+					JOptionPane.ERROR_MESSAGE, 
+					null);
 			return;
 		} catch (LoginException e) {
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																		"Нет сессии!"));
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel.getString("errorWrongLogin"),
-				LangModel.getString("errorTitleOpenSession"), JOptionPane.ERROR_MESSAGE, null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
+					StatusMessageEvent.STATUS_MESSAGE,
+					LangModelGeneral.getString("StatusBar.NoSession")));
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+					LangModelGeneral.getString("Error.WrongLogin"),
+					LangModelGeneral.getString("Error.ErrorOccur"), 
+					JOptionPane.ERROR_MESSAGE, 
+					null);
 			return;
 		}
 
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																	"Выбор домена..."));
+		this.dispatcher.firePropertyChange(
+			new StatusMessageEvent(this, 
+					StatusMessageEvent.STATUS_MESSAGE,
+					LangModelGeneral.getString("StatusBar.DomainSelection")));
 
-		WrapperedComboBox objComboBox = new WrapperedComboBox(DomainWrapper.getInstance(), new ArrayList(availableDomains),
-													StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+		WrapperedComboBox objComboBox = 
+			new WrapperedComboBox(DomainWrapper.getInstance(), 
+					new ArrayList(availableDomains),
+					StorableObjectWrapper.COLUMN_NAME, 
+					StorableObjectWrapper.COLUMN_ID);
 		{
 			Identifier domainId = Environment.getDomainId();
 			if (domainId != null) {
 				try {
-					objComboBox.setSelectedItem(StorableObjectPool.getStorableObject(domainId, true));
+					objComboBox.setSelectedItem(
+						StorableObjectPool.getStorableObject(domainId, true));
 				} catch (ApplicationException e) {
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-						.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
-					JOptionPane.ERROR_MESSAGE, null);
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						LangModelGeneral.getString("Error.ServerConnection"), 
+						LangModelGeneral.getString("Error.ErrorOccur"),
+						JOptionPane.ERROR_MESSAGE, 
+						null);
 				}
 			}
 		}
 
-		int result1 = JOptionPane.showOptionDialog(Environment.getActiveWindow(), objComboBox, LangModel
-				.getString("SessionDomainTitle"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null,
-			new Object[] { LangModel.getString("buttonSelect"), LangModel.getString("buttonCancel")}, LangModel
-					.getString("buttonSelect"));
+		int result1 = JOptionPane.showOptionDialog(Environment.getActiveWindow(), 
+					objComboBox, 
+					LangModelGeneral.getString("SelectDomain.Title"), 
+					JOptionPane.OK_CANCEL_OPTION, 
+					JOptionPane.PLAIN_MESSAGE, 
+					null,
+					new Object[] { 
+						LangModelGeneral.getString("Button.Select"), 
+						LangModelGeneral.getString("Button.Cancel")}, 
+					LangModelGeneral.getString("Button.Select"));
 		if (result1 == JOptionPane.OK_OPTION) {
 			Domain selectedDomain = (Domain) objComboBox.getSelectedItem();
 			if (selectedDomain != null) {
 				Identifier domainId = selectedDomain.getId();
 				try {
 					LoginManager.selectDomain(domainId);
-					this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																				"Новый домен выбран"));
-					this.dispatcher
-							.firePropertyChange(new ContextChangeEvent(domainId,
-																		ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+					this.dispatcher.firePropertyChange(
+						new StatusMessageEvent(this, 
+								StatusMessageEvent.STATUS_MESSAGE,
+								LangModelGeneral.getString("StatusBar.NewDomainSelected")));
+					this.dispatcher.firePropertyChange(
+						new ContextChangeEvent(domainId,
+								ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 				} catch (CommunicationException e) {
-					this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																				"Ошибка соединения!"));
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModel
-							.getString("Error server connection"), LangModel.getString("errorTitleOpenSession"),
-						JOptionPane.ERROR_MESSAGE, null);
+					this.dispatcher.firePropertyChange(
+						new StatusMessageEvent(this, 
+							StatusMessageEvent.STATUS_MESSAGE,
+							LangModelGeneral.getString("StatusBar.ConnectionError")));
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							LangModelGeneral.getString("Error.ServerConnection"), 
+							LangModelGeneral.getString("Error.ErrorOccur"),
+							JOptionPane.ERROR_MESSAGE, 
+							null);
 					return;
 				}
 			}
 		} else {
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																		LangModel.getString("Aborted")));
+			this.dispatcher.firePropertyChange(
+				new StatusMessageEvent(this, 
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("StatusBar.Aborted")));
 		}
 	}
 }
