@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.8 2005/06/17 13:07:00 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.9 2005/06/17 13:23:45 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/17 13:07:00 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/17 13:23:45 $
  * @author $Author: bass $
  * @module commonclient_v1
  */
@@ -137,7 +137,7 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 			
 			public SessionKey_Transferable login(	String login,
 													String password,
-													Identifier_TransferableHolder identifierTransferableHolder) throws AMFICOMRemoteException {
+													IdlIdentifierHolder identifierTransferableHolder) throws AMFICOMRemoteException {
 				SessionKey_Transferable transferable = new SessionKey_Transferable(new Date().toString());
 				try {
 					Set users = StorableObjectPool.getStorableObjectsByCondition(new TypicalCondition(login, OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN), true, true);
@@ -166,8 +166,8 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 			}
 			
 			public void validateAccess(	SessionKey_Transferable arg0,
-										Identifier_TransferableHolder arg1,
-										Identifier_TransferableHolder arg2) throws AMFICOMRemoteException {
+										IdlIdentifierHolder arg1,
+										IdlIdentifierHolder arg2) throws AMFICOMRemoteException {
 				//	nothing		
 			}
 			

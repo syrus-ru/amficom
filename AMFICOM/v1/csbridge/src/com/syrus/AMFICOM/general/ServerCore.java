@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.17 2005/06/17 13:06:58 bass Exp $
+ * $Id: ServerCore.java,v 1.18 2005/06/17 13:21:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/17 13:21:38 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -46,8 +46,8 @@ public abstract class ServerCore implements CommonServer {
 	 * @todo Move method body here (declaring method itself as final)
 	 */
 	protected abstract void validateAccess(final SessionKey_Transferable sessionKeyT,
-			final Identifier_TransferableHolder userIdH,
-			final Identifier_TransferableHolder domainIdH)
+			final IdlIdentifierHolder userIdH,
+			final IdlIdentifierHolder domainIdH)
 			throws AMFICOMRemoteException;
 
 	/**
@@ -60,8 +60,8 @@ public abstract class ServerCore implements CommonServer {
 			throws AMFICOMRemoteException {
 		try {
 			this.validateAccess(sessionKeyT,
-					new Identifier_TransferableHolder(),
-					new Identifier_TransferableHolder());
+					new IdlIdentifierHolder(),
+					new IdlIdentifierHolder());
 	
 			Log.debugMessage("ServerCore.delete() | Trying to delete... ", Log.INFO);
 			StorableObjectPool.delete(Identifier.fromTransferables(idsT));
@@ -132,8 +132,8 @@ public abstract class ServerCore implements CommonServer {
 			assert length != 0: ErrorMessages.NON_EMPTY_EXPECTED;
 			assert StorableObject.hasSingleTypeEntities(idsT);
 	
-			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
-			final Identifier_TransferableHolder domainIdH = new Identifier_TransferableHolder();
+			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
 			this.validateAccess(sessionKeyT, userIdH, domainIdH);
 
 			Log.debugMessage("ServerCore.transmitStorableObjects() | Requested " + length + " storable object(s) of type: "
@@ -170,8 +170,8 @@ public abstract class ServerCore implements CommonServer {
 			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
 			assert ObjectEntities.isEntityCodeValid(entityCode);
 
-			final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
-			final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			this.validateAccess(sessionKeyT, userId, domainId);
 			Log.debugMessage("ServerCore.transmitStorableObjectsButIdsCondition() | Requested storable object(s) of type: "
 					+ ObjectEntities.codeToString(entityCode), Log.FINEST);
@@ -205,8 +205,8 @@ public abstract class ServerCore implements CommonServer {
 			final boolean force,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
-			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
-			final Identifier_TransferableHolder domainIdH = new Identifier_TransferableHolder();
+			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
 			this.validateAccess(sessionKeyT, userIdH, domainIdH);
 
 			final Set storableObjects = new HashSet(transferables.length);
@@ -252,8 +252,8 @@ public abstract class ServerCore implements CommonServer {
 			final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		this.validateAccess(sessionKeyT,
-				new Identifier_TransferableHolder(),
-				new Identifier_TransferableHolder());
+				new IdlIdentifierHolder(),
+				new IdlIdentifierHolder());
 
 		final Map headerMap = new HashMap();
 		for (int i = 0; i < headers.length; i++)

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.11 2005/06/17 13:06:58 bass Exp $
+ * $Id: LoginManager.java,v 1.12 2005/06/17 13:21:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.SessionKey;
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/17 13:21:38 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -50,7 +50,7 @@ public final class LoginManager {
 	public static void login(final String login, final String password) throws CommunicationException, LoginException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			Identifier_TransferableHolder userIdHolder = new Identifier_TransferableHolder();
+			IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
 			sessionKeyT = loginServer.login(login, password, userIdHolder);
 			sessionKey = new SessionKey(sessionKeyT);
 			userId = new Identifier(userIdHolder.value);
