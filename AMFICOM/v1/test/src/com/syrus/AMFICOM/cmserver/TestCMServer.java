@@ -1,5 +1,5 @@
 /*
- * $Id: TestCMServer.java,v 1.4 2005/06/15 17:25:16 arseniy Exp $
+ * $Id: TestCMServer.java,v 1.5 2005/06/17 15:01:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/15 17:25:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 15:01:44 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -128,7 +128,7 @@ public final class TestCMServer extends CommonTest {
 		ids.add(new Identifier("Measurement_2493"));
 		ids.add(new Identifier("Measurement_2494"));
 		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_CODE);
 		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) ec.getTransferable();
 		final Measurement_Transferable[] measurementsT = cmServerRef.transmitMeasurementsButIdsByCondition(idsT,
 				conditionT,
@@ -141,7 +141,7 @@ public final class TestCMServer extends CommonTest {
 	public void _testTransmitMonitoredElementsButIdsByCondition() throws AMFICOMRemoteException {
 		final Set ids = new HashSet();
 		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		LinkedIdsCondition lic = new LinkedIdsCondition(new Identifier("Domain_19"), ObjectEntities.MONITOREDELEMENT_ENTITY_CODE);
+		LinkedIdsCondition lic = new LinkedIdsCondition(new Identifier("Domain_19"), ObjectEntities.MONITOREDELEMENT_CODE);
 		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) lic.getTransferable();
 		final MonitoredElement_Transferable[] monitoredElementsT = cmServerRef.transmitMonitoredElementsButIdsByCondition(idsT,
 				conditionT,
@@ -152,7 +152,7 @@ public final class TestCMServer extends CommonTest {
 	}
 
 	public void _testTransmitRefreshedStorableObjects() throws AMFICOMRemoteException, ApplicationException {
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_ENTITY_CODE);
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_CODE);
 		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) ec.getTransferable();
 		final Analysis_Transferable[] analysesT = cmServerRef.transmitAnalysesButIdsByCondition(new Identifier_Transferable[0],
 				conditionT,
