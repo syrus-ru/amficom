@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.38 2005/06/17 11:01:06 bass Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.39 2005/06/17 13:22:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/17 13:22:13 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -95,7 +95,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	/**
 	 * Init with given pool class and given pool sizes
-	 * @param gObjectLoader1
+	 * @param aObjectLoader1
 	 * @param cacheClass
 	 * @param size
 	 */
