@@ -1,5 +1,5 @@
 /*
- * $Id: MServerGeneralTransmit.java,v 1.6 2005/06/10 19:12:54 arseniy Exp $
+ * $Id: MServerGeneralTransmit.java,v 1.7 2005/06/17 13:07:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,14 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/10 19:12:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 13:07:01 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerGeneralTransmit extends MServerMeasurementReceive {
@@ -29,7 +29,7 @@ abstract class MServerGeneralTransmit extends MServerMeasurementReceive {
 
 	/* Transmit multiple objects*/
 
-	public ParameterType_Transferable[] transmitParameterTypes(final Identifier_Transferable[] idsT,
+	public ParameterType_Transferable[] transmitParameterTypes(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -38,7 +38,7 @@ abstract class MServerGeneralTransmit extends MServerMeasurementReceive {
 		return ret;
 	}
 
-	public CharacteristicType_Transferable[] transmitCharacteristicTypes(final Identifier_Transferable[] idsT,
+	public CharacteristicType_Transferable[] transmitCharacteristicTypes(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -47,7 +47,7 @@ abstract class MServerGeneralTransmit extends MServerMeasurementReceive {
 		return ret;
 	}
 
-	public Characteristic_Transferable[] transmitCharacteristics(final Identifier_Transferable[] idsT,
+	public Characteristic_Transferable[] transmitCharacteristics(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -60,7 +60,7 @@ abstract class MServerGeneralTransmit extends MServerMeasurementReceive {
 
 	/* Transmit multiple objects but ids by condition*/
 
-	public ParameterType_Transferable[] transmitParameterTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public ParameterType_Transferable[] transmitParameterTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);

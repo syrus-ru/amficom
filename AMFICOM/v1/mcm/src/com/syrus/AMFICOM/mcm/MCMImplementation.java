@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.37 2005/06/07 15:45:04 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.38 2005/06/17 13:06:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/07 15:45:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/06/17 13:06:56 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -66,12 +66,12 @@ public class MCMImplementation extends MCMPOA {
 		MeasurementControlModule.addTests(tests);
 	}
 
-	public void abortTests(Identifier_Transferable[] testIdsT) throws AMFICOMRemoteException {
+	public void abortTests(IdlIdentifier[] testIdsT) throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(testIdsT);
 		MeasurementControlModule.abortTests(ids);
 	}
 
-	public Measurement_Transferable transmitMeasurement(Identifier_Transferable idT) throws AMFICOMRemoteException {
+	public Measurement_Transferable transmitMeasurement(IdlIdentifier idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Measurement measurement = new Measurement(id);
@@ -91,7 +91,7 @@ public class MCMImplementation extends MCMPOA {
 		}
 	}
 
-	public Analysis_Transferable transmitAnalysis(Identifier_Transferable idT) throws AMFICOMRemoteException {
+	public Analysis_Transferable transmitAnalysis(IdlIdentifier idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Analysis analysis = new Analysis(id);
@@ -111,7 +111,7 @@ public class MCMImplementation extends MCMPOA {
 		}
 	}
 
-	public Evaluation_Transferable transmitEvaluation(Identifier_Transferable idT) throws AMFICOMRemoteException {
+	public Evaluation_Transferable transmitEvaluation(IdlIdentifier idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Evaluation evaluation = new Evaluation(id);
@@ -135,7 +135,7 @@ public class MCMImplementation extends MCMPOA {
 
 
 
-	public Measurement_Transferable[] transmitMeasurements(Identifier_Transferable[] identifier_Transferables)
+	public Measurement_Transferable[] transmitMeasurements(IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
@@ -157,7 +157,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables)
+	public Analysis_Transferable[] transmitAnalyses(IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
@@ -179,7 +179,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-  public Evaluation_Transferable[] transmitEvaluations(Identifier_Transferable[] identifier_Transferables)
+  public Evaluation_Transferable[] transmitEvaluations(IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
@@ -201,7 +201,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
+	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
@@ -215,7 +215,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
+	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(IdlIdentifier[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
@@ -229,7 +229,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
+	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
@@ -243,7 +243,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-  private Set getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+  private Set getObjectsButIdsCondition(IdlIdentifier[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		try {
 

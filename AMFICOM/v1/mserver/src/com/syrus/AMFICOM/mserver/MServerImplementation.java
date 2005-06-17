@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.60 2005/06/17 11:01:06 bass Exp $
+ * $Id: MServerImplementation.java,v 1.61 2005/06/17 13:07:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.61 $, $Date: 2005/06/17 13:07:01 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -55,7 +55,7 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 		}
 	}
 
-	public void deleteTests(Identifier_Transferable[] ids, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public void deleteTests(IdlIdentifier[] ids, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final Identifier_TransferableHolder userId = new Identifier_TransferableHolder();
 		final Identifier_TransferableHolder domainId = new Identifier_TransferableHolder();
 		this.validateAccess(sessionKeyT, userId, domainId);

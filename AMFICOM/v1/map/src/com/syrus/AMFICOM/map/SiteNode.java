@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.45 2005/06/17 12:40:40 bass Exp $
+ * $Id: SiteNode.java,v 1.46 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/17 13:06:55 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -221,15 +221,15 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 	public IDLEntity getTransferable() {
 		int i = 0;
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new SiteNode_Transferable(super.getHeaderTransferable(),
 				this.name,
 				this.description,
 				this.location.getX(),
 				this.location.getY(),
-				(Identifier_Transferable) this.imageId.getTransferable(),
-				(Identifier_Transferable) this.type.getId().getTransferable(),
+				(IdlIdentifier) this.imageId.getTransferable(),
+				(IdlIdentifier) this.type.getId().getTransferable(),
 				this.city,
 				this.street,
 				this.building,

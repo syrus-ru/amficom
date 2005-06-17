@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.3 2005/06/17 12:38:55 bass Exp $
+ * $Id: ParameterSet.java,v 1.4 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,14 +27,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -173,7 +173,7 @@ public final class ParameterSet extends StorableObject {
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
 
-		Identifier_Transferable[] meIds = Identifier.createTransferables(this.monitoredElementIds);
+		IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		return new ParameterSet_Transferable(super.getHeaderTransferable(),
 				ParameterSetSort.from_int(this.sort),
 				this.description,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.36 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemePath.java,v 1.37 2005/06/17 13:06:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 import com.syrus.util.Log;
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/17 13:06:53 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -289,9 +289,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		return new SchemePath_Transferable(
 				super.getHeaderTransferable(), this.name,
 				this.description,
-				(Identifier_Transferable) this.transmissionPathId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeMonitoringSolutionId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeId.getTransferable(),
+				(IdlIdentifier) this.transmissionPathId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeMonitoringSolutionId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeId.getTransferable(),
 				Identifier.createTransferables(this.characteristics));
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.22 2005/06/03 20:39:05 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.23 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/06/03 20:39:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -239,8 +239,8 @@ public abstract class AbstractSchemeElement extends
 	 */
 	void fromTransferable(final StorableObject_Transferable header,
 			final String name1, final String description1,
-			final Identifier_Transferable parentSchemeId1,
-			final Identifier_Transferable characteristicIds[])
+			final IdlIdentifier parentSchemeId1,
+			final IdlIdentifier characteristicIds[])
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.76 2005/06/17 12:38:56 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.77 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.77 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -170,24 +170,9 @@ public final class MeasurementSetup extends StorableObject {
 		super.fromTransferable(mst.header);
 
 		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string
-		 *       to identifier_code
-		 */
-		this.criteriaSet = (mst.criteria_set_id.identifier_string.length() != 0)
-				? (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true) : null;
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string
-		 *       to identifier_code
-		 */
-		this.thresholdSet = (mst.threshold_set_id.identifier_string.length() != 0)
-				? (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true) : null;
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string
-		 *       to identifier_code
-		 */
-		this.etalon = (mst.etalon_id.identifier_string.length() != 0)
-				? (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true) : null;
+		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.criteria_set_id), true);
+		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.threshold_set_id), true);
+		this.etalon = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.etalon_id), true);
 
 		this.description = mst.description;
 		this.measurementDuration = mst.measurement_duration;
@@ -204,13 +189,13 @@ public final class MeasurementSetup extends StorableObject {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		Identifier_Transferable[] meIds = Identifier.createTransferables(this.monitoredElementIds);
-		Identifier_Transferable[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
+		IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
+		IdlIdentifier[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
 		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
-												 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
-												 (this.criteriaSet != null) ? (Identifier_Transferable) this.criteriaSet.getId().getTransferable() : (new Identifier_Transferable("")),
-												 (this.thresholdSet != null) ? (Identifier_Transferable) this.thresholdSet.getId().getTransferable() : (new Identifier_Transferable("")),
-												 (this.etalon != null) ? (Identifier_Transferable) this.etalon.getId().getTransferable() : (new Identifier_Transferable("")),
+												 (IdlIdentifier) this.parameterSet.getId().getTransferable(),
+												 (this.criteriaSet != null) ? (IdlIdentifier) this.criteriaSet.getId().getTransferable() : (new IdlIdentifier("")),
+												 (this.thresholdSet != null) ? (IdlIdentifier) this.thresholdSet.getId().getTransferable() : (new IdlIdentifier("")),
+												 (this.etalon != null) ? (IdlIdentifier) this.etalon.getId().getTransferable() : (new IdlIdentifier("")),
 												 this.description,
 												 this.measurementDuration,
 												 meIds,

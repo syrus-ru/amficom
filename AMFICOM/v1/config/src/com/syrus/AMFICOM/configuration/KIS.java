@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.84 2005/06/17 12:32:20 bass Exp $
+ * $Id: KIS.java,v 1.85 2005/06/17 13:06:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.85 $, $Date: 2005/06/17 13:06:56 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -166,16 +166,16 @@ public final class KIS extends DomainMember implements Characterizable {
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new KIS_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				(IdlIdentifier) this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				this.hostname,
 				this.tcpPort,
-				(Identifier_Transferable) this.equipmentId.getTransferable(),
-				(Identifier_Transferable) this.mcmId.getTransferable(),
+				(IdlIdentifier) this.equipmentId.getTransferable(),
+				(IdlIdentifier) this.mcmId.getTransferable(),
 				charIds);
 	}
 

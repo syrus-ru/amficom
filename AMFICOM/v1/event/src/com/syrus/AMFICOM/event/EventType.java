@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.29 2005/06/17 11:01:03 bass Exp $
+ * $Id: EventType.java,v 1.30 2005/06/17 13:06:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,10 +34,10 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/17 11:01:03 $
+ * @version $Revision: 1.30 $, $Date: 2005/06/17 13:06:53 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -162,7 +162,7 @@ public final class EventType extends StorableObjectType {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final Identifier_Transferable[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
+		final IdlIdentifier[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
 
 		final ETUserAlertKinds[] userAlertKindsT = new ETUserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
@@ -175,7 +175,7 @@ public final class EventType extends StorableObjectType {
 			for (final Iterator it2 = userAlertKinds.iterator(); it2.hasNext(); j++) {
 				alertKindsT[j] = (AlertKind) it2.next();
 			}
-			userAlertKindsT[i] = new ETUserAlertKinds((Identifier_Transferable) userId.getTransferable(), alertKindsT);
+			userAlertKindsT[i] = new ETUserAlertKinds((IdlIdentifier) userId.getTransferable(), alertKindsT);
 		}
 
 		return new EventType_Transferable(

@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.35 2005/06/17 12:38:52 bass Exp $
+* $Id: MapView.java,v 1.36 2005/06/17 13:06:53 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/17 12:38:52 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/17 13:06:53 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -213,19 +213,19 @@ public class MapView extends DomainMember implements Namable {
 
 	public IDLEntity getTransferable() {
 		int i = 0;
-		Identifier_Transferable[] schemeIdsTransferable = new Identifier_Transferable[this.schemes.size()];
+		IdlIdentifier[] schemeIdsTransferable = new IdlIdentifier[this.schemes.size()];
 		for (Iterator iterator = this.schemes.iterator(); iterator.hasNext();)
-			schemeIdsTransferable[i++] = (Identifier_Transferable) (((Scheme) iterator.next()).getId()).getTransferable();		
+			schemeIdsTransferable[i++] = (IdlIdentifier) (((Scheme) iterator.next()).getId()).getTransferable();		
 
 		return new MapView_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable)this.getDomainId().getTransferable(),
+				(IdlIdentifier)this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				this.longitude,
 				this.latitude,
 				this.scale,
 				this.defaultScale,
-				(Identifier_Transferable)this.map.getId().getTransferable(),
+				(IdlIdentifier)this.map.getId().getTransferable(),
 				schemeIdsTransferable);
 	}
 

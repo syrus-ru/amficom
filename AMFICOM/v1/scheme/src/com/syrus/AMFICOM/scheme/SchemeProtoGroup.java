@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.33 2005/06/17 11:01:18 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.34 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -395,8 +395,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 				super.getHeaderTransferable(),
 				this.name,
 				this.description,
-				(Identifier_Transferable) this.symbolId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeProtoGroupId.getTransferable());
+				(IdlIdentifier) this.symbolId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeProtoGroupId.getTransferable());
 	}
 
 	/**

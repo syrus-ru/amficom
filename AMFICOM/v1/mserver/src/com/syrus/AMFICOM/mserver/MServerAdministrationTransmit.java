@@ -1,5 +1,5 @@
 /*
- * $Id: MServerAdministrationTransmit.java,v 1.5 2005/06/10 19:12:54 arseniy Exp $
+ * $Id: MServerAdministrationTransmit.java,v 1.6 2005/06/17 13:07:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,12 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/10 19:12:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 13:07:00 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerAdministrationTransmit extends MServerGeneralTransmit {
@@ -26,7 +26,7 @@ abstract class MServerAdministrationTransmit extends MServerGeneralTransmit {
 
 	/* Transmit multiple objects*/
 
-	public Server_Transferable[] transmitServers(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public Server_Transferable[] transmitServers(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
@@ -35,7 +35,7 @@ abstract class MServerAdministrationTransmit extends MServerGeneralTransmit {
 		return ret;
 	}
 
-	public MCM_Transferable[] transmitMCMs(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public MCM_Transferable[] transmitMCMs(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;

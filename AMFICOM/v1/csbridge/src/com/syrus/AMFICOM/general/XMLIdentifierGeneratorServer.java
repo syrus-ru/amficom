@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.3 2005/05/18 12:52:58 bass Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.4 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 13:06:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -24,7 +24,7 @@ public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, 
 
 	private Map entityCount = new HashMap();
 
-	public Identifier_Transferable getGeneratedIdentifier(short entity) {
+	public IdlIdentifier getGeneratedIdentifier(short entity) {
 		long minor;
 		Short code = new Short(entity);
 		Long count = (Long) this.entityCount.get(code);
@@ -34,12 +34,12 @@ public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, 
 			minor = count.longValue() + 1;
 		this.entityCount.put(code, new Long(minor));
 		Identifier identifier = new Identifier(ObjectEntities.codeToString(code) + Identifier.SEPARATOR + minor);
-		return (Identifier_Transferable) identifier.getTransferable();
+		return (IdlIdentifier) identifier.getTransferable();
 
 	}
 
-	public Identifier_Transferable[] getGeneratedIdentifierRange(short entity, int size) {
-		Identifier_Transferable[] transferables = new Identifier_Transferable[size];
+	public IdlIdentifier[] getGeneratedIdentifierRange(short entity, int size) {
+		IdlIdentifier[] transferables = new IdlIdentifier[size];
 		for (int i = 0; i < transferables.length; i++) {
 			transferables[i] = this.getGeneratedIdentifier(entity);
 		}

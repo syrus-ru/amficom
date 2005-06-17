@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.51 2005/06/17 11:01:01 bass Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.52 2005/06/17 13:07:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProc
 import com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitProcedure;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.mserver.corba.MServer;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/17 11:01:01 $
+ * @version $Revision: 1.52 $, $Date: 2005/06/17 13:07:00 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -68,7 +68,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public final Set loadMeasurements(final Set ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_CODE, ids, new TransmitProcedure() {
 			public final IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 				return ((MServer) commonServer).transmitMeasurements(idsT, sessionKeyT);
 			}
@@ -78,7 +78,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadAnalyses(Set ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_CODE, ids, new TransmitProcedure() {
 			public final IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 				return ((MServer) commonServer).transmitAnalyses(idsT, sessionKeyT);
 			}
@@ -88,7 +88,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	public Set loadEvaluations(Set ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.EVALUATION_CODE, ids, new TransmitProcedure() {
 			public final IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 				return ((MServer) commonServer).transmitEvaluations(idsT, sessionKeyT);
 			}
@@ -105,7 +105,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				condition,
 				new TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
-							final Identifier_Transferable[] idsT,
+							final IdlIdentifier[] idsT,
 							final SessionKey_Transferable sessionKeyT,
 							final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
 						return ((MServer) commonServer).transmitMeasurementsButIdsByCondition(idsT, conditionT, sessionKeyT);
@@ -119,7 +119,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				condition,
 				new TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
-							final Identifier_Transferable[] idsT,
+							final IdlIdentifier[] idsT,
 							final SessionKey_Transferable sessionKeyT,
 							final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
 						return ((MServer) commonServer).transmitAnalysesButIdsByCondition(idsT, conditionT, sessionKeyT);
@@ -133,7 +133,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				condition,
 				new TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
-							final Identifier_Transferable[] idsT,
+							final IdlIdentifier[] idsT,
 							final SessionKey_Transferable sessionKeyT,
 							final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
 						return ((MServer) commonServer).transmitEvaluationsButIdsByCondition(idsT, conditionT, sessionKeyT);

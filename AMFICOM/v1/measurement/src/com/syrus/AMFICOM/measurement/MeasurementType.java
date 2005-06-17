@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.78 2005/06/17 12:38:55 bass Exp $
+ * $Id: MeasurementType.java,v 1.79 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,11 +28,11 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/06/17 12:38:55 $
+ * @version $Revision: 1.79 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -166,9 +166,9 @@ public class MeasurementType extends ActionType implements Namable {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		Identifier_Transferable[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		Identifier_Transferable[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
-		Identifier_Transferable[] measPortTypeIds = Identifier.createTransferables(this.measurementPortTypeIds);
+		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		IdlIdentifier[] measPortTypeIds = Identifier.createTransferables(this.measurementPortTypeIds);
 
 		return new MeasurementType_Transferable(super.getHeaderTransferable(),
 				super.codename,

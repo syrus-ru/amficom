@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.38 2005/06/17 12:40:40 bass Exp $
+ * $Id: SiteNodeType.java,v 1.39 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
 /**
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/17 13:06:55 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -176,12 +176,12 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return new SiteNodeType_Transferable(super.getHeaderTransferable(),
 				this.codename,
 				this.name,
 				this.description,
-				(Identifier_Transferable) this.imageId.getTransferable(),
+				(IdlIdentifier) this.imageId.getTransferable(),
 				this.topological,
 				charIds);
 	}

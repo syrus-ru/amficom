@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.30 2005/06/14 11:21:58 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.31 2005/06/17 13:07:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/14 11:21:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 13:07:00 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
@@ -42,7 +42,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 	/* Transmit multiple objects*/
 
-	public EquipmentType_Transferable[] transmitEquipmentTypes(final Identifier_Transferable[] idsT,
+	public EquipmentType_Transferable[] transmitEquipmentTypes(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -51,7 +51,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return equipmentTypes;
 	}
 
-	public PortType_Transferable[] transmitPortTypes(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public PortType_Transferable[] transmitPortTypes(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -60,7 +60,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return portTypes;
 	}
 
-	public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(final Identifier_Transferable[] idsT,
+	public MeasurementPortType_Transferable[] transmitMeasurementPortTypes(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -69,7 +69,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return measurementPortTypes;
 	}
 
-	public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(final Identifier_Transferable[] idsT,
+	public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -78,7 +78,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transmissionPathTypes;
 	}
 
-	public LinkType_Transferable[] transmitLinkTypes(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public LinkType_Transferable[] transmitLinkTypes(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -87,7 +87,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return linkTypes;
 	}
 
-	public CableLinkType_Transferable[] transmitCableLinkTypes(final Identifier_Transferable[] idsT,
+	public CableLinkType_Transferable[] transmitCableLinkTypes(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -96,7 +96,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return cableLinkTypes;
 	}
 
-	public CableThreadType_Transferable[] transmitCableThreadTypes(final Identifier_Transferable[] idsT,
+	public CableThreadType_Transferable[] transmitCableThreadTypes(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -105,7 +105,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return cableThreadTypes;
 	}
 
-	public Equipment_Transferable[] transmitEquipments(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public Equipment_Transferable[] transmitEquipments(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -114,7 +114,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return equipments;
 	}
 
-	public Port_Transferable[] transmitPorts(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public Port_Transferable[] transmitPorts(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -123,7 +123,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return ports;
 	}
 
-	public MeasurementPort_Transferable[] transmitMeasurementPorts(final Identifier_Transferable[] idsT,
+	public MeasurementPort_Transferable[] transmitMeasurementPorts(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -132,7 +132,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return measurementPorts;
 	}
 
-	public TransmissionPath_Transferable[] transmitTransmissionPaths(final Identifier_Transferable[] idsT,
+	public TransmissionPath_Transferable[] transmitTransmissionPaths(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -141,7 +141,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transmissionPaths;
 	}
 
-	public KIS_Transferable[] transmitKISs(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public KIS_Transferable[] transmitKISs(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -150,7 +150,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return kiss;
 	}
 
-	public MonitoredElement_Transferable[] transmitMonitoredElements(final Identifier_Transferable[] idsT,
+	public MonitoredElement_Transferable[] transmitMonitoredElements(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -159,7 +159,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return monitoredElements;
 	}
 
-	public Link_Transferable[] transmitLinks(final Identifier_Transferable[] idsT, final SessionKey_Transferable sessionKeyT)
+	public Link_Transferable[] transmitLinks(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -168,7 +168,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return links;
 	}
 
-	public CableThread_Transferable[] transmitCableThreads(final Identifier_Transferable[] idsT,
+	public CableThread_Transferable[] transmitCableThreads(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -181,7 +181,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 	/* Transmit multiple objects but idsT by condition */
 
-	public EquipmentType_Transferable[] transmitEquipmentTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public EquipmentType_Transferable[] transmitEquipmentTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -191,7 +191,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return equipmentTypes;
 	}
 
-	public PortType_Transferable[] transmitPortTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public PortType_Transferable[] transmitPortTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -201,7 +201,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return portTypes;
 	}
 
-	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public MeasurementPortType_Transferable[] transmitMeasurementPortTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -211,7 +211,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return measurementPortTypes;
 	}
 
-	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -221,7 +221,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transmissionPathTypes;
 	}
 
-	public LinkType_Transferable[] transmitLinkTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public LinkType_Transferable[] transmitLinkTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -231,7 +231,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return linkTypes;
 	}
 
-	public CableLinkType_Transferable[] transmitCableLinkTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public CableLinkType_Transferable[] transmitCableLinkTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -241,7 +241,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return cableLinkTypes;
 	}
 
-	public CableThreadType_Transferable[] transmitCableThreadTypesButIdsByCondition(final Identifier_Transferable[] idsT,
+	public CableThreadType_Transferable[] transmitCableThreadTypesButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -251,7 +251,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return cableThreadTypes;
 	}
 
-	public Equipment_Transferable[] transmitEquipmentsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public Equipment_Transferable[] transmitEquipmentsButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -261,7 +261,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return equipments;
 	}
 
-	public Port_Transferable[] transmitPortsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public Port_Transferable[] transmitPortsButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -271,7 +271,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return ports;
 	}
 
-	public MeasurementPort_Transferable[] transmitMeasurementPortsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public MeasurementPort_Transferable[] transmitMeasurementPortsButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -281,7 +281,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return measurementPorts;
 	}
 
-	public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -291,7 +291,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return transmissionPaths;
 	}
 
-	public KIS_Transferable[] transmitKISsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public KIS_Transferable[] transmitKISsButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -301,7 +301,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return kiss;
 	}
 
-	public MonitoredElement_Transferable[] transmitMonitoredElementsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public MonitoredElement_Transferable[] transmitMonitoredElementsButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -311,7 +311,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return monitoredElements;
 	}
 
-	public Link_Transferable[] transmitLinksButIdsByCondition(final Identifier_Transferable[] idsT,
+	public Link_Transferable[] transmitLinksButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
@@ -321,7 +321,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		return links;
 	}
 
-	public CableThread_Transferable[] transmitCableThreadsButIdsByCondition(final Identifier_Transferable[] idsT,
+	public CableThread_Transferable[] transmitCableThreadsButIdsByCondition(final IdlIdentifier[] idsT,
 			final StorableObjectCondition_Transferable conditionT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);

@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.62 2005/06/17 12:38:56 bass Exp $
+ * $Id: Evaluation.java,v 1.63 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.63 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -101,8 +101,7 @@ public class Evaluation extends Action {
 		super.fromTransferable(et.header, null, new Identifier(et.monitored_element_id), null);
 
 		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-		super.parentAction = (et.measurement_id.identifier_string.length() != 0)
-				? (Measurement) StorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
+		super.parentAction = (Measurement) StorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true);
 
 		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
 		
@@ -116,10 +115,10 @@ public class Evaluation extends Action {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Evaluation_Transferable(super.getHeaderTransferable(),
-										   (Identifier_Transferable)super.type.getId().getTransferable(),
-										   (Identifier_Transferable)super.monitoredElementId.getTransferable(),
-										   (super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable() : new Identifier_Transferable(""),
-										   (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
+										   (IdlIdentifier)super.type.getId().getTransferable(),
+										   (IdlIdentifier)super.monitoredElementId.getTransferable(),
+										   (super.parentAction != null) ? (IdlIdentifier) super.parentAction.getId().getTransferable() : new IdlIdentifier(""),
+										   (IdlIdentifier)this.thresholdSet.getId().getTransferable());
 	}
 	
 	/* (non-Javadoc)

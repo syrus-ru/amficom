@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.75 2005/06/17 12:38:56 bass Exp $
+ * $Id: Measurement.java,v 1.76 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,14 +26,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.76 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -146,15 +146,15 @@ public class Measurement extends Action {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Measurement_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable) super.type.getId().getTransferable(),
-				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
+				(IdlIdentifier) super.type.getId().getTransferable(),
+				(IdlIdentifier) super.monitoredElementId.getTransferable(),
 				this.name,
-				(Identifier_Transferable) this.setup.getId().getTransferable(),
+				(IdlIdentifier) this.setup.getId().getTransferable(),
 				this.startTime.getTime(),
 				this.duration,
 				MeasurementStatus.from_int(this.status),
 				this.localAddress,
-				(Identifier_Transferable) this.testId.getTransferable());
+				(IdlIdentifier) this.testId.getTransferable());
 	}
 
 	/**

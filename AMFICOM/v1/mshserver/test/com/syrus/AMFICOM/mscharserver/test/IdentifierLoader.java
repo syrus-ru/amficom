@@ -1,5 +1,5 @@
 /*-
- * $Id: IdentifierLoader.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: IdentifierLoader.java,v 1.2 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,13 +11,13 @@ package com.syrus.AMFICOM.mscharserver.test;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 13:06:59 $
  * @author $Author: bass $
  * @module mscharserver_v1
  */
@@ -44,7 +44,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 	}
 
 	public void run() {
-		Identifier_Transferable[] generatedIdentifierRange = null;
+		IdlIdentifier[] generatedIdentifierRange = null;
 		while (generatedIdentifierRange == null) {
 			try {
 				int size = this.idPool.capacity() - this.idPool.getNumber();

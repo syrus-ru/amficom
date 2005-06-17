@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.48 2005/06/17 12:40:40 bass Exp $
+ * $Id: Collector.java,v 1.49 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
 /**
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/17 13:06:55 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -159,8 +159,8 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return new Collector_Transferable(super.getHeaderTransferable(), this.name, this.description, physicalLinkIds, charIds);
 	}
 

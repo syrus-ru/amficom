@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.95 2005/06/17 12:32:20 bass Exp $
+ * $Id: Equipment.java,v 1.96 2005/06/17 13:06:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,11 +34,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.96 $, $Date: 2005/06/17 13:06:56 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -221,11 +221,11 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Equipment_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable) this.getDomainId().getTransferable(),
-				(Identifier_Transferable) this.type.getId().getTransferable(),
+				(IdlIdentifier) this.getDomainId().getTransferable(),
+				(IdlIdentifier) this.type.getId().getTransferable(),
 				this.name != null ? this.name : "",
 				this.description != null ? this.description : "",
 				this.supplier != null ? this.supplier : "",
@@ -237,7 +237,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 				this.swSerial != null ? this.swSerial : "",
 				this.swVersion != null ? this.swVersion : "",
 				this.inventoryNumber != null ? this.inventoryNumber : "",
-				(Identifier_Transferable) this.imageId.getTransferable(),
+				(IdlIdentifier) this.imageId.getTransferable(),
 				charIds);
 	}
 

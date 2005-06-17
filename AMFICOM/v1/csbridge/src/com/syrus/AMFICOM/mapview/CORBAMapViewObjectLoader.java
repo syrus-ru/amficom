@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapViewObjectLoader.java,v 1.5 2005/06/17 11:01:02 bass Exp $
+ * $Id: CORBAMapViewObjectLoader.java,v 1.6 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:01:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 13:06:58 $
  * @module csbridge_v1
  */
 public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements MapViewObjectLoader {
@@ -46,7 +46,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 		return super.loadStorableObjects(ObjectEntities.MAPVIEW_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMapViews(ids1, sessionKey);
@@ -62,7 +62,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MAPVIEW_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {

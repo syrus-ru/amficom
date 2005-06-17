@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.15 2005/06/17 11:01:06 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.16 2005/06/17 13:07:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/17 13:07:01 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -38,7 +38,7 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 
 	private static final long serialVersionUID = 8337247295980850931L;
 
-	public void receiveResults(Result_Transferable[] resultsT, Identifier_Transferable mcmIdT, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public void receiveResults(Result_Transferable[] resultsT, IdlIdentifier mcmIdT, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
 			final Identifier_TransferableHolder domainIdH = new Identifier_TransferableHolder();

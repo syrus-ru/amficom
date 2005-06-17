@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAConfigurationObjectLoader.java,v 1.22 2005/06/17 11:01:02 bass Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.23 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,13 +35,13 @@ import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/06/17 11:01:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/17 13:06:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -59,7 +59,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitEquipmentTypes(idsT, sessionKey);
@@ -71,7 +71,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.PORT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitPortTypes(idsT, sessionKey);
@@ -83,7 +83,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitMeasurementPortTypes(idsT, sessionKey);
@@ -95,7 +95,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.TRANSPATH_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitTransmissionPathTypes(idsT, sessionKey);
@@ -107,7 +107,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.LINK_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitLinkTypes(idsT, sessionKey);
@@ -119,7 +119,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.CABLELINK_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitCableLinkTypes(idsT, sessionKey);
@@ -131,7 +131,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.CABLETHREAD_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitCableThreadTypes(idsT, sessionKey);
@@ -143,7 +143,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitEquipments(idsT, sessionKey);
@@ -155,7 +155,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.PORT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitPorts(idsT, sessionKey);
@@ -167,7 +167,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitMeasurementPorts(idsT, sessionKey);
@@ -179,7 +179,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.TRANSPATH_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitTransmissionPaths(idsT, sessionKey);
@@ -191,7 +191,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.KIS_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitKISs(idsT, sessionKey);
@@ -203,7 +203,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.MONITOREDELEMENT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitMonitoredElements(idsT, sessionKey);
@@ -215,7 +215,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.LINK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitLinks(idsT, sessionKey);
@@ -227,7 +227,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjects(ObjectEntities.CABLETHREAD_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitCableThreads(idsT, sessionKey);
@@ -243,7 +243,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENT_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -256,7 +256,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORT_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -269,7 +269,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -282,7 +282,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATH_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -295,7 +295,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINK_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -308,7 +308,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLELINK_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -321,7 +321,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREAD_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -334,7 +334,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -347,7 +347,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -360,7 +360,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -373,7 +373,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATH_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -386,7 +386,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -399,7 +399,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MONITOREDELEMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -412,7 +412,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {
@@ -425,7 +425,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREAD_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable[] idsT,
+					final IdlIdentifier[] idsT,
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable conditionT)
 					throws AMFICOMRemoteException {

@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.3 2005/06/17 12:38:56 bass Exp $
+ * $Id: Parameter.java,v 1.4 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,14 +28,14 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -90,8 +90,8 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 		byte[] ptValue = new byte[this.value.length];
 		for (int i = 0; i < ptValue.length; i++)
 			ptValue[i] = this.value[i];
-		return new Parameter_Transferable((Identifier_Transferable) this.id.getTransferable(),
-				(Identifier_Transferable) this.type.getId().getTransferable(),
+		return new Parameter_Transferable((IdlIdentifier) this.id.getTransferable(),
+				(IdlIdentifier) this.type.getId().getTransferable(),
 				ptValue);
 	}
 	

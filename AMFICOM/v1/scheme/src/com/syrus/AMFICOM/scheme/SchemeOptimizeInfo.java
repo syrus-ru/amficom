@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.29 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.30 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
 import com.syrus.util.Log;
 
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.30 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -382,7 +382,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 				this.mutationDegree, this.rtuDeleteProb,
 				this.rtuCreateProb, this.nodesSpliceProb,
 				this.nodesCutProb, this.survivorRate,
-				(Identifier_Transferable) this.parentSchemeId.getTransferable());
+				(IdlIdentifier) this.parentSchemeId.getTransferable());
 	}
 
 	public double getWaveLength() {

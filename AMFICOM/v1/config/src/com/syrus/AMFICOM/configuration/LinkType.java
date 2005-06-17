@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.53 2005/06/17 12:32:20 bass Exp $
+ * $Id: LinkType.java,v 1.54 2005/06/17 13:06:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,10 +31,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.54 $, $Date: 2005/06/17 13:06:56 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -159,14 +159,14 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	}
 
 	public IDLEntity getTransferable() {
-		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new LinkType_Transferable(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
-				(Identifier_Transferable) this.imageId.getTransferable(),
+				(IdlIdentifier) this.imageId.getTransferable(),
 				charIds);
 	}
 

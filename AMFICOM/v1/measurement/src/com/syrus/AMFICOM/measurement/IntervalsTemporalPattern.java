@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.21 2005/06/17 12:38:56 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.22 2005/06/17 13:06:57 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.Undoable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Duration;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Temporal_Pattern_Id;
 import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -464,7 +464,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 				Long ms = (Long) it.next();
 				Identifier temporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(ms);
 				intervalTemporalPatternsIdT[i] = new ITP_Interval_Temporal_Pattern_Id(ms.longValue(),
-						(Identifier_Transferable) temporalPatternId.getTransferable());
+						(IdlIdentifier) temporalPatternId.getTransferable());
 			}
 		}
 

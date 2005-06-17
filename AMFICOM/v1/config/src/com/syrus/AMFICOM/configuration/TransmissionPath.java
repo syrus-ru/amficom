@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.69 2005/06/17 12:32:20 bass Exp $
+ * $Id: TransmissionPath.java,v 1.70 2005/06/17 13:06:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,9 +33,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
- * @version $Revision: 1.69 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.70 $, $Date: 2005/06/17 13:06:56 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -150,15 +150,15 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				(IdlIdentifier) this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
-				(Identifier_Transferable) this.type.getId().getTransferable(),
-				(Identifier_Transferable) this.startPortId.getTransferable(),
-				(Identifier_Transferable) this.finishPortId.getTransferable(),
+				(IdlIdentifier) this.type.getId().getTransferable(),
+				(IdlIdentifier) this.startPortId.getTransferable(),
+				(IdlIdentifier) this.finishPortId.getTransferable(),
 				charIds);
 	}
 

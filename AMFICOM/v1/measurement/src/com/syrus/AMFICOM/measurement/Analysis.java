@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.65 2005/06/17 12:38:56 bass Exp $
+ * $Id: Analysis.java,v 1.66 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.66 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -103,8 +103,7 @@ public class Analysis extends Action {
 		super.fromTransferable(at.header, null, new Identifier(at.monitored_element_id), null);
 
 		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
-		super.parentAction = (at.measurement_id.identifier_string.length() != 0)
-				? (Measurement) StorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true) : null;
+		super.parentAction = (Measurement) StorableObjectPool.getStorableObject(new Identifier(at.measurement_id), true);
 
 		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
 		
@@ -119,12 +118,12 @@ public class Analysis extends Action {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Analysis_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable) super.type.getId().getTransferable(),
-				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
-				(super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable()
-						: new Identifier_Transferable(""),
+				(IdlIdentifier) super.type.getId().getTransferable(),
+				(IdlIdentifier) super.monitoredElementId.getTransferable(),
+				(super.parentAction != null) ? (IdlIdentifier) super.parentAction.getId().getTransferable()
+						: new IdlIdentifier(""),
 				this.name != null ? this.name : "",
-				(Identifier_Transferable) this.criteriaSet.getId().getTransferable());
+				(IdlIdentifier) this.criteriaSet.getId().getTransferable());
 	}
 	
 	/**

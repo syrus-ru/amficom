@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.33 2005/06/17 11:01:02 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.34 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -72,18 +72,18 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
+	 * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
 		IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
-				final Identifier_Transferable[] idsT,
+				final IdlIdentifier[] idsT,
 				final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException;
 	}
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
+	 * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -91,7 +91,7 @@ public abstract class CORBAObjectLoader {
 	 */
 	public interface TransmitButIdsByConditionProcedure {
 		IDLEntity[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
-				final Identifier_Transferable[] idsT,
+				final IdlIdentifier[] idsT,
 				final SessionKey_Transferable sessionKeyT,
 				final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException;
 	}
@@ -99,7 +99,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
+	 * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -121,7 +121,7 @@ public abstract class CORBAObjectLoader {
 	protected Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
 			throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
-		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		int numEfforts = 0;
 		while (true) {
 			try {
@@ -163,7 +163,7 @@ public abstract class CORBAObjectLoader {
 	 * 	return super.loadStorableObjects(ids, ObjectEntities.SYSTEMUSER_CODE, new TransmitProcedure() {
 	 * 		public IDLEntity[] transmitStorableObjects(
 	 * 				final CommonServer server,
-	 * 				final Identifier_Transferable[] idsT,
+	 * 				final IdlIdentifier[] idsT,
 	 * 				final SessionKey_Transferable sessionKeyT)
 	 * 				throws AMFICOMRemoteException {
 	 * 			return ((CMServer) server).transmitUsersButIdsCondition(ids1, sessionKeyT, (StorableObjectCondition_Transferable) condition.getTransferable());
@@ -175,7 +175,7 @@ public abstract class CORBAObjectLoader {
 	 * 	return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SYSTEMUSER_CODE, new TransmitButIdsByConditionProcedure() {
 	 * 		public IDLEntity[] transmitStorableObjectsButIdsCondition(
 	 * 				final CommonServer server,
-	 * 				final Identifier_Transferable[] idsT,
+	 * 				final IdlIdentifier[] idsT,
 	 * 				final SessionKey_Transferable sessionKeyT,
 	 * 				final StorableObjectCondition_Transferable[] conditionT)
 	 * 				throws AMFICOMRemoteException {
@@ -197,7 +197,7 @@ public abstract class CORBAObjectLoader {
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
-		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {

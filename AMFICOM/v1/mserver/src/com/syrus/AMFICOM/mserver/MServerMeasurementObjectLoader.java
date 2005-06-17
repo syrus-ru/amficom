@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.36 2005/06/17 11:01:06 bass Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.37 2005/06/17 13:07:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.mcm.corba.MCM;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/17 13:07:01 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -49,7 +49,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
-							final Identifier_Transferable loadIdsT[],
+							final IdlIdentifier loadIdsT[],
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitMeasurements(loadIdsT);
 					}
@@ -64,7 +64,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
-							final Identifier_Transferable loadIdsT[],
+							final IdlIdentifier loadIdsT[],
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitAnalyses(loadIdsT);
 					}
@@ -79,7 +79,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
-							final Identifier_Transferable loadIdsT[],
+							final IdlIdentifier loadIdsT[],
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitEvaluations(loadIdsT);
 					}
@@ -97,7 +97,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 				condition,
 				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
-							final Identifier_Transferable loadButIdsT[],
+							final IdlIdentifier loadButIdsT[],
 							final StorableObjectCondition_Transferable conditionT,
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitMeasurementsButIdsByCondition(loadButIdsT, conditionT);
@@ -114,7 +114,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 				condition,
 				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
-							final Identifier_Transferable loadButIdsT[],
+							final IdlIdentifier loadButIdsT[],
 							final StorableObjectCondition_Transferable conditionT,
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitAnalysesButIdsByCondition(loadButIdsT, conditionT);
@@ -131,7 +131,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 				condition,
 				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
 					public final IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
-							final Identifier_Transferable loadButIdsT[],
+							final IdlIdentifier loadButIdsT[],
 							final StorableObjectCondition_Transferable conditionT,
 							final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitEvaluationsButIdsByCondition(loadButIdsT, conditionT);
@@ -211,7 +211,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 			MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 			for (final Iterator it = mcmIdTestIdsMap.keySet().iterator(); it.hasNext();) {
 				final Identifier mcmId = (Identifier) it.next();
-				final Identifier_Transferable[] idsT = Identifier.createTransferables((Collection) mcmIdTestIdsMap.get(mcmId));
+				final IdlIdentifier[] idsT = Identifier.createTransferables((Collection) mcmIdTestIdsMap.get(mcmId));
 				final MCM mcmRef;
 				try {
 					mcmRef = sessionEnvironment.getMServerServantManager().getVerifiedMCMReference(mcmId);

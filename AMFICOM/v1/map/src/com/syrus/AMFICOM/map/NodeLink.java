@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.48 2005/06/17 12:40:40 bass Exp $
+ * $Id: NodeLink.java,v 1.49 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
 /**
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/17 13:06:55 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -179,12 +179,12 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return new NodeLink_Transferable(super.getHeaderTransferable(),
 				this.name,
-				(Identifier_Transferable) this.physicalLink.getId().getTransferable(),
-				(Identifier_Transferable) this.startNode.getId().getTransferable(),
-				(Identifier_Transferable) this.endNode.getId().getTransferable(),
+				(IdlIdentifier) this.physicalLink.getId().getTransferable(),
+				(IdlIdentifier) this.startNode.getId().getTransferable(),
+				(IdlIdentifier) this.endNode.getId().getTransferable(),
 				this.length,
 				charIds);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.14 2005/06/17 11:01:03 bass Exp $
+ * $Id: EventParameter.java,v 1.15 2005/06/17 13:06:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,11 +22,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/17 11:01:03 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/17 13:06:53 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -64,8 +64,8 @@ public class EventParameter implements Identifiable, TransferableObject, TypedOb
 	}
 
 	public IDLEntity getTransferable() {
-		return new EventParameter_Transferable((Identifier_Transferable) this.id.getTransferable(),
-				(Identifier_Transferable) this.type.getId().getTransferable(),
+		return new EventParameter_Transferable((IdlIdentifier) this.id.getTransferable(),
+				(IdlIdentifier) this.type.getId().getTransferable(),
 				this.value);
 	}
 

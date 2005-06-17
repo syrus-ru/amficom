@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGeneratorServer.java,v 1.4 2005/06/04 16:56:20 bass Exp $
+ * $Id: LocalIdentifierGeneratorServer.java,v 1.5 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,12 @@ package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/04 16:56:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 13:06:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -26,10 +26,10 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 		//nothing
 	}
 
-	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
+	public IdlIdentifier getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
 		try {
 			Identifier identifier = LocalIdentifierGenerator.generateIdentifier(entityCode);
-			return (Identifier_Transferable)identifier.getTransferable();
+			return (IdlIdentifier)identifier.getTransferable();
 		}
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
@@ -39,12 +39,12 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 		}	
 	}
 
-	public Identifier_Transferable[] getGeneratedIdentifierRange(short entityCode, int size) throws AMFICOMRemoteException {
+	public IdlIdentifier[] getGeneratedIdentifierRange(short entityCode, int size) throws AMFICOMRemoteException {
 		try {
 			Identifier[] identifiers = LocalIdentifierGenerator.generateIdentifierRange(entityCode, size);
-			Identifier_Transferable[] identifiersT = new Identifier_Transferable[identifiers.length];
+			IdlIdentifier[] identifiersT = new IdlIdentifier[identifiers.length];
 			for (int i = 0; i < identifiersT.length; i++)
-				identifiersT[i] = (Identifier_Transferable)identifiers[i].getTransferable();
+				identifiersT[i] = (IdlIdentifier)identifiers[i].getTransferable();
 			return identifiersT;
 		}
 		catch (IllegalObjectEntityException ioee) {

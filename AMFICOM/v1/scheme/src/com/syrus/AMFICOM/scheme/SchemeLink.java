@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.33 2005/06/17 11:01:18 bass Exp $
+ * $Id: SchemeLink.java,v 1.34 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
 import com.syrus.util.Log;
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -533,14 +533,14 @@ public final class SchemeLink extends AbstractSchemeLink {
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
-				(Identifier_Transferable) super.abstractLinkTypeId.getTransferable(),
-				(Identifier_Transferable) super.linkId.getTransferable(),
-				(Identifier_Transferable) this.siteNodeId.getTransferable(),
-				(Identifier_Transferable) super.sourceAbstractSchemePortId.getTransferable(),
-				(Identifier_Transferable) super.targetAbstractSchemePortId.getTransferable(),
-				(Identifier_Transferable) super.parentSchemeId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeElementId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeProtoElementId.getTransferable(),
+				(IdlIdentifier) super.abstractLinkTypeId.getTransferable(),
+				(IdlIdentifier) super.linkId.getTransferable(),
+				(IdlIdentifier) this.siteNodeId.getTransferable(),
+				(IdlIdentifier) super.sourceAbstractSchemePortId.getTransferable(),
+				(IdlIdentifier) super.targetAbstractSchemePortId.getTransferable(),
+				(IdlIdentifier) super.parentSchemeId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeElementId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeProtoElementId.getTransferable(),
 				Identifier.createTransferables(super.getCharacteristics()));
 	}
 

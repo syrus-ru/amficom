@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.75 2005/06/17 12:38:56 bass Exp $
+ * $Id: AnalysisType.java,v 1.76 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.76 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -190,11 +190,11 @@ public class AnalysisType extends ActionType {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		Identifier_Transferable[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		Identifier_Transferable[] criteriaParTypeIds = Identifier.createTransferables(this.criteriaParameterTypeIds);
-		Identifier_Transferable[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
-		Identifier_Transferable[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
-		Identifier_Transferable[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
+		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		IdlIdentifier[] criteriaParTypeIds = Identifier.createTransferables(this.criteriaParameterTypeIds);
+		IdlIdentifier[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
+		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		return new AnalysisType_Transferable(super.getHeaderTransferable(),
 				super.codename,

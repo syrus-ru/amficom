@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.16 2005/06/07 16:34:04 bass Exp $
+ * $Id: ServerCore.java,v 1.17 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/06/07 16:34:04 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/17 13:06:58 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -55,7 +55,7 @@ public abstract class ServerCore implements CommonServer {
 	 * @param sessionKeyT
 	 * @throws AMFICOMRemoteException
 	 */
-	public final void delete(final Identifier_Transferable[] idsT,
+	public final void delete(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
@@ -90,7 +90,7 @@ public abstract class ServerCore implements CommonServer {
 	 * @throws AMFICOMRemoteException
 	 * @see com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer#getGeneratedIdentifierRange(short, int)
 	 */
-	public final Identifier_Transferable[] getGeneratedIdentifierRange(
+	public final IdlIdentifier[] getGeneratedIdentifierRange(
 			final short entityCode, final int size)
 			throws AMFICOMRemoteException {
 		try {
@@ -108,13 +108,13 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	public final Identifier_Transferable getGeneratedIdentifier(
+	public final IdlIdentifier getGeneratedIdentifier(
 			final short entityCode) throws AMFICOMRemoteException {
 		try {
 			Log.debugMessage("ServerCore.getGeneratedIdentifier() | Generating an identifier of type: "
 					+ ObjectEntities.codeToString(entityCode),
 					Log.CONFIG);
-			return (Identifier_Transferable) IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
+			return (IdlIdentifier) IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
 		} catch (final IllegalObjectEntityException ioee) {
 			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
 		} catch (final IdentifierGenerationException ige) {
@@ -124,7 +124,7 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	protected final IDLEntity[] transmitStorableObjects(final Identifier_Transferable[] idsT,
+	protected final IDLEntity[] transmitStorableObjects(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			assert idsT != null && sessionKeyT != null: ErrorMessages.NON_NULL_EXPECTED;
@@ -157,7 +157,7 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	protected final IDLEntity[] transmitStorableObjectsButIdsByCondition(final Identifier_Transferable[] idsT,
+	protected final IDLEntity[] transmitStorableObjectsButIdsByCondition(final IdlIdentifier[] idsT,
 			final SessionKey_Transferable sessionKeyT,
 			final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
 		try {
@@ -247,7 +247,7 @@ public abstract class ServerCore implements CommonServer {
 	 * @throws AMFICOMRemoteException
 	 * @see com.syrus.AMFICOM.general.corba.CommonServer#transmitRefreshedStorableObjects(com.syrus.AMFICOM.general.corba.StorableObject_Transferable[], com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
 	 */
-	public final Identifier_Transferable[] transmitRefreshedStorableObjects(
+	public final IdlIdentifier[] transmitRefreshedStorableObjects(
 			final StorableObject_Transferable headers[],
 			final SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {

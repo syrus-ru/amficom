@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.18 2005/06/17 11:01:15 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.19 2005/06/17 13:06:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/17 11:01:15 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 13:06:52 $
  * @author $Author: bass $
  * @module leserver_v1
  */
@@ -96,7 +96,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 				Log.errorException(coe);
 			}
 
-			userIdTH.value = (Identifier_Transferable) userId.getTransferable();
+			userIdTH.value = (IdlIdentifier) userId.getTransferable();
 			return (SessionKey_Transferable) userLogin.getSessionKey().getTransferable();
 		}
 		throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_PASSWORD, CompletionStatus.COMPLETED_YES, "Illegal password");
@@ -142,7 +142,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		}
 	}
 
-	public void selectDomain(SessionKey_Transferable sessionKeyT, Identifier_Transferable domainIdT) throws AMFICOMRemoteException {
+	public void selectDomain(SessionKey_Transferable sessionKeyT, IdlIdentifier domainIdT) throws AMFICOMRemoteException {
 		SessionKey sessionKey = new SessionKey(sessionKeyT);
 		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin != null) {
@@ -180,9 +180,9 @@ final class LoginServerImplementation extends LoginServerPOA {
 			Log.errorException(uoe);
 		}
 
-		userIdTH.value = (Identifier_Transferable) userLogin.getUserId().getTransferable();
+		userIdTH.value = (IdlIdentifier) userLogin.getUserId().getTransferable();
 		final Identifier domainId = userLogin.getDomainId();
-		domainIdTH.value = (Identifier_Transferable) (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
+		domainIdTH.value = (IdlIdentifier) (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
 	}
 
 	public void verify(byte i) {

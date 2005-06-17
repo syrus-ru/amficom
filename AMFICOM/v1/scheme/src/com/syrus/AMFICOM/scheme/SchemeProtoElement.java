@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.39 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.40 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -641,12 +641,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				this.name,
 				this.description,
 				this.label,
-				(Identifier_Transferable) this.equipmentTypeId.getTransferable(),
-				(Identifier_Transferable) this.symbolId.getTransferable(),
-				(Identifier_Transferable) this.ugoCellId.getTransferable(),
-				(Identifier_Transferable) this.schemeCellId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeProtoGroupId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeProtoElementId.getTransferable(),
+				(IdlIdentifier) this.equipmentTypeId.getTransferable(),
+				(IdlIdentifier) this.symbolId.getTransferable(),
+				(IdlIdentifier) this.ugoCellId.getTransferable(),
+				(IdlIdentifier) this.schemeCellId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeProtoGroupId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeProtoElementId.getTransferable(),
 				Identifier.createTransferables(this.characteristics));
 	}
 

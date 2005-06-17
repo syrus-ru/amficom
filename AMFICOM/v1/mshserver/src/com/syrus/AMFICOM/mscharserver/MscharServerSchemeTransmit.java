@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSchemeTransmit.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerSchemeTransmit.java,v 1.2 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.mscharserver;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
@@ -35,14 +35,14 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 13:06:59 $
  * @module mscharserver_v1
  */
 abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	private static final long serialVersionUID = 6830363270405840293L;
 
 	public SchemeProtoGroup_Transferable[] transmitSchemeProtoGroups(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -53,7 +53,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeProtoGroup_Transferable[] transmitSchemeProtoGroupsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -65,7 +65,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeProtoElement_Transferable[] transmitSchemeProtoElements(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -76,7 +76,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeProtoElement_Transferable[] transmitSchemeProtoElementsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -88,7 +88,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public Scheme_Transferable[] transmitSchemes(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -99,7 +99,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public Scheme_Transferable[] transmitSchemesButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -111,7 +111,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeElement_Transferable[] transmitSchemeElements(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -122,7 +122,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeElement_Transferable[] transmitSchemeElementsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -134,7 +134,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeOptimizeInfo_Transferable[] transmitSchemeOptimizeInfos(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -145,7 +145,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeOptimizeInfo_Transferable[] transmitSchemeOptimizeInfosButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -157,7 +157,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeOptimizeInfoSwitch_Transferable[] transmitSchemeOptimizeInfoSwitches(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -168,7 +168,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeOptimizeInfoSwitch_Transferable[] transmitSchemeOptimizeInfoSwitchesButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -180,7 +180,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeOptimizeInfoRtu_Transferable[] transmitSchemeOptimizeInfoRtus(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -191,7 +191,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeOptimizeInfoRtu_Transferable[] transmitSchemeOptimizeInfoRtusButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -203,7 +203,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeMonitoringSolution_Transferable[] transmitSchemeMonitoringSolutions(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -214,7 +214,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeMonitoringSolution_Transferable[] transmitSchemeMonitoringSolutionsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -226,7 +226,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeDevice_Transferable[] transmitSchemeDevices(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -237,7 +237,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeDevice_Transferable[] transmitSchemeDevicesButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -249,7 +249,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemePort_Transferable[] transmitSchemePorts(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -260,7 +260,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemePort_Transferable[] transmitSchemePortsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -272,7 +272,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeCablePort_Transferable[] transmitSchemeCablePorts(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -283,7 +283,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeCablePort_Transferable[] transmitSchemeCablePortsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -295,7 +295,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeLink_Transferable[] transmitSchemeLinks(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -306,7 +306,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeLink_Transferable[] transmitSchemeLinksButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -318,7 +318,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeCableLink_Transferable[] transmitSchemeCableLinks(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -329,7 +329,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeCableLink_Transferable[] transmitSchemeCableLinksButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -341,7 +341,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeCableThread_Transferable[] transmitSchemeCableThreads(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -352,7 +352,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemeCableThread_Transferable[] transmitSchemeCableThreadsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -364,7 +364,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public CableChannelingItem_Transferable[] transmitCableChannelingItems(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -375,7 +375,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public CableChannelingItem_Transferable[] transmitCableChannelingItemsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -387,7 +387,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemePath_Transferable[] transmitSchemePaths(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -398,7 +398,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public SchemePath_Transferable[] transmitSchemePathsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {
@@ -410,7 +410,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public PathElement_Transferable[] transmitPathElements(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
@@ -421,7 +421,7 @@ abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	}
 
 	public PathElement_Transferable[] transmitPathElementsButIdsCondition(
-			final Identifier_Transferable ids[],
+			final IdlIdentifier ids[],
 			final SessionKey_Transferable sessionKey,
 			final StorableObjectCondition_Transferable storableObjectCondition)
 			throws AMFICOMRemoteException {

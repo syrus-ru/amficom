@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.34 2005/06/17 12:38:53 bass Exp $
+ * $Id: ParameterType.java,v 1.35 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,12 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/17 13:06:59 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -157,7 +157,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new ParameterType_Transferable(super.getHeaderTransferable(),
 				super.codename,

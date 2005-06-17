@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.37 2005/06/17 11:01:18 bass Exp $
+ * $Id: Scheme.java,v 1.38 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -428,12 +428,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		return new Scheme_Transferable(super.getHeaderTransferable(),
 				this.name, this.description, this.label,
 				this.width, this.height, this.kind,
-				(Identifier_Transferable) super.getDomainId().getTransferable(),
-				(Identifier_Transferable) this.mapId.getTransferable(),
-				(Identifier_Transferable) this.symbolId.getTransferable(),
-				(Identifier_Transferable) this.ugoCellId.getTransferable(),
-				(Identifier_Transferable) this.schemeCellId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeElementId.getTransferable());
+				(IdlIdentifier) super.getDomainId().getTransferable(),
+				(IdlIdentifier) this.mapId.getTransferable(),
+				(IdlIdentifier) this.symbolId.getTransferable(),
+				(IdlIdentifier) this.ugoCellId.getTransferable(),
+				(IdlIdentifier) this.schemeCellId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeElementId.getTransferable());
 	}
 
 	/**

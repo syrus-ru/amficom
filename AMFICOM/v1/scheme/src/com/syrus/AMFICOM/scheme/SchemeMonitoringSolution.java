@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.34 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.35 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
 import com.syrus.util.Log;
 
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -250,7 +250,7 @@ public final class SchemeMonitoringSolution extends
 		return new SchemeMonitoringSolution_Transferable(
 				super.getHeaderTransferable(), this.name,
 				this.description, this.price, this.active,
-				(Identifier_Transferable) this.parentSchemeOptimizeInfoId.getTransferable());
+				(IdlIdentifier) this.parentSchemeOptimizeInfoId.getTransferable());
 	}
 
 	public void removeSchemePath(final SchemePath schemePath) {

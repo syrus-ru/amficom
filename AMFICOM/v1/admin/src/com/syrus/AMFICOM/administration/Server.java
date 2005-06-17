@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.32 2005/06/17 11:01:06 bass Exp $
+ * $Id: Server.java,v 1.33 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,10 +31,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/17 13:06:55 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -125,10 +125,10 @@ public class Server extends DomainMember implements Characterizable {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Server_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable) super.domainId.getTransferable(),
+				(IdlIdentifier) super.domainId.getTransferable(),
 				this.name,
 				this.description,
 				this.hostname,

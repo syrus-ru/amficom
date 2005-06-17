@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.33 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeDevice.java,v 1.34 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
 import com.syrus.util.Log;
 
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -410,8 +410,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		return new SchemeDevice_Transferable(
 				super.getHeaderTransferable(), this.name,
 				this.description,
-				(Identifier_Transferable) this.parentSchemeProtoElementId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeElementId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeProtoElementId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeElementId.getTransferable(),
 				Identifier.createTransferables(this.characteristics));
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.7 2005/06/17 11:01:15 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.8 2005/06/17 13:07:00 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:15 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 13:07:00 $
  * @author $Author: bass $
  * @module commonclient_v1
  */
@@ -144,7 +144,7 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 					if (users.isEmpty()) {
 						throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_LOGIN, CompletionStatus.COMPLETED_NO, "Error during acquire user");
 					}
-					identifierTransferableHolder.value = (Identifier_Transferable) ((SystemUser)users.iterator().next()).getId().getTransferable();
+					identifierTransferableHolder.value = (IdlIdentifier) ((SystemUser)users.iterator().next()).getId().getTransferable();
 				} catch (ApplicationException e) {
 					throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_LOGIN, CompletionStatus.COMPLETED_NO, "Error during acquire user");
 				}
@@ -157,10 +157,10 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 			}
 			
 			/* (non-Javadoc)
-			 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#selectDomain(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_Transferable)
+			 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#selectDomain(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.IdlIdentifier)
 			 */
 			public void selectDomain(	SessionKey_Transferable arg0,
-										Identifier_Transferable arg1) throws AMFICOMRemoteException {
+										IdlIdentifier arg1) throws AMFICOMRemoteException {
 				// TODO Auto-generated method stub
 				
 			}

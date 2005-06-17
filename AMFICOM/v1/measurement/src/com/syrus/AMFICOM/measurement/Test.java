@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.127 2005/06/17 12:38:56 bass Exp $
+ * $Id: Test.java,v 1.128 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.127 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.128 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -243,16 +243,8 @@ public class Test extends StorableObject {
 		this.temporalType = tt.temporal_type.value();
 		this.timeStamps = new TestTimeStamps(tt.time_stamps);
 		this.measurementTypeId = new Identifier(tt.measurement_type_id);
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string to
-		 *       identifier_code
-		 */
-		this.analysisTypeId = (tt.analysis_type_id.identifier_string.length() != 0) ? new Identifier(tt.analysis_type_id) : null;
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string to
-		 *       identifier_code
-		 */
-		this.evaluationTypeId = (tt.evaluation_type_id.identifier_string.length() != 0)	? new Identifier(tt.evaluation_type_id) : null;
+		this.analysisTypeId = new Identifier(tt.analysis_type_id);
+		this.evaluationTypeId = new Identifier(tt.evaluation_type_id);
 
 		this.status = tt.status.value();
 
@@ -361,18 +353,18 @@ public class Test extends StorableObject {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		Identifier_Transferable[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
+		IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 		return new Test_Transferable(super.getHeaderTransferable(),
 				TestTemporalType.from_int(this.temporalType),
 				this.timeStamps.getTransferable(),
-				(Identifier_Transferable) this.measurementTypeId.getTransferable(),
-				(this.analysisTypeId != null) ? (Identifier_Transferable) this.analysisTypeId.getTransferable()
-						: (new Identifier_Transferable("")),
-				(this.evaluationTypeId != null) ? (Identifier_Transferable) this.evaluationTypeId.getTransferable()
-						: (new Identifier_Transferable("")),
-				(Identifier_Transferable)(this.groupTestId != null ? this.groupTestId : Identifier.VOID_IDENTIFIER).getTransferable(),
+				(IdlIdentifier) this.measurementTypeId.getTransferable(),
+				(this.analysisTypeId != null) ? (IdlIdentifier) this.analysisTypeId.getTransferable()
+						: (new IdlIdentifier("")),
+				(this.evaluationTypeId != null) ? (IdlIdentifier) this.evaluationTypeId.getTransferable()
+						: (new IdlIdentifier("")),
+				(IdlIdentifier)(this.groupTestId != null ? this.groupTestId : Identifier.VOID_IDENTIFIER).getTransferable(),
 				TestStatus.from_int(this.status),
-				(Identifier_Transferable) this.monitoredElement.getId().getTransferable(),
+				(IdlIdentifier) this.monitoredElement.getId().getTransferable(),
 				TestReturnType.from_int(this.returnType),
 				this.description,
 				this.numberOfMeasurements,
@@ -679,7 +671,7 @@ public class Test extends StorableObject {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
 						this.endTime.getTime(),
-						(Identifier_Transferable)this.temporalPatternId.getTransferable()));
+						(IdlIdentifier)this.temporalPatternId.getTransferable()));
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.49 2005/06/17 12:40:40 bass Exp $
+ * $Id: Map.java,v 1.50 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
 /**
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.50 $, $Date: 2005/06/17 13:06:55 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -208,14 +208,14 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] siteNodeIds = Identifier.createTransferables(this.siteNodes);
-		Identifier_Transferable[] topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
-		Identifier_Transferable[] nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
-		Identifier_Transferable[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
-		Identifier_Transferable[] markIds = Identifier.createTransferables(this.marks);
-		Identifier_Transferable[] collectorIds = Identifier.createTransferables(this.collectors);
+		IdlIdentifier[] siteNodeIds = Identifier.createTransferables(this.siteNodes);
+		IdlIdentifier[] topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
+		IdlIdentifier[] nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
+		IdlIdentifier[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
+		IdlIdentifier[] markIds = Identifier.createTransferables(this.marks);
+		IdlIdentifier[] collectorIds = Identifier.createTransferables(this.collectors);
 		return new Map_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable) this.getDomainId().getTransferable(),
+				(IdlIdentifier) this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				siteNodeIds,

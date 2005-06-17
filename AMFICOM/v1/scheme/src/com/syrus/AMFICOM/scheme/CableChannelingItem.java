@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.27 2005/06/17 11:01:18 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.28 2005/06/17 13:06:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/17 13:06:53 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -301,10 +301,10 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 				super.getHeaderTransferable(), this.startSpare,
 				this.endSpare, this.rowX, this.placeY,
 				this.sequentialNumber,
-				(Identifier_Transferable) this.physicalLinkId.getTransferable(),
-				(Identifier_Transferable) this.startSiteNodeId.getTransferable(),
-				(Identifier_Transferable) this.endSiteNodeId.getTransferable(),
-				(Identifier_Transferable) this.parentSchemeCableLinkId.getTransferable());
+				(IdlIdentifier) this.physicalLinkId.getTransferable(),
+				(IdlIdentifier) this.startSiteNodeId.getTransferable(),
+				(IdlIdentifier) this.endSiteNodeId.getTransferable(),
+				(IdlIdentifier) this.parentSchemeCableLinkId.getTransferable());
 	}
 
 	/**

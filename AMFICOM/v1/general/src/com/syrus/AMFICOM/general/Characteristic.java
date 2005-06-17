@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.39 2005/06/17 12:38:53 bass Exp $
+ * $Id: Characteristic.java,v 1.40 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,10 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/17 13:06:59 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -176,11 +176,11 @@ public class Characteristic extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Characteristic_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable)this.type.getId().getTransferable(),
+				(IdlIdentifier)this.type.getId().getTransferable(),
 				this.name,
 				this.description,
 				(this.value != null) ? this.value : "",
-				(Identifier_Transferable)this.characterizableId.getTransferable(),
+				(IdlIdentifier)this.characterizableId.getTransferable(),
 				this.editable,
 				this.visible);
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.64 2005/06/17 12:40:40 bass Exp $
+ * $Id: PhysicalLink.java,v 1.65 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.65 $, $Date: 2005/06/17 13:06:55 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -283,15 +283,15 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public IDLEntity getTransferable() {
-		Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
-		Identifier_Transferable[] nodeLinkIds = new Identifier_Transferable[0];
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
+		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
 
 		return new PhysicalLink_Transferable(super.getHeaderTransferable(),
 				this.name,
 				this.description,
-				(Identifier_Transferable) this.physicalLinkType.getId().getTransferable(),
-				(Identifier_Transferable) this.startNode.getId().getTransferable(),
-				(Identifier_Transferable) this.endNode.getId().getTransferable(),
+				(IdlIdentifier) this.physicalLinkType.getId().getTransferable(),
+				(IdlIdentifier) this.startNode.getId().getTransferable(),
+				(IdlIdentifier) this.endNode.getId().getTransferable(),
 				this.city,
 				this.street,
 				this.building,

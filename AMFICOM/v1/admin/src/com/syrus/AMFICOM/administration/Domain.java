@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.34 2005/06/17 11:01:06 bass Exp $
+ * $Id: Domain.java,v 1.35 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/17 13:06:55 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 public class Domain extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 6401785674412391641L;
@@ -104,7 +104,7 @@ public class Domain extends DomainMember implements Characterizable {
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Domain_Transferable dt = (Domain_Transferable)transferable;
-		super.fromTransferable(dt.header, (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
+		super.fromTransferable(dt.header, new Identifier(dt.domain_id));
 		this.name = dt.name;
 		this.description = dt.description;
 
@@ -121,7 +121,7 @@ public class Domain extends DomainMember implements Characterizable {
 	public IDLEntity getTransferable() {
 		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new Domain_Transferable(super.getHeaderTransferable(),
-				(super.domainId != null) ? (Identifier_Transferable) super.domainId.getTransferable() : (new Identifier_Transferable("")),
+				(super.domainId != null) ? (IdlIdentifier) super.domainId.getTransferable() : (new IdlIdentifier("")),
 				this.name,
 				this.description,
 				Identifier.createTransferables(this.characteristics));

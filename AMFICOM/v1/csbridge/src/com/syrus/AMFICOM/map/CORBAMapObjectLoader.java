@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.12 2005/06/17 11:01:02 bass Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.13 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/06/17 11:01:02 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/17 13:06:58 $
  * @module csbridge_v1
  */
 public final class CORBAMapObjectLoader extends CORBAObjectLoader implements MapObjectLoader {
@@ -54,7 +54,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.COLLECTOR_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitCollectors(ids1, sessionKey);
@@ -66,7 +66,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.MAP_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMaps(ids1, sessionKey);
@@ -78,7 +78,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.MARK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMarks(ids1, sessionKey);
@@ -90,7 +90,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.NODELINK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitNodeLinks(ids1, sessionKey);
@@ -102,7 +102,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.PHYSICALLINK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitPhysicalLinks(ids1, sessionKey);
@@ -114,7 +114,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.PHYSICALLINK_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitPhysicalLinkTypes(ids1, sessionKey);
@@ -126,7 +126,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.SITENODE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitSiteNodes(ids1, sessionKey);
@@ -138,7 +138,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.SITENODE_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitSiteNodeTypes(ids1, sessionKey);
@@ -150,7 +150,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjects(ObjectEntities.TOPOLOGICALNODE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitTopologicalNodes(ids1, sessionKey);
@@ -166,7 +166,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.COLLECTOR_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -179,7 +179,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MAP_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -192,7 +192,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MARK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -205,7 +205,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.NODELINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -218,7 +218,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PHYSICALLINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -231,7 +231,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PHYSICALLINK_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -244,7 +244,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SITENODE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -257,7 +257,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SITENODE_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {
@@ -270,7 +270,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TOPOLOGICALNODE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
-					final Identifier_Transferable ids1[],
+					final IdlIdentifier ids1[],
 					final SessionKey_Transferable sessionKey,
 					final StorableObjectCondition_Transferable condition1)
 					throws AMFICOMRemoteException {

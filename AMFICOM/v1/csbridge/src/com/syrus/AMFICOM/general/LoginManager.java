@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.10 2005/06/04 16:56:20 bass Exp $
+ * $Id: LoginManager.java,v 1.11 2005/06/17 13:06:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/04 16:56:20 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 13:06:58 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -122,7 +122,7 @@ public final class LoginManager {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			loginServer.selectDomain((SessionKey_Transferable) sessionKey.getTransferable(),
-					(Identifier_Transferable) domainId1.getTransferable());
+					(IdlIdentifier) domainId1.getTransferable());
 			domainId = domainId1;
 		}
 		catch (AMFICOMRemoteException are) {

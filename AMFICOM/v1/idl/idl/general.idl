@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.89 2005/06/06 14:44:02 arseniy Exp $
+ * $Id: general.idl,v 1.90 2005/06/17 13:07:00 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ module corba {
 	typedef wstring<128> WString128;
 	typedef wstring<256> WString256;
 
-	typedef struct Identifier_Transferable {
+	typedef struct IdlIdentifier {
 #ifdef NUMERIC_IDENTIFIER
 		short major;
 		long long minor;

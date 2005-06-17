@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.59 2005/06/17 12:32:20 bass Exp $
+ * $Id: PortType.java,v 1.60 2005/06/17 13:06:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,10 +33,10 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.60 $, $Date: 2005/06/17 13:06:56 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -137,7 +137,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 	}
 
 	public IDLEntity getTransferable() {
-		final Identifier_Transferable[] charIds = Identifier.createTransferables(this.characteristics);
+		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new PortType_Transferable(super.getHeaderTransferable(),
 				super.codename,

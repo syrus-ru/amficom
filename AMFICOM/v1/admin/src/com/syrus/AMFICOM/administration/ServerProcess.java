@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.10 2005/06/17 11:01:06 bass Exp $
+ * $Id: ServerProcess.java,v 1.11 2005/06/17 13:06:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,11 +26,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 13:06:55 $
  * @author $Author: bass $
  * @module admin_v1
  */
@@ -125,8 +125,8 @@ public class ServerProcess extends StorableObject {
 
 		return new ServerProcess_Transferable(super.getHeaderTransferable(),
 				this.codename,
-				(Identifier_Transferable) this.serverId.getTransferable(),
-				(Identifier_Transferable) this.userId.getTransferable(),
+				(IdlIdentifier) this.serverId.getTransferable(),
+				(IdlIdentifier) this.userId.getTransferable(),
 				this.description);
 	}
 

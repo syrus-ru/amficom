@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.33 2005/06/17 12:38:56 bass Exp $
+ * $Id: ModelingType.java,v 1.34 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -158,8 +158,8 @@ public class ModelingType extends ActionType {
 	public IDLEntity getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		Identifier_Transferable[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		Identifier_Transferable[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 
 		return new ModelingType_Transferable(super.getHeaderTransferable(),
 				super.codename,

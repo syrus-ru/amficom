@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseIdentifier.java,v 1.9 2005/06/10 16:12:57 bass Exp $
+ * $Id: DatabaseIdentifier.java,v 1.10 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.9 $, $Date: 2005/06/10 16:12:57 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/17 13:06:59 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -43,10 +43,7 @@ public class DatabaseIdentifier {
 		final String idCode = resultSet.getString(columnName);
 		return (idCode != null) && (idCode.indexOf(Identifier.SEPARATOR) > 0)
 			? new Identifier(idCode)
-			: null;
-		/**
-		 * @todo Should we return null or the void identifier singleton? 
-		 */
+			: Identifier.VOID_IDENTIFIER;
 	}
 
 	public static String toSQLString(final Identifier id) {

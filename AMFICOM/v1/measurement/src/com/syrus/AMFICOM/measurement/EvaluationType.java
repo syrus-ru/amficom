@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.71 2005/06/17 12:38:55 bass Exp $
+ * $Id: EvaluationType.java,v 1.72 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/06/17 12:38:55 $
+ * @version $Revision: 1.72 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -191,11 +191,11 @@ public class EvaluationType extends ActionType {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		Identifier_Transferable[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		Identifier_Transferable[] thresholdParTypeIds = Identifier.createTransferables(this.thresholdParameterTypeIds);
-		Identifier_Transferable[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
-		Identifier_Transferable[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
-		Identifier_Transferable[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
+		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		IdlIdentifier[] thresholdParTypeIds = Identifier.createTransferables(this.thresholdParameterTypeIds);
+		IdlIdentifier[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
+		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		return new EvaluationType_Transferable(super.getHeaderTransferable(),
 				super.codename,

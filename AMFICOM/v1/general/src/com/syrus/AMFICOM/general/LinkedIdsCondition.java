@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.33 2005/06/17 12:38:53 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.34 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.LinkedIdsCondition_Transferable;
 import com.syrus.util.Log;
@@ -68,7 +68,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:59 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -300,10 +300,10 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * @see StorableObjectCondition#getTransferable()
 	 */
 	public final IDLEntity getTransferable() {
-		Identifier_Transferable[] linkedIdTransferable = new Identifier_Transferable[this.delegate.linkedIds.size()];
+		IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIds.size()];
 		int i = 0;
 		for (Iterator it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
-			linkedIdTransferable[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
+			linkedIdTransferable[i] = (IdlIdentifier) ((Identifier) it.next()).getTransferable();
 
 		final LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable(this.delegate.entityCode.shortValue(),
 				this.delegate.linkedEntityCode,

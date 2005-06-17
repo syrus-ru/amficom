@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.61 2005/06/17 12:38:55 bass Exp $
+ * $Id: Result.java,v 1.62 2005/06/17 13:06:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,14 +26,14 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/17 12:38:55 $
+ * @version $Revision: 1.62 $, $Date: 2005/06/17 13:06:57 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -136,14 +136,14 @@ public class Result extends StorableObject {
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
 		return new Result_Transferable(super.getHeaderTransferable(),
-				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT) ? (Identifier_Transferable) this.action.getId().getTransferable()
-						: (new Identifier_Transferable("")),
-				(this.sort == ResultSort._RESULT_SORT_ANALYSIS) ? (Identifier_Transferable) this.action.getId().getTransferable()
-						: (new Identifier_Transferable("")),
-				(this.sort == ResultSort._RESULT_SORT_EVALUATION) ? (Identifier_Transferable) this.action.getId().getTransferable()
-						: (new Identifier_Transferable("")),
-				(this.sort == ResultSort._RESULT_SORT_MODELING) ? (Identifier_Transferable) this.action.getId().getTransferable()
-						: (new Identifier_Transferable("")),
+				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT) ? (IdlIdentifier) this.action.getId().getTransferable()
+						: (new IdlIdentifier("")),
+				(this.sort == ResultSort._RESULT_SORT_ANALYSIS) ? (IdlIdentifier) this.action.getId().getTransferable()
+						: (new IdlIdentifier("")),
+				(this.sort == ResultSort._RESULT_SORT_EVALUATION) ? (IdlIdentifier) this.action.getId().getTransferable()
+						: (new IdlIdentifier("")),
+				(this.sort == ResultSort._RESULT_SORT_MODELING) ? (IdlIdentifier) this.action.getId().getTransferable()
+						: (new IdlIdentifier("")),
 				ResultSort.from_int(this.sort),
 				pts);
 	}

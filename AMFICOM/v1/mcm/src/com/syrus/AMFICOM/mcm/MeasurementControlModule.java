@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.101 2005/06/17 11:01:01 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.102 2005/06/17 13:06:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/06/17 11:01:01 $
+ * @version $Revision: 1.102 $, $Date: 2005/06/17 13:06:56 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -354,7 +354,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					resultsT = createTransferables();
 					mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 					mServerRef.receiveResults(resultsT,
-							(Identifier_Transferable) mcmId.getTransferable(),
+							(IdlIdentifier) mcmId.getTransferable(),
 							LoginManager.getSessionKeyTransferable());
 					resultList.clear();
 					super.clearFalls();

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.30 2005/06/17 11:01:18 bass Exp $
+ * $Id: PathElement.java,v 1.31 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.Data;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -591,20 +591,20 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		switch (this.kind.value()) {
 			case Kind._SCHEME_ELEMENT:
 				data.schemeElementData(this.kind, new SchemeElementData(
-						(Identifier_Transferable) this.startAbstractSchemePortId.getTransferable(),
-						(Identifier_Transferable) this.endAbstractSchemePortId.getTransferable()));
+						(IdlIdentifier) this.startAbstractSchemePortId.getTransferable(),
+						(IdlIdentifier) this.endAbstractSchemePortId.getTransferable()));
 				break;
 			case Kind._SCHEME_CABLE_LINK:
-				data.schemeCableThreadId(this.kind, (Identifier_Transferable) this.schemeCableThreadId.getTransferable());
+				data.schemeCableThreadId(this.kind, (IdlIdentifier) this.schemeCableThreadId.getTransferable());
 				break;
 			case Kind._SCHEME_LINK:
-				data.schemeLinkId(this.kind, (Identifier_Transferable) this.schemeLinkId.getTransferable());
+				data.schemeLinkId(this.kind, (IdlIdentifier) this.schemeLinkId.getTransferable());
 				break;
 			default:
 				assert false;
 		}
 		return new PathElement_Transferable(getHeaderTransferable(),
-				(Identifier_Transferable) this.parentSchemePathId.getTransferable(),
+				(IdlIdentifier) this.parentSchemePathId.getTransferable(),
 				this.sequentialNumber, data);
 	}
 

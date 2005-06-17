@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.26 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.27 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,14 +25,14 @@ import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/06/03 20:39:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -423,11 +423,11 @@ public abstract class AbstractSchemePort extends
 	void fromTransferable(final StorableObject_Transferable header,
 			final String name1, final String description1,
 			final AbstractSchemePortDirectionType directionType1,
-			final Identifier_Transferable portTypeId1,
-			final Identifier_Transferable portId1,
-			final Identifier_Transferable measurementPortId1,
-			final Identifier_Transferable parentSchemeDeviceId1,
-			final Identifier_Transferable characteristicIds[])
+			final IdlIdentifier portTypeId1,
+			final IdlIdentifier portId1,
+			final IdlIdentifier measurementPortId1,
+			final IdlIdentifier parentSchemeDeviceId1,
+			final IdlIdentifier characteristicIds[])
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);

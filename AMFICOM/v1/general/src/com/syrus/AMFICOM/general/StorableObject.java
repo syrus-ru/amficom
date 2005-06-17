@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.65 2005/06/17 12:38:53 bass Exp $
+ * $Id: StorableObject.java,v 1.66 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
@@ -29,7 +29,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.66 $, $Date: 2005/06/17 13:06:59 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -151,11 +151,11 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
-		return new StorableObject_Transferable((Identifier_Transferable) this.id.getTransferable(),
+		return new StorableObject_Transferable((IdlIdentifier) this.id.getTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
-				(Identifier_Transferable) this.creatorId.getTransferable(),
-				(Identifier_Transferable) this.modifierId.getTransferable(),
+				(IdlIdentifier) this.creatorId.getTransferable(),
+				(IdlIdentifier) this.modifierId.getTransferable(),
 				this.version);
 	}
 
@@ -383,7 +383,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @see #hasSingleTypeEntities(Set)
 	 */
-	public static final boolean hasSingleTypeEntities(final Identifier_Transferable ids[]) {
+	public static final boolean hasSingleTypeEntities(final IdlIdentifier ids[]) {
 		assert ids != null;
 
 		final int length = ids.length;
@@ -442,7 +442,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @see #getEntityCodeOfIdentifiables(Set)
 	 */
-	public static final short getEntityCodeOfIdentifiables(final Identifier_Transferable ids[]) {
+	public static final short getEntityCodeOfIdentifiables(final IdlIdentifier ids[]) {
 		assert ids != null && ids.length != 0;
 		assert hasSingleTypeEntities(ids);
 

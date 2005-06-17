@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.40 2005/06/17 11:00:57 bass Exp $
+ * $Id: Identifier.java,v 1.41 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.40 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/17 13:06:59 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -39,7 +39,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	private short major;
 	private long minor;
 
-	public Identifier(Identifier_Transferable id_t) {
+	public Identifier(IdlIdentifier id_t) {
 		this(id_t.identifier_string);
 	}
 
@@ -97,7 +97,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	public IDLEntity getTransferable() {
-		return new Identifier_Transferable(this.identifierString);
+		return new IdlIdentifier(this.identifierString);
 	}
 
 	public int hashCode() {
@@ -127,17 +127,17 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 
 	/**
 	 * @param identifiables <code>Collection&lt;Identifiable&gt;</code>
-	 * @return a newly created <code>Identifier_Transferable[]</code> with
+	 * @return a newly created <code>IdlIdentifier[]</code> with
 	 *         elements ordered in the same way as returned by the iterator.
-	 * @see #fromTransferables(Identifier_Transferable[])
+	 * @see #fromTransferables(IdlIdentifier[])
 	 */
-	public static final Identifier_Transferable[] createTransferables(final Collection identifiables) {
+	public static final IdlIdentifier[] createTransferables(final Collection identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		int i = 0;
-		final Identifier_Transferable ids[] = new Identifier_Transferable[identifiables.size()];
+		final IdlIdentifier ids[] = new IdlIdentifier[identifiables.size()];
 		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext(); i++)
-			ids[i] = (Identifier_Transferable) ((Identifiable) identifiableIterator.next()).getId().getTransferable();
+			ids[i] = (IdlIdentifier) ((Identifiable) identifiableIterator.next()).getId().getTransferable();
 		return ids;
 	}
 
@@ -145,13 +145,13 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	 * @param identifiables
 	 * @see #createTransferables(Collection)
 	 */
-	public static final Identifier_Transferable[] createTransferables(final Identifiable identifiables[]) {
+	public static final IdlIdentifier[] createTransferables(final Identifiable identifiables[]) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 		
 		final int length = identifiables.length;
-		final Identifier_Transferable ids[] = new Identifier_Transferable[length];
+		final IdlIdentifier ids[] = new IdlIdentifier[length];
 		for (int i = 0; i < length; i++)
-			ids[i] = (Identifier_Transferable) identifiables[i].getId().getTransferable();
+			ids[i] = (IdlIdentifier) identifiables[i].getId().getTransferable();
 		return ids;
 	}
 
@@ -247,11 +247,11 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	/**
-	 * @param transferables <code>Identifier_Transferable[]</code>
+	 * @param transferables <code>IdlIdentifier[]</code>
 	 * @return a newly created <code>Set&lt;Identifier&gt;</code>.
 	 * @see #createTransferables(Collection)
 	 */
-	public static final Set fromTransferables(final Identifier_Transferable[] transferables) {
+	public static final Set fromTransferables(final IdlIdentifier[] transferables) {
 		final Set set = new HashSet(transferables.length);
 		for (int i = 0; i < transferables.length; i++)
 			set.add(new Identifier(transferables[i]));

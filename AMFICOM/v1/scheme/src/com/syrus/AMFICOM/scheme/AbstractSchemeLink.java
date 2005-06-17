@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.18 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: AbstractSchemeLink.java,v 1.19 2005/06/17 13:06:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/06/03 20:39:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 13:06:54 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -391,12 +391,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	void fromTransferable(final StorableObject_Transferable header,
 			final String name, final String description,
 			final double physicalLength1, final double opticalLength1,
-			final Identifier_Transferable abstractLinkTypeId1,
-			final Identifier_Transferable linkId1,
-			final Identifier_Transferable sourceAbstractSchemePortId1,
-			final Identifier_Transferable targetAbstractSchemePortId1,
-			final Identifier_Transferable parentSchemeId1,
-			final Identifier_Transferable characteristicIds[])
+			final IdlIdentifier abstractLinkTypeId1,
+			final IdlIdentifier linkId1,
+			final IdlIdentifier sourceAbstractSchemePortId1,
+			final IdlIdentifier targetAbstractSchemePortId1,
+			final IdlIdentifier parentSchemeId1,
+			final IdlIdentifier characteristicIds[])
 			throws CreateObjectException {
 		super.fromTransferable(header, name, description, parentSchemeId1, characteristicIds);
 		this.physicalLength = physicalLength1;

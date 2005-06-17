@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.8 2005/06/17 12:38:53 bass Exp $
+ * $Id: IdentifierLoader.java,v 1.9 2005/06/17 13:06:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/17 13:06:59 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -42,7 +42,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 			int numberToLoad = this.idPool.capacity() - this.idPool.getNumber();
 			while (this.running && numberToLoad > 0) {
 				try {
-					final Identifier_Transferable[] identifiersT = this.igServer.getGeneratedIdentifierRange(this.entityCode, numberToLoad);
+					final IdlIdentifier[] identifiersT = this.igServer.getGeneratedIdentifierRange(this.entityCode, numberToLoad);
 					for (int i = 0; i < identifiersT.length; i++) {
 						Identifier id = new Identifier(identifiersT[i]);
 						this.idPool.push(id);
