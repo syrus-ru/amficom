@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.18 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.19 2005/06/17 13:34:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -37,7 +36,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 13:34:32 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
