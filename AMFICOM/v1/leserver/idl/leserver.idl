@@ -31,6 +31,11 @@ module corba {
 			out general::corba::Identifier user_id,
 			out general::corba::Identifier domain_id)
 			raises (general::corba::AMFICOMRemoteException);
+
+		void setPassword(in security::corba::SessionKey sessionKeyT,
+			in general::corba::Identifier user_id,
+			in general::corba::WString32 password)
+			raises (general::corba::AMFICOMRemoteException);
 		
 	};
 

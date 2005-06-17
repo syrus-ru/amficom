@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.19 2005/06/17 13:06:52 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.20 2005/06/17 20:16:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/17 13:06:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/06/17 20:16:24 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -57,7 +57,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		this.shadowDatabase = new ShadowDatabase();
 	}
 
-	public SessionKey_Transferable login(String login, String password, Identifier_TransferableHolder userIdTH)
+	public SessionKey_Transferable login(String login, String password, IdlIdentifierHolder userIdTH)
 			throws AMFICOMRemoteException {
 		this.tc.setValue(login);
 		Set set = null;
@@ -166,8 +166,8 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateAccess(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
 	 */
 	public void validateAccess(final SessionKey_Transferable sessionKeyT,
-			final Identifier_TransferableHolder userIdTH,
-			final Identifier_TransferableHolder domainIdTH) throws AMFICOMRemoteException {
+			final IdlIdentifierHolder userIdTH,
+			final IdlIdentifierHolder domainIdTH) throws AMFICOMRemoteException {
 		final UserLogin userLogin = LoginProcessor.getUserLogin(new SessionKey(sessionKeyT));
 		if (userLogin == null)
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, ErrorMessages.NOT_LOGGED_IN);
@@ -185,6 +185,31 @@ final class LoginServerImplementation extends LoginServerPOA {
 		domainIdTH.value = (IdlIdentifier) (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
 	}
 
+	public void setPassword(final SessionKey_Transferable sessionKeyT, final IdlIdentifier userIdT, final String password) throws AMFICOMRemoteException {
+		this.validateAccess(sessionKeyT, new IdlIdentifierHolder(), new IdlIdentifierHolder());
+
+		final Identifier userId = new Identifier(userIdT);
+		try {
+			final SystemUser systemUser = (SystemUser) StorableObjectPool.getStorableObject(userId, true);
+			Log.debugMessage("Setting password to user '" + systemUser.getLogin() + "'/'" + userId + "'", Log.DEBUGLEVEL08);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		try {
+			this.shadowDatabase.updateOrInsert(userId, Encryptor.crypt(password));
+		}
+		catch (UpdateObjectException uoe) {
+			Log.errorException(uoe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_UPDATE, CompletionStatus.COMPLETED_NO, uoe.getMessage());
+		}
+	}
+
+	/**
+	 * @see Verifiable#verify(byte)
+	 */
 	public void verify(byte i) {
 		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
