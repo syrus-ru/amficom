@@ -1,7 +1,7 @@
 # Simple Makefile to compile single test class
 
-TEST_CLASS = TestCMServer
-TEST_PACKAGE = com.syrus.AMFICOM.cmserver
+TEST_CLASS = TestReflectogramma
+TEST_PACKAGE = com.syrus.AMFICOM.analysis.dadara
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class

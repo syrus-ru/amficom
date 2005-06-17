@@ -2,8 +2,8 @@
 
 # This script can be used to run tests from console
 
-TEST_CLASS=TestCMServer
-TEST_PACKAGE=com.syrus.AMFICOM.cmserver
+TEST_CLASS=TestReflectogramma
+TEST_PACKAGE=com.syrus.AMFICOM.analysis.dadara
 
 JUNITCLASSPATH=$ECLIPSE_HOME/plugins/org.junit_3.8.1/junit.jar
 JDBCCLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/orai18n.jar
