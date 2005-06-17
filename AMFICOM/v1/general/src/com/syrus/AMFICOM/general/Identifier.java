@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.42 2005/06/17 15:08:41 bass Exp $
+ * $Id: Identifier.java,v 1.43 2005/06/17 19:52:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,25 +23,25 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.42 $, $Date: 2005/06/17 15:08:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2005/06/17 19:52:54 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
-public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
+public final class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
+	private static final long serialVersionUID = 1721559813677093072L;
+
 	public static final char SEPARATOR = '_';
+	private static final int MINOR_SIZE_BITS = 48;
+	private static final long MAJOR_MASK = 0xffffL << MINOR_SIZE_BITS;
+	private static final long MINOR_MASK = ~MAJOR_MASK;
 
 	public static final Identifier VOID_IDENTIFIER = new Identifier(ObjectEntities.UPDIKE_CODE, 0);
 
-	private static final long serialVersionUID = 1721559813677093072L;
-
-	private static final int MINOR_SIZE_BITS = 48;
-
-	private static final long MAJOR_MASK = 0xffffl << MINOR_SIZE_BITS;
-
-	private static final long MINOR_MASK = MAJOR_MASK ^ -1;
-
 	private short major;
 	private long minor;
+
+	private transient long identifierCode;
+	private transient String identifierString;
 
 	public Identifier(final IdlIdentifier idlId) {
 		this(idlId.identifierCode);
@@ -59,7 +59,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 
 	/*	Only for IdentifierGenerator	*/
 	Identifier(short major, long minor) {
-		assert (minor & MAJOR_MASK) == 0;
+		assert (minor & MAJOR_MASK) == 0 : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		this.major = major;
 		this.minor = minor;
@@ -86,19 +86,23 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 
 	public boolean equals(Object obj) {
 		boolean ret = false;
-		if(obj instanceof Identifier){
+		if (obj instanceof Identifier) {
 			Identifier that = (Identifier) obj;
 			ret = ((that.major == this.major) && (that.minor == this.minor));
 		}
 		return ret;
 	}
 
-	public String getIdentifierString() {
-		return ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
+	public long getIdentifierCode() {
+		if (this.identifierCode == 0)
+			this.identifierCode = (((long) this.major) << MINOR_SIZE_BITS) | this.minor;
+		return this.identifierCode;
 	}
 
-	public long getIdentifierCode() {
-		return (((long) this.major) << MINOR_SIZE_BITS) | this.minor;
+	public String getIdentifierString() {
+		if (this.identifierString == null)
+			this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
+		return this.identifierString;
 	}
 
 	public short getMajor() {
@@ -121,7 +125,7 @@ public class Identifier implements Comparable, TransferableObject, Serializable,
 	}
 
 	public String toHexString() {
-		throw new UnsupportedOperationException();
+		return Long.toHexString(this.getIdentifierCode());
 	}
 
 	public String toString() {
