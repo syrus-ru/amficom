@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.6 2005/06/17 12:40:17 bob Exp $
+ * $Id: AbstractApplication.java,v 1.7 2005/06/17 13:53:51 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 12:40:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 13:53:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -253,7 +253,7 @@ public abstract class AbstractApplication {
 							"images/main/logo2.jpg"));
 				}
 		});
-
+		
 		UIManager.put(ResourceKeys.INSETS_NULL, 
 			new UIDefaults.LazyValue() {
 
@@ -287,7 +287,14 @@ public abstract class AbstractApplication {
 
 		UIManager.put(ResourceKeys.SIZE_NULL, new Dimension(0, 0));
 
+		this.initUIStyles();
+	}
+	
+	private void initUIStyles() {
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+		
+		UIManager.put("IconedRenderer.selectedBackground", Color.BLUE);
+		UIManager.put("IconedRenderer.selectedForeground", Color.WHITE);
 
 		defaults.put("Table.background", Color.WHITE);
 		defaults.put("Table.foreground", Color.BLACK);
