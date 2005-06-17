@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.17 2005/06/14 09:46:01 arseniy Exp $
+ * $Id: ErrorMessages.java,v 1.18 2005/06/17 15:22:39 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,14 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/06/14 09:46:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/17 15:22:39 $
  * @module general_v1
  */
 public interface ErrorMessages {
 	String NOT_LOGGED_IN = "NOT_LOGGED_IN";
 	String OBJECT_NOT_INITIALIZED = "object not initialized yet";
 	String NON_NULL_EXPECTED = "non-null value expected";
+	String NON_ZERO_EXPECTED = "non-zero value expected";
 	String NON_EMPTY_EXPECTED = "both non-null and non-empty string/array value expected";
 	String NON_VOID_EXPECTED = "both non-null and non-void identifier expected";
 	String CIRCULAR_DEPS_PROHIBITED = "circular dependencies not allowed";
