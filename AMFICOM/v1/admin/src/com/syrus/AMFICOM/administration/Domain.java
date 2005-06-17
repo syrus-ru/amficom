@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.35 2005/06/17 13:06:55 bass Exp $
+ * $Id: Domain.java,v 1.36 2005/06/17 17:26:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/17 13:06:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/17 17:26:16 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -121,7 +121,7 @@ public class Domain extends DomainMember implements Characterizable {
 	public IDLEntity getTransferable() {
 		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new Domain_Transferable(super.getHeaderTransferable(),
-				(super.domainId != null) ? (IdlIdentifier) super.domainId.getTransferable() : (new IdlIdentifier("")),
+				(IdlIdentifier) super.domainId.getTransferable(),
 				this.name,
 				this.description,
 				Identifier.createTransferables(this.characteristics));
