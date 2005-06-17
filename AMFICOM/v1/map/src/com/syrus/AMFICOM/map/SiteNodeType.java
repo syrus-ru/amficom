@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.37 2005/06/17 11:01:12 bass Exp $
+ * $Id: SiteNodeType.java,v 1.38 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -74,8 +74,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		final SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITENODE_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -83,8 +82,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	SiteNodeType(final SiteNodeType_Transferable sntt) throws CreateObjectException {
 		try {
 			this.fromTransferable(sntt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -141,8 +139,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 			siteNodeType.markAsChanged();
 
 			return siteNodeType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

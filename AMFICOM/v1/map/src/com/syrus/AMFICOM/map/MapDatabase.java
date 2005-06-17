@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.30 2005/06/17 11:01:12 bass Exp $
+ * $Id: MapDatabase.java,v 1.31 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 12:40:40 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -295,8 +295,7 @@ public final class MapDatabase extends CharacterizableDatabase {
 			this.updateLinkedObjectIds(maps, _MAP_PHYSICAL_LINK);
 			this.updateLinkedObjectIds(maps, _MAP_SITE_NODE);
 			this.updateLinkedObjectIds(maps, _MAP_TOPOLOGICAL_NODE);
-		}
-		catch (UpdateObjectException e) {
+		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
@@ -310,8 +309,7 @@ public final class MapDatabase extends CharacterizableDatabase {
 			this.updateLinkedObjectIds(storableObjects, _MAP_PHYSICAL_LINK);
 			this.updateLinkedObjectIds(storableObjects, _MAP_SITE_NODE);
 			this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
-		}
-		catch (UpdateObjectException e) {
+		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
@@ -346,8 +344,7 @@ public final class MapDatabase extends CharacterizableDatabase {
 		String tableName;
 		try {
 			tableName = getLinkedTableName(linkedTable);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new UpdateObjectException(e);
 		}
 		String columnName = (String) dbTableColumnName.get(tableName);
@@ -359,8 +356,7 @@ public final class MapDatabase extends CharacterizableDatabase {
 			Map map;
 			try {
 				map = fromStorableObject(storableObject);
-			}
-			catch (IllegalDataException e) {
+			} catch (IllegalDataException e) {
 				throw new UpdateObjectException(e);
 			}
 			Set linkedObjectList;
@@ -415,8 +411,7 @@ public final class MapDatabase extends CharacterizableDatabase {
 			try {
 				Map map = (Map) StorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
 			}
 		}
@@ -475,8 +470,7 @@ public final class MapDatabase extends CharacterizableDatabase {
 		String tableName;
 		try {
 			tableName = this.getLinkedTableName(linkedTable);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			Log.errorMessage(getEntityName() + "Database.deleteLinkedObjectIds | illegal linked database table id "
 					+ linkedTable + " -- " + e.getMessage());
 			return;
@@ -492,20 +486,16 @@ public final class MapDatabase extends CharacterizableDatabase {
 			statement = connection.createStatement();
 			statement.executeUpdate(linkBuffer.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle1) {
+		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

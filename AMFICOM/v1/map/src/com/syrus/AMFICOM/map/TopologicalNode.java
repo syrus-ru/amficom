@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.42 2005/06/17 11:01:12 bass Exp $
+ * $Id: TopologicalNode.java,v 1.43 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -82,8 +82,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICALNODE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -102,8 +101,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 				characteristicIds.add(new Identifier(tnt.characteristicIds[i]));
 
 			this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -184,8 +182,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 
 			return topologicalNode;
 
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -339,8 +336,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		setActive(mpnes.active);
 		try {
 			setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(mpnes.physicalLinkId, false));
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -387,8 +383,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 			node1.markAsChanged();
 
 			return node1;
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			throw new CreateObjectException("Mark.createInstance |  ", e);
 		}
 	}
@@ -469,8 +464,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			topologicalNode.markAsChanged();
 			return topologicalNode;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new CreateObjectException("TopologicalNode.createInstance |  ", e);
 		}
 	}

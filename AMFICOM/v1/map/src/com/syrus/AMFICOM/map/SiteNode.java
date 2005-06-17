@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.44 2005/06/17 11:01:12 bass Exp $
+ * $Id: SiteNode.java,v 1.45 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -95,8 +95,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITENODE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -120,8 +119,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				characteristicIds.add(new Identifier(snt.characteristicIds[i]));
 
 			this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -196,8 +194,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			siteNode.markAsChanged();
 
 			return siteNode;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -325,8 +322,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 		try {
 			setType((SiteNodeType) (StorableObjectPool.getStorableObject(msnes.mapProtoId, true)));
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -352,8 +348,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				AbstractBitmapImageResource imageResource = (AbstractBitmapImageResource) StorableObjectPool.getStorableObject(this.imageId,
 						false);
 				exportMap.put(COLUMN_IMAGE, imageResource.getCodename());
-			}
-			catch (ApplicationException e) {
+			} catch (ApplicationException e) {
 				return null;
 			}
 			return Collections.unmodifiableMap(exportMap);
@@ -435,8 +430,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			siteNode.markAsChanged();
 
 			return siteNode;
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			throw new CreateObjectException("SiteNode.createInstance |  ", e);
 		}
 	}
@@ -554,8 +548,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			siteNode.markAsChanged();
 			return siteNode;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new CreateObjectException("SiteNode.createInstance |  ", e);
 		}
 	}

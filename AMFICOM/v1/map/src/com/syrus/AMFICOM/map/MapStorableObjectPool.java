@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.28 2005/06/17 11:01:12 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.29 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/17 12:40:40 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -130,8 +130,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 			instance.addObjectPool(ObjectEntities.PHYSICALLINK_CODE, size);
 			instance.addObjectPool(ObjectEntities.COLLECTOR_CODE, size);
 			instance.addObjectPool(ObjectEntities.MAP_CODE, size);
-		}
-		else {
+		} else {
 			init(mapObjectLoader1, cacheClass);
 		}
 	}

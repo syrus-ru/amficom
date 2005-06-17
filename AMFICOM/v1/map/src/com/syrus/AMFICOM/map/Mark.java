@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.41 2005/06/17 11:01:12 bass Exp $
+ * $Id: Mark.java,v 1.42 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -88,8 +88,7 @@ public class Mark extends AbstractNode {
 		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -115,8 +114,7 @@ public class Mark extends AbstractNode {
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
 			super.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -205,8 +203,7 @@ public class Mark extends AbstractNode {
 			mark.markAsChanged();
 
 			return mark;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -526,8 +523,7 @@ public class Mark extends AbstractNode {
 			mark.markAsChanged();
 			
 			return mark;
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			throw new CreateObjectException("Mark.createInstance |  ", e);
 		}
 	}

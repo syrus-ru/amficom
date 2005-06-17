@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.63 2005/06/17 11:01:12 bass Exp $
+ * $Id: PhysicalLink.java,v 1.64 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.64 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -120,8 +120,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -129,8 +128,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	PhysicalLink(final PhysicalLink_Transferable plt) throws CreateObjectException {
 		try {
 			this.fromTransferable(plt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -247,8 +245,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			physicalLink.markAsChanged();
 
 			return physicalLink;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -681,8 +678,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 							smne = nodeLink.getEndNode();
 							currentNodeLink = nodeLink;
 							break;
-						}
-						else
+						} else
 							if (nodeLink.getEndNode().equals(smne)) {
 								list.add(nodeLink);
 								it.remove();
@@ -850,8 +846,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 		try {
 			setType((PhysicalLinkType) (StorableObjectPool.getStorableObject(mples.mapProtoId, true)));
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 
@@ -956,8 +951,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			link1.markAsChanged();
 
 			return link1;
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
 		}
 	}
@@ -1110,8 +1104,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			assert physicalLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			physicalLink.markAsChanged();
 			return physicalLink;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(xmlPhysicalLink);
 			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
 		}

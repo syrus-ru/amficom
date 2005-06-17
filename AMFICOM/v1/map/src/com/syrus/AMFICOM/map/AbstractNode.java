@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.23 2005/06/03 20:38:45 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.24 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/06/03 20:38:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -98,8 +98,7 @@ public abstract class AbstractNode
 	AbstractNode(final StorableObject_Transferable transferable) throws CreateObjectException {
 		try {
 			this.fromTransferable(transferable);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}

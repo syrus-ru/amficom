@@ -208,8 +208,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				 try
 				 {
 				 or.setReserve(new Vector());
-				 }
-				 catch (CreateReportException cre){}
+				 } catch (CreateReportException cre){}
 				 ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 				 or,
 					 LangModelReport.String(ObjectResourceReportModel.rt_objectsReport),
@@ -219,9 +218,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);/
 
-			}
-
-			else if (s.equals("label_repPhysicalScheme"))
+			} else if (s.equals("label_repPhysicalScheme"))
 			{
 				Set ht = new HashSet();
 				if (Pool.getMap(Scheme.typ) != null)

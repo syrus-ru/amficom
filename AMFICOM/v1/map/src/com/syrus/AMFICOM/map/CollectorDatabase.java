@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.31 2005/06/17 11:01:12 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.32 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/17 12:40:40 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -76,8 +76,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 			Set physicalLinkIds = (Set) map.get(collector);
 			try {
 				collector.setPhysicalLinks0(StorableObjectPool.getStorableObjects(physicalLinkIds, true));
-			}
-			catch (ApplicationException e) {
+			} catch (ApplicationException e) {
 				throw new RetrieveObjectException(e);
 			}
 		}
@@ -148,8 +147,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		super.insert(storableObject);
 		try {
 			this.updatePhysicalLinks(Collections.singleton(storableObject));
-		}
-		catch (UpdateObjectException e) {
+		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 
@@ -159,8 +157,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		super.insert(storableObjects);
 		try {
 			this.updatePhysicalLinks(storableObjects);
-		}
-		catch (UpdateObjectException e) {
+		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
@@ -187,8 +184,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 			Collector collector;
 			try {
 				collector = this.fromStorableObject((StorableObject) it.next());
-			}
-			catch (IllegalDataException e) {
+			} catch (IllegalDataException e) {
 				throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot get collector ", e);
 			}
 			Set physicalLinks = collector.getPhysicalLinks();
@@ -221,20 +217,16 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 			Log.debugMessage("CollectorDatabase.delete(Collection) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			statement.executeUpdate(stringBuffer.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			Log.errorException(sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			}
-			catch (SQLException sqle) {
+			} catch (SQLException sqle) {
 				Log.errorException(sqle);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

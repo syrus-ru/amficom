@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.48 2005/06/17 11:01:12 bass Exp $
+ * $Id: Map.java,v 1.49 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -100,8 +100,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 		final MapDatabase database = (MapDatabase) DatabaseContext.getDatabase(ObjectEntities.MAP_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -109,8 +108,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 	Map(final Map_Transferable mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -165,8 +163,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 			map.markAsChanged();
 
 			return map;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -498,8 +495,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 		if (node instanceof SiteNode) {
 			this.siteNodes.remove(node);
 			this.externalNodes.remove(node);
-		}
-		else if (node instanceof TopologicalNode)
+		} else if (node instanceof TopologicalNode)
 			this.topologicalNodes.remove(node);
 		else if (node instanceof Mark)
 			this.marks.remove(node);
@@ -906,8 +902,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 			map.markAsChanged();
 
 			return map;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new CreateObjectException("Map.createInstance |  ", e);
 		}
 	}
@@ -1186,8 +1181,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 			map.markAsChanged();
 
 			return map;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new CreateObjectException("Map.createInstance |  ", e);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.25 2005/06/17 11:01:12 bass Exp $
+ * $Id: NodeLinkDatabase.java,v 1.26 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/17 12:40:40 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -113,12 +113,10 @@ public final class NodeLinkDatabase extends CharacterizableDatabase {
 					NodeLinkWrapper.COLUMN_START_NODE_ID), true);
 			endNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					NodeLinkWrapper.COLUMN_END_NODE_ID), true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}

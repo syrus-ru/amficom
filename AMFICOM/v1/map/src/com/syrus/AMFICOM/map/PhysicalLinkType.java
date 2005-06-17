@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.44 2005/06/17 11:01:12 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.45 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -88,8 +88,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -97,8 +96,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	PhysicalLinkType(final PhysicalLinkType_Transferable pltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(pltt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -154,8 +152,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 			physicalLinkType.markAsChanged();
 
 			return physicalLinkType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}

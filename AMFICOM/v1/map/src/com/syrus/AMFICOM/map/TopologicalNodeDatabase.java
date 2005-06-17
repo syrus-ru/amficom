@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.27 2005/06/17 11:01:12 bass Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.28 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/17 12:40:40 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -73,18 +73,15 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 				try {
 					node.setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_ID), true));
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 			}
 			throw new ObjectNotFoundException("No physical link for node " + nodeIdStr);
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName() + "Database.retrievePhysicalLink | Cannot retrieve physical link for node " + nodeIdStr + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -92,11 +89,9 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -138,8 +133,7 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 						if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
 							startNodeBuffer.append(COMMA);
 							endNodeBuffer.append(COMMA);
-						}
-						else {
+						} else {
 							startNodeBuffer.append(CLOSE_BRACKET);
 							startNodeBuffer.append(SQL_OR);
 							startNodeBuffer.append(NodeLinkWrapper.COLUMN_START_NODE_ID);
@@ -198,8 +192,7 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 				try {
 					physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
-				}
-				catch (ApplicationException ae) {
+				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				nodePhysicalLinkMap.put(node, physicalLink);
@@ -215,14 +208,12 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 				topologicalNode.setPhysicalLink(physicalLink);
 			}
 
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			String mesg = this.getEntityName()
 					+ "Database.retrievePhysicalLinks | Cannot retrieve parameters for result -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -230,11 +221,9 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

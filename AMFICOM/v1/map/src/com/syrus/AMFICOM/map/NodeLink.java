@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.47 2005/06/17 11:01:12 bass Exp $
+ * $Id: NodeLink.java,v 1.48 2005/06/17 12:40:40 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/17 12:40:40 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -83,8 +83,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODELINK_CODE);
 		try {
 			database.retrieve(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -92,8 +91,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	NodeLink(final NodeLink_Transferable nlt) throws CreateObjectException {
 		try {
 			this.fromTransferable(nlt);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -159,8 +157,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 			nodeLink.markAsChanged();
 
 			return nodeLink;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -350,8 +347,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 
 		try {
 			setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(mnles.physicalLinkId, false));
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -433,8 +429,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 			nodeLink1.markAsChanged();
 
 			return nodeLink1;
-		}
-		catch (ApplicationException e) {
+		} catch (ApplicationException e) {
 			throw new CreateObjectException("NodeLink.createInstance |  ", e);
 		}
 	}
@@ -555,8 +550,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			nodeLink.markAsChanged();
 			return nodeLink;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new CreateObjectException("NodeLink.createInstance |  ", e);
 		}
 	}
