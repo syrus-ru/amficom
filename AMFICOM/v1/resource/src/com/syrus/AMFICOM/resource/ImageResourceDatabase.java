@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.23 2005/06/15 13:17:17 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.24 2005/06/17 11:01:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/06/15 13:17:17 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:14 $
  * @module resource_v1
  */
 
@@ -109,7 +109,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				Log.DEBUGLEVEL09);
 			statement.executeQuery(sql);
 			connection.commit();
-			ByteArrayDatabase.saveAsBlob(image, connection, ObjectEntities.IMAGE_RESOURCE_ENTITY, COLUMN_IMAGE, StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr);
+			ByteArrayDatabase.saveAsBlob(image, connection, ObjectEntities.IMAGERESOURCE, COLUMN_IMAGE, StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr);
 			connection.commit();			
 		} catch (SQLException sqle) {
 			String mesg = getEntityName() + "Database.insertImage | Cannot update blob " + sqle.getMessage();
@@ -126,7 +126,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE;
+		return ObjectEntities.IMAGERESOURCE_CODE;
 	}
 
 	protected String getColumnsTmpl() {

@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.1 2005/06/16 10:31:25 bass Exp $
+ * $Id: SystemUser.java,v 1.2 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/16 10:31:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:06 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -50,7 +50,7 @@ public final class SystemUser extends StorableObject {
 	public SystemUser(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEM_USER_ENTITY_CODE);
+		SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -170,7 +170,7 @@ public final class SystemUser extends StorableObject {
 			final String name,
 			final String description) throws CreateObjectException {
 		try {
-			Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEM_USER_ENTITY_CODE);
+			Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
 			SystemUser user = new SystemUser(generatedIdentifier,
 					creatorId != null ? creatorId : generatedIdentifier,
 					0L,

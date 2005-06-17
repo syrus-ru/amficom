@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.4 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.5 2005/06/17 11:01:04 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:01:04 $
  * @module schemeclient_v1
  */
 
@@ -695,13 +695,13 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			eq = this.schemeElement.getEquipment(); 
 			kis = this.schemeElement.getKis();
 			
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 			try {
 				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-			condition = new EquivalentCondition(ObjectEntities.KIS_ENTITY_CODE);
+			condition = new EquivalentCondition(ObjectEntities.KIS_CODE);
 			try {
 				kisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {

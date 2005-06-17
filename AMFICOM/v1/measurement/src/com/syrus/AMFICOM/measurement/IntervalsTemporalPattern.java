@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.19 2005/06/03 20:38:04 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.20 2005/06/17 11:01:00 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/06/17 11:01:00 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -84,7 +84,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			final SortedMap intervalsDuration) throws CreateObjectException {
 
 		try {
-			IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE),
+			IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE),
 					creatorId,
 					0L,
 					intervalsAbstractTemporalPatternMap,
@@ -780,7 +780,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			this.intervalsDuration.remove(offset);
 			short major = temporalPatternId.getMajor();
 			switch (major) {
-				case ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE:
+				case ObjectEntities.INTERVALSTEMPORALPATTERN_CODE:
 					IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
 					SortedMap intervalsAbstractTemporalPatternMap2 = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
@@ -796,7 +796,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 						this.intervalsDuration.put(newOffset, intervalsDuration2.get(offset2));
 					}
 					break;
-				case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
+				case ObjectEntities.PERIODICALTEMPORALPATTERN_CODE:
 					PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
 					// Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems |

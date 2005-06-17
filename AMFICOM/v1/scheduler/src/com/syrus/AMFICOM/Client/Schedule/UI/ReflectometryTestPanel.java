@@ -67,8 +67,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/16 13:47:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:13 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -491,52 +491,52 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		try {
 			TypicalCondition waveLengthCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH,
 																		OperationSort.OPERATION_EQUALS,
-																		ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																		ObjectEntities.PARAMETER_TYPE_CODE,
 																		StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition traceLengthCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_LENGTH,
 																			OperationSort.OPERATION_EQUALS,
-																			ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																			ObjectEntities.PARAMETER_TYPE_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition resolutionCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_RESOLUTION,
 																		OperationSort.OPERATION_EQUALS,
-																		ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																		ObjectEntities.PARAMETER_TYPE_CODE,
 																		StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition pulseWidthHiResCondition = new TypicalCondition(
 																				ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES,
 																				OperationSort.OPERATION_EQUALS,
-																				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																				ObjectEntities.PARAMETER_TYPE_CODE,
 																				StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition pulseWidthLowResCondition = new TypicalCondition(
 																				ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES,
 																				OperationSort.OPERATION_EQUALS,
-																				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																				ObjectEntities.PARAMETER_TYPE_CODE,
 																				StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition indexOfRefractionCondition = new TypicalCondition(
 																				ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
 																				OperationSort.OPERATION_EQUALS,
-																				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																				ObjectEntities.PARAMETER_TYPE_CODE,
 																				StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition averageCountCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
 																			OperationSort.OPERATION_EQUALS,
-																			ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																			ObjectEntities.PARAMETER_TYPE_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition gainSpliceFlagCondition = new TypicalCondition(
 																			ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON,
 																			OperationSort.OPERATION_EQUALS,
-																			ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																			ObjectEntities.PARAMETER_TYPE_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition liveFiberDetectFlagCondition = new TypicalCondition(
 																					ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT,
 																					OperationSort.OPERATION_EQUALS,
-																					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																					ObjectEntities.PARAMETER_TYPE_CODE,
 																					StorableObjectWrapper.COLUMN_CODENAME);
 
 			java.util.Set conditions = new HashSet(9);
@@ -699,7 +699,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				MeasurementPort port = (MeasurementPort) StorableObjectPool.getStorableObject(measurementPortId1, true);
 				LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
 																				port.getType().getId(),
-																				ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+																				ObjectEntities.CHARACTERISTIC_CODE);
 				Collection characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true, true);
 
 				if (this.traceLength == null) {

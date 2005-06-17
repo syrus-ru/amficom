@@ -56,7 +56,7 @@ public class PathElementsFrame extends AnalysisFrame
 
 				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
 					LinkedIdsCondition condition = new LinkedIdsCondition(LoginManager.getDomainId(),
-							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+							ObjectEntities.SCHEMEPATH_CODE);
 					Set paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					Collection tpathIds = me.getMonitoredDomainMemberIds();

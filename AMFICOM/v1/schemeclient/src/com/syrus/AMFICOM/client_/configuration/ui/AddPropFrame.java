@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.7 2005/06/04 16:56:20 bass Exp $
+ * $Id: AddPropFrame.java,v 1.8 2005/06/17 11:01:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/04 16:56:20 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:04 $
  * @module schemeclient_v1
  */
 
@@ -199,7 +199,7 @@ public class AddPropFrame extends JDialog {
 
 		try {
 			EquivalentCondition condition = new EquivalentCondition(
-					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+					ObjectEntities.CHARACTERISTIC_TYPE_CODE);
 			Collection characteristicTypes = StorableObjectPool
 					.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {

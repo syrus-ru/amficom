@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.43 2005/06/07 15:45:27 arseniy Exp $
+ * $Id: SiteNode.java,v 1.44 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: arseniy $
- * @version $Revision: 1.43 $, $Date: 2005/06/07 15:45:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -92,7 +92,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	SiteNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_ENTITY_CODE);
+		SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITENODE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -178,7 +178,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
+			SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE),
 					creatorId,
 					0L,
 					siteNodeType.getImageId(),
@@ -386,7 +386,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 			TypicalCondition condition = new TypicalCondition(typeCodeName1,
 					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+					ObjectEntities.SITENODE_TYPE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
@@ -408,7 +408,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 			condition = new TypicalCondition(imageCodeName1,
 					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
+					ObjectEntities.IMAGERESOURCE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
@@ -491,7 +491,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 		super(
 				clonedIdsPool.getClonedId(
-						ObjectEntities.SITE_NODE_ENTITY_CODE, 
+						ObjectEntities.SITENODE_CODE, 
 						xmlSiteNode.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -522,7 +522,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		String typeCodeName1 = xmlSiteNode.getSitenodetypeuid().toString();
 		TypicalCondition condition = new TypicalCondition(typeCodeName1,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+				ObjectEntities.SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument

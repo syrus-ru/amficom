@@ -117,7 +117,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 				TypicalCondition condition = new TypicalCondition(
 					String.valueOf(type.value()),
 					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.SCHEME_ENTITY_CODE,
+					ObjectEntities.SCHEME_CODE,
 					com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
 				try {
 					Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);

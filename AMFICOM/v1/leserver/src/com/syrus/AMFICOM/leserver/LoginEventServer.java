@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.18 2005/05/30 14:52:28 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.19 2005/06/17 11:01:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/05/30 14:52:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 11:01:15 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public final class LoginEventServer {
@@ -100,7 +100,7 @@ public final class LoginEventServer {
 					ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			eventProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 					ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
+			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
 			final ServerProcess loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
 			final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
 			// TODO something with loginServerProcess and eventServerProcess

@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.7 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.8 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public class MapViewEditor extends DefaultStorableObjectEditor {
@@ -161,7 +161,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 			Collection domains = null;
 
 			StorableObjectCondition condition = new EquivalentCondition(
-					ObjectEntities.DOMAIN_ENTITY_CODE);
+					ObjectEntities.DOMAIN_CODE);
 			try {
 				domains = StorableObjectPool.getStorableObjectsByCondition(
 						condition,

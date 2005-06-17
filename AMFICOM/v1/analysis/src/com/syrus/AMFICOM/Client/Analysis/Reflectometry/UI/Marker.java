@@ -21,7 +21,7 @@ public class Marker
 		pos = initial_position;
 		this.name = name;
 		try {
-			id = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_ENTITY_CODE);
+			id = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
 		}
 		catch (ApplicationException ex) {
 			ex.printStackTrace();

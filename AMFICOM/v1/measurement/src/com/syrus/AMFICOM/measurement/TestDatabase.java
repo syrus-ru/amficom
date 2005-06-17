@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.98 2005/05/26 14:34:20 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.99 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/05/26 14:34:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.99 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -57,7 +57,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;	
 
 	protected short getEntityCode() {
-		return ObjectEntities.TEST_ENTITY_CODE;
+		return ObjectEntities.TEST_CODE;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -209,7 +209,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
 			+ TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID
-			+ SQL_FROM + ObjectEntities.MSTESTLINK_ENTITY
+			+ SQL_FROM + ObjectEntities.MSTESTLINK
 			+ SQL_WHERE + LINK_COLMN_TEST_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -254,7 +254,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 
 		Map msIdsMap = null;
 		msIdsMap = this.retrieveLinkedEntityIds(tests,
-				ObjectEntities.MSTESTLINK_ENTITY,
+				ObjectEntities.MSTESTLINK,
 				LINK_COLMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 
@@ -291,7 +291,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+			+ SQL_FROM + ObjectEntities.MEASUREMENT
 			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 				+ SQL_AND + MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
 			+ SQL_ORDER_BY + MeasurementWrapper.COLUMN_START_TIME + " ASC";
@@ -338,13 +338,13 @@ public final class TestDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM
-			+ ObjectEntities.MEASUREMENT_ENTITY
+			+ ObjectEntities.MEASUREMENT
 			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 				+ SQL_AND + MeasurementWrapper.COLUMN_START_TIME + EQUALS
 					+ OPEN_BRACKET
 						+ SQL_SELECT
 						+ SQL_FUNCTION_MAX + OPEN_BRACKET + MeasurementWrapper.COLUMN_START_TIME + CLOSE_BRACKET
-						+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+						+ SQL_FROM + ObjectEntities.MEASUREMENT
 						+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 					+ CLOSE_BRACKET;
 		Statement statement = null;
@@ -389,13 +389,13 @@ public final class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
 			+ SQL_COUNT + " count "
-			+ SQL_FROM + ObjectEntities.RESULT_ENTITY
+			+ SQL_FROM + ObjectEntities.RESULT
 			+ SQL_WHERE + ResultWrapper.COLUMN_SORT + EQUALS + Integer.toString(resultSort.value())
 				+ SQL_AND + ResultWrapper.COLUMN_MEASUREMENT_ID + SQL_IN
 					+ OPEN_BRACKET
 						+ SQL_SELECT
 						+ StorableObjectWrapper.COLUMN_ID
-						+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+						+ SQL_FROM + ObjectEntities.MEASUREMENT
 						+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 					+ CLOSE_BRACKET;
 		Statement statement = null;
@@ -490,7 +490,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 
 		super.updateLinkedEntityIds(measurementSetupIdsMap,
-				ObjectEntities.MSTESTLINK_ENTITY,
+				ObjectEntities.MSTESTLINK,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 	}

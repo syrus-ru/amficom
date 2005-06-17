@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.50 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.51 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/06/03 20:37:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -53,7 +53,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 		this.characteristics = new HashSet();
 
-		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -105,7 +105,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
+			TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

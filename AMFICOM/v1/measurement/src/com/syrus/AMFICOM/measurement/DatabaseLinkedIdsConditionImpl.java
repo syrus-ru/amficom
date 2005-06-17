@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.27 2005/06/16 10:20:31 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.28 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/16 10:20:31 $
- * @author $Author: max $
+ * @version $Revision: 1.28 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -32,53 +32,53 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		StringBuffer stringBuffer;
 		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+			case ObjectEntities.ANALYSIS_TYPE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+					case ObjectEntities.PARAMETER_TYPE_CODE:
 						return super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
 								StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-								ObjectEntities.ANATYPPARTYPLINK_ENTITY);
-					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+								ObjectEntities.ANATYPPARTYPLINK);
+					case ObjectEntities.MEASUREMENT_TYPE_CODE:
 						return super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
 								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
-								ObjectEntities.MNTTYPANATYPEVATYP_ENTITY);
+								ObjectEntities.MNTTYPANATYPEVATYP);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
 								+ super.condition.getLinkedEntityCode()
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+			case ObjectEntities.EVALUATION_TYPE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+					case ObjectEntities.PARAMETER_TYPE_CODE:
 						return getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
 								StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-								ObjectEntities.EVATYPPARTYPLINK_ENTITY);
-					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+								ObjectEntities.EVATYPPARTYPLINK);
+					case ObjectEntities.MEASUREMENT_TYPE_CODE:
 						return super.getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
 								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
-								ObjectEntities.MNTTYPANATYPEVATYP_ENTITY);
+								ObjectEntities.MNTTYPANATYPEVATYP);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
 								+ super.condition.getLinkedEntityCode()
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENT_TYPE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+					case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
 						return super.getLinkedQuery(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
 								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-								ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY);
+								ObjectEntities.MNTTYPEMEASPORTTYPELINK);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
 								+ super.condition.getLinkedEntityCode()
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+			case ObjectEntities.ANALYSIS_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+					case ObjectEntities.MEASUREMENT_CODE:
 						return super.getQuery(AnalysisWrapper.COLUMN_MEASUREMENT_ID);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
@@ -86,9 +86,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.EVALUATION_ENTITY_CODE:
+			case ObjectEntities.EVALUATION_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+					case ObjectEntities.MEASUREMENT_CODE:
 						return super.getQuery(EvaluationWrapper.COLUMN_MEASUREMENT_ID);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
@@ -96,9 +96,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.TEST_ENTITY_CODE:
+					case ObjectEntities.TEST_CODE:
 						return super.getQuery(MeasurementWrapper.COLUMN_TEST_ID);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
@@ -106,25 +106,25 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTSETUP_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
+					case ObjectEntities.MONITOREDELEMENT_CODE:
 						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
-									ObjectEntities.MSMELINK_ENTITY);
-					case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+									ObjectEntities.MSMELINK);
+					case ObjectEntities.MEASUREMENT_TYPE_CODE:
 						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 							MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
-							ObjectEntities.MSMTLINK_ENTITY);
+							ObjectEntities.MSMTLINK);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
 								+ super.condition.getLinkedEntityCode()
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.RESULT_ENTITY_CODE:
+			case ObjectEntities.RESULT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+					case ObjectEntities.MEASUREMENT_CODE:
 						stringBuffer = new StringBuffer();
 						stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_MEASUREMENT_ID));
 						stringBuffer.append(StorableObjectDatabase.SQL_OR);
@@ -132,21 +132,21 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						stringBuffer.append(super.getLinkedQuery(ResultWrapper.COLUMN_ANALYSIS_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								AnalysisWrapper.COLUMN_MEASUREMENT_ID,
-								ObjectEntities.ANALYSIS_ENTITY));
+								ObjectEntities.ANALYSIS));
 						stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						stringBuffer.append(StorableObjectDatabase.SQL_OR);
 						stringBuffer.append(StorableObjectDatabase.OPEN_BRACKET);
 						stringBuffer.append(super.getLinkedQuery(ResultWrapper.COLUMN_EVALUATION_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								AnalysisWrapper.COLUMN_MEASUREMENT_ID,
-								ObjectEntities.EVALUATION_ENTITY));
+								ObjectEntities.EVALUATION));
 						stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						return stringBuffer.toString();
-					case ObjectEntities.ANALYSIS_ENTITY_CODE:
+					case ObjectEntities.ANALYSIS_CODE:
 						return super.getQuery(ResultWrapper.COLUMN_ANALYSIS_ID);
-					case ObjectEntities.EVALUATION_ENTITY_CODE:
+					case ObjectEntities.EVALUATION_CODE:
 						return super.getQuery(ResultWrapper.COLUMN_EVALUATION_ID);
-					case ObjectEntities.MODELING_ENTITY_CODE:
+					case ObjectEntities.MODELING_CODE:
 						return super.getQuery(ResultWrapper.COLUMN_MODELING_ID);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "
@@ -154,16 +154,16 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 								+ " for entity type " + super.condition.getEntityCode(),
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
-			case ObjectEntities.TEST_ENTITY_CODE:
+			case ObjectEntities.TEST_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
+					case ObjectEntities.MONITOREDELEMENT_CODE:
 						return super.getQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
-					case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+					case ObjectEntities.MEASUREMENTPORT_CODE:
 						return super.getLinkedQuery(TestWrapper.COLUMN_MONITORED_ELEMENT_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID,
-								ObjectEntities.MONITOREDELEMENT_ENTITY);
-					case ObjectEntities.MCM_ENTITY_CODE:
+								ObjectEntities.MONITOREDELEMENT);
+					case ObjectEntities.MCM_CODE:
 						stringBuffer = new StringBuffer();
 						stringBuffer.append(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_IN);
@@ -171,7 +171,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						stringBuffer.append(StorableObjectDatabase.SQL_SELECT);
 						stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_FROM);
-						stringBuffer.append(ObjectEntities.MONITOREDELEMENT_ENTITY);
+						stringBuffer.append(ObjectEntities.MONITOREDELEMENT);
 						stringBuffer.append(StorableObjectDatabase.SQL_WHERE);
 						stringBuffer.append(MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_IN);
@@ -179,20 +179,20 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						stringBuffer.append(StorableObjectDatabase.SQL_SELECT);
 						stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
 						stringBuffer.append(StorableObjectDatabase.SQL_FROM);
-						stringBuffer.append(ObjectEntities.MEASUREMENTPORT_ENTITY);
+						stringBuffer.append(ObjectEntities.MEASUREMENTPORT);
 						stringBuffer.append(StorableObjectDatabase.SQL_WHERE);
 						stringBuffer.append(super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								KISWrapper.COLUMN_MCM_ID,
-								ObjectEntities.KIS_ENTITY));
+								ObjectEntities.KIS));
 						stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						return stringBuffer.toString();
-					case ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE:
+					case ObjectEntities.MEASUREMENTSETUP_CODE:
 						return super.getLinkedQuery(TestWrapper.LINK_COLUMN_TEST_ID, 
 								TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
-								ObjectEntities.MSTESTLINK_ENTITY);
-					case ObjectEntities.TEST_ENTITY_CODE:
+								ObjectEntities.MSTESTLINK);
+					case ObjectEntities.TEST_CODE:
 						return super.getQuery(TestWrapper.COLUMN_GROUP_TEST_ID);
 					default:
 						throw new IllegalObjectEntityException("Unsupported linked entity type -- "

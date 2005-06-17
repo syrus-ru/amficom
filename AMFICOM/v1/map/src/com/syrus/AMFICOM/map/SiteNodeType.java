@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.36 2005/06/03 20:38:46 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.37 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/06/03 20:38:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -71,7 +71,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	SiteNodeType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+		final SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITENODE_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -126,7 +126,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
+			SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_TYPE_CODE),
 					creatorId,
 					0L,
 					sort,

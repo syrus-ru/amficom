@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.73 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.74 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/06/17 11:01:00 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -64,7 +64,7 @@ public class AnalysisType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+		AnalysisTypeDatabase database = (AnalysisTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -148,7 +148,7 @@ public class AnalysisType extends ActionType {
 			final java.util.Set measurementTypeIds) throws CreateObjectException {		
 
 		try {
-			AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
+			AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.3 2005/06/15 13:17:17 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.4 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/15 13:17:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase {
@@ -32,7 +32,7 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEntityCode()
 	 */
 	protected short getEntityCode() {
-		return ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE;
+		return ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
 	}
 
 	/**

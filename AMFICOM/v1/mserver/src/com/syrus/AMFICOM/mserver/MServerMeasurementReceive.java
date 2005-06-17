@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.14 2005/06/10 15:29:12 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.15 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/10 15:29:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends ServerCore implements MServerOperations {
@@ -62,7 +62,7 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 				}
 				CORBAMServerObjectLoader.preferredMCMId = null;
 
-				ResultDatabase resultDatabase = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
+				ResultDatabase resultDatabase = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_CODE);
 				try {
 					resultDatabase.insert(results);
 				}
@@ -85,6 +85,6 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 	public StorableObject_Transferable[] receiveTests(Test_Transferable[] testsT, boolean force, SessionKey_Transferable sessionKeyT)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("MServerImplementation.receiveTests | Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
-		return super.receiveStorableObjects(ObjectEntities.TEST_ENTITY_CODE, testsT, force, sessionKeyT);
+		return super.receiveStorableObjects(ObjectEntities.TEST_CODE, testsT, force, sessionKeyT);
 	}
 }

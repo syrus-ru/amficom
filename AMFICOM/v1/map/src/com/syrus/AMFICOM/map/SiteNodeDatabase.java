@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.26 2005/05/26 14:33:34 arseniy Exp $
+ * $Id: SiteNodeDatabase.java,v 1.27 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/26 14:33:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class SiteNodeDatabase extends CharacterizableDatabase {
@@ -49,7 +49,7 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 	}	
 	
 	protected short getEntityCode() {		
-		return ObjectEntities.SITE_NODE_ENTITY_CODE;
+		return ObjectEntities.SITENODE_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {

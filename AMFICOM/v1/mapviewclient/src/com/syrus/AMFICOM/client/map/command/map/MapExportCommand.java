@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.16 2005/06/06 12:20:31 krupenn Exp $ Syrus
+ * $Id: MapExportCommand.java,v 1.17 2005/06/17 11:01:08 bass Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.map.MapElement;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:20:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public class MapExportCommand extends ExportCommand {
@@ -66,13 +66,13 @@ public class MapExportCommand extends ExportCommand {
 	MapFrame mapFrame;
 
 	static {
-		typesMap.put(ObjectEntities.MAP_ENTITY, MAP_TYPE);
-		typesMap.put(ObjectEntities.MARK_ENTITY, MARK_TYPE);
-		typesMap.put(ObjectEntities.SITE_NODE_ENTITY, SITE_TYPE);
-		typesMap.put(ObjectEntities.TOPOLOGICAL_NODE_ENTITY, NODE_TYPE);
-		typesMap.put(ObjectEntities.NODE_LINK_ENTITY, NODELINK_TYPE);
-		typesMap.put(ObjectEntities.COLLECTOR_ENTITY, COLLECTOR_TYPE);
-		typesMap.put(ObjectEntities.PHYSICAL_LINK_ENTITY, LINK_TYPE);
+		typesMap.put(ObjectEntities.MAP, MAP_TYPE);
+		typesMap.put(ObjectEntities.MARK, MARK_TYPE);
+		typesMap.put(ObjectEntities.SITENODE, SITE_TYPE);
+		typesMap.put(ObjectEntities.TOPOLOGICALNODE, NODE_TYPE);
+		typesMap.put(ObjectEntities.NODELINK, NODELINK_TYPE);
+		typesMap.put(ObjectEntities.COLLECTOR, COLLECTOR_TYPE);
+		typesMap.put(ObjectEntities.PHYSICALLINK, LINK_TYPE);
 	}
 
 	public MapExportCommand(JDesktopPane desktop, ApplicationContext aContext) {

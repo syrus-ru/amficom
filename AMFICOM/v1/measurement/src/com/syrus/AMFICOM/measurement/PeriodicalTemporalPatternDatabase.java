@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.5 2005/05/26 14:15:57 arseniy Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.6 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/26 14:15:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:00 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -49,7 +49,7 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 	}	
 
 	protected short getEntityCode() {		
-		return ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE;
+		return ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
 	}	
 
 	protected String getColumnsTmpl() {

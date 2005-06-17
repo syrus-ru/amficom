@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.43 2005/06/09 12:16:04 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.44 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/06/09 12:16:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -85,7 +85,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -140,7 +140,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
+			PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_TYPE_CODE),
 					creatorId,
 					0L,
 					sort,

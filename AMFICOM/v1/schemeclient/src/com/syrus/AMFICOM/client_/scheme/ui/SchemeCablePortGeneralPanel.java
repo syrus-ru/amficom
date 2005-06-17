@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.5 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.6 2005/06/17 11:01:04 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:04 $
  * @module schemeclient_v1
  */
 
@@ -261,7 +261,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		typeCombo.removeAllItems();
 		
 		if (schemePort != null) {
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 			try {
 				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {

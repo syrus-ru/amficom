@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.29 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: PathElement.java,v 1.30 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/06/03 20:39:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -95,7 +95,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	PathElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
-		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(ObjectEntities.PATH_ELEMENT_ENTITY_CODE);
+		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(ObjectEntities.PATHELEMENT_CODE);
 		try {
 			this.pathElementDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -263,14 +263,14 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this.schemeCableThreadId = Identifier.possiblyVoid(schemeCableThread);
 		this.schemeLinkId = Identifier.possiblyVoid(schemeLink);
 
-		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(ObjectEntities.PATH_ELEMENT_ENTITY_CODE);
+		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(ObjectEntities.PATHELEMENT_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	PathElement(final PathElement_Transferable transferable) {
-		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(ObjectEntities.PATH_ELEMENT_ENTITY_CODE);
+		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(ObjectEntities.PATHELEMENT_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -304,7 +304,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			final Date created = new Date();
 			final PathElement pathElement = new PathElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.PATHELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, parentSchemePath,
 					startAbstractSchemePort,
@@ -335,7 +335,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			final Date created = new Date();
 			final PathElement pathElement = new PathElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.PATHELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, parentSchemePath, schemeCableThread);
 			pathElement.markAsChanged();
@@ -364,7 +364,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			final Date created = new Date();
 			final PathElement pathElement = new PathElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.PATH_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.PATHELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, parentSchemePath, schemeLink);
 			pathElement.markAsChanged();

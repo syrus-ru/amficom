@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.25 2005/05/26 08:33:31 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.26 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:31 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/17 11:00:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -28,7 +28,7 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.PARAMETERTYPE_ENTITY_CODE;
+		return ObjectEntities.PARAMETER_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {

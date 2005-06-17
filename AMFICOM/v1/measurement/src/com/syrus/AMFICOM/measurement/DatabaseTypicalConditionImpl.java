@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.7 2005/05/12 16:33:39 bob Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.8 2005/06/17 11:01:00 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/12 16:33:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:00 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -29,7 +29,7 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 	protected String getColumnName() throws IllegalObjectEntityException {
 		/* check key support */
 		switch(super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.TEST_ENTITY_CODE:
+			case ObjectEntities.TEST_CODE:
 				if (this.condition.getKey().equals(TestWrapper.COLUMN_START_TIME))
 					return TestWrapper.COLUMN_START_TIME;
 				if (this.condition.getKey().equals(TestWrapper.COLUMN_END_TIME))
@@ -37,11 +37,11 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 				if (this.condition.getKey().equals(TestWrapper.COLUMN_STATUS))
 					return TestWrapper.COLUMN_STATUS;
 				break;
-			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENT_TYPE_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME))
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				break;
-			case ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE:
+			case ObjectEntities.PERIODICALTEMPORALPATTERN_CODE:
 				if (this.condition.getKey().equals(PeriodicalTemporalPatternWrapper.COLUMN_PERIOD))
 					return PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 				break;

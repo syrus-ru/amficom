@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.13 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.14 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/06/06 12:57:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public class MapViewAddSchemeCommand extends AbstractCommand {
@@ -90,7 +90,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 			Identifier domainId = LoginManager.getDomainId();
 			StorableObjectCondition condition = new LinkedIdsCondition(
 					domainId,
-					ObjectEntities.SCHEME_ENTITY_CODE);
+					ObjectEntities.SCHEME_CODE);
 			Set schemes = StorableObjectPool.getStorableObjectsByCondition(
 					condition,
 					true);

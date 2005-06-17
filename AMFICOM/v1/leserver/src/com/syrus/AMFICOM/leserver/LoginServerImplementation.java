@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.17 2005/06/16 10:50:38 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.18 2005/06/17 11:01:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/16 10:50:38 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/17 11:01:15 $
  * @author $Author: bass $
  * @module leserver_v1
  */
@@ -52,7 +52,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	private ShadowDatabase shadowDatabase;
 
 	protected LoginServerImplementation() {
-		this.tc = new TypicalCondition("", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEM_USER_ENTITY_CODE, SystemUserWrapper.COLUMN_LOGIN);
+		this.tc = new TypicalCondition("", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
 		this.userLoginDatabase = new UserLoginDatabase();
 		this.shadowDatabase = new ShadowDatabase();
 	}
@@ -122,7 +122,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		if (userLogin == null)
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, ErrorMessages.NOT_LOGGED_IN);
 
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
 		try {
 			Set domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
 

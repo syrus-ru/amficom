@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.25 2005/05/26 08:33:30 bass Exp $
+ * $Id: ServerDatabase.java,v 1.26 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/05/26 08:33:30 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/17 11:01:06 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -42,7 +42,7 @@ public final class ServerDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.SERVER_ENTITY_CODE;
+		return ObjectEntities.SERVER_CODE;
 	}
 
 	protected String getColumnsTmpl() {		

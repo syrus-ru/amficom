@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.20 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.21 2005/06/17 11:01:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/06/17 11:01:04 $
  * @module schemeclient_v1
  */
 
@@ -179,7 +179,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			} 
 			else if (s.equals(Constants.LINK_TYPE)) {
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
 					Collection toAdd = getDifference(linkTypes, contents);
@@ -200,7 +200,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			} 
 			else if (s.equals(Constants.CABLE_LINK_TYPE)) {
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
 					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					Collection toAdd = getDifference(linkTypes, contents);
@@ -221,7 +221,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			} 
 			else if (s.equals(Constants.PORT_TYPE)) {
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 					Collection portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
 					Collection toAdd = getDifference(portTypes, contents);
@@ -242,7 +242,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			}
 			else if (s.equals(Constants.EQUIPMENT_TYPE)) {
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 					Collection equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
 					Collection toAdd = getDifference(equipmentTypes, contents);
@@ -264,7 +264,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			// else if (s.equals("TransmissionPathType")) {
 			// try {
 			// EquivalentCondition condition = new
-			// EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+			// EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
 			// Collection pathTypes =
 			// ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition,
 			// true);
@@ -281,7 +281,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			else if (s.equals(Constants.MEASUREMENT_PORT_TYPES)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+							ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 					Collection mpTypes = StorableObjectPool
 							.getStorableObjectsByCondition(condition, true);
 
@@ -303,7 +303,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			else if (s.equals(Constants.MEASUREMENT_TYPES)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+							ObjectEntities.MEASUREMENT_TYPE_CODE);
 					Collection measurementTypes = StorableObjectPool
 							.getStorableObjectsByCondition(condition, true);
 
@@ -328,7 +328,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					Identifier domainId = new Identifier(((RISDSessionInfo) aContext
 							.getSessionInterface()).getAccessIdentifier().domain_id);
 					LinkedIdsCondition condition = new LinkedIdsCondition(domainId,
-							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+							ObjectEntities.SCHEMEPROTOGROUP_CODE);
 					Set groups = SchemeStorableObjectPool.getStorableObjectsByCondition(
 							condition, true);
 
@@ -428,7 +428,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				Kind type = (Kind) node.getObject();
 				TypicalCondition condition = new TypicalCondition(String.valueOf(type
 						.value()), OperationSort.OPERATION_EQUALS,
-						ObjectEntities.SCHEME_ENTITY_CODE,
+						ObjectEntities.SCHEME_CODE,
 						com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
 				try {
 					Set schemes = SchemeStorableObjectPool

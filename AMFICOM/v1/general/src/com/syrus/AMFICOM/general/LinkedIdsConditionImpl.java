@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/05/24 17:18:55 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.12 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,13 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/24 17:18:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/06/17 11:00:57 $
+ * @author $Author: bass $
  * @module general_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
-	protected static final Short CHARACTERISTIC_SHORT = new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+	protected static final Short CHARACTERISTIC_SHORT = new Short(ObjectEntities.CHARACTERISTIC_CODE);
 
 	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
@@ -36,10 +36,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+			case ObjectEntities.CHARACTERISTIC_CODE:
 				Characteristic characteristic = (Characteristic) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
 						condition = super.conditionTest(characteristic.getType().getId());
 						break;
 					default:
@@ -57,7 +57,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+			case ObjectEntities.CHARACTERISTIC_CODE:
 				this.entityCode = CHARACTERISTIC_SHORT;
 				break;
 			default:

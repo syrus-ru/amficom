@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.18 2005/06/03 20:38:15 arseniy Exp $
+ * $Id: EventSource.java,v 1.19 2005/06/17 11:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/03 20:38:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 11:01:03 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public final class EventSource extends StorableObject {
@@ -43,7 +43,7 @@ public final class EventSource extends StorableObject {
 	EventSource (final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final EventSourceDatabase database = (EventSourceDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
+		final EventSourceDatabase database = (EventSourceDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -75,7 +75,7 @@ public final class EventSource extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_ENTITY_CODE),
+			EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_CODE),
 					creatorId,
 					0L,
 					sourceEntityId);

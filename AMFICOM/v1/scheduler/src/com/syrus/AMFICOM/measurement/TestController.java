@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.12 2005/05/23 10:26:12 bob Exp $
+ * $Id: TestController.java,v 1.13 2005/06/17 11:01:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/23 10:26:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/06/17 11:01:14 $
+ * @author $Author: bass $
  * @module module
  */
 public class TestController implements Wrapper {
@@ -190,7 +190,7 @@ public class TestController implements Wrapper {
 					
 					if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
 						Identifier temporalPatternId = test.getTemporalPatternId();
-						if (temporalPatternId != null && temporalPatternId.getMajor() == ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE) {
+						if (temporalPatternId != null && temporalPatternId.getMajor() == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
 							try {
 								PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId, true);
 								value = value + ", " + periodicalTemporalPattern.getPeriodDescription();

@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.1 2005/06/08 13:44:06 krupenn Exp $
+ * $Id: ImagesPanel.java,v 1.2 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -114,7 +114,7 @@ public class ImagesPanel extends JPanel
 				ImageResourceSort._BITMAP,
 				ImageResourceSort._BITMAP,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
+				ObjectEntities.IMAGERESOURCE_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
 			
 			Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);

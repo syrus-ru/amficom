@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.100 2005/06/16 10:54:57 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.101 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/06/16 10:54:57 $
+ * @version $Revision: 1.101 $, $Date: 2005/06/17 11:01:01 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -250,7 +250,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void activateKISTransceivers() {
 		try {
-			LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_ENTITY_CODE);
+			LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_CODE);
 			Collection kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true, false);
 
 			transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
@@ -280,9 +280,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		tc = new TypicalCondition(TestStatus._TEST_STATUS_SCHEDULED,
 				0,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.TEST_ENTITY_CODE,
+				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
-		LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.TEST_ENTITY_CODE);
+		LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.TEST_CODE);
 		try {
 			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
 		}
@@ -304,7 +304,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		tc = new TypicalCondition(TestStatus._TEST_STATUS_PROCESSING,
 				0,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.TEST_ENTITY_CODE,
+				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
 		try {
 			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
@@ -466,7 +466,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
+				StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);

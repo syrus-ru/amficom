@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.9 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.10 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -791,7 +791,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	CronTemporalPattern(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE);
+		final CronTemporalPatternDatabase database = (CronTemporalPatternDatabase) DatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -855,7 +855,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
+			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
 					creatorId,
 					0L,
 					description,
@@ -879,7 +879,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
+			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
 					creatorId,
 					0L,
 					description,
@@ -904,7 +904,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	public short getEntityCode() {
-		return ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE;
+		return ObjectEntities.CRONTEMPORALPATTERN_CODE;
 	}
 
 	public String[] getCronStrings() {

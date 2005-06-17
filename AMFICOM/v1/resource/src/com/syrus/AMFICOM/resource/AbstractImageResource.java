@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.11 2005/05/24 13:24:56 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.12 2005/06/17 11:01:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/05/24 13:24:56 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/17 11:01:14 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -40,7 +40,7 @@ public abstract class AbstractImageResource extends StorableObject {
 	protected AbstractImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		ImageResourceDatabase database = (ImageResourceDatabase) DatabaseContext.getDatabase(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
+		ImageResourceDatabase database = (ImageResourceDatabase) DatabaseContext.getDatabase(ObjectEntities.IMAGERESOURCE_CODE);
 		try {
 			database.retrieve(this);
 		}

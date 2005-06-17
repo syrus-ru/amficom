@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.51 2005/06/09 12:38:56 arseniy Exp $
+ * $Id: LinkType.java,v 1.52 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/09 12:38:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -58,7 +58,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		super(id);
 
 		this.characteristics = new HashSet();
-		LinkTypeDatabase database = (LinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.LINKTYPE_ENTITY_CODE);
+		LinkTypeDatabase database = (LinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.LINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -124,7 +124,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINKTYPE_ENTITY_CODE),
+			LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_TYPE_CODE),
 						creatorId,
 						0L,
 						codename,

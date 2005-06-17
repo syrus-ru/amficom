@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.1 2005/06/16 10:34:03 bass Exp $
+ * $Id: Parameter.java,v 1.2 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:00:59 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -73,7 +73,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 
 	public static Parameter createInstance(ParameterType type, byte[] value) throws CreateObjectException {
 		try {
-			Parameter setParameter = new Parameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_ENTITY_CODE), type, value);
+			Parameter setParameter = new Parameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_CODE), type, value);
 			assert setParameter.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			return setParameter;
 		}

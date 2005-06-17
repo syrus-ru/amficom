@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.32 2005/06/16 10:41:43 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.33 2005/06/17 11:01:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/16 10:41:43 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -72,7 +72,7 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.32 $, $Date: 2005/06/16 10:41:43 $
+	 * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -83,7 +83,7 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.32 $, $Date: 2005/06/16 10:41:43 $
+	 * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -99,7 +99,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.32 $, $Date: 2005/06/16 10:41:43 $
+	 * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:02 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -160,7 +160,7 @@ public abstract class CORBAObjectLoader {
 	 * 
 	 * <pre>
 	 * public Set loadSystemUsersButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-	 * 	return super.loadStorableObjects(ids, ObjectEntities.SYSTEM_USER_ENTITY_CODE, new TransmitProcedure() {
+	 * 	return super.loadStorableObjects(ids, ObjectEntities.SYSTEMUSER_CODE, new TransmitProcedure() {
 	 * 		public IDLEntity[] transmitStorableObjects(
 	 * 				final CommonServer server,
 	 * 				final Identifier_Transferable[] idsT,
@@ -172,7 +172,7 @@ public abstract class CORBAObjectLoader {
 	 * }
 	 * 
 	 * public Set loadSystemUsersButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-	 * 	return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SYSTEM_USER_ENTITY_CODE, new TransmitButIdsByConditionProcedure() {
+	 * 	return super.loadStorableObjectsButIdsCondition(ids, condition, ObjectEntities.SYSTEMUSER_CODE, new TransmitButIdsByConditionProcedure() {
 	 * 		public IDLEntity[] transmitStorableObjectsButIdsCondition(
 	 * 				final CommonServer server,
 	 * 				final Identifier_Transferable[] idsT,

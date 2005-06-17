@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.85 2005/05/27 18:36:04 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.86 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/05/27 18:36:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.86 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -46,7 +46,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	private static String updateMultipleSQLValues;
 
 	String getParameterTypeLinkTableName() {
-		return ObjectEntities.EVATYPPARTYPLINK_ENTITY;
+		return ObjectEntities.EVATYPPARTYPLINK;
 	}
 
 	String getActionTypeColumnName() {
@@ -61,7 +61,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}	
 
 	protected short getEntityCode() {
-		return ObjectEntities.EVALUATIONTYPE_ENTITY_CODE;
+		return ObjectEntities.EVALUATION_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -124,7 +124,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 			return;
 
 		Map measurementTypeIdsMap = super.retrieveLinkedEntityIds(evaluationTypes,
-				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				ObjectEntities.MNTTYPANATYPEVATYP,
 				EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
@@ -208,13 +208,13 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 		}
 
 		super.updateLinkedEntityIds(mtIdsMap,
-				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				ObjectEntities.MNTTYPANATYPEVATYP,
 				EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() != ObjectEntities.EVALUATIONTYPE_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() != ObjectEntities.EVALUATION_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(id);
@@ -223,10 +223,10 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVATYPPARTYPLINK_ENTITY
+					+ ObjectEntities.EVATYPPARTYPLINK
 					+ SQL_WHERE + EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID + EQUALS + evaluationTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVALUATIONTYPE_ENTITY
+					+ ObjectEntities.EVALUATION_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + evaluationTypeIdStr);
 			connection.commit();
 		}

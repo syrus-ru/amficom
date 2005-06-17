@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.85 2005/05/26 08:33:34 bass Exp $
+ * $Id: EquipmentDatabase.java,v 1.86 2005/06/17 11:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/05/26 08:33:34 $
+ * @version $Revision: 1.86 $, $Date: 2005/06/17 11:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -66,7 +66,7 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.EQUIPMENT_ENTITY_CODE;
+		return ObjectEntities.EQUIPMENT_CODE;
 	}
 
 	protected String getColumnsTmpl() {

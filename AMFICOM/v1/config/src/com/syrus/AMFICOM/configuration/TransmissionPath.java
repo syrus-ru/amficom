@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.67 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.68 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.67 $, $Date: 2005/06/03 20:37:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -57,7 +57,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 
 		this.characteristics = new HashSet();
 
-		TransmissionPathDatabase database = (TransmissionPathDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_ENTITY_CODE);
+		TransmissionPathDatabase database = (TransmissionPathDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -117,7 +117,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE),
+			TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_CODE),
 					creatorId,
 					0L,
 					domainId,

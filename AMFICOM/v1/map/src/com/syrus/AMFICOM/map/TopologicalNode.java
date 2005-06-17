@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.41 2005/06/07 15:45:27 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.42 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: arseniy $
- * @version $Revision: 1.41 $, $Date: 2005/06/07 15:45:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -79,7 +79,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 	TopologicalNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
+		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICALNODE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -168,7 +168,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE),
+			TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICALNODE_CODE),
 					creatorId,
 					0L,
 					name,
@@ -257,7 +257,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 
 	private PhysicalLink findPhysicalLink() {
 		try {
-			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
+			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
 			Set nlinks;
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
@@ -436,7 +436,7 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 
 		super(
 				clonedIdsPool.getClonedId(
-						ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, 
+						ObjectEntities.TOPOLOGICALNODE_CODE, 
 						xmlTopologicalNode.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),

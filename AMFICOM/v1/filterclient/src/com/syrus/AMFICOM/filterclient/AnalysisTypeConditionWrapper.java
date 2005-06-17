@@ -16,13 +16,13 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/24 13:45:42 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 11:01:05 $
+ * @author $Author: bass $
  * @module filterclient_v1
  */
 public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 	
-	private static short entityCode = ObjectEntities.ANALYSISTYPE_ENTITY_CODE;
+	private static short entityCode = ObjectEntities.ANALYSIS_TYPE_CODE;
 	
 	private ArrayList parameterTypes;
 	private ArrayList measurementTypes;

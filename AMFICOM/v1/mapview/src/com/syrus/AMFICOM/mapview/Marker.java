@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.18 2005/05/26 15:31:15 bass Exp $
+ * $Id: Marker.java,v 1.19 2005/06/17 11:01:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.18 $, $Date: 2005/05/26 15:31:15 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/17 11:01:07 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -162,7 +162,7 @@ public class Marker extends AbstractNode
 		try
 		{
 			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
 			return new Marker(
 				ide,
 				creatorId,
@@ -247,7 +247,7 @@ public class Marker extends AbstractNode
 		try
 		{
 			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
 			return new Marker(
 				ide,
 				creatorId,

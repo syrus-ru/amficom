@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.31 2005/06/04 16:56:18 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.32 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/06/04 16:56:18 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/17 11:00:57 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -215,7 +215,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		}
 		catch (final AssertionError ae) {
-			linkedCode = ObjectEntities.UNKNOWN_ENTITY_CODE;
+			linkedCode = ObjectEntities.UNKNOWN_CODE;
 			Log.errorException(ae);
 		}
 
@@ -372,7 +372,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			this.delegate.linkedEntityCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		}
 		catch (final AssertionError ae) {
-			this.delegate.linkedEntityCode = ObjectEntities.UNKNOWN_ENTITY_CODE;
+			this.delegate.linkedEntityCode = ObjectEntities.UNKNOWN_CODE;
 			Log.errorException(ae);
 		}
 		this.delegate.linkedIds = linkedIds;

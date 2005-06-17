@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.15 2005/05/26 15:31:14 bass Exp $
+ * $Id: CharacterizableDatabase.java,v 1.16 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/05/26 15:31:14 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/17 11:00:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -45,7 +45,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		String cdIdStr = DatabaseIdentifier.toSQLString(characterizable.getId());
 		String sql = CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		Set characteristics = characteristicDatabase.retrieveByCondition(sql);
 
 		characterizable.setCharacteristics0(characteristics);
@@ -57,7 +57,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			return;
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
-		final Set characteristics = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE)
+		final Set characteristics = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE)
 				.retrieveByCondition(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true)
 				.toString());
 
@@ -89,7 +89,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		super.insertEntity(storableObject);
 
 		Characterizable characterizable = this.fromStorableObject(storableObject);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		characteristicDatabase.insert(characterizable.getCharacteristics());
 	}
 
@@ -102,7 +102,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			characterizable = this.fromStorableObject((StorableObject) it.next());
 			characteristics.addAll(characterizable.getCharacteristics());
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		characteristicDatabase.insert(characteristics);
 	}
 
@@ -132,7 +132,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		String cdIdStr = DatabaseIdentifier.toSQLString(characterizable.getId());
 		String sql = CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
 			characteristics = characteristicDatabase.retrieveByCondition(sql);
 		}
@@ -193,7 +193,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		Set characteristics;
 		Characteristic characteristic;
 
-		final StorableObjectDatabase characteristicDatabase = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		final StorableObjectDatabase characteristicDatabase = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
 			characteristics = characteristicDatabase.retrieveByCondition(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true).toString());
 		}

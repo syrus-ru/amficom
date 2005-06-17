@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.36 2005/06/15 12:20:41 bass Exp $
+ * $Id: Scheme.java,v 1.37 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/15 12:20:41 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -88,7 +88,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	Scheme(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ENTITY_CODE);
+		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CODE);
 		try {
 			this.schemeDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -139,14 +139,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ENTITY_CODE);
+		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	Scheme(final Scheme_Transferable transferable) {
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ENTITY_CODE);
+		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -205,7 +205,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final Date created = new Date();
 			final Scheme scheme = new Scheme(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_CODE),
 					created, created, creatorId, creatorId,
 					0L, domainId, name, description, label, width,
 					height, kind, map, symbol,
@@ -342,7 +342,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeCableLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -368,7 +368,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEELEMENT_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -385,7 +385,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -397,7 +397,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeOptimizeInfos() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEOPTIMIZEINFO_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -768,7 +768,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public Set getSchemePaths() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PATH_ENTITY_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPATH_CODE), true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

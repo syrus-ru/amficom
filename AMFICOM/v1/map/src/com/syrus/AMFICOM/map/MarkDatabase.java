@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.24 2005/05/26 14:33:34 arseniy Exp $
+ * $Id: MarkDatabase.java,v 1.25 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/26 14:33:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class MarkDatabase extends CharacterizableDatabase {
@@ -53,7 +53,7 @@ public final class MarkDatabase extends CharacterizableDatabase {
 	}	
 	
 	protected short getEntityCode() {		
-		return ObjectEntities.MARK_ENTITY_CODE;
+		return ObjectEntities.MARK_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {

@@ -97,7 +97,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	public KIS getKIS() {
 		try {
 			return (KIS) StorableObjectPool.getStorableObject(this
-					.getObject(ObjectEntities.KIS_ENTITY_CODE), true);
+					.getObject(ObjectEntities.KIS_CODE), true);
 		} catch (ApplicationException e) {
 			//
 		}
@@ -106,7 +106,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public MeasurementType getMeasurementType() {
 		try {
-			Identifier measurementTypeId = this.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			Identifier measurementTypeId = this.getObject(ObjectEntities.MEASUREMENT_TYPE_CODE);
 			return measurementTypeId != null ? (MeasurementType) StorableObjectPool.getStorableObject(
 				measurementTypeId, true) : null;
 		} catch (ApplicationException e) {
@@ -117,7 +117,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public MonitoredElement getMonitoredElement() {
 		try {
-			Identifier meId = this.getObject(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE);
+			Identifier meId = this.getObject(ObjectEntities.MONITOREDELEMENT_CODE);
 
 			MonitoredElement me = null;
 			if (meId != null)
@@ -130,7 +130,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	}
 
 	public void setKIS(KIS kis) {
-		// this.paramMap.put(ObjectEntities.KIS_ENTITY, kis);
+		// this.paramMap.put(ObjectEntities.KIS, kis);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 	}
@@ -143,7 +143,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
 		Log.debugMessage("ElementsTreeFrame.setMonitoredElement | monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Log.FINEST);
-		this.paramMap.put(ObjectEntities.MONITOREDELEMENT_ENTITY, monitoredElement);
+		this.paramMap.put(ObjectEntities.MONITOREDELEMENT, monitoredElement);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 
@@ -233,7 +233,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 							final Identifier identifier = (Identifier) object;
 							short major = identifier.getMajor();
 							switch (major) {
-								case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE: {
+								case ObjectEntities.MONITOREDELEMENT_CODE: {
 									Item parent1 = item;
 									while (true) {
 										if (!parent1.canHaveParent())
@@ -244,7 +244,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 										Object object2 = parent1.getObject();
 										if (object2 instanceof Identifier) {
 											Identifier identifier2 = (Identifier) object2;
-											if (identifier2.getMajor() == ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE)
+											if (identifier2.getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE)
 												break;
 										}
 									}
@@ -273,7 +273,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 								}
 									break;
-								case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE: {
+								case ObjectEntities.MEASUREMENT_TYPE_CODE: {
 									try {
 										ElementsTreeFrame.this.schedulerModel
 												.setSelectedMeasurementType((MeasurementType) StorableObjectPool

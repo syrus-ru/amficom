@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.33 2005/06/09 12:18:33 krupenn Exp $
+* $Id: MapView.java,v 1.34 2005/06/17 11:01:07 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/06/09 12:18:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 11:01:07 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -94,7 +94,7 @@ public class MapView extends DomainMember implements Namable {
 	MapView(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
+		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE);
 		try {
 			this.mapViewDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -138,7 +138,7 @@ public class MapView extends DomainMember implements Namable {
 
 		this.schemes = new HashSet();
 
-		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_ENTITY_CODE);
+		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE);
 	}	
 	
 	public static MapView createInstance(final Identifier creatorId,
@@ -153,7 +153,7 @@ public class MapView extends DomainMember implements Namable {
 		if (domainId == null || name == null || description == null || map == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
-			MapView mapView = new MapView(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_ENTITY_CODE),
+			MapView mapView = new MapView(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_CODE),
 					creatorId,
 					0L,
 					domainId,

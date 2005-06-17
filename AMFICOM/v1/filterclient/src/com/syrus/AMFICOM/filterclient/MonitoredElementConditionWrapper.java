@@ -1,5 +1,5 @@
 /*-
- * $Id: MonitoredElementConditionWrapper.java,v 1.1 2005/06/15 08:13:39 max Exp $
+ * $Id: MonitoredElementConditionWrapper.java,v 1.2 2005/06/17 11:01:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,13 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/06/15 08:13:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:05 $
  * @module filterclient_v1
  */
 public class MonitoredElementConditionWrapper implements ConditionWrapper {
 	
-	private final static short entityCode = ObjectEntities.MONITOREDELEMENT_ENTITY_CODE;
+	private final static short entityCode = ObjectEntities.MONITOREDELEMENT_CODE;
 	
 	private final static String NAME = "Entity name";
 		

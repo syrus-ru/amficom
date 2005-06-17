@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.23 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.24 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.map.Map;
 
 /**
  * открыть карту. карта открывается в новом виде
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/06 12:57:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public class MapOpenCommand extends AbstractCommand {
@@ -72,7 +72,7 @@ public class MapOpenCommand extends AbstractCommand {
 			Identifier domainId = LoginManager.getDomainId();
 			StorableObjectCondition condition = new LinkedIdsCondition(
 					domainId,
-					ObjectEntities.MAP_ENTITY_CODE);
+					ObjectEntities.MAP_CODE);
 			maps = StorableObjectPool.getStorableObjectsByCondition(
 					condition,
 					true);

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.62 2005/06/07 15:45:27 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.63 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/06/07 15:45:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -117,7 +117,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	PhysicalLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
+		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -226,7 +226,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLink physicalLink = new PhysicalLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
+			PhysicalLink physicalLink = new PhysicalLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_CODE),
 					creatorId,
 					0L,
 					name,
@@ -427,7 +427,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	private List findNodeLinks() {
 		try {
-			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODE_LINK_ENTITY_CODE);
+			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
 			Set nlinks;
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
@@ -915,7 +915,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 			TypicalCondition condition = new TypicalCondition(typeCodeName1,
 					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+					ObjectEntities.PHYSICALLINK_TYPE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
@@ -1031,7 +1031,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 		super(
 				clonedIdsPool.getClonedId(
-						ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, 
+						ObjectEntities.PHYSICALLINK_CODE, 
 						xmlPhysicalLink.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -1054,10 +1054,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.building = xmlPhysicalLink.getBuilding();
 
 		Identifier startNodeId1 = clonedIdsPool.getClonedId(
-				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				ObjectEntities.SITENODE_CODE, 
 				xmlPhysicalLink.getStartnodeuid().getStringValue());
 		Identifier endNodeId1 = clonedIdsPool.getClonedId(
-				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				ObjectEntities.SITENODE_CODE, 
 				xmlPhysicalLink.getEndnodeuid().getStringValue());
 
 		if(xmlPhysicalLink.getStartnodeuid().getStringValue().equals("507133")) {
@@ -1073,7 +1073,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		String typeCodeName1 = xmlPhysicalLink.getPhysicallinktypeuid().toString();
 		TypicalCondition condition = new TypicalCondition(typeCodeName1,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+				ObjectEntities.PHYSICALLINK_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument

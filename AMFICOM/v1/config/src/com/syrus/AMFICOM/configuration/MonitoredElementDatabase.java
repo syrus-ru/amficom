@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.68 2005/06/05 18:39:59 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.69 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/05 18:39:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.69 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -62,7 +62,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.MONITOREDELEMENT_ENTITY_CODE;
+		return ObjectEntities.MONITOREDELEMENT_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -162,10 +162,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 			buffer.append(SQL_FROM);
 			switch (meSort) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					buffer.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
+					buffer.append(ObjectEntities.EQUIPMENTMELINK);
 					break;
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
+					buffer.append(ObjectEntities.TRANSPATHMELINK);
 					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
@@ -233,12 +233,12 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 			switch (meSort.intValue()) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
 					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
-							ObjectEntities.EQUIPMENTMELINK_ENTITY,
+							ObjectEntities.EQUIPMENTMELINK,
 							MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
 					break;
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
 					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
-							ObjectEntities.TRANSPATHMELINK_ENTITY,
+							ObjectEntities.TRANSPATHMELINK,
 							MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
 					break;
 				default:
@@ -309,10 +309,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 		StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
 		switch (meSort) {
 			case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-				buffer.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
+				buffer.append(ObjectEntities.EQUIPMENTMELINK);
 				break;
 			case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-				buffer.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
+				buffer.append(ObjectEntities.TRANSPATHMELINK);
 				break;
 			default:
 				String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
@@ -421,12 +421,12 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 			switch (meSort.intValue()) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
 					this.updateMDMIds(monitoredElementsOneSort,
-							ObjectEntities.EQUIPMENTMELINK_ENTITY,
+							ObjectEntities.EQUIPMENTMELINK,
 							MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
 					break;
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
 					this.updateMDMIds(monitoredElementsOneSort,
-							ObjectEntities.TRANSPATHMELINK_ENTITY,
+							ObjectEntities.TRANSPATHMELINK,
 							MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
 					break;
 				default:
@@ -456,7 +456,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() == ObjectEntities.MONITOREDELEMENT_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE) : "Illegal entity code: "
 				+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		try {
@@ -467,10 +467,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 			StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM);
 			switch (meSort) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					sql1.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
+					sql1.append(ObjectEntities.EQUIPMENTMELINK);
 					break;
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					sql1.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
+					sql1.append(ObjectEntities.TRANSPATHMELINK);
 					break;
 				default:
 					String mesg = "MonitoredElementDatabase.delete | ERROR: Unknown sort of monitored element: "
@@ -482,7 +482,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 			sql1.append(EQUALS);
 			sql1.append(meIdStr);
 
-			String sql2 = SQL_DELETE_FROM + ObjectEntities.MONITOREDELEMENT_ENTITY
+			String sql2 = SQL_DELETE_FROM + ObjectEntities.MONITOREDELEMENT
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + meIdStr;
 
 			Statement statement = null;

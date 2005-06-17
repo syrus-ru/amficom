@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeConditionWrapper.java,v 1.2 2005/05/24 13:45:42 max Exp $
+ * $Id: EvaluationTypeConditionWrapper.java,v 1.3 2005/06/17 11:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,12 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/24 13:45:42 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 11:01:05 $
+ * @author $Author: bass $
  * @module filterclient_v1
  */
 public class EvaluationTypeConditionWrapper implements ConditionWrapper {
-	private static short entityCode = ObjectEntities.EVALUATION_ENTITY_CODE;
+	private static short entityCode = ObjectEntities.EVALUATION_CODE;
 	
 	private ArrayList parameterTypes;
 	private ArrayList measurementTypes;

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.24 2005/06/06 12:22:32 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.25 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/06 12:22:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/17 11:00:57 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -30,7 +30,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE;
+		return ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {

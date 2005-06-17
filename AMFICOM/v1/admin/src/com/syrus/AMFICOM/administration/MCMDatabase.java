@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.27 2005/05/26 08:33:30 bass Exp $
+ * $Id: MCMDatabase.java,v 1.28 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/26 08:33:30 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/17 11:01:06 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -45,7 +45,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.MCM_ENTITY_CODE;
+		return ObjectEntities.MCM_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -135,7 +135,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 //		String mcmIdStr = DatabaseIdentifier.toSQLString(mcm.getId());
 //		String sql = SQL_SELECT
 //			+ StorableObjectWrapper.COLUMN_ID
-//			+ SQL_FROM + ObjectEntities.KIS_ENTITY
+//			+ SQL_FROM + ObjectEntities.KIS
 //			+ SQL_WHERE + MCMWrapper.LINK_COLUMN_MCM_ID + EQUALS + mcmIdStr;
 //		Statement statement = null;
 //		ResultSet resultSet = null;

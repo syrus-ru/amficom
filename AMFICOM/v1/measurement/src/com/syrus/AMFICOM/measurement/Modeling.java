@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.44 2005/06/16 10:34:04 bass Exp $
+ * $Id: Modeling.java,v 1.45 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/06/16 10:34:04 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/17 11:01:00 $
  * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
@@ -51,7 +51,7 @@ public class Modeling extends Action {
 	Modeling(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		ModelingDatabase database = (ModelingDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_ENTITY_CODE);
+		ModelingDatabase database = (ModelingDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -127,7 +127,7 @@ public class Modeling extends Action {
 	}
 
 	public short getEntityCode() {
-		return ObjectEntities.MODELING_ENTITY_CODE;
+		return ObjectEntities.MODELING_CODE;
 	}
 
 	public String getName() {
@@ -178,7 +178,7 @@ public class Modeling extends Action {
 			final String name,
 			final ParameterSet argumentSet) throws CreateObjectException{
 		try {
-			Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
+			Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_CODE),
 					creatorId,
 					0L,
 					type,

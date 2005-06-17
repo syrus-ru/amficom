@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.24 2005/06/04 16:56:18 bass Exp $
+ * $Id: CompoundCondition.java,v 1.25 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.24 $, $Date: 2005/06/04 16:56:18 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/17 11:00:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -36,7 +36,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 	 */
 	private Set conditions;
 
-	private Short entityCode = new Short(ObjectEntities.UNKNOWN_ENTITY_CODE);
+	private Short entityCode = new Short(ObjectEntities.UNKNOWN_CODE);
 
 	private boolean doCompare(boolean firstResult, boolean secondResult) {
 		switch (this.operation) {
@@ -62,13 +62,13 @@ public final class CompoundCondition implements StorableObjectCondition {
 		if (conditions.size() <= 1)
 			throw new CreateObjectException("Unable to create CompoundCondition for alone condition, use condition itself");
 
-		short code = ObjectEntities.UNKNOWN_ENTITY_CODE;
+		short code = ObjectEntities.UNKNOWN_CODE;
 
 		for (Iterator it = conditions.iterator(); it.hasNext();) {
 			Object object = it.next();
 			if (object instanceof StorableObjectCondition) {
 				StorableObjectCondition condition = (StorableObjectCondition) object;
-				if (code == ObjectEntities.UNKNOWN_ENTITY_CODE) {
+				if (code == ObjectEntities.UNKNOWN_CODE) {
 					this.entityCode = condition.getEntityCode();
 					code = this.entityCode.shortValue();
 				}
@@ -80,7 +80,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 				throw new CreateObjectException("Unable to create CompoundCondition for conditions containing not StorableObjectCondition objects");
 		}
 		
-		if (this.entityCode.shortValue() == ObjectEntities.UNKNOWN_ENTITY_CODE)
+		if (this.entityCode.shortValue() == ObjectEntities.UNKNOWN_CODE)
 			throw new CreateObjectException("Unable to create CompoundCondition unknown entities");
 
 		this.operation = operation.value();
@@ -104,11 +104,11 @@ public final class CompoundCondition implements StorableObjectCondition {
 		if (innerConditions.length <= 1)
 			throw new IllegalDataException("Unable to create CompoundCondition for " + innerConditions.length + "  condition");
 		this.conditions = new HashSet(innerConditions.length);
-		short code = ObjectEntities.UNKNOWN_ENTITY_CODE;
+		short code = ObjectEntities.UNKNOWN_CODE;
 		for (int i = 0; i < innerConditions.length; i++) {
 			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(innerConditions[i]);
 			this.conditions.add(condition);
-			if (code == ObjectEntities.UNKNOWN_ENTITY_CODE) {
+			if (code == ObjectEntities.UNKNOWN_CODE) {
 				this.entityCode = condition.getEntityCode();
 				code = this.entityCode.shortValue();
 			} else if (code != condition.getEntityCode().shortValue()) {
@@ -116,7 +116,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 			}
 		}
 		
-		if (this.entityCode.shortValue() == ObjectEntities.UNKNOWN_ENTITY_CODE)
+		if (this.entityCode.shortValue() == ObjectEntities.UNKNOWN_CODE)
 			throw new IllegalDataException("Unable to create CompoundCondition unknown entities");
 	}
 

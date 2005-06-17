@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.1 2005/06/16 10:34:03 bass Exp $
+ * $Id: ParameterSetDatabase.java,v 1.2 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:00:59 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -54,7 +54,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {
-		return ObjectEntities.PARAMETER_SET_ENTITY_CODE;
+		return ObjectEntities.PARAMETERSET_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -126,7 +126,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ ParameterSetWrapper.LINK_COLUMN_SET_ID
-				+ SQL_FROM + ObjectEntities.PARAMETER_ENTITY
+				+ SQL_FROM + ObjectEntities.PARAMETER
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(sets, ParameterSetWrapper.LINK_COLUMN_SET_ID, true));
 
@@ -205,7 +205,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 
 		Map meIdsMap = null;
 		meIdsMap = this.retrieveLinkedEntityIds(sets,
-				ObjectEntities.SETMELINK_ENTITY,
+				ObjectEntities.SETMELINK,
 				ParameterSetWrapper.LINK_COLUMN_SET_ID,
 				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
@@ -272,7 +272,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		Parameter[] setParameters = set.getParameters();
 		Log.debugMessage("ParameterSetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.PARAMETER_ENTITY
+			+ ObjectEntities.PARAMETER
 			+ OPEN_BRACKET
 			+ StorableObjectWrapper.COLUMN_ID  + COMMA
 			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -303,7 +303,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 											 connection,
-											 ObjectEntities.PARAMETER_ENTITY,
+											 ObjectEntities.PARAMETER,
 											 ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE,
 											 StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
@@ -365,13 +365,13 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 
 		super.updateLinkedEntityIds(meIdsMap,
-				ObjectEntities.SETMELINK_ENTITY,
+				ObjectEntities.SETMELINK,
 				ParameterSetWrapper.LINK_COLUMN_SET_ID,
 				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() == ObjectEntities.PARAMETER_SET_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() == ObjectEntities.PARAMETERSET_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String setIdStr = DatabaseIdentifier.toSQLString(id);
@@ -380,10 +380,10 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.SETMELINK_ENTITY
+					+ ObjectEntities.SETMELINK
 					+ SQL_WHERE + ParameterSetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.PARAMETER_ENTITY
+					+ ObjectEntities.PARAMETER
 					+ SQL_WHERE + ParameterSetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);									
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ this.getEntityName()

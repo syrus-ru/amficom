@@ -105,7 +105,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 					try
 					{
 						Domain domain = (Domain)StorableObjectPool.getStorableObject(domainId, true);
-						LinkedIdsCondition condition = new LinkedIdsCondition(domain.getId(), ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
+						LinkedIdsCondition condition = new LinkedIdsCondition(domain.getId(), ObjectEntities.MEASUREMENTSETUP_CODE);
 						Collection mSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 						java.util.Set testsHt = new HashSet();

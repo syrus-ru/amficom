@@ -1,5 +1,5 @@
 /*-
- * $Id: CMAdministrationReceive.java,v 1.15 2005/06/16 10:46:11 bass Exp $
+ * $Id: CMAdministrationReceive.java,v 1.16 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/16 10:46:11 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/17 11:01:01 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -31,7 +31,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SYSTEM_USER_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SYSTEMUSER_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveDomains(
@@ -39,7 +39,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.DOMAIN_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.DOMAIN_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveServers(
@@ -47,7 +47,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SERVER_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SERVER_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveMCMs(
@@ -55,7 +55,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.MCM_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.MCM_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveServerProcesses(
@@ -63,6 +63,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SERVERPROCESS_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SERVERPROCESS_CODE, transferables, force, sessionKey);
 	}
 }

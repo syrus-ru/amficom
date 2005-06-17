@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.35 2005/06/15 09:56:11 bass Exp $
+ * $Id: SchemePath.java,v 1.36 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/15 09:56:11 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -75,7 +75,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		super(id);
 		
 		this.characteristics = new HashSet();
-		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPATH_CODE);
 		try {
 			this.schemePathDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -116,7 +116,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @throws CreateObjectException
 	 */
 	SchemePath(final SchemePath_Transferable transferable) throws CreateObjectException {
-		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPATH_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -163,7 +163,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		try {
 			final Date created = new Date();
 			final SchemePath schemePath = new SchemePath(
-					IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
+					IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEMEPATH_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					transmissionPath,
@@ -275,7 +275,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	private Set getPathElements0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATH_ELEMENT_ENTITY_CODE), true, true);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATHELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

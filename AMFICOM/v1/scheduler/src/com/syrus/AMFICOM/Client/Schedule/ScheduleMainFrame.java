@@ -216,10 +216,10 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		ElementsTreeFrame treeFrame = (ElementsTreeFrame) this.frames.get(TREE_FRAME);
 		treeFrame.init();
 
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_ENTITY_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PARAMETER_SET_ENTITY_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PARAMETERSET_CODE);
+		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE);
 
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));
 

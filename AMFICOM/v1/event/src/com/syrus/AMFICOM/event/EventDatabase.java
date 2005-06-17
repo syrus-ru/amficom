@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.30 2005/05/26 14:16:27 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.31 2005/06/17 11:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/26 14:16:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:03 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -66,7 +66,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}	
 
 	protected short getEntityCode() {		
-		return ObjectEntities.EVENT_ENTITY_CODE;
+		return ObjectEntities.EVENT_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -136,7 +136,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ EventWrapper.LINK_COLUMN_PARAMETER_VALUE
 				+ EventWrapper.LINK_COLUMN_EVENT_ID
-				+ SQL_FROM + ObjectEntities.EVENTPARAMETER_ENTITY
+				+ SQL_FROM + ObjectEntities.EVENTPARAMETER
 				+ SQL_WHERE);
     stringBuffer.append(idsEnumerationString(events, EventWrapper.LINK_COLUMN_EVENT_ID, true));
 
@@ -210,7 +210,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 			return;
 
 		Map eventSourceIdsMap = this.retrieveLinkedEntityIds(events,
-				ObjectEntities.EVENTSOURCE_LINK_ENTITY,
+				ObjectEntities.EVENTSOURCELINK,
 				EventWrapper.LINK_COLUMN_EVENT_ID,
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 
@@ -269,7 +269,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 	private void insertEventParameters(Event event) throws CreateObjectException {
 		Identifier eventId = event.getId();
 		Set eventParameters = event.getParameters();
-		String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER_ENTITY
+		String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER
 				+ OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -357,7 +357,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 
 		super.updateLinkedEntityIds(eventSourceIdsMap,
-				ObjectEntities.EVENTSOURCE_LINK_ENTITY,
+				ObjectEntities.EVENTSOURCELINK,
 				EventWrapper.LINK_COLUMN_EVENT_ID,
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 	}
@@ -371,7 +371,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 
 	public void delete(Identifier id) {
 		//Event event = this.fromStorableObject(storableObject);
-		assert (id.getMajor() == ObjectEntities.EVENT_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() == ObjectEntities.EVENT_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String eventIdStr = DatabaseIdentifier.toSQLString(id);
@@ -380,13 +380,13 @@ public final class EventDatabase extends StorableObjectDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTSOURCE_LINK_ENTITY
+					+ ObjectEntities.EVENTSOURCELINK
 					+ SQL_WHERE + EventWrapper.LINK_COLUMN_EVENT_ID + EQUALS + eventIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTPARAMETER_ENTITY
+					+ ObjectEntities.EVENTPARAMETER
 					+ SQL_WHERE + EventWrapper.LINK_COLUMN_EVENT_ID + EQUALS + eventIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENT_ENTITY
+					+ ObjectEntities.EVENT
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + eventIdStr);
 			connection.commit();
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.30 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.31 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -55,7 +55,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	SchemeCablePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
-		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE);
+		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLEPORT_CODE);
 		try {
 			this.schemeCablePortDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -92,7 +92,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 
 		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT;
 
-		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE);
+		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLEPORT_CODE);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	SchemeCablePort(final SchemeCablePort_Transferable transferable) throws CreateObjectException {
-		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE);
+		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLEPORT_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -151,7 +151,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			final Date created = new Date();
 			final SchemeCablePort schemeCablePort = new SchemeCablePort(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMECABLEPORT_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, directionType,
 					portType, port, measurementPort,
@@ -196,7 +196,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 */
 	public SchemeCableLink getSchemeCableLink() {
 		try {
-			final Set schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE), true, true);
+			final Set schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLELINK_CODE), true, true);
 			assert schemeCableLinks != null && schemeCableLinks.size() <= 1;
 			return schemeCableLinks.isEmpty()
 					? null

@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.7 2005/06/03 20:38:04 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.8 2005/06/17 11:01:00 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:00 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -92,7 +92,7 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 			throws CreateObjectException {
 
 		try {
-			PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE),
+			PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
 					creatorId,
 					0L,
 					period);

@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.27 2005/06/07 13:59:04 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.28 2005/06/17 11:01:01 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/07 13:59:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/06/17 11:01:01 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObjectLoader {
@@ -39,7 +39,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 	/* Load multiple objects*/
 
 	public Set loadParameterTypes(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -49,7 +49,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 	}
 
 	public Set loadCharacteristicTypes(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -59,7 +59,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 	}
 
 	public Set loadCharacteristics(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -73,7 +73,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadParameterTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_TYPE_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {

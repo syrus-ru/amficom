@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.27 2005/05/27 18:38:15 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.28 2005/06/17 11:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/05/27 18:38:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/06/17 11:01:03 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -57,7 +57,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.EVENTTYPE_ENTITY_CODE;
+		return ObjectEntities.EVENT_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -124,7 +124,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 			return;
 
 		final Map eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
-				ObjectEntities.EVENTTYPPARTYPLINK_ENTITY,
+				ObjectEntities.EVENTTYPPARTYPLINK,
 				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
 				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 
@@ -157,7 +157,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
-				+ SQL_FROM + ObjectEntities.EVENTTYPEUSERALERT_ENTITY
+				+ SQL_FROM + ObjectEntities.EVENTTYPEUSERALERT
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(eventTypes, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 
@@ -291,7 +291,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 
 		super.updateLinkedEntityIds(parameterTypeIdsMap,
-				ObjectEntities.EVENTTYPPARTYPLINK_ENTITY,
+				ObjectEntities.EVENTTYPPARTYPLINK,
 				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
 				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 	}
@@ -413,7 +413,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		if (insertUserAlertKindsMap == null || insertUserAlertKindsMap.isEmpty())
 			return;
 
-		String sql = SQL_INSERT_INTO + ObjectEntities.EVENTTYPEUSERALERT_ENTITY + OPEN_BRACKET
+		String sql = SQL_INSERT_INTO + ObjectEntities.EVENTTYPEUSERALERT + OPEN_BRACKET
 				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
@@ -471,7 +471,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		if (deleteUserAlertKindsMap == null || deleteUserAlertKindsMap.isEmpty())
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + ObjectEntities.EVENTTYPEUSERALERT_ENTITY
+		StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + ObjectEntities.EVENTTYPEUSERALERT
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
 		for (final Iterator it1 = deleteUserAlertKindsMap.keySet().iterator(); it1.hasNext();) {
@@ -519,7 +519,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() == ObjectEntities.EVENTTYPE_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() == ObjectEntities.EVENT_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		Statement statement = null;
@@ -527,10 +527,10 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
+					+ ObjectEntities.EVENTTYPPARTYPLINK
 					+ SQL_WHERE + EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + id);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTTYPE_ENTITY
+					+ ObjectEntities.EVENT_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + id);
 
 			connection.commit();
@@ -555,10 +555,10 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 
 	public void delete(Set objects) {
 		StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
-				+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
+				+ ObjectEntities.EVENTTYPPARTYPLINK
 				+ SQL_WHERE);
 		StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
-				+ ObjectEntities.EVENTTYPE_ENTITY
+				+ ObjectEntities.EVENT_TYPE
 				+ SQL_WHERE);
 		sql1.append(idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 		sql2.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));

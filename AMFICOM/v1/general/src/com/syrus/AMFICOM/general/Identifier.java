@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.39 2005/06/16 12:19:59 arseniy Exp $
+ * $Id: Identifier.java,v 1.40 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,14 +23,14 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.39 $, $Date: 2005/06/16 12:19:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/06/17 11:00:57 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
 	public static final char SEPARATOR = '_';
 
-	public static final Identifier VOID_IDENTIFIER = new Identifier(ObjectEntities.UPDIKE_ENTITY_CODE, 0);
+	public static final Identifier VOID_IDENTIFIER = new Identifier(ObjectEntities.UPDIKE_CODE, 0);
 
 	private static final long serialVersionUID = 1721559813677093072L;
 

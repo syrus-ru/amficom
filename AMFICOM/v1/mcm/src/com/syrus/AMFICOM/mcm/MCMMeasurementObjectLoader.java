@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.61 2005/06/16 10:54:57 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.62 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/16 10:54:57 $
+ * @version $Revision: 1.62 $, $Date: 2005/06/17 11:01:01 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -41,7 +41,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	/* Load multiple objects*/
 
 	public java.util.Set loadMeasurementTypes(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -51,7 +51,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadAnalysisTypes(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.ANALYSIS_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -61,7 +61,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadEvaluationTypes(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.EVALUATION_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -85,7 +85,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadMeasurementSetups(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -99,7 +99,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadParameterSets(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PARAMETER_SET_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.PARAMETERSET_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -116,7 +116,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadCronTemporalPatterns(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.CRONTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -126,7 +126,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadIntervalsTemporalPatterns(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -136,7 +136,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public java.util.Set loadPeriodicalTemporalPatterns(final java.util.Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					Identifier_Transferable[] idsT,
 					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
@@ -151,7 +151,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadMeasurementTypesButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_TYPE_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -166,7 +166,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadAnalysisTypesButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_TYPE_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -181,7 +181,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadEvaluationTypesButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_TYPE_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -210,7 +210,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadMeasurementSetupsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTSETUP_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -229,7 +229,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadParameterSetsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_SET_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETERSET_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -252,7 +252,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadCronTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CRONTEMPORALPATTERN_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -267,7 +267,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadIntervalsTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -282,7 +282,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public java.util.Set loadPeriodicalTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
 			throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE,
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -316,7 +316,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	}
 
 	public void saveTests(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.TEST_ENTITY_CODE, storableObjects, force, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.TEST_CODE, storableObjects, force, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(final CommonServer server,
 					final IDLEntity[] transferables,
 					final SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {

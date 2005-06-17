@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.97 2005/05/27 18:36:04 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.98 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/05/27 18:36:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.98 $, $Date: 2005/06/17 11:01:00 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -46,7 +46,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	private static String updateMultipleSQLValues;
 
 	String getParameterTypeLinkTableName() {
-		return ObjectEntities.MNTTYPPARTYPLINK_ENTITY;
+		return ObjectEntities.MNTTYPPARTYPLINK;
 	}
 
 	String getActionTypeColumnName() {
@@ -61,7 +61,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}	
 
 	protected short getEntityCode() {
-		return ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE;
+		return ObjectEntities.MEASUREMENT_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -122,7 +122,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 			return;
 
 		Map measurementPortTypeIdsMap = super.retrieveLinkedEntityIds(measurementTypes,
-				ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY,
+				ObjectEntities.MNTTYPEMEASPORTTYPELINK,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
 
@@ -207,13 +207,13 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		}
 
 		super.updateLinkedEntityIds(mpIdsMap,
-				ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY,
+				ObjectEntities.MNTTYPEMEASPORTTYPELINK,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() != ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() != ObjectEntities.MEASUREMENT_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(id);
@@ -222,13 +222,13 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY
+					+ ObjectEntities.MNTTYPEMEASPORTTYPELINK
 					+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
+					+ ObjectEntities.MNTTYPPARTYPLINK
 					+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MEASUREMENTTYPE_ENTITY
+					+ ObjectEntities.MEASUREMENT_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + measurementTypeIdStr);
 
 			connection.commit();

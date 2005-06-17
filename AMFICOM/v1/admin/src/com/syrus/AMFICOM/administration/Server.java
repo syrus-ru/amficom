@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.31 2005/06/03 20:37:40 arseniy Exp $
+ * $Id: Server.java,v 1.32 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/03 20:37:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -55,7 +55,7 @@ public class Server extends DomainMember implements Characterizable {
 		super(id);
 		this.characteristics = new LinkedHashSet();
 
-		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_ENTITY_CODE);
+		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -203,7 +203,7 @@ public class Server extends DomainMember implements Characterizable {
 			final String description,
 			final String hostname) throws CreateObjectException {
 		try {
-			Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
+			Server server = new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_CODE),
 						creatorId,
 						0L,
 						domainId,

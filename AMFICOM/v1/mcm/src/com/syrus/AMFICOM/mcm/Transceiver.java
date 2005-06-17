@@ -100,7 +100,7 @@ public class Transceiver extends SleepButWorkThread {
 		}
 
 		try {
-			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_ENTITY_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);

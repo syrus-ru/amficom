@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.34 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.35 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -56,7 +56,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	SchemeCableLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
+		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE);
 		try {
 			this.schemeCableLinkDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -89,7 +89,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				sourceSchemeCablePort, targetSchemeCablePort,
 				parentScheme);
 
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
+		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	SchemeCableLink(final SchemeCableLink_Transferable transferable) throws CreateObjectException {
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE);
+		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -148,7 +148,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			final Date created = new Date();
 			final SchemeCableLink schemeCableLink = new SchemeCableLink(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMECABLELINK_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, physicalLength,
 					opticalLength, cableLinkType, link,
@@ -188,7 +188,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	public Set getCableChannelingItems() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.CABLECHANNELINGITEM_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -233,7 +233,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	public Set getSchemeCableThreads() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLETHREAD_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

@@ -375,7 +375,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																							.getTemporalPatternId();
 																					if (temporalPatternId != null
 																							&& temporalPatternId
-																									.getMajor() == ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE) {
+																									.getMajor() == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
 																						try {
 																							PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool
 																									.getStorableObject(
@@ -920,7 +920,7 @@ public class TimeParametersFrame extends JInternalFrame {
 ////																						intervalLength,
 ////																						intervalLength,
 ////																						OperationSort.OPERATION_EQUALS,
-////																						ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE,
+////																						ObjectEntities.PERIODICALTEMPORALPATTERN_CODE,
 ////																						PeriodicalTemporalPatternWrapper.COLUMN_PERIOD);
 ////							try {
 ////								java.util.Set set = MeasurementStorableObjectPool.getStorableObjectsByCondition(
@@ -1168,7 +1168,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
 //				temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
 				long intervalLength = this.getIntervalLength();
-				TypicalCondition typicalCondition = new TypicalCondition(intervalLength, intervalLength, OperationSort.OPERATION_EQUALS, ObjectEntities.PERIODICAL_TEMPORALPATTERN_ENTITY_CODE, PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
+				TypicalCondition typicalCondition = new TypicalCondition(intervalLength, intervalLength, OperationSort.OPERATION_EQUALS, ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
 				try {
 					java.util.Set set = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
 					if (!set.isEmpty()) {

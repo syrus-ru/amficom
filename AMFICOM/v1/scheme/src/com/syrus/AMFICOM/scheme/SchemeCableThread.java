@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.34 2005/06/15 12:20:41 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.35 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/15 12:20:41 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -75,7 +75,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE);
+		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLETHREAD_CODE);
 		try {
 			this.schemeCableThreadDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -121,7 +121,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeCableThread(final SchemeCableThread_Transferable transferable) throws CreateObjectException {
-		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE);
+		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLETHREAD_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -169,7 +169,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeCableThread schemeCableThread = new SchemeCableThread(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMECABLETHREAD_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, cableThreadType,
 					link, sourceSchemePort,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.28 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.29 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -86,7 +86,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	SchemeOptimizeInfo(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE);
 		try {
 			this.schemeOptimizeInfoDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -151,7 +151,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param transferable
 	 */
 	SchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable transferable) {
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE);
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -209,7 +209,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					optimizationMode, iterations, price,
@@ -335,7 +335,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeMonitoringSolutions() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -347,7 +347,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeOptimizeInfoRtus() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -359,7 +359,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeOptimizeInfoSwitches() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

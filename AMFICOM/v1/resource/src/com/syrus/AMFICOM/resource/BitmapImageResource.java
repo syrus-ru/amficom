@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.17 2005/06/03 20:38:27 arseniy Exp $
+ * $Id: BitmapImageResource.java,v 1.18 2005/06/17 11:01:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/06/03 20:38:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/06/17 11:01:14 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -73,7 +73,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	public static BitmapImageResource createInstance(final Identifier creatorId, final String codename, final byte image[])
 			throws CreateObjectException {
 		try {
-			BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
+			BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
 					0L,
 					codename,

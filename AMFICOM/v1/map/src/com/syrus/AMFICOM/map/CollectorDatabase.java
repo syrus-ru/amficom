@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.30 2005/05/26 14:33:34 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.31 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/26 14:33:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class CollectorDatabase extends CharacterizableDatabase {
@@ -84,7 +84,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.COLLECTOR_ENTITY_CODE;
+		return ObjectEntities.COLLECTOR_CODE;
 	}
 
 	protected String getColumnsTmpl() {

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.92 2005/06/16 12:57:53 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.93 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/06/16 12:57:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.93 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -56,23 +56,23 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	private ConfigurationStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.CONFIGURATION_GROUP_CODE, cacheMapClass);
 
-		registerFactory(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, new EquipmentTypeFactory());
-		registerFactory(ObjectEntities.PORTTYPE_ENTITY_CODE, new PortTypeFactory());
-		registerFactory(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, new MeasurementPortTypeFactory());
-		registerFactory(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, new TransmissionPathTypeFactory());
-		registerFactory(ObjectEntities.LINKTYPE_ENTITY_CODE, new LinkTypeFactory());
-		registerFactory(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, new CableLinkTypeFactory());
-		registerFactory(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, new CableThreadTypeFactory());
-		//registerFactory(ObjectEntities.KISTYPE_ENTITY_CODE, new KisTypeFactory());
+		registerFactory(ObjectEntities.EQUIPMENT_TYPE_CODE, new EquipmentTypeFactory());
+		registerFactory(ObjectEntities.PORT_TYPE_CODE, new PortTypeFactory());
+		registerFactory(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, new MeasurementPortTypeFactory());
+		registerFactory(ObjectEntities.TRANSPATH_TYPE_CODE, new TransmissionPathTypeFactory());
+		registerFactory(ObjectEntities.LINK_TYPE_CODE, new LinkTypeFactory());
+		registerFactory(ObjectEntities.CABLELINK_TYPE_CODE, new CableLinkTypeFactory());
+		registerFactory(ObjectEntities.CABLETHREAD_TYPE_CODE, new CableThreadTypeFactory());
+		//registerFactory(ObjectEntities.KIS_TYPE_CODE, new KisTypeFactory());
 
-		registerFactory(ObjectEntities.EQUIPMENT_ENTITY_CODE, new EquipmentFactory());
-		registerFactory(ObjectEntities.PORT_ENTITY_CODE, new PortFactory());
-		registerFactory(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, new MeasurementPortFactory());
-		registerFactory(ObjectEntities.TRANSPATH_ENTITY_CODE, new TransmissionPathFactory());
-		registerFactory(ObjectEntities.KIS_ENTITY_CODE, new KisFactory());
-		registerFactory(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, new MonitoredElementFactory());
-		registerFactory(ObjectEntities.LINK_ENTITY_CODE, new LinkFactory());
-		registerFactory(ObjectEntities.CABLETHREAD_ENTITY_CODE, new CableThreadFactory());
+		registerFactory(ObjectEntities.EQUIPMENT_CODE, new EquipmentFactory());
+		registerFactory(ObjectEntities.PORT_CODE, new PortFactory());
+		registerFactory(ObjectEntities.MEASUREMENTPORT_CODE, new MeasurementPortFactory());
+		registerFactory(ObjectEntities.TRANSPATH_CODE, new TransmissionPathFactory());
+		registerFactory(ObjectEntities.KIS_CODE, new KisFactory());
+		registerFactory(ObjectEntities.MONITOREDELEMENT_CODE, new MonitoredElementFactory());
+		registerFactory(ObjectEntities.LINK_CODE, new LinkFactory());
+		registerFactory(ObjectEntities.CABLETHREAD_CODE, new CableThreadFactory());
 	}
 
 
@@ -107,22 +107,22 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 		cObjectLoader = cObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, PORTTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, TRANSPATHTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, LINKTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, CABLELINKTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, CABLETHREADTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EQUIPMENT_TYPE_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PORT_TYPE_CODE, PORTTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.TRANSPATH_TYPE_CODE, TRANSPATHTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.LINK_TYPE_CODE, LINKTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.CABLELINK_TYPE_CODE, CABLELINKTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.CABLETHREAD_TYPE_CODE, CABLETHREADTYPE_OBJECT_POOL_SIZE);
 
-		instance.addObjectPool(ObjectEntities.EQUIPMENT_ENTITY_CODE, EQUIPMENT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.PORT_ENTITY_CODE, PORT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, TRANSPATH_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.LINK_ENTITY_CODE, LINK_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.CABLETHREAD_ENTITY_CODE, CABLETHREAD_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EQUIPMENT_CODE, EQUIPMENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PORT_CODE, PORT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.TRANSPATH_CODE, TRANSPATH_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.KIS_CODE, KIS_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MONITOREDELEMENT_CODE, ME_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.LINK_CODE, LINK_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.CABLETHREAD_CODE, CABLETHREAD_OBJECT_POOL_SIZE);
 	}
 
 	/**
@@ -141,23 +141,23 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 			cObjectLoader = cObjectLoader1;
 
-			instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, size);
-			// instance.addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.EQUIPMENT_TYPE_CODE, size);
+			instance.addObjectPool(ObjectEntities.PORT_TYPE_CODE, size);
+			instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, size);
+			instance.addObjectPool(ObjectEntities.TRANSPATH_TYPE_CODE, size);
+			instance.addObjectPool(ObjectEntities.LINK_TYPE_CODE, size);
+			instance.addObjectPool(ObjectEntities.CABLELINK_TYPE_CODE, size);
+			instance.addObjectPool(ObjectEntities.CABLETHREAD_TYPE_CODE, size);
+			// instance.addObjectPool(ObjectEntities.KIS_TYPE_CODE, size);
 
-			instance.addObjectPool(ObjectEntities.EQUIPMENT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.PORT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.LINK_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.CABLETHREAD_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.EQUIPMENT_CODE, size);
+			instance.addObjectPool(ObjectEntities.PORT_CODE, size);
+			instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_CODE, size);
+			instance.addObjectPool(ObjectEntities.TRANSPATH_CODE, size);
+			instance.addObjectPool(ObjectEntities.KIS_CODE, size);
+			instance.addObjectPool(ObjectEntities.MONITOREDELEMENT_CODE, size);
+			instance.addObjectPool(ObjectEntities.LINK_CODE, size);
+			instance.addObjectPool(ObjectEntities.CABLETHREAD_CODE, size);
 		}
 		else {
 			init(cObjectLoader1, cacheClass);
@@ -172,36 +172,36 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
-			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_TYPE_CODE:
 				return cObjectLoader.loadEquipmentTypes(ids);
-			case ObjectEntities.PORTTYPE_ENTITY_CODE:
+			case ObjectEntities.PORT_TYPE_CODE:
 				return cObjectLoader.loadPortTypes(ids);
-			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
 				return cObjectLoader.loadMeasurementPortTypes(ids);
-			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_TYPE_CODE:
 				return cObjectLoader.loadTransmissionPathTypes(ids);
-			case ObjectEntities.LINKTYPE_ENTITY_CODE:
+			case ObjectEntities.LINK_TYPE_CODE:
 				return cObjectLoader.loadLinkTypes(ids);
-			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLELINK_TYPE_CODE:
 				return cObjectLoader.loadCableLinkTypes(ids);
-			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLETHREAD_TYPE_CODE:
 				return cObjectLoader.loadCableThreadTypes(ids);
 
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_CODE:
 				return cObjectLoader.loadEquipments(ids);
-			case ObjectEntities.PORT_ENTITY_CODE:
+			case ObjectEntities.PORT_CODE:
 				return cObjectLoader.loadPorts(ids);
-			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTPORT_CODE:
 				return cObjectLoader.loadMeasurementPorts(ids);
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_CODE:
 				return cObjectLoader.loadTransmissionPaths(ids);
-			case ObjectEntities.KIS_ENTITY_CODE:
+			case ObjectEntities.KIS_CODE:
 				return cObjectLoader.loadKISs(ids);
-			case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
+			case ObjectEntities.MONITOREDELEMENT_CODE:
 				return cObjectLoader.loadMonitoredElements(ids);
-			case ObjectEntities.LINK_ENTITY_CODE:
+			case ObjectEntities.LINK_CODE:
 				return cObjectLoader.loadLinks(ids);
-			case ObjectEntities.CABLETHREAD_ENTITY_CODE:
+			case ObjectEntities.CABLETHREAD_CODE:
 				return cObjectLoader.loadCableThreads(ids);
 			default:
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entity: '"
@@ -213,36 +213,36 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_TYPE_CODE:
 				return cObjectLoader.loadEquipmentTypesButIds(condition, ids);
-			case ObjectEntities.PORTTYPE_ENTITY_CODE:
+			case ObjectEntities.PORT_TYPE_CODE:
 				return cObjectLoader.loadPortTypesButIds(condition, ids);
-			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
 				return cObjectLoader.loadMeasurementPortTypesButIds(condition, ids);
-			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_TYPE_CODE:
 				return cObjectLoader.loadTransmissionPathTypesButIds(condition, ids);
-			case ObjectEntities.LINKTYPE_ENTITY_CODE:
+			case ObjectEntities.LINK_TYPE_CODE:
 				return cObjectLoader.loadLinkTypesButIds(condition, ids);
-			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLELINK_TYPE_CODE:
 				return cObjectLoader.loadCableLinkTypesButIds(condition, ids);
-			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLETHREAD_TYPE_CODE:
 				return cObjectLoader.loadCableThreadTypesButIds(condition, ids);
 
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_CODE:
 				return cObjectLoader.loadEquipmentsButIds(condition, ids);
-			case ObjectEntities.PORT_ENTITY_CODE:
+			case ObjectEntities.PORT_CODE:
 				return cObjectLoader.loadPortsButIds(condition, ids);
-			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTPORT_CODE:
 				return cObjectLoader.loadMeasurementPortsButIds(condition, ids);
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_CODE:
 				return cObjectLoader.loadTransmissionPathsButIds(condition, ids);
-			case ObjectEntities.KIS_ENTITY_CODE:
+			case ObjectEntities.KIS_CODE:
 				return cObjectLoader.loadKISsButIds(condition, ids);
-			case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
+			case ObjectEntities.MONITOREDELEMENT_CODE:
 				return cObjectLoader.loadMonitoredElementsButIds(condition, ids);
-			case ObjectEntities.LINK_ENTITY_CODE:
+			case ObjectEntities.LINK_CODE:
 				return cObjectLoader.loadLinksButIds(condition, ids);
-			case ObjectEntities.CABLETHREAD_ENTITY_CODE:
+			case ObjectEntities.CABLETHREAD_CODE:
 				return cObjectLoader.loadCableThreadsButIds(condition, ids);
 			default:
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
@@ -257,50 +257,50 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
-			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_TYPE_CODE:
 				cObjectLoader.saveEquipmentTypes(storableObjects, force);
 				break;
-			case ObjectEntities.PORTTYPE_ENTITY_CODE:
+			case ObjectEntities.PORT_TYPE_CODE:
 				cObjectLoader.savePortTypes(storableObjects, force);
 				break;
-			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
 				cObjectLoader.saveMeasurementPortTypes(storableObjects, force);
 				break;
-			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_TYPE_CODE:
 				cObjectLoader.saveTransmissionPathTypes(storableObjects, force);
 				break;
-			case ObjectEntities.LINKTYPE_ENTITY_CODE:
+			case ObjectEntities.LINK_TYPE_CODE:
 				cObjectLoader.saveLinkTypes(storableObjects, force);
 				break;
-			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLELINK_TYPE_CODE:
 				cObjectLoader.saveCableLinkTypes(storableObjects, force);
 				break;
-			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+			case ObjectEntities.CABLETHREAD_TYPE_CODE:
 				cObjectLoader.saveCableThreadTypes(storableObjects, force);
 				break;
 
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_CODE:
 				cObjectLoader.saveEquipments(storableObjects, force);
 				break;
-			case ObjectEntities.PORT_ENTITY_CODE:
+			case ObjectEntities.PORT_CODE:
 				cObjectLoader.savePorts(storableObjects, force);
 				break;
-			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+			case ObjectEntities.MEASUREMENTPORT_CODE:
 				cObjectLoader.saveMeasurementPorts(storableObjects, force);
 				break;
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_CODE:
 				cObjectLoader.saveTransmissionPaths(storableObjects, force);
 				break;
-			case ObjectEntities.KIS_ENTITY_CODE:
+			case ObjectEntities.KIS_CODE:
 				cObjectLoader.saveKISs(storableObjects, force);
 				break;
-			case ObjectEntities.MONITOREDELEMENT_ENTITY_CODE:
+			case ObjectEntities.MONITOREDELEMENT_CODE:
 				cObjectLoader.saveMonitoredElements(storableObjects, force);
 				break;
-			case ObjectEntities.LINK_ENTITY_CODE:
+			case ObjectEntities.LINK_CODE:
 				cObjectLoader.saveLinks(storableObjects, force);
 				break;
-			case ObjectEntities.CABLETHREAD_ENTITY_CODE:
+			case ObjectEntities.CABLETHREAD_CODE:
 				cObjectLoader.saveCableThreads(storableObjects, force);
 				break;
 			default:

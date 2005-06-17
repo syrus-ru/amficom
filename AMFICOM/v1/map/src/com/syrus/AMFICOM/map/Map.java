@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.47 2005/06/09 12:15:16 krupenn Exp $
+ * $Id: Map.java,v 1.48 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.47 $, $Date: 2005/06/09 12:15:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -97,7 +97,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 	Map(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final MapDatabase database = (MapDatabase) DatabaseContext.getDatabase(ObjectEntities.MAP_ENTITY_CODE);
+		final MapDatabase database = (MapDatabase) DatabaseContext.getDatabase(ObjectEntities.MAP_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -153,7 +153,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
+			Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -1102,7 +1102,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 
 		super(
 				clonedIdsPool.getClonedId(
-						ObjectEntities.MAP_ENTITY_CODE, 
+						ObjectEntities.MAP_CODE, 
 						xmlMap.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),

@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.7 2005/06/07 17:11:36 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.8 2005/06/17 11:01:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/07 17:11:36 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:15 $
  * @module commonclient_v1
  */
 
@@ -150,7 +150,7 @@ public class CharacteristicAddDialog {
 
 		try {
 			TypicalCondition condition = new TypicalCondition(sort.value(), sort.value(), OperationSort.OPERATION_EQUALS,				
-					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CharacteristicTypeWrapper.COLUMN_SORT);
+					ObjectEntities.CHARACTERISTIC_TYPE_CODE, CharacteristicTypeWrapper.COLUMN_SORT);
 			Collection characteristicTypes = StorableObjectPool
 					.getStorableObjectsByCondition(condition, true, true);
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {

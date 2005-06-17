@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.32 2005/06/16 12:58:32 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.33 2005/06/17 11:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/16 12:58:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:03 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -41,9 +41,9 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 	private EventStorableObjectPool(Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
 
-		registerFactory(ObjectEntities.EVENTTYPE_ENTITY_CODE, new EventTypeFactory());
-		registerFactory(ObjectEntities.EVENT_ENTITY_CODE, new EventFactory());
-		registerFactory(ObjectEntities.EVENTSOURCE_ENTITY_CODE, new EventSourceFactory());
+		registerFactory(ObjectEntities.EVENT_TYPE_CODE, new EventTypeFactory());
+		registerFactory(ObjectEntities.EVENT_CODE, new EventFactory());
+		registerFactory(ObjectEntities.EVENTSOURCE_CODE, new EventSourceFactory());
 	}
 
 
@@ -78,10 +78,10 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 
 		eObjectLoader = eObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, EVENTTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EVENT_TYPE_CODE, EVENTTYPE_OBJECT_POOL_SIZE);
 
-		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENTSOURCE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EVENT_CODE, EVENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EVENTSOURCE_CODE, EVENTSOURCE_OBJECT_POOL_SIZE);
 	}
 
 	/**
@@ -100,10 +100,10 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 
 			eObjectLoader = eObjectLoader1;
 
-			instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.EVENT_TYPE_CODE, size);
 
-			instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.EVENT_CODE, size);
+			instance.addObjectPool(ObjectEntities.EVENTSOURCE_CODE, size);
 		}
 		else {
 			init(eObjectLoader1, cacheClass);
@@ -118,11 +118,11 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
-			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
+			case ObjectEntities.EVENT_TYPE_CODE:
 				return eObjectLoader.loadEventTypes(ids);
-			case ObjectEntities.EVENT_ENTITY_CODE:
+			case ObjectEntities.EVENT_CODE:
 				return eObjectLoader.loadEvents(ids);
-			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
+			case ObjectEntities.EVENTSOURCE_CODE:
 				return eObjectLoader.loadEventSources(ids);
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObjects | Unknown entity: '"
@@ -134,11 +134,11 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
+			case ObjectEntities.EVENT_TYPE_CODE:
 				return eObjectLoader.loadEventTypesButIds(condition, ids);
-			case ObjectEntities.EVENT_ENTITY_CODE:
+			case ObjectEntities.EVENT_CODE:
 				return eObjectLoader.loadEventsButIds(condition, ids);
-			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
+			case ObjectEntities.EVENTSOURCE_CODE:
 				return eObjectLoader.loadEventSourcesButIds(condition, ids);
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
@@ -153,13 +153,13 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
-			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
+			case ObjectEntities.EVENT_TYPE_CODE:
 				eObjectLoader.saveEventTypes(storableObjects, force);
 				break;
-			case ObjectEntities.EVENT_ENTITY_CODE:
+			case ObjectEntities.EVENT_CODE:
 				eObjectLoader.saveEvents(storableObjects, force);
 				break;
-			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
+			case ObjectEntities.EVENTSOURCE_CODE:
 				eObjectLoader.saveEventSources(storableObjects, force);
 				break;
 			default:

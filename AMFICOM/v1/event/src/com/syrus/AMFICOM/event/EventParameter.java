@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.13 2005/05/20 21:11:44 arseniy Exp $
+ * $Id: EventParameter.java,v 1.14 2005/06/17 11:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/20 21:11:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/06/17 11:01:03 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public class EventParameter implements Identifiable, TransferableObject, TypedObject {
@@ -53,7 +53,7 @@ public class EventParameter implements Identifiable, TransferableObject, TypedOb
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			EventParameter eventParameter = new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_ENTITY_CODE),
+			EventParameter eventParameter = new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_CODE),
 					type,
 					value);
 			return eventParameter;

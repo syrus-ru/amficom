@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.23 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.24 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * открыть вид 
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/06 12:57:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public class MapViewOpenCommand extends AbstractCommand {
@@ -72,7 +72,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 			Identifier domainId = LoginManager.getDomainId();
 			StorableObjectCondition condition = new LinkedIdsCondition(
 					domainId,
-					ObjectEntities.MAPVIEW_ENTITY_CODE);
+					ObjectEntities.MAPVIEW_CODE);
 			mapViews = StorableObjectPool.getStorableObjectsByCondition(
 					condition,
 					true);

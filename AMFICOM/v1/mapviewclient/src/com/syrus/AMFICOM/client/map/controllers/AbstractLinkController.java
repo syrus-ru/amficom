@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.23 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.24 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -81,7 +81,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,
+				ObjectEntities.CHARACTERISTIC_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 		try {
 			Collection pTypes = StorableObjectPool

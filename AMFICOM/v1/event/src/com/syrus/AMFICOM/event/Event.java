@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.26 2005/06/03 20:38:15 arseniy Exp $
+ * $Id: Event.java,v 1.27 2005/06/17 11:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/03 20:38:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:03 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -57,7 +57,7 @@ public final class Event extends StorableObject implements TypedObject {
 		this.eventParameters = new HashSet();
 		this.eventSourceIds = new HashSet();
 
-		final EventDatabase database = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_ENTITY_CODE);
+		final EventDatabase database = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -118,7 +118,7 @@ public final class Event extends StorableObject implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Event event = new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_ENTITY_CODE),
+			Event event = new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_CODE),
 					creatorId,
 					0L,
 					type,

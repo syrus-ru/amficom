@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.26 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.27 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/06/03 20:39:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -72,7 +72,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	CableChannelingItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE);
+		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLECHANNELINGITEM_CODE);
 		try {
 			this.cableChannelingItemDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -124,7 +124,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @param transferable
 	 */
 	CableChannelingItem(final CableChannelingItem_Transferable transferable) {
-		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE);
+		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLECHANNELINGITEM_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -180,7 +180,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 			final Date created = new Date();
 			final CableChannelingItem cableChannelingItem = new CableChannelingItem(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.CABLECHANNELINGITEM_CODE),
 					created, created, creatorId, creatorId,
 					0L, startSpare, endSpare, rowX, placeY,
 					sequentialNumber, physicalLink,

@@ -181,7 +181,7 @@ public class PathPropsPanel extends JPanel
 		});
 
 		try {
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
 			pathTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (ApplicationException ex) {

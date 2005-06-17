@@ -52,7 +52,7 @@ public class AnalysisUtil
 		TypicalCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 			java.util.Set parameterTypeSet = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
@@ -72,7 +72,7 @@ public class AnalysisUtil
 			new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.ANALYSISTYPE_ENTITY_CODE,
+				ObjectEntities.ANALYSIS_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);			
 
 		Collection aTypes = StorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);

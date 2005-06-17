@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.6 2005/06/06 11:02:26 arseniy Exp $
+ * $Id: CharacteristicsPanel.java,v 1.7 2005/06/17 11:01:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/06/06 11:02:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:15 $
  * @module commonclient_v1
  */
 
@@ -245,7 +245,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				}
 			}
 			StorableObjectPool.delete(removedIds);
-			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, true);
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 			return false;

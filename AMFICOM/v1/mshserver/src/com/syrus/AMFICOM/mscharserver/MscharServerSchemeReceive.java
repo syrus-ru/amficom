@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSchemeReceive.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerSchemeReceive.java,v 1.2 2005/06/17 11:01:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:13 $
  * @module mscharserver_v1
  */
 abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
@@ -44,7 +44,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEPROTOGROUP_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeProtoElements(
@@ -52,7 +52,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEPROTOELEMENT_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemes(
@@ -60,7 +60,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEME_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeElements(
@@ -68,7 +68,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEELEMENT_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeOptimizeInfos(
@@ -76,7 +76,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeOptimizeInfoSwitches(
@@ -84,7 +84,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE, transferables, force, sessionKey);
 	}
 			
 	public final StorableObject_Transferable[] receiveSchemeOptimizeInfoRtus(
@@ -92,7 +92,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeMonitoringSolutions(
@@ -100,7 +100,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeDevices(
@@ -108,7 +108,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEDEVICE_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemePorts(
@@ -116,7 +116,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_PORT_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEPORT_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeCablePorts(
@@ -124,7 +124,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMECABLEPORT_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeLinks(
@@ -132,7 +132,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_LINK_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMELINK_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeCableLinks(
@@ -140,7 +140,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMECABLELINK_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemeCableThreads(
@@ -148,7 +148,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMECABLETHREAD_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveCableChannelingItems(
@@ -156,7 +156,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.CABLECHANNELINGITEM_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSchemePaths(
@@ -164,7 +164,7 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SCHEME_PATH_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SCHEMEPATH_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receivePathElements(
@@ -172,6 +172,6 @@ abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.PATHELEMENT_CODE, transferables, force, sessionKey);
 	}
 }

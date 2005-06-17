@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.73 2005/06/16 10:34:04 bass Exp $
+ * $Id: Measurement.java,v 1.74 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/06/16 10:34:04 $
+ * @version $Revision: 1.74 $, $Date: 2005/06/17 11:01:00 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -62,7 +62,7 @@ public class Measurement extends Action {
 	public Measurement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -172,7 +172,7 @@ public class Measurement extends Action {
 	}
 	
 	public short getEntityCode() {
-		return ObjectEntities.MEASUREMENT_ENTITY_CODE;
+		return ObjectEntities.MEASUREMENT_CODE;
 	}
 
 	public MeasurementSetup getSetup() {
@@ -266,7 +266,7 @@ public class Measurement extends Action {
 			final Identifier testId) throws CreateObjectException {
 
 		try {
-			Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
+			Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_CODE),
 					creatorId,
 					0L,
 					type,
@@ -303,7 +303,7 @@ public class Measurement extends Action {
 	}
 
 	public java.util.Set getResults(final boolean breakOnLoadError) {
-		LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_ENTITY_CODE);
+		LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_CODE);
 		java.util.Set results = null;
 		try {
 			results = StorableObjectPool.getStorableObjectsByCondition(condition, true, breakOnLoadError);

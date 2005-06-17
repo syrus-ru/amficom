@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.42 2005/06/16 10:34:03 bass Exp $
+ * $Id: ModelingDatabase.java,v 1.43 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/17 11:00:59 $
  * @author $Author: bass $
  * @module module_name
  */
@@ -51,7 +51,7 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.MODELING_ENTITY_CODE;
+		return ObjectEntities.MODELING_CODE;
 	}
 
 	protected String getColumnsTmpl() {

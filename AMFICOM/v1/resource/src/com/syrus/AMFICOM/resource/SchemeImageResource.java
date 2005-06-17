@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.19 2005/06/03 20:38:27 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.20 2005/06/17 11:01:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/06/03 20:38:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/06/17 11:01:14 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -85,7 +85,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 */
 	public static SchemeImageResource createInstance(final Identifier creatorId) throws CreateObjectException {
 		try {
-			SchemeImageResource schemeImageResource = new SchemeImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
+			SchemeImageResource schemeImageResource = new SchemeImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
 					0L);
 

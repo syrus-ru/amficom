@@ -100,7 +100,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 			if (s.equals("root")) {
 				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 						getAccessIdentifier().domain_id);
-				LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEMEPROTOGROUP_CODE);
 				Collection groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 				for (Iterator it = groups.iterator(); it.hasNext(); )

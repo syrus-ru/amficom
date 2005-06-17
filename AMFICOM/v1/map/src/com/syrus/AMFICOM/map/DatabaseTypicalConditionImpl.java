@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.6 2005/06/10 14:06:12 max Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.7 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/10 14:06:12 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: bass $
  * @module map_v1
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -29,17 +29,17 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		String columnName = null;
 		/* check key support */
 		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+			case ObjectEntities.PHYSICALLINK_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
-			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
+			case ObjectEntities.SITENODE_TYPE_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
-			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+			case ObjectEntities.PHYSICALLINK_TYPE_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}

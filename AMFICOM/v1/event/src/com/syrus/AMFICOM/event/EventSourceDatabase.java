@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.17 2005/05/26 14:16:27 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.18 2005/06/17 11:01:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/26 14:16:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/06/17 11:01:03 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public final class EventSourceDatabase extends StorableObjectDatabase {
@@ -37,7 +37,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.EVENTSOURCE_ENTITY_CODE;
+		return ObjectEntities.EVENTSOURCE_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -77,35 +77,35 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 		short sourceEntityCode = sourceEntityId.getMajor();
 		preparedStatement.setShort(++startParameterNumber, sourceEntityCode);
 		switch (sourceEntityCode) {
-			case ObjectEntities.MCM_ENTITY_CODE:
+			case ObjectEntities.MCM_CODE:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				break;
-			case ObjectEntities.PORT_ENTITY_CODE:
+			case ObjectEntities.PORT_CODE:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				break;
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_CODE:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				break;
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_CODE:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				break;
-			case ObjectEntities.LINK_ENTITY_CODE:
+			case ObjectEntities.LINK_CODE:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
@@ -129,7 +129,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 		StringBuffer buffer = new StringBuffer(Short.toString(sourceEntityCode));
 		buffer.append(COMMA);
 		switch (sourceEntityCode) {
-			case ObjectEntities.MCM_ENTITY_CODE:
+			case ObjectEntities.MCM_CODE:
 				buffer.append(DatabaseIdentifier.toSQLString(sourceEntityId));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
@@ -140,7 +140,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				break;
-			case ObjectEntities.PORT_ENTITY_CODE:
+			case ObjectEntities.PORT_CODE:
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(sourceEntityId));
@@ -151,7 +151,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				break;
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_CODE:
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
@@ -162,7 +162,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				break;
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_CODE:
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
@@ -173,7 +173,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				break;
-			case ObjectEntities.LINK_ENTITY_CODE:
+			case ObjectEntities.LINK_CODE:
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
@@ -205,19 +205,19 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 		short sourceEntityCode = resultSet.getShort(EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE);
 		Identifier sourceEntityId = null;
 		switch (sourceEntityCode) {
-			case ObjectEntities.MCM_ENTITY_CODE:
+			case ObjectEntities.MCM_CODE:
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_MCM_ID);
 				break;
-			case ObjectEntities.PORT_ENTITY_CODE:
+			case ObjectEntities.PORT_CODE:
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_PORT_ID);
 				break;
-			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+			case ObjectEntities.EQUIPMENT_CODE:
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_EQUIPMENT_ID);
 				break;
-			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+			case ObjectEntities.TRANSPATH_CODE:
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID);
 				break;
-			case ObjectEntities.LINK_ENTITY_CODE:
+			case ObjectEntities.LINK_CODE:
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_LINK_ID);
 				break;
 			default:

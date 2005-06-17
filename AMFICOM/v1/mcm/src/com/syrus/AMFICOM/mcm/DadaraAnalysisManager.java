@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.46 2005/06/16 10:54:57 bass Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.47 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/06/16 10:54:57 $
+ * @version $Revision: 1.47 $, $Date: 2005/06/17 11:01:01 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -83,7 +83,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i],
 					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					ObjectEntities.PARAMETER_TYPE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME));
 		}
 

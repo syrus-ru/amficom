@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.31 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: ModelingType.java,v 1.32 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -56,7 +56,7 @@ public class ModelingType extends ActionType {
 		this.inParameterTypeIds = new HashSet();
 		this.outParameterTypeIds = new HashSet();
 
-		ModelingTypeDatabase database = (ModelingTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELINGTYPE_ENTITY_CODE);
+		ModelingTypeDatabase database = (ModelingTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -123,7 +123,7 @@ public class ModelingType extends ActionType {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELINGTYPE_ENTITY_CODE),
+			ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

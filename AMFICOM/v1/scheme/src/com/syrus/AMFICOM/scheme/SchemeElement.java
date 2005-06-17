@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.35 2005/06/07 15:45:54 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.36 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/06/07 15:45:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -86,7 +86,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	SchemeElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
+		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEELEMENT_CODE);
 		try {
 			this.schemeElementDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -142,7 +142,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		assert parentScheme == null || parentSchemeElement == null: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
-		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
+		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEELEMENT_CODE);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @throws CreateObjectException
 	 */
 	SchemeElement(final SchemeElement_Transferable transferable) throws CreateObjectException {
-		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
+		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEELEMENT_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -223,7 +223,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			final Date created = new Date();
 			final SchemeElement schemeElement = new SchemeElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, parentScheme, null);
 			schemeElement.markAsChanged();
@@ -271,7 +271,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			final Date created = new Date();
 			final SchemeElement schemeElement = new SchemeElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, null, parentSchemeElement);
 			schemeElement.markAsChanged();
@@ -462,7 +462,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemeDevices() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEDEVICE_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -475,7 +475,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemeElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEELEMENT_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -488,7 +488,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -501,7 +501,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set getSchemes() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

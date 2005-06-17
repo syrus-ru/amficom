@@ -23,7 +23,7 @@ public class SchemeOpenCommand extends AbstractCommand
 
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-			LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_ENTITY_CODE);
+			LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_CODE);
 			Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			mcd.setContents(schemes);
 		}

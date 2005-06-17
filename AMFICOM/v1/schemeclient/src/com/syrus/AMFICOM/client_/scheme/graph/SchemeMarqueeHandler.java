@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.6 2005/06/04 16:56:20 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.7 2005/06/17 11:01:04 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/04 16:56:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:04 $
  * @module schemeclient_v1
  */
 
@@ -308,8 +308,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			StorableObjectCondition condition = new TypicalCondition(
 					isCable ? PortSort._PORT_SORT_CABLE_PORT : PortSort._PORT_SORT_PORT,
 					0, OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PORTTYPE_ENTITY_CODE, PortTypeWrapper.COLUMN_SORT);
-//			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
+					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_SORT);
+//			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 			Set types = Collections.EMPTY_SET;
 			try {
 				types = StorableObjectPool.getStorableObjectsByCondition(condition, true);

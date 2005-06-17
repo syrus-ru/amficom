@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.32 2005/06/03 20:39:06 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.33 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/06/03 20:39:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -62,7 +62,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	SchemeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_LINK_ENTITY_CODE);
+		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMELINK_CODE);
 		try {
 			this.schemeLinkDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -115,7 +115,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 
-		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_LINK_ENTITY_CODE);
+		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMELINK_CODE);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	SchemeLink(final SchemeLink_Transferable transferable) throws CreateObjectException {
-		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_LINK_ENTITY_CODE);
+		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMELINK_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -223,7 +223,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			final Date created = new Date();
 			final SchemeLink schemeLink = new SchemeLink(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMELINK_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, physicalLength,
 					opticalLength, linkType, link,
@@ -271,7 +271,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			final Date created = new Date();
 			final SchemeLink schemeLink = new SchemeLink(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMELINK_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, physicalLength,
 					opticalLength, linkType, link,
@@ -320,7 +320,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			final Date created = new Date();
 			final SchemeLink schemeLink = new SchemeLink(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMELINK_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, physicalLength,
 					opticalLength, linkType, link,
@@ -369,7 +369,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			final Date created = new Date();
 			final SchemeLink schemeLink = new SchemeLink(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_LINK_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMELINK_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, physicalLength,
 					opticalLength, linkType, link,

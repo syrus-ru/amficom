@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.26 2005/05/26 14:33:34 arseniy Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.27 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/05/26 14:33:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class TopologicalNodeDatabase extends CharacterizableDatabase {
@@ -59,7 +59,7 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 	private void retrievePhysicalLink(TopologicalNode node) throws RetrieveObjectException, ObjectNotFoundException{
 		String nodeIdStr = DatabaseIdentifier.toSQLString(node.getId());
 		String sql = SQL_SELECT + NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + SQL_FROM
-				+ ObjectEntities.NODE_LINK_ENTITY + SQL_WHERE
+				+ ObjectEntities.NODELINK + SQL_WHERE
 				+ NodeLinkWrapper.COLUMN_START_NODE_ID + EQUALS + nodeIdStr + SQL_OR
 				+ NodeLinkWrapper.COLUMN_END_NODE_ID + EQUALS + nodeIdStr;
 		Statement statement = null;
@@ -165,7 +165,7 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 				+ NodeLinkWrapper.COLUMN_START_NODE_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_END_NODE_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
-				+ SQL_FROM + ObjectEntities.NODE_LINK_ENTITY
+				+ SQL_FROM + ObjectEntities.NODELINK
 				+ SQL_WHERE + startNodeIdStrs + SQL_OR + endNodeIdStrs;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -241,7 +241,7 @@ public final class TopologicalNodeDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE;
+		return ObjectEntities.TOPOLOGICALNODE_CODE;
 	}	
 
 	protected String getColumnsTmpl() {

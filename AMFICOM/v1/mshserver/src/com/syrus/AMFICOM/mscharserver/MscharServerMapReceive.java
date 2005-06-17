@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerMapReceive.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerMapReceive.java,v 1.2 2005/06/17 11:01:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:13 $
  * @module mscharserver_v1
  */
 abstract class MscharServerMapReceive extends MscharServerResourceReceive {
@@ -37,7 +37,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SITE_NODE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SITENODE_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveTopologicalNodes(
@@ -45,7 +45,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.TOPOLOGICALNODE_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveNodeLinks(
@@ -53,7 +53,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.NODE_LINK_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.NODELINK_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveMarks(
@@ -61,7 +61,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.MARK_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.MARK_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receivePhysicalLinks(
@@ -69,7 +69,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.PHYSICALLINK_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveCollectors(
@@ -77,7 +77,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.COLLECTOR_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.COLLECTOR_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveMaps(
@@ -85,7 +85,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.MAP_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.MAP_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveSiteNodeTypes(
@@ -93,7 +93,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.SITENODE_TYPE_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receivePhysicalLinkTypes(
@@ -101,7 +101,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.PHYSICALLINK_TYPE_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveMapViews(
@@ -109,6 +109,6 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.MAPVIEW_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.MAPVIEW_CODE, transferables, force, sessionKey);
 	}
 }

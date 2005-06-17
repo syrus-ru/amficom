@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.12 2005/05/18 11:27:15 bass Exp $
+ * $Id: EquipmentWrapper.java,v 1.13 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/18 11:27:15 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/17 11:01:10 $
  * @author $Author: bass $
  * @module configuration_v1
  */
@@ -60,7 +60,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
 				COLUMN_IMAGE_ID, COLUMN_LONGITUDE, COLUMN_LATITUDE, COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE,
 				COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION, COLUMN_INVENTORY_NUMBER,
-				COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK_ENTITY};
+				COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -111,7 +111,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 				return equipment.getInventoryNumber();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return equipment.getCharacteristics();
-			if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
+			if (key.equals(ObjectEntities.EQUIPMENTMELINK))
 				return equipment.getMonitoredElementIds();
 		}
 		return null;
@@ -169,7 +169,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
+		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK))
 			return Set.class;
 		return String.class;
 	}

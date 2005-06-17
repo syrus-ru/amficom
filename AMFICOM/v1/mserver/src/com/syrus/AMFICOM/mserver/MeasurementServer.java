@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.55 2005/06/16 10:54:57 bass Exp $
+ * $Id: MeasurementServer.java,v 1.56 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/06/16 10:54:57 $
+ * @version $Revision: 1.56 $, $Date: 2005/06/17 11:01:06 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -155,9 +155,9 @@ public class MeasurementServer extends SleepButWorkThread {
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		try {
 			final Server server = new Server(serverId);
-			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE)).retrieveForServerAndCodename(serverId, processCodename);
+			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE)).retrieveForServerAndCodename(serverId, processCodename);
 			final SystemUser user = new SystemUser(serverProcess.getUserId());
-			final Set mcmIds = Identifier.createIdentifiers(((MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE)).retrieveForServer(serverId));
+			final Set mcmIds = Identifier.createIdentifiers(((MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE)).retrieveForServer(serverId));
 			login = user.getLogin();
 			
 			/*	Create map of test queues*/
@@ -270,11 +270,11 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 
 	private static void fillMCMTestQueueMap() throws ApplicationException {
-		LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_ENTITY_CODE);
+		LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_CODE);
 		TypicalCondition tc = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
 				0,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.TEST_ENTITY_CODE,
+				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
 		CompoundCondition cc = null;
 		try {
@@ -352,7 +352,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 
 		try {
-			StorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -389,7 +389,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 			mcmIdsToAbortTests.clear();
 
-			StorableObjectPool.truncate(ObjectEntities.TEST_ENTITY_CODE);
+			StorableObjectPool.truncate(ObjectEntities.TEST_CODE);
 		}
 		else
 			Log.errorMessage("abortTests | Collection is NULL or empty");

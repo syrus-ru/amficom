@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.6 2005/05/26 14:15:39 arseniy Exp $
+ * $Id: ServerProcessDatabase.java,v 1.7 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/26 14:15:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public final class ServerProcessDatabase extends StorableObjectDatabase {
@@ -43,7 +43,7 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.SERVERPROCESS_ENTITY_CODE;
+		return ObjectEntities.SERVERPROCESS_CODE;
 	}
 
 	protected String getColumnsTmpl() {

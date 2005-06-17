@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.55 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: Link.java,v 1.56 2005/06/17 11:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/06/03 20:37:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/06/17 11:01:09 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterizable, TypedObject {
@@ -63,7 +63,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 
 		this.characteristics = new HashSet();
 
-		LinkDatabase database = (LinkDatabase) DatabaseContext.getDatabase(ObjectEntities.LINK_ENTITY_CODE);
+		LinkDatabase database = (LinkDatabase) DatabaseContext.getDatabase(ObjectEntities.LINK_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -143,7 +143,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Link link = new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_ENTITY_CODE),
+			Link link = new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_CODE),
 					creatorId,
 					0L,
 					domainId,

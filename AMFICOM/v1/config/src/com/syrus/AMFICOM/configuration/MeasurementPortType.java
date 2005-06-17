@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.51 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.52 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/03 20:37:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -52,7 +52,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 
 		this.characteristics = new HashSet();
 
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -103,7 +103,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			MeasurementPortType measurementPortType = new MeasurementPortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE),
+			MeasurementPortType measurementPortType = new MeasurementPortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

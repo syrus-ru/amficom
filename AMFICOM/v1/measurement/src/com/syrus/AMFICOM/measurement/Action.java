@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.30 2005/06/16 10:34:03 bass Exp $
+ * $Id: Action.java,v 1.31 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 11:00:59 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -96,7 +96,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 		return super.isValid()
 				&& this.type != null
 				&& this.monitoredElementId != null
-				&& (entityCode == ObjectEntities.MEASUREMENT_ENTITY_CODE || entityCode == ObjectEntities.MODELING_ENTITY_CODE || this.parentAction != null);
+				&& (entityCode == ObjectEntities.MEASUREMENT_CODE || entityCode == ObjectEntities.MODELING_CODE || this.parentAction != null);
 	}
 
 	public StorableObjectType getType() {

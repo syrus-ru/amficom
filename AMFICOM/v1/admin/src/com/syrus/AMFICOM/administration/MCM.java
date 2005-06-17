@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.28 2005/06/03 20:37:40 arseniy Exp $
+ * $Id: MCM.java,v 1.29 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/03 20:37:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -57,7 +57,7 @@ public class MCM extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_ENTITY_CODE);
+		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -223,7 +223,7 @@ public class MCM extends DomainMember implements Characterizable {
 			final Identifier userId,
 			final Identifier serverId) throws CreateObjectException {
 		try {
-			MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
+			MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_CODE),
 					creatorId,
 					0L,
 					domainId,

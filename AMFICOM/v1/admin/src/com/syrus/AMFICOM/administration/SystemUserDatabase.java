@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.1 2005/06/16 10:31:25 bass Exp $
+ * $Id: SystemUserDatabase.java,v 1.2 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/16 10:31:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:06 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -45,7 +45,7 @@ public final class SystemUserDatabase extends StorableObjectDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.SYSTEM_USER_ENTITY_CODE;
+		return ObjectEntities.SYSTEMUSER_CODE;
 	}
 
 	protected String getColumnsTmpl() {

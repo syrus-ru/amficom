@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.91 2005/06/16 10:34:03 bass Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.92 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.92 $, $Date: 2005/06/17 11:00:59 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -49,7 +49,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;	
 
 	protected short getEntityCode() {		
-		return ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE;
+		return ObjectEntities.MEASUREMENTSETUP_CODE;
 	}	
 
 	protected String getColumnsTmpl() {
@@ -172,7 +172,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 			return;
 
 		Map meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
-				ObjectEntities.MSMELINK_ENTITY,
+				ObjectEntities.MSMELINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
@@ -193,7 +193,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 			return;
 
 		Map mtIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
-				ObjectEntities.MSMTLINK_ENTITY,
+				ObjectEntities.MSMTLINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
@@ -279,7 +279,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 
 		super.updateLinkedEntityIds(meIdsMap,
-				ObjectEntities.MSMELINK_ENTITY,
+				ObjectEntities.MSMELINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
@@ -298,7 +298,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 
 		super.updateLinkedEntityIds(mtIdsMap,
-				ObjectEntities.MSMTLINK_ENTITY,
+				ObjectEntities.MSMTLINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	}

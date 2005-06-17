@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.13 2005/06/16 14:34:47 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.14 2005/06/17 11:01:08 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -183,7 +183,7 @@ public final class SchemeSampleData {
 //		StorableObjectCondition condition;
 //		condition = new LinkedIdsCondition(
 //				domainId,
-//				ObjectEntities.LINKTYPE_ENTITY_CODE);
+//				ObjectEntities.LINK_TYPE_CODE);
 //		Set linktypes = StorableObjectPool.getStorableObjectsByCondition(
 //				condition,
 //				true);
@@ -192,7 +192,7 @@ public final class SchemeSampleData {
 //		LinkType lt = (LinkType )linktypes.iterator().next();
 //		condition = new LinkedIdsCondition(
 //				domainId,
-//				ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+//				ObjectEntities.CABLELINK_TYPE_CODE);
 //		Set cablelinktypes = StorableObjectPool.getStorableObjectsByCondition(
 //				condition,
 //				true);
@@ -201,7 +201,7 @@ public final class SchemeSampleData {
 //		CableLinkType clt = (CableLinkType)cablelinktypes.iterator().next();
 //		condition = new LinkedIdsCondition(
 //				domainId,
-//				ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
+//				ObjectEntities.CABLETHREAD_TYPE_CODE);
 //		Set cablethreadtypes = StorableObjectPool.getStorableObjectsByCondition(
 //				condition,
 //				true);
@@ -209,8 +209,8 @@ public final class SchemeSampleData {
 //			return;
 //		CableThreadType ctt = (CableThreadType)cablethreadtypes.iterator().next();; 
 
-		LinkType lt = LinkType.createInstance(userId, "1", "2", "3", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "9", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
-		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
+		LinkType lt = LinkType.createInstance(userId, "1", "2", "3", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "9", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
+		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "7", "CTT", 0, lt, clt); 
 		
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк1", scheme);
@@ -389,7 +389,7 @@ public final class SchemeSampleData {
 //		StorableObjectCondition condition;
 //		condition = new LinkedIdsCondition(
 //				domainId,
-//				ObjectEntities.LINKTYPE_ENTITY_CODE);
+//				ObjectEntities.LINK_TYPE_CODE);
 //		Set linktypes = StorableObjectPool.getStorableObjectsByCondition(
 //				condition,
 //				true);
@@ -398,7 +398,7 @@ public final class SchemeSampleData {
 //		LinkType lt = (LinkType )linktypes.iterator().next();
 //		condition = new LinkedIdsCondition(
 //				domainId,
-//				ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+//				ObjectEntities.CABLELINK_TYPE_CODE);
 //		Set cablelinktypes = StorableObjectPool.getStorableObjectsByCondition(
 //				condition,
 //				true);
@@ -407,15 +407,15 @@ public final class SchemeSampleData {
 //		CableLinkType clt = (CableLinkType)cablelinktypes.iterator().next();
 //		condition = new LinkedIdsCondition(
 //				domainId,
-//				ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
+//				ObjectEntities.CABLETHREAD_TYPE_CODE);
 //		Set cablethreadtypes = StorableObjectPool.getStorableObjectsByCondition(
 //				condition,
 //				true);
 //		if(cablethreadtypes.isEmpty())
 //			return;
 //		CableThreadType ctt = (CableThreadType)cablethreadtypes.iterator().next();; 
-		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
-		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
+		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
+		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt); 
 
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк", scheme);

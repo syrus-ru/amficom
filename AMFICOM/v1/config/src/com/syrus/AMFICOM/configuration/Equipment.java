@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.93 2005/06/07 15:43:55 arseniy Exp $
+ * $Id: Equipment.java,v 1.94 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/06/07 15:43:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.94 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -68,7 +68,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 		this.characteristics = new HashSet();
 
-		EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_ENTITY_CODE);
+		EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -170,7 +170,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE),
+			Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -448,7 +448,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	 */
 	public Set getPorts(final boolean breakOnLoadError) {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PORT_ENTITY_CODE),
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PORT_CODE),
 					true,
 					breakOnLoadError);
 		}

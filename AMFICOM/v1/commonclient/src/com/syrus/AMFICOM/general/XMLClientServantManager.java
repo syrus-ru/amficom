@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.6 2005/06/16 11:11:03 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.7 2005/06/17 11:01:15 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/16 11:11:03 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:15 $
  * @author $Author: bass $
  * @module commonclient_v1
  */
@@ -60,7 +60,7 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 
 			public Domain_Transferable[] transmitAvailableDomains(SessionKey_Transferable arg0) throws AMFICOMRemoteException {
 				try {
-					Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE), true, true);
+					Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_CODE), true, true);
 					Domain_Transferable[] transferables = new Domain_Transferable[storableObjectsByCondition.size()];
 					int i = 0;
 					for (Iterator iterator = storableObjectsByCondition.iterator(); iterator.hasNext();i++) {
@@ -140,7 +140,7 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 													Identifier_TransferableHolder identifierTransferableHolder) throws AMFICOMRemoteException {
 				SessionKey_Transferable transferable = new SessionKey_Transferable(new Date().toString());
 				try {
-					Set users = StorableObjectPool.getStorableObjectsByCondition(new TypicalCondition(login, OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEM_USER_ENTITY_CODE, SystemUserWrapper.COLUMN_LOGIN), true, true);
+					Set users = StorableObjectPool.getStorableObjectsByCondition(new TypicalCondition(login, OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN), true, true);
 					if (users.isEmpty()) {
 						throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_LOGIN, CompletionStatus.COMPLETED_NO, "Error during acquire user");
 					}

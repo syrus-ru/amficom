@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.90 2005/06/16 10:34:04 bass Exp $
+ * $Id: ResultDatabase.java,v 1.91 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/06/16 10:34:04 $
+ * @version $Revision: 1.91 $, $Date: 2005/06/17 11:01:00 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -50,7 +50,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	private static String			updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.RESULT_ENTITY_CODE;
+		return ObjectEntities.RESULT_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -251,7 +251,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 //
 //		String resultIdStr = DatabaseIdentifier.toSQLString(result.getId());
 //		String sql = SQL_SELECT + COLUMN_ID + COMMA + LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE
-//				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE + LINK_COLUMN_RESULT_ID
+//				+ SQL_FROM + ObjectEntities.RESULTPARAMETER + SQL_WHERE + LINK_COLUMN_RESULT_ID
 //				+ EQUALS + resultIdStr;
 //		Statement statement = null;
 //		ResultSet resultSet = null;
@@ -312,7 +312,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ResultWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ ResultWrapper.LINK_COLUMN_RESULT_ID
-				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY
+				+ SQL_FROM + ObjectEntities.RESULTPARAMETER
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(results, ResultWrapper.LINK_COLUMN_RESULT_ID, true));
 
@@ -421,7 +421,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		Identifier resultId = result.getId();
 		Parameter[] setParameters = result.getParameters();
 		String sql = SQL_INSERT_INTO
-				+ ObjectEntities.RESULTPARAMETER_ENTITY + OPEN_BRACKET
+				+ ObjectEntities.RESULTPARAMETER + OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ResultWrapper.LINK_COLUMN_RESULT_ID + COMMA
@@ -449,7 +449,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 						connection,
-						ObjectEntities.RESULTPARAMETER_ENTITY,
+						ObjectEntities.RESULTPARAMETER,
 						ResultWrapper.LINK_COLUMN_PARAMETER_VALUE,
 						StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
@@ -476,7 +476,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() != ObjectEntities.RESULT_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() != ObjectEntities.RESULT_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String resultIdStr = DatabaseIdentifier.toSQLString(id);
@@ -484,9 +484,9 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULTPARAMETER_ENTITY
+			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULTPARAMETER
 					+ SQL_WHERE + ResultWrapper.LINK_COLUMN_RESULT_ID + EQUALS + resultIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT_ENTITY
+			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + resultIdStr);
 			connection.commit();
 		}

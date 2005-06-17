@@ -207,7 +207,7 @@ public class ElementsNavigatorPanel extends JPanel implements PropertyChangeList
 				try {
 					Identifier domain_id = LoginManager.getDomainId();
 					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
-							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+							ObjectEntities.SCHEMEPROTOGROUP_CODE);
 					Set groups = StorableObjectPool.getStorableObjectsByCondition(
 							condition, true);
 					

@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerResourceReceive.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerResourceReceive.java,v 1.2 2005/06/17 11:01:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:13 $
  * @module mscharserver_v1
  */
 abstract class MscharServerResourceReceive extends ServerCore implements MscharServerOperations {
@@ -28,6 +28,6 @@ abstract class MscharServerResourceReceive extends ServerCore implements MscharS
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.IMAGERESOURCE_CODE, transferables, force, sessionKey);
 	}
 }

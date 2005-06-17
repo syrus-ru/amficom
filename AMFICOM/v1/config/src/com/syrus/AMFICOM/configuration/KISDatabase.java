@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.74 2005/06/05 18:39:59 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.75 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/06/05 18:39:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -58,7 +58,7 @@ public final class KISDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.KIS_ENTITY_CODE;
+		return ObjectEntities.KIS_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -163,11 +163,11 @@ public final class KISDatabase extends CharacterizableDatabase {
 		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.MONITOREDELEMENT_ENTITY
+			+ SQL_FROM + ObjectEntities.MONITOREDELEMENT
 			+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID
-				+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
+				+ SQL_FROM + ObjectEntities.MEASUREMENTPORT
 				+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + EQUALS + kisIdStr
 			+ CLOSE_BRACKET;
 
@@ -214,14 +214,14 @@ public final class KISDatabase extends CharacterizableDatabase {
 			return null;
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
-		+ ObjectEntities.MONITOREDELEMENT_ENTITY + DOT + StorableObjectWrapper.COLUMN_ID + COMMA
-		+ ObjectEntities.MEASUREMENTPORT_ENTITY + DOT + MeasurementPortWrapper.COLUMN_KIS_ID
-		+ SQL_FROM + ObjectEntities.MONITOREDELEMENT_ENTITY + COMMA + ObjectEntities.MEASUREMENTPORT_ENTITY
-		+ SQL_WHERE + ObjectEntities.MONITOREDELEMENT_ENTITY + DOT + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN
+		+ ObjectEntities.MONITOREDELEMENT + DOT + StorableObjectWrapper.COLUMN_ID + COMMA
+		+ ObjectEntities.MEASUREMENTPORT + DOT + MeasurementPortWrapper.COLUMN_KIS_ID
+		+ SQL_FROM + ObjectEntities.MONITOREDELEMENT + COMMA + ObjectEntities.MEASUREMENTPORT
+		+ SQL_WHERE + ObjectEntities.MONITOREDELEMENT + DOT + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN
 		+ OPEN_BRACKET
 			+ SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
+			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT
 			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET);
 
 		int i = 1;

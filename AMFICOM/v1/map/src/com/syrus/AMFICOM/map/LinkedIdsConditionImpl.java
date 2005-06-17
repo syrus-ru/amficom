@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/05/20 21:11:56 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $
+ * @author $Author: bass $
  * @module map_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -41,7 +41,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 				final Identifier id = (Identifier) it.next();
-				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
+				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
 					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.isChild(domain))
 						condition = true;
@@ -58,7 +58,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 			final Identifier id = (Identifier) it.next();
-			if (id.getMajor() == ObjectEntities.PHYSICAL_LINK_ENTITY_CODE) {
+			if (id.getMajor() == ObjectEntities.PHYSICALLINK_CODE) {
 				if (nodeLink.getPhysicalLink().getId().equals(id))
 					condition = true;
 			}
@@ -70,8 +70,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 			final Identifier id = (Identifier) it.next();
-			if (id.getMajor() == ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE
-					|| id.getMajor() == ObjectEntities.SITE_NODE_ENTITY_CODE) {
+			if (id.getMajor() == ObjectEntities.TOPOLOGICALNODE_CODE
+					|| id.getMajor() == ObjectEntities.SITENODE_CODE) {
 				if (nodeLink.getStartNode().getId().equals(id)
 						|| nodeLink.getEndNode().getId().equals(id))
 					condition = true;
@@ -83,17 +83,17 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.NODE_LINK_ENTITY_CODE:
+			case ObjectEntities.NODELINK_CODE:
 				NodeLink nodeLink = (NodeLink) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+					case ObjectEntities.PHYSICALLINK_CODE:
 						condition = this.checkPhysicalLink(nodeLink);
 						break;
-					case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
+					case ObjectEntities.TOPOLOGICALNODE_CODE:
 						// fall through.
 						// finding a node link by endpoint is the same for
 						// topological node and site node
-					case ObjectEntities.SITE_NODE_ENTITY_CODE:
+					case ObjectEntities.SITENODE_CODE:
 						condition = this.checkNode(nodeLink);
 						break;
 					default:
@@ -102,10 +102,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.MAP_ENTITY_CODE:
+			case ObjectEntities.MAP_CODE:
 				Map map = (Map) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.DOMAIN_ENTITY_CODE:
+					case ObjectEntities.DOMAIN_CODE:
 						condition = this.checkDomain(map);
 						break;
 					default:
@@ -124,7 +124,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.MAP_ENTITY_CODE:
+			case ObjectEntities.MAP_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:

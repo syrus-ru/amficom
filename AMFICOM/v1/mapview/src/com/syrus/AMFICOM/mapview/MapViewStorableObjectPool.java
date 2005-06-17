@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.23 2005/06/16 13:03:28 arseniy Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.24 2005/06/17 11:01:07 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -22,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/06/16 13:03:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -40,7 +40,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	private MapViewStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MAPVIEW_GROUP_CODE, cacheMapClass);
 
-		registerFactory(ObjectEntities.MAPVIEW_ENTITY_CODE, new MapViewFactory());
+		registerFactory(ObjectEntities.MAPVIEW_CODE, new MapViewFactory());
 	}
 
 
@@ -75,7 +75,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 		mvObjectLoader = mvObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, MAPVIEW_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MAPVIEW_CODE, MAPVIEW_OBJECT_POOL_SIZE);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 			mvObjectLoader = mvObjectLoader1;
 
-			instance.addObjectPool(ObjectEntities.MAPVIEW_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.MAPVIEW_CODE, size);
 		}
 		else {
 			init(mvObjectLoader1, cacheClass);
@@ -109,7 +109,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
-			case ObjectEntities.MAPVIEW_ENTITY_CODE:
+			case ObjectEntities.MAPVIEW_CODE:
 				return mvObjectLoader.loadMapViews(ids);
 			default:
 				Log.errorMessage("MapViewStorableObjectPool.loadStorableObjects | Unknown entity: '"
@@ -121,7 +121,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-			case ObjectEntities.MAP_ENTITY_CODE:
+			case ObjectEntities.MAP_CODE:
 				return mvObjectLoader.loadMapViewsButIds(condition, ids);
 			default:
 				Log.errorMessage("MapViewStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
@@ -136,7 +136,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
-			case ObjectEntities.MAPVIEW_ENTITY_CODE:
+			case ObjectEntities.MAPVIEW_CODE:
 				mvObjectLoader.saveMapViews(storableObjects, force);
 				break;
 			default:

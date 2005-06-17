@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.32 2005/06/03 20:37:26 arseniy Exp $
+ * $Id: ParameterType.java,v 1.33 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/03 20:37:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/06/17 11:00:57 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -42,7 +42,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		
 		this.characteristics = new HashSet();
 		
-		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETER_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -104,7 +104,7 @@ public final class ParameterType extends StorableObjectType implements Character
 			final String name,
 			final DataType dataType) throws CreateObjectException {
 		try {
-			ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+			ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

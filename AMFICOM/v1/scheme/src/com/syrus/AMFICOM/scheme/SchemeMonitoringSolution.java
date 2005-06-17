@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.33 2005/06/15 12:20:41 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.34 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/06/15 12:20:41 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -70,7 +70,7 @@ public final class SchemeMonitoringSolution extends
 	SchemeMonitoringSolution(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE);
+		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
 		try {
 			this.schemeMonitoringSolutionDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -109,7 +109,7 @@ public final class SchemeMonitoringSolution extends
 	 * @param transferable
 	 */
 	SchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable transferable) {
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE);
+		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -150,7 +150,7 @@ public final class SchemeMonitoringSolution extends
 			final Date created = new Date();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, price, active,
 					parentSchemeOptimizeInfo);
@@ -236,7 +236,7 @@ public final class SchemeMonitoringSolution extends
 	 */
 	public Set getSchemePaths() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PATH_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPATH_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

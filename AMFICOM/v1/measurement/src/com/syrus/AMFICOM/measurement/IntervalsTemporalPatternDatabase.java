@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.4 2005/05/26 08:33:32 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.5 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/26 08:33:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:01:00 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -65,7 +65,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 	
 	protected short getEntityCode() {		
-		return ObjectEntities.INTERVALS_TEMPORALPATTERN_ENTITY_CODE;
+		return ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
 	}
 	
 	protected String getColumnsTmpl() {

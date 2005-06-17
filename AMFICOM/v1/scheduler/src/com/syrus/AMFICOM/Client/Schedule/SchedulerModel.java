@@ -337,7 +337,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (groupTestId != null) {
 			try {
 				java.util.Set testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
-					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_ENTITY_CODE), true, true);
+					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
 				java.util.Set testIds = new HashSet(testsByCondition.size());
 				for (Iterator iterator = testsByCondition.iterator(); iterator.hasNext();) {
 					Identifier testId = ((Test) iterator.next()).getId();
@@ -365,13 +365,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// Collection temporalPatterns =
 		// MeasurementStorableObjectPool.getStorableObjectsByCondition(
 		// new
-		// EquivalentCondition(ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE),
+		// EquivalentCondition(ObjectEntities.CRONTEMPORALPATTERN_CODE),
 		// true);
 		// this.testTemporalStampsEditor.setTemporalPatterns(temporalPatterns);
 
 		{
 			Collection measurementTypes = StorableObjectPool.getStorableObjectsByCondition(
-				new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true, true);
+				new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE), true, true);
 
 			// LinkedIdsCondition domainCondition = new
 			// LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
@@ -407,7 +407,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 																StorableObjectPool
 																		.getStorableObjectsByCondition(
 																			new EquivalentCondition(
-																									ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
+																									ObjectEntities.ANALYSIS_TYPE_CODE),
 																			true, true)));
 
 			this.dispatcher
@@ -418,7 +418,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 																StorableObjectPool
 																		.getStorableObjectsByCondition(
 																			new EquivalentCondition(
-																									ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+																									ObjectEntities.EVALUATION_TYPE_CODE),
 																			true, true)));
 
 			// if (!monitoredElements.isEmpty()) {
@@ -633,19 +633,19 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		TypicalCondition startTypicalCondition = new TypicalCondition(startDate, endDate,
 																		OperationSort.OPERATION_IN_RANGE,
-																		ObjectEntities.TEST_ENTITY_CODE,
+																		ObjectEntities.TEST_CODE,
 																		TestWrapper.COLUMN_START_TIME);
 		TypicalCondition endTypicalCondition = new TypicalCondition(startDate, endDate,
 																	OperationSort.OPERATION_IN_RANGE,
-																	ObjectEntities.TEST_ENTITY_CODE,
+																	ObjectEntities.TEST_CODE,
 																	TestWrapper.COLUMN_END_TIME);
 		TypicalCondition startTypicalCondition1 = new TypicalCondition(startDate, null,
 																		OperationSort.OPERATION_LESS_EQUALS,
-																		ObjectEntities.TEST_ENTITY_CODE,
+																		ObjectEntities.TEST_CODE,
 																		TestWrapper.COLUMN_START_TIME);
 		TypicalCondition endTypicalCondition2 = new TypicalCondition(endDate, null,
 																		OperationSort.OPERATION_GREAT_EQUALS,
-																		ObjectEntities.TEST_ENTITY_CODE,
+																		ObjectEntities.TEST_CODE,
 																		TestWrapper.COLUMN_END_TIME);
 
 		CompoundCondition compoundCondition1 = new CompoundCondition(startTypicalCondition, CompoundConditionSort.OR,
@@ -761,12 +761,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		if (SchedulerModel.this.measurementType != null) {
 			identifier = SchedulerModel.this.measurementType.getId();
-			measurementTypeCondition = new LinkedIdsCondition(identifier, ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
+			measurementTypeCondition = new LinkedIdsCondition(identifier, ObjectEntities.MEASUREMENTSETUP_CODE);
 		}
 
 		if (SchedulerModel.this.monitoredElement != null) {
 			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(SchedulerModel.this.monitoredElement
-					.getId(), ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
+					.getId(), ObjectEntities.MEASUREMENTSETUP_CODE);
 			try {
 				if (measurementTypeCondition != null) {
 					idSet = new HashSet(2);
@@ -854,7 +854,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void commitChanges() throws ApplicationException {
-		StorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
 		if (this.meTestGroup != null) {
 			this.meTestGroup.clear();
 		}

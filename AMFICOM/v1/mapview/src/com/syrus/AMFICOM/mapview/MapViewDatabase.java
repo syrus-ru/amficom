@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.24 2005/05/26 14:33:52 arseniy Exp $
+* $Id: MapViewDatabase.java,v 1.25 2005/06/17 11:01:07 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/26 14:33:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/17 11:01:07 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public final class MapViewDatabase extends CharacterizableDatabase {
@@ -103,7 +103,7 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 	}	
 	
 	protected short getEntityCode() {		
-		return ObjectEntities.MAPVIEW_ENTITY_CODE;
+		return ObjectEntities.MAPVIEW_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {

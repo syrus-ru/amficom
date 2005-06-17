@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.32 2005/06/07 15:45:54 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.33 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  * #07 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/06/07 15:45:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -71,7 +71,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE);
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEDEVICE_CODE);
 		try {
 			this.schemeDeviceDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -106,7 +106,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
 		this.characteristics = new HashSet();
-		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE);
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEDEVICE_CODE);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeDevice(final SchemeDevice_Transferable transferable) throws CreateObjectException {
-		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE);
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEDEVICE_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -185,7 +185,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeDevice schemeDevice = new SchemeDevice(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEDEVICE_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					null, null);
@@ -217,7 +217,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeDevice schemeDevice = new SchemeDevice(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEDEVICE_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					parentSchemeProtoElement, null);
@@ -250,7 +250,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeDevice schemeDevice = new SchemeDevice(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEDEVICE_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					null, parentSchemeElement);
@@ -383,7 +383,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeCablePorts() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLEPORT_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -396,7 +396,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemePorts() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PORT_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPORT_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

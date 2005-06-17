@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.6 2005/06/15 13:17:17 bass Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.7 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/15 13:17:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  */
 public final class SchemeCablePortDatabase extends CharacterizableDatabase {
@@ -67,7 +67,7 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE;
+		return ObjectEntities.SCHEMECABLEPORT_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

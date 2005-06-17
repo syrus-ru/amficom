@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.49 2005/05/26 08:33:35 bass Exp $
+ * $Id: PortTypeDatabase.java,v 1.50 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/05/26 08:33:35 $
+ * @version $Revision: 1.50 $, $Date: 2005/06/17 11:01:10 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -40,7 +40,7 @@ public final class PortTypeDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.PORTTYPE_ENTITY_CODE;
+		return ObjectEntities.PORT_TYPE_CODE;
 	}	
 
 	protected String getColumnsTmpl() {		

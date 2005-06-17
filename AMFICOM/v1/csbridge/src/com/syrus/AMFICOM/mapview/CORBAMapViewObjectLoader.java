@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapViewObjectLoader.java,v 1.4 2005/06/07 16:34:26 bass Exp $
+ * $Id: CORBAMapViewObjectLoader.java,v 1.5 2005/06/17 11:01:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/07 16:34:26 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:01:02 $
  * @module csbridge_v1
  */
 public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements MapViewObjectLoader {
@@ -43,7 +43,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 	/* Load multiple objects*/
 
 	public Set loadMapViews(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MAPVIEW_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MAPVIEW_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -59,7 +59,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadMapViewsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MAPVIEW_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MAPVIEW_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -76,7 +76,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 	/*	Save multiple objects*/
 
 	public void saveMapViews(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.MAPVIEW_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.MAPVIEW_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.32 2005/06/06 12:31:37 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.33 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.Ch
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/06 12:31:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/06/17 11:00:57 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -38,7 +38,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	CharacteristicType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -114,7 +114,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 			final DataType dataType,
 			final CharacteristicTypeSort sort) throws CreateObjectException {
 		try {
-			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
+			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

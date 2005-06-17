@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.11 2005/06/06 13:28:09 stas Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.12 2005/06/17 11:01:15 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/06 13:28:09 $
- * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/06/17 11:01:15 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
@@ -112,7 +112,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				item.addChild(item3);
 
 			} else if (s.equals(MEASUREMENTS) || s.equals(PREDICTED)) {
-				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId, ObjectEntities.MONITOREDELEMENT_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId, ObjectEntities.MONITOREDELEMENT_CODE);
 				try {
 					Set meSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					List list = new LinkedList(meSet);
@@ -147,7 +147,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				item.addChild(item3);
 			} else if (s.equals(CALCULATED)) {
 				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId,
-																		ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+																		ObjectEntities.SCHEMEPATH_CODE);
 				try {
 					Set paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = paths.iterator(); it.hasNext();) {
@@ -165,7 +165,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			} else if (s.equals(MEASUREMENTSETUPS)) {
 				Item parent = item.getParent();
 				MonitoredElement me = (MonitoredElement) parent.getObject();
-				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENTSETUP_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENTSETUP_CODE);
 				try {
 					Collection mSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mSetups.iterator(); it.hasNext();) {
@@ -236,7 +236,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				 * condition = LinkedIdsCondition.getInstance();
 				 * condition.setDomain(domain);
 				 * condition.setIdentifier(me.getId());
-				 * condition.setEntityCode(ObjectEntities.MODELING_ENTITY_CODE);
+				 * condition.setEntityCode(ObjectEntities.MODELING_CODE);
 				 * List models =
 				 * MeasurementStorableObjectPool.getStorableObjectsByCondition(condition,
 				 * true); for (Iterator it = models.iterator(); it.hasNext();) {
@@ -248,7 +248,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 		} else if (nodeObject instanceof SchemePath) {
 			/*
 			 * StorableObjectCondition condition = new DomainCondition(domain,
-			 * ObjectEntities.MODELING_ENTITY_CODE); List models =
+			 * ObjectEntities.MODELING_CODE); List models =
 			 * MeasurementStorableObjectPool.getStorableObjectsByCondition(condition,
 			 * true); for (Iterator it = models.iterator(); it.next();) {
 			 * Modeling model = (Modeling)it.next(); if
@@ -258,9 +258,9 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			// "images/prognosis_mini.gif"
 		} else if (nodeObject instanceof MeasurementSetup) {
 			MeasurementSetup setup = (MeasurementSetup) nodeObject;
-			LinkedIdsCondition condition = new LinkedIdsCondition(setup.getId(), ObjectEntities.TEST_ENTITY_CODE);
+			LinkedIdsCondition condition = new LinkedIdsCondition(setup.getId(), ObjectEntities.TEST_CODE);
 			try {
-				condition.setEntityCode(ObjectEntities.TEST_ENTITY_CODE);
+				condition.setEntityCode(ObjectEntities.TEST_CODE);
 				Collection tests = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
@@ -275,7 +275,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			}
 		} else if (nodeObject instanceof Test) {
 			Test test = (Test) nodeObject;
-			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
+			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE);
 			try {
 				Collection measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				Set measurementIds = new HashSet();
@@ -284,7 +284,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 					measurementIds.add(measurement.getId());
 				}
 				if (!measurementIds.isEmpty()) {
-					condition.setEntityCode(ObjectEntities.RESULT_ENTITY_CODE);
+					condition.setEntityCode(ObjectEntities.RESULT_CODE);
 					condition.setLinkedIds(measurementIds);
 					for (Iterator iter = StorableObjectPool.getStorableObjectsByCondition(condition, true)
 							.iterator(); iter.hasNext();) {
@@ -338,7 +338,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				StorableObjectCondition condition;
 				TypicalCondition condition1 = new TypicalCondition(startDate, endDate,
 																	OperationSort.OPERATION_IN_RANGE,
-																	ObjectEntities.TEST_ENTITY_CODE,
+																	ObjectEntities.TEST_CODE,
 																	TestWrapper.COLUMN_START_TIME);
 				// */
 				condition = condition1;
@@ -346,7 +346,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				 * / TypicalCondition condition2 = new
 				 * TypicalCondition(startDate, endDate,
 				 * OperationSort.OPERATION_IN_RANGE,
-				 * ObjectEntities.TEST_ENTITY_CODE,
+				 * ObjectEntities.TEST_CODE,
 				 * TestWrapper.COLUMN_START_TIME); try { condition = new
 				 * CompoundCondition(condition1, CompoundConditionSort.AND,
 				 * condition2); } catch (CreateObjectException e) { // it's

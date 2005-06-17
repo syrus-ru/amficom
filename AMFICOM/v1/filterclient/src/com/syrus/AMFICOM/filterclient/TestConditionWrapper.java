@@ -1,5 +1,5 @@
 /*
- * $Id: TestConditionWrapper.java,v 1.9 2005/06/15 07:08:10 max Exp $
+ * $Id: TestConditionWrapper.java,v 1.10 2005/06/17 11:01:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,13 +17,13 @@ import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/15 07:08:10 $
- * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/06/17 11:01:05 $
+ * @author $Author: bass $
  * @module filterclient_v1
  */
 public class TestConditionWrapper implements ConditionWrapper {
 
-	private static short entityCode = ObjectEntities.TEST_ENTITY_CODE;
+	private static short entityCode = ObjectEntities.TEST_CODE;
 	
 	//private static final String STATUS = "Status";
 	private static final String START_TIME = "Start time";
@@ -37,9 +37,9 @@ public class TestConditionWrapper implements ConditionWrapper {
 		//keys.add(new ConditionKey(TestWrapper.COLUMN_STATUS, STATUS, testStatusNames));
 		keys.add(new ConditionKey(TestWrapper.COLUMN_START_TIME, START_TIME, ConditionWrapper.DATE));
 		keys.add(new ConditionKey(TestWrapper.COLUMN_END_TIME, END_TIME, ConditionWrapper.DATE));
-		//keys.add(new ConditionKey(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE));
-		//keys.add(new ConditionKey(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE));
-		//keys.add(new ConditionKey(ObjectEntities.MCM_ENTITY_CODE));
+		//keys.add(new ConditionKey(ObjectEntities.MONITOREDELEMENT_CODE));
+		//keys.add(new ConditionKey(ObjectEntities.MEASUREMENTPORT_CODE));
+		//keys.add(new ConditionKey(ObjectEntities.MCM_CODE));
 		keys.add(new ConditionKey(StorableObjectWrapper.COLUMN_NAME, BYNAME, ConditionWrapper.STRING));
 	}
 	

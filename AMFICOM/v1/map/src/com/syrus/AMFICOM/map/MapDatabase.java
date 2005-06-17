@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.29 2005/05/26 14:33:34 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.30 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/05/26 14:33:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class MapDatabase extends CharacterizableDatabase {
@@ -218,7 +218,7 @@ public final class MapDatabase extends CharacterizableDatabase {
 	}
 	
 	protected short getEntityCode() {		
-		return ObjectEntities.MAP_ENTITY_CODE;
+		return ObjectEntities.MAP_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {

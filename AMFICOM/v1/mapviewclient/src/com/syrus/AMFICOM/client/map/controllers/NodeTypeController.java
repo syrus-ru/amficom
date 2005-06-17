@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.23 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.24 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -146,7 +146,7 @@ public class NodeTypeController extends AbstractNodeController {
 			StorableObjectCondition condition = new TypicalCondition(
 				String.valueOf(ImageResourceSort._FILE),
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
+				ObjectEntities.IMAGERESOURCE_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
 			Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 //			List bitMaps = Collections.EMPTY_LIST;
@@ -189,7 +189,7 @@ public class NodeTypeController extends AbstractNodeController {
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+				ObjectEntities.SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		try {
@@ -265,7 +265,7 @@ public class NodeTypeController extends AbstractNodeController {
 	 */
 	public static Collection getTopologicalNodeTypes() {
 		Collection list = Collections.EMPTY_LIST;
-		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
 		try {
 			list = StorableObjectPool.getStorableObjectsByCondition(
 					pTypeCondition,

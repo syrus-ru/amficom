@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.59 2005/06/16 10:34:03 bass Exp $
+ * $Id: AnalysisDatabase.java,v 1.60 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.60 $, $Date: 2005/06/17 11:00:59 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -52,7 +52,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 	}	
 
 	protected short getEntityCode() {		
-		return ObjectEntities.ANALYSIS_ENTITY_CODE;
+		return ObjectEntities.ANALYSIS_CODE;
 	}	
 
 	protected String getColumnsTmpl() {

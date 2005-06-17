@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.61 2005/05/26 08:33:35 bass Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.62 2005/06/17 11:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/05/26 08:33:35 $
+ * @version $Revision: 1.62 $, $Date: 2005/06/17 11:01:09 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -51,7 +51,7 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.TRANSPATH_ENTITY_CODE;
+		return ObjectEntities.TRANSPATH_CODE;
 	}
 
 	protected String getColumnsTmpl() {

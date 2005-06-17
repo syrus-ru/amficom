@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.24 2005/05/26 14:33:34 arseniy Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.25 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/05/26 14:33:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
@@ -46,7 +46,7 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 	}	
 	
 	protected short getEntityCode() {		
-		return ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE;
+		return ObjectEntities.PHYSICALLINK_TYPE_CODE;
 	}	
 	
 	protected String getColumnsTmpl() {

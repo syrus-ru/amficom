@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.50 2005/06/07 13:57:33 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.51 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/06/07 13:57:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/06/17 11:01:01 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -66,7 +66,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	/* Load multiple objects*/
 
 	public final Set loadMeasurements(final Set ids) throws ApplicationException {
-		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_ENTITY_CODE, ids, new TransmitProcedure() {
+		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_CODE, ids, new TransmitProcedure() {
 			public final IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
 					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
@@ -76,7 +76,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadAnalyses(Set ids) throws ApplicationException {
-		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_ENTITY_CODE, ids, new TransmitProcedure() {
+		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_CODE, ids, new TransmitProcedure() {
 			public final IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
 					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
@@ -86,7 +86,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadEvaluations(Set ids) throws ApplicationException {
-		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.EVALUATION_ENTITY_CODE, ids, new TransmitProcedure() {
+		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.EVALUATION_CODE, ids, new TransmitProcedure() {
 			public final IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
 					final Identifier_Transferable[] idsT,
 					final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
@@ -100,7 +100,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 
 	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE,
+		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -114,7 +114,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_ENTITY_CODE,
+		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -128,7 +128,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	}
 
 	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_ENTITY_CODE,
+		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_CODE,
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
@@ -184,7 +184,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		Set testIdentifiers = null;
 		for (final Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			if (id.getMajor() == ObjectEntities.TEST_ENTITY_CODE) {
+			if (id.getMajor() == ObjectEntities.TEST_CODE) {
 				if (testIdentifiers == null) {
 					testIdentifiers = new HashSet();
 				}

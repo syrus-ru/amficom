@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.5 2005/06/04 16:56:23 bass Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.6 2005/06/17 11:01:14 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:23 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:14 $
  * @author $Author: bass $
  * @module resource_v1
  */
@@ -30,7 +30,7 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		String columnName = null;
 		/* check key support */
 		switch(super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+			case ObjectEntities.IMAGERESOURCE_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME))
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				if (this.condition.getKey().equals(ImageResourceWrapper.COLUMN_DATA))

@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.4 2005/05/26 14:15:57 arseniy Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.5 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/26 14:15:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -50,7 +50,7 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;	
 
 	protected short getEntityCode() {		
-		return ObjectEntities.CRONTEMPORALPATTERN_ENTITY_CODE;
+		return ObjectEntities.CRONTEMPORALPATTERN_CODE;
 	}
 	
 	protected String getColumnsTmpl() {
@@ -136,7 +136,7 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 		PreparedStatement preparedStatement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try{
-			String sql = SQL_INSERT_INTO + ObjectEntities.CRONTEMPORALPATTERN_ENTITY
+			String sql = SQL_INSERT_INTO + ObjectEntities.CRONTEMPORALPATTERN
 			+ OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET

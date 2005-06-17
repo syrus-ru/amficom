@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.35 2005/05/26 14:04:28 bass Exp $
+ * $Id: CharacteristicDatabase.java,v 1.36 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/05/26 14:04:28 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/17 11:00:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -30,7 +30,7 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.CHARACTERISTIC_ENTITY_CODE;
+		return ObjectEntities.CHARACTERISTIC_CODE;
 	}
 
 	protected String getColumnsTmpl() {

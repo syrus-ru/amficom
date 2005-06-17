@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceDatabase.java,v 1.5 2005/06/15 13:17:17 bass Exp $
+ * $Id: SchemeDeviceDatabase.java,v 1.6 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/15 13:17:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  */
 public final class SchemeDeviceDatabase extends CharacterizableDatabase {
@@ -62,7 +62,7 @@ public final class SchemeDeviceDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.SCHEME_DEVICE_ENTITY_CODE;
+		return ObjectEntities.SCHEMEDEVICE_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

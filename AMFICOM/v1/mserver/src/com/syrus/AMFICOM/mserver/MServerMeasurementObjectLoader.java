@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.35 2005/06/15 15:55:12 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.36 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/15 15:55:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
@@ -45,7 +45,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	 * @todo make access validation on MCM
 	 */
 	public Set loadMeasurements(final Set ids) throws ApplicationException {
-		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_CODE,
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
@@ -60,7 +60,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	 * @todo make access validation on MCM
 	 */
 	public Set loadAnalyses(final Set ids) throws ApplicationException {
-		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
@@ -75,7 +75,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	 * @todo make access validation on MCM
 	 */
 	public Set loadEvaluations(final Set ids) throws ApplicationException {
-		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
 					public final IDLEntity[] transmitStorableObjects(final MCM mcmRef,
@@ -92,7 +92,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	 * @todo make access validation on MCM
 	 */
 	public Set loadMeasurementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_CODE,
 				ids,
 				condition,
 				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
@@ -109,7 +109,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	 * @todo make access validation on MCM
 	 */
 	public Set loadAnalysesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				condition,
 				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
@@ -126,7 +126,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	 * @todo make access validation on MCM
 	 */
 	public Set loadEvaluationsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_ENTITY_CODE,
+		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_CODE,
 				ids,
 				condition,
 				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
@@ -151,7 +151,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 		Set testIdentifiers = null;
 		for (Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			if (id.getMajor() == ObjectEntities.TEST_ENTITY_CODE) {
+			if (id.getMajor() == ObjectEntities.TEST_CODE) {
 				if (testIdentifiers == null) {
 					testIdentifiers = new HashSet();
 				}

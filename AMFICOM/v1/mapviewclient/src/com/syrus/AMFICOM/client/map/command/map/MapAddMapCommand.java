@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.7 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: MapAddMapCommand.java,v 1.8 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:57:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public class MapAddMapCommand extends AbstractCommand
@@ -92,7 +92,7 @@ public class MapAddMapCommand extends AbstractCommand
 		try
 		{
 			Identifier domainId = LoginManager.getDomainId();
-			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAP_ENTITY_CODE);
+			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAP_CODE);
 			Collection ss = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			ss.remove(mapView.getMap());
 			mapChooserDialog.setContents(ss);

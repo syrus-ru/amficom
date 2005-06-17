@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.90 2005/05/27 18:36:04 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.91 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/05/27 18:36:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -46,7 +46,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	private static String updateMultipleSQLValues;
 
 	String getParameterTypeLinkTableName() {
-		return ObjectEntities.ANATYPPARTYPLINK_ENTITY;
+		return ObjectEntities.ANATYPPARTYPLINK;
 	}
 
 	String getActionTypeColumnName() {
@@ -61,7 +61,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.ANALYSISTYPE_ENTITY_CODE;
+		return ObjectEntities.ANALYSIS_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -115,7 +115,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 			return;
 
 		Map measurementTypeIdsMap = super.retrieveLinkedEntityIds(analysisTypes,
-				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				ObjectEntities.MNTTYPANATYPEVATYP,
 				AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
@@ -199,13 +199,13 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 		}
 
 		super.updateLinkedEntityIds(mtIdsMap,
-				ObjectEntities.MNTTYPANATYPEVATYP_ENTITY,
+				ObjectEntities.MNTTYPANATYPEVATYP,
 				AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
 				MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() != ObjectEntities.ANALYSISTYPE_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() != ObjectEntities.ANALYSIS_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(id);
@@ -214,10 +214,10 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.ANATYPPARTYPLINK_ENTITY
+					+ ObjectEntities.ANATYPPARTYPLINK
 					+ SQL_WHERE + AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID + EQUALS + analysisTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.ANALYSISTYPE_ENTITY
+					+ ObjectEntities.ANALYSIS_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + analysisTypeIdStr);
 			connection.commit();
 		}

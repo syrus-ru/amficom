@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.125 2005/06/15 09:49:35 arseniy Exp $
+ * $Id: Test.java,v 1.126 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.125 $, $Date: 2005/06/15 09:49:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.126 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -83,7 +83,7 @@ public class Test extends StorableObject {
 		super(id);
 		this.measurementSetupIds = new HashSet();
 
-		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -198,7 +198,7 @@ public class Test extends StorableObject {
 			final String description,
 			final java.util.Set measurementSetupIds) throws CreateObjectException {
 		try {
-			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
+			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
 					0L,
 					startTime,
@@ -298,7 +298,7 @@ public class Test extends StorableObject {
 	}
 	
 	public short getEntityCode() {
-		return ObjectEntities.TEST_ENTITY_CODE;
+		return ObjectEntities.TEST_CODE;
 	}
 
 	public Identifier getAnalysisTypeId() {
@@ -385,7 +385,7 @@ public class Test extends StorableObject {
 	}
 
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
-		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
 			Measurement measurement = (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 			try {
@@ -402,7 +402,7 @@ public class Test extends StorableObject {
 	}
 
 	public int retrieveNumberOfResults(final ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_ENTITY_CODE);
+		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
 			return ((Integer) database.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
 		}

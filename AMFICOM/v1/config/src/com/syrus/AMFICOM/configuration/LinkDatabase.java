@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.40 2005/05/26 08:33:35 bass Exp $
+ * $Id: LinkDatabase.java,v 1.41 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/05/26 08:33:35 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/17 11:01:10 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -51,7 +51,7 @@ public final class LinkDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.LINK_ENTITY_CODE;
+		return ObjectEntities.LINK_CODE;
 	}
 
 	protected String getColumnsTmpl() {

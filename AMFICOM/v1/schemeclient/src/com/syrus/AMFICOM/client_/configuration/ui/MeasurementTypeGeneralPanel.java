@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.10 2005/05/26 07:40:51 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.11 2005/06/17 11:01:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 11:01:04 $
  * @module schemeclient_v1
  */
 
@@ -321,7 +321,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		root.addChild(output);
 		
 		EquivalentCondition condition = new EquivalentCondition(
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+				ObjectEntities.PARAMETER_TYPE_CODE);
 		try {
 			Collection pTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();) {
@@ -338,7 +338,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	
 	Item createPortsRoot() {
 		Item root = new IconedNode(Constants.ROOT, Constants.ROOT);
-		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 		try {
 			Collection mpTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = mpTypes.iterator(); it.hasNext();) {

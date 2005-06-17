@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.12 2005/05/26 07:40:51 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.13 2005/06/17 11:01:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/06/17 11:01:04 $
  * @module schemeclient_v1
  */
 
@@ -199,7 +199,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 
 			try {
 				LinkedIdsCondition condition = new LinkedIdsCondition(type.getId(),
-						ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+						ObjectEntities.MEASUREMENT_TYPE_CODE);
 				Collection mPTypes = StorableObjectPool.getStorableObjectsByCondition(
 						condition, true);
 				
@@ -272,7 +272,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		Item root1 = new IconedNode(Constants.ROOT, LangModelScheme.getString(Constants.ROOT));
 		
 		EquivalentCondition condition = new EquivalentCondition(
-				ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+				ObjectEntities.MEASUREMENT_TYPE_CODE);
 		try {
 			Collection allMPTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {

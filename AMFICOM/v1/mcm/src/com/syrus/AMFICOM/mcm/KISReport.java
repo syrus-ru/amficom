@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.38 2005/06/16 10:54:57 bass Exp $
+ * $Id: KISReport.java,v 1.39 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/16 10:54:57 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/17 11:01:01 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -59,7 +59,7 @@ public class KISReport {
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i],
 					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					ObjectEntities.PARAMETER_TYPE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME));
 		}
 

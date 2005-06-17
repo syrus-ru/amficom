@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.39 2005/05/27 18:36:04 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.40 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/05/27 18:36:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -43,7 +43,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	private static String updateMultipleSQLValues;
 
 	String getParameterTypeLinkTableName() {
-		return ObjectEntities.MODTYPPARTYPLINK_ENTITY;
+		return ObjectEntities.MODTYPPARTYPLINK;
 	}
 
 	String getActionTypeColumnName() {
@@ -57,7 +57,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.MODELINGTYPE_ENTITY_CODE;
+		return ObjectEntities.MODELING_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {
@@ -162,7 +162,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	}
 
 	public void delete(Identifier id) {
-		assert (id.getMajor() != ObjectEntities.MODELINGTYPE_ENTITY_CODE) : "Illegal entity code: "
+		assert (id.getMajor() != ObjectEntities.MODELING_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		String modelingTypeIdStr = DatabaseIdentifier.toSQLString(id);
@@ -171,10 +171,10 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MODTYPPARTYPLINK_ENTITY
+					+ ObjectEntities.MODTYPPARTYPLINK
 					+ SQL_WHERE + ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID + EQUALS + modelingTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MODELINGTYPE_ENTITY
+					+ ObjectEntities.MODELING_TYPE
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + modelingTypeIdStr);
 			connection.commit();
 		}

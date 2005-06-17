@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.40 2005/06/03 20:38:45 arseniy Exp $
+ * $Id: Mark.java,v 1.41 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/06/03 20:38:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -85,7 +85,7 @@ public class Mark extends AbstractNode {
 	Mark(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_ENTITY_CODE);
+		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -187,7 +187,7 @@ public class Mark extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE),
+			Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_CODE),
 					creatorId,
 					0L,
 					name,

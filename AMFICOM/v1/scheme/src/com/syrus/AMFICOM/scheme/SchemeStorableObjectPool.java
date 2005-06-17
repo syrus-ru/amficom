@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.25 2005/06/16 12:56:55 arseniy Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.26 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/06/16 12:56:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -77,23 +77,23 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	private SchemeStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.SCHEME_GROUP_CODE, cacheMapClass);
 
-		registerFactory(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, new SchemeProtoGroupFactory());
-		registerFactory(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, new SchemeProtoElementFactory());
-		registerFactory(ObjectEntities.SCHEME_ENTITY_CODE, new SchemeFactory());
-		registerFactory(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, new SchemeElementFactory());
-		registerFactory(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, new SchemeOptimizeInfoFactory());
-		registerFactory(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, new SchemeOptimizeInfoSwitchFactory());
-		registerFactory(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, new SchemeOptimizeInfoRtuFactory());
-		registerFactory(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, new SchemeMonitoringSolutionFactory());
-		registerFactory(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, new SchemeDeviceFactory());
-		registerFactory(ObjectEntities.SCHEME_PORT_ENTITY_CODE, new SchemePortFactory());
-		registerFactory(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, new SchemeCablePortFactory());
-		registerFactory(ObjectEntities.SCHEME_LINK_ENTITY_CODE, new SchemeLinkFactory());
-		registerFactory(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, new SchemeCableLinkFactory());
-		registerFactory(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, new SchemeCableThreadFactory());
-		registerFactory(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, new CableChannelingItemFactory());
-		registerFactory(ObjectEntities.SCHEME_PATH_ENTITY_CODE, new SchemePathFactory());
-		registerFactory(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, new PathElementFactory());
+		registerFactory(ObjectEntities.SCHEMEPROTOGROUP_CODE, new SchemeProtoGroupFactory());
+		registerFactory(ObjectEntities.SCHEMEPROTOELEMENT_CODE, new SchemeProtoElementFactory());
+		registerFactory(ObjectEntities.SCHEME_CODE, new SchemeFactory());
+		registerFactory(ObjectEntities.SCHEMEELEMENT_CODE, new SchemeElementFactory());
+		registerFactory(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE, new SchemeOptimizeInfoFactory());
+		registerFactory(ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE, new SchemeOptimizeInfoSwitchFactory());
+		registerFactory(ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE, new SchemeOptimizeInfoRtuFactory());
+		registerFactory(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE, new SchemeMonitoringSolutionFactory());
+		registerFactory(ObjectEntities.SCHEMEDEVICE_CODE, new SchemeDeviceFactory());
+		registerFactory(ObjectEntities.SCHEMEPORT_CODE, new SchemePortFactory());
+		registerFactory(ObjectEntities.SCHEMECABLEPORT_CODE, new SchemeCablePortFactory());
+		registerFactory(ObjectEntities.SCHEMELINK_CODE, new SchemeLinkFactory());
+		registerFactory(ObjectEntities.SCHEMECABLELINK_CODE, new SchemeCableLinkFactory());
+		registerFactory(ObjectEntities.SCHEMECABLETHREAD_CODE, new SchemeCableThreadFactory());
+		registerFactory(ObjectEntities.CABLECHANNELINGITEM_CODE, new CableChannelingItemFactory());
+		registerFactory(ObjectEntities.SCHEMEPATH_CODE, new SchemePathFactory());
+		registerFactory(ObjectEntities.PATHELEMENT_CODE, new PathElementFactory());
 	}
 
 
@@ -128,23 +128,23 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 		schemeObjectLoader = schemeObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, SCHEME_PROTO_GROUP_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, SCHEME_PROTO_ELEMENT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_ENTITY_CODE, SCHEME_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, SCHEME_ELEMENT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_SWITCH_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, SCHEME_OPTIMIZE_INFO_RTU_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, SCHEME_MONITORING_SOLUTION_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, SCHEME_DEVICE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_PORT_ENTITY_CODE, SCHEME_PORT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, SCHEME_CABLE_PORT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_LINK_ENTITY_CODE, SCHEME_LINK_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, SCHEME_CABLE_LINK_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, SCHEME_CABLE_THREAD_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, CABLE_CHANNELING_ITEM_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SCHEME_PATH_ENTITY_CODE, SCHEME_PATH_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, PATH_ELEMENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEPROTOGROUP_CODE, SCHEME_PROTO_GROUP_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEPROTOELEMENT_CODE, SCHEME_PROTO_ELEMENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEME_CODE, SCHEME_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEELEMENT_CODE, SCHEME_ELEMENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE, SCHEME_OPTIMIZE_INFO_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE, SCHEME_OPTIMIZE_INFO_SWITCH_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE, SCHEME_OPTIMIZE_INFO_RTU_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE, SCHEME_MONITORING_SOLUTION_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEDEVICE_CODE, SCHEME_DEVICE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEPORT_CODE, SCHEME_PORT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMECABLEPORT_CODE, SCHEME_CABLE_PORT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMELINK_CODE, SCHEME_LINK_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMECABLELINK_CODE, SCHEME_CABLE_LINK_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMECABLETHREAD_CODE, SCHEME_CABLE_THREAD_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.CABLECHANNELINGITEM_CODE, CABLE_CHANNELING_ITEM_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SCHEMEPATH_CODE, SCHEME_PATH_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PATHELEMENT_CODE, PATH_ELEMENT_OBJECT_POOL_SIZE);
 	}
 
 	/**
@@ -163,23 +163,23 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 			schemeObjectLoader = schemeObjectLoader1;
 
-			instance.addObjectPool(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_DEVICE_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_PORT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_LINK_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.SCHEME_PATH_ENTITY_CODE, size);
-			instance.addObjectPool(ObjectEntities.PATH_ELEMENT_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEPROTOGROUP_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEPROTOELEMENT_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEME_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEELEMENT_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEDEVICE_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEPORT_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMECABLEPORT_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMELINK_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMECABLELINK_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMECABLETHREAD_CODE, size);
+			instance.addObjectPool(ObjectEntities.CABLECHANNELINGITEM_CODE, size);
+			instance.addObjectPool(ObjectEntities.SCHEMEPATH_CODE, size);
+			instance.addObjectPool(ObjectEntities.PATHELEMENT_CODE, size);
 		}
 		else {
 			init(schemeObjectLoader1, cacheClass);
@@ -203,39 +203,39 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
-			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPROTOGROUP_CODE:
 				return schemeObjectLoader.loadSchemeProtoGroups(ids);
-			case ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
 				return schemeObjectLoader.loadSchemeProtoElements(ids);
-			case ObjectEntities.SCHEME_ENTITY_CODE:
+			case ObjectEntities.SCHEME_CODE:
 				return schemeObjectLoader.loadSchemes(ids);
-			case ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEELEMENT_CODE:
 				return schemeObjectLoader.loadSchemeElements(ids);
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFO_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfos(ids);
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfoSwitches(ids);
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfoRtus(ids);
-			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
+			case ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE:
 				return schemeObjectLoader.loadSchemeMonitoringSolutions(ids);
-			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
+			case ObjectEntities.SCHEMEDEVICE_CODE:
 				return schemeObjectLoader.loadSchemeDevices(ids);
-			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPORT_CODE:
 				return schemeObjectLoader.loadSchemePorts(ids);
-			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLEPORT_CODE:
 				return schemeObjectLoader.loadSchemeCablePorts(ids);
-			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
+			case ObjectEntities.SCHEMELINK_CODE:
 				return schemeObjectLoader.loadSchemeLinks(ids);
-			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLELINK_CODE:
 				return schemeObjectLoader.loadSchemeCableLinks(ids);
-			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLETHREAD_CODE:
 				return schemeObjectLoader.loadSchemeCableThreads(ids);
-			case ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE:
+			case ObjectEntities.CABLECHANNELINGITEM_CODE:
 				return schemeObjectLoader.loadCableChannelingItems(ids);
-			case ObjectEntities.SCHEME_PATH_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPATH_CODE:
 				return schemeObjectLoader.loadSchemePaths(ids);
-			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.PATHELEMENT_CODE:
 				return schemeObjectLoader.loadPathElements(ids);
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjects | Unknown entity: '"
@@ -253,39 +253,39 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			throws ApplicationException {
 		final short entityCode = storableObjectCondition.getEntityCode().shortValue();
 		switch (entityCode) {
-			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPROTOGROUP_CODE:
 				return schemeObjectLoader.loadSchemeProtoGroupsButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
 				return schemeObjectLoader.loadSchemeProtoElementsButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_ENTITY_CODE:
+			case ObjectEntities.SCHEME_CODE:
 				return schemeObjectLoader.loadSchemesButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEELEMENT_CODE:
 				return schemeObjectLoader.loadSchemeElementsButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFO_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfosButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfoSwitchesButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE:
 				return schemeObjectLoader.loadSchemeOptimizeInfoRtusButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
+			case ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE:
 				return schemeObjectLoader.loadSchemeMonitoringSolutionsButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
+			case ObjectEntities.SCHEMEDEVICE_CODE:
 				return schemeObjectLoader.loadSchemeDevicesButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPORT_CODE:
 				return schemeObjectLoader.loadSchemePortsButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLEPORT_CODE:
 				return schemeObjectLoader.loadSchemeCablePortsButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
+			case ObjectEntities.SCHEMELINK_CODE:
 				return schemeObjectLoader.loadSchemeLinksButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLELINK_CODE:
 				return schemeObjectLoader.loadSchemeCableLinksButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLETHREAD_CODE:
 				return schemeObjectLoader.loadSchemeCableThreadsButIds(storableObjectCondition, ids);
-			case ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE:
+			case ObjectEntities.CABLECHANNELINGITEM_CODE:
 				return schemeObjectLoader.loadCableChannelingItemsButIds(storableObjectCondition, ids);
-			case ObjectEntities.SCHEME_PATH_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPATH_CODE:
 				return schemeObjectLoader.loadSchemePathsButIds(storableObjectCondition, ids);
-			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.PATHELEMENT_CODE:
 				return schemeObjectLoader.loadPathElementsButIds(storableObjectCondition, ids);
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
@@ -306,55 +306,55 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
-			case ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPROTOGROUP_CODE:
 				schemeObjectLoader.saveSchemeProtoGroups(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
 				schemeObjectLoader.saveSchemeProtoElements(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_ENTITY_CODE:
+			case ObjectEntities.SCHEME_CODE:
 				schemeObjectLoader.saveSchemes(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEELEMENT_CODE:
 				schemeObjectLoader.saveSchemeElements(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFO_CODE:
 				schemeObjectLoader.saveSchemeOptimizeInfos(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_SWITCH_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE:
 				schemeObjectLoader.saveSchemeOptimizeInfoSwitches(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_OPTIMIZE_INFO_RTU_ENTITY_CODE:
+			case ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE:
 				schemeObjectLoader.saveSchemeOptimizeInfoRtus(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
+			case ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE:
 				schemeObjectLoader.saveSchemeMonitoringSolutions(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_DEVICE_ENTITY_CODE:
+			case ObjectEntities.SCHEMEDEVICE_CODE:
 				schemeObjectLoader.saveSchemeDevices(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_PORT_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPORT_CODE:
 				schemeObjectLoader.saveSchemePorts(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_CABLE_PORT_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLEPORT_CODE:
 				schemeObjectLoader.saveSchemeCablePorts(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_LINK_ENTITY_CODE:
+			case ObjectEntities.SCHEMELINK_CODE:
 				schemeObjectLoader.saveSchemeLinks(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_CABLE_LINK_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLELINK_CODE:
 				schemeObjectLoader.saveSchemeCableLinks(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE:
+			case ObjectEntities.SCHEMECABLETHREAD_CODE:
 				schemeObjectLoader.saveSchemeCableThreads(storableObjects, force);
 				break;
-			case ObjectEntities.CABLE_CHANNELING_ITEM_ENTITY_CODE:
+			case ObjectEntities.CABLECHANNELINGITEM_CODE:
 				schemeObjectLoader.saveCableChannelingItems(storableObjects, force);
 				break;
-			case ObjectEntities.SCHEME_PATH_ENTITY_CODE:
+			case ObjectEntities.SCHEMEPATH_CODE:
 				schemeObjectLoader.saveSchemePaths(storableObjects, force);
 				break;
-			case ObjectEntities.PATH_ELEMENT_ENTITY_CODE:
+			case ObjectEntities.PATHELEMENT_CODE:
 				schemeObjectLoader.savePathElements(storableObjects, force);
 				break;
 			default:

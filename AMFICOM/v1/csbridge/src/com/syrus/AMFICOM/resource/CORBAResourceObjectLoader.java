@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.11 2005/06/07 16:34:26 bass Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.12 2005/06/17 11:01:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/06/07 16:34:26 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/17 11:01:02 $
  * @module csbridge_v1
  */
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
@@ -43,7 +43,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 	/* Load multiple objects*/
 
 	public Set loadImageResources(final Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.IMAGERESOURCE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -59,7 +59,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadImageResourcesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.IMAGERESOURCE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable ids1[],
@@ -76,7 +76,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 	/*	Save multiple objects*/
 
 	public void saveImageResources(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.IMAGERESOURCE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.38 2005/06/07 15:45:54 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.39 2005/06/17 11:01:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.38 $, $Date: 2005/06/07 15:45:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/06/17 11:01:17 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -94,7 +94,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE);
+		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 		try {
 			this.schemeProtoElementDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -143,7 +143,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 
 		this.characteristics = new HashSet();
-		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE);
+		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	SchemeProtoElement(final SchemeProtoElement_Transferable transferable) throws CreateObjectException {
-		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE);
+		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -237,7 +237,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEPROTOELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, label,
 					equipmentType, symbol, ugoCell,
@@ -281,7 +281,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEPROTOELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, label,
 					equipmentType, symbol, ugoCell,
@@ -327,7 +327,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final Date created = new Date();
 			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+							.getGeneratedIdentifier(ObjectEntities.SCHEMEPROTOELEMENT_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, label,
 					equipmentType, symbol, ugoCell,
@@ -585,7 +585,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeDevices() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_DEVICE_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEDEVICE_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -598,7 +598,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_LINK_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;
@@ -611,7 +611,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeProtoElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPROTOELEMENT_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return Collections.EMPTY_SET;

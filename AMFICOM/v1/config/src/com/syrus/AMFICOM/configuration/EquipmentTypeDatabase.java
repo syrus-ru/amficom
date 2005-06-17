@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.48 2005/05/26 08:33:35 bass Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.49 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/05/26 08:33:35 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/17 11:01:10 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -39,7 +39,7 @@ public final class EquipmentTypeDatabase extends CharacterizableDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE;
+		return ObjectEntities.EQUIPMENT_TYPE_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

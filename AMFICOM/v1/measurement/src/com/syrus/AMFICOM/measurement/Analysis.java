@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.63 2005/06/16 10:34:04 bass Exp $
+ * $Id: Analysis.java,v 1.64 2005/06/17 11:01:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/16 10:34:04 $
+ * @version $Revision: 1.64 $, $Date: 2005/06/17 11:01:00 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -50,7 +50,7 @@ public class Analysis extends Action {
 	public Analysis(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_ENTITY_CODE);
+		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -136,7 +136,7 @@ public class Analysis extends Action {
 	}
 
 	public short getEntityCode() {
-		return ObjectEntities.ANALYSIS_ENTITY_CODE;
+		return ObjectEntities.ANALYSIS_CODE;
 	}
 
 	public Measurement getMeasurement() {
@@ -209,7 +209,7 @@ public class Analysis extends Action {
 			final String name,
 			final ParameterSet criteriaSet) throws CreateObjectException {
 		try {
-			Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
+			Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_CODE),
 				creatorId,
 				0L,
 				type,

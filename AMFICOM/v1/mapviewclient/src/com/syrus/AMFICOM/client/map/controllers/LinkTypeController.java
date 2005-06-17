@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.29 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.30 2005/06/17 11:01:08 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/06/16 10:57:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/06/17 11:01:08 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -589,7 +589,7 @@ public final class LinkTypeController extends AbstractLinkController {
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename, 
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+				ObjectEntities.PHYSICALLINK_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		try
@@ -668,7 +668,7 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public static Collection getTopologicalLinkTypes() {
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(
-				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+				ObjectEntities.PHYSICALLINK_TYPE_CODE);
 
 		Collection list = null;
 		try {

@@ -1,5 +1,5 @@
 /*-
- * $Id: CMGeneralReceive.java,v 1.23 2005/05/25 13:01:03 bass Exp $
+ * $Id: CMGeneralReceive.java,v 1.24 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/05/25 13:01:03 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:01 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -31,7 +31,7 @@ public abstract class CMGeneralReceive extends ServerCore implements CMServerOpe
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveCharacteristicTypes(
@@ -39,7 +39,7 @@ public abstract class CMGeneralReceive extends ServerCore implements CMServerOpe
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, transferables, force, sessionKey);
 	}
 
 	public final StorableObject_Transferable[] receiveCharacteristics(
@@ -47,6 +47,6 @@ public abstract class CMGeneralReceive extends ServerCore implements CMServerOpe
 			final boolean force,
 			final SessionKey_Transferable sessionKey)
 			throws AMFICOMRemoteException {
-		return super.receiveStorableObjects(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, transferables, force, sessionKey);
+		return super.receiveStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, transferables, force, sessionKey);
 	}
 }

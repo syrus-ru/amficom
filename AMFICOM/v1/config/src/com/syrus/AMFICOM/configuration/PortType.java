@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.57 2005/06/03 20:37:53 arseniy Exp $
+ * $Id: PortType.java,v 1.58 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/06/03 20:37:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -54,7 +54,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 
 		this.characteristics = new HashSet();
 
-		PortTypeDatabase database = (PortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PORTTYPE_ENTITY_CODE);
+		PortTypeDatabase database = (PortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -110,7 +110,7 @@ public class PortType extends StorableObjectType implements Characterizable, Nam
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE),
+			PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

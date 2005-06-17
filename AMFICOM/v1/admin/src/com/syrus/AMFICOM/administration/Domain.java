@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.33 2005/06/03 20:37:40 arseniy Exp $
+ * $Id: Domain.java,v 1.34 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/03 20:37:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -54,7 +54,7 @@ public class Domain extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_ENTITY_CODE);
+		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -198,7 +198,7 @@ public class Domain extends DomainMember implements Characterizable {
 			final String name,
 			final String description) throws CreateObjectException {
 		try {
-			Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE),
+			Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_CODE),
 					creatorId,
 					0L,
 					domainId,

@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.37 2005/06/06 10:49:42 arseniy Exp $
+ * $Id: Characteristic.java,v 1.38 2005/06/17 11:00:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/06 10:49:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/06/17 11:00:57 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -43,7 +43,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	Characteristic(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -131,7 +131,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 			final boolean visible) throws CreateObjectException {
 		assert characterizable != null : ErrorMessages.NON_NULL_EXPECTED;
 		try {
-			Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
+			Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
 					creatorId,
 					0L,
 					type,

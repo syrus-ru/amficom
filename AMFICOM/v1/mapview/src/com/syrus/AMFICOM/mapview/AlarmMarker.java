@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarker.java,v 1.6 2005/05/18 12:37:39 bass Exp $
+ * $Id: AlarmMarker.java,v 1.7 2005/06/17 11:01:07 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * Стационарный маркер сигнала тревоги.
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/18 12:37:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:07 $
  * @module mapviewclient_v1
  * @todo AlarmMarker functionality
  */
@@ -49,7 +49,7 @@ public class AlarmMarker extends Marker {
 //		try
 //		{
 //			Identifier ide =
-//				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+//				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITENODE_CODE);
 //			return new MapAlarmMarker(
 //				ide,
 //				mapView,

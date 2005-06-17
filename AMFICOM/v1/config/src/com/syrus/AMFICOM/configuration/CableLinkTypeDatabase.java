@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.30 2005/05/26 14:49:10 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.31 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/05/26 14:49:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkTypeDatabase extends CharacterizableDatabase {
@@ -35,7 +35,7 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 	private static String updateMultipleSQLValues;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.CABLELINKTYPE_ENTITY_CODE;
+		return ObjectEntities.CABLELINK_TYPE_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
@@ -65,8 +65,8 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 	}
 	
 	protected boolean checkEntity(short conditionCode) {
-		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + ObjectEntities.CABLELINKTYPE_ENTITY_CODE, Log.FINEST);
-		return ObjectEntities.CABLELINKTYPE_ENTITY_CODE == conditionCode;		
+		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + ObjectEntities.CABLELINK_TYPE_CODE, Log.FINEST);
+		return ObjectEntities.CABLELINK_TYPE_CODE == conditionCode;		
 	}
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {

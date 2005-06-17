@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.43 2005/06/09 12:38:56 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.44 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/09 12:38:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -56,7 +56,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 		this.characteristics = new HashSet();
 
-		CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+		CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -123,7 +123,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINKTYPE_ENTITY_CODE),
+			CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,
@@ -244,7 +244,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 
 	public Set getCableThreadTypes(final boolean breakOnLoadError) {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CABLETHREAD_TYPE_CODE);
 		Set cableThreadTypes;
 		try {
 			cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(lic, true, breakOnLoadError);

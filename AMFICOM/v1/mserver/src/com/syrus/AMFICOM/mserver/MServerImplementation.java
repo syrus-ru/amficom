@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.59 2005/06/14 08:55:52 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.60 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/14 08:55:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 public class MServerImplementation extends MServerMeasurementTransmit {
@@ -63,12 +63,12 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 		Set testIds = Identifier.fromTransferables(ids);
 		StorableObjectPool.delete(testIds);
 		try {
-			StorableObjectPool.flush(ObjectEntities.TEST_ENTITY_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, "Cannot delete '"
-					+ ObjectEntities.codeToString(ObjectEntities.TEST_ENTITY_CODE) + "'");
+					+ ObjectEntities.codeToString(ObjectEntities.TEST_CODE) + "'");
 		}
 	}
 

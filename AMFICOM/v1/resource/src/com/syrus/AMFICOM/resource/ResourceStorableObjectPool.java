@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.30 2005/06/16 12:58:45 arseniy Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.31 2005/06/17 11:01:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/06/16 12:58:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:14 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -39,7 +39,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	private ResourceStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.RESOURCE_GROUP_CODE, cacheMapClass);
 
-		registerFactory(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, new ImageResourceFactory());
+		registerFactory(ObjectEntities.IMAGERESOURCE_CODE, new ImageResourceFactory());
 	}
 
 
@@ -74,7 +74,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 
 		rObjectLoader = rObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, IMAGERESOURCE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.IMAGERESOURCE_CODE, IMAGERESOURCE_OBJECT_POOL_SIZE);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 
 			rObjectLoader = rObjectLoader1;
 
-			instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, size);
+			instance.addObjectPool(ObjectEntities.IMAGERESOURCE_CODE, size);
 		}
 		else {
 			init(rObjectLoader1, cacheClass);
@@ -108,7 +108,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
-			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+			case ObjectEntities.IMAGERESOURCE_CODE:
 				return rObjectLoader.loadImageResources(ids);
 			default:
 				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjects | Unknown entity: '"
@@ -121,7 +121,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			throws ApplicationException {
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+			case ObjectEntities.IMAGERESOURCE_CODE:
 				return rObjectLoader.loadImageResourcesButIds(condition, ids);
 			default:
 				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
@@ -136,7 +136,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		switch (entityCode) {
-			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+			case ObjectEntities.IMAGERESOURCE_CODE:
 				rObjectLoader.saveImageResources(storableObjects, force);
 				break;
 			default:

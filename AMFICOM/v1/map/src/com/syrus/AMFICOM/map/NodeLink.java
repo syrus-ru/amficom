@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.46 2005/06/03 20:38:45 arseniy Exp $
+ * $Id: NodeLink.java,v 1.47 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/06/03 20:38:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -80,7 +80,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 	NodeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODE_LINK_ENTITY_CODE);
+		NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODELINK_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -145,7 +145,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			NodeLink nodeLink = new NodeLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.NODE_LINK_ENTITY_CODE),
+			NodeLink nodeLink = new NodeLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.NODELINK_CODE),
 					creatorId,
 					0L,
 					name,
@@ -512,7 +512,7 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 
 		super(
 				clonedIdsPool.getClonedId(
-						ObjectEntities.NODE_LINK_ENTITY_CODE, 
+						ObjectEntities.NODELINK_CODE, 
 						xmlNodeLink.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -530,13 +530,13 @@ public class NodeLink extends StorableObject implements MapElement, XMLBeansTran
 		this.length = xmlNodeLink.getLength();
 
 		Identifier physicalLinkId1 = clonedIdsPool.getClonedId(
-				ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, 
+				ObjectEntities.PHYSICALLINK_CODE, 
 				xmlNodeLink.getPhysicallinkuid().getStringValue());
 		Identifier startNodeId1 = clonedIdsPool.getClonedId(
-				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				ObjectEntities.SITENODE_CODE, 
 				xmlNodeLink.getStartnodeuid().getStringValue());
 		Identifier endNodeId1 = clonedIdsPool.getClonedId(
-				ObjectEntities.SITE_NODE_ENTITY_CODE, 
+				ObjectEntities.SITENODE_CODE, 
 				xmlNodeLink.getEndnodeuid().getStringValue());
 
 		this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);

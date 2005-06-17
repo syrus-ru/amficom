@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.76 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.77 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.77 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -59,7 +59,7 @@ public class MeasurementType extends ActionType implements Namable {
 		this.outParameterTypeIds = new HashSet();
 		this.measurementPortTypeIds = new HashSet();
 
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+		MeasurementTypeDatabase database = (MeasurementTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -129,7 +129,7 @@ public class MeasurementType extends ActionType implements Namable {
 			final java.util.Set outParameterTypeIds,
 			final java.util.Set measurementPortTypeIds) throws CreateObjectException {
 		try {
-			MeasurementType measurementType = new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
+			MeasurementType measurementType = new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

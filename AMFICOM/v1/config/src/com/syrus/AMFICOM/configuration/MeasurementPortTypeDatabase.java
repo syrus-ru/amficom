@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.43 2005/05/26 08:33:35 bass Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.44 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/05/26 08:33:35 $
+ * @version $Revision: 1.44 $, $Date: 2005/06/17 11:01:10 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -40,7 +40,7 @@ public final class MeasurementPortTypeDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {		
-		return ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE;
+		return ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 	}
 
 	protected String getColumnsTmpl() {

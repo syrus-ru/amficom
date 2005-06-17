@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.78 2005/05/26 14:15:57 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.79 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/05/26 14:15:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.79 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -48,7 +48,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 	private static final int SIZE_LOCAL_ADDRESS_COLUMN = 64;
 
 	protected short getEntityCode() {		
-		return ObjectEntities.MEASUREMENT_ENTITY_CODE;
+		return ObjectEntities.MEASUREMENT_CODE;
 	}	
 
 	private Measurement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -186,7 +186,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		int resultSortNum = resultSort.value();
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.RESULT_ENTITY
+			+ SQL_FROM + ObjectEntities.RESULT
 			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_ID + EQUALS + measurementIdStr
 			+ SQL_AND + LINK_SORT + EQUALS + Integer.toString(resultSortNum);
 		Statement statement = null;

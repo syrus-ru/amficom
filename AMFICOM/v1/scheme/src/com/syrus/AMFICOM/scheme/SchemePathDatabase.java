@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.7 2005/06/15 13:17:17 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.8 2005/06/17 11:01:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/15 13:17:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:18 $
  * @module scheme_v1
  */
 public final class SchemePathDatabase extends CharacterizableDatabase {
@@ -64,7 +64,7 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.SCHEME_PATH_ENTITY_CODE;
+		return ObjectEntities.SCHEMEPATH_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {

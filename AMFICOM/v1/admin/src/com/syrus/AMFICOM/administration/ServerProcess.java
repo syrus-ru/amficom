@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.9 2005/06/08 09:29:13 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.10 2005/06/17 11:01:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/08 09:29:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/06/17 11:01:06 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public class ServerProcess extends StorableObject {
@@ -50,7 +50,7 @@ public class ServerProcess extends StorableObject {
 	ServerProcess(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_ENTITY_CODE);
+		ServerProcessDatabase database = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -136,7 +136,7 @@ public class ServerProcess extends StorableObject {
 			final Identifier userId,
 			final String description) throws CreateObjectException {
 		try {
-			ServerProcess serverProcess = new ServerProcess(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVERPROCESS_ENTITY_CODE),
+			ServerProcess serverProcess = new ServerProcess(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVERPROCESS_CODE),
 					creatorId,
 					0L,
 					codename,

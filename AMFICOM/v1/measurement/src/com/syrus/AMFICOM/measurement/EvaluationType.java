@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.69 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.70 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/06/03 20:38:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.70 $, $Date: 2005/06/17 11:00:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -64,7 +64,7 @@ public class EvaluationType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+		EvaluationTypeDatabase database = (EvaluationTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -148,7 +148,7 @@ public class EvaluationType extends ActionType {
 			final java.util.Set outParameterTypeIds,
 			final java.util.Set measurementTypeIds) throws CreateObjectException {
 		try {
-			EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+			EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,

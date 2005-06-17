@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.1 2005/06/10 16:18:11 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/06/10 16:18:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -27,12 +27,12 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 	
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.NODE_LINK_ENTITY_CODE:
+			case ObjectEntities.NODELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+					case ObjectEntities.PHYSICALLINK_CODE:
 						return super.getQuery(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID);
-					case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
-					case ObjectEntities.SITE_NODE_ENTITY_CODE:
+					case ObjectEntities.TOPOLOGICALNODE_CODE:
+					case ObjectEntities.SITENODE_CODE:
 						return StorableObjectDatabase.OPEN_BRACKET +
 								super.getQuery(NodeLinkWrapper.COLUMN_START_NODE_ID)
 								+ StorableObjectDatabase.SQL_OR + 
@@ -41,9 +41,9 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 					default:
 						throw newIllegalObjectEntityException();
 				}
-			case ObjectEntities.MAP_ENTITY_CODE:
+			case ObjectEntities.MAP_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.DOMAIN_ENTITY_CODE:
+					case ObjectEntities.DOMAIN_CODE:
 						return super.getQuery(MapWrapper.COLUMN_DOMAIN_ID);
 					default:
 						throw newIllegalObjectEntityException();

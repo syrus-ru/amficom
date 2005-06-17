@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.82 2005/06/07 15:43:55 arseniy Exp $
+ * $Id: KIS.java,v 1.83 2005/06/17 11:01:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/06/07 15:43:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2005/06/17 11:01:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -62,7 +62,7 @@ public final class KIS extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_ENTITY_CODE);
+		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -129,7 +129,7 @@ public final class KIS extends DomainMember implements Characterizable {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_ENTITY_CODE),
+			KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -313,7 +313,7 @@ public final class KIS extends DomainMember implements Characterizable {
 	public Set getMeasurementPorts(final boolean breakOnLoadError) {
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id,
-					ObjectEntities.MEASUREMENTPORT_ENTITY_CODE), true, breakOnLoadError);
+					ObjectEntities.MEASUREMENTPORT_CODE), true, breakOnLoadError);
 		}
 		catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);

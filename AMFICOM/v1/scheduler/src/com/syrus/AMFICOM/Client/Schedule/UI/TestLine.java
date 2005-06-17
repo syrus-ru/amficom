@@ -552,7 +552,7 @@ public class TestLine extends TimeLine {
 					} else {
 						LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
 																						test.getId(),
-																						ObjectEntities.MEASUREMENT_ENTITY_CODE);
+																						ObjectEntities.MEASUREMENT_CODE);
 						try {
 							Set testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true, true);
 							List measurementTestList = new LinkedList();

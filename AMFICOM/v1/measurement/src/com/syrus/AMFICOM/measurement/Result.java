@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.59 2005/06/16 10:34:03 bass Exp $
+ * $Id: Result.java,v 1.60 2005/06/17 11:00:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/16 10:34:03 $
+ * @version $Revision: 1.60 $, $Date: 2005/06/17 11:00:59 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -53,7 +53,7 @@ public class Result extends StorableObject {
 	Result(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		ResultDatabase database = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_ENTITY_CODE);
+		ResultDatabase database = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -170,7 +170,7 @@ public class Result extends StorableObject {
 	}
 
 	public short getEntityCode() {
-		return ObjectEntities.RESULT_ENTITY_CODE;
+		return ObjectEntities.RESULT_CODE;
 	}
 
 	public Action getAction() {
@@ -222,7 +222,7 @@ public class Result extends StorableObject {
 			final ResultSort sort,
 			final Parameter[] parameters) throws CreateObjectException {
 		try {
-			Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
+			Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_CODE),
 				creatorId,
 				0L,
 				action,

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAConfigurationObjectLoader.java,v 1.21 2005/06/14 11:46:28 arseniy Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.22 2005/06/17 11:01:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/14 11:46:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/06/17 11:01:02 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader implements ConfigurationObjectLoader {
@@ -56,7 +56,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	/* Load multiple objects*/
 
 	public Set loadEquipmentTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -68,7 +68,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadPortTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PORTTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.PORT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -80,7 +80,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMeasurementPortTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -92,7 +92,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadTransmissionPathTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.TRANSPATH_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -104,7 +104,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadLinkTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.LINKTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.LINK_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -116,7 +116,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadCableLinkTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.CABLELINK_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -128,7 +128,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadCableThreadTypes(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.CABLETHREAD_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -140,7 +140,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadEquipments(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -152,7 +152,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadPorts(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PORT_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.PORT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -164,7 +164,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMeasurementPorts(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -176,7 +176,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadTransmissionPaths(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.TRANSPATH_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.TRANSPATH_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -188,7 +188,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadKISs(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.KIS_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.KIS_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -200,7 +200,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMonitoredElements(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.MONITOREDELEMENT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -212,7 +212,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadLinks(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.LINK_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.LINK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -224,7 +224,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadCableThreads(Set ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CABLETHREAD_ENTITY_CODE, ids, new TransmitProcedure() {
+		return super.loadStorableObjects(ObjectEntities.CABLETHREAD_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -240,7 +240,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENT_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -253,7 +253,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORT_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -266,7 +266,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -279,7 +279,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATH_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -292,7 +292,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINKTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINK_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -305,7 +305,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLELINK_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -318,7 +318,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREAD_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -331,7 +331,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EQUIPMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -344,7 +344,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PORT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -357,7 +357,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTPORT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -370,7 +370,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATH_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TRANSPATH_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -383,7 +383,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -396,7 +396,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MONITOREDELEMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -409,7 +409,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINK_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.LINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -422,7 +422,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREAD_ENTITY_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLETHREAD_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final Identifier_Transferable[] idsT,
@@ -439,7 +439,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	/*	Save multiple objects*/
 
 	public void saveEquipmentTypes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.EQUIPMENT_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -451,7 +451,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void savePortTypes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.PORTTYPE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.PORT_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -463,7 +463,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveMeasurementPortTypes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -475,7 +475,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveTransmissionPathTypes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.TRANSPATH_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -487,7 +487,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveLinkTypes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.LINKTYPE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.LINK_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -499,7 +499,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveCableLinkTypes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.CABLELINK_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -511,7 +511,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveCableThreadTypes(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.CABLETHREAD_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -523,7 +523,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveEquipments(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.EQUIPMENT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.EQUIPMENT_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -535,7 +535,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void savePorts(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.PORT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.PORT_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -547,7 +547,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveMeasurementPorts(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.MEASUREMENTPORT_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -559,7 +559,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveTransmissionPaths(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.TRANSPATH_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.TRANSPATH_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -571,7 +571,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveKISs(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.KIS_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.KIS_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -583,7 +583,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveMonitoredElements(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.MONITOREDELEMENT_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -595,7 +595,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveLinks(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.LINK_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.LINK_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
@@ -607,7 +607,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 	}
 
 	public void saveCableThreads(final Set storableObjects, final boolean force) throws ApplicationException {
-		super.saveStorableObjects(ObjectEntities.CABLETHREAD_ENTITY_CODE, storableObjects, new ReceiveProcedure() {
+		super.saveStorableObjects(ObjectEntities.CABLETHREAD_CODE, storableObjects, new ReceiveProcedure() {
 			public StorableObject_Transferable[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],

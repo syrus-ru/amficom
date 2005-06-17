@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.54 2005/06/15 12:23:53 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.55 2005/06/17 11:01:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/06/15 12:23:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/06/17 11:01:01 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -253,7 +253,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.flush(ObjectEntities.RESULT_ENTITY_CODE, false);
+				StorableObjectPool.flush(ObjectEntities.RESULT_CODE, false);
 				//- Every action contains in dependencies of it's result
 				//StorableObjectPool.flush(measurement.getId(), false);
 			}

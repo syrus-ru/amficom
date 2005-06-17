@@ -230,7 +230,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("LinkType"))
 			{
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
@@ -246,7 +246,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("CableLinkType"))
 			{
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
 					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
@@ -263,7 +263,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("PortType"))
 			{
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 					Collection portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = portTypes.iterator(); it.hasNext(); ) {
@@ -279,7 +279,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("TransmissionPathType"))
 			{
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
 					Collection pathTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
@@ -295,7 +295,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("MeasurementPortType"))
 			{
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 					Collection pathTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
@@ -311,7 +311,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("MeasurementType"))
 			{
 				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
 					Collection measurementTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = measurementTypes.iterator(); it.hasNext(); ) {
@@ -330,7 +330,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
 					LinkedIdsCondition condition = new LinkedIdsCondition(domain_id,
-							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+							ObjectEntities.SCHEMEPROTOGROUP_CODE);
 					Collection groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {

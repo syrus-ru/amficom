@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.46 2005/06/03 20:38:45 arseniy Exp $
+ * $Id: Collector.java,v 1.47 2005/06/17 11:01:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/06/03 20:38:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/06/17 11:01:12 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -79,7 +79,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		this.physicalLinks = new HashSet();
 		this.characteristics = new HashSet();
 
-		final CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_ENTITY_CODE);
+		final CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -122,7 +122,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Collector collector = new Collector(IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_ENTITY_CODE),
+			Collector collector = new Collector(IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_CODE),
 					creatorId,
 					0L,
 					name,
@@ -443,7 +443,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 
 		super(
 				clonedIdsPool.getClonedId(
-						ObjectEntities.COLLECTOR_ENTITY_CODE, 
+						ObjectEntities.COLLECTOR_CODE, 
 						xmlCollector.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -469,7 +469,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 			xmlPhysicalLinkUIdsArray[0].getPhysicallinkuidArray();
 		for(int i = 0; i < xmlUIDsArray.length; i++) {
 			Identifier physicalLinkId = clonedIdsPool.getClonedId(
-					ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, 
+					ObjectEntities.PHYSICALLINK_CODE, 
 					xmlUIDsArray[i].getStringValue());
 			PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
 			this.addPhysicalLink(physicalLink);

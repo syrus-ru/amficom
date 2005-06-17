@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/05/20 21:12:22 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/06/17 11:01:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -40,7 +40,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 			/* if linked ids is domain id */
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 				final Identifier id = (Identifier) it.next();
-				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
+				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
 					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.isChild(domain))
 						condition = true;
@@ -58,7 +58,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 		boolean condition = false;
 		DomainMember domainMember;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.MAPVIEW_ENTITY_CODE:
+			case ObjectEntities.MAPVIEW_CODE:
 				domainMember = (MapView) storableObject;
 				break;
 			default:
@@ -72,7 +72,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.MAPVIEW_ENTITY_CODE:
+			case ObjectEntities.MAPVIEW_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:
