@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseIdentifier.java,v 1.11 2005/06/17 15:08:41 bass Exp $
+ * $Id: DatabaseIdentifier.java,v 1.12 2005/06/17 19:51:11 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -19,11 +19,13 @@ import com.syrus.util.Log;
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.11 $, $Date: 2005/06/17 15:08:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/06/17 19:51:11 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
-public class DatabaseIdentifier {
+public final class DatabaseIdentifier {
+	private static final String NULL_SQL_STRING = "NULL";
+
 	private DatabaseIdentifier() {
 		assert false;
 	}
@@ -46,16 +48,13 @@ public class DatabaseIdentifier {
 
 		final long identifierCode = resultSet.getLong(columnName);
 
-		if (identifierCode == 0) {
-			Log.debugMessage("DatabaseIdentifier.getIdentifier() | Returnning void identifier in an UNPREDICTABLE MANNER", Log.SEVERE);
-			return Identifier.VOID_IDENTIFIER;
-		}
+		assert identifierCode != 0 : ErrorMessages.NON_ZERO_EXPECTED;
 
 		return new Identifier(identifierCode);
 	}
 
 	public static String toSQLString(final Identifier id) {
 		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
-		return id.isVoid() ? "NULL" : id.getIdentifierString();
+		return id.isVoid() ? NULL_SQL_STRING : Long.toString(id.getIdentifierCode());
 	}
 }
