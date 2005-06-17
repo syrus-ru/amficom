@@ -1,5 +1,5 @@
 /*-
- * $Id: IconedRenderer.java,v 1.2 2005/06/17 11:50:08 bass Exp $
+ * $Id: IconedRenderer.java,v 1.3 2005/06/17 13:54:16 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,23 +16,20 @@ import javax.swing.tree.TreeCellRenderer;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:50:08 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 13:54:16 $
  * @module generalclient_v1
  */
 
 public class IconedRenderer extends JLabel implements TreeCellRenderer {
 	private static final long serialVersionUID = 3834031342177432887L;
+	
 	private static IconedRenderer instance;
-	/**
-	 * @todo fill following fields from UIDefaults 
-	 */
-	private Color selectedBackground = Color.BLUE;
-	private Color selectedForeground = Color.WHITE;
+
 	private boolean selected = false; 
 	
 	private IconedRenderer() {
-		// empty
+		// singleton
 	}
 	
 	public static IconedRenderer getInstance() {
@@ -47,14 +44,14 @@ public class IconedRenderer extends JLabel implements TreeCellRenderer {
 		Item node = (Item)value;
 		setText(node.getName());
 		if (node instanceof IconedNode)
-			setIcon(((IconedNode)node).getIcon());
+			this.setIcon(((IconedNode)node).getIcon());
 
 		if (!selected) {
-			setForeground(tree.getForeground());
-			setBackground(tree.getBackground());
+			this.setForeground(tree.getForeground());
+			this.setBackground(tree.getBackground());
 		} else {
-			setForeground(this.selectedForeground);
-			setBackground(this.selectedBackground);
+			this.setForeground(UIManager.getColor("IconedRenderer.selectedForeground"));
+			this.setBackground(UIManager.getColor("IconedRenderer.selectedBackground"));
 		}
 		return this;
 	}
@@ -64,11 +61,11 @@ public class IconedRenderer extends JLabel implements TreeCellRenderer {
 			int x = 0;
 			Icon icon1 = getIcon();
 			if (icon1 != null) {
-				x += icon1.getIconWidth() + getIconTextGap(); 
+				x += icon1.getIconWidth() + this.getIconTextGap(); 
 			}
-			g.setColor(this.selectedBackground);
-			Insets i = getInsets();
-			g.fillRect(i.left + x, 0, getWidth() - i.right - i.left - x, getHeight());
+			g.setColor(this.getBackground());
+			Insets insets = this.getInsets();
+			g.fillRect(insets.left + x, 0, this.getWidth() - insets.right - insets.left - x, this.getHeight());
 		}
 		super.paintComponent(g);
 	}
