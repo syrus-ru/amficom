@@ -19,6 +19,8 @@
 #define EventParams_ENDOFTRACE 23
 #define EventParams_UNRECOGNIZED 30
 
+class Splash;
+
 class EventParams
 {
 public:
@@ -38,11 +40,13 @@ public:
 	int type;
 	int begin;
 	int end;
-
     // reliability parameter
     double R; // см листочек с пояснениями или алгоритм вычисления этой величины
-    // flags
+
+    // temporarty pars for analysis
     bool can_be_endoftrace; // если splash достиг некоторого порогового уровня, то мы признаём, что всплеск достаточно велик и может быть в принципе концом волокна
+	Splash *spliceSplash; // указатель на Splash, по которому была обнаружена эта сварка, либо 0, если это не сварка
+
 };
 
 #endif // !defined(AFX_EVENTPARAMS_H__4602CAF5_15BD_4327_AD1F_01E97ED71701__INCLUDED_)
