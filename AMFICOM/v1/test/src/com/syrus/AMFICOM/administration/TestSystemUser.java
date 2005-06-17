@@ -1,5 +1,5 @@
 /*
- * $Id: TestUser.java,v 1.5 2005/06/16 13:26:44 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.1 2005/06/17 17:14:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,30 +14,46 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/16 13:26:44 $
+ * @version $Revision: 1.1 $, $Date: 2005/06/17 17:14:10 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestUser extends CommonTest {
-	public TestUser(String name) {
+public final class TestSystemUser extends CommonTest {
+	public TestSystemUser(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestUser.class);
+		return suiteWrapper(TestSystemUser.class);
+	}
+
+	public void testCreateSysUser() throws ApplicationException {
+		final Identifier sysUserId = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
+		SystemUser sysUser = new SystemUser(sysUserId,
+				sysUserId,
+				0,
+				SystemUserWrapper.SYS_LOGIN,
+				SystemUserSort._USER_SORT_SYSADMIN,
+				"sys",
+				"System administrator");
+		SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+		database.insert(sysUser);
 	}
 
 	public void _testCreateInstance() throws ApplicationException {
 //	Retrieve sys user
 		TypicalCondition tc = new TypicalCondition(SystemUserWrapper.SYS_LOGIN,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SYSTEM_USER_ENTITY_CODE,
+				ObjectEntities.SYSTEMUSER_CODE,
 				SystemUserWrapper.COLUMN_LOGIN);
 		Set users = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 		SystemUser sysUser = (SystemUser) users.iterator().next();
@@ -84,13 +100,13 @@ public final class TestUser extends CommonTest {
 		System.out.println("MSHServer user: '" + mshserverUser.getLogin() + "', id: '" + mshserverUser.getId() + "'");
 
 //	save all
-		StorableObjectPool.flush(ObjectEntities.SYSTEM_USER_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, true);
 	}
 
-	public void testUpdate() throws ApplicationException {
+	public void _testUpdate() throws ApplicationException {
 		final TypicalCondition tc = new TypicalCondition(SystemUserWrapper.MSCHARSERVER_LOGIN,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SYSTEM_USER_ENTITY_CODE,
+				ObjectEntities.SYSTEMUSER_CODE,
 				SystemUserWrapper.COLUMN_LOGIN);
 		final Set set = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 		final SystemUser user = (SystemUser) set.iterator().next();
