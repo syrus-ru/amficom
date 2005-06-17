@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.10 2005/06/16 10:47:55 bob Exp $
+ * $Id: ApplicationProperties.java,v 1.11 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,7 @@ public class ApplicationProperties {
 		if (applicationResourceBundle != null) {
 			try {
 				return applicationResourceBundle.getString(key);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
 			}
 		}
@@ -74,8 +73,7 @@ public class ApplicationProperties {
 		if (commonResourceBundle != null) {
 			try {
 				return commonResourceBundle.getString(key);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
 			}
 		}
@@ -88,8 +86,7 @@ public class ApplicationProperties {
 		if (applicationResourceBundle != null) {
 			try {
 				return Integer.parseInt(applicationResourceBundle.getString(key));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
 			}
 		}
@@ -97,8 +94,7 @@ public class ApplicationProperties {
 		if (commonResourceBundle != null) {
 			try {
 				return Integer.parseInt(commonResourceBundle.getString(key));
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
 			}
 		}

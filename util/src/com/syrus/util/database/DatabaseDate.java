@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.13 2005/05/18 10:49:17 bass Exp $
+ * $Id: DatabaseDate.java,v 1.14 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,7 @@ public class DatabaseDate {
 			String dateStr = resultset.getString(column);
 			if (dateStr != null)
 				date = SDF.parse(dateStr);
-		}
-		catch (ParseException pe) {
+		} catch (ParseException pe) {
 			Log.errorMessage("DatabaseDate.fromQuerySubString | parse exception '" + pe.getMessage() + '\'');
 		}
 		return date;

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreReader.java,v 1.9 2005/06/08 13:49:06 bass Exp $
+ * $Id: BellcoreReader.java,v 1.10 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/08 13:49:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/17 11:25:48 $
  * @author $Author: bass $
  * @module util
  */
@@ -35,49 +35,32 @@ public final class BellcoreReader extends DataReader {
 
 		// анализируем какие блоки присутствуют и читаем их
 		for (int i = 1; i < this.bs.map.nb; i++) {
-			{
-				if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_GENPARAMS)) {
-					this.bs.addField(2);
-					this.readGenParams(i);
-				}
-				else
-					if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_SUPPARAMS)) {
-						this.bs.addField(3);
-						this.readSupParams(i);
-					}
-					else
-						if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_FXDPARAMS)) {
-							this.bs.addField(4);
-							this.readFxdParams(i);
-						}
-						else
-							if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_KEYEVENTS)) {
-								this.bs.addField(5);
-								this.readKeyEvents(i);
-							}
-							else
-								if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_LNKPARAMS)) {
-									this.bs.addField(6);
-									this.readLnkParams(i);
-								}
-								else
-									if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_DATAPTS)) {
-										this.bs.addField(7);
-										this.readDataPts(i);
-									}
-									else
-										if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_CKSUM)) {
-											readCksum(i);
-										}
-										else
-											if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_HP_MINI_SPECIAL)) {
-												this.bs.addField(BellcoreStructure.SPECIAL);
-												this.readHPMiniSpecial(i);
-											}
-											else {
-												this.bs.addField(BellcoreStructure.SPECIAL);
-												this.readSpecial(i);
-											}
+			if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_GENPARAMS)) {
+				this.bs.addField(2);
+				this.readGenParams(i);
+			} else if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_SUPPARAMS)) {
+				this.bs.addField(3);
+				this.readSupParams(i);
+			} else if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_FXDPARAMS)) {
+				this.bs.addField(4);
+				this.readFxdParams(i);
+			} else if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_KEYEVENTS)) {
+				this.bs.addField(5);
+				this.readKeyEvents(i);
+			} else if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_LNKPARAMS)) {
+				this.bs.addField(6);
+				this.readLnkParams(i);
+			} else if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_DATAPTS)) {
+				this.bs.addField(7);
+				this.readDataPts(i);
+			} else if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_CKSUM)) {
+				readCksum(i);
+			} else if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_HP_MINI_SPECIAL)) {
+				this.bs.addField(BellcoreStructure.SPECIAL);
+				this.readHPMiniSpecial(i);
+			} else {
+				this.bs.addField(BellcoreStructure.SPECIAL);
+				this.readSpecial(i);
 			}
 		}
 
@@ -102,9 +85,7 @@ public final class BellcoreReader extends DataReader {
 				this.bs.map.bRev[i] = this.idis.readIUnsignedShort();
 				this.bs.map.bSize[i] = this.idis.readIInt();
 			}
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -132,9 +113,7 @@ public final class BellcoreReader extends DataReader {
 //		bs.genParams.UOD = idis.readIInt();
 			this.bs.genParams.op = this.idis.readIString();
 			this.bs.genParams.cmt = this.idis.readIString();
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -154,9 +133,7 @@ public final class BellcoreReader extends DataReader {
 			this.bs.supParams.omsn = this.idis.readIString();
 			this.bs.supParams.sr = this.idis.readIString();
 			this.bs.supParams.ot = this.idis.readIString();
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -195,9 +172,7 @@ public final class BellcoreReader extends DataReader {
 			this.bs.fxdParams.lt = this.idis.readIUnsignedShort();
 			this.bs.fxdParams.rt = this.idis.readIUnsignedShort();
 			this.bs.fxdParams.et = this.idis.readIUnsignedShort();
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -239,9 +214,7 @@ public final class BellcoreReader extends DataReader {
 			this.bs.keyEvents.orl = this.idis.readIUnsignedShort();
 			this.bs.keyEvents.rlmp[0] = this.idis.readIInt();
 			this.bs.keyEvents.rlmp[1] = this.idis.readIInt();
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -283,9 +256,7 @@ public final class BellcoreReader extends DataReader {
 				this.bs.lnkParams.mfdl[i] = this.idis.readIShort();
 				this.bs.lnkParams.cmt[i] = this.idis.readIString();
 			}
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -314,9 +285,7 @@ public final class BellcoreReader extends DataReader {
 					this.bs.dataPts.dsf[i][j] = this.idis.readIUnsignedShort();
 				}
 			}
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -364,9 +333,7 @@ public final class BellcoreReader extends DataReader {
 			this.bs.fxdParams.nppw[0] = this.bs.dataPts.tndp;
 			this.bs.fxdParams.ar = (int) (resolution * this.bs.dataPts.tndp * this.bs.fxdParams.gi / (3d * 1000/*meters*/) );
 
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}
@@ -383,9 +350,7 @@ public final class BellcoreReader extends DataReader {
 			this.bs.special[this.bs.specials-1].specData = new byte[this.bs.map.bSize[n]];
 			for (int i = 0; i < this.bs.map.bSize[n]; i++ )
 				this.bs.special[this.bs.specials-1].specData[i] = this.idis.readByte();
-		}
-		catch (IOException ioe)
-		{
+		} catch (IOException ioe) {
 			System.err.println(IO_ERROR_MESSAGE);
 			return 0;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConnection.java,v 1.13 2005/05/26 11:00:02 bass Exp $
+ * $Id: DatabaseConnection.java,v 1.14 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,7 @@ public class DatabaseConnection {
 		if (connection == null) {
 			try {
 				Class.forName(JDBCDRIVER);
-			}
-			catch (ClassNotFoundException e) {
+			} catch (ClassNotFoundException e) {
 				throw new SQLException("Cannot locate driver: " + JDBCDRIVER + ", " + e.getMessage());
 			}
 
@@ -80,16 +79,14 @@ public class DatabaseConnection {
 					connection = DriverManager.getConnection(url, db_login_name, PASSWORD);
 					connection.setAutoCommit(autocommit);
 					connected = true;
-				}
-				catch (SQLException e) {
+				} catch (SQLException e) {
 					Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL07);
 					Object obj = new Object();
 					try {
 						synchronized (obj) {
 							obj.wait(5*1000);
 						}
-					}
-					catch (InterruptedException ex) {
+					} catch (InterruptedException ex) {
 						Log.errorException(ex);
 					}
 				}
@@ -111,8 +108,7 @@ public class DatabaseConnection {
 			try {
 				connection.close();
 				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Log.errorException(e);
 			}
 		}
@@ -128,8 +124,7 @@ public class DatabaseConnection {
 				 */
 				// connection.close();
 				Log.debugMessage("DatabaseConnection | releaseConnection(Connection)", Log.DEBUGLEVEL10);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Log.errorException(e);
 			}
 		}

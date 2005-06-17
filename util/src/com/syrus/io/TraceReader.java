@@ -1,5 +1,5 @@
 /*
- * $Id: TraceReader.java,v 1.10 2005/06/08 13:49:06 bass Exp $
+ * $Id: TraceReader.java,v 1.11 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import com.syrus.util.TraceDataReader;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/08 13:49:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 11:25:48 $
  * @author $Author: bass $
  * @module util
  */
@@ -33,8 +33,7 @@ public final class TraceReader extends DataReader {
 		try {
 			System.loadLibrary("Treader");
 			treaderLoaded = true;
-		}
-		catch (UnsatisfiedLinkError ule) {
+		} catch (UnsatisfiedLinkError ule) {
 			System.err.println("Cannot load library for TraceReader -- " + ule.getMessage());
 			ule.printStackTrace();
 		}
@@ -53,27 +52,20 @@ public final class TraceReader extends DataReader {
 			filetype = BELLCORE;
 			BellcoreReader br = new BellcoreReader();
 			bs = br.getData(f);
+		// then Wavetek
+		} else if (f.getName().toLowerCase().endsWith(".tfw")) {
+			filetype = WAVETEK;
+			WavetekReader wr = new WavetekReader();
+			bs = wr.getData(f);
+		} else if ((this.raw = new TraceDataReader().getBellcoreData(f.getAbsolutePath())) != null) {
+			bs = new BellcoreReader().getData(this.raw);
+			this.raw = null;
+		} else if (treaderLoaded && new TraceReader().getTrace(f.getAbsolutePath()) != 0) {
+			bs = new BellcoreStructure();
+			bs = fillBellcore(bs);
+		} else {
+			System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format");
 		}
-		else
-			// then Wavetek
-			if (f.getName().toLowerCase().endsWith(".tfw")) {
-				filetype = WAVETEK;
-				WavetekReader wr = new WavetekReader();
-				bs = wr.getData(f);
-			}
-			else
-				if ((this.raw = new TraceDataReader().getBellcoreData(f.getAbsolutePath())) != null) {
-					bs = new BellcoreReader().getData(this.raw);
-					this.raw = null;
-				}
-				else
-					if (treaderLoaded && new TraceReader().getTrace(f.getAbsolutePath()) != 0) {
-						bs = new BellcoreStructure();
-						bs = fillBellcore(bs);
-					}
-					else {
-						System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format");
-					}
 		return bs;
 	}
 
@@ -106,9 +98,7 @@ public final class TraceReader extends DataReader {
 		try
 		{
 			dt = sdf.parse(date + " " + time).getTime() / 1000;
-		}
-		catch (java.text.ParseException ex)
-		{
+		} catch (java.text.ParseException ex) {
 			dt = System.currentTimeMillis() / 1000;
 		}
 

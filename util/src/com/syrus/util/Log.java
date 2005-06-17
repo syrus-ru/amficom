@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.7 2005/05/18 10:49:17 bass Exp $
+ * $Id: Log.java,v 1.8 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,8 +87,7 @@ public class Log {
 	public static boolean debugMessage(String message, int debugLevel) {
 		try {
 			logger.debugMessage(message, debugLevel);
-		}
-		catch (NullPointerException npe) {
+		} catch (NullPointerException npe) {
 			System.out.println(message);
 		}
 		return true;
@@ -97,8 +96,7 @@ public class Log {
 	public static void debugException(Throwable throwable, int debugLevel) {
 		try {
 			logger.debugException(throwable, debugLevel);
-		}
-		catch (NullPointerException npe) {
+		} catch (NullPointerException npe) {
 			System.out.println(throwable.getMessage());
 			throwable.printStackTrace();
 		}
@@ -107,8 +105,7 @@ public class Log {
 	public static void errorMessage(String mesg) {
 		try {
 			logger.errorMessage(mesg);
-		}
-		catch (NullPointerException npe) {
+		} catch (NullPointerException npe) {
 			System.out.println(mesg);
 		}
 	}
@@ -116,8 +113,7 @@ public class Log {
 	public static void errorException(Throwable throwable) {
 		try {
 			logger.errorException(throwable);
-		}
-		catch (NullPointerException npe) {
+		} catch (NullPointerException npe) {
 			System.out.println(throwable.getMessage());
 			throwable.printStackTrace();
 		}

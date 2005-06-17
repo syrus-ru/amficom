@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayCollector.java,v 1.5 2005/06/08 13:49:06 bass Exp $
+ * $Id: ByteArrayCollector.java,v 1.6 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,7 @@ public final class ByteArrayCollector {
 		try {
 			this.dos.writeInt(b.length);
 			this.dos.write(b);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
@@ -39,8 +38,7 @@ public final class ByteArrayCollector {
 	public byte[] encode() {
 		try {
 			this.dos.flush();
-		}
-		catch (IOException io) {
+		} catch (IOException io) {
 			io.printStackTrace();
 		}
 		return this.baos.toByteArray();
@@ -58,12 +56,10 @@ public final class ByteArrayCollector {
 				this.dis.skipBytes(s);
 				size++;
 			}
-		}
-		catch (EOFException eof) {
+		} catch (EOFException eof) {
 			// empty
 			eof.printStackTrace();
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 
@@ -75,8 +71,7 @@ public final class ByteArrayCollector {
 				data[i] = new byte[s];
 				this.dis.read(data[i]);
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return data;

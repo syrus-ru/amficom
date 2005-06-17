@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.13 2005/06/03 10:06:19 max Exp $
+ * $Id: LRUMapSaver.java,v 1.14 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/03 10:06:19 $
- * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2005/06/17 11:25:48 $
+ * @author $Author: bass $
  * @module util
  */
 public class LRUMapSaver {
@@ -68,14 +68,11 @@ public class LRUMapSaver {
 			if(cleanLRUMap) {
 				lruMap.clear();
 			}
-		}
-		catch (FileNotFoundException fnfe) {
+		} catch (FileNotFoundException fnfe) {
 			Log.errorMessage("LRUMapSaver.save | Error: " + fnfe.getMessage());        	
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			Log.errorMessage("LRUMapSaver.save | Error: " + ioe.getMessage());
-		}
-		finally {
+		} finally {
 			if(tempFile != null)
 				tempFile.delete();
 		}
@@ -100,16 +97,13 @@ public class LRUMapSaver {
 			}
 			Set keys = (HashSet) in.readObject();
 			return keys;
-		}
-		catch (FileNotFoundException fnfe) {
+		} catch (FileNotFoundException fnfe) {
 			Log.debugMessage("LRUMapSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
 			return null;
-		}
-		catch (ClassNotFoundException cnfe) {
+		} catch (ClassNotFoundException cnfe) {
 			Log.errorMessage("LRUMapSaver.load | Error: " + cnfe.getMessage());
 			return null;
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			Log.errorMessage("LRUMapSaver.load | Error: " + ioe.getMessage());
 			return null;
 		}

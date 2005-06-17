@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.15 2005/05/18 10:49:17 bass Exp $
+ * $Id: ByteArrayDatabase.java,v 1.16 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/05/18 10:49:17 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/17 11:25:48 $
  * @module util
  */
 public final class ByteArrayDatabase {
@@ -44,21 +44,17 @@ public final class ByteArrayDatabase {
 			os.write(bar);
 			os.flush();
 			os.close();
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			throw new SQLException(ioe.getMessage());
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
-			}
-			finally {
+			} finally {
 				try {
 					if (ors != null)
 						ors.close();
-				}
-				finally {
+				} finally {
 					if (oldAutoCommit)
 						conn.setAutoCommit(true);
 				}

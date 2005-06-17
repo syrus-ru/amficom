@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.26 2005/06/08 13:02:43 arseniy Exp $
+ * $Id: LRUMap.java,v 1.27 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/08 13:02:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/06/17 11:25:48 $
+ * @author $Author: bass $
  * @module util
  */
 
@@ -37,8 +37,7 @@ public class LRUMap implements Serializable {
 	public LRUMap(final int capacity) {
 		if (capacity > 0) {
 			this.array = new Entry[capacity];
-		}
-		else
+		} else
 			throw new IllegalArgumentException("Illegal capacity: " + capacity);
 	}
 
@@ -147,11 +146,9 @@ public class LRUMap implements Serializable {
 				if (value != null) {
 					this.key = key;
 					this.value = value;
-				}
-				else
+				} else
 					throw new IllegalArgumentException("Value is NULL");
-			}
-			else
+			} else
 				throw new IllegalArgumentException("Key is NULL");
 		}
 
@@ -203,8 +200,7 @@ public class LRUMap implements Serializable {
 					this.lastRet = this.cursor++;
 				}
 				return next;
-			}
-			catch (IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException e) {
 				this.checkForComodification();
 				throw new NoSuchElementException();
 			}
@@ -223,8 +219,7 @@ public class LRUMap implements Serializable {
 					this.cursor--;
 				this.lastRet = -1;
 				this.expectedModCount = LRUMap.this.modCount;
-			}
-			catch (IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException e) {
 				throw new ConcurrentModificationException();
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Application.java,v 1.6 2005/06/08 13:49:06 bass Exp $
+ * $Id: Application.java,v 1.7 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,7 @@ public final class Application {
 		if (internetAddress == null)
 			try {
 				internetAddress = InetAddress.getLocalHost().getHostName();
-			}
-			catch (UnknownHostException e) {
+			} catch (UnknownHostException e) {
 				internetAddress = "INETADDR_UNKNOWN";
 			}
 		Log.initialize(new ApplicationLogger(applicationName, internetAddress));

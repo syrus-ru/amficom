@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreWriter.java,v 1.9 2005/06/08 13:49:06 bass Exp $
+ * $Id: BellcoreWriter.java,v 1.10 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.io.*;
 import java.nio.*;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/08 13:49:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/17 11:25:48 $
  * @author $Author: bass $
  * @module util
  */
@@ -34,37 +34,23 @@ public final class BellcoreWriter {
 		while (i < bs1.map.nb) {
 			if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_GENPARAMS)) {
 				this.writeGenParams(i++);
+			} else if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_SUPPARAMS)) {
+				this.writeSupParams(i++);
+			} else if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_FXDPARAMS)) {
+				this.writeFxdParams(i++);
+			} else if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_KEYEVENTS)) {
+				this.writeKeyEvents(i++);
+			} else if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_LNKPARAMS)) {
+				this.writeLnkParams(i++);
+			} else if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_DATAPTS)) {
+				this.writeDataPts(i++);
+			} else if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_CKSUM)) {
+				this.writeCksum(i++);
+			} else if (bs1.specials > 0) {
+				this.writeSpecial(j++, i++);
+			} else {
+				System.out.println("Unknown block!");
 			}
-			else
-				if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_SUPPARAMS)) {
-					this.writeSupParams(i++);
-				}
-				else
-					if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_FXDPARAMS)) {
-						this.writeFxdParams(i++);
-					}
-					else
-						if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_KEYEVENTS)) {
-							this.writeKeyEvents(i++);
-						}
-						else
-							if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_LNKPARAMS)) {
-								this.writeLnkParams(i++);
-							}
-							else
-								if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_DATAPTS)) {
-									this.writeDataPts(i++);
-								}
-								else
-									if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_CKSUM)) {
-										this.writeCksum(i++);
-									}
-									else
-										if (bs1.specials > 0) {
-											this.writeSpecial(j++, i++);
-										}
-										else
-											System.out.println("Unknown block!");
 		}
 
 		this.data = new byte[this.baos.size()];
@@ -83,8 +69,7 @@ public final class BellcoreWriter {
 				this.idos.writeIUnsignedShort(this.bs.map.bRev[i]);
 				this.idos.writeIInt(this.bs.map.bSize[i]);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing Map");
 			return 0;
 		}
@@ -108,8 +93,7 @@ public final class BellcoreWriter {
 			this.idos.writeIInt(this.bs.genParams.uo);
 			this.idos.writeIString(this.bs.genParams.op);
 			this.idos.writeIString(this.bs.genParams.cmt);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing GenParams");
 			return 0;
 		}
@@ -127,8 +111,7 @@ public final class BellcoreWriter {
 			this.idos.writeIString(this.bs.supParams.omsn);
 			this.idos.writeIString(this.bs.supParams.sr);
 			this.idos.writeIString(this.bs.supParams.ot);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing SupParams");
 			return 0;
 		}
@@ -162,8 +145,7 @@ public final class BellcoreWriter {
 			this.idos.writeIUnsignedShort(this.bs.fxdParams.lt);
 			this.idos.writeIUnsignedShort(this.bs.fxdParams.rt);
 			this.idos.writeIUnsignedShort(this.bs.fxdParams.et);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing FxdParams");
 			return 0;
 		}
@@ -194,8 +176,7 @@ public final class BellcoreWriter {
 			this.idos.writeIUnsignedShort(this.bs.keyEvents.orl);
 			this.idos.writeIInt(this.bs.keyEvents.rlmp[0]);
 			this.idos.writeIInt(this.bs.keyEvents.rlmp[1]);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing KeyEvents");
 			return 0;
 		}
@@ -223,8 +204,7 @@ public final class BellcoreWriter {
 				this.idos.writeIShort(this.bs.lnkParams.mfdl[i]);
 				this.idos.writeIString(this.bs.lnkParams.cmt[i]);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing LnkParams");
 			return 0;
 		}
@@ -243,8 +223,7 @@ public final class BellcoreWriter {
 				for (int j = 0; j < this.bs.dataPts.tps[i]; j++)
 					this.idos.writeIUnsignedShort(this.bs.dataPts.dsf[i][j]);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing DataPts");
 			return 0;
 		}
@@ -257,8 +236,7 @@ public final class BellcoreWriter {
 		try {
 			for (int i = 0; i < this.bs.special[j].getSize(); i++)
 				this.idos.writeByte(this.bs.special[j].specData[i]);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("IO Error writing Special Data");
 			return 0;
 		}
@@ -273,8 +251,7 @@ public final class BellcoreWriter {
 //		int sum = crc16(bb);
 //		try {
 //			idos.writeIUnsignedShort(sum);
-//		}
-//		catch (IOException e) {
+//		} catch (IOException e) {
 //			System.err.println("IO Error writing Checksum");
 //			return 0;
 //		}

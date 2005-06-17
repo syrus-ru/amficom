@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArray.java,v 1.12 2005/05/18 10:49:17 bass Exp $
+ * $Id: ByteArray.java,v 1.13 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,8 +81,7 @@ public class ByteArray {
 		try {
 			while (bais.available() > 0)
 				linkedlist.add(new Integer(dis.readInt()));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.err.println("Exception while converting byte array to int array: " + e.getMessage()
 					+ ", length of byte array == " + this.bar.length);
 		}
@@ -113,8 +112,7 @@ public class ByteArray {
 		try {
 			while (bais.available() > 0)
 				linkedlist.add(new Double(dis.readDouble()));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.err.println("Exception while converting byte array to double array: " + e.getMessage()
 					+ ", length of byte array == " + this.bar.length);
 			e.printStackTrace();
@@ -146,8 +144,7 @@ public class ByteArray {
 		try {
 			while (bais.available() > 0)
 				c.add(dis.readUTF());
-		}
-		catch (Exception ioe) {
+		} catch (Exception ioe) {
 			System.err.println("Exception while converting byte array to string array: " + ioe.getMessage()
 					+ ", length of byte array == " + this.bar.length);
 			ioe.printStackTrace();
@@ -178,8 +175,7 @@ public class ByteArray {
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
 			dos.writeInt(a);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
 			System.err.println("Exception while converting int to byte array -- " + ioe.getMessage());
 			ioe.printStackTrace();
@@ -192,8 +188,7 @@ public class ByteArray {
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
 			dos.writeLong(l);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
 			System.err.println("Exception while converting long to byte array -- " + ioe.getMessage());
 			ioe.printStackTrace();
@@ -206,8 +201,7 @@ public class ByteArray {
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
 			dos.writeDouble(d);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
 			System.err.println("Exception while converting double to byte array -- " + ioe.getMessage());
 			ioe.printStackTrace();
@@ -221,8 +215,7 @@ public class ByteArray {
 		try {
 			for (int i = 0; i < dar.length; i++)
 				dos.writeDouble(dar[i]);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
 			System.err.println("Exception while converting double array to byte array -- " + ioe.getMessage());
 			ioe.printStackTrace();
@@ -235,8 +228,7 @@ public class ByteArray {
 		DataOutputStream dos = new DataOutputStream(baos);
 		try {
 			dos.writeBoolean(b);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
 			System.err.println("Exception while converting boolean to byte array -- " + ioe.getMessage());
 			ioe.printStackTrace();
@@ -250,8 +242,7 @@ public class ByteArray {
 		try {
 			dos.writeUTF(s);
 			// dos.write((byte)\u0000);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
 			System.err.println("Exception while converting string to byte array -- " + ioe.getMessage());
 			ioe.printStackTrace();
@@ -266,8 +257,7 @@ public class ByteArray {
 			for (int i = 0; i < sar.length; i++)
 				dos.writeUTF(sar[i]);
 			//dos.write((byte)\u0000);
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
 			System.err.println("Exception while converting string array to byte array -- " + ioe.getMessage());
 			ioe.printStackTrace();

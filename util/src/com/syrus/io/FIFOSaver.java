@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.8 2005/06/08 13:49:06 bass Exp $
+ * $Id: FIFOSaver.java,v 1.9 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/08 13:49:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/17 11:25:48 $
  * @author $Author: bass $
  * @module util
  */
@@ -57,14 +57,11 @@ public final class FIFOSaver {
 			out.writeObject(new Integer(fifo.getNumber()));
 			out.close();
 			tempFile.renameTo(saveFile);
-		}
-		catch (FileNotFoundException fnfe) {
+		} catch (FileNotFoundException fnfe) {
 			Log.errorMessage("FifoSaver.save | Error: " + fnfe.getMessage());        	
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			Log.errorMessage("FifoSaver.save | Error: " + ioe.getMessage());
-		}
-		finally {
+		} finally {
 			if(tempFile != null)
 				tempFile.delete();
 		}
@@ -91,16 +88,13 @@ public final class FIFOSaver {
 			fifo.setObjects(objects);
 			fifo.setNumber(number.intValue());
 			return fifo;
-		}
-		catch (FileNotFoundException fnfe) {
+		} catch (FileNotFoundException fnfe) {
 			Log.debugMessage("FifoSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
 			return null;
-		}
-		catch (ClassNotFoundException cnfe) {
+		} catch (ClassNotFoundException cnfe) {
 			Log.errorMessage("FifoSaver.load | Error: " + cnfe.getMessage());
 			return null;
-		}
-		catch (IOException ioe) {
+		} catch (IOException ioe) {
 			Log.errorMessage("FifoSaver.load | Error: " + ioe.getMessage());
 			return null;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLogger.java,v 1.1 2005/06/08 13:49:06 bass Exp $
+ * $Id: AbstractLogger.java,v 1.2 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/08 13:49:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:25:48 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -79,8 +79,7 @@ abstract class AbstractLogger implements Logger {
 					System.out.println(mesg);
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("Exception in debug logging: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -101,8 +100,7 @@ abstract class AbstractLogger implements Logger {
 					throwable.printStackTrace();
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("Exception in debug logging: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -120,8 +118,7 @@ abstract class AbstractLogger implements Logger {
 				echoTimeStamp();
 				System.out.println(mesg);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -140,8 +137,7 @@ abstract class AbstractLogger implements Logger {
 					System.out.println("Exception: " + throwable.getMessage());
 					throwable.printStackTrace();
 				}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
 			e.printStackTrace();
 		}

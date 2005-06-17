@@ -1,5 +1,5 @@
 /*
- * $Id: IniFile.java,v 1.10 2005/06/08 13:49:06 bass Exp $
+ * $Id: IniFile.java,v 1.11 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/06/08 13:49:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/17 11:25:48 $
  * @deprecated java.util.prefs will be used instead.
  * @module util
  */
@@ -109,8 +109,7 @@ public final class IniFile {
 		{
 			this.keys.add(key);
 			this.values.add(val.toString());
-		}
-		else
+		} else
 			this.values.set(n, val.toString());
 	}
 
@@ -129,9 +128,7 @@ public final class IniFile {
 			}
 			this.pw.close();
 			this.fos.close();
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			ex.printStackTrace();
 			return false;
 		}
@@ -158,9 +155,7 @@ public final class IniFile {
 				{
 					this.keys.add(this.tmp);
 					this.values.add("");
-				}
-				else
-				{
+				} else {
 					this.counter++;
 					int spos = this.tmp.indexOf(" =");
 					if (spos != -1)
@@ -170,9 +165,7 @@ public final class IniFile {
 							this.values.add(this.tmp.substring(spos + 3, this.tmp.length()));
 						else
 							this.values.add(this.tmp.substring(spos + 2, this.tmp.length()));
-					}
-					else
-					{
+					} else {
 						spos = this.tmp.indexOf("=");
 						if (spos != -1)
 						{
@@ -181,17 +174,13 @@ public final class IniFile {
 								this.values.add(this.tmp.substring(spos + 2, this.tmp.length()));
 							else
 								this.values.add(this.tmp.substring(spos + 1, this.tmp.length()));
-						}
-						else
-						{
+						} else {
 							this.keys.add(this.tmp);
 							this.values.add("");
 						}
 					}
 				}
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}

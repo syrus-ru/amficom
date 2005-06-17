@@ -1,5 +1,5 @@
 /*
- * $Id: WavetekReader.java,v 1.9 2005/06/08 13:49:06 bass Exp $
+ * $Id: WavetekReader.java,v 1.10 2005/06/17 11:25:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/08 13:49:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/17 11:25:48 $
  * @author $Author: bass $
  * @module util
  */
@@ -94,8 +94,9 @@ public final class WavetekReader extends DataReader {
 			this.bs.dataPts.dsf = new int[1][size];
 			for (this.i = 0; this.i < size; this.i++)
 				this.bs.dataPts.dsf[0][this.i] = 65535 - this.idis.readIUnsignedShort();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		catch (IOException e) { e.printStackTrace(); }
 		return 1;
 	}
 
@@ -168,7 +169,8 @@ public final class WavetekReader extends DataReader {
 				this.pos++;
 			}
 			this.pos += 3;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		catch (IOException e) { e.printStackTrace(); }
 	}
 }
