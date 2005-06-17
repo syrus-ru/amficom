@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.15 2005/06/14 08:52:14 saa Exp $
+ * $Id: BellcoreStructure.java,v 1.16 2005/06/17 07:12:06 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/14 08:52:14 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/17 07:12:06 $
  * @author $Author: saa $
  * @module util
  */
@@ -437,16 +437,20 @@ public class BellcoreStructure {
 	 * </ol>
 	 */
 	private void shiftTraceByAbsMax(double[] data) {
-		if (data.length == 0)
+		if (data.length == 0) {
 			return;
+		}
 		// определяем абс. макс.
 		double vMax = data[0];
-		for (int i = 1; i < data.length; i++)
-			if (vMax < data[i])
+		for (int i = 1; i < data.length; i++) {
+			if (vMax < data[i]) {
 				vMax = data[i];
-		//System.err.println("correctReflectogramm2: vMax = " + vMax);
+			}
+		}
+		// System.err.println("correctReflectogramm2: vMax = " + vMax);
 		// смещаем
-		for (int i = 0; i < data.length; i++)
+		for (int i = 0; i < data.length; i++) {
 			data[i] -= vMax;
+		}
 	}
 }
