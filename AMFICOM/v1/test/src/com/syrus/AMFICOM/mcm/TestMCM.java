@@ -1,5 +1,5 @@
 /*
- * $Id: TestMCM.java,v 1.3 2005/06/10 19:21:24 arseniy Exp $
+ * $Id: TestMCM.java,v 1.4 2005/06/17 20:17:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.mcm.corba.MCM;
@@ -35,17 +35,15 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/10 19:21:24 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 20:17:51 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class TestMCM extends CommonTest {
-	private static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 	private static final String KEY_MCM_ID = "MCMID";
 	private static final String KEY_LOGIN = "Login";
 	private static final String KEY_PASSWORD = "Password";
 
-	private static final String SERVER_HOST_NAME = "localhost";
 	private static final String MCM_ID = "MCM_19";
 	private static final String LOGIN = "mserver";
 	private static final String PASSWORD = "MServer";
@@ -85,7 +83,7 @@ public final class TestMCM extends CommonTest {
 			loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			final String login = ApplicationProperties.getString(KEY_LOGIN, LOGIN);
 			final String password = ApplicationProperties.getString(KEY_PASSWORD, PASSWORD);
-			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
+			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
 			sessionKeyT = loginServerRef.login(login, password, userIdH);
 
 			final String mcmIdString = ApplicationProperties.getString(KEY_MCM_ID, MCM_ID);
@@ -125,7 +123,7 @@ public final class TestMCM extends CommonTest {
 		id = new Identifier("Measurement_2755");
 		ids.add(id);
 
-		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		
 		final Measurement_Transferable[] measurementsT = mcmRef.transmitMeasurements(idsT);
 		for (int i = 0; i < measurementsT.length; i++) {
