@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.1 2005/06/16 10:31:25 bass Exp $
+ * $Id: SystemUserWrapper.java,v 1.2 2005/06/17 17:26:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.Sys
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/16 10:31:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 17:26:37 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class SystemUserWrapper extends StorableObjectWrapper {
@@ -27,6 +27,7 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 	public static final String MSERVER_LOGIN = "mserver";
 	public static final String CMSERVER_LOGIN = "cmserver";
 	public static final String MSCHARSERVER_LOGIN = "mscharserver";
+	public static final String MCM_LOGIN = "mcm";
 
 	// table :: users
 	// description VARCHAR2(256),
