@@ -4,3 +4,5 @@
 *.gz
 classes
 .mach
+.classpath
+.project
