@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelElementAction.java,v 1.4 2005/05/18 14:59:44 bass Exp $
+ * $Id: CreateTopLevelElementAction.java,v 1.5 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 14:59:44 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 /*
@@ -68,8 +68,7 @@ public class CreateTopLevelElementAction extends AbstractAction {
 		SchemeProtoElement proto;
 		if (groups.length == 1) {
 			proto = groups[0].getProtoElement();
-		}
-		else {
+		} else {
 			proto = targetPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
 			if (proto == null) {
 				try {

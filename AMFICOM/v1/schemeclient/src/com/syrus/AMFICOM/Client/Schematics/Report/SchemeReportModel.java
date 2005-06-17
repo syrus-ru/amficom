@@ -99,8 +99,7 @@ public class SchemeReportModel extends APOReportModel
 			if (rp.getReserve() instanceof UgoPanel)
 			{
 				sc = ((UgoPanel) rp.getReserve()).getGraph().getScheme();
-			}
-			else
+			} else
 			{
 				sc = (Scheme) Pool.get(Scheme.typ, (String) rp.getReserve());
 				if (sc == null)

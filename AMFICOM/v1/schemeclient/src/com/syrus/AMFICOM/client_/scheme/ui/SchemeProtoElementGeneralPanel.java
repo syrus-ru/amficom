@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.6 2005/06/17 11:01:04 bass Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.7 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -265,8 +265,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				if (eqt != null) {
 					manufacturerText.setText(eqt.getManufacturer());
 					manufacturerCodeText.setText(eqt.getManufacturerCode());
-				}
-				else {
+				} else {
 					manufacturerText.setText(Constants.EMPTY);
 					manufacturerCodeText.setText(Constants.EMPTY);
 				}
@@ -314,8 +313,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-		}
-		else {
+		} else {
 			this.nameText.setText(Constants.EMPTY);
 			this.descrArea.setText(Constants.EMPTY);
 			this.labelText.setText(Constants.EMPTY);
@@ -326,8 +324,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			this.typeCombo.setSelectedItem(eqt);
 			this.manufacturerText.setText(eqt.getManufacturer());
 			this.manufacturerCodeText.setText(eqt.getManufacturerCode());
-		}
-		else {
+		} else {
 			this.typeBox.setSelected(false);
 			this.manufacturerText.setText(Constants.EMPTY);
 			this.manufacturerCodeText.setText(Constants.EMPTY);
@@ -342,8 +339,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			schemeProtoElement.setLabel(this.labelText.getText());
 			if (this.symbolBut.getIcon() == null) {
 				schemeProtoElement.setSymbol(null);
-			}
-			else {
+			} else {
 				try {
 					schemeProtoElement.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(imageId, true));
 				} catch (ApplicationException e) {
@@ -357,8 +353,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 					eqt.setManufacturer(this.manufacturerText.getText());
 					eqt.setManufacturerCode(this.manufacturerCodeText.getText());
 				}
-			}
-			else {
+			} else {
 				schemeProtoElement.setEquipmentType(null);
 			}
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeProtoElement, SchemeEvent.UPDATE_OBJECT));

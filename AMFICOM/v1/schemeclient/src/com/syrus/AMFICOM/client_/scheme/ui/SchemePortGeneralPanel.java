@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.7 2005/06/17 11:01:04 bass Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.8 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -348,8 +348,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 //			if (!isConatainsColor(color))
 //				colorCombo.addItem(color);
 //			colorCombo.setSelectedItem(color);
-		}
-		else {
+		} else {
 			portBox.setSelected(false);
 			setPortEnabled(false);
 			markText.setText(Constants.EMPTY);
@@ -360,8 +359,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		if (mPort != null) {
 			mpBox.setSelected(true);
 			mpTypeCombo.setSelectedItem(mPort.getType());
-		}
-		else {
+		} else {
 			mpBox.setSelected(false);
 			setMPTypeEnabled(false);
 		}
@@ -394,13 +392,11 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 //					port.setMark(markText.getText());
 //					port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 				}
-			}
-			else if (port != null) {
+			} else if (port != null) {
 				StorableObjectPool.delete(port.getId());
 				schemePort.setPort(null);
 				mpBox.setSelected(false);
-			}
-			else {
+			} else {
 				mpBox.setSelected(false);
 			}
 			
@@ -416,18 +412,15 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 						} catch (CreateObjectException e) {
 							Log.errorException(e);
 						}
-					}
-					else {
+					} else {
 						Log.debugMessage("KIS is null. Cannot create MeasurementPort", Log.FINEST); //$NON-NLS-1$
 					}
-				}
-				else if (mp != null) {
+				} else if (mp != null) {
 					mp.setName(schemePort.getName());
 					mp.setDescription(schemePort.getDescription());
 					mp.setType((MeasurementPortType)mpTypeCombo.getSelectedItem());
 				}
-			}
-			else if (mp != null) {
+			} else if (mp != null) {
 				StorableObjectPool.delete(mp.getId());
 				schemePort.setMeasurementPort(null);
 			} 

@@ -38,8 +38,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 		SchemeProtoElement proto = null;
 		if (ugoPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement() != null) {
 			proto = ugoPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
-		}
-		else if (cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement() != null) {
+		} else if (cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement() != null) {
 			proto = cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
 		}
 		if (proto == null) {
@@ -65,8 +64,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 								"Ошибка", JOptionPane.OK_OPTION);
 					return;
 				}
-		}
-		else {
+		} else {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					"Невозможно сохранить пустой компонент", "Ошибка",
 					JOptionPane.OK_OPTION);

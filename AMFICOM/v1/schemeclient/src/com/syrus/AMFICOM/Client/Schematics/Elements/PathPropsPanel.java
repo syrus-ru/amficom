@@ -86,8 +86,7 @@ public class PathPropsPanel extends JPanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -183,8 +182,7 @@ public class PathPropsPanel extends JPanel
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
 			pathTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		}
-		catch (ApplicationException ex) {
+		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -402,8 +400,7 @@ public class PathPropsPanel extends JPanel
 				pathTypes.add(new_type);
 				typeComboBox.addItem(new_type);
 				typeComboBox.setSelectedItem(new_type);
-			}
-			catch (CreateObjectException ex) {
+			} catch (CreateObjectException ex) {
 				ex.printStackTrace();
 			}
 
@@ -479,8 +476,7 @@ class PathTreeModel extends ObjectResourceTreeModel
 					{
 						cur_scheme_id = pe.schemeId;
 						vec.add(new ObjectResourceTreeNode(pe, pe.getName(), true, true));
-					}
-					else if (!pe.schemeId.equals(cur_scheme_id))
+					} else if (!pe.schemeId.equals(cur_scheme_id))
 					{
 						cur_scheme_id = pe.schemeId;
 						if (cur_scheme_id.length() != 0)
@@ -491,8 +487,7 @@ class PathTreeModel extends ObjectResourceTreeModel
 					}
 				}
 			}
-		}
-		else if (node.getObject() instanceof Scheme)
+		} else if (node.getObject() instanceof Scheme)
 		{
 			Scheme scheme = (Scheme)node.getObject();
 			for (Iterator it = path.links.iterator(); it.hasNext();)
@@ -511,13 +506,11 @@ class PathTreeModel extends ObjectResourceTreeModel
 		{
 			SchemeElement se = (SchemeElement) Pool.get(SchemeElement.typ, pe.scheme_element_id);
 			return new ObjectResourceTreeNode(se, se.getName(), true, null);
-		}
-		else if (pe.getType() == PathElement.CABLE_LINK)
+		} else if (pe.getType() == PathElement.CABLE_LINK)
 		{
 			SchemeCableLink link = (SchemeCableLink) Pool.get(SchemeCableLink.typ, pe.link_id);
 			return new ObjectResourceTreeNode(link, link.getName(), true, null);
-		}
-		else if (pe.getType() == PathElement.LINK)
+		} else if (pe.getType() == PathElement.LINK)
 		{
 			SchemeLink link = (SchemeLink) Pool.get(SchemeLink.typ, pe.link_id);
 			return new ObjectResourceTreeNode(link, link.getName(), true, null);

@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.5 2005/06/09 10:53:52 stas Exp $
+ * $Id: UgoPanel.java,v 1.6 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/06/09 10:53:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -131,28 +131,24 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 					DeviceGroup group = SchemeActions.findGroupById(this.graph, se.getId());
 					if (group != null)
 						updateGroup(group, se.getLabel(), new ImageIcon(se.getSymbol().getImage()));
-				}
-				else if (obj instanceof SchemeProtoElement) {
+				} else if (obj instanceof SchemeProtoElement) {
 					SchemeProtoElement proto = (SchemeProtoElement)obj;
 					DeviceGroup group = SchemeActions.findGroupById(this.graph, proto.getId());
 					if (group != null)
 						updateGroup(group, proto.getLabel(), new ImageIcon(proto.getSymbol().getImage()));
-				}
-				else if (obj instanceof SchemeCableLink) {
+				} else if (obj instanceof SchemeCableLink) {
 					SchemeCableLink link = (SchemeCableLink)obj;
 					DefaultGraphCell cell = SchemeActions.findSchemeCableLinkById(this.graph, link.getId());
 					if (cell != null) {
 						GraphActions.setText(this.graph, cell, link.getName());
 					}
-				}
-				else if (obj instanceof SchemeLink) {
+				} else if (obj instanceof SchemeLink) {
 					SchemeLink link = (SchemeLink)obj;
 					DefaultGraphCell cell = SchemeActions.findSchemeLinkById(this.graph, link.getId());
 					if (cell != null) {
 						GraphActions.setText(this.graph, cell, link.getName());
 					}
-				}
-				else if (obj instanceof SchemePort) {
+				} else if (obj instanceof SchemePort) {
 					SchemePort port = (SchemePort)obj;
 					DefaultGraphCell cell = SchemeActions.findPortCellById(this.graph, port.getId());
 					if (cell != null) {
@@ -170,8 +166,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 					if (cell != null) {
 						GraphActions.setText(this.graph, cell, port.getName());
 					}
-				}
-				else if (obj instanceof SchemeCablePort) {
+				} else if (obj instanceof SchemeCablePort) {
 					SchemeCablePort port = (SchemeCablePort)obj;
 					DefaultGraphCell cell = SchemeActions.findCablePortCellById(this.graph, port.getId());
 					if (cell != null) {

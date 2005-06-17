@@ -49,8 +49,7 @@ public class PathNewCommand extends AbstractCommand
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPATH, "false",
 					path.getId(), true, true);
 			path.addCharacteristic(ea);
-		}
-		catch (CreateObjectException ex) {
+		} catch (CreateObjectException ex) {
 			ex.printStackTrace();
 		}
 		aContext.getDispatcher().notify(new CreatePathEvent(pane, null,

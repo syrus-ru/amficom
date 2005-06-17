@@ -21,8 +21,7 @@ public class CableThreadSelectionDialog extends JDialog
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}

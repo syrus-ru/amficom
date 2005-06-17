@@ -65,8 +65,7 @@ public class CopyDirectoryToFile
 			in.read(b);
 			in.close();
 			return b;
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			System.err.println("Error reading " + ex.getMessage());
 			return null;
@@ -95,28 +94,22 @@ public class CopyDirectoryToFile
 					Pool.putMap(EquipmentType.typ, h);
 				}
 				h.putAll(loadEquipmentTypes(files[i], dataSource));
-			}
-			else if (filename.startsWith(link_type))
+			} else if (filename.startsWith(link_type))
 			{
 				Pool.putMap(LinkType.typ, loadLinkTypes(files[i], dataSource));
-			}
-			else if (filename.startsWith(port_type))
+			} else if (filename.startsWith(port_type))
 			{
 				Pool.putMap(PortType.typ, loadPortTypes(files[i], dataSource));
-			}
-			else if (filename.startsWith(cable_port_type))
+			} else if (filename.startsWith(cable_port_type))
 			{
 				Pool.putMap(CablePortType.typ, loadCablePortTypes(files[i], dataSource));
-			}
-			else if (filename.startsWith(testport_type))
+			} else if (filename.startsWith(testport_type))
 			{
 				Pool.putMap(TestPortType.typ, loadTestPortTypes(files[i], dataSource));
-			}
-			else if (filename.startsWith(accessport_type))
+			} else if (filename.startsWith(accessport_type))
 			{
 				Pool.putMap(AccessPortType.typ, loadAccessPortTypes(files[i], dataSource));
-			}
-			else if (filename.startsWith(characteristic_type))
+			} else if (filename.startsWith(characteristic_type))
 			{
 				h = Pool.getMap(CharacteristicType.typ);
 				if (h == null)
@@ -159,8 +152,7 @@ public class CopyDirectoryToFile
 					}
 					eqt.id = new_id;
 					h.put(eqt.id, eqt);
-				}
-				else if (s[0].equals("@codename"))
+				} else if (s[0].equals("@codename"))
 					eqt.codename = s[1];
 				else if (s[0].equals("@description"))
 					eqt.description = s[1];
@@ -197,8 +189,7 @@ public class CopyDirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -236,8 +227,7 @@ public class CopyDirectoryToFile
 					}
 					lt.id = new_id;
 					h.put(lt.id, lt);
-				}
-				else if (s[0].equals("@codename"))
+				} else if (s[0].equals("@codename"))
 					lt.codename = s[1];
 				else if (s[0].equals("@description"))
 					lt.description = s[1];
@@ -278,8 +268,7 @@ public class CopyDirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -317,8 +306,7 @@ public class CopyDirectoryToFile
 					}
 					pt.id = new_id;
 					h.put(pt.id, pt);
-				}
-				else if (s[0].equals("@p_class"))
+				} else if (s[0].equals("@p_class"))
 					pt.p_class = s[1];
 				else if (s[0].equals("@codename"))
 					pt.codename = s[1];
@@ -353,8 +341,7 @@ public class CopyDirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -392,8 +379,7 @@ public class CopyDirectoryToFile
 					}
 					cpt.id = new_id;
 					h.put(cpt.id, cpt);
-				}
-				else if (s[0].equals("@codename"))
+				} else if (s[0].equals("@codename"))
 					cpt.codename = s[1];
 				else if (s[0].equals("@description"))
 					cpt.description = s[1];
@@ -426,8 +412,7 @@ public class CopyDirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -465,8 +450,7 @@ public class CopyDirectoryToFile
 					}
 					tpt.id = new_id;
 					h.put(tpt.id, tpt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					tpt.description = s[1];
 				else if (s[0].equals("@port_type_id"))
 					tpt.port_type_id = s[1];
@@ -493,8 +477,7 @@ public class CopyDirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -532,8 +515,7 @@ public class CopyDirectoryToFile
 					}
 					apt.id = new_id;
 					h.put(apt.id, apt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					apt.description = s[1];
 				else if (s[0].equals("@access_type"))
 					apt.access_type = s[1];
@@ -560,8 +542,7 @@ public class CopyDirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -599,8 +580,7 @@ public class CopyDirectoryToFile
 					}
 					ch.id = new_id;
 					h.put(ch.id, ch);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					ch.description = s[1];
 				else if (s[0].equals("@ch_class"))
 					ch.ch_class = s[1];
@@ -609,8 +589,7 @@ public class CopyDirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -656,8 +635,7 @@ public class CopyDirectoryToFile
 							}
 							port.id = new_id;
 							h.put(port.id, port);
-						}
-						else if (s[0].equals("@port_type_id"))
+						} else if (s[0].equals("@port_type_id"))
 							port.port_type_id = s[1];
 						else if (s[0].equals("@link_id"))
 							port.link_id = s[1];
@@ -673,8 +651,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(SchemePort.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -721,8 +698,7 @@ public class CopyDirectoryToFile
 							}
 							port.id = new_id;
 							h.put(port.id, port);
-						}
-						else if (s[0].equals("@cable_port_type_id"))
+						} else if (s[0].equals("@cable_port_type_id"))
 							port.cable_port_type_id = s[1];
 						else if (s[0].equals("@cable_link_id"))
 							port.cable_link_id = s[1];
@@ -736,8 +712,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(SchemeCablePort.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -784,8 +759,7 @@ public class CopyDirectoryToFile
 							}
 							link.id = new_id;
 							h.put(link.id, link);
-						}
-						else if (s[0].equals("@link_type_id"))
+						} else if (s[0].equals("@link_type_id"))
 							link.link_type_id = s[1];
 						else if (s[0].equals("@source_port_id"))
 							link.source_port_id = s[1];
@@ -799,8 +773,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(SchemeLink.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -847,8 +820,7 @@ public class CopyDirectoryToFile
 							}
 							link.id = new_id;
 							h.put(link.id, link);
-						}
-						else if (s[0].equals("@cable_link_type_id"))
+						} else if (s[0].equals("@cable_link_type_id"))
 							link.cable_link_type_id = s[1];
 						else if (s[0].equals("@source_port_id"))
 							link.source_port_id = s[1];
@@ -872,8 +844,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(SchemeCableLink.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -920,8 +891,7 @@ public class CopyDirectoryToFile
 							}
 							device.id = new_id;
 							h.put(device.id, device);
-						}
-						else if (s[0].equals("@ports"))
+						} else if (s[0].equals("@ports"))
 						{
 							device.ports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -930,8 +900,7 @@ public class CopyDirectoryToFile
 								device.ports.add((SchemePort)Pool.get(SchemePort.typ, s[0]));
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@cableports"))
+						} else if (s[0].equals("@cableports"))
 						{
 							device.cableports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -950,8 +919,7 @@ public class CopyDirectoryToFile
 					else
 						old.putAll(h);
 
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -998,8 +966,7 @@ public class CopyDirectoryToFile
 							}
 							proto.id = new_id;
 							h.put(proto.id, proto);
-						}
-						else if (s[0].equals("@equipment_type_id"))
+						} else if (s[0].equals("@equipment_type_id"))
 							proto.equipment_type_id = s[1];
 						else if (s[0].equals("@devices"))
 						{
@@ -1010,8 +977,7 @@ public class CopyDirectoryToFile
 								proto.devices.add((SchemeDevice)Pool.get(SchemeDevice.typ, s[0]));
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@links"))
+						} else if (s[0].equals("@links"))
 						{
 							proto.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -1020,8 +986,7 @@ public class CopyDirectoryToFile
 								proto.links.add((SchemeLink)Pool.get(SchemeLink.typ, s[0]));
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@protoelements"))
+						} else if (s[0].equals("@protoelements"))
 						{
 							proto.protoelement_ids = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -1030,8 +995,7 @@ public class CopyDirectoryToFile
 								proto.protoelement_ids.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@schemecell"))
+						} else if (s[0].equals("@schemecell"))
 						{
 							proto.schemecell = readVisualElement(s[1]);
 						}
@@ -1044,8 +1008,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(ProtoElement.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -1092,8 +1055,7 @@ public class CopyDirectoryToFile
 							}
 							mapproto.id = new_id;
 							h.put(mapproto.id, mapproto);
-						}
-						else if (s[0].equals("@description"))
+						} else if (s[0].equals("@description"))
 							mapproto.description = s[1];
 						else if (s[0].equals("@symbol_id"))
 							mapproto.setImageID(s[1]);
@@ -1104,8 +1066,7 @@ public class CopyDirectoryToFile
 						else if (s[0].equals("@is_visual"))
 						{
 							mapproto.is_visual = Boolean.valueOf(s[1]).booleanValue();
-						}
-						else if (s[0].equals("@protoelements"))
+						} else if (s[0].equals("@protoelements"))
 						{
 							mapproto.pe_ids = new Vector();
 							s = analyseString(isr.readASCIIString());
@@ -1123,8 +1084,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(MapProtoElement.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -1171,8 +1131,7 @@ public class CopyDirectoryToFile
 							}
 							scheme.id = new_id;
 							h.put(scheme.id, scheme);
-						}
-						else if (s[0].equals("@created"))
+						} else if (s[0].equals("@created"))
 							scheme.created = Long.parseLong(s[1]);
 						else if (s[0].equals("@created_by"))
 							scheme.created_by = s[1];
@@ -1193,8 +1152,7 @@ public class CopyDirectoryToFile
 								scheme.cablelinks.add((SchemeCableLink)Pool.get(SchemeCableLink.typ, s[0]));
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@elements"))
+						} else if (s[0].equals("@elements"))
 						{
 							scheme.elements = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -1213,8 +1171,7 @@ public class CopyDirectoryToFile
 //								scheme.paths.add((SchemePath)Pool.get(SchemePath.typ, s[0]));
 //								s = analyseString(isr.readASCIIString());
 //							}
-//						}
-						else if (s[0].equals("@schemecell"))
+//						} else if (s[0].equals("@schemecell"))
 						{
 							scheme.schemecell = readVisualElement(s[1]);
 						}
@@ -1226,8 +1183,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(Scheme.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -1274,8 +1230,7 @@ public class CopyDirectoryToFile
 							}
 							se.id = new_id;
 							h.put(se.id, se);
-						}
-						else if (s[0].equals("@equipment_id"))
+						} else if (s[0].equals("@equipment_id"))
 							se.equipment_id = s[1];
 						else if (s[0].equals("@proto_element_id"))
 							se.proto_element_id = s[1];
@@ -1289,8 +1244,7 @@ public class CopyDirectoryToFile
 								se.devices.add((SchemeDevice)Pool.get(SchemeDevice.typ, s[0]));
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@elements"))
+						} else if (s[0].equals("@elements"))
 						{
 							se.element_ids = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -1299,8 +1253,7 @@ public class CopyDirectoryToFile
 								se.element_ids.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@links"))
+						} else if (s[0].equals("@links"))
 						{
 							se.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -1322,8 +1275,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(SchemeElement.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -1370,8 +1322,7 @@ public class CopyDirectoryToFile
 							}
 							path.id = new_id;
 							h.put(path.id, path);
-						}
-						else if (s[0].equals("@start_device_id"))
+						} else if (s[0].equals("@start_device_id"))
 							path.start_device_id = s[1];
 						else if (s[0].equals("@end_device_id"))
 							path.end_device_id = s[1];
@@ -1403,8 +1354,7 @@ public class CopyDirectoryToFile
 						Pool.putMap(SchemePath.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;

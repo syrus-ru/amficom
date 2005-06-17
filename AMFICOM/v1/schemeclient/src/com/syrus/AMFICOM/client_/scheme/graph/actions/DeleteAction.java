@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.3 2005/05/26 07:40:51 stas Exp $
+ * $Id: DeleteAction.java,v 1.4 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -54,8 +54,7 @@ public class DeleteAction extends AbstractAction {
 					graph.getModel().remove(graph.getDescendants(cells));
 					return;
 				}
-			}
-			else {
+			} else {
 				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 						"Удалить все эти элементы?",
 						"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -83,12 +82,10 @@ public class DeleteAction extends AbstractAction {
 							}
 						}
 						new_cells.add(cells[i]);
-					}
-					else if (!GraphActions.hasGroupedParent(cells[i])) {
+					} else if (!GraphActions.hasGroupedParent(cells[i])) {
 						if (cells[i] instanceof PortCell) {
 							new_cells.add(deletePort(graph, resource, (PortCell)cells[i]));
-						}
-						else if (cells[i] instanceof CablePortCell) {
+						} else if (cells[i] instanceof CablePortCell) {
 							new_cells.add(deleteCablePort(graph, resource, (CablePortCell)cells[i]));
 						} 
 						else if (cells[i] instanceof DefaultEdge) {
@@ -101,8 +98,7 @@ public class DeleteAction extends AbstractAction {
 								else if (p instanceof CablePortCell) {
 									new_cells.add(deleteCablePort(graph, resource, (CablePortCell)p));
 								}
-							}
-							else {
+							} else {
 								new_cells.add(edge);
 								deleteConnections(graph, edge, (DefaultPort) edge.getSource());
 							}
@@ -114,8 +110,7 @@ public class DeleteAction extends AbstractAction {
 								else if (p instanceof CablePortCell) {
 									new_cells.add(deleteCablePort(graph, resource, (CablePortCell)p));
 								}
-							}
-							else {
+							} else {
 								new_cells.add(edge);
 								deleteConnections(graph, edge, (DefaultPort) edge.getTarget());
 							}

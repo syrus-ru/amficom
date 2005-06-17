@@ -62,8 +62,7 @@ public final class SchemeController extends ObjectResourceController
 		Scheme sc = (Scheme)object;
 		if (key.equals(KEY_NAME)) {
 			result = sc.getName();
-		}
-		else if (key.equals(KEY_DOMAIN)) {
+		} else if (key.equals(KEY_DOMAIN)) {
 			try
 			{
 				result = ((Domain) (AdministrationStorableObjectPool
@@ -71,27 +70,22 @@ public final class SchemeController extends ObjectResourceController
 								.getDomainId(),
 								true)))
 						.getName();
-			}
-			catch (final ApplicationException ae)
+			} catch (final ApplicationException ae)
 			{
 				ae.printStackTrace();
 				result = null;
 			}
-		}
-		else if (key.equals(KEY_USER)) {
+		} else if (key.equals(KEY_USER)) {
 			try {
 				SystemUser user = (SystemUser)ConfigurationStorableObjectPool.getStorableObject(
 						sc.getCreatorId(), true);
 				result = user.getName();
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				result = "";
 			}
-		}
-		else if (key.equals(KEY_CREATED)) {
+		} else if (key.equals(KEY_CREATED)) {
 			result = sdf.format(sc.getCreated());
-		}
-		else if (key.equals(KEY_MODIFIED)) {
+		} else if (key.equals(KEY_MODIFIED)) {
 			result = sdf.format(sc.getModified());
 		}
 		return result;

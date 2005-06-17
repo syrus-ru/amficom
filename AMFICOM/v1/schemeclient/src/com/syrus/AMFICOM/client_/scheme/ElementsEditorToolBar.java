@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorToolBar.java,v 1.2 2005/05/26 07:40:51 stas Exp $
+ * $Id: ElementsEditorToolBar.java,v 1.3 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModel;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -43,8 +43,7 @@ public class ElementsEditorToolBar extends JToolBar implements ApplicationModelL
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

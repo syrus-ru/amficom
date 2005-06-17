@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.4 2005/06/09 10:53:52 stas Exp $
+ * $Id: ElementsPanel.java,v 1.5 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/06/09 10:53:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -90,8 +90,7 @@ public class ElementsPanel extends UgoPanel {
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)) {
 				SchemeCablePort port = (SchemeCablePort)ev.getSelectedObject();
 				graph.setSelectionCell(SchemeActions.findCablePortCellById(graph, port.getId()));
-			}
-			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)) {
+			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)) {
 				SchemeLink link = (SchemeLink)ev.getSelectedObject();
 				graph.setSelectionCell(SchemeActions.findSchemeLinkById(graph, link.getId()));
 			} 

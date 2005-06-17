@@ -62,8 +62,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
 			if (!parent_group.getSchemeProtoElements().isEmpty())
 				return SchemeProtoGroup.class;
-		}
-		else if (node.getObject() instanceof SchemeProtoGroup)
+		} else if (node.getObject() instanceof SchemeProtoGroup)
 			return SchemeProtoElement.class;
 		return SchemeProtoGroup.class;
 	}
@@ -79,8 +78,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 			 * @todo write SchemeProtoGroupController
 			 */
 //				return SchemeProtoGroupController.getInstance();
-		}
-		else if (node.getObject() instanceof SchemeProtoGroup)
+		} else if (node.getObject() instanceof SchemeProtoGroup)
 			return null;
 			/**
 			 * @todo write SchemeProtoElementController
@@ -119,8 +117,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 					}
 				}
 			}
-		}
-		else if(node.getObject() instanceof SchemeProtoGroup)
+		} else if(node.getObject() instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
 			for (final Iterator schemeProtoGroupIterator = parent_group.getSchemeProtoGroups().iterator(); schemeProtoGroupIterator.hasNext();) {
@@ -135,8 +132,7 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 						group.getSchemeProtoGroups().isEmpty()));
 			}
 		}
-	}
-	catch (ApplicationException ex) {
+	} catch (ApplicationException ex) {
 	}
 
 		return vec;

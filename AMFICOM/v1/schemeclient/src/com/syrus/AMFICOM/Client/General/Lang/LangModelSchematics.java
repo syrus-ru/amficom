@@ -30,14 +30,12 @@ public class LangModelSchematics
 		try
 		{
 			string = RESOURCE_BUNDLE.getString(keyName);
-		}
-		catch (MissingResourceException e)
+		} catch (MissingResourceException e)
 		{
 			try
 			{
 				string = RESOURCE_BUNDLE.getString(keyName + "Text");
-			}
-			catch (MissingResourceException mre)
+			} catch (MissingResourceException mre)
 			{
 				try
 				{
@@ -45,13 +43,11 @@ public class LangModelSchematics
 												+ keyName + "Text"
 												+ "' "
 												+ "not found");
-				}
-				catch (Exception exc)
+				} catch (Exception exc)
 				{
 					exc.printStackTrace();
 				}
-			}
-			catch (Exception exc)
+			} catch (Exception exc)
 			{
 				exc.printStackTrace();
 			}

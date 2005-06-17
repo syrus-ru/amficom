@@ -86,8 +86,7 @@ public class SchemeCopyCommand extends AbstractCommand
 
 			aContext.getDispatcher().notify(new TreeListSelectionEvent("",
 					TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
-		}
-		catch (ApplicationException ex) {
+		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
 																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);

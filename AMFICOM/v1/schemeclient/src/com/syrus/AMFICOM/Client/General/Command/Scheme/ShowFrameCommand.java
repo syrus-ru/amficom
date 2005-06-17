@@ -32,8 +32,7 @@ public class ShowFrameCommand extends AbstractCommand
 				try
 				{
 					frame.setIcon(false);
-				}
-				catch (PropertyVetoException ex)
+				} catch (PropertyVetoException ex)
 				{
 					ex.printStackTrace();
 				}

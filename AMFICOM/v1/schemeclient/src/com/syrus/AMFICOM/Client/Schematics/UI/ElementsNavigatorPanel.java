@@ -152,8 +152,7 @@ public class ElementsNavigatorPanel extends JPanel implements PropertyChangeList
 					loadButton.setEnabled(true);
 					delMapGroupButton.setEnabled(true);
 				} 
-			}
-			else {
+			} else {
 				loadButton.setEnabled(false);
 				delMapGroupButton.setEnabled(false);
 			}

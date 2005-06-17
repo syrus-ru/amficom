@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.4 2005/06/04 16:56:20 bass Exp $
+ * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.5 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/04 16:56:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -53,8 +53,7 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 							link,
 							link.getId(), true);
 				super.addCharacteristics(link.getCharacteristics(), link.getId());
-			}
-			else {
+			} else {
 				CableLinkType linkType = schemeCableLink.getCableLinkType();
 				if (linkType != null) {
 					for (int i = 0; i < sorts.length; i++)

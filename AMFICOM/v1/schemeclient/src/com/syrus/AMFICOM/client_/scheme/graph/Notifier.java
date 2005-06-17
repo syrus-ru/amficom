@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.2 2005/05/26 07:40:51 stas Exp $
+ * $Id: Notifier.java,v 1.3 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -86,8 +86,7 @@ public class Notifier {
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, null, null,
 					ObjectSelectedEvent.ALL_DESELECTED));
 			return;
-		}
-		else if (cells.length == 1) {
+		} else if (cells.length == 1) {
 			Object selectedObject = null;
 			long selectedType = 0;
 			VisualManager manager = null;
@@ -110,40 +109,35 @@ public class Notifier {
 					selectedType = ObjectSelectedEvent.SCHEME_PROTOELEMENT;
 					manager = SchemeProtoElementPropertiesManager.getInstance(aContext);
 				}
-			}
-			else if (object instanceof DeviceCell) {
+			} else if (object instanceof DeviceCell) {
 				DeviceCell dev = (DeviceCell)object;
 				if (dev.getSchemeDeviceId() != null) {
 					selectedObject = dev.getSchemeDevice();
 					selectedType = ObjectSelectedEvent.SCHEME_DEVICE;
 					manager = SchemeDevicePropertiesManager.getInstance(aContext);
 				}
-			}
-			else if (object instanceof DefaultLink) {
+			} else if (object instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)object;
 				if (link.getSchemeLinkId() != null) {
 					selectedObject = link.getSchemeLink();
 					selectedType = ObjectSelectedEvent.SCHEME_LINK;
 					manager = SchemeLinkPropertiesManager.getInstance(aContext);
 				}
-			}
-			else if (object instanceof DefaultCableLink) {
+			} else if (object instanceof DefaultCableLink) {
 				DefaultCableLink link = (DefaultCableLink)object;
 				if (link.getSchemeCableLinkId() != null) {
 					selectedObject = link.getSchemeCableLink();
 					selectedType = ObjectSelectedEvent.SCHEME_CABLELINK;
 					manager = SchemeCableLinkPropertiesManager.getInstance(aContext);
 				}
-			}
-			else if (object instanceof PortCell) {
+			} else if (object instanceof PortCell) {
 				PortCell port = (PortCell)object;
 				if (port.getSchemePortId() != null) {
 					selectedObject = port.getSchemePort();
 					selectedType = ObjectSelectedEvent.SCHEME_PORT;
 					manager = SchemePortPropertiesManager.getInstance(aContext);
 				}
-			}
-			else if (object instanceof CablePortCell) {
+			} else if (object instanceof CablePortCell) {
 				CablePortCell port = (CablePortCell)object;
 				if (port.getSchemeCablePortId() != null) {
 					selectedObject = port.getSchemeCablePort();
@@ -155,13 +149,11 @@ public class Notifier {
 				Log.debugMessage("unsupported object selection: " + object, Log.WARNING); //$NON-NLS-1$
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, null, null,
 						ObjectSelectedEvent.ALL_DESELECTED));
-			}
-			else {
+			} else {
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObject, manager,
 						selectedType));
 			}
-		}
-		else if (cells.length > 1) {
+		} else if (cells.length > 1) {
 			// TODO multiple selection
 		}
 	}

@@ -25,8 +25,7 @@ public class SaveComponentDialog extends JDialog
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -131,8 +130,7 @@ public class SaveComponentDialog extends JDialog
 					"Элемент "+ proto.getName() +" успешно сохранен",
 					"Сообщение",
 							JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch (IllegalObjectEntityException ex) {
+		} catch (IllegalObjectEntityException ex) {
 			ex.printStackTrace();
 		}
 	}

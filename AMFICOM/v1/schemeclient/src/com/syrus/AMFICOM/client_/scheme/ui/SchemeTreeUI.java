@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.3 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.4 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -63,8 +63,7 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 				if (node != null)
 					this.treeUI.getTree().setSelectionPath(new TreePath(model.getPathToRoot(node)));
 			}
-		}
-		else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
+		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent ev = (SchemeEvent)e;
 			if (ev.isType(SchemeEvent.CREATE_OBJECT) || ev.isType(SchemeEvent.DELETE_OBJECT)) {
 				ItemTreeModel model = this.treeUI.getTreeModel();
@@ -119,8 +118,7 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 			type = ObjectSelectedEvent.OTHER_OBJECT;
 			if (manager != null)
 				object = null; 
-		}
-		else {
+		} else {
 			throw new UnsupportedOperationException("Unsupported tree object type " + object); //$NON-NLS-1$
 		}
 		ObjectSelectedEvent ev = new ObjectSelectedEvent(e.getSource(), object, manager, type);

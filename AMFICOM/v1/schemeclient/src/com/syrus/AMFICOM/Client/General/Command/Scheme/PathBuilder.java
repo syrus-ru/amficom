@@ -61,8 +61,7 @@ public class PathBuilder
 					if (link == null)
 						return false;
 					newPE = addLink(path, (SchemePort)port, link);
-				}
-				else if (port instanceof SchemeCablePort)
+				} else if (port instanceof SchemeCablePort)
 				{
 					SchemeCablePort cport = (SchemeCablePort)port;
 					SchemeCableLink clink = cport.getSchemeCableLink();
@@ -73,8 +72,7 @@ public class PathBuilder
 				}
 				if (newPE == null)
 					return false;
-			}
-			else
+			} else
 			{
 				PathElement newPE = null;
 				AbstractSchemePort port = pe.getEndAbstractSchemePort();
@@ -113,8 +111,7 @@ public class PathBuilder
 					if (link == null)
 						return false;
 					newPE = addLink(path, (SchemePort)port, link);
-				}
-				else if (port instanceof SchemeCablePort)
+				} else if (port instanceof SchemeCablePort)
 				{
 					SchemeCablePort cport = (SchemeCablePort)port;
 					SchemeCableLink clink = cport.getSchemeCableLink();
@@ -125,8 +122,7 @@ public class PathBuilder
 				}
 				if (newPE == null)
 					return false;
-			}
-			else
+			} else
 			{
 				PathElement newPE = null;
 				AbstractSchemePort port = pe.getEndAbstractSchemePort();
@@ -190,8 +186,7 @@ public class PathBuilder
 					if (link == null)
 						return false;
 					newPE = addLink(path, (SchemePort)port, link);
-				}
-				else if (port instanceof SchemeCablePort)
+				} else if (port instanceof SchemeCablePort)
 				{
 					SchemeCablePort cport = (SchemeCablePort)port;
 					SchemeCableLink clink = cport.getSchemeCableLink();
@@ -202,8 +197,7 @@ public class PathBuilder
 				}
 				if (newPE == null)
 					return false;
-			}
-			else
+			} else
 			{
 				PathElement newPE = null;
 				AbstractSchemePort port = pe.getEndAbstractSchemePort();
@@ -231,8 +225,7 @@ public class PathBuilder
 				Scheme scheme = se.getScheme();
 				exploreScheme(path, scheme);
 				return (PathElement)path.getPathElements().last();
-			}
-			else if (!se.getSchemeElements().isEmpty())
+			} else if (!se.getSchemeElements().isEmpty())
 			{
 				exploreSchemeElement(path, se);
 				return (PathElement)path.getPathElements().last();
@@ -262,8 +255,7 @@ public class PathBuilder
 				{
 					cports = findCablePorts(dev, AbstractSchemePortDirectionType._OUT);
 					ports = findPorts(dev, AbstractSchemePortDirectionType._OUT);
-				}
-				else
+				} else
 				{
 					cports = findCablePorts(dev, AbstractSchemePortDirectionType._IN);
 					ports = findPorts(dev, AbstractSchemePortDirectionType._IN);
@@ -289,8 +281,7 @@ public class PathBuilder
 				else if (ports.size() > 1)
 					state = MULTIPLE_PORTS;
 				// else we couldn't go further
-			}
-			else if (pe.getKind() == Kind.SCHEME_CABLE_LINK)
+			} else if (pe.getKind() == Kind.SCHEME_CABLE_LINK)
 			{
 //				SchemeCableLink link = (SchemeCableLink)pe.abstractSchemeElement();
 				SchemeCablePort startPort = (SchemeCablePort)pe.getEndAbstractSchemePort();
@@ -304,8 +295,7 @@ public class PathBuilder
 				{
 					cports = findCablePorts(dev, AbstractSchemePortDirectionType._OUT);
 					ports = findPorts(dev, AbstractSchemePortDirectionType._OUT);
-				}
-				else
+				} else
 				{
 					cports = findCablePorts(dev, AbstractSchemePortDirectionType._IN);
 					ports = findPorts(dev, AbstractSchemePortDirectionType._IN);
@@ -322,11 +312,9 @@ public class PathBuilder
 					if (port != null)
 						newPE.setEndAbstractSchemePort(port);
 				}
-			}
-			else
+			} else
 				return null;
-		}
-		else //first element
+		} else //first element
 		{
 			int accessPorts = 0;
 			SchemePort port = null;
@@ -385,8 +373,7 @@ public class PathBuilder
 						if (port.equals(pe.getEndAbstractSchemePort()))
 							return addLink(path, port, link);
 					}
-				}
-				else //в противном случае ищем по общему порту предыдущего эл-та и линка
+				} else //в противном случае ищем по общему порту предыдущего эл-та и линка
 				{
 					for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
 					{
@@ -452,8 +439,7 @@ public class PathBuilder
 							}
 						}
 					}
-				}
-				else //в противном случае ищем по общему порту предыдущего эл-та и линка
+				} else //в противном случае ищем по общему порту предыдущего эл-та и линка
 				{
 					for (Iterator it = se.getSchemeCablePorts().iterator(); it.hasNext();)
 					{
@@ -499,13 +485,11 @@ public class PathBuilder
 		{
 			newPE.setStartAbstractSchemePort(link.getSourceSchemeCablePort());
 			newPE.setEndAbstractSchemePort(link.getTargetSchemeCablePort());
-		}
-		else if (port.equals(link.getTargetSchemeCablePort()))
+		} else if (port.equals(link.getTargetSchemeCablePort()))
 		{
 			newPE.setStartAbstractSchemePort(link.getTargetSchemeCablePort());
 			newPE.setEndAbstractSchemePort(link.getSourceSchemeCablePort());
-		}
-		else //нет общих портов
+		} else //нет общих портов
 			return null;
 
 		return newPE;

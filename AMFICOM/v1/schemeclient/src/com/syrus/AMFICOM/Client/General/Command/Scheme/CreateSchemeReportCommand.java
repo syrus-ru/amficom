@@ -39,8 +39,7 @@ public class CreateSchemeReportCommand extends VoidCommand
 		if (key.equals(PANEL) && value instanceof UgoPanel)
 		{
 			panels.add(value);
-		}
-		else if (key.equals(TYPE))
+		} else if (key.equals(TYPE))
 		{
 			type = (String)value;
 		}

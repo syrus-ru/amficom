@@ -36,8 +36,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}

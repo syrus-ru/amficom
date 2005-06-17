@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.5 2005/06/17 11:01:04 bass Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.6 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -590,8 +590,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				if (eqt != null) {
 					manufacturerText.setText(eqt.getManufacturer());
 					manufacturerCodeText.setText(eqt.getManufacturerCode());
-				}
-				else {
+				} else {
 					manufacturerText.setText(Constants.EMPTY);
 					manufacturerCodeText.setText(Constants.EMPTY);
 				}
@@ -719,8 +718,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.typeCombo.setSelectedItem(eqt);
 			this.manufacturerText.setText(eqt.getManufacturer());
 			this.manufacturerCodeText.setText(eqt.getManufacturerCode());
-		}
-		else {
+		} else {
 			this.typeBox.setSelected(false);
 			this.manufacturerText.setText(Constants.EMPTY);
 			this.manufacturerCodeText.setText(Constants.EMPTY);
@@ -730,8 +728,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.kisCombo.setSelectedItem(kis);
 			this.kisAddrText.setText(kis.getHostName());
 			this.kisPortText.setText(Short.toString(kis.getTCPPort()));
-		}
-		else {
+		} else {
 			this.kisBox.setSelected(false);
 			this.kisAddrText.setText(Constants.EMPTY);
 			this.kisPortText.setText(Constants.EMPTY);
@@ -746,8 +743,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.swvText.setText(eq.getSwVersion());
 			this.longText.setText(Float.toString(eq.getLongitude()));
 			this.latText.setText(Float.toString(eq.getLatitude()));
-		}
-		else {
+		} else {
 			this.equipmentBox.setSelected(false);
 			this.supplierText.setText(Constants.EMPTY);
 			this.supplierCodeText.setText(Constants.EMPTY);
@@ -768,8 +764,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			schemeElement.setLabel(this.labelText.getText());
 			if (this.symbolBut.getIcon() == null) {
 				schemeElement.setSymbol(null);
-			}
-			else {
+			} else {
 				try {
 					schemeElement.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(imageId, true));
 				} catch (ApplicationException e) {
@@ -783,8 +778,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					eqt.setManufacturer(this.manufacturerText.getText());
 					eqt.setManufacturerCode(this.manufacturerCodeText.getText());
 				}
-			}
-			else {
+			} else {
 				schemeElement.setEquipmentType(null);
 			}
 			Equipment eq = schemeElement.getEquipment();
@@ -817,8 +811,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 						eq.setLatitude(0);
 					}
 				}
-			}
-			else if (eq != null) {
+			} else if (eq != null) {
 				StorableObjectPool.delete(eq.getId());
 				schemeElement.setEquipment(null);
 			}
@@ -832,8 +825,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					kis.setHostName(this.kisAddrText.getText());
 					kis.setTCPPort(Short.parseShort(this.kisPortText.getText()));
 				}
-			}
-			else {
+			} else {
 				schemeElement.setKis(null);
 			}
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeElement, SchemeEvent.UPDATE_OBJECT));

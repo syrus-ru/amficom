@@ -189,8 +189,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						try
 						{
 							rep.setReserve(EquipmentType.typ + ":" + eqType.id);
-						}
-						catch (CreateReportException cre)
+						} catch (CreateReportException cre)
 						{}
 
 						ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
@@ -246,8 +245,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 							getDefaultToolkit().getImage("images/folder.gif"))));
 					}
 				}
-			}
-			else if ((((ObjectResourceTreeNode) node.getParent()).getObject()instanceof
+			} else if ((((ObjectResourceTreeNode) node.getParent()).getObject()instanceof
 				String) &&
 				((ObjectResourceTreeNode) node.getParent()).getObject().equals(
 				"label_repPhysicalScheme"))
@@ -274,8 +272,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						try
 						{
 							or.setReserve(scheme.id);
-						}
-						catch(Exception exc)
+						} catch(Exception exc)
 						{}
 
 						ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
@@ -288,8 +285,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						vec.add(ortn);
 					}
 				}
-			}
-			else
+			} else
 			{
 				if (((ObjectResourceTreeNode) node.getParent()).getObject()instanceof
 					ObjectResourceReportModel)
@@ -360,11 +356,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						try
 						{
 							rep.setReserve(Equipment.typ + ":" + element.equipmentId);
-						}
-						catch (CreateReportException cre)
+						} catch (CreateReportException cre)
 						{}
-					}
-					else if (!element.protoElementId.equals(""))
+					} else if (!element.protoElementId.equals(""))
 					{
 						ProtoElement pe = (ProtoElement) Pool.get(ProtoElement.typ,
 							element.protoElementId);
@@ -372,11 +366,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						{
 							rep.setReserve(EquipmentType.typ + ":"
 								+ pe.equipmentTypeId);
-						}
-						catch (CreateReportException cre)
+						} catch (CreateReportException cre)
 						{}
-					}
-					else
+					} else
 						continue;
 
 					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
@@ -388,8 +380,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						true);
 					ortn.setDragDropEnabled(true);
 					vec.add(ortn);
-				}
-				else
+				} else
 				{
 					ObjectsReport or = new ObjectsReport (
 						new SchemeReportModel(),
@@ -399,8 +390,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 					try
 					{
 						or.setReserve(element.getInternalSchemeId());
-					}
-					catch(Exception exc)
+					} catch(Exception exc)
 					{}
 
 					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
@@ -427,20 +417,16 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 					try
 					{
 						rep.setReserve(Link.typ + ":" + link.linkId);
-					}
-					catch (CreateReportException cre)
+					} catch (CreateReportException cre)
 					{}
-				}
-				else if (!link.linkTypeId.equals(""))
+				} else if (!link.linkTypeId.equals(""))
 				{
 					try
 					{
 						rep.setReserve(LinkType.typ + ":" + link.linkTypeId);
-					}
-					catch (CreateReportException cre)
+					} catch (CreateReportException cre)
 					{}
-				}
-				else
+				} else
 					continue;
 
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
@@ -467,21 +453,17 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 					try
 					{
 						rep.setReserve(CableLink.typ + ":" + link.cableLinkId);
-					}
-					catch (CreateReportException cre)
+					} catch (CreateReportException cre)
 					{}
-				}
-				else if (!link.cableLinkTypeId.equals(""))
+				} else if (!link.cableLinkTypeId.equals(""))
 				{
 					try
 					{
 						rep.setReserve(CableLinkType.typ + ":"
 							+ link.cableLinkTypeId);
-					}
-					catch (CreateReportException cre)
+					} catch (CreateReportException cre)
 					{}
-				}
-				else
+				} else
 					continue;
 
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
@@ -495,8 +477,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				vec.add(ortn);
 			}
 
-		}
-		else if (node.getObject()instanceof SchemeElement)
+		} else if (node.getObject()instanceof SchemeElement)
 		{
 			SchemeElement schel = (SchemeElement) node.getObject();
 			if (schel.getInternalSchemeId().length() != 0)
@@ -520,14 +501,12 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 							{
 								rep.setReserve(Equipment.typ + ":"
 									+ element.equipmentId);
-							}
-							catch (CreateReportException cre)
+							} catch (CreateReportException cre)
 							{
 								System.out.println(
 									"Jokarnyj nasos pri realizatsii objecta otcheta!");
 							}
-						}
-						else if (!element.protoElementId.equals(""))
+						} else if (!element.protoElementId.equals(""))
 						{
 							ProtoElement pe = (ProtoElement) Pool.get(ProtoElement.typ,
 								element.protoElementId);
@@ -535,14 +514,12 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 							{
 								rep.setReserve(EquipmentType.typ + ":"
 									+ pe.equipmentTypeId);
-							}
-							catch (CreateReportException cre)
+							} catch (CreateReportException cre)
 							{
 								System.out.println(
 									"Jokarnyj nasos pri realizatsii objecta otcheta!");
 							}
-						}
-						else
+						} else
 							continue;
 
 						ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
@@ -555,8 +532,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						ortn.setDragDropEnabled(true);
 						vec.add(ortn);
 
-					}
-					else
+					} else
 						vec.add(new ObjectResourceTreeNode(element, element.getName(), true,
 							new ImageIcon(Toolkit.
 							getDefaultToolkit().getImage("images/scheme.gif")), false));

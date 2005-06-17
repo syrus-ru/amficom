@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.6 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.7 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -146,8 +146,7 @@ public class SchemeObjectsFactory {
 			StorableObjectPool.putStorableObject(ir);
 		} catch (IllegalObjectEntityException e) {
 			 Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: ResourceStorableObjectPool.putStorableObject()");
 		}
 		return ir;
@@ -160,8 +159,7 @@ public class SchemeObjectsFactory {
 			StorableObjectPool.putStorableObject(ir);
 		} catch (IllegalObjectEntityException e) {
 			 Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: ResourceStorableObjectPool.putStorableObject()");
 		}
 		return ir;
@@ -176,8 +174,7 @@ public class SchemeObjectsFactory {
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeDevice;
@@ -192,8 +189,7 @@ public class SchemeObjectsFactory {
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemePort;
@@ -221,8 +217,7 @@ public class SchemeObjectsFactory {
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeCablePort;
@@ -237,8 +232,7 @@ public class SchemeObjectsFactory {
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return protoElement;
@@ -253,8 +247,7 @@ public class SchemeObjectsFactory {
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeElement;
@@ -269,8 +262,7 @@ public class SchemeObjectsFactory {
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeLink;
@@ -285,8 +277,7 @@ public class SchemeObjectsFactory {
 		} 
 		catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.SEVERE);
-		}
-		catch (UnsupportedOperationException e) {
+		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
 		}
 		return schemeCableLink;

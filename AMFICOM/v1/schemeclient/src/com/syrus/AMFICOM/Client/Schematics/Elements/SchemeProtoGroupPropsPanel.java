@@ -46,8 +46,7 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -60,11 +59,9 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 			fis.read(buf);
 			fis.close();
 			image = BitmapImageResource.createInstance(user_id, "", buf);
-		}
-		catch (CreateObjectException ex) {
+		} catch (CreateObjectException ex) {
 			ex.printStackTrace();
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 	}

@@ -137,14 +137,12 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				return MeasurementPortType.class;
 			if(s.equals("MeasurementType"))
 				return MeasurementType.class;
-		}
-		else if (node.getObject() instanceof SchemeProtoGroup)
+		} else if (node.getObject() instanceof SchemeProtoGroup)
 		{
 			if (!((SchemeProtoGroup)node.getObject()).getSchemeProtoGroups().isEmpty())
 				return SchemeProtoGroup.class;
 			return SchemeProtoElement.class;
-		}
-		else if (node.getObject() instanceof SchemeProtoGroup)
+		} else if (node.getObject() instanceof SchemeProtoGroup)
 			return SchemeProtoElement.class;
 		return null;
 	}
@@ -172,8 +170,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				return MeasurementTypeController.getInstance();
 			if(s.equals("MeasurementPortType"))
 				return MeasurementPortTypeController.getInstance();
-		}
-		else if (node.getObject() instanceof SchemeProtoGroup)
+		} else if (node.getObject() instanceof SchemeProtoGroup)
 		{
 			if (!((SchemeProtoGroup)node.getObject()).getSchemeProtoGroups().isEmpty())
 				return null;
@@ -204,8 +201,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 				vec.add(new ObjectResourceTreeNode ("SchemeProtoGroup", "Компоненты сети", true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-			}
-			else if(s.equals("configure"))
+			} else if(s.equals("configure"))
 			{
 				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.getString("menuNetDirText"), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
@@ -219,15 +215,13 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				vec.add(new ObjectResourceTreeNode("CableLinkType", LangModelConfig.getString("menuNetDirCableText"), true));
 				vec.add(new ObjectResourceTreeNode("PortType", LangModelConfig.getString("menuNetDirPortText"), true));
 //				vec.add(new ObjectResourceTreeNode("CablePortType", LangModelConfig.getString("menuNetDirCablePortText"), true));
-			}
-			else if(s.equals("jdirectory"))
+			} else if(s.equals("jdirectory"))
 			{
 //				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
 				vec.add(new ObjectResourceTreeNode("MeasurementType", LangModelConfig.getString("MeasurementType"), true));
 				vec.add(new ObjectResourceTreeNode("MeasurementPortType", LangModelConfig.getString("menuJDirAccessPointText"), true));
 //				vec.add(new ObjectResourceTreeNode("TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
-			}
-			else if(s.equals("LinkType"))
+			} else if(s.equals("LinkType"))
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
@@ -238,12 +232,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-			}
-			else if(s.equals("CableLinkType"))
+			} else if(s.equals("CableLinkType"))
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
@@ -254,13 +246,11 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
 
-			}
-			else if(s.equals("PortType"))
+			} else if(s.equals("PortType"))
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
@@ -271,12 +261,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-			}
-			else if(s.equals("TransmissionPathType"))
+			} else if(s.equals("TransmissionPathType"))
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
@@ -287,12 +275,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-			}
-			else if(s.equals("MeasurementPortType"))
+			} else if(s.equals("MeasurementPortType"))
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
@@ -303,12 +289,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-			}
-			else if(s.equals("MeasurementType"))
+			} else if(s.equals("MeasurementType"))
 			{
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
@@ -319,12 +303,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getDescription(), true, true);
 						vec.add(n);
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-			}
-			else if (s.equals("SchemeProtoGroup"))
+			} else if (s.equals("SchemeProtoGroup"))
 			{
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
@@ -338,13 +320,11 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(group, group.getName(), true, true);
 						vec.add(n);
 					}
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
 			}
-		}
-		else
+		} else
 		{
 			if(node.getObject() instanceof SchemeProtoGroup)
 			{

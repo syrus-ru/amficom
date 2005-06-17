@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.4 2005/05/26 07:40:51 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.5 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -137,12 +137,10 @@ public class UgoTabbedPane extends JPanel implements PropertyChangeListener {
 			if (see.isType(SchemeEvent.OPEN_SCHEME)) {
 				Scheme scheme = (Scheme) see.getObject();
 				openScheme(scheme);
-			}
-			else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
+			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
 				SchemeElement schemeElement = (SchemeElement) see.getObject();
 				openSchemeElement(schemeElement);
-			}
-			else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
+			} else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
 				openSchemeProtoElement(proto);
 			}

@@ -33,8 +33,7 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 			this.setPreferredSize(new Dimension(reportsRO.width,(int)(reportsRO.width / formKoeff)));*
 
 			srpResized();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			throw new CreateReportException(reportsRO.getReportToRender().getName(),CreateReportException.cantImplement);
 		}

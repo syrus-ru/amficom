@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeCharacteristicsPanel.java,v 1.4 2005/05/26 15:31:13 bass Exp $
+ * $Id: PortTypeCharacteristicsPanel.java,v 1.5 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.configuration.PortType;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 15:31:13 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -43,8 +43,7 @@ public class PortTypeCharacteristicsPanel extends CharacteristicsPanel {
 						type,
 						type.getId(), true);
 			super.addCharacteristics(type.getCharacteristics(), type.getId());
-		}
-		else
+		} else
 			showNoSelection();
 	}
 }

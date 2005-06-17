@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.6 2005/06/17 11:01:04 bass Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.7 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -281,8 +281,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 //			if (!isConatainsColor(color))
 //				colorCombo.addItem(color);
 //			colorCombo.setSelectedItem(color);
-		}
-		else {
+		} else {
 			portBox.setSelected(false);
 			markText.setText(Constants.EMPTY);
 		}
@@ -314,8 +313,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 //					port.setMark(markText.getText());
 //					port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 				}
-			}
-			else if (port != null) {
+			} else if (port != null) {
 				StorableObjectPool.delete(port.getId());
 				schemePort.setPort(null);
 			}

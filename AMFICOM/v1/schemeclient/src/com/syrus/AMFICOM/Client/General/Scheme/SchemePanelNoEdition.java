@@ -20,8 +20,7 @@ public class SchemePanelNoEdition extends SchemePanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -60,8 +59,7 @@ public class SchemePanelNoEdition extends SchemePanel
 				try {
 					SchemePath path = (SchemePath)SchemeStorableObjectPool.getStorableObject(mne.getSchemePathId(), true);
 					startPathAnimator(path, SchemeUtils.getPathElement(path, mne.getSchemePathElementId()));
-				}
-				catch (ApplicationException ex) {
+				} catch (ApplicationException ex) {
 				}
 			}
 			if (mne.isDataMarkerDeleted())
@@ -122,8 +120,7 @@ public class SchemePanelNoEdition extends SchemePanel
 				ap.unmark();
 				animators.remove(pe_id);
 			}
-		}
-		else
+		} else
 		{
 			for (Iterator it = animators.values().iterator(); it.hasNext();)
 			{

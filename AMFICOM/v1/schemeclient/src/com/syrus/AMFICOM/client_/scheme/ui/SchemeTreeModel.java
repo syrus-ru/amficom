@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.21 2005/06/17 11:01:04 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.22 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -239,8 +239,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-			}
-			else if (s.equals(Constants.EQUIPMENT_TYPE)) {
+			} else if (s.equals(Constants.EQUIPMENT_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 					Collection equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -379,8 +378,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 						if (element.getSchemeLinksAsArray().length != 0	|| element.getSchemeElementsAsArray().length != 0) {
 							if (!contents.contains(element))
 								node.addChild(new PopulatableIconedNode(this, element, element.getName(), true));
-						}
-						else {
+						} else {
 							if (!contents.contains(element))
 								node.addChild(new PopulatableIconedNode(this, element, element.getName(), false));
 						}
@@ -451,8 +449,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					ImageIcon icon;
 					if (map_group.getSymbol() == null) {
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
-					}
-					else {
+					} else {
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
 								map_group.getSymbol().getImage()).getScaledInstance(16, 16,
 								Image.SCALE_SMOOTH));

@@ -203,8 +203,7 @@ public class DirectoryToFile
 						osw.close();
 						fos.close();
 						System.out.println(counter + " EquipmentTypes of " +  eqtClass + " class written");
-					}
-					catch (Exception ex)
+					} catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
@@ -254,8 +253,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " PortTypes written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -301,8 +299,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " TestPortTypes written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -353,8 +350,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " AccessPortTypes written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -403,8 +399,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " LinkTypes written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -454,8 +449,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " CableLinkTypes written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -517,8 +511,7 @@ public class DirectoryToFile
 						osw.close();
 						fos.close();
 						System.out.println(counter + " CharacteristicTypes of " + chtClass + " class written");
-					}
-					catch (Exception ex)
+					} catch (Exception ex)
 					{
 						ex.printStackTrace();
 					}
@@ -572,8 +565,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemeDevices written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -620,8 +612,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemePorts written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -668,8 +659,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemeCablePorts written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -716,8 +706,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemeLinks written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -773,8 +762,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemeCableLinks written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -860,8 +848,7 @@ public class DirectoryToFile
 					osw.close();
 					fos.close();
 					System.out.println(counter + " ProtoElements of " + protoClass + " class written");
-				}
-				catch (Exception ex)
+				} catch (Exception ex)
 				{
 					ex.printStackTrace();
 				}
@@ -922,8 +909,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemeProtoGroups written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -976,8 +962,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemeProtoGroups written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -1064,8 +1049,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " Schemes written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -1132,8 +1116,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemeElements written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -1190,8 +1173,7 @@ public class DirectoryToFile
 				osw.close();
 				fos.close();
 				System.out.println(counter + " SchemePaths written");
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
@@ -1207,8 +1189,7 @@ public class DirectoryToFile
 			out.flush();
 			out.close();
 			return true;
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			ex.printStackTrace();
 			return false;
@@ -1226,8 +1207,7 @@ public class DirectoryToFile
 			in.read(b);
 			in.close();
 			return b;
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			System.err.println("Error reading " + ex.getMessage());
 			return new byte[0];
@@ -1256,32 +1236,25 @@ public class DirectoryToFile
 					Pool.putMap(EquipmentType.typ, h);
 				}
 				h.putAll(loadEquipmentTypes(files[i]));
-			}
-			else if (filename.startsWith(linkType) && !files[i].isDirectory())
+			} else if (filename.startsWith(linkType) && !files[i].isDirectory())
 			{
 				Pool.putMap(LinkType.typ, loadLinkTypes(files[i]));
-			}
-			else if (filename.startsWith(cableLinkType) && !files[i].isDirectory())
+			} else if (filename.startsWith(cableLinkType) && !files[i].isDirectory())
 			{
 				Pool.putMap(CableLinkType.typ, loadCableLinkTypes(files[i]));
-			}
-			else if (filename.startsWith(portType) && !files[i].isDirectory())
+			} else if (filename.startsWith(portType) && !files[i].isDirectory())
 			{
 				Pool.putMap(PortType.typ, loadPortTypes(files[i]));
-			}
-			else if (filename.startsWith(cablePortType) && !files[i].isDirectory())
+			} else if (filename.startsWith(cablePortType) && !files[i].isDirectory())
 			{
 				Pool.putMap(CablePortType.typ, loadCablePortTypes(files[i]));
-			}
-			else if (filename.startsWith(testportType) && !files[i].isDirectory())
+			} else if (filename.startsWith(testportType) && !files[i].isDirectory())
 			{
 				Pool.putMap(TestPortType.typ, loadTestPortTypes(files[i]));
-			}
-			else if (filename.startsWith(accessportType) && !files[i].isDirectory())
+			} else if (filename.startsWith(accessportType) && !files[i].isDirectory())
 			{
 				Pool.putMap(AccessPortType.typ, loadAccessPortTypes(files[i]));
-			}
-			else if (filename.startsWith(characteristicType) && !files[i].isDirectory())
+			} else if (filename.startsWith(characteristicType) && !files[i].isDirectory())
 			{
 				h = Pool.getMap(CharacteristicType.typ);
 				if (h == null)
@@ -1318,8 +1291,7 @@ public class DirectoryToFile
 				{
 					eqt.id = s[1];
 					h.put(eqt.id, eqt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					eqt.description = s[1];
 				else if (s[0].equals("@eqClass"))
 					eqt.eqClass = s[1];
@@ -1352,8 +1324,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1385,8 +1356,7 @@ public class DirectoryToFile
 				{
 					lt.id = s[1];
 					h.put(lt.id, lt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					lt.description = s[1];
 				else if (s[0].equals("@imageId"))
 					lt.imageId = s[1];
@@ -1419,8 +1389,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1452,8 +1421,7 @@ public class DirectoryToFile
 				{
 					lt.id = s[1];
 					h.put(lt.id, lt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					lt.description = s[1];
 				else if (s[0].equals("@imageId"))
 					lt.imageId = s[1];
@@ -1486,8 +1454,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1520,8 +1487,7 @@ public class DirectoryToFile
 				{
 					pt.id = s[1];
 					h.put(pt.id, pt);
-				}
-				else if (s[0].equals("@pClass"))
+				} else if (s[0].equals("@pClass"))
 					pt.pClass = s[1];
 				else if (s[0].equals("@description"))
 					pt.description = s[1];
@@ -1550,8 +1516,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1583,8 +1548,7 @@ public class DirectoryToFile
 				{
 					cpt.id = s[1];
 					h.put(cpt.id, cpt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					cpt.description = s[1];
 				else if (s[0].equals("@interfaceId"))
 					cpt.interfaceId = s[1];
@@ -1611,8 +1575,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1644,8 +1607,7 @@ public class DirectoryToFile
 				{
 					tpt.id = s[1];
 					h.put(tpt.id, tpt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					tpt.description = s[1];
 				else if (s[0].equals("@portTypeId"))
 					tpt.portTypeId = s[1];
@@ -1672,8 +1634,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1705,8 +1666,7 @@ public class DirectoryToFile
 				{
 					apt.id = s[1];
 					h.put(apt.id, apt);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					apt.description = s[1];
 				else if (s[0].equals("@accessType"))
 					apt.accessType = s[1];
@@ -1733,8 +1693,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1766,8 +1725,7 @@ public class DirectoryToFile
 				{
 					ch.id = s[1];
 					h.put(ch.id, ch);
-				}
-				else if (s[0].equals("@description"))
+				} else if (s[0].equals("@description"))
 					ch.description = s[1];
 				else if (s[0].equals("@chClass"))
 					ch.chClass = s[1];
@@ -1776,8 +1734,7 @@ public class DirectoryToFile
 			}
 			isr.close();
 			fis.close();
-		}
-		catch (IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 			return null;
@@ -1817,8 +1774,7 @@ public class DirectoryToFile
 						{
 							port.id = s[1];
 							h.put(port.id, port);
-						}
-						else if (s[0].equals("@portTypeId"))
+						} else if (s[0].equals("@portTypeId"))
 							port.portTypeId = s[1];
 						else if (s[0].equals("@linkId"))
 							port.linkId = s[1];
@@ -1836,8 +1792,7 @@ public class DirectoryToFile
 						Pool.putMap(SchemePort.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -1878,8 +1833,7 @@ public class DirectoryToFile
 						{
 							port.id = s[1];
 							h.put(port.id, port);
-						}
-						else if (s[0].equals("@cablePortTypeId"))
+						} else if (s[0].equals("@cablePortTypeId"))
 							port.cablePortTypeId = s[1];
 						else if (s[0].equals("@cableLinkId"))
 							port.cableLinkId = s[1];
@@ -1897,8 +1851,7 @@ public class DirectoryToFile
 						Pool.putMap(SchemeCablePort.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -1939,8 +1892,7 @@ public class DirectoryToFile
 						{
 							link.id = s[1];
 							h.put(link.id, link);
-						}
-						else if (s[0].equals("@linkTypeId"))
+						} else if (s[0].equals("@linkTypeId"))
 							link.linkTypeId = s[1];
 						else if (s[0].equals("@sourcePortId"))
 							link.sourcePortId = s[1];
@@ -1958,8 +1910,7 @@ public class DirectoryToFile
 						Pool.putMap(SchemeLink.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2000,8 +1951,7 @@ public class DirectoryToFile
 						{
 							link.id = s[1];
 							h.put(link.id, link);
-						}
-						else if (s[0].equals("@cableLinkTypeId"))
+						} else if (s[0].equals("@cableLinkTypeId"))
 							link.cableLinkTypeId = s[1];
 						else if (s[0].equals("@sourcePortId"))
 							link.sourcePortId = s[1];
@@ -2035,8 +1985,7 @@ public class DirectoryToFile
 						Pool.putMap(SchemeCableLink.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2077,8 +2026,7 @@ public class DirectoryToFile
 						{
 							device.id = s[1];
 							h.put(device.id, device);
-						}
-						else if (s[0].equals("@ports"))
+						} else if (s[0].equals("@ports"))
 						{
 							device.ports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2090,8 +2038,7 @@ public class DirectoryToFile
 								device.ports.add(port);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@cableports"))
+						} else if (s[0].equals("@cableports"))
 						{
 							device.cableports = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2113,8 +2060,7 @@ public class DirectoryToFile
 					else
 						old.putAll(h);
 
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2155,8 +2101,7 @@ public class DirectoryToFile
 						{
 							proto.id = s[1];
 							h.put(proto.id, proto);
-						}
-						else if (s[0].equals("@equipmentTypeId"))
+						} else if (s[0].equals("@equipmentTypeId"))
 							proto.equipmentTypeId = s[1];
 						else if (s[0].equals("@devices"))
 						{
@@ -2170,8 +2115,7 @@ public class DirectoryToFile
 								proto.devices.add(dev);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@links"))
+						} else if (s[0].equals("@links"))
 						{
 							proto.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2183,8 +2127,7 @@ public class DirectoryToFile
 								proto.links.add(link);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@protoelements"))
+						} else if (s[0].equals("@protoelements"))
 						{
 							proto.protoelementIds = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2193,12 +2136,10 @@ public class DirectoryToFile
 								proto.protoelementIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@schemecell"))
+						} else if (s[0].equals("@schemecell"))
 						{
 							proto.schemecell = readVisualElement(s[1]);
-						}
-						else if (s[0].equals("@ugocell"))
+						} else if (s[0].equals("@ugocell"))
 						{
 							proto.ugo = readVisualElement(s[1]);
 						}
@@ -2211,8 +2152,7 @@ public class DirectoryToFile
 						Pool.putMap(ProtoElement.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2253,8 +2193,7 @@ public class DirectoryToFile
 						{
 							mapproto.id = s[1];
 							h.put(mapproto.id, mapproto);
-						}
-						else if (s[0].equals("@description"))
+						} else if (s[0].equals("@description"))
 							mapproto.description = s[1];
 						else if (s[0].equals("@symbolId"))
 						{
@@ -2267,15 +2206,13 @@ public class DirectoryToFile
 								imr = (ImageResource)in.readObject();
 								if (imr != null)
 									ImageCatalogue.add(imr.getId(), imr);
-							}
-							catch (Exception ex)
+							} catch (Exception ex)
 							{
 								ex.printStackTrace();
 							}
 
 							mapproto.setImageID(s[1]);
-						}
-						else if (s[0].equals("@peClass"))
+						} else if (s[0].equals("@peClass"))
 							mapproto.peClass = s[1];
 						else if (s[0].equals("@peIs_kis"))
 							mapproto.peIs_kis = Boolean.valueOf(s[1]).booleanValue();
@@ -2302,8 +2239,7 @@ public class DirectoryToFile
 						Pool.putMap(MapProtoElement.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2344,8 +2280,7 @@ public class DirectoryToFile
 						{
 							mapproto.id = s[1];
 							h.put(mapproto.id, mapproto);
-						}
-						else if (s[0].equals("@parentId"))
+						} else if (s[0].equals("@parentId"))
 							mapproto.parentId = s[1];
 						else if (s[0].equals("@groups"))
 						{
@@ -2356,8 +2291,7 @@ public class DirectoryToFile
 								mapproto.groupIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@mapprotos"))
+						} else if (s[0].equals("@mapprotos"))
 						{
 							mapproto.mapprotoIds = new Vector();
 							s = analyseString(isr.readASCIIString());
@@ -2375,8 +2309,7 @@ public class DirectoryToFile
 						Pool.putMap(MapProtoGroup.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2417,8 +2350,7 @@ public class DirectoryToFile
 						{
 							scheme.id = s[1];
 							h.put(scheme.id, scheme);
-						}
-						else if (s[0].equals("@created"))
+						} else if (s[0].equals("@created"))
 							scheme.created = Long.parseLong(s[1]);
 						else if (s[0].equals("@createdBy"))
 							scheme.createdBy = s[1];
@@ -2443,8 +2375,7 @@ public class DirectoryToFile
 									scheme.cablelinks.add(link);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@links"))
+						} else if (s[0].equals("@links"))
 						{
 							scheme.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2457,8 +2388,7 @@ public class DirectoryToFile
 									scheme.links.add(link);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@elements"))
+						} else if (s[0].equals("@elements"))
 						{
 							scheme.elements = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2483,8 +2413,7 @@ public class DirectoryToFile
 //								scheme.paths.add(path);
 //								s = analyseString(isr.readASCIIString());
 //							}
-//						}
-						else if (s[0].equals("@clones"))
+//						} else if (s[0].equals("@clones"))
 						{
 							scheme.clones = new HashMap();
 							s = analyseString(isr.readASCIIString());
@@ -2493,8 +2422,7 @@ public class DirectoryToFile
 								scheme.clones.put(s[0], s[1]);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@width"))
+						} else if (s[0].equals("@width"))
 							scheme.width = Integer.parseInt(s[1]);
 						else if (s[0].equals("@height"))
 							scheme.height = Integer.parseInt(s[1]);
@@ -2503,8 +2431,7 @@ public class DirectoryToFile
 						else if (s[0].equals("@schemecell"))
 						{
 							scheme.schemecell = readVisualElement(s[1]);
-						}
-						else if (s[0].equals("@ugocell"))
+						} else if (s[0].equals("@ugocell"))
 						{
 							scheme.ugo = readVisualElement(s[1]);
 						}
@@ -2516,8 +2443,7 @@ public class DirectoryToFile
 						Pool.putMap(Scheme.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2558,8 +2484,7 @@ public class DirectoryToFile
 						{
 							se.id = s[1];
 							h.put(se.id, se);
-						}
-						else if (s[0].equals("@equipmentId"))
+						} else if (s[0].equals("@equipmentId"))
 							se.equipmentId = s[1];
 						else if (s[0].equals("@protoElementId"))
 							se.protoElementId = s[1];
@@ -2576,8 +2501,7 @@ public class DirectoryToFile
 								se.devices.add(dev);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@elements"))
+						} else if (s[0].equals("@elements"))
 						{
 							se.elementIds = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2586,8 +2510,7 @@ public class DirectoryToFile
 								se.elementIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@links"))
+						} else if (s[0].equals("@links"))
 						{
 							se.links = new ArrayList();
 							s = analyseString(isr.readASCIIString());
@@ -2599,12 +2522,10 @@ public class DirectoryToFile
 								se.links.add(link);
 								s = analyseString(isr.readASCIIString());
 							}
-						}
-						else if (s[0].equals("@schemecell"))
+						} else if (s[0].equals("@schemecell"))
 						{
 							se.schemecell = readVisualElement(s[1]);
-						}
-						else if (s[0].equals("@ugocell"))
+						} else if (s[0].equals("@ugocell"))
 						{
 							se.ugo = readVisualElement(s[1]);
 						}
@@ -2616,8 +2537,7 @@ public class DirectoryToFile
 						Pool.putMap(SchemeElement.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;
@@ -2658,8 +2578,7 @@ public class DirectoryToFile
 						{
 							path.id = s[1];
 							h.put(path.id, path);
-						}
-						else if (s[0].equals("@startDeviceId"))
+						} else if (s[0].equals("@startDeviceId"))
 							path.startDeviceId = s[1];
 						else if (s[0].equals("@endDeviceId"))
 							path.endDeviceId = s[1];
@@ -2695,8 +2614,7 @@ public class DirectoryToFile
 						Pool.putMap(SchemePath.typ, h);
 					else
 						old.putAll(h);
-				}
-				catch (IOException e)
+				} catch (IOException e)
 				{
 					e.printStackTrace();
 					return;

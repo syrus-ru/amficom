@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.4 2005/05/26 07:40:52 stas Exp $
+ * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.5 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -393,8 +393,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 			this.physicalText.setText(Double.toString(schemeLink.getPhysicalLength()));
 			this.typeCombo.setSelectedItem(schemeLink.getAbstractLinkType());
 			link = schemeLink.getLink();
-		}
-		else {
+		} else {
 			this.nameText.setText(Constants.EMPTY);
 			this.descrArea.setText(Constants.EMPTY);
 			this.opticalText.setText(Constants.EMPTY);
@@ -410,8 +409,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 			if (!isConatainsColor(color))
 				colorCombo.addItem(color);
 			colorCombo.setSelectedItem(color);
-		}
-		else {
+		} else {
 			linkBox.setSelected(false);
 			invNumberText.setText(Constants.EMPTY);
 			supplierText.setText(Constants.EMPTY);

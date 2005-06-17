@@ -64,8 +64,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 			String s = (String )node.getObject();
 			if(s.equals("root"))
 				return Kind.class;
-		}
-		else if (node.getObject() instanceof Kind)
+		} else if (node.getObject() instanceof Kind)
 			return Scheme.class;
 		return null;
 	}
@@ -76,8 +75,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 			String s = (String)node.getObject();
 			if (s.equals("root"))
 				return null;
-		}
-		else if (node.getObject() instanceof Kind)
+		} else if (node.getObject() instanceof Kind)
 			return SchemeController.getInstance();
 		return null;
 	}
@@ -108,8 +106,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 				}
 			}
-		}
-		else
+		} else
 		{
 			if(node.getObject() instanceof Kind)
 			{
@@ -127,8 +124,7 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 						vec.add(new ObjectResourceTreeNode(sc, sc.getName(), true,
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif"))));
 					}
-				}
-				catch (ApplicationException ex1) {
+				} catch (ApplicationException ex1) {
 					ex1.printStackTrace();
 				}
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.7 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeActions.java,v 1.8 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -109,8 +109,7 @@ public class SchemeActions {
 							(Port)newEnd.getFirstChild(),
 							graph.getCellBounds(newStart).getLocation(),
 							graph.getCellBounds(newEnd).getLocation());
-				}
-				else if (b1) {
+				} else if (b1) {
 					DeviceGroup newStart = (DeviceGroup)oldToNewMap.get(start);
 					DeviceGroup newEnd = (DeviceGroup)map2.get(end);
 					if (newEnd == null)
@@ -121,8 +120,7 @@ public class SchemeActions {
 							(Port)newEnd.getFirstChild(),
 							graph.getCellBounds(newStart).getLocation(),
 							graph.getCellBounds(newEnd).getLocation());
-				}
-				else if (b2) {
+				} else if (b2) {
 					DeviceGroup newEnd = (DeviceGroup)oldToNewMap.get(end);
 					DeviceGroup newStart = (DeviceGroup)map2.get(start);
 					if (newStart == null)
@@ -221,8 +219,7 @@ public class SchemeActions {
 	
 		if (!isCable) {
 			visualPort = PortCell.createInstance("", portCellBounds, viewMap, direction);
-		}
-		else { // cableport
+		} else { // cableport
 			visualPort = CablePortCell.createInstance("", portCellBounds, viewMap, direction);
 		}
 		graph.getGraphLayoutCache().insert(new Object[] { visualPort }, viewMap, null, null, null);

@@ -23,8 +23,7 @@ public class ResourceUtil
 		int n = -1;
 		try {
 			n = Integer.parseInt(s.toString());
-		}
-		catch (NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 		}
 		return n;
 	}

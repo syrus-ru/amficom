@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.1 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.2 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 07:40:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -107,12 +107,10 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 						portDirection = AbstractSchemePortDirectionType.__OUT;
 					else
 						portDirection = AbstractSchemePortDirectionType.__IN;
-				}
-				else
+				} else
 					data[i][1] = NULL_PORT;
 			}
-		}
-		else {
+		} else {
 			size = 0;
 			data = new Object[0][2];
 		}

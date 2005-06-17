@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.4 2005/06/04 16:56:20 bass Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.5 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/04 16:56:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -53,8 +53,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 							eq,
 							eq.getId(), true);
 				super.addCharacteristics(eq.getCharacteristics(), eq.getId());
-			}
-			else {
+			} else {
 				EquipmentType eqt = schemeElement.getEquipmentType();
 				if (eqt != null) {
 					for (int i = 0; i < sorts.length; i++)

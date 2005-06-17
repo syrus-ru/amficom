@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.2 2005/05/26 07:40:51 stas Exp $
+ * $Id: CreateGroup.java,v 1.3 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -73,8 +73,7 @@ public class CreateGroup extends AbstractAction {
 											return;
 										}
 										new_cells.add(ellipse);
-									}
-									else if (ellipse instanceof CablePortCell) {
+									} else if (ellipse instanceof CablePortCell) {
 										if (((CablePortCell) ellipse).getSchemeCablePort().getPortType() == null) {
 											JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 													"Не установлен тип кабельного порта", "Ошибка",
@@ -141,14 +140,12 @@ public class CreateGroup extends AbstractAction {
 					if (link != null) {
 						childSchemeLinks.add(link);
 					}
-				}
-				else if (cells[i] instanceof PortCell) {
+				} else if (cells[i] instanceof PortCell) {
 					SchemePort port = ((PortCell) cells[i]).getSchemePort();
 					if (port != null) {
 						childSchemePorts.add(port);
 					}
-				}
-				else if (cells[i] instanceof CablePortCell) {
+				} else if (cells[i] instanceof CablePortCell) {
 					SchemeCablePort port = ((CablePortCell) cells[i]).getSchemeCablePort();
 					if (port != null) {
 						childSchemeCablePorts.add(port);

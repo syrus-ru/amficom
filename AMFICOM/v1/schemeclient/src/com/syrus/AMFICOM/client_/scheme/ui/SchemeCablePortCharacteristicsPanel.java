@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.4 2005/06/04 16:56:20 bass Exp $
+ * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.5 2005/06/17 11:36:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/04 16:56:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:22 $
  * @module schemeclient_v1
  */
 
@@ -53,8 +53,7 @@ public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
 							port,
 							port.getId(), true);
 				super.addCharacteristics(port.getCharacteristics(), port.getId());
-			}
-			else {
+			} else {
 				PortType portType = schemeCablePort.getPortType();
 				if (portType != null) {
 					for (int i = 0; i < sorts.length; i++)

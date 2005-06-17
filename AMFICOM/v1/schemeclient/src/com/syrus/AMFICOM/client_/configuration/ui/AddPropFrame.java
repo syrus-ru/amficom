@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.8 2005/06/17 11:01:04 bass Exp $
+ * $Id: AddPropFrame.java,v 1.9 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -167,8 +167,7 @@ public class AddPropFrame extends JDialog {
 			if (characteristicTypeComboBox.getSelectedItem() != null) {
 				selectedType = (CharacteristicType) characteristicTypeComboBox
 						.getSelectedItem();
-			}
-			else
+			} else
 				return;
 		} 
 		else {
@@ -182,8 +181,7 @@ public class AddPropFrame extends JDialog {
 					ex.printStackTrace();
 					return;
 				}
-			}
-			else
+			} else
 				return;
 		}
 		res = Constants._OK;
@@ -214,8 +212,7 @@ public class AddPropFrame extends JDialog {
 		if (characteristicTypeComboBox.getModel().getSize() == 0) {
 			existingRadioButton.setEnabled(false);
 			newRadioButton.doClick();
-		}
-		else
+		} else
 			existingRadioButton.doClick();
 		
 		setModal(true);

@@ -100,8 +100,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 				mark = ((EquipmentType)Pool.get(EquipmentType.typ,obj.typeId)).name;
 				properties = obj.characteristics;
 			}
-		}
-		else if (type.equals(Link.typ))
+		} else if (type.equals(Link.typ))
 		{
 			Link obj = (Link)Pool.get(type,id);
 			if (obj != null)
@@ -111,8 +110,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 				mark = ((LinkType)Pool.get(LinkType.typ,obj.typeId)).name;
 				properties = obj.characteristics;
 			}
-		}
-		else if (type.equals(CableLink.typ))
+		} else if (type.equals(CableLink.typ))
 		{
 			CableLink obj = (CableLink)Pool.get(type,id);
 			if (obj != null)
@@ -122,8 +120,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 				mark = ((CableLinkType)Pool.get(CableLinkType.typ,obj.typeId)).name;
 				properties = obj.characteristics;
 			}
-		}
-		else if (type.equals(LinkType.typ))
+		} else if (type.equals(LinkType.typ))
 		{
 			LinkType obj = (LinkType)Pool.get(type,id);
 			if (obj != null)
@@ -132,8 +129,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 				visualType = LangModelConfig.getString("label_link");
 				properties = obj.characteristics;
 			}
-		}
-		else if (type.equals(CableLinkType.typ))
+		} else if (type.equals(CableLinkType.typ))
 		{
 			CableLinkType obj = (CableLinkType)Pool.get(type,id);
 			if (obj != null)
@@ -142,8 +138,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 				visualType = LangModelConfig.getString("label_cablelink");
 				properties = obj.characteristics;
 			}
-		}
-		else if (type.equals(EquipmentType.typ))
+		} else if (type.equals(EquipmentType.typ))
 		{
 			EquipmentType obj = (EquipmentType)Pool.get(type,id);
 			if (obj != null)
@@ -152,8 +147,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 				visualType = LangModelConfig.getString(obj.eqClass);
 				properties = obj.characteristics;
 			}
-		}
-		else if (type.equals(KISType.typ))
+		} else if (type.equals(KISType.typ))
 		{
 			KISType obj = (KISType)Pool.get(type,id);
 			if (obj != null)
@@ -187,8 +181,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			secondColumn.add("");
 
 			length += 4;
-		}
-		else
+		} else
 		{
 			firstColumn.add(LangModelReport.getString("label_equipClass"));
 			secondColumn.add(visualType);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.13 2005/06/17 11:01:04 bass Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.14 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -212,8 +212,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			this.tfNameText.setText(Constants.EMPTY);
 			this.taDescriptionArea.setText(Constants.EMPTY);
 			for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {

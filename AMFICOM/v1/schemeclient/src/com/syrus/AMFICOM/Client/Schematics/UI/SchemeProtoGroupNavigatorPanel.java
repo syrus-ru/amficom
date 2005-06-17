@@ -54,8 +54,7 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -140,11 +139,9 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 					SchemeProtoGroup group = (SchemeProtoGroup)dse.getList().get(dse.getSelectionNumber());
 					if (group.getSchemeProtoElements().isEmpty())
 						createMapGroupButton.setEnabled(true);
-				}
-				else
+				} else
 					createMapGroupButton.setEnabled(true);
-			}
-			else if (creating_class.equals(SchemeProtoGroup.class))
+			} else if (creating_class.equals(SchemeProtoGroup.class))
 			{
 				createMapGroupButton.setEnabled(false);
 			}
@@ -180,24 +177,21 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 				new_group = SchemeProtoGroup.createInstance(
 						userId, ret, "", null, parent_group);
 				parent_group.addSchemeProtoGroup(new_group);
-			}
-			else
+			} else
 				new_group = SchemeProtoGroup.createInstance(
 						userId, ret, "", null, null);
 
 			StorableObjectPool.putStorableObject(new_group);
 			dispatcher.notify(new TreeListSelectionEvent("",
 					TreeListSelectionEvent.REFRESH_EVENT));
-		}
-		catch (final IllegalObjectEntityException ioee)
+		} catch (final IllegalObjectEntityException ioee)
 		{
 			/**
 			 * @todo Introduce more substantial error handling
 			 *       instead of just printing stack trace.
 			 */
 			ioee.printStackTrace();
-		}
-		catch (final CreateObjectException coe)
+		} catch (final CreateObjectException coe)
 		{
 			/**
 			 * @todo Introduce more substantial error handling
@@ -222,8 +216,7 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 				final SchemeProtoGroup parentSchemeProtoGroup = group.getParentSchemeProtoGroup();
 				if (parentSchemeProtoGroup != null)
 					parentSchemeProtoGroup.removeSchemeProtoGroup(group);
-			}
-			else
+			} else
 				return;
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.7 2005/06/17 11:01:04 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.8 2005/06/17 11:36:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/17 11:36:21 $
  * @module schemeclient_v1
  */
 
@@ -149,8 +149,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					}
 				}
 			}
-		}
-		else if (groups == 1) {
+		} else if (groups == 1) {
 			// ugo.setEnabled(true);
 		}
 		if (groups > 0)
@@ -170,8 +169,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				settingPoint = null;
 				graph.repaint();
 				event.consume();
-			}
-			else if (ce.isSelected() && firstPort != null)
+			} else if (ce.isSelected() && firstPort != null)
 				start = graph.toScreen(firstPort.getLocation(null));
 		}
 		
@@ -331,8 +329,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				if (!isCable) { //port
 					schemePort = SchemePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
 					((PortCell)cell).setSchemePortId(schemePort.getId());
-				}
-				else {
+				} else {
 					schemePort = SchemeCablePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
 					((CablePortCell)cell).setSchemeCablePortId(schemePort.getId());
 				}
@@ -367,16 +364,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					} catch (ApplicationException e1) {
 						Log.errorException(e1);
 					}
-				}
-				else if (r.isSelected())
+				} else if (r.isSelected())
 					graph.addVertex("", bounds, false, Color.black); //$NON-NLS-1$
 				else if (c.isSelected())
 					graph.addEllipse("", bounds); //$NON-NLS-1$
 				else if (ce.isSelected()) {
 					if (start == null || current == null) {
 						event.consume();
-					}
-					else {
+					} else {
 						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
 						if (scheme != null) {
 							Identifier userId = LoginManager.getUserId();
@@ -394,12 +389,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							}
 						}
 					}
-				}
-				else if (e.isSelected()) {
+				} else if (e.isSelected()) {
 					if (start == null || current == null) {
 						event.consume();
-					}
-					else {
+					} else {
 						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
 						if (scheme != null) {
 							Identifier userId = LoginManager.getUserId();
@@ -416,8 +409,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}
-						}
-						else {
+						} else {
 							SchemeElement schemeElement = pane.getCurrentPanel().getSchemeResource().getSchemeElement();
 							if (schemeElement != null) {
 								Identifier userId = LoginManager.getUserId();
@@ -433,8 +425,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 								} catch (ApplicationException e1) {
 									Log.errorException(e1);
 								}
-							}
-							else {
+							} else {
 								Log.debugMessage("neither Scheme nor SchemeElement is opened", Log.SEVERE); //$NON-NLS-1$
 							}
 						}
@@ -465,8 +456,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				}
 				event.consume();
 			}
-		}
-		else { // right mouse button pressed
+		} else { // right mouse button pressed
 			if (!graph.isSelectionEmpty()) {
 				Object cell = graph.getSelectionCell();
 				DeviceGroup group = null;
@@ -589,8 +579,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							settingPoint.x + crossSize, settingPoint.y + crossSize);
 					g.drawLine(settingPoint.x - crossSize, settingPoint.y + crossSize, 
 							settingPoint.x + crossSize, settingPoint.y - crossSize);
-				}
-				else if (settingPoint.x > devBounds.x + devBounds.width) { 
+				} else if (settingPoint.x > devBounds.x + devBounds.width) { 
 					g.drawLine(settingPoint.x, settingPoint.y, devBounds.x + devBounds.width, settingPoint.y);
 					g.drawLine(settingPoint.x - crossSize, settingPoint.y - crossSize, 
 							settingPoint.x + crossSize, settingPoint.y + crossSize);

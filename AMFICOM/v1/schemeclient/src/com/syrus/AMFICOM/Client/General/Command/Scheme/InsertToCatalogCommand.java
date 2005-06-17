@@ -102,8 +102,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			{
 				se.equipment_id = ((Equipment)obj).getId();
 				status = saveEquipment(dataSource, se, "");
-			}
-			else if (obj.equals(""))
+			} else if (obj.equals(""))
 				se.equipment_id = "";
 			else
 				status = saveEquipment(dataSource, se, (String)obj);
@@ -119,8 +118,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				{
 					sl.link_id = ((Link)obj).getId();
 					status = saveLink(dataSource, sl, "");
-				}
-				else if (obj.equals(""))
+				} else if (obj.equals(""))
 					sl.link_id = "";
 				else
 					status = saveLink(dataSource, sl, (String)obj);
@@ -136,8 +134,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				{
 					scl.cable_link_id = ((CableLink)obj).getId();
 					status = saveCableLink(dataSource, scl, "");
-				}
-				else if (obj.equals(""))
+				} else if (obj.equals(""))
 					scl.cable_link_id = "";
 				else
 					status = saveCableLink(dataSource, scl, (String)obj);
@@ -153,8 +150,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				{
 					sp.path_id = ((TransmissionPath)obj).getId();
 					status = savePath(dataSource, sp, "");
-				}
-				else if (obj.equals(""))
+				} else if (obj.equals(""))
 					sp.path_id = "";
 				else
 					status = savePath(dataSource, sp, (String)obj);
@@ -215,8 +211,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						links_to_save.put(sl.getId(), sl);
 					}
 					/
-				}
-				else
+				} else
 				{
 					Scheme inner_scheme = element.getInternalScheme();
 					SchemePanel virtual_panel = new SchemePanel(aContext);
@@ -248,8 +243,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					{
 						SchemeCableLink cl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
 						cable_links_to_save.put(cl.getId(), cl);
-					}
-					else
+					} else
 					{
 						SchemeLink l = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
 						links_to_save.put(l.getId(), l);
@@ -275,8 +269,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				 {
 					SchemeCableLink cl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
 						cable_links_to_save.put(cl.getId(), cl);
-					}
-					else
+					} else
 					{
 						SchemeLink l = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
 						links_to_save.put(l.getId(), l);
@@ -340,8 +333,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					{
 						access_port_id = sp.access_port_id;
 						break;
-					}
-					else
+					} else
 					{
 						sp = (SchemeCablePort)Pool.get(SchemeCablePort.typ, link.target_port_id);
 						cp = (CablePort)Pool.get(CablePort.typ, sp.cable_port_id);
@@ -351,8 +343,7 @@ public class InsertToCatalogCommand extends VoidCommand
 							break;
 						}
 					}
-				}
-				else
+				} else
 				{
 					SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pel.link_id);
 					SchemePort sp = (SchemePort)Pool.get(SchemePort.typ, link.source_port_id);
@@ -361,8 +352,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					{
 						access_port_id = sp.access_port_id;
 						break;
-					}
-					else
+					} else
 					{
 						sp = (SchemePort)Pool.get(SchemePort.typ, link.target_port_id);
 						cp = (Port)Pool.get(Port.typ, sp.port_id);
@@ -397,8 +387,7 @@ public class InsertToCatalogCommand extends VoidCommand
 
 			dataSource.SavePath(path.getId());
 			return true;
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении маршрута " + name, "Ошибка", JOptionPane.OK_OPTION);
 			return false;
@@ -441,8 +430,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			{
 				link.start_equipment_id = "";
 				link.start_port_id = "";
-			}
-			else
+			} else
 			{
 				Port port = (Port)Pool.get(Port.typ, scheme_port.port_id);
 				link.start_port_id = (port == null ? "" : port.getId());
@@ -453,8 +441,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			{
 				link.end_equipment_id = "";
 				link.end_port_id = "";
-			}
-			else
+			} else
 			{
 				Port port = (Port)Pool.get(Port.typ, scheme_port.port_id);
 				link.end_port_id = (port == null ? "" : port.getId());
@@ -465,8 +452,7 @@ public class InsertToCatalogCommand extends VoidCommand
 
 			dataSource.SaveLink(scheme_link.link_id);
 			return true;
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении линии связи " + name, "Ошибка", JOptionPane.OK_OPTION);
 			return false;
@@ -503,8 +489,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					element.equipment_id = eq.getId();
 					eq.is_kis = true;
 					System.out.println("Add to catalog KIS with id " + kis.getId());
-				}
-				else {
+				} else {
 					eq = new Equipment();
 					eq.id = dataSource.GetUId(Equipment.typ);
 					Pool.put(Equipment.typ, eq.getId(), eq);
@@ -659,8 +644,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				if(eq.is_kis)
 				{
 					dataSource.SaveKIS(eq.getId());
-				}
-				else
+				} else
 				{
 					dataSource.SaveEquipment(eq.getId());
 				}
@@ -683,8 +667,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					saveEquipment(dataSource, el, el.getName());
 			}
 			return true;
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении оборудования " + name, "Ошибка", JOptionPane.OK_OPTION);
 			return false;
@@ -728,8 +711,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			{
 				link.start_equipment_id = "";
 				link.start_port_id = "";
-			}
-			else
+			} else
 			{
 				CablePort port = (CablePort)Pool.get(CablePort.typ, scheme_port.cable_port_id);
 				link.start_port_id = (port == null ? "" : port.getId());
@@ -740,8 +722,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			{
 				link.end_equipment_id = "";
 				link.end_port_id = "";
-			}
-			else
+			} else
 			{
 				CablePort port = (CablePort)Pool.get(CablePort.typ, scheme_port.cable_port_id);
 				link.end_port_id = (port == null ? "" : port.getId());
@@ -784,8 +765,7 @@ public class InsertToCatalogCommand extends VoidCommand
 
 			dataSource.SaveCableLink(scheme_link.cable_link_id);
 			return true;
-		}
-		catch (Exception ex)
+		} catch (Exception ex)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при кабеля " + name, "Ошибка", JOptionPane.OK_OPTION);
 			return false;

@@ -26,8 +26,7 @@ public class SchemeOpenCommand extends AbstractCommand
 			LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_CODE);
 			Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			mcd.setContents(schemes);
-		}
-		catch (ApplicationException ex) {
+		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
 
