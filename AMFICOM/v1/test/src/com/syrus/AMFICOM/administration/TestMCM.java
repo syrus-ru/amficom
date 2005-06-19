@@ -1,5 +1,5 @@
 /*
- * $Id: TestMCM.java,v 1.1 2005/06/17 20:17:16 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestMCM.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
@@ -7,7 +7,7 @@ package com.syrus.AMFICOM.administration;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -15,18 +15,19 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/17 20:17:16 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestMCM extends CommonTest {
+public final class TestMCM extends DatabaseCommonTest {
 
 	public TestMCM(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestMCM.class);
+		addTestSuite(TestMCM.class);
+		return createTestSetup();
 	}
 
 public void testCreateInstance() throws ApplicationException {

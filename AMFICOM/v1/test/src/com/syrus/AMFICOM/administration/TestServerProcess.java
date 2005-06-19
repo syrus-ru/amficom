@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.7 2005/06/17 20:18:20 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.8 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,18 +26,19 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/17 20:18:20 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestServerProcess extends CommonTest {
+public final class TestServerProcess extends DatabaseCommonTest {
 
 	public TestServerProcess(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestServerProcess.class);
+		addTestSuite(TestServerProcess.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -45,27 +46,20 @@ public final class TestServerProcess extends CommonTest {
 		final Server server = (Server) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Server '" + server.getId() + "'");
 
-//	sys user
-		final TypicalCondition tc = new TypicalCondition(SystemUserWrapper.SYS_LOGIN,
+//	login user
+		final TypicalCondition tc = new TypicalCondition(SystemUserWrapper.LOGINPROCESSOR_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SYSTEMUSER_CODE,
 				SystemUserWrapper.COLUMN_LOGIN);
 
-//	login user
-		TypicalCondition tc1 = new TypicalCondition(SystemUserWrapper.LOGINPROCESSOR_LOGIN,
+//	event user
+		TypicalCondition tc1 = new TypicalCondition(SystemUserWrapper.EVENTPROCESSOR_LOGIN,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SYSTEMUSER_CODE,
 				SystemUserWrapper.COLUMN_LOGIN);
 
 //	Create compound condition
 		final CompoundCondition cc = new CompoundCondition(tc, CompoundConditionSort.OR, tc1);
-
-//	event user
-		tc1 = new TypicalCondition(SystemUserWrapper.EVENTPROCESSOR_LOGIN,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SYSTEMUSER_CODE,
-				SystemUserWrapper.COLUMN_LOGIN);
-		cc.addCondition(tc1);
 
 //	mserver user
 		tc1 = new TypicalCondition(SystemUserWrapper.MSERVER_LOGIN,
@@ -96,12 +90,11 @@ public final class TestServerProcess extends CommonTest {
 			usersMap.put(user.getLogin(), user);
 		}
 
-		final SystemUser sysUser = (SystemUser) usersMap.get(SystemUserWrapper.SYS_LOGIN);
 		SystemUser user;
 
 		//	login process
 		user = (SystemUser) usersMap.get(SystemUserWrapper.LOGINPROCESSOR_LOGIN);
-		ServerProcess.createInstance(sysUser.getId(),
+		ServerProcess.createInstance(creatorUser.getId(),
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -109,7 +102,7 @@ public final class TestServerProcess extends CommonTest {
 
 //	event process
 		user = (SystemUser) usersMap.get(SystemUserWrapper.EVENTPROCESSOR_LOGIN);
-		ServerProcess.createInstance(sysUser.getId(),
+		ServerProcess.createInstance(creatorUser.getId(),
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -117,7 +110,7 @@ public final class TestServerProcess extends CommonTest {
 
 //	mserver process
 		user = (SystemUser) usersMap.get(SystemUserWrapper.MSERVER_LOGIN);
-		ServerProcess.createInstance(sysUser.getId(),
+		ServerProcess.createInstance(creatorUser.getId(),
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -125,7 +118,7 @@ public final class TestServerProcess extends CommonTest {
 
 //	cmserver process
 		user = (SystemUser) usersMap.get(SystemUserWrapper.CMSERVER_LOGIN);
-		ServerProcess.createInstance(sysUser.getId(),
+		ServerProcess.createInstance(creatorUser.getId(),
 				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
@@ -133,7 +126,7 @@ public final class TestServerProcess extends CommonTest {
 
 //	mscharserver process
 		user = (SystemUser) usersMap.get(SystemUserWrapper.MSCHARSERVER_LOGIN);
-		ServerProcess.createInstance(sysUser.getId(),
+		ServerProcess.createInstance(creatorUser.getId(),
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),

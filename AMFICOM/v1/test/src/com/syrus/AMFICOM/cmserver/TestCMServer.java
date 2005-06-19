@@ -1,5 +1,5 @@
 /*
- * $Id: TestCMServer.java,v 1.5 2005/06/17 15:01:44 arseniy Exp $
+ * $Id: TestCMServer.java,v 1.6 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Set;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
@@ -19,15 +20,13 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
@@ -38,11 +37,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 15:01:44 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestCMServer extends CommonTest {
+public final class TestCMServer extends TestCase {
 	private static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 	private static final String KEY_LOGIN = "Login";
 	private static final String KEY_PASSWORD = "Password";
@@ -75,7 +74,7 @@ public final class TestCMServer extends CommonTest {
 	protected static void oneTimeSetUp() {
 		Application.init(APPLICATION_NAME);
 
-//		CommonTest.oneTimeSetUp();
+//		DatabaseCommonTest.oneTimeSetUp();
 
 		try {
 			final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
@@ -85,7 +84,7 @@ public final class TestCMServer extends CommonTest {
 			loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			final String login = ApplicationProperties.getString(KEY_LOGIN, LOGIN);
 			final String password = ApplicationProperties.getString(KEY_PASSWORD, PASSWORD);
-			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
+			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
 			sessionKeyT = loginServerRef.login(login, password, userIdH);
 
 			cmServerRef = (CMServer) corbaServer.resolveReference(ServerProcessWrapper.CMSERVER_PROCESS_CODENAME);
@@ -105,7 +104,7 @@ public final class TestCMServer extends CommonTest {
 			fail(e.getMessage());
 		}
 
-//		CommonTest.oneTimeTearDown();
+//		DatabaseCommonTest.oneTimeTearDown();
 	}
 
 	public void _testTransmitMeasurements() throws AMFICOMRemoteException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.5 2005/06/16 13:26:44 arseniy Exp $
+ * $Id: TestEventType.java,v 1.6 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.event.corba.AlertKind;
 import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,18 +33,19 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/16 13:26:44 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class TestEventType extends CommonTest {
+public class TestEventType extends DatabaseCommonTest {
 
 	public TestEventType(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestEventType.class);
+		addTestSuite(TestEventType.class);
+		return createTestSetup();
 	}
 
 	public void tes1tAlertKind() {
@@ -63,11 +64,11 @@ public class TestEventType extends CommonTest {
 
 		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.ALARM_STATUS,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.HZ_CHO,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
 		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
@@ -79,7 +80,7 @@ public class TestEventType extends CommonTest {
 				new HashMap());
 
 		Identifier id = eventType.getId();
-		assertEquals(ObjectEntities.EVENTTYPE_ENTITY_CODE, id.getMajor());
+		assertEquals(ObjectEntities.EVENT_TYPE_CODE, id.getMajor());
 		EventType_Transferable ett = (EventType_Transferable) eventType.getTransferable();
 		assertEquals(ett.codename, eventType.getCodename());
 		EventType eventType1 = new EventType(ett);
@@ -110,19 +111,19 @@ public class TestEventType extends CommonTest {
 			assertEquals("data type of parameter type for event type '" + eventType.getId() + "'", parameterType1.getDataType(), parameterType2.getDataType());
 		}
 
-		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENTTYPE_ENTITY_CODE);
+		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_TYPE_CODE);
 		eventTypeDatabase.update(eventType, creatorUser.getId(), StorableObjectDatabase.UPDATE_FORCE);
 	}
 
 	public void testChangeUserAlertKinds() throws ApplicationException {
 		TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.EVENTTYPE_ENTITY_CODE,
+				ObjectEntities.EVENT_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 		EventType eventType = (EventType) StorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next();
 		System.out.println("Event type: '" + eventType.getId() + "'");
 
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SYSTEM_USER_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SYSTEMUSER_CODE);
 		Set users = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 
 		for (final Iterator it = users.iterator(); it.hasNext();) {
@@ -132,19 +133,19 @@ public class TestEventType extends CommonTest {
 		}
 
 		eventType.printUserAlertKinds();
-		StorableObjectPool.flush(ObjectEntities.EVENTTYPE_ENTITY_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.EVENT_TYPE_CODE, false);
 	}
 
 	public void testTransferable() throws ApplicationException {
 		TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.EVENTTYPE_ENTITY_CODE,
+				ObjectEntities.EVENT_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 		EventType eventType = (EventType) StorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next();
 		System.out.println("Event type: '" + eventType.getId() + "'");
 
 		EventType_Transferable ett = (EventType_Transferable) eventType.getTransferable();
-		EventType eventType1 = (EventType) StorableObjectPool.fromTransferable(ObjectEntities.EVENTTYPE_ENTITY_CODE, ett);
+		EventType eventType1 = (EventType) StorableObjectPool.fromTransferable(ObjectEntities.EVENT_TYPE_CODE, ett);
 		eventType1.printUserAlertKinds();
 	}
 }

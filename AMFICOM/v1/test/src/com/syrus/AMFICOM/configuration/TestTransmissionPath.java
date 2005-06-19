@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPath.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: TestTransmissionPath.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,32 +14,33 @@ import junit.framework.Test;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module config_v1
  */
-public class TestTransmissionPath extends CommonTest {
+public class TestTransmissionPath extends DatabaseCommonTest {
 
 	public TestTransmissionPath(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestTransmissionPath.class);
+		addTestSuite(TestTransmissionPath.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		TransmissionPathType transmissionPathType = (TransmissionPathType) it.next();
 
-		ec = new EquivalentCondition(ObjectEntities.PORT_ENTITY_CODE);
+		ec = new EquivalentCondition(ObjectEntities.PORT_CODE);
 		Collection ports = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 		it = ports.iterator();
 		Port startPort = (Port) it.next();
@@ -68,6 +69,6 @@ public class TestTransmissionPath extends CommonTest {
 		assertEquals(transmissionPath.getStartPortId(), transmissionPath1.getStartPortId());
 		assertEquals(transmissionPath.getFinishPortId(), transmissionPath1.getFinishPortId());
 
-		StorableObjectPool.flush(ObjectEntities.TRANSPATH_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.TRANSPATH_CODE, true);
 	}
 }

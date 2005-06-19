@@ -1,5 +1,5 @@
 /*
- * $Id: TestSystemUser.java,v 1.2 2005/06/17 20:18:20 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.3 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,12 +17,9 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.ContextNameFactory;
-import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -32,40 +29,27 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
-import com.syrus.AMFICOM.security.ShadowDatabase;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 20:18:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestSystemUser extends CommonTest {
-	private static final String SYS_PASSWORD = SystemUserWrapper.SYS_LOGIN;
+public final class TestSystemUser extends DatabaseCommonTest {
 
 	public TestSystemUser(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestSystemUser.class);
+		//addTestSuite(TestSystemUser.class);
+		addTest(new TestSystemUser("testSetPassword"));
+		return createTestSetup();
 	}
 
-	public void _testCreateSysUser() throws ApplicationException {
-		final Identifier sysUserId = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
-		final SystemUser sysUser = new SystemUser(sysUserId,
-				sysUserId,
-				0,
-				SystemUserWrapper.SYS_LOGIN,
-				SystemUserSort._USER_SORT_SYSADMIN,
-				"sys",
-				"System administrator");
-		final SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-		database.insert(sysUser);
-	}
-
-	public void _testCreateInstance() throws ApplicationException {
+	public void testCreateInstance() throws ApplicationException {
 //	1
 		final SystemUser loginUser = SystemUser.createInstance(creatorUser.getId(),
 				SystemUserWrapper.LOGINPROCESSOR_LOGIN,
@@ -110,7 +94,7 @@ public final class TestSystemUser extends CommonTest {
 		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, true);
 	}
 
-	public void _testCreateMCMUsers() throws ApplicationException {
+	public void testCreateMCMUsers() throws ApplicationException {
 		final SystemUser mcmUser = SystemUser.createInstance(creatorUser.getId(),
 				SystemUserWrapper.MCM_LOGIN,
 				SystemUserSort.USER_SORT_SERVERPROCESS,
@@ -121,11 +105,6 @@ public final class TestSystemUser extends CommonTest {
 		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, true);
 	}
 
-	public void testSetSysUserPassword() throws ApplicationException {
-		final ShadowDatabase shadowDatabase = new ShadowDatabase();
-		shadowDatabase.updateOrInsert(creatorUser.getId(), SYS_PASSWORD);
-	}
-
 	public void testSetPassword() throws ApplicationException, AMFICOMRemoteException {
 		final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
 		final String contextName = ContextNameFactory.generateContextName(serverHostName);
@@ -133,7 +112,7 @@ public final class TestSystemUser extends CommonTest {
 		final LoginServer loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 
 		final IdlIdentifierHolder userIdTH = new IdlIdentifierHolder();
-		final SessionKey_Transferable sessionKeyT = loginServerRef.login(SystemUserWrapper.SYS_LOGIN, SYS_PASSWORD, userIdTH);
+		final SessionKey_Transferable sessionKeyT = loginServerRef.login(SystemUserWrapper.SYS_LOGIN, "sys", userIdTH);
 
 //	login user
 		TypicalCondition tc = new TypicalCondition(SystemUserWrapper.LOGINPROCESSOR_LOGIN,

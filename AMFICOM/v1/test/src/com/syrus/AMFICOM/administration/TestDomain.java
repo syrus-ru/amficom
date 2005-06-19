@@ -1,5 +1,5 @@
 /*
- * $Id: TestDomain.java,v 1.1 2005/06/17 20:17:16 arseniy Exp $
+ * $Id: TestDomain.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,23 +10,24 @@ package com.syrus.AMFICOM.administration;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/17 20:17:16 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestDomain extends CommonTest {
+public final class TestDomain extends DatabaseCommonTest {
 
 	public TestDomain(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestDomain.class);
+		addTestSuite(TestDomain.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {

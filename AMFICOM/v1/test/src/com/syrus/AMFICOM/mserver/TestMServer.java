@@ -1,5 +1,5 @@
 /*
- * $Id: TestMServer.java,v 1.2 2005/06/14 12:02:55 arseniy Exp $
+ * $Id: TestMServer.java,v 1.3 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,18 +12,18 @@ import java.util.Set;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
@@ -34,11 +34,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/14 12:02:55 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestMServer extends CommonTest {
+public final class TestMServer extends TestCase {
 	private static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 	private static final String KEY_LOGIN = "Login";
 	private static final String KEY_PASSWORD = "Password";
@@ -79,7 +79,7 @@ public final class TestMServer extends CommonTest {
 			loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			final String login = ApplicationProperties.getString(KEY_LOGIN, LOGIN);
 			final String password = ApplicationProperties.getString(KEY_PASSWORD, PASSWORD);
-			final Identifier_TransferableHolder userIdH = new Identifier_TransferableHolder();
+			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
 			sessionKeyT = loginServerRef.login(login, password, userIdH);
 
 			mServerRef = (MServer) corbaServer.resolveReference(ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
@@ -107,10 +107,11 @@ public final class TestMServer extends CommonTest {
 		ids.add(new Identifier("Measurement_2493"));
 		ids.add(new Identifier("Measurement_2494"));
 		ids.add(new Identifier("Measurement_2754"));
-		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
+		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		final Measurement_Transferable[] measurementsT = mServerRef.transmitMeasurements(idsT, sessionKeyT);
 		for (int i = 0; i < measurementsT.length; i++) {
-			Log.debugMessage("Loaded: " + measurementsT[i].header.id.identifier_string, Log.DEBUGLEVEL02);
+			final Identifier id = new Identifier(measurementsT[i].header.id);
+			Log.debugMessage("Loaded: " + id, Log.DEBUGLEVEL02);
 		}
 	}
 
@@ -120,14 +121,15 @@ public final class TestMServer extends CommonTest {
 		ids.add(new Identifier("Measurement_2492"));
 		ids.add(new Identifier("Measurement_2493"));
 		ids.add(new Identifier("Measurement_2494"));
-		final Identifier_Transferable[] idsT = Identifier.createTransferables(ids);
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_CODE);
 		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) ec.getTransferable();
 		final Measurement_Transferable[] measurementsT = mServerRef.transmitMeasurementsButIdsByCondition(idsT,
 				conditionT,
 				sessionKeyT);
 		for (int i = 0; i < measurementsT.length; i++) {
-			Log.debugMessage("Loaded: " + measurementsT[i].header.id.identifier_string, Log.DEBUGLEVEL02);
+			final Identifier id = new Identifier(measurementsT[i].header.id);
+			Log.debugMessage("Loaded: " + id, Log.DEBUGLEVEL02);
 		}
 	}
 }

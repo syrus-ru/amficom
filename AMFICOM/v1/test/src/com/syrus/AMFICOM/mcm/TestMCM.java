@@ -1,5 +1,5 @@
 /*
- * $Id: TestMCM.java,v 1.4 2005/06/17 20:17:51 arseniy Exp $
+ * $Id: TestMCM.java,v 1.5 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,11 @@ import java.util.Set;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -35,11 +35,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/17 20:17:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestMCM extends CommonTest {
+public final class TestMCM extends TestCase {
 	private static final String KEY_MCM_ID = "MCMID";
 	private static final String KEY_LOGIN = "Login";
 	private static final String KEY_PASSWORD = "Password";

@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.9 2005/06/17 20:18:20 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.1 2005/06/19 18:41:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -66,11 +66,11 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/17 20:18:20 $
+ * @version $Revision: 1.1 $, $Date: 2005/06/19 18:41:00 $
  * @author $Author: arseniy $
  * @module test
  */
-public abstract class CommonTest extends TestCase {
+public abstract class DatabaseCommonTest extends TestCase {
 	public static final String APPLICATION_NAME = "test";
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
 	public static final String KEY_DB_SID = "DBSID";
@@ -85,13 +85,23 @@ public abstract class CommonTest extends TestCase {
 
 	protected static SystemUser creatorUser;
 
-	public CommonTest(String name) {
+	private static final TestSuite TEST_SUITE = new TestSuite();
+
+
+	public DatabaseCommonTest(String name) {
 		super(name);
 	}
 
-	protected static Test suiteWrapper(Class clazz) {
-		TestSuite testSuite = new TestSuite(clazz);
-		TestSetup testSetupWrapper = new TestSetup(testSuite) {
+	public static void addTest(final Test test) {
+		TEST_SUITE.addTest(test);
+	}
+
+	public static void addTestSuite(final Class testClass) {
+		TEST_SUITE.addTestSuite(testClass);
+	}
+
+	public static TestSetup createTestSetup() {
+		TestSetup testSetup = new TestSetup(TEST_SUITE) {
 
 			protected void setUp() {
 				oneTimeSetUp();
@@ -102,10 +112,10 @@ public abstract class CommonTest extends TestCase {
 			}
 
 		};
-		return testSetupWrapper;
+		return testSetup;
 	}
 
-	protected static void oneTimeSetUp() {
+	static void oneTimeSetUp() {
 		Application.init(APPLICATION_NAME);
 		establishDatabaseConnection();
 		initDatabaseContext();
@@ -113,11 +123,11 @@ public abstract class CommonTest extends TestCase {
 		initIdentifierPool();
 	}
 
-	protected static void oneTimeTearDown() {
+	static void oneTimeTearDown() {
 		DatabaseConnection.closeConnection();
 	}
 
-	private static void establishDatabaseConnection() {
+	public static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
 		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;

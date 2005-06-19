@@ -1,7 +1,9 @@
 # Simple Makefile to compile single test class
 
-TEST_CLASS = TestSystemUser
-TEST_PACKAGE = com.syrus.AMFICOM.administration
+#TEST_CLASS = TestInitialSetup
+#TEST_PACKAGE = com.syrus.AMFICOM.setup
+TEST_CLASS=TestSystemUser
+TEST_PACKAGE=com.syrus.AMFICOM.administration
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
@@ -14,7 +16,7 @@ ENCODING=KOI8-R
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/leserver.jar
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 JUNITCLASSPATH=$(ECLIPSE_HOME)/plugins/org.junit_3.8.1/junit.jar
 

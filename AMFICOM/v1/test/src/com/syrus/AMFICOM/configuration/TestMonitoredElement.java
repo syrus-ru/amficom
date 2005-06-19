@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.4 2005/06/05 18:40:41 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.5 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,36 +16,37 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/05 18:40:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module config_v1
  */
-public class TestMonitoredElement extends CommonTest {
+public class TestMonitoredElement extends DatabaseCommonTest {
 
 	public TestMonitoredElement(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestMonitoredElement.class);
+		addTestSuite(TestMonitoredElement.class);
+		return createTestSetup();
 	}
 
 	public void testCreate() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		MeasurementPort measurementPort = (MeasurementPort) it.next();
 
 		String localAddress = "SW=01:06";
 
-		ec = new EquivalentCondition(ObjectEntities.TRANSPATH_ENTITY_CODE);
+		ec = new EquivalentCondition(ObjectEntities.TRANSPATH_CODE);
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		TransmissionPath transmissionPath = (TransmissionPath) it.next();
 
@@ -59,7 +60,7 @@ public class TestMonitoredElement extends CommonTest {
 
 		this.checkMonitoredElement(monitoredElement);
 
-		ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_ENTITY_CODE);
+		ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE);
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		Equipment equipment = (Equipment) it.next();
 
@@ -73,7 +74,7 @@ public class TestMonitoredElement extends CommonTest {
 
 		this.checkMonitoredElement(monitoredElement1);
 
-		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_ENTITY_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_CODE, false);
 	}
 
 	private void checkMonitoredElement(MonitoredElement monitoredElement) {

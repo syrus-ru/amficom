@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisType.java,v 1.3 2005/06/10 15:18:18 arseniy Exp $
+ * $Id: TestAnalysisType.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,36 +15,37 @@ import java.util.Set;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/10 15:18:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public class TestAnalysisType extends CommonTest {
+public class TestAnalysisType extends DatabaseCommonTest {
 
 	public TestAnalysisType(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestAnalysisType.class);
+		addTestSuite(TestAnalysisType.class);
+		return createTestSetup();
 	}
 
 	public void testTransferable() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-		AnalysisType analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE);
+		AnalysisType analysisType = (AnalysisType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Analysis type: '" + analysisType.getId() + "'");
 		AnalysisType_Transferable att = (AnalysisType_Transferable) analysisType.getTransferable();
 		AnalysisType analysisType1 = new AnalysisType(att);
@@ -54,8 +55,8 @@ public class TestAnalysisType extends CommonTest {
 	}
 
 	public void testChangeParameterTypes() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-		AnalysisType analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE);
+		AnalysisType analysisType = (AnalysisType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Analysis type: '" + analysisType.getId() + "'");
 
 		Set inParTypIds = analysisType.getInParameterTypeIds();
@@ -79,13 +80,13 @@ public class TestAnalysisType extends CommonTest {
 			System.out.println("MT: '" + it.next() + "'");
 		}
 
-		ec = new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+		ec = new EquivalentCondition(ObjectEntities.PARAMETER_TYPE_CODE);
 		Set butIds = new HashSet();
 		butIds.addAll(inParTypIds);
 		butIds.addAll(criParTypIds);
 		butIds.addAll(etaParTypIds);
 		butIds.addAll(outParTypIds);
-		Set parameterTypes = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(butIds, ec, true);
+		Set parameterTypes = StorableObjectPool.getStorableObjectsByConditionButIds(butIds, ec, true);
 		Set parameterTypeIds = Identifier.createIdentifiers(parameterTypes);
 		for (Iterator it = parameterTypeIds.iterator(); it.hasNext();) {
 			System.out.println("Loaded: '" + it.next() + "'");
@@ -93,9 +94,9 @@ public class TestAnalysisType extends CommonTest {
 
 		TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.REFLECTOGRAMMA,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
-		inParTypIds = Collections.singleton(((ParameterType) GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next()).getId());
+		inParTypIds = Collections.singleton(((ParameterType) StorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next()).getId());
 		criParTypIds = Collections.EMPTY_SET;
 		etaParTypIds = Collections.EMPTY_SET;
 		outParTypIds = Collections.EMPTY_SET;
@@ -127,6 +128,6 @@ public class TestAnalysisType extends CommonTest {
 		measTypIds = Collections.singleton(new Identifier("MeasurementType_19"));
 		analysisType.setMeasurementTypeIds(measTypIds);
 
-		MeasurementStorableObjectPool.flush(analysisType.getId(), true);
+		StorableObjectPool.flush(analysisType.getId(), true);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.2 2005/06/17 20:18:20 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.3 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import junit.framework.TestSuite;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 20:18:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public class TestIdentifier extends CommonTest {
+public class TestIdentifier extends DatabaseCommonTest {
 
 	public TestIdentifier(String name) {
 		super(name);

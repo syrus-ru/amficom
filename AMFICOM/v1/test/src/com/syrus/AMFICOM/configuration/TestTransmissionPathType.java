@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPathType.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: TestTransmissionPathType.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,23 +11,24 @@ import junit.framework.Test;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module config_v1
  */
-public class TestTransmissionPathType extends CommonTest {
+public class TestTransmissionPathType extends DatabaseCommonTest {
 
 	public TestTransmissionPathType(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestTransmissionPathType.class);
+		addTestSuite(TestTransmissionPathType.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -47,7 +48,7 @@ public class TestTransmissionPathType extends CommonTest {
 		assertEquals(transmissionPathType.getDescription(), transmissionPathType1.getDescription());
 		assertEquals(transmissionPathType.getName(), transmissionPathType1.getName());
 
-		StorableObjectPool.flush(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.TRANSPATH_TYPE_CODE, true);
 	}
 
 //	public void testDelete() throws ApplicationException {

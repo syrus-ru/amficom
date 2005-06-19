@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementType.java,v 1.4 2005/05/27 18:23:51 arseniy Exp $
+ * $Id: TestMeasurementType.java,v 1.5 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Set;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -25,27 +25,28 @@ import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/27 18:23:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public class TestMeasurementType extends CommonTest {
+public class TestMeasurementType extends DatabaseCommonTest {
 
 	public TestMeasurementType(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestMeasurementType.class);
+		addTestSuite(TestMeasurementType.class);
+		return createTestSetup();
 	}
 
 	public void tes1tTransferable() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
 		MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Measurement type: '" + measurementType.getId() + "'");
 
@@ -62,7 +63,7 @@ public class TestMeasurementType extends CommonTest {
 	}
 
 	public void testChangeParameterTypes() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
 		MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Measurement type: '" + measurementType.getId() + "'");
 
@@ -80,44 +81,44 @@ public class TestMeasurementType extends CommonTest {
 
 		TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.TRACE_LENGTH,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc, CompoundConditionSort.OR, tc1);
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_RESOLUTION,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		cc.addCondition(new TypicalCondition(ParameterTypeCodenames.REFLECTOGRAMMA,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME));
 		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
 		Map parTypeIdsCodename = new HashMap();

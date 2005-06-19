@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: TestEventSource.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,24 +15,25 @@ import junit.framework.Test;
 
 import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class TestEventSource extends CommonTest {
+public class TestEventSource extends DatabaseCommonTest {
 
 	public TestEventSource(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestEventSource.class);
+		addTestSuite(TestEventSource.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -56,7 +57,7 @@ public class TestEventSource extends CommonTest {
 			eventSource = (EventSource) it.next();
 			System.out.println("id: "+ eventSource.getId());
 		}
-		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_ENTITY_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_CODE, false);
 	}
 
 	private EventSource createAndTestEventSource(Identifier sourceEntityId) throws ApplicationException {

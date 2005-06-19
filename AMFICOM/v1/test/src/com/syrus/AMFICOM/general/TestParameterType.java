@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.10 2005/06/15 09:54:13 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.11 2005/06/19 18:43:56 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -15,18 +15,19 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/15 09:54:13 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public class TestParameterType extends CommonTest {
+public class TestParameterType extends DatabaseCommonTest {
 
 	public TestParameterType(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestParameterType.class);
+		addTestSuite(TestParameterType.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -48,13 +49,13 @@ public class TestParameterType extends CommonTest {
 		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
 		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
 
-		StorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.PARAMETER_TYPE_CODE, true);
 	}
 
 	public void _testUpdate() throws ApplicationException {
 		TypicalCondition tc = new TypicalCondition("ref_pulswd",
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 		Set objects = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 		ParameterType parameterType = (ParameterType) objects.iterator().next();
@@ -68,17 +69,17 @@ public class TestParameterType extends CommonTest {
 				"Ширина импульса в режиме низкого разрешения",
 				"Ширина импульса",
 				parameterType.getDataType());
-		StorableObjectPool.flush(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.PARAMETER_TYPE_CODE, false);
 	}
 
 	public void _testRetrieveByCondition() throws ApplicationException {
 		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.ALARM_STATUS,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.HZ_CHO,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
 		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
@@ -91,11 +92,11 @@ public class TestParameterType extends CommonTest {
 	public void _testDelete() throws ApplicationException {
 		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.ALARM_STATUS,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.HZ_CHO,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
 		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);

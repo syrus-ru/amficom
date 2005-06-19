@@ -1,5 +1,5 @@
 /*-
- * $Id: InitialSetup.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: InitialSetup.java,v 1.3 2005/06/19 18:43:56 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,12 +38,12 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module test
  */
-public class InitialSetup extends CommonTest {
+public class InitialSetup extends DatabaseCommonTest {
 
 	public InitialSetup(String name) {
 		super(name);

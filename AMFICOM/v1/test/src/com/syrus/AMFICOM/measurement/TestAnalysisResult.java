@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisResult.java,v 1.1 2005/06/15 12:03:25 arseniy Exp $
+ * $Id: TestAnalysisResult.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -22,28 +22,29 @@ import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/15 12:03:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestAnalysisResult extends CommonTest {
+public final class TestAnalysisResult extends DatabaseCommonTest {
 
 	public TestAnalysisResult(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestAnalysisResult.class);
+		addTestSuite(TestAnalysisResult.class);
+		return createTestSetup();
 	}
 
 	public void testLoadResult() throws ApplicationException, DataFormatException {
 		Identifier analysisId = new Identifier("Analysis_62");
 		//Analysis analysis = (Analysis) StorableObjectPool.getStorableObject(analysisId, true);
-		LinkedIdsCondition lic = new LinkedIdsCondition(analysisId, ObjectEntities.RESULT_ENTITY_CODE);
+		LinkedIdsCondition lic = new LinkedIdsCondition(analysisId, ObjectEntities.RESULT_CODE);
 		Set set = StorableObjectPool.getStorableObjectsByCondition(lic, true);
 		Result result = (Result) set.iterator().next();
 		System.out.println("Loaded: " + result.getId());
-		SetParameter[] parameters = result.getParameters();
+		Parameter[] parameters = result.getParameters();
 		System.out.println("Result has " + parameters.length + " parameters");
 		for (int i = 0; i < parameters.length; i++) {
 			String codename = parameters[i].getType().getCodename();

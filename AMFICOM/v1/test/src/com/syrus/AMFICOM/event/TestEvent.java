@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvent.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: TestEvent.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,9 @@ import java.util.Set;
 import junit.framework.Test;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -25,22 +24,23 @@ import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class TestEvent extends CommonTest {
+public class TestEvent extends DatabaseCommonTest {
 
 	public TestEvent(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestEvent.class);
+		addTestSuite(TestEvent.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -48,7 +48,7 @@ public class TestEvent extends CommonTest {
 
 		TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.EVENTTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.EVENT_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		Set eventTypes = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 		System.out.println("###################### Retrieved: " + eventTypes.size() + " event types");
@@ -58,11 +58,11 @@ public class TestEvent extends CommonTest {
 
 		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.ALARM_STATUS,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.HZ_CHO,
 				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
 		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
@@ -87,16 +87,16 @@ public class TestEvent extends CommonTest {
 		eventParameters.add(EventParameter.createInstance(pt2, "1, 2, 3, 4, 5, 6, 7, 8"));
 
 		//LinkedIdsCondition lic = new LinkedIdsCondition()
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EVENTSOURCE_CODE);
 		Set eventSources = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 		System.out.println("###################### Retrieved: " + eventSources.size() + " event sources");
 		Set eventSourceIds = new HashSet(eventSources.size());
 		for (Iterator it = eventSources.iterator(); it.hasNext();)
 			eventSourceIds.add(((EventSource) it.next()).getId()); 
 
-		Event event = Event.createInstance(creatorId, eventType, description, eventParameters, eventSourceIds);
+		Event.createInstance(creatorId, eventType, description, eventParameters, eventSourceIds);
 
-		StorableObjectPool.flush(ObjectEntities.EVENT_ENTITY_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.EVENT_CODE, false);
 	}
 
 }

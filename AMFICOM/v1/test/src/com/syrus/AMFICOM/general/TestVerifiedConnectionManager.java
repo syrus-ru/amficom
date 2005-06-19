@@ -1,5 +1,5 @@
 /*
- * $Id: TestVerifiedConnectionManager.java,v 1.1 2005/06/10 15:17:44 arseniy Exp $
+ * $Id: TestVerifiedConnectionManager.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import java.util.Collections;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
@@ -19,11 +20,11 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/10 15:17:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestVerifiedConnectionManager extends CommonTest {
+public final class TestVerifiedConnectionManager extends TestCase {
 	private static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 
 	private static final String SERVER_HOST_NAME = "localhost";

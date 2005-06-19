@@ -1,5 +1,5 @@
 /*
- * $Id: QP1643ACharacteristrics.java,v 1.4 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: QP1643ACharacteristrics.java,v 1.5 2005/06/19 18:43:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,11 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module tools
  */
-public class QP1643ACharacteristrics extends CommonTest {
+public class QP1643ACharacteristrics extends DatabaseCommonTest {
 
 	public QP1643ACharacteristrics(String name) {
 		super(name);

@@ -1,5 +1,5 @@
 /*
- * $Id: TestStorableObjectPool.java,v 1.1 2005/06/10 15:17:44 arseniy Exp $
+ * $Id: TestStorableObjectPool.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,11 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/10 15:17:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestStorableObjectPool extends CommonTest {
+public final class TestStorableObjectPool extends DatabaseCommonTest {
 
 	public TestStorableObjectPool(String name) {
 		super(name);
