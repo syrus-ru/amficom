@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.2 2005/06/17 11:01:06 bass Exp $
+ * $Id: SystemUserDatabase.java,v 1.3 2005/06/19 18:39:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,15 +27,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/19 18:39:20 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public final class SystemUserDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
-	private static final int SIZE_LOGIN_COLUMN = 32;
+	static final int SIZE_LOGIN_COLUMN = 32;
 
 	private SystemUser fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof SystemUser)
