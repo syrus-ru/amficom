@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.147 2005/06/17 12:38:53 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.148 2005/06/19 18:38:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2005/06/17 12:38:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.148 $, $Date: 2005/06/19 18:38:32 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -77,9 +77,9 @@ public abstract class StorableObjectDatabase {
 	public static final int MODE_INSERT = -10;
 	public static final int MODE_UPDATE = -11;
 
-	protected static final int SIZE_CODENAME_COLUMN = 32;
-	protected static final int SIZE_NAME_COLUMN = 64;
-	protected static final int SIZE_DESCRIPTION_COLUMN = 256;
+	public static final int SIZE_CODENAME_COLUMN = 32;
+	public static final int SIZE_NAME_COLUMN = 64;
+	public static final int SIZE_DESCRIPTION_COLUMN = 256;
 
 	private static final long MAX_LOCK_TIMEOUT = 1 * 60 * 1000; // 1 minuta
 	private static final long LOCK_TIME_WAIT = 5 * 1000; // 5 sec
@@ -523,30 +523,33 @@ public abstract class StorableObjectDatabase {
 
 	public abstract void insert(Set storableObjects) throws IllegalDataException, CreateObjectException;
 
-	protected final void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
+	protected final void insertEntity(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+		storableObject.setUpdated(storableObject.getCreatorId());
 
-		String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
+		final Identifier id = storableObject.getId();
+
+		final String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
 				+ this.getColumns(MODE_INSERT)
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ this.getUpdateSingleSQLValues(storableObject, MODE_INSERT)
 				+ CLOSE_BRACKET;
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.insertEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
+			storableObject.cleanupUpdate();
 		} catch (SQLException sqle) {
-			String mesg = this.getEntityName() + "Database.insertEntity | Cannot insert " + this.getEntityName()
-					+ " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
+			storableObject.rollbackUpdate();
 			try {
 				connection.rollback();
 			} catch (SQLException sqle2) {
-				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle2);
 			}
+			final String mesg = this.getEntityName() + "Database.insertEntity | Cannot insert " + this.getEntityName()
+					+ " '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -562,8 +565,8 @@ public abstract class StorableObjectDatabase {
 
 	}
 
-	protected final void insertEntities(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		if ((storableObjects == null) || (storableObjects.size() == 0))
+	protected final void insertEntities(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+		if (storableObjects == null || storableObjects.isEmpty())
 			return;
 
 		if (storableObjects.size() == 1) {
@@ -571,44 +574,49 @@ public abstract class StorableObjectDatabase {
 			return;
 		}
 
-		Set idsList = new HashSet();
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			StorableObject storableObject = (StorableObject) it.next();
-			Identifier localId = storableObject.getId();
-			if (idsList.contains(localId))
-				throw new CreateObjectException(this.getEntityName()
-						+ "Database.insertEntities | Input collection contains entity with the same id "
-						+ localId.getIdentifierString());
-			idsList.add(storableObject.getId());
-		}
-		idsList.clear();
-		idsList = null;
-
-		String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
 				+ this.getColumns(MODE_INSERT)
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ this.getInsertMultipleSQLValues()
 				+ CLOSE_BRACKET;
 
 		PreparedStatement preparedStatement = null;
-		String storableObjectIdStr = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
+		Identifier id = null;
+		final Set setUpdatedStorableObjects = new HashSet();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEntityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				storableObjectIdStr = storableObject.getId().toString();
+			for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
+				id = storableObject.getId();
+
+				storableObject.setUpdated(storableObject.getCreatorId());
+				setUpdatedStorableObjects.add(storableObject);
+
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_INSERT);
 				Log.debugMessage(this.getEntityName() + "Database.insertEntities | Inserting  " + this.getEntityName()
-						+ " " + storableObjectIdStr, Log.DEBUGLEVEL09);
+						+ " '" + id + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 
 			connection.commit();
+			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
+				storableObject.cleanupUpdate();
+			}
 		} catch (SQLException sqle) {
-			String mesg = "StorableObejctDatabase.insertEntities | Cannot insert " + this.getEntityName()
-					+ " '" + storableObjectIdStr + "' -- " + sqle.getMessage();
+			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
+				storableObject.rollbackUpdate();
+			}
+			try {
+				connection.rollback();
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			final String mesg = "StorableObejctDatabase.insertEntities | Cannot insert " + this.getEntityName()
+					+ " '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -984,17 +992,16 @@ public abstract class StorableObjectDatabase {
 		sql.append(EQUALS);
 		sql.append(QUESTION);
 
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		PreparedStatement preparedStatement = null;
-		Set setUpdatedStorableObjects = new HashSet();
-		StorableObject storableObject;
-		String storableObjectIdCode = null;
+		Identifier id = null;
+		final Set setUpdatedStorableObjects = new HashSet();
 		try {
 			preparedStatement = connection.prepareStatement(sql.toString());
 			Log.debugMessage(this.getEntityName() + "Database.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-				storableObject = (StorableObject) it.next();
-				storableObjectIdCode = storableObject.getId().getIdentifierString();
+			for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
+				id = storableObject.getId();
 
 				storableObject.setUpdated(modifierId);
 				setUpdatedStorableObjects.add(storableObject);
@@ -1003,8 +1010,10 @@ public abstract class StorableObjectDatabase {
 					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
 					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
 				} catch (IllegalDataException ide) {
-					for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
-						((StorableObject) it1.next()).rollbackUpdate();
+					for (final Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();) {
+						final StorableObject storableObject1 = (StorableObject) it1.next();
+						storableObject1.rollbackUpdate();
+					}
 					try {
 						connection.rollback();
 					} catch (SQLException sqle1) {
@@ -1014,23 +1023,27 @@ public abstract class StorableObjectDatabase {
 				}
 
 				Log.debugMessage(this.getEntityName()
-						+ "Database.updateEntities | Updating " + this.getEntityName() + " '" + storableObjectIdCode + "'", Log.DEBUGLEVEL09);
+						+ "Database.updateEntities | Updating " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 
 			connection.commit();
-			for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
-				((StorableObject) it1.next()).cleanupUpdate();
+			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
+				storableObject.cleanupUpdate();
+			}
 		} catch (SQLException sqle) {
-			for (Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();)
-				((StorableObject) it1.next()).rollbackUpdate();
+			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
+				storableObject.rollbackUpdate();
+			}
 			try {
 				connection.rollback();
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
 			String mesg = this.getEntityName() + "Database.updateEntities | Cannot update " + this.getEntityName()
-					+ " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
+					+ " '" + id + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			try {
