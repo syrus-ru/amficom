@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConnection.java,v 1.14 2005/06/17 11:25:48 bass Exp $
+ * $Id: DatabaseConnection.java,v 1.15 2005/06/19 19:01:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,6 +107,7 @@ public class DatabaseConnection {
 			Log.debugMessage("Disconnecting from database...", Log.DEBUGLEVEL07);
 			try {
 				connection.close();
+				connection = null;
 				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
 			} catch (Exception e) {
 				Log.errorException(e);
