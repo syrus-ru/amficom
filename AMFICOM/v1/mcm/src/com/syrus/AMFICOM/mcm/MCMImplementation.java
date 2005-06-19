@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.38 2005/06/17 13:06:56 bass Exp $
+ * $Id: MCMImplementation.java,v 1.39 2005/06/19 14:00:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -39,8 +37,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/17 13:06:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/06/19 14:00:50 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -69,66 +67,6 @@ public class MCMImplementation extends MCMPOA {
 	public void abortTests(IdlIdentifier[] testIdsT) throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(testIdsT);
 		MeasurementControlModule.abortTests(ids);
-	}
-
-	public Measurement_Transferable transmitMeasurement(IdlIdentifier idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			Measurement measurement = new Measurement(id);
-			return (Measurement_Transferable) measurement.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public Analysis_Transferable transmitAnalysis(IdlIdentifier idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			Analysis analysis = new Analysis(id);
-			return (Analysis_Transferable) analysis.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-	}
-
-	public Evaluation_Transferable transmitEvaluation(IdlIdentifier idT) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(idT);
-		try {
-			Evaluation evaluation = new Evaluation(id);
-			return (Evaluation_Transferable) evaluation.getTransferable();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
 	}
 
 
