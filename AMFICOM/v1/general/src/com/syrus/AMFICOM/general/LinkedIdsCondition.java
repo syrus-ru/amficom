@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.36 2005/06/20 17:29:37 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.37 2005/06/20 20:54:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/20 17:29:37 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/06/20 20:54:25 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -354,7 +354,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.linkedIds = linkedIds;
 	}
 
-	public final Set getLinkedIds() {
+	public final Set<Identifier> getLinkedIds() {
 		return this.delegate.linkedIds;
 	}
 

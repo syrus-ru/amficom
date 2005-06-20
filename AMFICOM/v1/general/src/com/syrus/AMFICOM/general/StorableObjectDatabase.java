@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.149 2005/06/20 08:56:15 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.150 2005/06/20 20:54:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -31,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.149 $, $Date: 2005/06/20 08:56:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.150 $, $Date: 2005/06/20 20:54:25 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -94,10 +93,10 @@ public abstract class StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 	private String retrieveQuery;
 
-	private static Set lockedObjectIds; // Collection <Identifier>
+	private static Set<Identifier> lockedObjectIds;
 
 	static {
-		lockedObjectIds = Collections.synchronizedSet(new HashSet());
+		lockedObjectIds = Collections.synchronizedSet(new HashSet<Identifier>());
 	}
 
 	// //////////////////// common /////////////////////////
@@ -110,7 +109,7 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getColumnsTmpl();
 
-	protected final String getColumns(int mode) {
+	protected final String getColumns(final int mode) {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CREATED + COMMA
 					+ StorableObjectWrapper.COLUMN_MODIFIED + COMMA
@@ -148,8 +147,8 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException;
 
-	protected final String getUpdateSingleSQLValues(StorableObject storableObject,
-													int mode) throws IllegalDataException {
+	protected final String getUpdateSingleSQLValues(final StorableObject storableObject, final int mode)
+			throws IllegalDataException {
 		String modeString;
 		switch (mode) {
 			case MODE_INSERT:
@@ -195,13 +194,13 @@ public abstract class StorableObjectDatabase {
 		return buffer.toString();
 	}
 
-	protected abstract int setEntityForPreparedStatementTmpl(	StorableObject storableObject,
-																PreparedStatement preparedStatement,
-																int startParameterNumber) throws IllegalDataException, SQLException;
+	protected abstract int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+			PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException;
 
-	protected final int setEntityForPreparedStatement(	StorableObject storableObject,
-														PreparedStatement preparedStatement,
-														int mode) throws IllegalDataException, SQLException {
+	protected final int setEntityForPreparedStatement(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			final int mode) throws IllegalDataException, SQLException {
 		int i = 0;
 		switch (mode) {
 			case MODE_INSERT:
@@ -210,8 +209,7 @@ public abstract class StorableObjectDatabase {
 			case MODE_UPDATE:
 				break;
 			default:
-				throw new IllegalDataException(this.getEntityName()
-						+ "Database.setEntityForPreparedStatement | Unknown mode " + mode);
+				throw new IllegalDataException(this.getEntityName() + "Database.setEntityForPreparedStatement | Unknown mode " + mode);
 		}
 		preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getCreated().getTime()));
 		preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getModified().getTime()));
@@ -224,7 +222,7 @@ public abstract class StorableObjectDatabase {
 	/**
 	 * If <code>storableObject</code> is <code>null</code> creates new
 	 * StorableObject Else - fills it fields from <code>resultSet</code>
-	 *
+	 * 
 	 * @param storableObject
 	 * @param resultSet
 	 * @return Storable Object with filled fields
@@ -243,23 +241,23 @@ public abstract class StorableObjectDatabase {
 	 * @return List&lt;Identifier&gt; of changed storable objects
 	 * @throws RetrieveObjectException
 	 */
-	public final Set refresh(Set storableObjects) throws RetrieveObjectException {
+	public final Set<Identifier> refresh(final Set<StorableObject> storableObjects) throws RetrieveObjectException {
 		if (storableObjects == null || storableObjects.isEmpty())
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 
-		Set changedObjectsIds = new HashSet();
+		Set<Identifier> changedObjectsIds = new HashSet<Identifier>();
 		StorableObject storableObject;
 		Identifier id;
-		Map storableObjectsMap = new HashMap();
+		Map<Identifier, StorableObject> storableObjectsMap = new HashMap<Identifier, StorableObject>();
 
 		StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_VERSION
 				+ SQL_FROM + this.getEntityName()
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
-		Set refreshObjectIds = new HashSet();
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			storableObject = (StorableObject) it.next();
+		Set<Identifier> refreshObjectIds = new HashSet<Identifier>();
+		for (final Iterator<StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+			storableObject = it.next();
 			id = storableObject.getId();
 			storableObjectsMap.put(id, storableObject);
 
@@ -291,11 +289,11 @@ public abstract class StorableObjectDatabase {
 				throw new RetrieveObjectException("Cannot obtain lock on object " + this.getEntityName() + " '" + id + "'");
 			}
 		}
-		String sql = stringBuffer.toString();
+		final String sql = stringBuffer.toString();
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.refresh | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -303,14 +301,14 @@ public abstract class StorableObjectDatabase {
 			long dbversion;
 			while (resultSet.next()) {
 				id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
-				storableObject = (StorableObject) storableObjectsMap.get(id);
+				storableObject = storableObjectsMap.get(id);
 				dbversion = resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION);
 				// Refresh only objects with older version, then in DB
 				if (storableObject.hasOlderVersion(dbversion))
 					changedObjectsIds.add(id);
 			}
 		} catch (SQLException sqle) {
-			String mesg = this.getEntityName() + "Database.refresh | Cannot execute query " + sqle.getMessage();
+			final String mesg = this.getEntityName() + "Database.refresh | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			lockedObjectIds.removeAll(refreshObjectIds);
@@ -334,19 +332,19 @@ public abstract class StorableObjectDatabase {
 
 	// ////////////////////// retrieve /////////////////////////
 
-	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
+	public abstract void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException;
 
-	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	public abstract Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
-	protected final void retrieveEntity(StorableObject storableObject)
+	protected final void retrieveEntity(final StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
-		String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
+		final String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
+		final String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveEntity | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -356,7 +354,7 @@ public abstract class StorableObjectDatabase {
 			else
 				throw new ObjectNotFoundException("No such " + getEntityName() + ": " + strorableObjectIdStr);
 		} catch (SQLException sqle) {
-			String mesg = this.getEntityName() + "Database.retrieveEntity | Cannot retrieve " + getEntityName()
+			final String mesg = this.getEntityName() + "Database.retrieveEntity | Cannot retrieve " + getEntityName()
 					+ " '" + strorableObjectIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
@@ -378,17 +376,19 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public final Set retrieveByCondition(StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+	public final Set<StorableObject> retrieveByCondition(final StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set storableObjects = new HashSet();
+	protected Set<StorableObject> retrieveByCondition(final String conditionQuery)
+			throws RetrieveObjectException, IllegalDataException {
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
 
-		String sql = this.retrieveQuery(conditionQuery);
+		final String sql = this.retrieveQuery(conditionQuery);
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -418,8 +418,8 @@ public abstract class StorableObjectDatabase {
 		return storableObjects;
 	}
 
-	public final Set retrieveButIdsByCondition(Set ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
+	public final Set<StorableObject> retrieveButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 
 		if (condition != null) {
@@ -432,8 +432,8 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByCondition(stringBuffer.toString());
 	}
 
-	public final Set retrieveAll() throws RetrieveObjectException {
-		Set objects = null;
+	public final Set<StorableObject> retrieveAll() throws RetrieveObjectException {
+		Set<StorableObject> objects = null;
 		try {
 			objects = this.retrieveByCondition((String) null);
 		} catch (IllegalDataException ide) {
@@ -442,9 +442,9 @@ public abstract class StorableObjectDatabase {
 		return objects;
 	}
 
-	public final Set retrieveByIdsByCondition(Set ids, StorableObjectCondition condition)
+	public final Set<StorableObject> retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
-		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
@@ -464,33 +464,37 @@ public abstract class StorableObjectDatabase {
 	 * @param linkedIdColumnName
 	 * @throws RetrieveObjectException
 	 */
-	protected final Map retrieveLinkedEntityIds(Set storableObjects,
+	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(Set<StorableObject> storableObjects,
 			String tableName,
 			String idColumnName,
 			String linkedIdColumnName)
 			throws RetrieveObjectException {
 		if (storableObjects == null || storableObjects.isEmpty())
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT + idColumnName + COMMA + linkedIdColumnName + SQL_FROM + tableName + SQL_WHERE);
+		final StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ idColumnName + COMMA
+				+ linkedIdColumnName
+				+ SQL_FROM + tableName
+				+ SQL_WHERE);
 		sql.append(idsEnumerationString(storableObjects, idColumnName, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
-			Map linkedEntityIdsMap = new HashMap();
+			Map<Identifier, Set<Identifier>> linkedEntityIdsMap = new HashMap<Identifier, Set<Identifier>>();
 			Identifier storabeObjectId;
-			Set linkedEntityIds;
+			Set<Identifier> linkedEntityIds;
 			while (resultSet.next()) {
 				storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-				linkedEntityIds = (Set) linkedEntityIdsMap.get(storabeObjectId);
+				linkedEntityIds = linkedEntityIdsMap.get(storabeObjectId);
 				if (linkedEntityIds == null) {
-					linkedEntityIds = new HashSet();
+					linkedEntityIds = new HashSet<Identifier>();
 					linkedEntityIdsMap.put(storabeObjectId, linkedEntityIds);
 				}
 				linkedEntityIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName));
@@ -520,9 +524,9 @@ public abstract class StorableObjectDatabase {
 
 	// //////////////////// insert /////////////////////////
 
-	public abstract void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException;
+	public abstract void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException;
 
-	public abstract void insert(Set storableObjects) throws IllegalDataException, CreateObjectException;
+	public abstract void insert(Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException;
 
 	protected final void insertEntity(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		storableObject.setUpdated(storableObject.getCreatorId());
@@ -566,12 +570,13 @@ public abstract class StorableObjectDatabase {
 
 	}
 
-	protected final void insertEntities(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	protected final void insertEntities(final Set<? extends StorableObject> storableObjects)
+			throws IllegalDataException, CreateObjectException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
 
 		if (storableObjects.size() == 1) {
-			this.insertEntity((StorableObject) storableObjects.iterator().next());
+			this.insertEntity(storableObjects.iterator().next());
 			return;
 		}
 
@@ -584,12 +589,12 @@ public abstract class StorableObjectDatabase {
 		PreparedStatement preparedStatement = null;
 		final Connection connection = DatabaseConnection.getConnection();
 		Identifier id = null;
-		final Set setUpdatedStorableObjects = new HashSet();
+		final Set<StorableObject> setUpdatedStorableObjects = new HashSet<StorableObject>();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEntityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				id = storableObject.getId();
 
 				storableObject.setUpdated(storableObject.getCreatorId());
@@ -602,13 +607,13 @@ public abstract class StorableObjectDatabase {
 			}
 
 			connection.commit();
-			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<StorableObject> it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				storableObject.cleanupUpdate();
 			}
 		} catch (SQLException sqle) {
-			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<StorableObject> it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				storableObject.rollbackUpdate();
 			}
 			try {
@@ -638,12 +643,14 @@ public abstract class StorableObjectDatabase {
 	 *            List&lt;Identifier&gt; physicalLinkIds&gt;
 	 * @throws CreateObjectException
 	 */
-	private void insertLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName)
-			throws CreateObjectException {
+	private final void insertLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedObjectIdsMap,
+			final String tableName,
+			final String idColumnName,
+			final String linkedIdColumnName) throws CreateObjectException {
 		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
 			return;
 
-		String sql = SQL_INSERT_INTO + tableName + OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + tableName + OPEN_BRACKET
 				+ idColumnName + COMMA
 				+ linkedIdColumnName
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -652,16 +659,15 @@ public abstract class StorableObjectDatabase {
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		Identifier id = null;
-		Set linkedIds = null;
 		Identifier linkedId = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator it1 = idLinkedObjectIdsMap.keySet().iterator(); it1.hasNext();) {
-				id = (Identifier) it1.next();
-				linkedIds = (Set) idLinkedObjectIdsMap.get(id);
-				for (Iterator it2 = linkedIds.iterator(); it2.hasNext();) {
-					linkedId = (Identifier) it2.next();
+			for (final Iterator<Identifier> it1 = idLinkedObjectIdsMap.keySet().iterator(); it1.hasNext();) {
+				id = it1.next();
+				final Set<Identifier> linkedIds = idLinkedObjectIdsMap.get(id);
+				for (final Iterator<Identifier> it2 = linkedIds.iterator(); it2.hasNext();) {
+					linkedId = it2.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
 					Log.debugMessage(this.getEntityName() + "Database.insertLinkedEntityIds | Inserting linked entity  '"
@@ -671,7 +677,7 @@ public abstract class StorableObjectDatabase {
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
-			String mesg = this.getEntityName()
+			final String mesg = this.getEntityName()
 					+ "Database.insertLinkedEntityIds | Cannot insert linked entity  '" + linkedId
 					+ "' for " + id + " -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
@@ -690,7 +696,7 @@ public abstract class StorableObjectDatabase {
 
 	// //////////////////// update /////////////////////////
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	public void update(final StorableObject storableObject, final Identifier modifierId, final int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -703,7 +709,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public void update(Set storableObjects, Identifier modifierId, int updateKind)
+	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -716,14 +722,14 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected final void checkAndUpdateEntity(StorableObject storableObject, Identifier modifierId, final boolean force)
+	protected final void checkAndUpdateEntity(final StorableObject storableObject, final Identifier modifierId, final boolean force)
 			throws UpdateObjectException, VersionCollisionException {
-		Identifier id = storableObject.getId();
-		String idStr = DatabaseIdentifier.toSQLString(storableObject.getId());
+		final Identifier id = storableObject.getId();
+		final String idStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 
 		StorableObject dbstorableObject = null;
-		String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + idStr);
-		Connection connection = DatabaseConnection.getConnection();
+		final String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + idStr);
+		final Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -742,7 +748,7 @@ public abstract class StorableObjectDatabase {
 					throw new UpdateObjectException(mesg, ide);
 				}
 			} else {
-				String mesg = this.getEntityName() + "Database.checkAndUpdateEntity | No such object '" + id + "'; will try to insert";
+				final String mesg = this.getEntityName() + "Database.checkAndUpdateEntity | No such object '" + id + "'; will try to insert";
 				Log.debugMessage(mesg, Log.DEBUGLEVEL08);
 				try {
 					this.insert(storableObject);
@@ -754,7 +760,7 @@ public abstract class StorableObjectDatabase {
 				}
 			}
 		} catch (SQLException sqle) {
-			String mesg = "Cannot retrieve from database object, corresponding for updating object '"
+			final String mesg = "Cannot retrieve from database object, corresponding for updating object '"
 					+ this.getEntityName() + "', id: " + idStr;
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
@@ -772,7 +778,7 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 
-		long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
+		final long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
 		while (force && lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
 			try {
 				Thread.sleep(LOCK_TIME_WAIT);
@@ -799,43 +805,45 @@ public abstract class StorableObjectDatabase {
 			throw new UpdateObjectException("Cannot obtain lock on object " + this.getEntityName() + " '" + id + "'");
 	}
 
-	protected final void checkAndUpdateEntities(Set storableObjects, Identifier modifierId, final boolean force)
-			throws UpdateObjectException, VersionCollisionException {
+	protected final void checkAndUpdateEntities(final Set<? extends StorableObject> storableObjects,
+			final Identifier modifierId,
+			final boolean force) throws UpdateObjectException, VersionCollisionException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
 
-		Identifier id;
-		StorableObject storableObject;
+//		Identifier id;
+//		StorableObject storableObject;
 
-		Set storableObjectIds = new HashSet();
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
+		final Set<Identifier> storableObjectIds = new HashSet<Identifier>();
+		for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+			final StorableObject storableObject = it.next();
+			final Identifier id = storableObject.getId();
 			if (!storableObjectIds.contains(id))
 				storableObjectIds.add(id);
 		}
 
-		Set dbstorableObjects = null;
+		Set<StorableObject> dbstorableObjects = null;
 		try {
 			dbstorableObjects = this.retrieveByIdsByCondition(storableObjectIds, null);
 		} catch (ApplicationException e) {
 			throw new UpdateObjectException(e);
 		}
-		Map dbstorableObjectsMap = new HashMap();
-		for (Iterator it = dbstorableObjects.iterator(); it.hasNext();) {
-			storableObject = (StorableObject) it.next();
-			id = storableObject.getId();
+		final Map<Identifier, StorableObject> dbstorableObjectsMap = new HashMap<Identifier, StorableObject>();
+		for (final Iterator<StorableObject> it = dbstorableObjects.iterator(); it.hasNext();) {
+			final StorableObject storableObject = it.next();
+			final Identifier id = storableObject.getId();
 			dbstorableObjectsMap.put(id, storableObject);
 		}
 
-		Set updateObjects = null;
-		Set updateObjectsIds = null;
-		Set insertObjects = null;
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			storableObject = (StorableObject) it.next();
-			id = storableObject.getId();
+		Set<StorableObject> updateObjects = null;
+		Set<Identifier> updateObjectsIds = null;
+		Set<StorableObject> insertObjects = null;
+		for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+			final StorableObject storableObject = it.next();
+			final Identifier id = storableObject.getId();
 			if (dbstorableObjectsMap.containsKey(id)) {
 
-				long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
+				final long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
 				while (force && lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
 					try {
 						Thread.sleep(LOCK_TIME_WAIT);
@@ -846,14 +854,14 @@ public abstract class StorableObjectDatabase {
 
 				if (!lockedObjectIds.contains(id)) {
 					lockedObjectIds.add(id);
-					long dbversion = ((StorableObject) dbstorableObjectsMap.get(id)).getVersion();
-					long version = storableObject.getVersion();
+					final long dbversion = dbstorableObjectsMap.get(id).getVersion();
+					final long version = storableObject.getVersion();
 					if (version == dbversion || force) {
 						if (updateObjectsIds == null)
-							updateObjectsIds = new HashSet();
+							updateObjectsIds = new HashSet<Identifier>();
 						updateObjectsIds.add(id);
 						if (updateObjects == null)
-							updateObjects = new HashSet();
+							updateObjects = new HashSet<StorableObject>();
 						updateObjects.add(storableObject);
 					} else {
 						lockedObjectIds.remove(id);
@@ -871,7 +879,7 @@ public abstract class StorableObjectDatabase {
 
 			} else {
 				if (insertObjects == null)
-					insertObjects = new HashSet();
+					insertObjects = new HashSet<StorableObject>();
 				insertObjects.add(storableObject);
 			}
 		}
@@ -894,10 +902,11 @@ public abstract class StorableObjectDatabase {
 
 	}
 
-	protected final void updateEntity(StorableObject storableObject, Identifier modifierId) throws UpdateObjectException {
+	protected final void updateEntity(final StorableObject storableObject, final Identifier modifierId)
+			throws UpdateObjectException {
 		storableObject.setUpdated(modifierId);
 
-		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
+		final String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
 		String[] values = null;
 		try {
 			values = this.parseStringValues(this.getUpdateSingleSQLValues(storableObject, MODE_UPDATE), cols.length);
@@ -912,9 +921,9 @@ public abstract class StorableObjectDatabase {
 					+ "') is not equals count of values ('" + values.length + "')");
 		}
 
-		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
+		final String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 
-		StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEntityName() + SQL_SET);
+		final StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEntityName() + SQL_SET);
 		for (int i = 0; i < cols.length; i++) {
 			sql.append(cols[i]);
 			sql.append(EQUALS);
@@ -928,7 +937,7 @@ public abstract class StorableObjectDatabase {
 		sql.append(storableObjectIdStr);
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.updateEntity | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -942,7 +951,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			String mesg = this.getEntityName() + "Database.updateEntity | Cannot update " + this.getEntityName()
+			final String mesg = this.getEntityName() + "Database.updateEntity | Cannot update " + this.getEntityName()
 					+ storableObjectIdStr + " -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
@@ -958,27 +967,28 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected final void updateEntities(Set storableObjects, Identifier modifierId) throws UpdateObjectException {
+	protected final void updateEntities(final Set<? extends StorableObject> storableObjects, final Identifier modifierId)
+			throws UpdateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
 		// Maybe not need this?
 		if (storableObjects.size() == 1) {
-			this.updateEntity((StorableObject) storableObjects.iterator().next(), modifierId);
+			this.updateEntity(storableObjects.iterator().next(), modifierId);
 			return;
 		}
 
-		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
+		final String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
 		// String[] values =
 		// this.parseStringValues(this.getUpdateMultipleSQLValues(), cols.length);
 		// here we can split multyply sql values by COMMA because of it is only
 		// QUESTIONS separeted by COMMA
-		String[] values = this.getUpdateMultipleSQLValues().split(COMMA);
+		final String[] values = this.getUpdateMultipleSQLValues().split(COMMA);
 		if (cols.length != values.length)
 			throw new UpdateObjectException(this.getEntityName() + "Database.updateEntities | Count of columns ('" + cols.length
 					+ "') is not equals count of values ('" + values.length + "')");
 
-		StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEntityName() + SQL_SET);
+		final StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEntityName() + SQL_SET);
 		for (int i = 0; i < cols.length; i++) {
 			if (cols[i].equals(StorableObjectWrapper.COLUMN_ID))
 				continue;
@@ -996,12 +1006,12 @@ public abstract class StorableObjectDatabase {
 		final Connection connection = DatabaseConnection.getConnection();
 		PreparedStatement preparedStatement = null;
 		Identifier id = null;
-		final Set setUpdatedStorableObjects = new HashSet();
+		final Set<StorableObject> setUpdatedStorableObjects = new HashSet<StorableObject>();
 		try {
 			preparedStatement = connection.prepareStatement(sql.toString());
 			Log.debugMessage(this.getEntityName() + "Database.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				id = storableObject.getId();
 
 				storableObject.setUpdated(modifierId);
@@ -1011,8 +1021,8 @@ public abstract class StorableObjectDatabase {
 					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
 					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
 				} catch (IllegalDataException ide) {
-					for (final Iterator it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();) {
-						final StorableObject storableObject1 = (StorableObject) it1.next();
+					for (final Iterator<StorableObject> it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();) {
+						final StorableObject storableObject1 = it1.next();
 						storableObject1.rollbackUpdate();
 					}
 					try {
@@ -1029,13 +1039,13 @@ public abstract class StorableObjectDatabase {
 			}
 
 			connection.commit();
-			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<StorableObject> it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				storableObject.cleanupUpdate();
 			}
 		} catch (SQLException sqle) {
-			for (final Iterator it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<StorableObject> it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				storableObject.rollbackUpdate();
 			}
 			try {
@@ -1043,7 +1053,7 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			String mesg = this.getEntityName() + "Database.updateEntities | Cannot update " + this.getEntityName()
+			final String mesg = this.getEntityName() + "Database.updateEntities | Cannot update " + this.getEntityName()
 					+ " '" + id + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
@@ -1071,31 +1081,31 @@ public abstract class StorableObjectDatabase {
 	 * @param linkedIdColumnName
 	 * @throws UpdateObjectException
 	 */
-	protected final void updateLinkedEntityIds(Map idLinkedIdMap, String tableName, String idColumnName, String linkedIdColumnName)
-			throws UpdateObjectException {
+	protected final void updateLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedIdMap,
+			final String tableName,
+			final String idColumnName,
+			final String linkedIdColumnName) throws UpdateObjectException {
 		if (idLinkedIdMap == null || idLinkedIdMap.isEmpty())
 			return;
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT + idColumnName + COMMA + linkedIdColumnName + SQL_FROM + tableName + SQL_WHERE);
 		sql.append(idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
 
-		Map dbLinkedObjIdsMap = new HashMap();
-		Identifier id;
-		Set dbLinkedObjIds;
+		final Map<Identifier, Set<Identifier>> dbLinkedObjIdsMap = new HashMap<Identifier, Set<Identifier>>();
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.updateLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
-				id = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-				dbLinkedObjIds = (Set) dbLinkedObjIdsMap.get(id);
+				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
+				Set<Identifier> dbLinkedObjIds = dbLinkedObjIdsMap.get(id);
 				if (dbLinkedObjIds == null) {
-					dbLinkedObjIds = new HashSet();
+					dbLinkedObjIds = new HashSet<Identifier>();
 					dbLinkedObjIdsMap.put(id, dbLinkedObjIds);
 				}
 				dbLinkedObjIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName));
@@ -1118,25 +1128,22 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 
-		Set linkedObjIds;
-		Map insertIdsMap = new HashMap();
-		Map deleteIdsMap = new HashMap();
-		Identifier linkedObjId;
-		Set alteringIds;
-		for (Iterator it1 = idLinkedIdMap.keySet().iterator(); it1.hasNext();) {
-			id = (Identifier) it1.next();
-			linkedObjIds = (Set) idLinkedIdMap.get(id);
-			dbLinkedObjIds = (Set) dbLinkedObjIdsMap.get(id);
+		final Map<Identifier, Set<Identifier>> insertIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		final Map<Identifier, Set<Identifier>> deleteIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final Iterator<Identifier> it1 = idLinkedIdMap.keySet().iterator(); it1.hasNext();) {
+			final Identifier id = it1.next();
+			final Set<Identifier> linkedObjIds = idLinkedIdMap.get(id);
+			final Set<Identifier> dbLinkedObjIds = dbLinkedObjIdsMap.get(id);
 
 			if (dbLinkedObjIds != null) {
 
 				// Prepare map for insertion
-				for (Iterator it2 = linkedObjIds.iterator(); it2.hasNext();) {
-					linkedObjId = (Identifier) it2.next();
+				for (Iterator<Identifier> it2 = linkedObjIds.iterator(); it2.hasNext();) {
+					final Identifier linkedObjId = it2.next();
 					if (!dbLinkedObjIds.contains(linkedObjId)) {
-						alteringIds = (Set) insertIdsMap.get(id);
+						Set<Identifier> alteringIds = insertIdsMap.get(id);
 						if (alteringIds == null) {
-							alteringIds = new HashSet();
+							alteringIds = new HashSet<Identifier>();
 							insertIdsMap.put(id, alteringIds);
 						}
 						alteringIds.add(linkedObjId);
@@ -1144,12 +1151,12 @@ public abstract class StorableObjectDatabase {
 				}
 
 				// Prepare map for deletion
-				for (Iterator it2 = dbLinkedObjIds.iterator(); it2.hasNext();) {
-					linkedObjId = (Identifier) it2.next();
+				for (Iterator<Identifier> it2 = dbLinkedObjIds.iterator(); it2.hasNext();) {
+					final Identifier linkedObjId = it2.next();
 					if (!linkedObjIds.contains(linkedObjId)) {
-						alteringIds = (Set) deleteIdsMap.get(id);
+						Set<Identifier> alteringIds = deleteIdsMap.get(id);
 						if (alteringIds == null) {
-							alteringIds = new LinkedHashSet();
+							alteringIds = new HashSet<Identifier>();
 							deleteIdsMap.put(id, alteringIds);
 						}
 						alteringIds.add(linkedObjId);
@@ -1175,12 +1182,12 @@ public abstract class StorableObjectDatabase {
 		this.delete(identifiable.getId());
 	}
 
-	public void delete(Identifier id) {
+	public void delete(final Identifier id) {
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM + this.getEntityName()
+			final String sql = SQL_DELETE_FROM + this.getEntityName()
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
 			Log.debugMessage(this.getEntityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
@@ -1199,15 +1206,15 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Set identifiables) {
+	public void delete(Set<? extends Identifiable> identifiables) {
 		if ((identifiables == null) || (identifiables.isEmpty()))
 			return;
 
-		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + this.getEntityName() + SQL_WHERE);
+		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + this.getEntityName() + SQL_WHERE);
 		stringBuffer.append(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.delete(List) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
@@ -1228,17 +1235,19 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected final void deleteLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName) {
+	protected final void deleteLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedObjectIdsMap,
+			final String tableName,
+			final String idColumnName,
+			final String linkedIdColumnName) {
 		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName + SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName
+				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
-		Identifier id;
-		Set linkedObjIds;
-		for (Iterator it = idLinkedObjectIdsMap.keySet().iterator(); it.hasNext();) {
-			id = (Identifier) it.next();
-			linkedObjIds = (Set) idLinkedObjectIdsMap.get(id);
+		for (final Iterator<Identifier> it = idLinkedObjectIdsMap.keySet().iterator(); it.hasNext();) {
+			final Identifier id = it.next();
+			final Set<Identifier> linkedObjIds = idLinkedObjectIdsMap.get(id);
 
 			sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
 			sql.append(idsEnumerationString(linkedObjIds, linkedIdColumnName, true));
@@ -1247,7 +1256,7 @@ public abstract class StorableObjectDatabase {
 		}
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.deleteLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -1282,19 +1291,19 @@ public abstract class StorableObjectDatabase {
 	 * @param inList
 	 * @return String for "WHERE" subclause of SQL query
 	 */
-	protected static StringBuffer idsEnumerationString(Set identifiables, String idColumn, boolean inList) {
+	protected static StringBuffer idsEnumerationString(final Set< ? extends Identifiable> identifiables,
+			final String idColumn,
+			final boolean inList) {
 		if (identifiables == null || identifiables.isEmpty())
 			return new StringBuffer(inList ? DatabaseStorableObjectCondition.FALSE_CONDITION
 					: DatabaseStorableObjectCondition.TRUE_CONDITION);
 
-		StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
+		final StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
 
-		Identifiable identifiable;
-		Identifier id;
 		int i = 0;
-		for (Iterator it = identifiables.iterator(); it.hasNext(); i++) {
-			identifiable = (Identifiable) it.next();
-			id = identifiable.getId();
+		for (final Iterator< ? extends Identifiable> it = identifiables.iterator(); it.hasNext(); i++) {
+			final Identifiable identifiable = it.next();
+			final Identifier id = identifiable.getId();
 			stringBuffer.append(DatabaseIdentifier.toSQLString(id));
 			if (it.hasNext()) {
 				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
@@ -1314,12 +1323,11 @@ public abstract class StorableObjectDatabase {
 		return stringBuffer;
 	}
 
-	private String[] parseStringValues(	String values,
-										int columnCount) {
-		int length = values.length();
-		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',]+)|(\\w+\\s*\\([^)]+\\)))\\s*(,|$)");
-		Matcher matcher = pattern.matcher(values);
-		String[] parsedValues = new String[columnCount];
+	private String[] parseStringValues(String values, int columnCount) {
+		final int length = values.length();
+		final Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',]+)|(\\w+\\s*\\([^)]+\\)))\\s*(,|$)");
+		final Matcher matcher = pattern.matcher(values);
+		final String[] parsedValues = new String[columnCount];
 		int valueCounter = 0;
 		while (matcher.find()) {
 			for (int i = 1; i <= matcher.groupCount(); i++) {
@@ -1343,12 +1351,12 @@ public abstract class StorableObjectDatabase {
 		return parsedValues;
 	}
 
-	private String getConditionQuery(StorableObjectCondition condition) {
-		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
+	private String getConditionQuery(final StorableObjectCondition condition) {
+		final DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
 		if (databaseStorableObjectCondition == null)
 			return DatabaseStorableObjectCondition.TRUE_CONDITION;
 
-		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
+		final short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
 		assert (this.checkEntity(conditionCode)) : this.getEntityName() + "Database.retrieveByCondition | Incompatible condition ("
 					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEntityName() + ") classes";
 
@@ -1362,20 +1370,19 @@ public abstract class StorableObjectDatabase {
 		return conditionQuery;
 	}
 	
-	protected boolean checkEntity(short conditionCode) {
-		String enityName = this.getEntityName();
-		enityName = enityName.replaceAll("\"", "");
+	private boolean checkEntity(final short conditionCode) {
+		final String enityName = this.getEntityName().replaceAll("\"", "");
 		return (ObjectEntities.stringToCode(enityName) == conditionCode);		
 	}
 
-	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition) {
+	private DatabaseStorableObjectCondition reflectDatabaseCondition(final StorableObjectCondition condition) {
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = null;
-		String className = condition.getClass().getName();
-		int lastPoint = className.lastIndexOf('.');
-		String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
+		final String className = condition.getClass().getName();
+		final int lastPoint = className.lastIndexOf('.');
+		final String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
 		try {
-			Class clazz = Class.forName(dbClassName);
-			Constructor constructor = clazz.getDeclaredConstructor(new Class[] {condition.getClass()});
+			final Class clazz = Class.forName(dbClassName);
+			final Constructor constructor = clazz.getDeclaredConstructor(new Class[] {condition.getClass()});
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
 		} catch (ClassNotFoundException e) {

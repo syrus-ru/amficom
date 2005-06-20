@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.18 2005/06/20 20:54:25 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.19 2005/06/20 20:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/20 20:54:25 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/20 20:58:06 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -49,6 +49,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		final CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		final Set<? extends StorableObject> storableObjects = characteristicDatabase.retrieveByCondition(sql);
+		//@todo Find standart way
 		final Set<Characteristic> characteristics = new HashSet<Characteristic>(storableObjects.size());
 		for (StorableObject storableObject : storableObjects) {
 			characteristics.add((Characteristic) storableObject);
