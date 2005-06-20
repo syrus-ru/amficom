@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.24 2005/06/17 11:01:08 bass Exp $
+ * $Id: NodeTypeController.java,v 1.25 2005/06/20 12:10:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/06/20 12:10:29 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -164,6 +164,7 @@ public class NodeTypeController extends AbstractNodeController {
 			FileImageResource ir = FileImageResource.createInstance(
 					userId,
 					filename);
+			ir.setCodename(codename);
 			StorableObjectPool.putStorableObject(ir);
 			StorableObjectPool.flush(ir.getId(), true);
 			return ir.getId();
