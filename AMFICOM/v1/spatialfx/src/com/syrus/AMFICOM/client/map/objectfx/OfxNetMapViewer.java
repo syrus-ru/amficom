@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.8 2005/06/16 14:44:29 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.9 2005/06/20 15:38:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,6 @@ import java.awt.geom.Rectangle2D;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.ToolTipManager;
 
 import com.ofx.component.swing.JMapViewer;
 import com.ofx.geometry.SxDoublePoint;
@@ -30,18 +29,12 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
-import com.syrus.AMFICOM.client.map.ui.MapDropTargetListener;
-import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
-import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
-import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
-import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
 
 /**
  * 
- * @version $Revision: 1.8 $, $Date: 2005/06/16 14:44:29 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/20 15:38:54 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */

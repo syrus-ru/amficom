@@ -1,5 +1,5 @@
 /**
- * $Id: OfxCoordinatesConverter.java,v 1.1 2005/06/16 14:44:28 krupenn Exp $
+ * $Id: OfxCoordinatesConverter.java,v 1.2 2005/06/20 15:37:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,34 +10,12 @@
 
 package com.syrus.AMFICOM.client.map.objectfx;
 
-import java.awt.Cursor;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
 
-import com.ofx.component.MapViewer;
 import com.ofx.geometry.SxDoublePoint;
-import com.ofx.geometry.SxRectangle;
-import com.ofx.mapViewer.SxMapLayer;
-import com.ofx.mapViewer.SxMapViewer;
-import com.ofx.query.SxQueryResultInterface;
-import com.ofx.repository.SxSpatialObject;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.SpatialObject;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
@@ -47,7 +25,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/06/16 14:44:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/20 15:37:53 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
