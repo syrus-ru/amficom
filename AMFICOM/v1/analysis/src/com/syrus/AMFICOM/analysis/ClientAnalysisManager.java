@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.14 2005/06/15 14:24:33 arseniy Exp $
+ * $Id: ClientAnalysisManager.java,v 1.15 2005/06/20 15:57:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/06/15 14:24:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.15 $, $Date: 2005/06/20 15:57:55 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -90,7 +90,6 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		int maxIndex = ReflectogramMath.getArrayMaxIndex(yMT, 0, yMT.length - 1);
 		int rMinIndex = ReflectogramMath.getArrayMinIndex(yMT, maxIndex, yMT.length - 1);
 		double yMinMT = yMT[rMinIndex];
-		System.out.println("yMinAbs = " + yMinAbs + "; yMinMT = " + yMinMT);
 		Heap.setMinTraceLevel((yMinAbs + yMinMT) / 2);
 
 	}
