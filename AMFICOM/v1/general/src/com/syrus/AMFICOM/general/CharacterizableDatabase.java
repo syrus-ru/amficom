@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.17 2005/06/17 12:38:53 bass Exp $
+ * $Id: CharacterizableDatabase.java,v 1.18 2005/06/20 20:54:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,37 +16,45 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/17 12:38:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/06/20 20:54:25 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
-	private Characterizable fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Characterizable fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Characterizable)
 			return (Characterizable) storableObject;
 		throw new IllegalDataException("CharacterizableDatabase.fromStorableObject | Illegal Storable Object: "
 				+ storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject)
+	public void retrieve(final StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		this.retrieveEntity(storableObject);
 
 		this.retrieveCharacteristics(this.fromStorableObject(storableObject));
 	}
 
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set collection = super.retrieveByCondition(conditionQuery);
+	@Override
+	protected Set<StorableObject> retrieveByCondition(final String conditionQuery)
+			throws RetrieveObjectException, IllegalDataException {
+		Set<StorableObject> collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveCharacteristicsByOneQuery(collection);
 		return collection;
 	}
 
-	private void retrieveCharacteristics(Characterizable characterizable) throws RetrieveObjectException, IllegalDataException {
-		String cdIdStr = DatabaseIdentifier.toSQLString(characterizable.getId());
-		String sql = CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
+	private void retrieveCharacteristics(final Characterizable characterizable) throws RetrieveObjectException, IllegalDataException {
+		final String cdIdStr = DatabaseIdentifier.toSQLString(characterizable.getId());
+		final String sql = CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
-		Set characteristics = characteristicDatabase.retrieveByCondition(sql);
+		final CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<? extends StorableObject> storableObjects = characteristicDatabase.retrieveByCondition(sql);
+		final Set<Characteristic> characteristics = new HashSet<Characteristic>(storableObjects.size());
+		for (StorableObject storableObject : storableObjects) {
+			characteristics.add((Characteristic) storableObject);
+		}
+		
+		//final Set<Characteristic> characteristics = characteristicDatabase.retrieveByCondition(sql);
 
 		characterizable.setCharacteristics0(characteristics);
 	}
@@ -85,6 +93,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	@Override
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		super.insertEntity(storableObject);
 
@@ -93,6 +102,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		characteristicDatabase.insert(characterizable.getCharacteristics());
 	}
 
+	@Override
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
@@ -106,6 +116,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		characteristicDatabase.insert(characteristics);
 	}
 
+	@Override
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
@@ -118,6 +129,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	@Override
 	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
