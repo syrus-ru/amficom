@@ -1,11 +1,11 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.7 2005/06/20 10:02:49 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.1 2005/06/20 15:26:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.client.map;
+package com.syrus.AMFICOM.client.map.cache;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -18,11 +18,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.syrus.AMFICOM.client.map.Logger;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapContext;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapImageLoader;
+import com.syrus.AMFICOM.client.map.MapImageRenderer;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/20 10:02:49 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.1 $, $Date: 2005/06/20 15:26:09 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -115,7 +124,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	/**
 	 * Текущее изображение
 	 */
-	private TopologicalRequest requestToPaint = null;
+	private TopologicalImageQuery requestToPaint = null;
 
 	/**
 	 * Последний сегмент неактивной области в котором мы присутвовали.
@@ -519,7 +528,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 * @throws MapDataException 
 	 * @throws MapConnectionException 
 	 */
-	private TopologicalRequest setPriorityForRequest(
+	private TopologicalImageQuery setPriorityForRequest(
 			DoublePoint topoCenter,
 			double topoScale,
 			int priority) throws MapConnectionException, MapDataException
@@ -527,11 +536,12 @@ public class TopologicalImageCache implements MapImageRenderer
 		
 		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 		{
-			TopologicalRequest request = (TopologicalRequest) it.next();
+			TopologicalImageQuery request = (TopologicalImageQuery) it.next();
 			if (	TopologicalImageCache.compare(request.getTopoScale(),topoScale)
-					&&(this.screenDistance(request.getTopoCenter(),topoCenter) < TopologicalImageCache.CENTER_COMPUTING_ERROR))
+					&&(this.screenDistance(request.getTopoCenter(),topoCenter) <
+							TopologicalImageCache.CENTER_COMPUTING_ERROR))
 			{
-				if (request.getPriority() > TopologicalRequest.PRIORITY_ALREADY_LOADED)
+				if (request.getPriority() > TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
 					this.loadingThread.changeRequestPriority(request,priority);
 				
 				request.setLastUsed(System.currentTimeMillis());
@@ -540,7 +550,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			}
 		}
 		
-		TopologicalRequest request = this.createRequestForExpressArea(
+		TopologicalImageQuery request = this.createRequestForExpressArea(
 				topoScale,
 				topoCenter,
 				priority);
@@ -568,11 +578,11 @@ public class TopologicalImageCache implements MapImageRenderer
 						this.center.getX() + j * this.xDifferenceSph,
 						this.center.getY() + (i + 1) * direction * this.yDifferenceSph);
 				
-				int priority = TopologicalRequest.PRIORITY_BACKGROUND_LOW;
+				int priority = TopologicalImageQuery.PRIORITY_BACKGROUND_LOW;
 				if (i == 0)
-					priority = TopologicalRequest.PRIORITY_BACKGROUND_HIGH;
+					priority = TopologicalImageQuery.PRIORITY_BACKGROUND_HIGH;
 				else if (j == 0)
-					priority = TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE;
+					priority = TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE;
 				
 				this.setPriorityForRequest(topoCenter,this.scale,priority);
 			}
@@ -594,11 +604,11 @@ public class TopologicalImageCache implements MapImageRenderer
 						this.center.getX() + (i + 1) * direction * this.xDifferenceSph,
 						this.center.getY() + j * this.yDifferenceSph);
 				
-				int priority = TopologicalRequest.PRIORITY_BACKGROUND_LOW;
+				int priority = TopologicalImageQuery.PRIORITY_BACKGROUND_LOW;
 				if (i == 0)
-					priority = TopologicalRequest.PRIORITY_BACKGROUND_HIGH;
+					priority = TopologicalImageQuery.PRIORITY_BACKGROUND_HIGH;
 				else if (j == 0)
-					priority = TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE;
+					priority = TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE;
 				
 				this.setPriorityForRequest(topoCenter,this.scale,priority);
 			}
@@ -620,13 +630,13 @@ public class TopologicalImageCache implements MapImageRenderer
 						this.center.getX() + (i + 1) * direction.width * this.xDifferenceSph,
 						this.center.getY() + (j + 1) * direction.height * this.yDifferenceSph);
 				
-				int priority = TopologicalRequest.PRIORITY_BACKGROUND_LOW;
+				int priority = TopologicalImageQuery.PRIORITY_BACKGROUND_LOW;
 				if (i == j)
 				{
 					if (i == 0)
-						priority = TopologicalRequest.PRIORITY_BACKGROUND_HIGH;
+						priority = TopologicalImageQuery.PRIORITY_BACKGROUND_HIGH;
 					else
-						priority = TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE;						
+						priority = TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE;						
 				}
 				
 				this.setPriorityForRequest(topoCenter,this.scale,priority);
@@ -650,7 +660,7 @@ public class TopologicalImageCache implements MapImageRenderer
 		if (this.requestToPaint == null)
 			return null;
 
-		while (this.requestToPaint.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+		while (this.requestToPaint.getPriority() != TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
 		{
 			// Изображение по запросу ещё не подгружено
 			
@@ -673,13 +683,9 @@ public class TopologicalImageCache implements MapImageRenderer
 
 		Logger.log(" TIC - getImage - returning image");
 
-		if (this.requestToPaint.getImage() == null)
-			return null;
-		
-		Image imageToReturn = this.requestToPaint.getImage().getImage();
-
-		this.requestToPaint = null;
-
+        Image imageToReturn = this.requestToPaint.getImage();
+        this.requestToPaint = null;
+        
 		return imageToReturn;
 	}
 
@@ -747,7 +753,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			throws MapConnectionException, MapDataException
 	{
 		Logger.log(" TIC - createMovingRequests - just entered.");		
-		this.requestToPaint = this.setPriorityForRequest(this.center,this.scale,TopologicalRequest.PRIORITY_EXPRESS);
+		this.requestToPaint = this.setPriorityForRequest(this.center,this.scale,TopologicalImageQuery.PRIORITY_EXPRESS);
 		Logger.log(" TIC - createMovingRequests - exiting.");		
 	}
 
@@ -782,9 +788,9 @@ public class TopologicalImageCache implements MapImageRenderer
 		// Ищем, есть ли уже сегмент с таким центром
 		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
 		{
-			TopologicalRequest curRequest = (TopologicalRequest) it.next();
-			if ((!currCacheBorders.contains(curRequest.getTopoCenter().getX(),curRequest.getTopoCenter().getY()))
-					&& (curRequest.getPriority() != TopologicalRequest.PRIORITY_ALREADY_LOADED)
+			TopologicalImageQuery curRequest = (TopologicalImageQuery) it.next();
+			if ((!currCacheBorders.contains(curRequest.getTopoCenterX(),curRequest.getTopoCenterY()))
+					&& (curRequest.getPriority() != TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
 					&& (curRequest != this.requestToPaint))
 			{
 				// Удаляем сегмент - не имеет смысла его подгружает
@@ -848,7 +854,7 @@ public class TopologicalImageCache implements MapImageRenderer
 		}
 
 		//Устанавливаем отображаемое изображение. Если его нет - ему самый высокий приоритет
-		this.requestToPaint = this.setPriorityForRequest(this.center,mapContext.getScale(),TopologicalRequest.PRIORITY_EXPRESS);
+		this.requestToPaint = this.setPriorityForRequest(this.center,mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
 
 		// Массштаб, который возможно понадобится в направлении измененеия массштаба
 		double scaleToCheck = 1;
@@ -870,7 +876,7 @@ public class TopologicalImageCache implements MapImageRenderer
 		}
 
 		// Если изображения с таким масштабом нет - грузим с приритетом PRIORITY_BACKGROUND_HIGH
-		this.setPriorityForRequest(this.center,scaleToCheck,TopologicalRequest.PRIORITY_BACKGROUND_HIGH);
+		this.setPriorityForRequest(this.center,scaleToCheck,TopologicalImageQuery.PRIORITY_BACKGROUND_HIGH);
 
 		// Если в кэше слишком много сегментов удаляем самые старые
 		if (this.cacheOfImages.size() > TopologicalImageCache.CACHE_ELEMENTS_COUNT
@@ -896,7 +902,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	{
 		//Устанавливаем отображаемое изображение. Грузим его с самым высоким приоритетом
 		MapContext mapContext = this.logicalNetLayer.getMapContext();
-		this.requestToPaint = this.setPriorityForRequest(this.center,mapContext.getScale(),TopologicalRequest.PRIORITY_EXPRESS);
+		this.requestToPaint = this.setPriorityForRequest(this.center,mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
 
 		// Делаем изображения большего и меньшего изображения
 		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
@@ -905,28 +911,30 @@ public class TopologicalImageCache implements MapImageRenderer
 			this.setPriorityForRequest(
 					this.center,
 					mapContext.getScale()	/ Math.pow(MapContext.ZOOM_FACTOR, i + 1),
-					TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE);
+					TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
 
 			// Большое
 			this.setPriorityForRequest(
 					this.center,
 					mapContext.getScale()	* Math.pow(MapContext.ZOOM_FACTOR, i + 1),
-					TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE);
+					TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
 		}
 	}
 
-	private TopologicalRequest createRequestForExpressArea(
-			double asScale,
-			DoublePoint asCenter,
-			int asPriority)
+	private TopologicalImageQuery createRequestForExpressArea(
+			double reqScale,
+			DoublePoint reqCenter,
+			int reqPriority)
 	{
-		TopologicalRequest result = new TopologicalRequest();
+		TopologicalImageQuery result = new TopologicalImageQuery();
 		result.setLastUsed(System.currentTimeMillis());
 
-		result.setPriority(asPriority);
+		result.setPriority(reqPriority);
 
-		result.setTopoScale(asScale);
-		result.setTopoCenter(asCenter);
+		result.setTopoScale(reqScale);
+		result.setTopoCenter(reqCenter);
+		result.setMapImageWidth(this.imageSize.width);
+		result.setMapImageHeight(this.imageSize.height);		
 
 		return result;
 	}
