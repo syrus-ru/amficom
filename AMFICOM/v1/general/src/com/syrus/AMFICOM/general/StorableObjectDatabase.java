@@ -1,9 +1,9 @@
-/*
- * $Id: StorableObjectDatabase.java,v 1.148 2005/06/19 18:38:32 arseniy Exp $
+/*-
+ * $Id: StorableObjectDatabase.java,v 1.149 2005/06/20 08:56:15 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.general;
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.148 $, $Date: 2005/06/19 18:38:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.149 $, $Date: 2005/06/20 08:56:15 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -60,7 +60,8 @@ public abstract class StorableObjectDatabase {
 	public static final String SQL_IN = " IN ";
 	public static final String SQL_NOT_IN = " NOT IN ";
 	public static final String SQL_INSERT_INTO = " INSERT INTO ";
-	public static final String SQL_NULL = " NULL ";
+	public static final String SQL_NULL_TRIMMED = "NULL";
+	public static final String SQL_NULL = ' ' + SQL_NULL_TRIMMED + ' ';
 	public static final String SQL_OR = " OR ";
 	public static final String SQL_ORDER_BY = " ORDER BY ";
 	public static final String SQL_SELECT = " SELECT ";
