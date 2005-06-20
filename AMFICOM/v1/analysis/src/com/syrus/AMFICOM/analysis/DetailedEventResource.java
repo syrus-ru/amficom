@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.7 2005/06/16 10:58:00 stas Exp $
+ * $Id: DetailedEventResource.java,v 1.8 2005/06/20 15:28:47 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,29 @@
 
 package com.syrus.AMFICOM.analysis;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Analysis.*;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.analysis.dadara.events.*;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
+import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/06/16 10:58:00 $
+ * @author $Author: saa $
+ * @version $Revision: 1.8 $, $Date: 2005/06/20 15:28:47 $
  * @module analysis_v1
  */
 
@@ -92,7 +104,7 @@ public class DetailedEventResource {
 			setAttenuation(DASH);
 			break;
 		case SimpleReflectogramEvent.CONNECTOR:
-			setReflectance(Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((ConnectorDetailedEvent) ev).getAmpl()))));
+			setReflectance(Double.toString(MathRef.round_1(MathRef.calcReflectance(sigma, ((ConnectorDetailedEvent) ev).getAmpl()))));
 			setLoss(Double.toString(MathRef.round_3(((ConnectorDetailedEvent) ev).getLoss())));
 			setAttenuation(DASH);
 			break;
@@ -103,7 +115,7 @@ public class DetailedEventResource {
 			setAttenuation(DASH);
 			break;
 		case SimpleReflectogramEvent.ENDOFTRACE:
-			setReflectance(Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, ((EndOfTraceDetailedEvent) ev).getAmpl()))));
+			setReflectance(Double.toString(MathRef.round_1(MathRef.calcReflectance(sigma, ((EndOfTraceDetailedEvent) ev).getAmpl()))));
 			setLoss(DASH);
 			setAttenuation(DASH);
 			break;
