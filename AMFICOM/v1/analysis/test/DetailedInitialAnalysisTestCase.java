@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.9 2005/06/20 15:22:35 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.10 2005/06/20 15:30:59 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/06/20 15:22:35 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/20 15:30:59 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -393,7 +393,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 
         assertNotNull(re);
 
-        boolean veryVerbose = verbose && true;
+        boolean veryVerbose = verbose && false;
 
         if (veryVerbose) {
             System.out.println("NEvents=" + re.length);
