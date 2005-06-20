@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.2 2005/06/20 15:13:54 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.3 2005/06/20 17:37:48 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,9 +18,11 @@ import com.syrus.AMFICOM.administration.TestServer;
 import com.syrus.AMFICOM.administration.TestServerProcess;
 import com.syrus.AMFICOM.administration.TestSystemUser;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.SQLCommonTest;
+import com.syrus.AMFICOM.general.TestDataType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/20 15:13:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 17:37:48 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -31,9 +33,13 @@ public final class TestInitialSetup extends TestCase {
 	}
 
 	public static Test suite() {
+		final SQLCommonTest sqlCommonTest = new SQLCommonTest();
+
 		//-1. Create system administrator
-		final TestSuite testSuite = new TestSuite();
-		testSuite.addTest(TestCreateSysUser.suite());
+		sqlCommonTest.addTest(new TestCreateSysUser("testCreateSysUser"));
+		
+		//-2.Create data types
+		sqlCommonTest.addTest(new TestDataType("testCreate"));
 
 		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 
@@ -49,9 +55,10 @@ public final class TestInitialSetup extends TestCase {
 		databaseCommonTest.addTest(new TestSystemUser("testCreateMCMUsers"));
 		databaseCommonTest.addTest(new TestMCM("testCreateInstance"));
 
+		//- Create test suite contains all operations
+		TestSuite testSuite = new TestSuite();
+		testSuite.addTest(sqlCommonTest.createTestSetup());
 		testSuite.addTest(databaseCommonTest.createTestSetup());
-
-		//- Returning test suite contains all operations
 		return testSuite;
 	}
 }
