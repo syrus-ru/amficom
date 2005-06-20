@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.9 2005/06/04 16:56:22 bass Exp $
+ * $Id: LogicalScheme.java,v 1.10 2005/06/20 13:42:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/04 16:56:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/20 13:42:48 $
+ * @author $Author: max $
  * @module filter_v1
  */
 public class LogicalScheme {
@@ -69,8 +69,10 @@ public class LogicalScheme {
 		} catch (IllegalDataException e) {
 			Log.errorMessage(e.getMessage());
 		}
-		if(collection.size()>1)
+		if(collection.size() != 1) {
 			Log.errorMessage("LogicalScheme.getResultCondition | somthing wrong");
+			return null;
+		}
 		return (StorableObjectCondition) collection.iterator().next();
 	}
 	
