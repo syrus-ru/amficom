@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.24 2005/06/17 11:01:08 bass Exp $
+ * $Id: MapOpenCommand.java,v 1.25 2005/06/20 15:30:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.map.Map;
 
 /**
  * открыть карту. карта открывается в новом виде
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/06/20 15:30:56 $
  * @module mapviewclient_v1
  */
 public class MapOpenCommand extends AbstractCommand {
@@ -89,19 +89,14 @@ public class MapOpenCommand extends AbstractCommand {
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
-		WrapperedTableChooserDialog mapChooserDialog = new WrapperedTableChooserDialog(
+		this.map = (Map )WrapperedTableChooserDialog.showChooserDialog(
 				LangModelMap.getString("Map"),
+				maps,
 				mapTableController,
-				mapTableController.getKeysArray());
+				mapTableController.getKeysArray(),
+				true);
 
-		mapChooserDialog.setCanDelete(this.canDelete);
-
-		mapChooserDialog.setContents(maps);
-
-		mapChooserDialog.setModal(true);
-		mapChooserDialog.setVisible(true);
-
-		if(mapChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_CANCEL) {
+		if(this.map == null) {
 			this.aContext.getDispatcher().firePropertyChange(
 					new StatusMessageEvent(
 							this,
@@ -111,17 +106,12 @@ public class MapOpenCommand extends AbstractCommand {
 			return;
 		}
 
-		if(mapChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_OK) {
-			this.map = (Map )mapChooserDialog.getReturnObject();
-
-			setResult(Command.RESULT_OK);
-
-			this.aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Finished")));
-		}
+		this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("Finished")));
+		setResult(Command.RESULT_OK);
 	}
 
 }

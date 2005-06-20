@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.14 2005/06/17 11:01:08 bass Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.15 2005/06/20 15:30:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,15 +13,16 @@ import java.util.Set;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.SchemeTableController;
-import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
-import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/06/17 11:01:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/06/20 15:30:56 $
  * @module mapviewclient_v1
  */
 public class MapViewAddSchemeCommand extends AbstractCommand {
@@ -81,52 +82,49 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 		SchemeTableController schemeTableController = 
 			SchemeTableController.getInstance();
 
-		WrapperedTableChooserDialog schemeChooserDialog = new WrapperedTableChooserDialog(
-				LangModelMap.getString("Scheme"),
-				schemeTableController,
-				schemeTableController.getKeysArray());
-
+		Set schemes;
 		try {
 			Identifier domainId = LoginManager.getDomainId();
 			StorableObjectCondition condition = new LinkedIdsCondition(
 					domainId,
 					ObjectEntities.SCHEME_CODE);
-			Set schemes = StorableObjectPool.getStorableObjectsByCondition(
+			schemes = StorableObjectPool.getStorableObjectsByCondition(
 					condition,
 					true);
-			schemeChooserDialog.setContents(schemes);
 		} catch(ApplicationException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		schemeChooserDialog.setModal(true);
-		schemeChooserDialog.setVisible(true);
-		if(schemeChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_CANCEL) {
+		this.scheme = (Scheme )WrapperedTableChooserDialog.showChooserDialog(
+				LangModelMap.getString("Scheme"),
+				schemes,
+				schemeTableController,
+				schemeTableController.getKeysArray(),
+				true);
+
+		if(this.scheme == null) {
 			this.aContext.getDispatcher().firePropertyChange(
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
 							LangModelGeneral.getString("Aborted")));
+			setResult(Command.RESULT_CANCEL);
 			return;
 		}
 
-		if(schemeChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_OK) {
-			this.scheme = (Scheme )schemeChooserDialog.getReturnObject();
-
-			if(!mapView.getSchemes().contains(this.scheme)) {
-				controller.addScheme(this.scheme);
-				this.aContext.getDispatcher().firePropertyChange(
-						new MapEvent(mapView, MapEvent.MAP_VIEW_CHANGED));
-				this.aContext.getDispatcher().firePropertyChange(
-						new MapEvent(mapView, MapEvent.NEED_REPAINT));
-			}
+		if(!mapView.getSchemes().contains(this.scheme)) {
+			controller.addScheme(this.scheme);
 			this.aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Finished")));
+					new MapEvent(mapView, MapEvent.MAP_VIEW_CHANGED));
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(mapView, MapEvent.NEED_REPAINT));
 		}
+		this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("Finished")));
+		setResult(Command.RESULT_OK);
 	}
-
 }

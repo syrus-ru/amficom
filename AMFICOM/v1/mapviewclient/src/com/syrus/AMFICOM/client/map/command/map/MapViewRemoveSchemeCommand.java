@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.9 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.10 2005/06/20 15:30:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/20 15:30:57 $
  * @module mapviewclient_v1
  */
 public class MapViewRemoveSchemeCommand extends AbstractCommand {
@@ -67,25 +67,22 @@ public class MapViewRemoveSchemeCommand extends AbstractCommand {
 		SchemeTableController schemeTableController = 
 			SchemeTableController.getInstance();
 
-		WrapperedTableChooserDialog schemeChooserDialog = new WrapperedTableChooserDialog(
+		Scheme scheme = (Scheme )WrapperedTableChooserDialog.showChooserDialog(
 				LangModelMap.getString("Scheme"),
+				mapView.getSchemes(),
 				schemeTableController,
-				schemeTableController.getKeysArray());
+				schemeTableController.getKeysArray(),
+				true);
 
-		schemeChooserDialog.setContents(mapView.getSchemes());
-
-		schemeChooserDialog.setModal(true);
-		schemeChooserDialog.setVisible(true);
-		if(schemeChooserDialog.getReturnCode() != WrapperedTableChooserDialog.RET_OK) {
+		if(scheme == null) {
 			this.aContext.getDispatcher().firePropertyChange(
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
 							LangModelGeneral.getString("Aborted")));
+			setResult(Command.RESULT_CANCEL);
 			return;
 		}
-
-		Scheme scheme = (Scheme )schemeChooserDialog.getReturnObject();
 
 		controller.removeScheme(scheme);
 		mapFrame.getContext().getDispatcher().firePropertyChange(

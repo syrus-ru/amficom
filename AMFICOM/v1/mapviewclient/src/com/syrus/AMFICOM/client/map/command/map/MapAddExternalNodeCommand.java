@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.8 2005/06/17 11:01:08 bass Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.9 2005/06/20 15:30:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/17 11:01:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2005/06/20 15:30:56 $
  * @module mapviewclient_v1
  */
 public class MapAddExternalNodeCommand extends AbstractCommand
@@ -83,29 +83,28 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
-		WrapperedTableChooserDialog mapChooserDialog = new WrapperedTableChooserDialog(
-				LangModelMap.getString("Map"),
-				mapTableController,
-				mapTableController.getKeysArray());
-
+		Collection availableMaps;
 		try {
 			Identifier domainId = LoginManager.getDomainId();
 			StorableObjectCondition condition = new LinkedIdsCondition(
 					domainId,
 					ObjectEntities.MAP_CODE);
-			Collection ss = StorableObjectPool.getStorableObjectsByCondition(
+			availableMaps = StorableObjectPool.getStorableObjectsByCondition(
 					condition,
 					true);
-			ss.remove(mapView.getMap());
-			mapChooserDialog.setContents(ss);
+			availableMaps.remove(mapView.getMap());
 		} catch(ApplicationException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		mapChooserDialog.setModal(true);
-		mapChooserDialog.setVisible(true);
-		if(mapChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_CANCEL) {
+		this.map = (Map )WrapperedTableChooserDialog.showChooserDialog(
+				LangModelMap.getString("Map"),
+				availableMaps,
+				mapTableController,
+				mapTableController.getKeysArray());
+
+		if(this.map == null) {
 			this.aContext.getDispatcher().firePropertyChange(
 					new StatusMessageEvent(
 							this,
@@ -113,11 +112,6 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 							LangModelGeneral.getString("Aborted")));
 			return;
 		}
-
-		if(mapChooserDialog.getReturnCode() != WrapperedTableChooserDialog.RET_OK)
-			return;
-
-		this.map = (Map )mapChooserDialog.getReturnObject();
 
 		ExternalMapElementChooserDialog elemengChooserDialog = 
 			new ExternalMapElementChooserDialog(

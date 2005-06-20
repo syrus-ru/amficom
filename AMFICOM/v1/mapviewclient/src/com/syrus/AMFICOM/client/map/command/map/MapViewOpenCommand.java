@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.24 2005/06/17 11:01:08 bass Exp $
+ * $Id: MapViewOpenCommand.java,v 1.25 2005/06/20 15:30:57 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,9 +13,9 @@ import java.util.Collection;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.client.map.ui.MapViewTableController;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.ui.MapViewTableController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * открыть вид 
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/06/20 15:30:57 $
  * @module mapviewclient_v1
  */
 public class MapViewOpenCommand extends AbstractCommand {
@@ -90,19 +90,14 @@ public class MapViewOpenCommand extends AbstractCommand {
 		MapViewTableController mapViewTableController = 
 			MapViewTableController.getInstance();
 
-		WrapperedTableChooserDialog mapViewChooserDialog = new WrapperedTableChooserDialog(
+		this.mapView = (MapView )WrapperedTableChooserDialog.showChooserDialog(
 				LangModelMap.getString("MapView"),
+				mapViews,
 				mapViewTableController,
-				mapViewTableController.getKeysArray());
+				mapViewTableController.getKeysArray(),
+				true);
 
-		mapViewChooserDialog.setCanDelete(this.canDelete);
-
-		mapViewChooserDialog.setContents(mapViews);
-
-		mapViewChooserDialog.setModal(true);
-		mapViewChooserDialog.setVisible(true);
-
-		if(mapViewChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_CANCEL) {
+		if(this.mapView == null) {
 			this.aContext.getDispatcher().firePropertyChange(
 					new StatusMessageEvent(
 							this,
@@ -112,17 +107,12 @@ public class MapViewOpenCommand extends AbstractCommand {
 			return;
 		}
 
-		if(mapViewChooserDialog.getReturnCode() == WrapperedTableChooserDialog.RET_OK) {
-			this.mapView = (MapView )mapViewChooserDialog.getReturnObject();
+		setResult(Command.RESULT_OK);
 
-			setResult(Command.RESULT_OK);
-
-			this.aContext.getDispatcher().firePropertyChange(
-					new StatusMessageEvent(
-							this,
-							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Finished")));
-		}
+		this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("Finished")));
 	}
-
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveMapCommand.java,v 1.4 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapRemoveMapCommand.java,v 1.5 2005/06/20 15:30:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.JDesktopPane;
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/20 15:30:56 $
  * @module mapviewclient_v1
  */
 public class MapRemoveMapCommand extends AbstractCommand {
@@ -60,25 +60,22 @@ public class MapRemoveMapCommand extends AbstractCommand {
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
-		WrapperedTableChooserDialog mapChooserDialog = new WrapperedTableChooserDialog(
+		Map map = (Map )WrapperedTableChooserDialog.showChooserDialog(
 				LangModelMap.getString("Map"),
+				mapView.getMap().getMaps(),
 				mapTableController,
-				mapTableController.getKeysArray());
+				mapTableController.getKeysArray(),
+				true);
 
-		mapChooserDialog.setContents(mapView.getMap().getMaps());
-
-		mapChooserDialog.setModal(true);
-		mapChooserDialog.setVisible(true);
-		if(mapChooserDialog.getReturnCode() != WrapperedTableChooserDialog.RET_OK) {
+		if(map == null) {
 			this.aContext.getDispatcher().firePropertyChange(
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
 							LangModelGeneral.getString("Aborted")));
+			setResult(Command.RESULT_CANCEL);
 			return;
 		}
-
-		Map map = (Map )mapChooserDialog.getReturnObject();
 
 		mapView.getMap().removeMap(map);
 		mapFrame.getContext().getDispatcher().firePropertyChange(
