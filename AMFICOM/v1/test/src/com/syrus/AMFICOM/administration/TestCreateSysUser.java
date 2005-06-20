@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateSysUser.java,v 1.2 2005/06/20 15:13:53 arseniy Exp $
+ * $Id: TestCreateSysUser.java,v 1.3 2005/06/20 17:38:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,34 +7,50 @@
  */
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.SystemUserDatabase.SIZE_LOGIN_COLUMN;
+import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_LOGIN;
+import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_SORT;
+import static com.syrus.AMFICOM.administration.SystemUserWrapper.SYS_LOGIN;
+import static com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort._USER_SORT_SYSADMIN;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTOPHE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_DESCRIPTION_COLUMN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_NAME_COLUMN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
-import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
-import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommonTest;
-import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Application;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/20 15:13:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 17:38:10 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -42,33 +58,16 @@ public final class TestCreateSysUser extends TestCase {
 	private static final String TABLE_SHADOW = "Shadow";
 	private static final String COLUMN_USER_ID = "user_id";
 	private static final String COLUMN_PASSWORD = "password";
-	private static final String SYS_PASSWORD = SystemUserWrapper.SYS_LOGIN;
+	private static final String SYS_PASSWORD = SYS_LOGIN;
 
 	public TestCreateSysUser(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		TestSuite testSuite = new TestSuite(TestCreateSysUser.class);
-		TestSetup testSetup = new TestSetup(testSuite) {
-			public void setUp() {
-				oneTimeSetUp();
-			}
-			public void tearDown() {
-				oneTimeTearDown();
-			}
-		};
-		return testSetup;
-	}
-
-	static void oneTimeSetUp() {
-		Application.init(CommonTest.APPLICATION_NAME);
-		DatabaseCommonTest.establishDatabaseConnection();
-		IdentifierPool.init(new DatabaseIdentifierGeneratorServer(), 1);
-	}
-
-	static void oneTimeTearDown() {
-		DatabaseConnection.closeConnection();
+		SQLCommonTest commonTest = new SQLCommonTest();
+		commonTest.addTestSuite(TestCreateSysUser.class);
+		return commonTest.createTestSetup();
 	}
 
 	public void testCreateSysUser() throws ApplicationException, SQLException {
@@ -79,45 +78,39 @@ public final class TestCreateSysUser extends TestCase {
 		String sql;
 		final Statement statement = DatabaseConnection.getConnection().createStatement();
 
-		sql = StorableObjectDatabase.SQL_INSERT_INTO + ObjectEntities.SYSTEMUSER + StorableObjectDatabase.OPEN_BRACKET
-				+ StorableObjectWrapper.COLUMN_ID + StorableObjectDatabase.COMMA
-				+ StorableObjectWrapper.COLUMN_CREATED + StorableObjectDatabase.COMMA
-				+ StorableObjectWrapper.COLUMN_MODIFIED + StorableObjectDatabase.COMMA
-				+ StorableObjectWrapper.COLUMN_CREATOR_ID + StorableObjectDatabase.COMMA
-				+ StorableObjectWrapper.COLUMN_MODIFIER_ID + StorableObjectDatabase.COMMA
-				+ StorableObjectWrapper.COLUMN_VERSION + StorableObjectDatabase.COMMA
-				+ SystemUserWrapper.COLUMN_LOGIN + StorableObjectDatabase.COMMA
-				+ SystemUserWrapper.COLUMN_SORT + StorableObjectDatabase.COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + StorableObjectDatabase.COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION
-				+ StorableObjectDatabase.CLOSE_BRACKET + StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
-				+ DatabaseIdentifier.toSQLString(sysUserId) + StorableObjectDatabase.COMMA
-				+ DatabaseDate.toUpdateSubString(date) + StorableObjectDatabase.COMMA
-				+ DatabaseDate.toUpdateSubString(date) + StorableObjectDatabase.COMMA
-				+ DatabaseIdentifier.toSQLString(sysUserId) + StorableObjectDatabase.COMMA
-				+ DatabaseIdentifier.toSQLString(sysUserId) + StorableObjectDatabase.COMMA
-				+ Long.toString(0) + StorableObjectDatabase.COMMA
-				+ StorableObjectDatabase.APOSTOPHE
-					+ DatabaseString.toQuerySubString(SystemUserWrapper.SYS_LOGIN, SystemUserDatabase.SIZE_LOGIN_COLUMN)
-						+ StorableObjectDatabase.APOSTOPHE + StorableObjectDatabase.COMMA
-				+ Integer.toString(SystemUserSort._USER_SORT_SYSADMIN) + StorableObjectDatabase.COMMA
-				+ StorableObjectDatabase.APOSTOPHE
-					+ DatabaseString.toQuerySubString(name, StorableObjectDatabase.SIZE_NAME_COLUMN)
-						+ StorableObjectDatabase.APOSTOPHE + StorableObjectDatabase.COMMA 
-				+ StorableObjectDatabase.APOSTOPHE
-						+ DatabaseString.toQuerySubString(description, StorableObjectDatabase.SIZE_NAME_COLUMN)
-							+ StorableObjectDatabase.APOSTOPHE
+		sql = SQL_INSERT_INTO + SYSTEMUSER + OPEN_BRACKET
+				+ COLUMN_ID + COMMA
+				+ COLUMN_CREATED + COMMA
+				+ COLUMN_MODIFIED + COMMA
+				+ COLUMN_CREATOR_ID + COMMA
+				+ COLUMN_MODIFIER_ID + COMMA
+				+ COLUMN_VERSION + COMMA
+				+ COLUMN_LOGIN + COMMA
+				+ COLUMN_SORT + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+				+ DatabaseDate.toUpdateSubString(date) + COMMA
+				+ DatabaseDate.toUpdateSubString(date) + COMMA
+				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+				+ Long.toString(0) + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(SYS_LOGIN, SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
+				+ Integer.toString(_USER_SORT_SYSADMIN) + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTOPHE + COMMA 
+				+ APOSTOPHE + DatabaseString.toQuerySubString(description, SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
 				+ StorableObjectDatabase.CLOSE_BRACKET;
 		Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 		statement.executeUpdate(sql);
 
-		sql = StorableObjectDatabase.SQL_INSERT_INTO + TABLE_SHADOW + StorableObjectDatabase.OPEN_BRACKET
-				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
+		sql = SQL_INSERT_INTO + TABLE_SHADOW + OPEN_BRACKET
+				+ COLUMN_USER_ID + COMMA
 				+ COLUMN_PASSWORD
-				+ StorableObjectDatabase.CLOSE_BRACKET + StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
-				+ DatabaseIdentifier.toSQLString(sysUserId) + StorableObjectDatabase.COMMA
-				+ StorableObjectDatabase.APOSTOPHE + DatabaseString.toQuerySubString(SYS_PASSWORD) + StorableObjectDatabase.APOSTOPHE
-				+ StorableObjectDatabase.CLOSE_BRACKET;
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(SYS_PASSWORD) + APOSTOPHE
+				+ CLOSE_BRACKET;
 		Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 		statement.executeUpdate(sql);
 
