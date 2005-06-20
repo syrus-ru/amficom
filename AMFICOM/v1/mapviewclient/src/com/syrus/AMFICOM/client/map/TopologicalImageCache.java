@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.6 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.7 2005/06/20 10:02:49 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/20 10:02:49 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -836,8 +836,8 @@ public class TopologicalImageCache implements MapImageRenderer
 		Logger.log(" TIC - createScaleRequests - just entered.");		
 		MapContext mapContext = this.logicalNetLayer.getMapContext();
 		if ((this.cacheOfImages.size() == 0)
-				|| (	(!TopologicalImageCache.compare(this.scale, mapContext.getScale()	* LogicalNetLayer.ZOOM_FACTOR))
-						&&(!TopologicalImageCache.compare(this.scale * LogicalNetLayer.ZOOM_FACTOR, mapContext.getScale()))))
+				|| (	(!TopologicalImageCache.compare(this.scale, mapContext.getScale()	* MapContext.ZOOM_FACTOR))
+						&&(!TopologicalImageCache.compare(this.scale * MapContext.ZOOM_FACTOR, mapContext.getScale()))))
 		{
 			// Если новый масштаб не является кратным предыдущему (zoom_to_box)
 			// или мы только что вышли из режима изменения центра
@@ -854,18 +854,18 @@ public class TopologicalImageCache implements MapImageRenderer
 		double scaleToCheck = 1;
 		if (TopologicalImageCache.compare(this.scale, mapContext
 				.getScale()
-				* LogicalNetLayer.ZOOM_FACTOR))
+				* MapContext.ZOOM_FACTOR))
 		{
 			// Новый масштаб в ZOOM_FACTOR раз меньше предыдущего
 			scaleToCheck = mapContext.getScale()
-					/ Math.pow(LogicalNetLayer.ZOOM_FACTOR,
+					/ Math.pow(MapContext.ZOOM_FACTOR,
 							TopologicalImageCache.CACHE_SIZE);
 		} else if (TopologicalImageCache.compare(this.scale
-				* LogicalNetLayer.ZOOM_FACTOR, mapContext.getScale()))
+				* MapContext.ZOOM_FACTOR, mapContext.getScale()))
 		{
 			// Новый масштаб в ZOOM_FACTOR раз больше предыдущего
 			scaleToCheck = mapContext.getScale()
-					* Math.pow(LogicalNetLayer.ZOOM_FACTOR,
+					* Math.pow(MapContext.ZOOM_FACTOR,
 							TopologicalImageCache.CACHE_SIZE);
 		}
 
@@ -904,13 +904,13 @@ public class TopologicalImageCache implements MapImageRenderer
 			// Маленькое
 			this.setPriorityForRequest(
 					this.center,
-					mapContext.getScale()	/ Math.pow(LogicalNetLayer.ZOOM_FACTOR, i + 1),
+					mapContext.getScale()	/ Math.pow(MapContext.ZOOM_FACTOR, i + 1),
 					TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE);
 
 			// Большое
 			this.setPriorityForRequest(
 					this.center,
-					mapContext.getScale()	* Math.pow(LogicalNetLayer.ZOOM_FACTOR, i + 1),
+					mapContext.getScale()	* Math.pow(MapContext.ZOOM_FACTOR, i + 1),
 					TopologicalRequest.PRIORITY_BACKGROUND_MIDDLE);
 		}
 	}
