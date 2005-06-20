@@ -2,8 +2,8 @@
 
 TEST_CLASS = TestInitialSetup
 TEST_PACKAGE = com.syrus.AMFICOM.setup
-#TEST_CLASS=TestServer
-#TEST_PACKAGE=com.syrus.AMFICOM.administration
+#TEST_CLASS=TestDataType
+#TEST_PACKAGE=com.syrus.AMFICOM.general
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
