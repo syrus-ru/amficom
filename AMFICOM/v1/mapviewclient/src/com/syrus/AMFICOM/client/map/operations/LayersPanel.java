@@ -1,10 +1,10 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.10 2005/06/20 10:03:30 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.11 2005/06/20 15:21:22 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
-*/
+ */
 
 package com.syrus.AMFICOM.client.map.operations;
 
@@ -31,25 +31,26 @@ import javax.swing.JSeparator;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.10 $, $Date: 2005/06/20 10:03:30 $
- * @author $Author: krupenn $
+ * 
+ * @version $Revision: 1.11 $, $Date: 2005/06/20 15:21:22 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
-public class LayersPanel extends JPanel
-{
+public class LayersPanel extends JPanel {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	/**
 	 * панель списка слоев
 	 */
 	private JPanel layersPanel = new JPanel();
-	
+
 	/**
 	 * панель заголовка
 	 */
@@ -58,7 +59,7 @@ public class LayersPanel extends JPanel
 	/**
 	 * окно карты
 	 */
-	private MapFrame mapFrame;
+	MapFrame mapFrame;
 
 	/**
 	 * список CheckBox'ов для слоёв
@@ -68,15 +69,29 @@ public class LayersPanel extends JPanel
 	/**
 	 * обработчик изменения видимости слоя
 	 */
-	private ActionListener actionListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				LayerVisibilityCheckBox cb = (LayerVisibilityCheckBox )e.getSource();
-				SpatialLayer sl = cb.getSpatialLayer();
-				sl.setVisible(cb.isSelected());
+	private ActionListener actionListener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			LayerVisibilityCheckBox cb = (LayerVisibilityCheckBox) e
+					.getSource();
+			SpatialLayer sl = cb.getSpatialLayer();
+			sl.setVisible(cb.isSelected());
+			NetMapViewer netMapViewer = LayersPanel.this.mapFrame
+					.getMapViewer();
+			try {
+				netMapViewer.getRenderer().refreshLayers();
+				if (sl
+						.isVisibleAtScale(netMapViewer.getMapContext()
+								.getScale()))
+					netMapViewer.repaint(true);
+			} catch (MapConnectionException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (MapDataException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		};
+		}
+	};
 
 	/**
 	 * По умолчанию
@@ -84,13 +99,14 @@ public class LayersPanel extends JPanel
 	public LayersPanel() {
 		try {
 			jbInit();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void jbInit() {
-		this.setToolTipText(LangModelMap.getString("ConfigureTopologicalLayers"));
+		this.setToolTipText(LangModelMap
+				.getString("ConfigureTopologicalLayers"));
 
 		this.setLayout(new BorderLayout());
 
@@ -101,7 +117,8 @@ public class LayersPanel extends JPanel
 
 		GridBagConstraints gridbagconstraints = new GridBagConstraints();
 
-		ImageIcon ii = new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/seesymbs.gif"));
+		ImageIcon ii = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
+				"images/seesymbs.gif"));
 		JLabel jlabel = new JLabel(ii);
 		gridbagconstraints.gridx = 0;
 		gridbagconstraints.gridy = 0;
@@ -162,10 +179,9 @@ public class LayersPanel extends JPanel
 	 */
 	public void setMapFrame(MapFrame mapFrame) {
 		this.mapFrame = mapFrame;
-		if(mapFrame != null) {
+		if (mapFrame != null) {
 			updateList();
-		}
-		else {
+		} else {
 			clearList();
 		}
 	}
@@ -188,17 +204,19 @@ public class LayersPanel extends JPanel
 		try {
 			GridBagConstraints gridbagconstraints = new GridBagConstraints();
 			Component imageLabel = null;
-		
+
 			int i = 0;
-			for(Iterator it = this.mapFrame.getMapViewer().getMapContext().getMapConnection().getLayers().iterator(); it.hasNext();) {
-				SpatialLayer sl = (SpatialLayer )it.next();
-				
-				LayerVisibilityCheckBox lvCheckBox = new LayerVisibilityCheckBox(sl);
+			for (Iterator it = this.mapFrame.getMapViewer().getMapContext()
+					.getMapConnection().getLayers().iterator(); it.hasNext();) {
+				SpatialLayer sl = (SpatialLayer) it.next();
+
+				LayerVisibilityCheckBox lvCheckBox = new LayerVisibilityCheckBox(
+						sl);
 				lvCheckBox.addActionListener(this.actionListener);
 				lvCheckBox.setBackground(this.layersPanel.getBackground());
 				lvCheckBox.setAlignmentY(0.5F);
 				lvCheckBox.setAlignmentX(0.8F);
-				
+
 				gridbagconstraints.gridx = 0;
 				gridbagconstraints.gridy = i;
 				gridbagconstraints.weightx = 0.0D;
@@ -207,9 +225,9 @@ public class LayersPanel extends JPanel
 				gridbagconstraints.gridheight = 1;
 				gridbagconstraints.fill = 0;
 				this.layersPanel.add(lvCheckBox, gridbagconstraints);
-				this.checkBoxesList.add(lvCheckBox);				
+				this.checkBoxesList.add(lvCheckBox);
 
-				if(imageLabel != null) {
+				if (imageLabel != null) {
 					imageLabel.setBackground(this.layersPanel.getBackground());
 					gridbagconstraints.gridx = 1;
 					gridbagconstraints.gridy = i;
@@ -234,38 +252,47 @@ public class LayersPanel extends JPanel
 				lvCheckBox.setNameLabel(nameLabel);
 				i++;
 			}
-		}
-		catch(MapDataException e) {
+		} catch (MapDataException e) {
 			System.out.println("cannot get layers");
 			e.printStackTrace();
-		} catch(MapConnectionException e) {
+		} catch (MapConnectionException e) {
 			System.out.println("cannot get layers");
 			e.printStackTrace();
 		}
-		
+
 		setVisibility();
 	}
-	
+
 	/**
-	 * разместить графические элемента управления отображением слоев на панели 
+	 * разместить графические элемента управления отображением слоев на панели
 	 * списка слоев
 	 */
 	public void setVisibility() {
-		for(Iterator it = this.checkBoxesList.iterator(); it.hasNext();) {
-			LayerVisibilityCheckBox curBox = (LayerVisibilityCheckBox )it
-					.next();
-			SpatialLayer boxSL = curBox.getSpatialLayer();
+		try {
+			double currentScale = this.mapFrame.getMapViewer().getMapContext()
+					.getScale();
+			for (Iterator it = this.checkBoxesList.iterator(); it.hasNext();) {
+				LayerVisibilityCheckBox curBox = (LayerVisibilityCheckBox) it
+						.next();
+				SpatialLayer boxSL = curBox.getSpatialLayer();
 
-			curBox.setSelected(boxSL.isVisible());
+				curBox.setSelected(boxSL.isVisible());
 
-			if(boxSL.isVisibleAtCurrentScale())
-				curBox.getNameLabel().setForeground(SystemColor.textText);
-			else
-				curBox.getNameLabel().setForeground(
-						SystemColor.textInactiveText);
+				if (boxSL.isVisibleAtScale(currentScale))
+					curBox.getNameLabel().setForeground(SystemColor.textText);
+				else
+					curBox.getNameLabel().setForeground(
+							SystemColor.textInactiveText);
+			}
+
+			this.revalidate();
+		} catch (MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		this.revalidate();
 	}
 
 	public MapFrame getMapFrame() {
@@ -320,4 +347,3 @@ public class LayersPanel extends JPanel
 		}
 	}
 }
-
