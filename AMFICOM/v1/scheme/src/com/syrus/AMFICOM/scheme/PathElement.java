@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.31 2005/06/17 13:06:54 bass Exp $
+ * $Id: PathElement.java,v 1.32 2005/06/20 16:13:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,7 +32,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.Data;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/20 16:13:53 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -375,6 +375,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		}
 	}
 
+	@Override
 	public Object clone() {
 		final PathElement pathElement = (PathElement) super.clone();
 		/**
@@ -402,11 +403,11 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	public AbstractSchemeElement getAbstractSchemeElement() {
 		switch (this.kind.value()) {
 			case Kind._SCHEME_CABLE_LINK:
-				return getSchemeCableLink();
+				return this.getSchemeCableLink();
 			case Kind._SCHEME_ELEMENT:
-				return getSchemeElement();
+				return this.getSchemeElement();
 			case Kind._SCHEME_LINK:
-				return getSchemeCableLink();
+				return this.getSchemeLink();
 			default:
 				throw new UnsupportedOperationException(ErrorMessages.OBJECT_STATE_ILLEGAL);
 		}
@@ -415,7 +416,8 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.parentSchemePathId != null && !this.parentSchemePathId.isVoid()
 				&& this.sequentialNumber != -1
 				&& this.kind != null
@@ -445,7 +447,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			default:
 				assert false;
 		}
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemePathId);
 		dependencies.add(this.startAbstractSchemePortId);
 		dependencies.add(this.endAbstractSchemePortId);
@@ -586,25 +588,25 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public PathElement_Transferable getTransferable() {
 		final Data data = new Data();
 		switch (this.kind.value()) {
 			case Kind._SCHEME_ELEMENT:
 				data.schemeElementData(this.kind, new SchemeElementData(
-						(IdlIdentifier) this.startAbstractSchemePortId.getTransferable(),
-						(IdlIdentifier) this.endAbstractSchemePortId.getTransferable()));
+						this.startAbstractSchemePortId.getTransferable(),
+						this.endAbstractSchemePortId.getTransferable()));
 				break;
 			case Kind._SCHEME_CABLE_LINK:
-				data.schemeCableThreadId(this.kind, (IdlIdentifier) this.schemeCableThreadId.getTransferable());
+				data.schemeCableThreadId(this.kind, this.schemeCableThreadId.getTransferable());
 				break;
 			case Kind._SCHEME_LINK:
-				data.schemeLinkId(this.kind, (IdlIdentifier) this.schemeLinkId.getTransferable());
+				data.schemeLinkId(this.kind, this.schemeLinkId.getTransferable());
 				break;
 			default:
 				assert false;
 		}
 		return new PathElement_Transferable(getHeaderTransferable(),
-				(IdlIdentifier) this.parentSchemePathId.getTransferable(),
+				this.parentSchemePathId.getTransferable(),
 				this.sequentialNumber, data);
 	}
 
@@ -742,8 +744,8 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 		final boolean parentSchemePathIsNull = parentSchemePath == null;
 		int newSequentialNumber = parentSchemePathIsNull ? -1 : parentSchemePath.getPathElements().size();
-		for (final Iterator pathElementIterator = getParentSchemePath().getPathElements().tailSet(this).iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
+		for (final Iterator<PathElement> pathElementIterator = getParentSchemePath().getPathElements().tailSet(this).iterator(); pathElementIterator.hasNext();) {
+			final PathElement pathElement = pathElementIterator.next();
 			pathElement.parentSchemePathId = newParentSchemePathId;
 			super.markAsChanged();
 			pathElement.sequentialNumber = parentSchemePathIsNull ? -1 : newSequentialNumber++;
@@ -810,6 +812,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * @param transferable
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) {
 		final PathElement_Transferable pathElement = (PathElement_Transferable) transferable;
 		try {
