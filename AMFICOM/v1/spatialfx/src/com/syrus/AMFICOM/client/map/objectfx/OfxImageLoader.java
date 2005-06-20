@@ -1,5 +1,5 @@
 /**
- * $Id: OfxImageLoader.java,v 1.1 2005/06/16 14:44:28 krupenn Exp $
+ * $Id: OfxImageLoader.java,v 1.2 2005/06/20 15:38:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,13 +10,12 @@
 
 package com.syrus.AMFICOM.client.map.objectfx;
 
+import java.awt.Image;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
-
-import javax.swing.ImageIcon;
 
 import com.ofx.query.SxQueryResultInterface;
 import com.ofx.repository.SxSpatialObject;
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
-import com.syrus.AMFICOM.client.map.TopologicalRequest;
+import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
  * Реализация уровня логического отображения сети на карте средствами
@@ -33,7 +32,7 @@ import com.syrus.AMFICOM.client.map.TopologicalRequest;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/06/16 14:44:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/20 15:38:43 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -118,7 +117,7 @@ public class OfxImageLoader implements MapImageLoader
 		return found;
 	}
 
-	public ImageIcon renderMapImage(TopologicalRequest request) throws MapConnectionException, MapDataException {
+	public Image renderMapImage(TopologicalImageQuery request) throws MapConnectionException, MapDataException {
 		// TODO Auto-generated method stub
 		return null;
 	}
