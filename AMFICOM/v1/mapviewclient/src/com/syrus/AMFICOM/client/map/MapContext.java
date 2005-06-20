@@ -1,13 +1,11 @@
 /**
- * $Id: MapContext.java,v 1.5 2005/06/20 10:09:13 peskovsky Exp $
+ * $Id: MapContext.java,v 1.6 2005/06/20 12:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
 package com.syrus.AMFICOM.client.map;
-
-import java.util.List;
 
 import com.syrus.AMFICOM.map.DoublePoint;
 
