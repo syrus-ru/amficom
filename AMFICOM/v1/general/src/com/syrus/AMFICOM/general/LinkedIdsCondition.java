@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.34 2005/06/17 13:06:59 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.35 2005/06/20 14:34:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/06/20 14:34:16 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -93,7 +93,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 
-	protected Set linkedIds;
+	protected Set<Identifier> linkedIds;
 
 	private LinkedIdsCondition delegate;
 
@@ -105,15 +105,15 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this(Collections.singleton(identifier), entityCode);
 	}
 
-	public LinkedIdsCondition(final Set linkedIds, final short entityCode) {
+	public LinkedIdsCondition(final Set<Identifier> linkedIds, final short entityCode) {
 		this(linkedIds, new Short(entityCode));
 	}
 
 	public LinkedIdsCondition(final LinkedIdsCondition_Transferable transferable) {
-		Short code = new Short(transferable.entity_code);
+		final Short code = new Short(transferable.entity_code);
 		short linkedCode = transferable.linked_entity_code;
 
-		Set linkIds = new HashSet(transferable.linked_ids.length);
+		final Set<Identifier> linkIds = new HashSet<Identifier>(transferable.linked_ids.length);
 		for (int i = 0; i < transferable.linked_ids.length; i++) {
 			linkIds.add(new Identifier(transferable.linked_ids[i]));
 		}
@@ -199,7 +199,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		// Empty constructor used by descendants only.
 	}
 
-	private LinkedIdsCondition(final Set linkedIds, final Short entityCode) {
+	private LinkedIdsCondition(final Set<Identifier> linkedIds, final Short entityCode) {
 		short linkedCode;
 		try {
 			linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
@@ -302,8 +302,8 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	public final IDLEntity getTransferable() {
 		IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIds.size()];
 		int i = 0;
-		for (Iterator it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
-			linkedIdTransferable[i] = (IdlIdentifier) ((Identifier) it.next()).getTransferable();
+		for (Iterator<Identifier> it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
+			linkedIdTransferable[i] = it.next().getTransferable();
 
 		final LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable(this.delegate.entityCode.shortValue(),
 				this.delegate.linkedEntityCode,
@@ -330,7 +330,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * @param storableObjects
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(final Set storableObjects) {
+	public boolean isNeedMore(final Set<StorableObject> storableObjects) {
 		return this.delegate.isNeedMore(storableObjects);
 	}
 
@@ -346,7 +346,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.setEntityCode(entityCode);
 	}
 
-	public final void setLinkedIds(Set linkedIds) {
+	public final void setLinkedIds(Set<Identifier> linkedIds) {
 		try {
 			this.delegate.linkedEntityCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		} catch (final AssertionError ae) {
@@ -364,14 +364,14 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.setLinkedIds(Collections.singleton(linkedId));
 	}
 
-	protected final Map sort(Set linkIds) {
-		Map codeIdsMap = new HashMap();
-		for (Iterator it = linkIds.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
-			short code = id.getMajor();
-			Set ids = (Set) codeIdsMap.get(new Short(code));
+	protected final Map sort(Set<Identifier> linkIds) {
+		final Map<Short, Set<Identifier>> codeIdsMap = new HashMap<Short, Set<Identifier>>();
+		for (Iterator<Identifier> it = linkIds.iterator(); it.hasNext();) {
+			final Identifier id = it.next();
+			final short code = id.getMajor();
+			Set<Identifier> ids = codeIdsMap.get(new Short(code));
 			if (ids == null) {
-				ids = new HashSet();
+				ids = new HashSet<Identifier>();
 				codeIdsMap.put(new Short(code), ids);
 			}
 			ids.add(id);
@@ -379,40 +379,26 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return codeIdsMap;
 	}
 
-	protected final boolean conditionTest(Set params) {
-		if (params != null) {
-			for (Iterator it = params.iterator(); it.hasNext();) {
-				Object object = it.next();
-				Identifier id = null;
-				if (object instanceof Identifier)
-					id = (Identifier) object;
-				else
-					if (object instanceof Identifiable)
-						id = ((Identifiable) object).getId();
-				if (id != null)
-					for (Iterator iterator = this.linkedIds.iterator(); iterator.hasNext();) {
-						Identifier id2 = null;
-						object = iterator.next();
-						if (object instanceof Identifier)
-							id2 = (Identifier) object;
-						else
-							if (object instanceof Identifiable)
-								id2 = ((Identifiable) object).getId();
-						if (id.equals(id2)) {
-							return true;
-
-						}
-					}
+	protected final boolean conditionTest(Set<Identifiable> identifiables) {
+		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
+		for (final Iterator<Identifiable> it = identifiables.iterator(); it.hasNext();) {
+			final Identifiable identifiable = it.next();
+			final Identifier id = identifiable.getId();
+			for (final Iterator<Identifier> linkedIdsIt = this.linkedIds.iterator(); linkedIdsIt.hasNext();) {
+				final Identifier linkedId = linkedIdsIt.next();
+				if (id.equals(linkedId)) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	protected final boolean conditionTest(final Identifier paramId) {
-		if (paramId != null && !paramId.isVoid()) {
-			for (final Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-				final Identifier id = (Identifier) it.next();
-				if (paramId.equals(id)) {
+	protected final boolean conditionTest(final Identifier id) {
+		if (id != null && !id.isVoid()) {
+			for (final Iterator<Identifier> linkedIdsIt = this.linkedIds.iterator(); linkedIdsIt.hasNext();) {
+				final Identifier linkedId = linkedIdsIt.next();
+				if (id.equals(linkedId)) {
 					return true;
 				}
 			}

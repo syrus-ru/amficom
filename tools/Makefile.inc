@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.23 2005/06/20 14:30:04 arseniy Exp $
+# $Id: Makefile.inc,v 1.24 2005/06/20 14:37:19 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -112,6 +112,7 @@ JAVAC_WARNOFF_FLAG = -nowarn
 # User may specify either -source 1.3 or -source 1.4 as an initial value
 # of JAVACFLAGS
 JAVACFLAGS += \
+	-Xlint:unchecked \
 	-source 1.5 \
 	-target 1.5 \
 	-O \
