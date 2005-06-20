@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.40 2005/06/17 13:06:59 bass Exp $
+ * $Id: Characteristic.java,v 1.41 2005/06/20 13:56:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,10 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/17 13:06:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/06/20 13:56:52 $
+ * @author $Author: max $
  * @module general_v1
  */
 
@@ -176,11 +175,11 @@ public class Characteristic extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Characteristic_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier)this.type.getId().getTransferable(),
+				this.type.getId().getTransferable(),
 				this.name,
 				this.description,
 				(this.value != null) ? this.value : "",
-				(IdlIdentifier)this.characterizableId.getTransferable(),
+				this.characterizableId.getTransferable(),
 				this.editable,
 				this.visible);
 	}
@@ -323,9 +322,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set getDependencies() {
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		Set dependencies = new HashSet(2);
+		Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.characterizableId);
 		dependencies.add(this.type);
 		return dependencies;

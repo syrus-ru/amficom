@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.106 2005/06/17 12:38:53 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.107 2005/06/20 13:57:37 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/06/17 12:38:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.107 $, $Date: 2005/06/20 13:57:37 $
+ * @author $Author: max $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -940,10 +940,9 @@ public abstract class StorableObjectPool {
 
 		this.savingObjectIds.add(id);
 
-		Set dependencies = storableObject.getDependencies();
+		Set<Identifiable> dependencies = storableObject.getDependencies();
 		StorableObject dependencyObject = null;
-		for (Iterator dIt = dependencies.iterator(); dIt.hasNext();) {
-			Object object = dIt.next();
+		for (Identifiable object: dependencies) {
 			// if (object == null)
 			// continue;
 			if (object instanceof Identifier)
@@ -1127,8 +1126,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.106 $, $Date: 2005/06/17 12:38:53 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.107 $, $Date: 2005/06/20 13:57:37 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

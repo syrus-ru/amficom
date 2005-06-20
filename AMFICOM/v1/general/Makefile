@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.42 2005/05/26 12:28:59 arseniy Exp $
+# $Id: Makefile,v 1.43 2005/06/20 13:57:37 max Exp $
 #
 # vim:set ft=make:
 #
@@ -11,15 +11,15 @@ ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
 
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
+JAVACFLAGS = -source 1.5
+SUNJAVACFLAGS = -target 1.5
 JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(AMFICOM_HOME)/lib/external/xalan.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.66 2005/06/17 13:06:59 bass Exp $
+ * $Id: StorableObject.java,v 1.67 2005/06/20 13:57:37 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/06/17 13:06:59 $
+ * @author $Author: max $
+ * @version $Revision: 1.67 $, $Date: 2005/06/20 13:57:37 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -141,7 +141,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public abstract Set getDependencies();
+	public abstract Set<Identifiable> getDependencies();
 
 	/**
 	 * Returns structure to be transmitted via CORBA. Should be declared
