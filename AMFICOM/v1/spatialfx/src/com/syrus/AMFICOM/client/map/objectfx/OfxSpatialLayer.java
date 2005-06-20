@@ -131,8 +131,4 @@ public class OfxSpatialLayer implements SpatialLayer
 	public boolean isVisibleAtScale(double scale) {
 		return true;
 	}
-
-	public boolean isVisibleAtCurrentScale() {
-		return true;
-	}
 }
