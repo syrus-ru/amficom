@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.22 2005/05/23 08:31:25 bass Exp $
+# $Id: Makefile.inc,v 1.23 2005/06/20 14:30:04 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -112,6 +112,8 @@ JAVAC_WARNOFF_FLAG = -nowarn
 # User may specify either -source 1.3 or -source 1.4 as an initial value
 # of JAVACFLAGS
 JAVACFLAGS += \
+	-source 1.5 \
+	-target 1.5 \
 	-O \
 	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
 	-d $(CLASSDIR) \
