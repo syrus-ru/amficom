@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.3 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.4 2005/06/20 15:13:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,41 +11,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.extensions.TestSetup;
 import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/20 15:13:54 $
  * @author $Author: arseniy $
  * @module test
  */
-public class TestIdentifier extends DatabaseCommonTest {
+public class TestIdentifier extends TestCase {
 
 	public TestIdentifier(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		TestSuite testSuite = new TestSuite(TestIdentifier.class);
-		TestSetup testSetup = new TestSetup(testSuite) {
-			protected void setUp() {
-				oneTimeSetUp();
-			}
-			protected void tearDown() {
-				oneTimeTearDown();
-			}
-		};
-		return testSetup;
-	}
-
-	protected static void oneTimeSetUp() {
-		//Nothing
-	}
-
-	protected static void oneTimeTearDown() {
-		//Nothing
+		final CommonTest commonTest = new CommonTest();
+		commonTest.addTestSuite(TestIdentifier.class);
+		return commonTest.createTestSetup();
 	}
 
 	public void testEquals() {
@@ -83,14 +67,14 @@ public class TestIdentifier extends DatabaseCommonTest {
 	}
 
 	public void _testCreateSumIdentifiers() throws ApplicationException {
-		final Set ids = new HashSet();
+		final Set<Identifier> ids = new HashSet<Identifier>();
 
 		//1
 		ids.add(new Identifier("Measurement_2491"));
 		ids.add(new Identifier("Measurement_2492"));
 		ids.add(new Identifier("Measurement_2493"));
 		ids.add(new Identifier("Measurement_2494"));
-		final Set identifiables1 = new HashSet(ids);
+		final Set<Identifiable> identifiables1 = new HashSet<Identifiable>(ids);
 
 		ids.clear();
 
@@ -98,11 +82,11 @@ public class TestIdentifier extends DatabaseCommonTest {
 		ids.add(new Identifier("Measurement_2741"));
 		ids.add(new Identifier("Measurement_2742"));
 		ids.add(new Identifier("Measurement_2744"));
-		final Set identifiables2 = new HashSet(ids);
+		final Set<Identifiable> identifiables2 = new HashSet<Identifiable>(ids);
 
 		//create sum
 		System.out.println("Sum:");
-		final Set sumIds = Identifier.createSumIdentifiers(identifiables1, identifiables2);
+		final Set<Identifier> sumIds = Identifier.createSumIdentifiers(identifiables1, identifiables2);
 		for (final Iterator it = sumIds.iterator(); it.hasNext();) {
 			final Identifier id = (Identifier) it.next();
 			System.out.println("Id: '" + id + "'");
@@ -115,14 +99,14 @@ public class TestIdentifier extends DatabaseCommonTest {
 	}
 
 	public void _testCreateSubstractionIdentifiers() throws ApplicationException {
-		final Set ids = new HashSet();
+		final Set<Identifier> ids = new HashSet<Identifier>();
 
 		//1
 		ids.add(new Identifier("Measurement_2491"));
 		ids.add(new Identifier("Measurement_2492"));
 		ids.add(new Identifier("Measurement_2493"));
 		ids.add(new Identifier("Measurement_2494"));
-		final Set identifiables1 = new HashSet(ids);
+		final Set<Identifiable> identifiables1 = new HashSet<Identifiable>(ids);
 
 		ids.clear();
 
@@ -130,11 +114,11 @@ public class TestIdentifier extends DatabaseCommonTest {
 		ids.add(new Identifier("Measurement_2491"));
 		ids.add(new Identifier("Measurement_2492"));
 		ids.add(new Identifier("Measurement_2493"));
-		final Set identifiables2 = new HashSet(ids);
+		final Set<Identifiable> identifiables2 = new HashSet<Identifiable>(ids);
 
 		// Create substraction
 		System.out.println("Substraction:");
-		final Set subIds = Identifier.createSubstractionIdentifiers(identifiables1, identifiables2);
+		final Set<Identifier> subIds = Identifier.createSubtractionIdentifiers(identifiables1, identifiables2);
 		for (final Iterator it = subIds.iterator(); it.hasNext();) {
 			final Identifier id = (Identifier) it.next();
 			System.out.println("Id: '" + id + "'");

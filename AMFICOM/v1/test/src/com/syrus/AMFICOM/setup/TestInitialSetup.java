@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.1 2005/06/19 18:43:14 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.2 2005/06/20 15:13:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.administration.TestSystemUser;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/19 18:43:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/20 15:13:54 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -35,19 +35,21 @@ public final class TestInitialSetup extends TestCase {
 		final TestSuite testSuite = new TestSuite();
 		testSuite.addTest(TestCreateSysUser.suite());
 
+		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
+
 		//-2. Create default domain and server
-		DatabaseCommonTest.addTest(new TestDomain("testCreateInstance"));
-		DatabaseCommonTest.addTest(new TestServer("testCreateInstance"));
+		databaseCommonTest.addTest(new TestDomain("testCreateInstance"));
+		databaseCommonTest.addTest(new TestServer("testCreateInstance"));
 
 		//-3. Create users for server processes and processes itself
-		DatabaseCommonTest.addTest(new TestSystemUser("testCreateInstance"));
-		DatabaseCommonTest.addTest(new TestServerProcess("testCreateInstance"));
+		databaseCommonTest.addTest(new TestSystemUser("testCreateInstance"));
+		databaseCommonTest.addTest(new TestServerProcess("testCreateInstance"));
 
 		//-4. Create users for MCM and MCMs itself.
-		DatabaseCommonTest.addTest(new TestSystemUser("testCreateMCMUsers"));
-		DatabaseCommonTest.addTest(new TestMCM("testCreateInstance"));
+		databaseCommonTest.addTest(new TestSystemUser("testCreateMCMUsers"));
+		databaseCommonTest.addTest(new TestMCM("testCreateInstance"));
 
-		testSuite.addTest(DatabaseCommonTest.createTestSetup());
+		testSuite.addTest(databaseCommonTest.createTestSetup());
 
 		//- Returning test suite contains all operations
 		return testSuite;

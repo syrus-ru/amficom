@@ -1,5 +1,5 @@
 /*
- * $Id: TestDomain.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: TestDomain.java,v 1.3 2005/06/20 15:13:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.administration;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -15,23 +16,24 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 15:13:53 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestDomain extends DatabaseCommonTest {
+public final class TestDomain extends TestCase {
 
 	public TestDomain(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		addTestSuite(TestDomain.class);
-		return createTestSetup();
+		DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
+		databaseCommonTest.addTestSuite(TestDomain.class);
+		return databaseCommonTest.createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		final Domain domain = Domain.createInstance(creatorUser.getId(),
+		final Domain domain = Domain.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				Identifier.VOID_IDENTIFIER,
 				"Корневой домен",
 				"Первый домен в иерархии");

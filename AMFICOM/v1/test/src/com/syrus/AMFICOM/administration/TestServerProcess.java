@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.8 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.9 2005/06/20 15:13:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -26,19 +27,20 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/20 15:13:53 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestServerProcess extends DatabaseCommonTest {
+public final class TestServerProcess extends TestCase {
 
 	public TestServerProcess(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		addTestSuite(TestServerProcess.class);
-		return createTestSetup();
+		DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
+		databaseCommonTest.addTestSuite(TestServerProcess.class);
+		return databaseCommonTest.createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -83,7 +85,7 @@ public final class TestServerProcess extends DatabaseCommonTest {
 		cc.addCondition(tc1);
 
 		final Set users = StorableObjectPool.getStorableObjectsByCondition(cc, true);
-		final Map usersMap = new HashMap(users.size());
+		final Map<String, SystemUser> usersMap = new HashMap<String, SystemUser>(users.size());
 		for (Iterator it = users.iterator(); it.hasNext();) {
 			final SystemUser user = (SystemUser) it.next();
 			System.out.println("User: " + user.getId() + ", " + user.getLogin());
@@ -93,40 +95,40 @@ public final class TestServerProcess extends DatabaseCommonTest {
 		SystemUser user;
 
 		//	login process
-		user = (SystemUser) usersMap.get(SystemUserWrapper.LOGINPROCESSOR_LOGIN);
-		ServerProcess.createInstance(creatorUser.getId(),
+		user = usersMap.get(SystemUserWrapper.LOGINPROCESSOR_LOGIN);
+		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				ServerProcessWrapper.LOGIN_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
 				"Login process");
 
 //	event process
-		user = (SystemUser) usersMap.get(SystemUserWrapper.EVENTPROCESSOR_LOGIN);
-		ServerProcess.createInstance(creatorUser.getId(),
+		user = usersMap.get(SystemUserWrapper.EVENTPROCESSOR_LOGIN);
+		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
 				"Event process");
 
 //	mserver process
-		user = (SystemUser) usersMap.get(SystemUserWrapper.MSERVER_LOGIN);
-		ServerProcess.createInstance(creatorUser.getId(),
+		user = usersMap.get(SystemUserWrapper.MSERVER_LOGIN);
+		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
 				"Measurement Server");
 
 //	cmserver process
-		user = (SystemUser) usersMap.get(SystemUserWrapper.CMSERVER_LOGIN);
-		ServerProcess.createInstance(creatorUser.getId(),
+		user = usersMap.get(SystemUserWrapper.CMSERVER_LOGIN);
+		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),
 				"Client Measurement Server");
 
 //	mscharserver process
-		user = (SystemUser) usersMap.get(SystemUserWrapper.MSCHARSERVER_LOGIN);
-		ServerProcess.createInstance(creatorUser.getId(),
+		user = usersMap.get(SystemUserWrapper.MSCHARSERVER_LOGIN);
+		ServerProcess.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME,
 				server.getId(),
 				user.getId(),

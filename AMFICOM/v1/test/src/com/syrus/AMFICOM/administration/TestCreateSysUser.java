@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateSysUser.java,v 1.1 2005/06/19 18:42:45 arseniy Exp $
+ * $Id: TestCreateSysUser.java,v 1.2 2005/06/20 15:13:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommonTest;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
@@ -33,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/19 18:42:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/20 15:13:53 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -61,7 +62,7 @@ public final class TestCreateSysUser extends TestCase {
 	}
 
 	static void oneTimeSetUp() {
-		Application.init(DatabaseCommonTest.APPLICATION_NAME);
+		Application.init(CommonTest.APPLICATION_NAME);
 		DatabaseCommonTest.establishDatabaseConnection();
 		IdentifierPool.init(new DatabaseIdentifierGeneratorServer(), 1);
 	}

@@ -1,10 +1,11 @@
 /*
- * $Id: TestMCM.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestMCM.java,v 1.3 2005/06/20 15:13:53 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -15,19 +16,20 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 15:13:53 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestMCM extends DatabaseCommonTest {
+public final class TestMCM extends TestCase {
 
 	public TestMCM(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		addTestSuite(TestMCM.class);
-		return createTestSetup();
+		DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
+		databaseCommonTest.addTestSuite(TestMCM.class);
+		return databaseCommonTest.createTestSetup();
 	}
 
 public void testCreateInstance() throws ApplicationException {
@@ -43,7 +45,7 @@ public void testCreateInstance() throws ApplicationException {
 		System.out.println("User '" + mcmUser.getId() + "'");
 
 		final String hostname = "mongol";
-		final MCM mcm = MCM.createInstance(creatorUser.getId(),
+		final MCM mcm = MCM.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				server.getDomainId(),
 				"МУИ",
 				"Управляет измерениями",

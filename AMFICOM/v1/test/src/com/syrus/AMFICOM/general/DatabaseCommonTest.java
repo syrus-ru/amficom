@@ -1,16 +1,11 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.1 2005/06/19 18:41:00 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.2 2005/06/20 15:13:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
-
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
@@ -66,56 +61,28 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/19 18:41:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/20 15:13:54 $
  * @author $Author: arseniy $
  * @module test
  */
-public abstract class DatabaseCommonTest extends TestCase {
-	public static final String APPLICATION_NAME = "test";
+public class DatabaseCommonTest extends CommonTest {
 	public static final String KEY_DB_HOST_NAME = "DBHostName";
 	public static final String KEY_DB_SID = "DBSID";
 	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_SERVER_HOST_NAME = "ServerHostName";
 
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
-	public static final String SERVER_HOST_NAME = "localhost";
 
-	protected static SystemUser creatorUser;
-
-	private static final TestSuite TEST_SUITE = new TestSuite();
+	private static SystemUser sysUser;
 
 
-	public DatabaseCommonTest(String name) {
-		super(name);
+	public static SystemUser getSysUser() {
+		return sysUser;
 	}
 
-	public static void addTest(final Test test) {
-		TEST_SUITE.addTest(test);
-	}
-
-	public static void addTestSuite(final Class testClass) {
-		TEST_SUITE.addTestSuite(testClass);
-	}
-
-	public static TestSetup createTestSetup() {
-		TestSetup testSetup = new TestSetup(TEST_SUITE) {
-
-			protected void setUp() {
-				oneTimeSetUp();
-			}
-
-			protected void tearDown() {
-				oneTimeTearDown();
-			}
-
-		};
-		return testSetup;
-	}
-
-	static void oneTimeSetUp() {
+	void oneTimeSetUp() {
 		Application.init(APPLICATION_NAME);
 		establishDatabaseConnection();
 		initDatabaseContext();
@@ -123,7 +90,7 @@ public abstract class DatabaseCommonTest extends TestCase {
 		initIdentifierPool();
 	}
 
-	static void oneTimeTearDown() {
+	void oneTimeTearDown() {
 		DatabaseConnection.closeConnection();
 	}
 
@@ -137,7 +104,7 @@ public abstract class DatabaseCommonTest extends TestCase {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-			System.exit(-1);
+			System.exit(0);
 		}
 	}
 
@@ -194,13 +161,12 @@ public abstract class DatabaseCommonTest extends TestCase {
 	private static void initStorableObjectPools() {
 		try {
 			SystemUserDatabase userDatabase = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-			SystemUser sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
-			creatorUser = sysUser;
+			sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
 			DatabaseObjectLoader.init(sysUser.getId());
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			fail(ae.getMessage());
+			System.exit(0);
 		}
 		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), StorableObjectResizableLRUMap.class);
 		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), StorableObjectResizableLRUMap.class);
