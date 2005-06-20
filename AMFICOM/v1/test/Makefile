@@ -1,16 +1,15 @@
 # Simple Makefile to compile single test class
 
-#TEST_CLASS = TestInitialSetup
-#TEST_PACKAGE = com.syrus.AMFICOM.setup
-TEST_CLASS=TestSystemUser
-TEST_PACKAGE=com.syrus.AMFICOM.administration
+TEST_CLASS = TestInitialSetup
+TEST_PACKAGE = com.syrus.AMFICOM.setup
+#TEST_CLASS=TestServer
+#TEST_PACKAGE=com.syrus.AMFICOM.administration
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
 
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4.2
+JAVAC=javac
+
 ENCODING=KOI8-R
 
 include ../tools/Makefile.inc
