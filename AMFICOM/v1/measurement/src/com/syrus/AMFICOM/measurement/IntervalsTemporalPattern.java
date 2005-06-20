@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.22 2005/06/17 13:06:57 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.23 2005/06/20 17:29:55 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.Undoable;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Duration;
 import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Temporal_Pattern_Id;
 import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
@@ -41,20 +40,20 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/06/17 13:06:57 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
-public class IntervalsTemporalPattern extends AbstractTemporalPattern implements Undoable {
+public final class IntervalsTemporalPattern extends AbstractTemporalPattern implements Undoable {
 
 	private static final long serialVersionUID = 3257567312898175032L;
 
 	/** SortedMap <Long milliseconds, Identifier <AbstractTemporalPattern>> */
-	private SortedMap intervalsAbstractTemporalPatternMap;
+	private SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap;
 
 	/** SortedMap <Long milliseconds, Long duration> */
-	private SortedMap intervalsDuration;
+	private SortedMap<Long, Long> intervalsDuration;
 
 	private String name;
 
@@ -265,7 +264,7 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 		}
 	}
 
-	public void addIntervalItems(final Map offsetId, final Map durations) throws IllegalDataException {
+	public void addIntervalItems(final Map offsetId, final Map<?, Long> durations) throws IllegalDataException {
 		/* save state before */
 		this.saveState();
 
@@ -451,20 +450,20 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public IDLEntity getTransferable() {
+	public IntervalsTemporalPattern_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		ITP_Interval_Temporal_Pattern_Id[] intervalTemporalPatternsIdT;
 		ITP_Interval_Duration[] durationsT;
 		{
-			final java.util.Set keys = this.intervalsAbstractTemporalPatternMap.keySet();
+			final Set<Long> keys = this.intervalsAbstractTemporalPatternMap.keySet();
 			intervalTemporalPatternsIdT = new ITP_Interval_Temporal_Pattern_Id[keys.size()];
 			int i = 0;
-			for (Iterator it = keys.iterator(); it.hasNext(); i++) {
-				Long ms = (Long) it.next();
-				Identifier temporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(ms);
+			for (Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
+				Long ms = it.next();
+				Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
 				intervalTemporalPatternsIdT[i] = new ITP_Interval_Temporal_Pattern_Id(ms.longValue(),
-						(IdlIdentifier) temporalPatternId.getTransferable());
+						temporalPatternId.getTransferable());
 			}
 		}
 
@@ -472,12 +471,12 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 			if (this.intervalsDuration == null) {
 				durationsT = new ITP_Interval_Duration[0];
 			} else {
-				java.util.Set keys = this.intervalsDuration.keySet();
+				Set<Long> keys = this.intervalsDuration.keySet();
 				durationsT = new ITP_Interval_Duration[keys.size()];
 				int i = 0;
-				for (Iterator it = keys.iterator(); it.hasNext(); i++) {
-					Long ms = (Long) it.next();
-					Long duration = (Long) this.intervalsDuration.get(ms);
+				for (Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
+					Long ms = it.next();
+					Long duration = this.intervalsDuration.get(ms);
 					durationsT[i] = new ITP_Interval_Duration(ms.longValue(), duration.longValue());
 				}
 
@@ -768,8 +767,8 @@ public class IntervalsTemporalPattern extends AbstractTemporalPattern implements
 				case ObjectEntities.INTERVALSTEMPORALPATTERN_CODE:
 					IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
-					SortedMap intervalsAbstractTemporalPatternMap2 = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
-					SortedMap intervalsDuration2 = intervalsTemporalPattern.getIntervalsDuration();
+					SortedMap<?, Identifier> intervalsAbstractTemporalPatternMap2 = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
+					SortedMap<?, Long> intervalsDuration2 = intervalsTemporalPattern.getIntervalsDuration();
 
 					for (Iterator iterator = intervalsAbstractTemporalPatternMap2.keySet().iterator(); iterator.hasNext();) {
 						Long offset2 = (Long) iterator.next();

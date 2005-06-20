@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.46 2005/06/17 13:06:55 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.47 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,13 +40,13 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.47 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
  * @todo make 'sort' transient (update database scheme as well)
  */
-public class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable {
+public final class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable {
 
 	/** тоннель */
 	public static final String DEFAULT_TUNNEL = "tunnel";
@@ -68,7 +68,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	private transient PhysicalLinkTypeSort sort;
 	
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	private String name;
 
@@ -175,7 +175,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		return Collections.EMPTY_SET;
 	}
 
-	public IDLEntity getTransferable() {
+	public PhysicalLinkType_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return new PhysicalLinkType_Transferable(super.getHeaderTransferable(),
 				this.codename,

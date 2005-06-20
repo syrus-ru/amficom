@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.20 2005/06/17 12:38:52 bass Exp $
+ * $Id: Marker.java,v 1.21 2005/06/20 17:30:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.20 $, $Date: 2005/06/17 12:38:52 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/20 17:30:17 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -487,8 +487,7 @@ public class Marker extends AbstractNode
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public IDLEntity getTransferable()
-	{
+	public final IDLEntity getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 

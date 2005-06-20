@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.11 2005/06/17 12:38:56 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.12 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,12 +38,12 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class CronTemporalPattern extends AbstractTemporalPattern {
+public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -930,7 +930,7 @@ public class CronTemporalPattern extends AbstractTemporalPattern {
 
 	}
 	
-	public IDLEntity getTransferable() {
+	public CronTemporalPattern_Transferable getTransferable() {
 		return new CronTemporalPattern_Transferable(super.getHeaderTransferable(), this.description, getCronStrings());
 	}
 

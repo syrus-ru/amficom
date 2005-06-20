@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.2 2005/06/17 11:01:06 bass Exp $
+ * $Id: SystemUser.java,v 1.3 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -113,7 +113,7 @@ public final class SystemUser extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public SystemUser_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new SystemUser_Transferable(super.getHeaderTransferable(),
 				this.login,

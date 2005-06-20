@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.17 2005/06/17 12:38:52 bass Exp $
+ * $Id: UnboundLink.java,v 1.18 2005/06/20 17:30:17 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,6 @@ package com.syrus.AMFICOM.mapview;
 
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -24,17 +22,17 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
 /**
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/06/17 12:38:52 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/20 17:30:17 $
  * @module mapviewclient_v1
  */
-public class UnboundLink extends PhysicalLink
-{
+public final class UnboundLink extends PhysicalLink {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -146,9 +144,8 @@ public class UnboundLink extends PhysicalLink
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public IDLEntity getTransferable()
-	{
+	@Override
+	public PhysicalLink_Transferable getTransferable() {
 		throw new UnsupportedOperationException();
 	}
-
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.76 2005/06/17 13:06:57 bass Exp $
+ * $Id: AnalysisType.java,v 1.77 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -31,12 +32,12 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/06/17 13:06:57 $
+ * @version $Revision: 1.77 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class AnalysisType extends ActionType {
+public final class AnalysisType extends ActionType {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -44,12 +45,12 @@ public class AnalysisType extends ActionType {
 
 	public static final String CODENAME_DADARA = "dadara";
 
-	private java.util.Set inParameterTypeIds;
-	private java.util.Set criteriaParameterTypeIds;
-	private java.util.Set etalonParameterTypeIds;
-	private java.util.Set outParameterTypeIds;
+	private Set<Identifier> inParameterTypeIds;
+	private Set<Identifier> criteriaParameterTypeIds;
+	private Set<Identifier> etalonParameterTypeIds;
+	private Set<Identifier> outParameterTypeIds;
 
-	private java.util.Set measurementTypeIds;
+	private Set<Identifier> measurementTypeIds;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -187,7 +188,7 @@ public class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public AnalysisType_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);

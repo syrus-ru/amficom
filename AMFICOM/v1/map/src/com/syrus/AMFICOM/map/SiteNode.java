@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.46 2005/06/17 13:06:55 bass Exp $
+ * $Id: SiteNode.java,v 1.47 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
@@ -55,7 +54,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.47 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -219,7 +218,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		return dependencies;
 	}
 
-	public IDLEntity getTransferable() {
+	public SiteNode_Transferable getTransferable() {
 		int i = 0;
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
@@ -228,8 +227,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				this.description,
 				this.location.getX(),
 				this.location.getY(),
-				(IdlIdentifier) this.imageId.getTransferable(),
-				(IdlIdentifier) this.type.getId().getTransferable(),
+				this.imageId.getTransferable(),
+				this.type.getId().getTransferable(),
 				this.city,
 				this.street,
 				this.building,

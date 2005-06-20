@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.41 2005/06/20 13:56:52 max Exp $
+ * $Id: Characteristic.java,v 1.42 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,12 +17,12 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/20 13:56:52 $
- * @author $Author: max $
+ * @version $Revision: 1.42 $, $Date: 2005/06/20 17:29:37 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
-public class Characteristic extends StorableObject implements TypedObject {
+public final class Characteristic extends StorableObject implements TypedObject {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;
@@ -171,7 +171,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Characteristic_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Characteristic_Transferable(super.getHeaderTransferable(),

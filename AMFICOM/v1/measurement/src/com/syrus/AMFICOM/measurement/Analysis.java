@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.67 2005/06/17 20:46:25 arseniy Exp $
+ * $Id: Analysis.java,v 1.68 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,17 +25,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/06/17 20:46:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/06/20 17:29:55 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class Analysis extends Action {
+public final class Analysis extends Action {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -115,17 +114,17 @@ public class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Analysis_Transferable getTransferable() {
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return new Analysis_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) super.type.getId().getTransferable(),
-				(IdlIdentifier) super.monitoredElementId.getTransferable(),
-				(super.parentAction != null) ? (IdlIdentifier) super.parentAction.getId().getTransferable()
-						: (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable(),
+				super.type.getId().getTransferable(),
+				super.monitoredElementId.getTransferable(),
+				(super.parentAction != null) ? super.parentAction.getId().getTransferable()
+						: Identifier.VOID_IDENTIFIER.getTransferable(),
 				this.name != null ? this.name : "",
-				(IdlIdentifier) this.criteriaSet.getId().getTransferable());
+				this.criteriaSet.getId().getTransferable());
 	}
 	
 	/**

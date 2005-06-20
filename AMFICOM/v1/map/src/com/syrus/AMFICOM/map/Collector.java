@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.49 2005/06/17 13:06:55 bass Exp $
+ * $Id: Collector.java,v 1.50 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,10 +43,10 @@ import com.syrus.AMFICOM.map.corba.Collector_Transferable;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.50 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  */
-public class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
+public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -67,8 +67,8 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 	private String name;
 	private String description;
 
-	private Set physicalLinks;
-	private Set characteristics;
+	private Set<PhysicalLink> physicalLinks;
+	private Set<Characteristic> characteristics;
 
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
@@ -158,7 +158,7 @@ public class Collector extends StorableObject implements MapElement, XMLBeansTra
 		return dependencies;
 	}
 
-	public IDLEntity getTransferable() {
+	public Collector_Transferable getTransferable() {
 		IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return new Collector_Transferable(super.getHeaderTransferable(), this.name, this.description, physicalLinkIds, charIds);

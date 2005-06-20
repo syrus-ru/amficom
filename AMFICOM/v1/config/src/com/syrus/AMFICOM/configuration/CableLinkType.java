@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.46 2005/06/17 13:06:56 bass Exp $
+ * $Id: CableLinkType.java,v 1.47 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.47 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -49,7 +49,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	private String manufacturerCode;
 	private Identifier imageId;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	CableLinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -156,7 +156,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
-	public IDLEntity getTransferable() {
+	public CableLinkType_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new CableLinkType_Transferable(super.getHeaderTransferable(),
@@ -166,7 +166,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 				LinkTypeSort.from_int(this.sort),
 				this.manufacturer,
 				this.manufacturerCode,
-				(IdlIdentifier) this.imageId.getTransferable(),
+				this.imageId.getTransferable(),
 				charIds);
 	}
 

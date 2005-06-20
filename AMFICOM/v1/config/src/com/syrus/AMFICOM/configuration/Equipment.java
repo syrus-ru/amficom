@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.96 2005/06/17 13:06:56 bass Exp $
+ * $Id: Equipment.java,v 1.97 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.97 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -61,7 +61,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	private String swVersion;
 	private String inventoryNumber;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	Equipment(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -220,12 +220,12 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IDLEntity getTransferable() {
+	public Equipment_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Equipment_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.getDomainId().getTransferable(),
-				(IdlIdentifier) this.type.getId().getTransferable(),
+				this.getDomainId().getTransferable(),
+				this.type.getId().getTransferable(),
 				this.name != null ? this.name : "",
 				this.description != null ? this.description : "",
 				this.supplier != null ? this.supplier : "",
@@ -237,7 +237,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 				this.swSerial != null ? this.swSerial : "",
 				this.swVersion != null ? this.swVersion : "",
 				this.inventoryNumber != null ? this.inventoryNumber : "",
-				(IdlIdentifier) this.imageId.getTransferable(),
+				this.imageId.getTransferable(),
 				charIds);
 	}
 

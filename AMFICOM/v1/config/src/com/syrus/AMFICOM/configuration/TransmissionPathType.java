@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.53 2005/06/17 13:06:56 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.54 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,18 +35,18 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.54 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class TransmissionPathType extends StorableObjectType implements Characterizable, Namable {
+public final class TransmissionPathType extends StorableObjectType implements Characterizable, Namable {
 
 	private static final long serialVersionUID = 5311725679846973948L;
 
 	private String name;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	TransmissionPathType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -130,7 +130,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IDLEntity getTransferable() {
+	public TransmissionPathType_Transferable getTransferable() {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new TransmissionPathType_Transferable(super.getHeaderTransferable(),

@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.47 2005/06/17 13:06:57 bass Exp $
+ * $Id: Modeling.java,v 1.48 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,17 +25,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/06/17 13:06:57 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
  */
-public class Modeling extends Action {
+public final class Modeling extends Action {
 	
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -114,14 +113,14 @@ public class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Modeling_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new Modeling_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) super.type.getId().getTransferable(),
-				(IdlIdentifier) super.monitoredElementId.getTransferable(),
+				super.type.getId().getTransferable(),
+				super.monitoredElementId.getTransferable(),
 				this.name,
-				(IdlIdentifier) this.argumentSet.getId().getTransferable());
+				this.argumentSet.getId().getTransferable());
 	}
 
 	public short getEntityCode() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.2 2005/05/23 16:18:43 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.3 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,22 +10,22 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoSwitch_Transferable;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/05/23 16:18:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoSwitch extends AbstractCloneableStorableObject {
 	private static final long serialVersionUID = 2583191675321445786L;
 
-	SchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch_Transferable transferable) throws CreateObjectException {
+	@SuppressWarnings("unusedThrown")
+	SchemeOptimizeInfoSwitch(@SuppressWarnings("unusedArgument") final SchemeOptimizeInfoSwitch_Transferable transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -33,15 +33,16 @@ public final class SchemeOptimizeInfoSwitch extends AbstractCloneableStorableObj
 		throw new UnsupportedOperationException();
 	}
 
-	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
+	public void setParentSchemeOptimizeInfo(@SuppressWarnings("unusedArgument") final SchemeOptimizeInfo schemeOptimizeInfo) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
-	public IDLEntity getTransferable() {
+	public SchemeOptimizeInfoSwitch_Transferable getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 }

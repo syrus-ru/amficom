@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.85 2005/06/17 13:06:56 bass Exp $
+ * $Id: KIS.java,v 1.86 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.86 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -55,7 +55,7 @@ public final class KIS extends DomainMember implements Characterizable {
 	private String hostname;
 	private short tcpPort;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	KIS(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -165,17 +165,17 @@ public final class KIS extends DomainMember implements Characterizable {
 
 	}
 
-	public IDLEntity getTransferable() {
+	public KIS_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new KIS_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.getDomainId().getTransferable(),
+				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				this.hostname,
 				this.tcpPort,
-				(IdlIdentifier) this.equipmentId.getTransferable(),
-				(IdlIdentifier) this.mcmId.getTransferable(),
+				this.equipmentId.getTransferable(),
+				this.mcmId.getTransferable(),
 				charIds);
 	}
 

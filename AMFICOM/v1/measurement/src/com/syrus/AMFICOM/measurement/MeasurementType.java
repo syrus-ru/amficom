@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.79 2005/06/17 13:06:57 bass Exp $
+ * $Id: MeasurementType.java,v 1.80 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -32,12 +33,12 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/06/17 13:06:57 $
+ * @version $Revision: 1.80 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class MeasurementType extends ActionType implements Namable {
+public final class MeasurementType extends ActionType implements Namable {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -45,9 +46,9 @@ public class MeasurementType extends ActionType implements Namable {
 
 	public static final String CODENAME_REFLECTOMETRY = "reflectometry";
 
-	private java.util.Set inParameterTypeIds;
-	private java.util.Set outParameterTypeIds;
-	private java.util.Set measurementPortTypeIds;
+	private Set<Identifier> inParameterTypeIds;
+	private Set<Identifier> outParameterTypeIds;
+	private Set<Identifier> measurementPortTypeIds;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -163,7 +164,7 @@ public class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public MeasurementType_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);

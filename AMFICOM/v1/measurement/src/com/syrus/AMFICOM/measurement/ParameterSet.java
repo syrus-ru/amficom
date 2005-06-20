@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.4 2005/06/17 13:06:57 bass Exp $
+ * $Id: ParameterSet.java,v 1.5 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.Para
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/17 13:06:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -49,7 +50,7 @@ public final class ParameterSet extends StorableObject {
 	private String description;
 	private Parameter[] parameters;
 
-	private java.util.Set monitoredElementIds;
+	private Set<Identifier> monitoredElementIds;
 
 	protected static final String ID_MONITORED_ELEMENTS_IDS = "monitoredElementId"+KEY_VALUE_SEPERATOR;
 	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
@@ -166,12 +167,12 @@ public final class ParameterSet extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public ParameterSet_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
-			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
+			pts[i] = this.parameters[i].getTransferable();
 
 		IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		return new ParameterSet_Transferable(super.getHeaderTransferable(),

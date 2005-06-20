@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.36 2005/06/17 13:06:54 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.37 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
 import com.syrus.util.Log;
 
@@ -41,7 +40,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -64,7 +63,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	private SchemeCableThreadDatabase schemeCableThreadDatabase;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	/**
 	 * @param id
@@ -328,15 +327,15 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public SchemeCableThread_Transferable getTransferable() {
 		return new SchemeCableThread_Transferable(
 				super.getHeaderTransferable(), this.name,
 				this.description,
-				(IdlIdentifier) this.cableThreadTypeId.getTransferable(),
-				(IdlIdentifier) this.linkId.getTransferable(),
-				(IdlIdentifier) this.sourceSchemePortId.getTransferable(),
-				(IdlIdentifier) this.targetSchemePortId.getTransferable(),
-				(IdlIdentifier) this.parentSchemeCableLinkId.getTransferable(),
+				this.cableThreadTypeId.getTransferable(),
+				this.linkId.getTransferable(),
+				this.sourceSchemePortId.getTransferable(),
+				this.targetSchemePortId.getTransferable(),
+				this.parentSchemeCableLinkId.getTransferable(),
 				Identifier.createTransferables(this.characteristics));
 	}
 

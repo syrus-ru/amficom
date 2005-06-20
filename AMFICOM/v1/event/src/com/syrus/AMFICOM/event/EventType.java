@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.30 2005/06/17 13:06:53 bass Exp $
+ * $Id: EventType.java,v 1.31 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/17 13:06:53 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -47,8 +47,8 @@ public final class EventType extends StorableObjectType {
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
-	private Set parameterTypeIds;
-	private Map userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
+	private Set<Identifier> parameterTypeIds;
+	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
 //	private Set userIds;
 
 	EventType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -159,7 +159,7 @@ public final class EventType extends StorableObjectType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public IDLEntity getTransferable() {
+	public EventType_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
@@ -167,15 +167,15 @@ public final class EventType extends StorableObjectType {
 		final ETUserAlertKinds[] userAlertKindsT = new ETUserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
 		i = 0;
-		for (final Iterator it1 = this.userAlertKindsMap.keySet().iterator(); it1.hasNext(); i++) {
-			final Identifier userId = (Identifier) it1.next();
-			final Set userAlertKinds = (Set) this.userAlertKindsMap.get(userId);
+		for (final Iterator<Identifier> it1 = this.userAlertKindsMap.keySet().iterator(); it1.hasNext(); i++) {
+			final Identifier userId = it1.next();
+			final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
 			final AlertKind[] alertKindsT = new AlertKind[userAlertKinds.size()];
 			j = 0;
-			for (final Iterator it2 = userAlertKinds.iterator(); it2.hasNext(); j++) {
-				alertKindsT[j] = (AlertKind) it2.next();
+			for (final Iterator<AlertKind> it2 = userAlertKinds.iterator(); it2.hasNext(); j++) {
+				alertKindsT[j] = it2.next();
 			}
-			userAlertKindsT[i] = new ETUserAlertKinds((IdlIdentifier) userId.getTransferable(), alertKindsT);
+			userAlertKindsT[i] = new ETUserAlertKinds(userId.getTransferable(), alertKindsT);
 		}
 
 		return new EventType_Transferable(

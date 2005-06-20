@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.37 2005/06/17 13:06:54 bass Exp $
+ * $Id: SchemeElement.java,v 1.38 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -43,7 +42,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -535,20 +534,20 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public SchemeElement_Transferable getTransferable() {
 		return new SchemeElement_Transferable(getHeaderTransferable(),
 				super.getName(),
 				super.getDescription(),
 				this.label,
-				(IdlIdentifier) this.equipmentTypeId.getTransferable(),
-				(IdlIdentifier) this.equipmentId.getTransferable(),
-				(IdlIdentifier) this.kisId.getTransferable(),
-				(IdlIdentifier) this.siteNodeId.getTransferable(),
-				(IdlIdentifier) this.symbolId.getTransferable(),
-				(IdlIdentifier) this.ugoCellId.getTransferable(),
-				(IdlIdentifier) this.schemeCellId.getTransferable(),
-				(IdlIdentifier) super.parentSchemeId.getTransferable(),
-				(IdlIdentifier) this.parentSchemeElementId.getTransferable(),
+				this.equipmentTypeId.getTransferable(),
+				this.equipmentId.getTransferable(),
+				this.kisId.getTransferable(),
+				this.siteNodeId.getTransferable(),
+				this.symbolId.getTransferable(),
+				this.ugoCellId.getTransferable(),
+				this.schemeCellId.getTransferable(),
+				super.parentSchemeId.getTransferable(),
+				this.parentSchemeElementId.getTransferable(),
 				Identifier.createTransferables(super.getCharacteristics()));
 	}
 

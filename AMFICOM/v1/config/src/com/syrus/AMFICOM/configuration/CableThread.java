@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.29 2005/06/17 13:06:56 bass Exp $
+ * $Id: CableThread.java,v 1.30 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,14 +29,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.30 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module config_v1
  */
-public class CableThread extends DomainMember implements TypedObject {
+public final class CableThread extends DomainMember implements TypedObject {
 
 	private static final long serialVersionUID = 3258415027823063600L;
 
@@ -118,12 +117,12 @@ public class CableThread extends DomainMember implements TypedObject {
 		this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
 	}
 
-	public IDLEntity getTransferable() {
+	public CableThread_Transferable getTransferable() {
 		return new CableThread_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.getDomainId().getTransferable(),
+				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
-				(IdlIdentifier) this.type.getId().getTransferable());
+				this.type.getId().getTransferable());
 	}
 
 	protected synchronized void setAttributes(final Date created,

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.65 2005/06/17 13:06:55 bass Exp $
+ * $Id: PhysicalLink.java,v 1.66 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.66 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -103,7 +103,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	private boolean leftToRight;
 	private boolean topToBottom;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	private transient List nodeLinks = null;
 	protected transient boolean selected = false;
@@ -282,16 +282,16 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		return Collections.singleton(this.physicalLinkType);
 	}
 
-	public IDLEntity getTransferable() {
+	public PhysicalLink_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
 
 		return new PhysicalLink_Transferable(super.getHeaderTransferable(),
 				this.name,
 				this.description,
-				(IdlIdentifier) this.physicalLinkType.getId().getTransferable(),
-				(IdlIdentifier) this.startNode.getId().getTransferable(),
-				(IdlIdentifier) this.endNode.getId().getTransferable(),
+				this.physicalLinkType.getId().getTransferable(),
+				this.startNode.getId().getTransferable(),
+				this.endNode.getId().getTransferable(),
 				this.city,
 				this.street,
 				this.building,

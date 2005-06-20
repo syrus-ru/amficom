@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.39 2005/06/17 13:06:55 bass Exp $
+ * $Id: SiteNodeType.java,v 1.40 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,11 +41,11 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
-public class SiteNodeType extends StorableObjectType implements Characterizable, Namable {
+public final class SiteNodeType extends StorableObjectType implements Characterizable, Namable {
 
 	public static final String DEFAULT_WELL = "well";
 	public static final String DEFAULT_PIQUET = "piquet";
@@ -60,7 +60,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 	 */
 	private static final long serialVersionUID = 3690481316080464696L;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	private Identifier imageId;
 	private String name;
@@ -175,13 +175,13 @@ public class SiteNodeType extends StorableObjectType implements Characterizable,
 		return this.name;
 	}
 
-	public IDLEntity getTransferable() {
+	public SiteNodeType_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return new SiteNodeType_Transferable(super.getHeaderTransferable(),
 				this.codename,
 				this.name,
 				this.description,
-				(IdlIdentifier) this.imageId.getTransferable(),
+				this.imageId.getTransferable(),
 				this.topological,
 				charIds);
 	}

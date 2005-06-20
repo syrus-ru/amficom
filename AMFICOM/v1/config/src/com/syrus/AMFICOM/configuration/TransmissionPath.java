@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.70 2005/06/17 13:06:56 bass Exp $
+ * $Id: TransmissionPath.java,v 1.71 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,12 +35,12 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
- * @version $Revision: 1.70 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.71 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class TransmissionPath extends DomainMember implements MonitoredDomainMember, Characterizable, TypedObject {
+public final class TransmissionPath extends DomainMember implements MonitoredDomainMember, Characterizable, TypedObject {
 
 	private static final long serialVersionUID = 8129503678304843903L;
 
@@ -50,7 +50,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	private Identifier startPortId;
 	private Identifier finishPortId;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	TransmissionPath(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -149,16 +149,16 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IDLEntity getTransferable() {
+	public TransmissionPath_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.getDomainId().getTransferable(),
+				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
-				(IdlIdentifier) this.type.getId().getTransferable(),
-				(IdlIdentifier) this.startPortId.getTransferable(),
-				(IdlIdentifier) this.finishPortId.getTransferable(),
+				this.type.getId().getTransferable(),
+				this.startPortId.getTransferable(),
+				this.finishPortId.getTransferable(),
 				charIds);
 	}
 

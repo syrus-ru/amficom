@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.38 2005/06/17 13:06:54 bass Exp $
+ * $Id: Scheme.java,v 1.39 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -43,7 +42,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -421,19 +420,19 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public Scheme_Transferable getTransferable() {
 		/*
 		 * domainId is assumed to be non-null.
 		 */
 		return new Scheme_Transferable(super.getHeaderTransferable(),
 				this.name, this.description, this.label,
 				this.width, this.height, this.kind,
-				(IdlIdentifier) super.getDomainId().getTransferable(),
-				(IdlIdentifier) this.mapId.getTransferable(),
-				(IdlIdentifier) this.symbolId.getTransferable(),
-				(IdlIdentifier) this.ugoCellId.getTransferable(),
-				(IdlIdentifier) this.schemeCellId.getTransferable(),
-				(IdlIdentifier) this.parentSchemeElementId.getTransferable());
+				super.getDomainId().getTransferable(),
+				this.mapId.getTransferable(),
+				this.symbolId.getTransferable(),
+				this.ugoCellId.getTransferable(),
+				this.schemeCellId.getTransferable(),
+				this.parentSchemeElementId.getTransferable());
 	}
 
 	/**

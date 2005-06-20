@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.36 2005/06/17 17:26:16 arseniy Exp $
+ * $Id: Domain.java,v 1.37 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/17 17:26:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/06/20 17:29:36 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -36,15 +36,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
-public class Domain extends DomainMember implements Characterizable {
+public final class Domain extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 6401785674412391641L;
 
 	private String name;
 	private String description;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -118,10 +117,10 @@ public class Domain extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Domain_Transferable getTransferable() {
 		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new Domain_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) super.domainId.getTransferable(),
+				super.domainId.getTransferable(),
 				this.name,
 				this.description,
 				Identifier.createTransferables(this.characteristics));

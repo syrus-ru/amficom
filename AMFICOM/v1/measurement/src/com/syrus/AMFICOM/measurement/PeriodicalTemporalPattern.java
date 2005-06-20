@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.9 2005/06/17 12:38:56 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.10 2005/06/20 17:29:55 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
-public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
+public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 
 	private static final long	serialVersionUID	= 3257567312898175032L;
 	
@@ -138,7 +138,7 @@ public class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public PeriodicalTemporalPattern_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		return new PeriodicalTemporalPattern_Transferable(super.getHeaderTransferable(), this.period);

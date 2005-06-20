@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.35 2005/06/20 14:34:16 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.36 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,6 @@
  */
 
 package com.syrus.AMFICOM.general;
-
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.LinkedIdsCondition_Transferable;
-import com.syrus.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +17,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.LinkedIdsCondition_Transferable;
+import com.syrus.util.Log;
 
 /**
  * If one needs to write a implementation for <code>LinkedIdsCondition</code>
@@ -67,8 +65,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/06/20 14:34:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/20 17:29:37 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -299,7 +297,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 *
 	 * @see StorableObjectCondition#getTransferable()
 	 */
-	public final IDLEntity getTransferable() {
+	public final StorableObjectCondition_Transferable getTransferable() {
 		IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIds.size()];
 		int i = 0;
 		for (Iterator<Identifier> it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)

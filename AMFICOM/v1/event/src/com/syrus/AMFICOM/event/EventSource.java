@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.20 2005/06/17 13:06:53 bass Exp $
+ * $Id: EventSource.java,v 1.21 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/17 13:06:53 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -103,9 +102,9 @@ public final class EventSource extends StorableObject {
 		this.sourceEntityId = new Identifier(est.source_entity_id);
 	}
 
-	public IDLEntity getTransferable() {
+	public EventSource_Transferable getTransferable() {
 		return new EventSource_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.sourceEntityId.getTransferable());
+				this.sourceEntityId.getTransferable());
 	}
 
 	public Identifier getSourceEntityId() {

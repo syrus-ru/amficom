@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.34 2005/06/17 12:38:53 bass Exp $
+ * $Id: CharacteristicType.java,v 1.35 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.Ch
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/20 17:29:37 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -134,7 +134,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public CharacteristicType_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL + ", id: '" + this.id + "'";
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
 				super.codename,
@@ -142,7 +142,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 				this.name,
 				DataType.from_int(this.dataType),
 				CharacteristicTypeSort.from_int(this.sort));
-	}	
+	}
 
 	public DataType getDataType() {
 		return DataType.from_int(this.dataType);

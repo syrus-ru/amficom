@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.28 2005/06/17 13:06:53 bass Exp $
+ * $Id: Event.java,v 1.29 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/17 13:06:53 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -49,8 +49,8 @@ public final class Event extends StorableObject implements TypedObject {
 	private EventType type;
 	private String description;
 
-	private Set eventParameters;	//Set <EventParameter>
-	private Set eventSourceIds; //Set <Identifier>
+	private Set<EventParameter> eventParameters;	//Set <EventParameter>
+	private Set<Identifier> eventSourceIds; //Set <Identifier>
 
 	Event(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -156,18 +156,18 @@ public final class Event extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public IDLEntity getTransferable() {
+	public Event_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		int i = 0;
 		EventParameter_Transferable[] ept = new EventParameter_Transferable[this.eventParameters.size()];
-		for (Iterator it = this.eventParameters.iterator(); it.hasNext(); i++)
-			ept[i] = (EventParameter_Transferable) ((EventParameter) it.next()).getTransferable();
+		for (Iterator<EventParameter> it = this.eventParameters.iterator(); it.hasNext(); i++)
+			ept[i] = it.next().getTransferable();
 
 		IdlIdentifier[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
 
 		return new Event_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.type.getId().getTransferable(),
+				this.type.getId().getTransferable(),
 				this.description,
 				ept,
 				esIdsT);

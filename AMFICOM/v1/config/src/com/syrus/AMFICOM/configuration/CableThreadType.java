@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.41 2005/06/17 13:06:56 bass Exp $
+ * $Id: CableThreadType.java,v 1.42 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * <code>CableThreadType</code>, among other fields, contain references to
@@ -38,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.41 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -146,14 +145,14 @@ public final class CableThreadType extends StorableObjectType implements Namable
 				true);
 	}
 
-	public IDLEntity getTransferable() {
+	public CableThreadType_Transferable getTransferable() {
 		return new CableThreadType_Transferable(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				this.color,
-				(IdlIdentifier) this.linkType.getId().getTransferable(),
-				(IdlIdentifier) this.cableLinkType.getId().getTransferable());
+				this.linkType.getId().getTransferable(),
+				this.cableLinkType.getId().getTransferable());
 	}
 
 	protected synchronized void setAttributes(final Date created,

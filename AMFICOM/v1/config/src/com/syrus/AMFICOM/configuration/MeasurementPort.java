@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.60 2005/06/17 13:06:56 bass Exp $
+ * $Id: MeasurementPort.java,v 1.61 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,11 +36,11 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.61 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
-public class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
+public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
 	private static final long serialVersionUID = -5100885507408715167L;
 
 	private MeasurementPortType type;
@@ -51,7 +51,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	private Identifier kisId;
 	private Identifier portId;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	MeasurementPort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -153,15 +153,15 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IDLEntity getTransferable() {
+	public MeasurementPort_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new MeasurementPort_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier)this.type.getId().getTransferable(),
+				this.type.getId().getTransferable(),
 				this.name,
 				this.description,
-				(IdlIdentifier)this.kisId.getTransferable(),
-				(IdlIdentifier)this.portId.getTransferable(),
+				this.kisId.getTransferable(),
+				this.portId.getTransferable(),
 				charIds);
 	}
 

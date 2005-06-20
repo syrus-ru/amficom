@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.63 2005/06/17 20:46:25 arseniy Exp $
+ * $Id: Result.java,v 1.64 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,12 +33,12 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/17 20:46:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/06/20 17:29:55 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class Result extends StorableObject {
+public final class Result extends StorableObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -131,22 +131,28 @@ public class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Result_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
-		for (int i = 0; i < pts.length; i++)
-			pts[i] = (Parameter_Transferable) this.parameters[i].getTransferable();
+		for (int i = 0; i < pts.length; i++) {
+			pts[i] = this.parameters[i].getTransferable();
+		}
 
-		final IdlIdentifier voidIdlIdentifier = (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable();
+		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
+		final IdlIdentifier nonVoidIdlIdentifier = this.action.getId().getTransferable();
 		return new Result_Transferable(super.getHeaderTransferable(),
-				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT) ? (IdlIdentifier) this.action.getId().getTransferable()
+				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT)
+						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,
-				(this.sort == ResultSort._RESULT_SORT_ANALYSIS) ? (IdlIdentifier) this.action.getId().getTransferable()
+				(this.sort == ResultSort._RESULT_SORT_ANALYSIS)
+						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,
-				(this.sort == ResultSort._RESULT_SORT_EVALUATION) ? (IdlIdentifier) this.action.getId().getTransferable()
+				(this.sort == ResultSort._RESULT_SORT_EVALUATION)
+						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,
-				(this.sort == ResultSort._RESULT_SORT_MODELING) ? (IdlIdentifier) this.action.getId().getTransferable()
+				(this.sort == ResultSort._RESULT_SORT_MODELING)
+						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,
 				ResultSort.from_int(this.sort),
 				pts);

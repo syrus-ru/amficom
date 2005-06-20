@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.68 2005/06/20 14:34:57 arseniy Exp $
+ * $Id: StorableObject.java,v 1.69 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.68 $, $Date: 2005/06/20 14:34:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.69 $, $Date: 2005/06/20 17:29:37 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -104,6 +104,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws ApplicationException
 	 */
+	@SuppressWarnings("unusedThrown")
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
 		this.id = new Identifier(sot.id);
@@ -327,13 +328,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return clone;
 	}
 
-	public static final StorableObject_Transferable[] createHeadersTransferable(final Collection storableObjects) {
+	public static final StorableObject_Transferable[] createHeadersTransferable(final Collection<? extends StorableObject> storableObjects) {
 		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		StorableObject_Transferable[] headersT = new StorableObject_Transferable[storableObjects.size()];
 		int i = 0;
-		for (Iterator it = storableObjects.iterator(); it.hasNext();i ++) {
-			final StorableObject storableObject = (StorableObject) it.next();
+		for (Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();i ++) {
+			final StorableObject storableObject = it.next();
 			headersT[i] = storableObject.getHeaderTransferable();
 		}
 
@@ -364,7 +365,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return <code>true</code> if all entities within this set are of
 	 *         the same type, <code>false</code> otherwise.
 	 */
-	public static final boolean hasSingleTypeEntities(final Set identifiables) {
+	public static final boolean hasSingleTypeEntities(final Set<? extends Identifiable> identifiables) {
 		/*
 		 * Nested assertions are ok.
 		 */
@@ -373,10 +374,10 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		if (identifiables.isEmpty())
 			return true;
 
-		final Iterator identifiableIterator = identifiables.iterator();
-		final short entityCode = ((Identifiable) identifiableIterator.next()).getId().getMajor();
+		final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator();
+		final short entityCode = identifiableIterator.next().getId().getMajor();
 		while (identifiableIterator.hasNext())
-			if (entityCode != ((Identifiable) identifiableIterator.next()).getId().getMajor())
+			if (entityCode != identifiableIterator.next().getId().getMajor())
 				return false;
 		return true;
 	}
@@ -406,20 +407,23 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return <code>true</code> if all entities within this set belong to
 	 *         the same group, <code>false</code> otherwise.
 	 */
-	public static final boolean hasSingleGroupEntities(final Set identifiables) {
+	public static final boolean hasSingleGroupEntities(final Set<? extends Identifiable> identifiables) {
 		/*
 		 * Nested assertions are ok.
 		 */
 		assert identifiables != null;
 
-		if (identifiables.isEmpty())
+		if (identifiables.isEmpty()) {
 			return true;
+		}
 
-		final Iterator identifiableIterator = identifiables.iterator();
-		final short groupCode = ObjectGroupEntities.getGroupCode(((Identifiable) identifiableIterator.next()).getId().getMajor());
-		while (identifiableIterator.hasNext())
-			if (groupCode != ObjectGroupEntities.getGroupCode(((Identifiable) identifiableIterator.next()).getId().getMajor()))
+		final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator();
+		final short groupCode = ObjectGroupEntities.getGroupCode(identifiableIterator.next().getId().getMajor());
+		while (identifiableIterator.hasNext()) {
+			if (groupCode != ObjectGroupEntities.getGroupCode(identifiableIterator.next().getId().getMajor())) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -433,11 +437,11 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return common type of identifiables supplied as
 	 *         <code>short</code>.
 	 */
-	public static final short getEntityCodeOfIdentifiables(final Set identifiables) {
+	public static final short getEntityCodeOfIdentifiables(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
 		assert hasSingleTypeEntities(identifiables);
 
-		return ((Identifiable) identifiables.iterator().next()).getId().getMajor();
+		return identifiables.iterator().next().getId().getMajor();
 	}
 
 	/**
@@ -463,10 +467,10 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @return common group of identifiables supplied as
 	 *         <code>short</code>.
 	 */
-	public static final short getGroupCodeOfIdentifiables(final Set identifiables) {
+	public static final short getGroupCodeOfIdentifiables(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
 
-		return ObjectGroupEntities.getGroupCode(((Identifiable) identifiables.iterator().next()).getId().getMajor());
+		return ObjectGroupEntities.getGroupCode(identifiables.iterator().next().getId().getMajor());
 	}
 
 	/**
@@ -478,11 +482,11 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @param storableObjects
 	 * @param headers
 	 */
-	protected static final void updateHeaders(final Set storableObjects, final StorableObject_Transferable[] headers) {
+	protected static final void updateHeaders(final Set<? extends StorableObject> storableObjects, final StorableObject_Transferable[] headers) {
 		for (int i = 0; i < headers.length; i++) {
 			final Identifier id = new Identifier(headers[i].id);
-			for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				if (storableObject.getId().equals(id)) {
 					storableObject.updateFromHeaderTransferable(headers[i]);
 					it.remove();

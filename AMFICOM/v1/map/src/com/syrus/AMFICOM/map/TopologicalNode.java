@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.44 2005/06/17 13:06:55 bass Exp $
+ * $Id: TopologicalNode.java,v 1.45 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
@@ -43,11 +42,11 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
-public class TopologicalNode extends AbstractNode implements XMLBeansTransferable{
+public final class TopologicalNode extends AbstractNode implements XMLBeansTransferable{
 
 	public static final String CLOSED_NODE = "node";
 	public static final String OPEN_NODE = "void";
@@ -214,14 +213,14 @@ public class TopologicalNode extends AbstractNode implements XMLBeansTransferabl
 		return Collections.EMPTY_SET;
 	}
 
-	public IDLEntity getTransferable() {
+	public TopologicalNode_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return new TopologicalNode_Transferable(super.getHeaderTransferable(),
 				this.name,
 				this.description,
 				this.location.getX(),
 				this.location.getY(),
-				(IdlIdentifier) this.physicalLink.getId().getTransferable(),
+				this.physicalLink.getId().getTransferable(),
 				this.active,
 				charIds);
 	}

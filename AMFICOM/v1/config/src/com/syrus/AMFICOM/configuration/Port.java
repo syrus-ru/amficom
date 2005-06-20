@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.67 2005/06/17 13:06:56 bass Exp $
+ * $Id: Port.java,v 1.68 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,11 +37,11 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.68 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
-public class Port extends StorableObject implements Characterizable, TypedObject {
+public final class Port extends StorableObject implements Characterizable, TypedObject {
 	private static final long serialVersionUID = -5139393638116159453L;
 
 	private PortType type;
@@ -49,7 +49,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	private Identifier equipmentId;
 	private int sort;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	Port(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -147,15 +147,15 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	}
 	
 
-	public IDLEntity getTransferable() {
+	public Port_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Port_Transferable(super.getHeaderTransferable(),
-									 (IdlIdentifier)this.type.getId().getTransferable(),
-									 this.description,
-									 (IdlIdentifier)this.equipmentId.getTransferable(),
-									 PortSort.from_int(this.sort),
-									 charIds);
+				 this.type.getId().getTransferable(),
+				 this.description,
+				 this.equipmentId.getTransferable(),
+				 PortSort.from_int(this.sort),
+				 charIds);
 	}
 
 	public StorableObjectType getType() {

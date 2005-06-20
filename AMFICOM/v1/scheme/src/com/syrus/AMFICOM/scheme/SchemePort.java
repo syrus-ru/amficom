@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.32 2005/06/17 13:06:54 bass Exp $
+ * $Id: SchemePort.java,v 1.33 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
 import com.syrus.util.Log;
@@ -39,7 +38,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -226,15 +225,15 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public SchemePort_Transferable getTransferable() {
 		return new SchemePort_Transferable(
 				super.getHeaderTransferable(), super.getName(),
 				super.getDescription(),
 				super.getDirectionType(),
-				(IdlIdentifier) super.portTypeId.getTransferable(),
-				(IdlIdentifier) super.portId.getTransferable(),
-				(IdlIdentifier) super.measurementPortId.getTransferable(),
-				(IdlIdentifier) super.parentSchemeDeviceId.getTransferable(),
+				super.portTypeId.getTransferable(),
+				super.portId.getTransferable(),
+				super.measurementPortId.getTransferable(),
+				super.parentSchemeDeviceId.getTransferable(),
 				Identifier.createTransferables(super.getCharacteristics()));
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.54 2005/06/17 13:06:56 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.55 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,17 +35,17 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.55 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class MeasurementPortType extends StorableObjectType implements Characterizable, Namable {
+public final class MeasurementPortType extends StorableObjectType implements Characterizable, Namable {
 	private static final long serialVersionUID = 7733425194674608181L;
 
 	private String name;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	MeasurementPortType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -128,7 +128,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IDLEntity getTransferable() {
+	public MeasurementPortType_Transferable getTransferable() {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new MeasurementPortType_Transferable(super.getHeaderTransferable(),

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.24 2005/06/17 12:40:40 bass Exp $
+ * $Id: AbstractNode.java,v 1.25 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -40,7 +40,7 @@ public abstract class AbstractNode
 
 	static final long serialVersionUID = -2623880496462305233L;
 
-	protected Set		characteristics;
+	protected Set<Characteristic> characteristics;
 
 	protected String	name;
 
@@ -49,11 +49,13 @@ public abstract class AbstractNode
 	/**
 	 * @deprecated use {@link #location location}.{@link DoublePoint#getX() getX()}
 	 */
+	@Deprecated
 	protected double	longitude;
 
 	/**
 	 * @deprecated use {@link #location location}.{@link DoublePoint#getY() getY()}
 	 */
+	@Deprecated
 	protected double	latitude;
 
 	/**

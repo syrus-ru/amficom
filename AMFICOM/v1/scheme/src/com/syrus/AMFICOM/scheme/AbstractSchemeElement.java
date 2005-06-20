@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.23 2005/06/17 13:06:54 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.24 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -51,7 +51,7 @@ public abstract class AbstractSchemeElement extends
 	 */
 	Identifier parentSchemeId;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	/**
 	 * @param id
@@ -106,7 +106,7 @@ public abstract class AbstractSchemeElement extends
 	/**
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public final Set getCharacteristics() {
+	public final Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 

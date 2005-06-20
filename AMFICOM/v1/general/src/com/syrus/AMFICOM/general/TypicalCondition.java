@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.22 2005/06/04 16:56:18 bass Exp $
+ * $Id: TypicalCondition.java,v 1.23 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_Transferable;
@@ -121,7 +120,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.22 $, $Date: 2005/06/04 16:56:18 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/20 17:29:37 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -902,7 +901,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		this.delegate.key = key;
 	}
 
-	public final IDLEntity getTransferable() {
+	public final StorableObjectCondition_Transferable getTransferable() {
 		TypicalCondition_Transferable transferable = new TypicalCondition_Transferable();
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:

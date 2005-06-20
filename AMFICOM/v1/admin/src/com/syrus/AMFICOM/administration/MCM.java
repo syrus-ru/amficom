@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.30 2005/06/17 13:06:55 bass Exp $
+ * $Id: MCM.java,v 1.31 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,12 +33,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module administration_v1
  */
 
-public class MCM extends DomainMember implements Characterizable {
+public final class MCM extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 4622885259080741046L;
 
 	private String name;
@@ -47,7 +47,7 @@ public class MCM extends DomainMember implements Characterizable {
 	private Identifier userId;
 	private Identifier serverId;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -130,21 +130,21 @@ public class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public MCM_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new MCM_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) super.domainId.getTransferable(),
+				super.domainId.getTransferable(),
 				this.name,
 				this.description,
 				this.hostname,
-				(IdlIdentifier) this.userId.getTransferable(),
-				(IdlIdentifier) this.serverId.getTransferable(),
+				this.userId.getTransferable(),
+				this.serverId.getTransferable(),
 				charIds);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

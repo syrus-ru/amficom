@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKey.java,v 1.3 2005/05/18 11:07:39 bass Exp $
+ * $Id: SessionKey.java,v 1.4 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,11 @@
  */
 package com.syrus.AMFICOM.security;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:07:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/20 17:29:37 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -32,7 +30,7 @@ public final class SessionKey implements TransferableObject {
 		this.sessionCode = skT.session_code;
 	}
 
-	public IDLEntity getTransferable() {
+	public SessionKey_Transferable getTransferable() {
 		return new SessionKey_Transferable(this.sessionCode);
 	}
 

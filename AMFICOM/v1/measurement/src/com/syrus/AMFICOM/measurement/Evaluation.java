@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.64 2005/06/17 20:46:25 arseniy Exp $
+ * $Id: Evaluation.java,v 1.65 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,17 +25,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/06/17 20:46:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2005/06/20 17:29:55 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class Evaluation extends Action {
+public final class Evaluation extends Action {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -113,15 +112,15 @@ public class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Evaluation_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return new Evaluation_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) super.type.getId().getTransferable(),
-				(IdlIdentifier) super.monitoredElementId.getTransferable(),
-				(super.parentAction != null) ? (IdlIdentifier) super.parentAction.getId().getTransferable()
-						: (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable(),
-				(IdlIdentifier) this.thresholdSet.getId().getTransferable());
+				super.type.getId().getTransferable(),
+				super.monitoredElementId.getTransferable(),
+				(super.parentAction != null) ? super.parentAction.getId().getTransferable()
+						: Identifier.VOID_IDENTIFIER.getTransferable(),
+				this.thresholdSet.getId().getTransferable());
 	}
 	
 	/*

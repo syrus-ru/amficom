@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.33 2005/06/17 13:06:55 bass Exp $
+ * $Id: Server.java,v 1.34 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,19 +34,19 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module administration_v1
  */
 
-public class Server extends DomainMember implements Characterizable {
+public final class Server extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 1988410957632317660L;
 
 	private String name;
 	private String description;
 	private String hostname;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -122,13 +122,13 @@ public class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Server_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Server_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) super.domainId.getTransferable(),
+				super.domainId.getTransferable(),
 				this.name,
 				this.description,
 				this.hostname,

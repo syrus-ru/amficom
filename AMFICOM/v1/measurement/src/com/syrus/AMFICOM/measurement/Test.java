@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.129 2005/06/17 20:46:25 arseniy Exp $
+ * $Id: Test.java,v 1.130 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -46,12 +47,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.129 $, $Date: 2005/06/17 20:46:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.130 $, $Date: 2005/06/20 17:29:55 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class Test extends StorableObject {	
+public final class Test extends StorableObject {	
 	private static final long	serialVersionUID	= 3688785890592241972L;
 
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
@@ -68,7 +69,7 @@ public class Test extends StorableObject {
 	private int	returnType;
 	private String description;
 	private int numberOfMeasurements;
-	private java.util.Set measurementSetupIds;
+	private Set<Identifier> measurementSetupIds;
 
 	private MeasurementSetup mainMeasurementSetup;
 
@@ -350,21 +351,20 @@ public class Test extends StorableObject {
 		return TestTemporalType.from_int(this.temporalType);
 	}
 
-	public IDLEntity getTransferable() {
+	public Test_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
-		final IdlIdentifier voidIdlIdentifier = (IdlIdentifier) Identifier.VOID_IDENTIFIER.getTransferable();
 		return new Test_Transferable(super.getHeaderTransferable(),
 				TestTemporalType.from_int(this.temporalType),
 				this.timeStamps.getTransferable(),
-				(IdlIdentifier) this.measurementTypeId.getTransferable(),
-				(this.analysisTypeId != null) ? (IdlIdentifier) this.analysisTypeId.getTransferable() : voidIdlIdentifier,
-				(this.evaluationTypeId != null) ? (IdlIdentifier) this.evaluationTypeId.getTransferable() : voidIdlIdentifier,
-				(this.groupTestId != null) ? (IdlIdentifier) this.groupTestId.getTransferable() : voidIdlIdentifier,
+				this.measurementTypeId.getTransferable(),
+				this.analysisTypeId.getTransferable(),
+				this.evaluationTypeId.getTransferable(),
+				this.groupTestId.getTransferable(),
 				TestStatus.from_int(this.status),
-				(IdlIdentifier) this.monitoredElement.getId().getTransferable(),
+				this.monitoredElement.getId().getTransferable(),
 				TestReturnType.from_int(this.returnType),
 				this.description,
 				this.numberOfMeasurements,

@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.36 2005/06/17 13:06:53 bass Exp $
+* $Id: MapView.java,v 1.37 2005/06/20 17:30:17 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -55,11 +55,11 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/17 13:06:53 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/20 17:30:17 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
-public class MapView extends DomainMember implements Namable {
+public final class MapView extends DomainMember implements Namable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -78,7 +78,7 @@ public class MapView extends DomainMember implements Namable {
 	/**
 	 *  List&lt;{@link com.syrus.AMFICOM.scheme.Scheme}&gt;
 	 */
-	private Set schemes;
+	private Set<Scheme> schemes;
 
 	private StorableObjectDatabase	mapViewDatabase;
 
@@ -211,21 +211,21 @@ public class MapView extends DomainMember implements Namable {
 		return dependencies;
 	}
 
-	public IDLEntity getTransferable() {
+	public MapView_Transferable getTransferable() {
 		int i = 0;
 		IdlIdentifier[] schemeIdsTransferable = new IdlIdentifier[this.schemes.size()];
-		for (Iterator iterator = this.schemes.iterator(); iterator.hasNext();)
-			schemeIdsTransferable[i++] = (IdlIdentifier) (((Scheme) iterator.next()).getId()).getTransferable();		
+		for (Iterator<Scheme> iterator = this.schemes.iterator(); iterator.hasNext();)
+			schemeIdsTransferable[i++] = iterator.next().getId().getTransferable();		
 
 		return new MapView_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier)this.getDomainId().getTransferable(),
+				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				this.longitude,
 				this.latitude,
 				this.scale,
 				this.defaultScale,
-				(IdlIdentifier)this.map.getId().getTransferable(),
+				this.map.getId().getTransferable(),
 				schemeIdsTransferable);
 	}
 

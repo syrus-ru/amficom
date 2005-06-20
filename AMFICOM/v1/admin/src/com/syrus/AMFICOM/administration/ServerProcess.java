@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.11 2005/06/17 13:06:55 bass Exp $
+ * $Id: ServerProcess.java,v 1.12 2005/06/20 17:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,15 +26,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/20 17:29:36 $
  * @author $Author: bass $
  * @module admin_v1
  */
-public class ServerProcess extends StorableObject {
+public final class ServerProcess extends StorableObject {
 	private static final long serialVersionUID = 2216890579914405388L;
 
 	private String codename;
@@ -120,13 +119,13 @@ public class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public ServerProcess_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		return new ServerProcess_Transferable(super.getHeaderTransferable(),
 				this.codename,
-				(IdlIdentifier) this.serverId.getTransferable(),
-				(IdlIdentifier) this.userId.getTransferable(),
+				this.serverId.getTransferable(),
+				this.userId.getTransferable(),
 				this.description);
 	}
 

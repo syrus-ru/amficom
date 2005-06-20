@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.27 2005/06/17 13:06:54 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.28 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -62,7 +62,7 @@ public abstract class AbstractSchemePort extends
 
 	Identifier parentSchemeDeviceId;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	boolean portTypeSet = false;
 
@@ -133,7 +133,7 @@ public abstract class AbstractSchemePort extends
 		return this.directionType;
 	}
 
-	public final Set getCharacteristics() {
+	public final Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 

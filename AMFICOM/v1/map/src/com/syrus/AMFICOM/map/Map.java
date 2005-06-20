@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.50 2005/06/17 13:06:55 bass Exp $
+ * $Id: Map.java,v 1.51 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,12 +47,12 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.51 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
  */
-public class Map extends DomainMember implements Namable, XMLBeansTransferable {
+public final class Map extends DomainMember implements Namable, XMLBeansTransferable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -76,12 +76,12 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 	private String name;
 	private String description;
 
-	private Set siteNodes;
-	private Set topologicalNodes;
-	private Set nodeLinks;
-	private Set physicalLinks;
-	private Set marks;
-	private Set collectors;
+	private Set<SiteNode> siteNodes;
+	private Set<TopologicalNode> topologicalNodes;
+	private Set<NodeLink> nodeLinks;
+	private Set<PhysicalLink> physicalLinks;
+	private Set<Mark> marks;
+	private Set<Collector> collectors;
 
 	protected transient Set maps;
 	protected transient Set externalNodes;
@@ -207,7 +207,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 		return dependencies;
 	}
 
-	public IDLEntity getTransferable() {
+	public Map_Transferable getTransferable() {
 		IdlIdentifier[] siteNodeIds = Identifier.createTransferables(this.siteNodes);
 		IdlIdentifier[] topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
 		IdlIdentifier[] nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
@@ -215,7 +215,7 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 		IdlIdentifier[] markIds = Identifier.createTransferables(this.marks);
 		IdlIdentifier[] collectorIds = Identifier.createTransferables(this.collectors);
 		return new Map_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.getDomainId().getTransferable(),
+				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				siteNodeIds,
@@ -474,11 +474,11 @@ public class Map extends DomainMember implements Namable, XMLBeansTransferable {
 	 */
 	public void addNode(final AbstractNode node) {
 		if (node instanceof SiteNode)
-			this.siteNodes.add(node);
+			this.siteNodes.add((SiteNode) node);
 		else if (node instanceof TopologicalNode)
-			this.topologicalNodes.add(node);
+			this.topologicalNodes.add((TopologicalNode) node);
 		else if (node instanceof Mark)
-			this.marks.add(node);
+			this.marks.add((Mark) node);
 		node.setRemoved(false);
 		super.markAsChanged();
 	}

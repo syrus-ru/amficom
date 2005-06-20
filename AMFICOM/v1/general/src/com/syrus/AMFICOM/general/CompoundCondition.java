@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.26 2005/06/17 12:38:53 bass Exp $
+ * $Id: CompoundCondition.java,v 1.27 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
@@ -24,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePacka
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.26 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/20 17:29:37 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -34,7 +32,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 	/**
 	 * Collection&lt;StorableObjectCondition&gt;
 	 */
-	private Set conditions;
+	private Set<StorableObjectCondition> conditions;
 
 	private Short entityCode = new Short(ObjectEntities.UNKNOWN_CODE);
 
@@ -158,13 +156,13 @@ public final class CompoundCondition implements StorableObjectCondition {
 		throw new UnsupportedOperationException("Cannot set entity code " + entityCode + " for this condition");
 	}
 
-	public IDLEntity getTransferable() {
+	public StorableObjectCondition_Transferable getTransferable() {
 		final CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
 		transferable.sort = CompoundConditionSort.from_int(this.operation);
 		transferable.innerConditions = new StorableObjectCondition_Transferable[this.conditions.size()];
 		int i = 0;
-		for (final Iterator storableObjectConditionIterator = this.conditions.iterator(); storableObjectConditionIterator.hasNext(); i++) {
-			final StorableObjectCondition storableObjectCondition = (StorableObjectCondition) storableObjectConditionIterator.next();
+		for (final Iterator<StorableObjectCondition> storableObjectConditionIterator = this.conditions.iterator(); storableObjectConditionIterator.hasNext(); i++) {
+			final StorableObjectCondition storableObjectCondition = storableObjectConditionIterator.next();
 			transferable.innerConditions[i] = (StorableObjectCondition_Transferable) storableObjectCondition.getTransferable();
 		}
 		

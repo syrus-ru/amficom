@@ -1,5 +1,5 @@
 /*
- * $Id: Characterizable.java,v 1.5 2005/05/26 15:31:14 bass Exp $
+ * $Id: Characterizable.java,v 1.6 2005/06/20 17:29:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,14 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/26 15:31:14 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/20 17:29:37 $
  * @author $Author: bass $
  * @module general_v1
  */
 
 public interface Characterizable extends Identifiable {
 
-	Set getCharacteristics();
+	Set<Characteristic> getCharacteristics();
 
 	void setCharacteristics(final Set characteristics);
 	
@@ -30,5 +30,5 @@ public interface Characterizable extends Identifiable {
 	 * NEVER call this method directly. Use setCharacteristics
 	 * @param characteristics
 	 */
-	void setCharacteristics0(final Set characteristics);
+	void setCharacteristics0(final Set<Characteristic> characteristics);
 }

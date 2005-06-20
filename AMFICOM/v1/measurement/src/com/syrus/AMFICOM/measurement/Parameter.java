@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.4 2005/06/17 13:06:57 bass Exp $
+ * $Id: Parameter.java,v 1.5 2005/06/20 17:29:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.measurement;
 
 
 import java.io.IOException;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -35,12 +33,12 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/17 13:06:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/20 17:29:55 $
  * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class Parameter implements TransferableObject, TypedObject, Identifiable {
+public final class Parameter implements TransferableObject, TypedObject, Identifiable {
 	private Identifier id;
 	private ParameterType type;
 	private byte[] value;	
@@ -84,7 +82,7 @@ public class Parameter implements TransferableObject, TypedObject, Identifiable 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IDLEntity getTransferable() {
+	public Parameter_Transferable getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		byte[] ptValue = new byte[this.value.length];

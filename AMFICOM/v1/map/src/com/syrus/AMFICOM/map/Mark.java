@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.43 2005/06/17 13:06:55 bass Exp $
+ * $Id: Mark.java,v 1.44 2005/06/20 17:31:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -42,10 +40,10 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/06/17 13:06:55 $
+ * @version $Revision: 1.44 $, $Date: 2005/06/20 17:31:02 $
  * @module map_v1
  */
-public class Mark extends AbstractNode {
+public final class Mark extends AbstractNode {
 
 	public static final String IMAGE_NAME = "mark";
 	/**
@@ -212,7 +210,7 @@ public class Mark extends AbstractNode {
 		return Collections.singleton(this.physicalLink);
 	}
 
-	public IDLEntity getTransferable() {
+	public Mark_Transferable getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new Mark_Transferable(super.getHeaderTransferable(),
@@ -220,7 +218,7 @@ public class Mark extends AbstractNode {
 				this.description,
 				this.location.getX(),
 				this.location.getY(),
-				(IdlIdentifier) this.physicalLink.getId().getTransferable(),
+				this.physicalLink.getId().getTransferable(),
 				this.distance,
 				this.city,
 				this.street,

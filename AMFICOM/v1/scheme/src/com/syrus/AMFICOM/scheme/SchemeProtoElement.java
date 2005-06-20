@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.40 2005/06/17 13:06:54 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.41 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -79,7 +78,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	private SchemeProtoElementDatabase schemeProtoElementDatabase;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	private boolean parentSet = false;
 
@@ -635,18 +634,18 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public SchemeProtoElement_Transferable getTransferable() {
 		return new SchemeProtoElement_Transferable(
 				super.getHeaderTransferable(),
 				this.name,
 				this.description,
 				this.label,
-				(IdlIdentifier) this.equipmentTypeId.getTransferable(),
-				(IdlIdentifier) this.symbolId.getTransferable(),
-				(IdlIdentifier) this.ugoCellId.getTransferable(),
-				(IdlIdentifier) this.schemeCellId.getTransferable(),
-				(IdlIdentifier) this.parentSchemeProtoGroupId.getTransferable(),
-				(IdlIdentifier) this.parentSchemeProtoElementId.getTransferable(),
+				this.equipmentTypeId.getTransferable(),
+				this.symbolId.getTransferable(),
+				this.ugoCellId.getTransferable(),
+				this.schemeCellId.getTransferable(),
+				this.parentSchemeProtoGroupId.getTransferable(),
+				this.parentSchemeProtoElementId.getTransferable(),
 				Identifier.createTransferables(this.characteristics));
 	}
 

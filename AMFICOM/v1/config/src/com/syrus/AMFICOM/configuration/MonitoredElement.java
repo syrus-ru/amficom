@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.58 2005/06/17 13:06:56 bass Exp $
+ * $Id: MonitoredElement.java,v 1.59 2005/06/20 17:29:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,12 +31,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.59 $, $Date: 2005/06/20 17:29:35 $
  * @author $Author: bass $
  * @module config_v1
  */
 
-public class MonitoredElement extends DomainMember {
+public final class MonitoredElement extends DomainMember {
 	private static final long serialVersionUID = 5689746173688711494L;
 
 	private Identifier measurementPortId;
@@ -44,7 +44,7 @@ public class MonitoredElement extends DomainMember {
 	private String name;
 	private String localAddress;
 
-	private Set monitoredDomainMemberIds;
+	private Set<Identifier> monitoredDomainMemberIds;
 
 	MonitoredElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -141,13 +141,13 @@ public class MonitoredElement extends DomainMember {
 		this.monitoredDomainMemberIds = Identifier.fromTransferables(met.monitored_domain_member_ids);
 	}
 
-	public IDLEntity getTransferable() {
+	public MonitoredElement_Transferable getTransferable() {
 		IdlIdentifier[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
 
 		return new MonitoredElement_Transferable(super.getHeaderTransferable(),
-				(IdlIdentifier) this.getDomainId().getTransferable(),
+				this.getDomainId().getTransferable(),
 				this.name,
-				(IdlIdentifier) this.measurementPortId.getTransferable(),
+				this.measurementPortId.getTransferable(),
 				MonitoredElementSort.from_int(this.sort),
 				this.localAddress,
 				mdmIds);

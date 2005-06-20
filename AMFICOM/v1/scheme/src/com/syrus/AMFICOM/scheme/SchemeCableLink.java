@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.36 2005/06/17 13:06:54 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.37 2005/06/20 17:29:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
 import com.syrus.util.Log;
 
@@ -40,7 +39,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/20 17:29:57 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -269,17 +268,17 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public SchemeCableLink_Transferable getTransferable() {
 		return new SchemeCableLink_Transferable(
 				super.getHeaderTransferable(), super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
-				(IdlIdentifier) super.abstractLinkTypeId.getTransferable(),
-				(IdlIdentifier) super.linkId.getTransferable(),
-				(IdlIdentifier) super.sourceAbstractSchemePortId.getTransferable(),
-				(IdlIdentifier) super.targetAbstractSchemePortId.getTransferable(),
-				(IdlIdentifier) super.parentSchemeId.getTransferable(),
+				super.abstractLinkTypeId.getTransferable(),
+				super.linkId.getTransferable(),
+				super.sourceAbstractSchemePortId.getTransferable(),
+				super.targetAbstractSchemePortId.getTransferable(),
+				super.parentSchemeId.getTransferable(),
 				Identifier.createTransferables(super.getCharacteristics()));
 	}
 

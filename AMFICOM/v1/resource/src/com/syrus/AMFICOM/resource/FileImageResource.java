@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.20 2005/06/17 12:38:54 bass Exp $
+ * $Id: FileImageResource.java,v 1.21 2005/06/20 17:29:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.resource;
 
 import java.util.Date;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -26,7 +24,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/06/17 12:38:54 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/20 17:29:56 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -103,7 +101,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 		throw new UnsupportedOperationException();
 	}
 
-	public IDLEntity getTransferable() {
+	public ImageResource_Transferable getTransferable() {
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.fileName(this.fileName);
 		return new ImageResource_Transferable(getHeaderTransferable(), imageResourceData);
