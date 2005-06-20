@@ -1,5 +1,5 @@
 /**
- * $Id: MapContext.java,v 1.4 2005/06/20 10:03:16 krupenn Exp $
+ * $Id: MapContext.java,v 1.5 2005/06/20 10:09:13 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,6 @@ import java.util.List;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public interface MapContext {
-
 	public static final double ZOOM_FACTOR = 2D;
 
 	public abstract MapConnection getMapConnection()
@@ -47,20 +46,20 @@ public interface MapContext {
 			throws MapConnectionException, MapDataException;
 
 	/**
-	 * Установить масштаб вида карты с заданным коэффициентом.
+	 * Изменить масштаб вида карты в заданное число раз.
 	 * @param scaleCoef коэффициент масштабирования
 	 */
 	public abstract void scaleTo(double scaleCoef)
 			throws MapConnectionException, MapDataException;
 
 	/**
-	 * Приблизить вид карты со стандартным коэффициентом.
+	 * Приблизить вид карты в стандартное число раз.
 	 */
 	public abstract void zoomIn()
 			throws MapConnectionException, MapDataException;
 
 	/**
-	 * Отдалить вид карты со стандартным коэффициентом.
+	 * Отдалить вид карты в стандартное число раз.
 	 */
 	public abstract void zoomOut()
 			throws MapConnectionException, MapDataException;
