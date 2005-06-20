@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.76 2005/06/16 10:57:18 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.77 2005/06/20 10:02:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,13 +64,11 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.76 $, $Date: 2005/06/16 10:57:18 $
+ * @version $Revision: 1.77 $, $Date: 2005/06/20 10:02:13 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
 {
-	public static final double ZOOM_FACTOR = 2D;
-
 	protected CommandList commandList = new CommandList(20);
 	
 	/** Нить, управляющая анимацией на слое. */
