@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.9 2005/06/17 13:23:45 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.10 2005/06/20 10:13:33 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/17 13:23:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/20 10:13:33 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 abstract class XMLClientServantManager implements BaseConnectionManager {
@@ -173,6 +173,14 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 			
 			public void verify(byte i) {
 				// nothing				
+			}
+
+			/**
+			 * @todo This is just to enable compatibility and compile. No sense. 
+			 */
+			public void setPassword(SessionKey_Transferable arg0, IdlIdentifier arg1, String arg2) throws AMFICOMRemoteException {
+				/*Don't know, what to write here*/
+				throw new UnsupportedOperationException(ErrorMessages.METHOD_NOT_NEEDED);
 			}
 			
 		};
