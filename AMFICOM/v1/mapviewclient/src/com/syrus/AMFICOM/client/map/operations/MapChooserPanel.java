@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.5 2005/06/15 07:42:28 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.6 2005/06/20 12:10:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.5 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/20 12:10:57 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -72,7 +72,7 @@ public class MapChooserPanel extends JPanel
 		this.setToolTipText(LangModelMap.getString("ChooseMap"));
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-		this.selectButton.setText(LangModelGeneral.getString("Ok"));
+		this.selectButton.setText(LangModelGeneral.getString("Button.OK"));
 		this.selectButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
