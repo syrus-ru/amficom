@@ -1,5 +1,5 @@
 /**
- * $Id: EditorDialog.java,v 1.4 2005/06/14 11:29:27 krupenn Exp $
+ * $Id: EditorDialog.java,v 1.5 2005/06/20 15:28:51 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -37,8 +37,8 @@ public class EditorDialog
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(editor.getGUI(), BorderLayout.CENTER);
 		
-		final String okButton = LangModelGeneral.getString("Ok");
-		final String cancelButton = LangModelGeneral.getString("Cancel");
+		final String okButton = LangModelGeneral.getString("Button.OK");
+		final String cancelButton = LangModelGeneral.getString("Button.Cancel");
 		final JOptionPane optionPane = new JOptionPane(
 				mainPanel, 
 				JOptionPane.PLAIN_MESSAGE,
@@ -53,7 +53,7 @@ public class EditorDialog
 		int height = Math.min(screenDim.height / 2, 400);
 		dialog.setSize(new Dimension(width, height));
 
-		dialog.show();
+		dialog.setVisible(true);
 		dialog.dispose();
 
 		final Object selectedValue = optionPane.getValue();
