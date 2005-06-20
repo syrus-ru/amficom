@@ -1,5 +1,5 @@
 /*
- * $Id: EventServerImplementation.java,v 1.5 2005/06/04 16:56:23 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.6 2005/06/20 15:28:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,18 +24,18 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/04 16:56:23 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/20 15:28:02 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public class EventServerImplementation extends EventServerPOA {
 	private static final long serialVersionUID = 3257569516216398643L;
 
 	/*	Map of event queues for every user*/
-	private static Map userEventNotifiersMap;	//Map <Identifier userId, UserEventNotifier userEventNotifier>
+	private static Map<Identifier, UserEventNotifier> userEventNotifiersMap;
 
 	static {
-		userEventNotifiersMap = Collections.synchronizedMap(new HashMap());
+		userEventNotifiersMap = Collections.synchronizedMap(new HashMap<Identifier, UserEventNotifier>());
 	}
 
 	public void eventGeneration(Event_Transferable et) throws AMFICOMRemoteException {
@@ -44,7 +44,7 @@ public class EventServerImplementation extends EventServerPOA {
 			final EventType eventType = (EventType) event.getType();
 			for (final Iterator it = eventType.getAlertedUserIds().iterator(); it.hasNext();) {
 				final Identifier userId = (Identifier) it.next();
-				UserEventNotifier userEventNotifier = (UserEventNotifier) userEventNotifiersMap.get(userId);
+				UserEventNotifier userEventNotifier = userEventNotifiersMap.get(userId);
 				if (userEventNotifier == null) {
 					userEventNotifier = new UserEventNotifier(userId);
 					userEventNotifier.start();
@@ -55,7 +55,8 @@ public class EventServerImplementation extends EventServerPOA {
 		}
 		catch (CreateObjectException coe) {
 			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, "Cannot create event -- " + coe.getMessage());
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, "Cannot create event -- "
+					+ coe.getMessage());
 		}
 	}
 

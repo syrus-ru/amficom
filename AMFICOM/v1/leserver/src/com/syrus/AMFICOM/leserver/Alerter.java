@@ -1,5 +1,5 @@
 /*
- * $Id: Alerter.java,v 1.1 2005/06/01 16:02:31 arseniy Exp $
+ * $Id: Alerter.java,v 1.2 2005/06/20 15:28:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,15 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/01 16:02:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/20 15:28:02 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
 abstract class Alerter {
-	private static Map alertersMap;
+	private static Map<AlertKind, Alerter> alertersMap;
 
 	static {
-		alertersMap = Collections.synchronizedMap(new HashMap());
+		alertersMap = Collections.synchronizedMap(new HashMap<AlertKind, Alerter>());
 	}
 
 	static void registerAlerter(AlertKind alertKind, Alerter alerter) {
@@ -32,7 +32,7 @@ abstract class Alerter {
 	}
 
 	protected static Alerter getAlerter(AlertKind alertKind) {
-		Alerter alerter = (Alerter) alertersMap.get(alertKind);
+		Alerter alerter = alertersMap.get(alertKind);
 		if (alerter == null)
 			alerter = createAlerter(alertKind);
 		return alerter;

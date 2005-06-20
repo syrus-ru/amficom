@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.20 2005/06/17 20:16:24 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.21 2005/06/20 15:28:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/17 20:16:24 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/20 15:28:02 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -96,7 +96,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 				Log.errorException(coe);
 			}
 
-			userIdTH.value = (IdlIdentifier) userId.getTransferable();
+			userIdTH.value = userId.getTransferable();
 			return (SessionKey_Transferable) userLogin.getSessionKey().getTransferable();
 		}
 		throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_PASSWORD, CompletionStatus.COMPLETED_YES, "Illegal password");
@@ -180,9 +180,9 @@ final class LoginServerImplementation extends LoginServerPOA {
 			Log.errorException(uoe);
 		}
 
-		userIdTH.value = (IdlIdentifier) userLogin.getUserId().getTransferable();
+		userIdTH.value = userLogin.getUserId().getTransferable();
 		final Identifier domainId = userLogin.getDomainId();
-		domainIdTH.value = (IdlIdentifier) (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
+		domainIdTH.value = (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
 	}
 
 	public void setPassword(final SessionKey_Transferable sessionKeyT, final IdlIdentifier userIdT, final String password) throws AMFICOMRemoteException {

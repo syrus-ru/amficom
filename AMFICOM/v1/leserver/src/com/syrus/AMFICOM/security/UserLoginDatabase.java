@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.3 2005/05/18 13:29:31 bass Exp $
+ * $Id: UserLoginDatabase.java,v 1.4 2005/06/20 15:28:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 13:29:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/20 15:28:02 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class UserLoginDatabase {
@@ -63,7 +63,7 @@ public final class UserLoginDatabase {
 		return sql;
 	}
 
-	public Set retrieveAll() throws RetrieveObjectException {
+	public Set<UserLogin> retrieveAll() throws RetrieveObjectException {
 		return this.retrieveByCondition(null);
 	}
 
@@ -74,8 +74,8 @@ public final class UserLoginDatabase {
 		throw new ObjectNotFoundException("User login not found");
 	}
 
-	private Set retrieveByCondition(StringBuffer condition) throws RetrieveObjectException {
-		Set objects = new HashSet();
+	private Set<UserLogin> retrieveByCondition(StringBuffer condition) throws RetrieveObjectException {
+		Set<UserLogin> objects = new HashSet<UserLogin>();
 
 		StringBuffer sql = this.retrieveQuery(condition);
 

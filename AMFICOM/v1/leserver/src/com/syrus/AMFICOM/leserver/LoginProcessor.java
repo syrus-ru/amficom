@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.9 2005/06/14 11:48:14 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.10 2005/06/20 15:28:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/14 11:48:14 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/20 15:28:02 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -35,7 +35,7 @@ final class LoginProcessor extends SleepButWorkThread {
 	public static final int LOGIN_PROCESSOR_TICK_TIME = 5;	//sec
 	public static final int MAX_USER_UNACTIVITY_PERIOD = 1;	//hour
 
-	private static Map loginMap;		//Map <SessionKey sessionKey, UserLogin userLogin>
+	private static Map<SessionKey, UserLogin> loginMap;
 	private long maxUserUnactivityPeriod;
 	private UserLoginDatabase userLoginDatabase;
 	private boolean running;
@@ -45,7 +45,7 @@ final class LoginProcessor extends SleepButWorkThread {
 				ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_MAX_FALLS, MAX_FALLS));
 
 		if (loginMap == null)
-			loginMap = Collections.synchronizedMap(new HashMap());
+			loginMap = Collections.synchronizedMap(new HashMap<SessionKey, UserLogin>());
 
 		this.maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 60 * 1000;
 		this.userLoginDatabase = new UserLoginDatabase();
@@ -63,9 +63,9 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	private void restoreState() {
 		try {
-			final Set userLogins = this.userLoginDatabase.retrieveAll();
-			for (Iterator it = userLogins.iterator(); it.hasNext();) {
-				final UserLogin userLogin = (UserLogin) it.next();
+			final Set<UserLogin> userLogins = this.userLoginDatabase.retrieveAll();
+			for (Iterator<UserLogin> it = userLogins.iterator(); it.hasNext();) {
+				final UserLogin userLogin = it.next();
 				loginMap.put(userLogin.getSessionKey(), userLogin);
 			}
 		}
@@ -78,9 +78,9 @@ final class LoginProcessor extends SleepButWorkThread {
 		while (this.running) {
 
 			synchronized (loginMap) {
-				for (Iterator it = loginMap.keySet().iterator(); it.hasNext();) {
-					final SessionKey sessionKey = (SessionKey) it.next();
-					final UserLogin userLogin = (UserLogin) loginMap.get(sessionKey);
+				for (Iterator<SessionKey> it = loginMap.keySet().iterator(); it.hasNext();) {
+					final SessionKey sessionKey = it.next();
+					final UserLogin userLogin = loginMap.get(sessionKey);
 					final Date lastActivityDate = userLogin.getLastActivityDate();
 					if (System.currentTimeMillis() - lastActivityDate.getTime() >= this.maxUserUnactivityPeriod) {
 						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than "
@@ -119,21 +119,21 @@ final class LoginProcessor extends SleepButWorkThread {
 		Log.debugMessage("LoginProcessor.getUserLogin | Getting login for session key '" + sessionKey
 				+ "'; found: " + loginMap.containsKey(sessionKey), Log.DEBUGLEVEL08);
 		printUserLogins();
-		return (UserLogin) loginMap.get(sessionKey);
+		return loginMap.get(sessionKey);
 	}
 
 	protected static UserLogin removeUserLogin(final SessionKey sessionKey) {
 		Log.debugMessage("LoginProcessor.getUserLogin | Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
-		final UserLogin userLogin = (UserLogin) loginMap.remove(sessionKey);
+		final UserLogin userLogin = loginMap.remove(sessionKey);
 		printUserLogins();
 		return userLogin;
 	}
 
 	private static void printUserLogins() {
 		Log.debugMessage("#### LoginProcessor.printUserLogins | Logged in: ", Log.DEBUGLEVEL10);
-		for (final Iterator it = loginMap.keySet().iterator(); it.hasNext();) {
-			final SessionKey sessionKey = (SessionKey) it.next();
-			final UserLogin userLogin = (UserLogin) loginMap.get(sessionKey);
+		for (final Iterator<SessionKey> it = loginMap.keySet().iterator(); it.hasNext();) {
+			final SessionKey sessionKey = it.next();
+			final UserLogin userLogin = loginMap.get(sessionKey);
 			Log.debugMessage("#### Session key: '" + sessionKey + "'", Log.DEBUGLEVEL10);
 			Log.debugMessage("#### '" + userLogin.getUserId()
 					+ "' from: " + userLogin.getLoginDate()

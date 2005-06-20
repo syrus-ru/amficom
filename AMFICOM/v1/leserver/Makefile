@@ -10,9 +10,7 @@ LOCALIDLDIR = ./idl
 HOST = mongol
 SERVICE_NAME = mongol
 
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4.2
+JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)

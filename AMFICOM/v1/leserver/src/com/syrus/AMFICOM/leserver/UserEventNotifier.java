@@ -1,5 +1,5 @@
 /*
- * $Id: UserEventNotifier.java,v 1.3 2005/06/01 16:03:56 arseniy Exp $
+ * $Id: UserEventNotifier.java,v 1.4 2005/06/20 15:28:02 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/01 16:03:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/20 15:28:02 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -33,14 +33,14 @@ final class UserEventNotifier extends SleepButWorkThread {
 	public static final int EVENT_NOTIFIER_TICK_TIME = 5;	//sec
 
 	private Identifier userId;
-	private List eventQueue;
+	private List<Event> eventQueue;
 
 	protected UserEventNotifier(Identifier userId) {
 		super(ApplicationProperties.getInt(KEY_EVENT_NOTIFIER_TICK_TIME, EVENT_NOTIFIER_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(KEY_EVENT_NOTIFIER_MAX_FALLS, MAX_FALLS));
 
 		this.userId = userId;
-		this.eventQueue = Collections.synchronizedList(new LinkedList());
+		this.eventQueue = Collections.synchronizedList(new LinkedList<Event>());
 	}
 
 	protected void addEvent(final Event event) {
@@ -50,8 +50,8 @@ final class UserEventNotifier extends SleepButWorkThread {
 
 	public void run() {
 		synchronized (this.eventQueue) {
-			for (final Iterator it1 = this.eventQueue.iterator(); it1.hasNext();) {
-				final Event event = (Event) it1.next();
+			for (final Iterator<Event> it1 = this.eventQueue.iterator(); it1.hasNext();) {
+				final Event event = it1.next();
 				final EventType eventType = (EventType) event.getType();
 				final Set userAlertKinds = eventType.getUserAlertKinds(this.userId);
 				boolean delivered = false;
