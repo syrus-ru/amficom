@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.17 2005/06/07 10:03:22 stas Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.18 2005/06/20 14:29:21 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
-import java.awt.*;
-
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/07 10:03:22 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/20 14:29:21 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
