@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.2 2005/06/16 10:31:38 max Exp $
+ * $Id: FilterPanel.java,v 1.3 2005/06/20 09:33:34 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/16 10:31:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 09:33:34 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -91,7 +91,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	private JPanel conditionPanel;
 	private JComboBox keysCombo;
 		
-	private JList filteredList;
+	//private JList filteredList;
 	private JList conditions;
 	private JList linkedConditionList;
 	
@@ -172,7 +172,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		
 		this.keysCombo = 				new JComboBox(this.filter.getKeyNames());
 		
-		this.filteredList = 			new JList();
+		//this.filteredList = 			new JList();
 		this.conditions = 				new JList();
 		this.linkedConditionList = 		new JList();
 		
@@ -181,7 +181,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		this.endDateSpinner = 			new DateSpinner();
 		this.endTimeSpinner = 			new TimeSpinner();
 		
-		JScrollPane filterScroller = 	new JScrollPane(this.filteredList);
+		//JScrollPane filterScroller = 	new JScrollPane(this.filteredList);
 		JScrollPane conditionScroller =	new JScrollPane(this.conditions);
 		
 		this.removeButton.setEnabled(false);
@@ -218,7 +218,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		
 		this.boundaryCheckBox.setSelected(true);
 		
-		filterScroller.setPreferredSize(new Dimension(0,0));
+		//filterScroller.setPreferredSize(new Dimension(0,0));
 		conditionScroller.setPreferredSize(new Dimension(0,0));
 		linkedConditionListScroller.setPreferredSize(new Dimension(0,0));
 		
@@ -531,9 +531,9 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		this.conditions.setListData(names);
 	}
 
-	public void refreshFilteredEntities(String[] filteredNames) {
-		this.filteredList.setListData(filteredNames);		
-	}
+//	public void refreshFilteredEntities(String[] filteredNames) {
+//		this.filteredList.setListData(filteredNames);		
+//	}
 
 	public void refreshResultConditionString(String stringCondition) {
 		this.resultConditionTextField.setText(stringCondition);
@@ -576,6 +576,47 @@ public class FilterPanel extends JScrollPane implements FilterView {
 			return component;
 		}
 		return getParentFrame(component.getParent());
+	}
+	
+	public Filter getFilter() {
+		return this.filter;
+	}
+	
+	public void setFilter(Filter filter) {
+		this.filter = filter;
+		this.controller.setFilter(filter);
+		clearPanel();
+		
+		this.keysCombo.removeActionListener(this.controller);
+		this.keysCombo.removeAllItems();
+		
+		String[] keyNames = this.filter.getKeyNames();
+		for (int i = 0; i < keyNames.length; i++) {
+			this.keysCombo.addItem(keyNames[i]);
+		}
+		this.keysCombo.addActionListener(this.controller);
+		this.keysCombo.setSelectedIndex(0);
+		this.revalidate();
+	}
+	
+	private void clearPanel() {
+		/*Object[] nullStub = new Object[0];
+		this.conditions.setListData(nullStub);
+		this.linkedConditionList.setListData(nullStub);*/
+		
+		this.conditionTextField.setText("");
+		this.equalsField.setText("");
+		this.fromField.setText("");
+		this.toField.setText("");
+		this.resultConditionTextField.setText("");
+		
+		Date currentDate = new Date();
+		this.startTimeSpinner.setValue(currentDate);
+		this.startDateSpinner.setValue(currentDate);
+		this.endTimeSpinner.setValue(currentDate);
+		this.endDateSpinner.setValue(currentDate);
+		
+		
 	}
 }
 
