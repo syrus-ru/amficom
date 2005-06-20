@@ -1,5 +1,5 @@
 /**
- * $Id: MapContext.java,v 1.3 2005/06/16 14:39:05 krupenn Exp $
+ * $Id: MapContext.java,v 1.4 2005/06/20 10:03:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,8 @@ import java.util.List;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 public interface MapContext {
+
+	public static final double ZOOM_FACTOR = 2D;
 
 	public abstract MapConnection getMapConnection()
 		throws MapConnectionException;
@@ -72,11 +74,4 @@ public interface MapContext {
 	public abstract void zoomToBox(DoublePoint from, DoublePoint to)
 			throws MapConnectionException, MapDataException;
 
-	/**
-	 * Получить список географических слоев.
-	 * @return список слоев &lt;{@link SpatialLayer}&gt;
-	 */
-	public abstract List getLayers()
-		throws MapDataException;
-	
 }
