@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.44 2005/06/20 08:56:55 bass Exp $
+ * $Id: Identifier.java,v 1.45 2005/06/20 15:41:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.44 $, $Date: 2005/06/20 08:56:55 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/20 15:41:50 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -60,7 +60,7 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	}
 
 	/*	Only for IdentifierGenerator	*/
-	Identifier(short major, long minor) {
+	Identifier(final short major, final long minor) {
 		assert (minor & MAJOR_MASK) == 0 : OBJECT_STATE_ILLEGAL;
 
 		this.major = major;
@@ -137,11 +137,11 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 		return this.getIdentifierString();
 	}
 
-	public static final Set<String> createStrings(final Collection<Identifiable> identifiables) {
+	public static final Set<String> createStrings(final Collection<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
 		Set<String> idStrings = new HashSet<String>(identifiables.size());
-		for (final Iterator<Identifiable> identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();)
+		for (final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();)
 			idStrings.add(identifiableIterator.next().getId().toString());
 		return idStrings;
 	}
@@ -152,12 +152,12 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	 *         elements ordered in the same way as returned by the iterator.
 	 * @see #fromTransferables(IdlIdentifier[])
 	 */
-	public static final IdlIdentifier[] createTransferables(final Collection<Identifiable> identifiables) {
+	public static final IdlIdentifier[] createTransferables(final Collection<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
 		int i = 0;
 		final IdlIdentifier ids[] = new IdlIdentifier[identifiables.size()];
-		for (final Iterator<Identifiable> identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext(); i++)
+		for (final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext(); i++)
 			ids[i] = identifiableIterator.next().getId().getTransferable();
 		return ids;
 	}
@@ -181,11 +181,11 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	 * @param identifiables
 	 * @return Set of identifiers
 	 */
-	public static final Set<Identifier> createIdentifiers(final Set<Identifiable> identifiables) {
+	public static final Set<Identifier> createIdentifiers(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = new HashSet<Identifier>(identifiables.size());
-		for (Iterator<Identifiable> it = identifiables.iterator(); it.hasNext();) {
+		for (Iterator<? extends Identifiable> it = identifiables.iterator(); it.hasNext();) {
 			final Identifiable identifiable = it.next();
 			identifiers.add(identifiable.getId());
 		}
@@ -198,16 +198,16 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	 * @param identifiables2
 	 * @return Set of identifiers
 	 */
-	public static final Set<Identifier> createSumIdentifiers(final Set<Identifiable> identifiables1, final Set<Identifiable> identifiables2) {
+	public static final Set<Identifier> createSumIdentifiers(final Set<? extends Identifiable> identifiables1, final Set<? extends Identifiable> identifiables2) {
 		assert identifiables1 != null : NON_NULL_EXPECTED;
 		assert identifiables2 != null : NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = new HashSet<Identifier>(identifiables1.size() + identifiables2.size());
-		for (final Iterator<Identifiable> it = identifiables1.iterator(); it.hasNext();) {
+		for (final Iterator<? extends Identifiable> it = identifiables1.iterator(); it.hasNext();) {
 			final Identifiable identifiable = it.next();
 			identifiers.add(identifiable.getId());
 		}
-		for (final Iterator<Identifiable> it = identifiables2.iterator(); it.hasNext();) {
+		for (final Iterator<? extends Identifiable> it = identifiables2.iterator(); it.hasNext();) {
 			final Identifiable identifiable = it.next();
 			identifiers.add(identifiable.getId());
 		}
@@ -221,12 +221,12 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	 * @param identifiables2
 	 * @return Set of identifiers
 	 */
-	public static final Set<Identifier> createSubtractionIdentifiers(final Set<Identifiable> identifiables1, final Set<Identifiable> identifiables2) {
+	public static final Set<Identifier> createSubtractionIdentifiers(final Set<? extends Identifiable> identifiables1, final Set<? extends Identifiable> identifiables2) {
 		assert identifiables1 != null : NON_NULL_EXPECTED;
 		assert identifiables2 != null : NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = Identifier.createIdentifiers(identifiables1);
-		for (final Iterator<Identifiable> it = identifiables2.iterator(); it.hasNext();) {
+		for (final Iterator<? extends Identifiable> it = identifiables2.iterator(); it.hasNext();) {
 			final Identifiable identifiable = it.next();
 			identifiers.remove(identifiable.getId());
 		}
@@ -240,11 +240,11 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	 * @param identifiers
 	 * @param identifiables
 	 */
-	public static final void addToIdentifiers(final Set<Identifier> identifiers, final Set<Identifiable> identifiables) {
+	public static final void addToIdentifiers(final Set<Identifier> identifiers, final Set<? extends Identifiable> identifiables) {
 		assert identifiers != null : NON_NULL_EXPECTED;
 		assert identifiables != null : NON_NULL_EXPECTED;
 
-		for (final Iterator<Identifiable> it = identifiables.iterator(); it.hasNext();) {
+		for (final Iterator<? extends Identifiable> it = identifiables.iterator(); it.hasNext();) {
 			final Identifiable identifiable = it.next();
 			identifiers.add(identifiable.getId());
 		}
@@ -257,11 +257,11 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	 * @param identifiers
 	 * @param identifiables
 	 */
-	public static final void subtractFromIdentifiers(final Set<Identifier> identifiers, final Set<Identifiable> identifiables) {
+	public static final void subtractFromIdentifiers(final Set<Identifier> identifiers, final Set<? extends Identifiable> identifiables) {
 		assert identifiers != null : NON_NULL_EXPECTED;
 		assert identifiables != null : NON_NULL_EXPECTED;
 
-		for (final Iterator<Identifiable> it = identifiables.iterator(); it.hasNext();) {
+		for (final Iterator<? extends Identifiable> it = identifiables.iterator(); it.hasNext();) {
 			final Identifiable identifiable = it.next();
 			identifiers.remove(identifiable.getId());
 		}
