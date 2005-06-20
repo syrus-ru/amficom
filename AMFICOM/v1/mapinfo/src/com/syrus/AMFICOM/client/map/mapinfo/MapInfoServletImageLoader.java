@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoServletMapImageLoader.java,v 1.1.2.3 2005/06/06 13:16:59 krupenn Exp $
+ * $Id: MapInfoServletImageLoader.java,v 1.1.2.1 2005/06/20 15:31:23 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,33 +18,36 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
-import javax.swing.ImageIcon;
-
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ServletCommandNames;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
-import com.syrus.AMFICOM.client.map.TopologicalRequest;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
-public class MapInfoServletMapImageLoader implements MapImageLoader
+public class MapInfoServletImageLoader implements MapImageLoader
 {
-	private LogicalNetLayer logicalNetLayer = null;
 	private String uriString = null;
-	
+
 	private byte[] imageBuffer = null;
 	
-	public MapInfoServletMapImageLoader(
-			LogicalNetLayer miLayer)
+	private final MapInfoConnection connection;
+	
+	public MapInfoServletImageLoader(MapInfoConnection connection)
+			throws MapConnectionException
 	{
-		this.logicalNetLayer = miLayer;
-		this.uriString = this.logicalNetLayer.getMapViewer().getConnection().getURL();
+		this.connection = connection;
+
+		this.uriString = this.connection.getURL();
 		
 		Dimension maximumImageSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int dataSize = maximumImageSize.width * maximumImageSize.height * 2;
@@ -61,7 +64,7 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 	/**
 	 * Посылает запрос на сервер на остановку рендеринга.
 	 */
-	public void stopRenderingAtServer()
+	public void stopRendering()
 	{
 		String requestString = new String(
 				this.uriString +
@@ -76,12 +79,12 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 		{
 			URI mapServerURI = new URI(requestString);
 			URL mapServerURL = new URL(mapServerURI.toASCIIString());
-			URLConnection connection = mapServerURL.openConnection();
+			URLConnection urlConnection = mapServerURL.openConnection();
 
             String connectionResult = null;
             while (connectionResult == null)
             {
-                connectionResult = connection.getHeaderField(ServletCommandNames.STATUS_FIELD_NAME);
+                connectionResult = urlConnection.getHeaderField(ServletCommandNames.STATUS_FIELD_NAME);
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -118,22 +121,22 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 	 * Посылает запрос на рендеринг изображения на сервере
 	 * @throws MapConnectionException 
 	 */
-	public ImageIcon renderMapImageAtServer(TopologicalRequest request) throws MapConnectionException
+	public Image renderMapImage(TopologicalImageQuery query) throws MapConnectionException
 	{
 		System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 			" TIC - loadingthread - starting rendering at server");
 
 		try
 		{
-			String requestString = this.uriString + this.createRenderCommandString(request);			
+			String requestString = this.uriString + this.createRenderCommandString(query);			
 			URI mapServerURI = new URI(requestString);
 			URL mapServerURL = new URL(mapServerURI.toASCIIString());
-			URLConnection connection = mapServerURL.openConnection();
+			URLConnection urlConnection = mapServerURL.openConnection();
 
-            if(connection.getInputStream() == null)
-                return null;
+      if(urlConnection.getInputStream() == null)
+          return null;
 
-			ObjectInputStream ois = new ObjectInputStream(connection.getInputStream());
+			ObjectInputStream ois = new ObjectInputStream(urlConnection.getInputStream());
 
 			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 					" TIC - loadingthread - getServerMapImage - got data at ObjectInputStream");
@@ -149,7 +152,7 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 					" TIC - loadingthread - getServerMapImage - Read array from stream");
 
-			String connectionResult = connection.getHeaderField(ServletCommandNames.STATUS_FIELD_NAME);
+			String connectionResult = urlConnection.getHeaderField(ServletCommandNames.STATUS_FIELD_NAME);
             if (!connectionResult.equals(ServletCommandNames.STATUS_SUCCESS))
             {
                 System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
@@ -165,7 +168,7 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 			System.out.println(MapPropertiesManager.getLogDateFormat().format(new Date(System.currentTimeMillis())) +
 					" TIC - loadingthread - getServerMapImage - Image created");
 			
-			return new ImageIcon(imageReceived);
+			return imageReceived;
 
 		} catch (MalformedURLException e)
 		{
@@ -191,12 +194,12 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 	/**
 	 * Создаёт по текущему запросу строку параметров для HTTP запроса к серверу
 	 * топографии для рендеринга графических данных
-	 * @param request Запрос
+	 * @param query Запрос
 	 * @return Строка параметров для HTTP запроса к серверу
 	 * топографии 
 	 * @throws MapConnectionException 
 	 */
-	private String createRenderCommandString(TopologicalRequest request)
+	private String createRenderCommandString(TopologicalImageQuery query)
 		throws MapDataException, MapConnectionException
 	{
 		String result = "";
@@ -206,18 +209,15 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 		result += "&" + ServletCommandNames.COMMAND_NAME + "="
 		+ ServletCommandNames.CN_START_RENDER_IMAGE;
 		
-		Dimension size = this.logicalNetLayer.getMapViewer().getVisualComponent().getSize();
-		
-		result += "&" + ServletCommandNames.PAR_WIDTH + "="	+ size.width;
-		result += "&" + ServletCommandNames.PAR_HEIGHT + "=" + size.height;
-		result += "&" + ServletCommandNames.PAR_CENTER_X + "=" + request.getTopoCenter().getX();
-		result += "&" + ServletCommandNames.PAR_CENTER_Y + "=" + request.getTopoCenter().getY();
-		result += "&" + ServletCommandNames.PAR_ZOOM_FACTOR + "=" + request.getTopoScale();
+		result += "&" + ServletCommandNames.PAR_WIDTH + "="	+ query.getMapImageWidth();
+		result += "&" + ServletCommandNames.PAR_HEIGHT + "=" + query.getMapImageHeight();
+		result += "&" + ServletCommandNames.PAR_CENTER_X + "=" + query.getTopoCenterX();
+		result += "&" + ServletCommandNames.PAR_CENTER_Y + "=" + query.getTopoCenterY();
+		result += "&" + ServletCommandNames.PAR_ZOOM_FACTOR + "=" + query.getTopoScale();
 
 		int index = 0;
 		
-		Iterator layersIt = this.logicalNetLayer.getMapViewer().getLayers()
-				.iterator();
+		Iterator layersIt = this.connection.getLayers().iterator();
 		for(; layersIt.hasNext();)
 		{
 			SpatialLayer spL = (SpatialLayer )layersIt.next();
@@ -225,17 +225,107 @@ public class MapInfoServletMapImageLoader implements MapImageLoader
 			//Видимость слоя зависит от того, хочет ли его видеть клиент, виден ли он при текущем масштабе на сервере
 			//и надо ли отображать объекты для текущего запроса
 			boolean toShowLayerObjects =	spL.isVisible()
-				&& spL.isVisibleAtScale(this.logicalNetLayer.getScale());
+				&& spL.isVisibleAtScale(query.getTopoScale());
 
 			//то же самое для надписей
 			boolean toShowLayerLabels =	spL.isLabelVisible()
-				&& spL.isVisibleAtScale(this.logicalNetLayer.getScale());
+				&& spL.isVisibleAtScale(query.getTopoScale());
 			
 			result += "&" + ServletCommandNames.PAR_LAYER_VISIBLE + index + "="	+ (toShowLayerObjects ? 1 : 0);
 			result += "&" + ServletCommandNames.PAR_LAYER_LABELS_VISIBLE + index + "=" + (toShowLayerLabels ? 1 : 0);
 
 			index++;
 		}
+
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#getMapConnection()
+	 */
+	public MapConnection getMapConnection() throws MapConnectionException
+	{
+		return this.connection;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#findSpatialObjects(java.lang.String)
+	 */
+	public List findSpatialObjects(String searchText) throws MapConnectionException, MapDataException
+	{
+		List resultList = new ArrayList();
+
+		try
+		{
+			String requestString = this.uriString + this.createSearchCommandString(searchText);			
+			URI mapServerURI = new URI(requestString);
+			URL mapServerURL = new URL(mapServerURI.toASCIIString());
+			URLConnection urlConnection = mapServerURL.openConnection();
+
+			System.out.println("MIServletImageLoader - searchText - Conection opened");
+
+			if(urlConnection.getInputStream() == null)
+				return resultList;
+			
+			ObjectInputStream ois = new ObjectInputStream(urlConnection.getInputStream());
+
+			System.out.println("MIFLNL - searchText - ObjectInputStream exists");
+
+			//reading possible error from server
+			try
+			{
+				Object readObject = ois.readObject();
+				if(readObject instanceof String)
+				{
+//						Environment.log(
+//								Environment.LOG_LEVEL_FINER,
+//								(String )readObject);
+					return resultList;
+				}
+			}
+			catch(IOException optExc)
+			{
+			}
+
+			//reading names and centers
+			try
+			{
+				for(;;)
+				{
+					double xCoord  = ois.readDouble();
+					double yCoord  = ois.readDouble();				
+					String featureName = (String)ois.readObject();
+					
+					resultList.add(new MapInfoSpatialObject(
+							new DoublePoint(xCoord,yCoord),
+							featureName));
+				}
+			}
+			catch(EOFException eofExc)
+			{
+			}
+			System.out.println("MIFLNL - searchText - Spatial objects read");
+
+			ois.close();
+			System.out.println("MIFLNL - searchText - Stream closed");
+		}
+
+		catch(Exception exc)
+		{
+			exc.printStackTrace();
+		}
+
+		return resultList;
+	}
+	
+	private String createSearchCommandString(String nameToSearch)
+	{
+		String result = "";
+
+		result += "?" + ServletCommandNames.COMMAND_NAME + "="
+			+ ServletCommandNames.CN_SEARCH_NAME;
+		
+		result += "&" + ServletCommandNames.PAR_NAME_TO_SEARCH + "=" + nameToSearch;
 
 		return result;
 	}

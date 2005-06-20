@@ -1,183 +1,66 @@
 package com.syrus.AMFICOM.client.map.mapinfo;
 
+import java.awt.Cursor;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TooManyListenersException;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 import javax.swing.JComponent;
-import javax.swing.ToolTipManager;
 
-import com.mapinfo.mapj.FeatureLayer;
-import com.mapinfo.mapj.LayerType;
+import com.mapinfo.util.DoubleRect;
+import com.syrus.AMFICOM.client.map.Logger;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.SpatialLayer;
-import com.syrus.AMFICOM.client.map.ui.MapDropTargetListener;
-import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
-import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
-import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
-import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.map.SpatialObject;
 
 public class MapInfoNetMapViewer extends NetMapViewer
 {
-	protected MapInfoLogicalNetLayer lnl = null;
-
-	protected MapToolTippedPanel mttp = null;
-
-	protected ToolTipManager ttm = null;
-
-	protected DropTarget dropTarget = null;
-
-	protected MouseListener ml = null;
-
-	protected MouseMotionListener mml = null;
-
-	protected MapKeyAdapter mka = null;
-
-	protected DropTargetListener dtl = null;
-
-	protected static boolean dbset = false;
-
-	protected MapImagePanel mapImagePanel = null;
+	protected MapImagePanel visualComponent = null;
 	
 	protected MapInfoConnection mapConnection = null;
 	
-	/**
-	 * Список слоёв. Подгружается один раз при инциализации модуля.
-	 * Следует обновлять при изменении файла проекта во время работы (это опция пока нереализована)
-	 */
-	private List layersList = null;
+	protected DropTarget dropTarget = null;	
+	
+	public MapInfoNetMapViewer(LogicalNetLayer logicalNetLayer, MapContext mapContext, MapImageRenderer renderer) throws MapDataException, MapConnectionException {
+		super(logicalNetLayer, mapContext, renderer);
+
+		this.mapConnection =
+      (MapInfoConnection)this.mapContext.getMapConnection();
+		this.visualComponent = new MapImagePanel(this);
+	}
 	
 	public void init() throws MapDataException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "init()");
-
 		super.init();
-		
-		if(this.mapConnection == null)
-			throw new MapDataException("Нет соединения.");
-
 		try
 		{
-			this.lnl = new MapInfoLogicalNetLayer(this);
-			
-			if(this.mapImagePanel == null)
-			{
-				this.mapImagePanel = new MapImagePanel();
+			this.dropTarget = new DropTarget(this.visualComponent, this.dtl);
+			this.dropTarget.setActive(true);
 
-				this.mapImagePanel.setLogicalLayer(this.lnl);
+			this.visualComponent.addMouseListener(this.mttp.toolTippedPanelListener);
+			this.visualComponent.addMouseMotionListener(this.mttp.toolTippedPanelListener);
 
-				this.dtl = new MapDropTargetListener(this.lnl);
-				this.dropTarget = this.mapImagePanel.getDropTarget();
-				if(this.dropTarget == null)
-				{
-					this.dropTarget = new DropTarget(this.mapImagePanel, this.dtl);
-					this.mapImagePanel.setDropTarget(this.dropTarget);
-				}
-				else
-					try
-					{
-						this.dropTarget.addDropTargetListener(this.dtl);
-					}
-					catch(TooManyListenersException e)
-					{
-						e.printStackTrace();
-					}
+			this.visualComponent.addKeyListener(this.mka);
+			this.visualComponent.grabFocus();
 
-				this.dropTarget.setActive(true);
-
-				this.mttp = new MapToolTippedPanel(this);
-				this.mapImagePanel.addMouseListener(this.mttp.toolTippedPanelListener);
-				this.mapImagePanel.addMouseMotionListener(this.mttp.toolTippedPanelListener);
-
-				this.mka = new MapKeyAdapter(this.lnl);
-				this.mapImagePanel.addKeyListener(this.mka);
-				this.mapImagePanel.grabFocus();
-
-				this.ttm = ToolTipManager.sharedInstance();
-				this.ttm.registerComponent(this.mttp);
-
-				if(this.ml == null)
-				{
-					this.ml = new MapMouseListener(this.lnl);
-					this.mapImagePanel.addMouseListener(this.ml);
-				}
-				if(this.mml == null)
-				{
-					this.mml = new MapMouseMotionListener(this.lnl);
-					this.mapImagePanel.addMouseMotionListener(this.mml);
-				}
-			}
-
-			this.lnl.initializeImageCache();			
-			this.lnl.setCenter(MapPropertiesManager.getCenter());
-			this.lnl.setScale(MapPropertiesManager.getZoom());
+			this.visualComponent.addMouseListener(this.ml);
+			this.visualComponent.addMouseMotionListener(this.mml);
 		}
-		catch(Throwable e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
+			throw new MapDataException("abracadabra");
 		}
 	}
 
-	public void saveConfig()
+	public void dispose()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "saveConfig()");
-
-		//TODO Здесь, при наличии кэша, закрывается поток подгрузки
-		//изображений. По-хорошему должно быть перенесено в какой-нибудь
-		//другой метод, вызываемый при закрытии модуля карты
-		this.lnl.actionOnExit();
-		
-		try {
-			MapPropertiesManager.setCenter(this.lnl.getCenter());
-			MapPropertiesManager.setZoom(this.lnl.getScale());
-			MapPropertiesManager.saveIniFile();
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Установить соединение с хранилищем топографической информации
-	 */
-	public void setConnection(MapConnection conn)
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "setConnection(" + conn + ")");
-
-		try
-		{
-			this.mapConnection = (MapInfoConnection) conn;
-		} catch (ClassCastException e)
-		{
-			// TODO Auto-generated catch block
-			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-					.getName(), "Only MapInfoConnection can be set for this implementation.");			
-		}
-	}
-
-	/**
-	 * Получить соединение с хранилищем топографической информации
-	 */
-	public MapConnection getConnection()
-	{
-		return this.mapConnection;
+		this.renderer.cancel();
 	}
 
 	/**
@@ -185,31 +68,108 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public JComponent getVisualComponent()
 	{
-		return this.mapImagePanel;
+		return this.visualComponent;
 	}
 
-	public LogicalNetLayer getLogicalNetLayer()
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#getVisibleBounds()
+	 */
+	public Double getVisibleBounds() throws MapConnectionException, MapDataException
 	{
-		return this.lnl;
-	}
-
-	public List getLayers()
-	{
-		if (this.layersList == null)
+		try
 		{
-			this.layersList = new ArrayList();
+			DoubleRect rect = this.mapConnection.getLocalMapJ().getBounds();
+			Rectangle2D.Double vb = new Rectangle2D.Double(
+					rect.xmin,
+					rect.ymin,
+					rect.width(),
+					rect.height());
 
-			Iterator layersIt = this.mapConnection.getLocalMapJ().getLayers().iterator(
-					LayerType.FEATURE);
-			for(; layersIt.hasNext();)
-			{
-				FeatureLayer currLayer = (FeatureLayer) layersIt.next();
-				SpatialLayer spL = new MapInfoSpatialLayer(currLayer, this.lnl);
-				this.layersList.add(spL);
-			}
+			return vb;
 		}
-
-		return this.layersList;
+		catch(Exception ex)
+		{
+			throw new MapConnectionException("cannot get visible bounds", ex);
+		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#centerSpatialObject(com.syrus.AMFICOM.client.map.SpatialObject)
+	 */
+	public void centerSpatialObject(SpatialObject so) throws MapConnectionException, MapDataException
+	{
+		MapInfoSpatialObject miso = (MapInfoSpatialObject )so;
+		this.mapContext.setCenter(miso.getCenter());
+		this.renderer.setCenter(miso.getCenter());
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#repaint(boolean)
+	 */
+	public void repaint(boolean fullRepaint) throws MapConnectionException, MapDataException
+	{
+		if(fullRepaint)
+		{
+			Logger.log(" MIFLNL - repaint - Entered full repaint");
+			
+			this.visualComponent.setImage(this.renderer.getImage());
+			Logger.log(" MIFLNL - repaint - Exiting full repaint");
+			
+		}
+		this.visualComponent.repaint();		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#setCursor(java.awt.Cursor)
+	 */
+	public void setCursor(Cursor cursor)
+	{
+		this.visualComponent.setCursor(cursor);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#getCursor()
+	 */
+	public Cursor getCursor()
+	{
+		return this.visualComponent.getCursor();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handDragged(java.awt.event.MouseEvent)
+	 */
+	public void handDragged(MouseEvent me) throws MapConnectionException, MapDataException
+	{
+		// empty
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handMoved(java.awt.event.MouseEvent)
+	 */
+	public void handMoved(MouseEvent me) throws MapConnectionException, MapDataException
+	{
+		// empty
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#mouseMoved(java.awt.event.MouseEvent)
+	 */
+	public void mouseMoved(MouseEvent me) throws MapConnectionException, MapDataException
+	{
+		this.renderer.analyzeMouseLocation(me);
+	}
+
+	public void setMapImageSize(int width, int height) throws MapConnectionException, MapDataException
+	{
+		if((width > 0) && (height > 0))
+		{
+			this.mapConnection.getLocalMapJ().setDeviceBounds(new DoubleRect(
+					0,
+					0,
+					width,
+					height));
+
+			this.renderer.sizeChanged();
+		}
+	}
 }

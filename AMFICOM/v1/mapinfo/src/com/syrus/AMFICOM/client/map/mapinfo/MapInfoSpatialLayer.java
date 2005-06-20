@@ -4,8 +4,6 @@ import java.awt.Component;
 
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.unit.Distance;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 
 public class MapInfoSpatialLayer implements SpatialLayer
@@ -14,14 +12,10 @@ public class MapInfoSpatialLayer implements SpatialLayer
 	
 	private FeatureLayer mapLayer = null;
 
-	private MapInfoLogicalNetLayer layerToRepaint = null;
-
 	public MapInfoSpatialLayer(
-			FeatureLayer mapLayer,
-			MapInfoLogicalNetLayer layerToRepaint)
+			FeatureLayer mapLayer)
 	{
 		this.mapLayer = mapLayer;
-		this.layerToRepaint = layerToRepaint;
 	}
 
 	public MapInfoSpatialLayer()
@@ -76,36 +70,9 @@ public class MapInfoSpatialLayer implements SpatialLayer
 		return returnValue;
 	}
 
-	public boolean isVisibleAtCurrentScale()
-	{
-		try {
-			return isVisibleAtScale(this.layerToRepaint.getScale());
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
-		try {
-			this.layerToRepaint.refreshLayers();		
-			if (this.isVisibleAtScale(this.layerToRepaint.getScale()))
-			{
-				this.layerToRepaint.repaint(true);			
-			}
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public void setLabelVisible(boolean visible)

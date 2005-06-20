@@ -17,12 +17,12 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 public class MapImagePanel extends JPanel
 {
 	private Image mapImage = null;
-	private boolean imageIsMoving = false;
 
-	MapInfoLogicalNetLayer layerToPaint = null;
+	private final MapInfoNetMapViewer viewer;
 
-	public MapImagePanel()
+	public MapImagePanel(MapInfoNetMapViewer viewer)
 	{
+		this.viewer = viewer;
 		ComponentListener[] listeners = this.getComponentListeners();
 		for (int i = 0; i < listeners.length; i++)
 			this.removeComponentListener(listeners[i]);
@@ -48,10 +48,9 @@ public class MapImagePanel extends JPanel
 
 	void setLayerSize()
 	{
-		if(this.layerToPaint != null)
 			try
 			{
-				this.layerToPaint.setMapImageSize(
+				this.viewer.setMapImageSize(
 						this.getWidth(),
 						this.getHeight());
 			} catch (MapConnectionException e)
@@ -72,22 +71,11 @@ public class MapImagePanel extends JPanel
 	
 	public void setImage(Image newImage)
 	{
-        if (newImage != null)
-        {
-    		this.mapImage = newImage;
-    		this.imageIsMoving = false;
-        }
-//		if (newImage != null)
-//			this.mapImage.getGraphics().drawImage(newImage,0,0,this);
+   if (newImage != null)
+   		this.mapImage = newImage;
 	}
 	
 	
-	public void setLogicalLayer(MapInfoLogicalNetLayer layerToPaint)
-	{
-		this.layerToPaint = layerToPaint;
-		this.repaint();
-	}
-
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
@@ -95,10 +83,9 @@ public class MapImagePanel extends JPanel
 		if(this.mapImage != null && g != null)
 			g.drawImage(this.mapImage, 0, 0, this);
 
-		if(this.layerToPaint != null)
 			try
 			{
-				this.layerToPaint.paint(g);
+				this.viewer.getLogicalNetLayer().paint(g, this.viewer.getVisibleBounds());
 			} catch (MapConnectionException e)
 			{
 				// TODO Auto-generated catch block
@@ -108,49 +95,5 @@ public class MapImagePanel extends JPanel
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	}
-	
-	public void repaint(Graphics g, int shiftX, int shiftY)
-	{
-		if (this.imageIsMoving == false)
-		{
-			try
-			{
-				this.layerToPaint.paint(this.mapImage.getGraphics());
-			} catch (MapConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MapDataException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			this.imageIsMoving = true;
-		}
-		
-		if (this.mapImage != null && g != null)
-			g.drawImage(this.mapImage, 0, 0, this);
-
-//		g.setColor(Color.GRAY);
-//
-//		if(boundedShiftX > 0)
-//			g.fillRect(0, 0, boundedShiftX, this.getHeight());
-//		else
-//			if(boundedShiftX < 0)
-//				g.fillRect(this.getWidth() + boundedShiftX, 0, -boundedShiftX, this.getHeight());
-//
-//		if(boundedShiftY > 0)
-//			g.fillRect(0, 0, this.getWidth(), boundedShiftY);
-//		else
-//			if(boundedShiftY < 0)
-//				g.fillRect(
-//						0,
-//						this.getHeight() + boundedShiftY,
-//						this.getWidth(),
-//						-boundedShiftY);
-//
-//		if(this.mapImage != null && g != null)
-//			g.drawImage(this.mapImage, boundedShiftX, boundedShiftY, this);
 	}
 }
