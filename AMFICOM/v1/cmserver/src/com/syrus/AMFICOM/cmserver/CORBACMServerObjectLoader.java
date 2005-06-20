@@ -1,5 +1,5 @@
 /*
- * $Id: CORBACMServerObjectLoader.java,v 1.3 2005/06/14 09:43:51 arseniy Exp $
+ * $Id: CORBACMServerObjectLoader.java,v 1.4 2005/06/20 08:57:21 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/14 09:43:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/06/20 08:57:21 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 final class CORBACMServerObjectLoader extends CORBAObjectLoader {
@@ -33,7 +33,7 @@ final class CORBACMServerObjectLoader extends CORBAObjectLoader {
 			throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 
-		final Set loadIds = Identifier.createSubstractionIdentifiers(ids, objects);
+		final Set loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 

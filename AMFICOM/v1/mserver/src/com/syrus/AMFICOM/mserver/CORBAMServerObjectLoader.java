@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.6 2005/06/17 13:07:01 bass Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.7 2005/06/20 08:57:21 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 13:07:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/20 08:57:21 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -54,7 +54,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.6 $, $Date: 2005/06/17 13:07:01 $
+	 * @version $Revision: 1.7 $, $Date: 2005/06/20 08:57:21 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -66,7 +66,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.6 $, $Date: 2005/06/17 13:07:01 $
+	 * @version $Revision: 1.7 $, $Date: 2005/06/20 08:57:21 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -95,7 +95,7 @@ final class CORBAMServerObjectLoader {
 			throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 
-		final Set loadIds = Identifier.createSubstractionIdentifiers(ids, objects);
+		final Set loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 
@@ -186,7 +186,7 @@ final class CORBAMServerObjectLoader {
 				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(mcmRef, loadIdsT, sessionKeyT);
 
 				final Set mcmLoadedObjects = StorableObjectPool.fromTransferables(entityCode, transferables, true);
-				Identifier.substractFromIdentifiers(loadIds, mcmLoadedObjects);
+				Identifier.subtractFromIdentifiers(loadIds, mcmLoadedObjects);
 				loadedObjects.addAll(mcmLoadedObjects);
 
 				/*	Just debug output -- nothing more*/
