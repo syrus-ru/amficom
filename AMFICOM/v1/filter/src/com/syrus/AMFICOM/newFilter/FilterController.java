@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.14 2005/06/16 10:24:34 max Exp $
+ * $Id: FilterController.java,v 1.15 2005/06/20 09:28:56 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/16 10:24:34 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/20 09:28:56 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -80,9 +80,40 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				this.keyTempCondition.put(conditionKey, new DateCondition());
 				break;
 			default:
-				Log.errorMessage("FilterCondition.<init> | Unsupported condition type");
+				Log.errorMessage("FilterController.<init> | Unsupported condition type");
 			}
 		}		
+	}
+	
+	public void setFilter(Filter filter) {
+		this.model = filter;
+		this.model.addView(this.view);
+		this.keyTempCondition.clear();
+		for (Iterator it = this.model.getKeys().iterator(); it.hasNext();) {
+			ConditionKey conditionKey = (ConditionKey) it.next();
+			byte type = conditionKey.getType();
+			switch (type) {
+			case ConditionWrapper.INT:
+			case ConditionWrapper.FLOAT:
+			case ConditionWrapper.DOUBLE:
+				this.keyTempCondition.put(conditionKey, new NumberCondition());
+				break;
+			case ConditionWrapper.STRING:
+				this.keyTempCondition.put(conditionKey, new StringCondition());
+				break;
+			case ConditionWrapper.CONSTRAINT:
+				this.keyTempCondition.put(conditionKey, new ListCondition(conditionKey.getConstraintNames()));
+				break;
+			case ConditionWrapper.LIST:
+				this.keyTempCondition.put(conditionKey, new ListCondition());
+				break;
+			case ConditionWrapper.DATE:
+				this.keyTempCondition.put(conditionKey, new DateCondition());
+				break;
+			default:
+				Log.errorMessage("FilterController.<init> | Unsupported condition type");
+			}
+		}
 	}
 
 	public void actionPerformed(ActionEvent evt) {
