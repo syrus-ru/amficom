@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.7 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: MapConnection.java,v 1.8 2005/06/20 10:03:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/20 10:03:30 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -39,6 +39,13 @@ public abstract class MapConnection {
 	
 	public abstract MapContext createMapContext();
 
+	/**
+	 * Получить список географических слоев.
+	 * @return список слоев &lt;{@link SpatialLayer}&gt;
+	 */
+	public abstract List getLayers()
+		throws MapDataException;
+	
 	/**
 	 * Получить список названий доступных видов.
 	 * 

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.9 2005/06/16 10:57:21 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.10 2005/06/20 10:03:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
+import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/20 10:03:30 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -189,7 +190,7 @@ public class LayersPanel extends JPanel
 			Component imageLabel = null;
 		
 			int i = 0;
-			for(Iterator it = this.mapFrame.getMapViewer().getMapContext().getLayers().iterator(); it.hasNext();) {
+			for(Iterator it = this.mapFrame.getMapViewer().getMapContext().getMapConnection().getLayers().iterator(); it.hasNext();) {
 				SpatialLayer sl = (SpatialLayer )it.next();
 				
 				LayerVisibilityCheckBox lvCheckBox = new LayerVisibilityCheckBox(sl);
@@ -235,6 +236,9 @@ public class LayersPanel extends JPanel
 			}
 		}
 		catch(MapDataException e) {
+			System.out.println("cannot get layers");
+			e.printStackTrace();
+		} catch(MapConnectionException e) {
 			System.out.println("cannot get layers");
 			e.printStackTrace();
 		}
