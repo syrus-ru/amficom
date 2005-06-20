@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreReader.java,v 1.10 2005/06/17 11:25:48 bass Exp $
+ * $Id: BellcoreReader.java,v 1.11 2005/06/20 14:24:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/17 11:25:48 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/20 14:24:40 $
  * @author $Author: bass $
  * @module util
  */
@@ -23,6 +23,7 @@ public final class BellcoreReader extends DataReader {
 
 	private static final String IO_ERROR_MESSAGE = "I/O Error";
 
+	@Override
 	public BellcoreStructure getData(byte[] raw_data) {
 		if (raw_data.length < 50)
 			return null;
@@ -296,8 +297,7 @@ public final class BellcoreReader extends DataReader {
 	 * @todo Parameter <code>n</code> is never read. Method is used only
 	 *       locally. Wouldn't it be wise to remove it?
 	 */
-	private int readCksum(final int n)
-	{
+	private int readCksum(@SuppressWarnings("unusedArgument") final int n) {
 		return 1;
 	}
 

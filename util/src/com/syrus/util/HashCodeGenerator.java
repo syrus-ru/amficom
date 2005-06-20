@@ -1,5 +1,5 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.8 2005/05/18 10:49:17 bass Exp $
+ * $Id: HashCodeGenerator.java,v 1.9 2005/06/20 14:24:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Date;
  * HashCodeGenerator methods have got from Effective Java: Programming Language
  * Guide by Joshua Bloch
  *
- * @version $Revision: 1.8 $, $Date: 2005/05/18 10:49:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/20 14:24:40 $
  * @author $Author: bass $
  * @module util
  */
@@ -209,14 +209,17 @@ public class HashCodeGenerator {
 		return false;
 	}
 
-	public boolean equals(Object obj) {
+	@Override
+	public boolean equals(final Object obj) {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public int hashCode() {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String toString() {
 		return "HashCodeGenerator result:" + this.result;
 	}

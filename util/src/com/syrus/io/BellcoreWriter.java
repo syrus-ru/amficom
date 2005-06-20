@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreWriter.java,v 1.10 2005/06/17 11:25:48 bass Exp $
+ * $Id: BellcoreWriter.java,v 1.11 2005/06/20 14:24:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.io.*;
 import java.nio.*;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/17 11:25:48 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/20 14:24:40 $
  * @author $Author: bass $
  * @module util
  */
@@ -246,7 +246,7 @@ public final class BellcoreWriter {
 	/**
 	 * @todo Parameter never read.
 	 */
-	private int writeCksum(int n) {
+	private int writeCksum(@SuppressWarnings("unusedArgument") int n) {
 //		ByteBuffer bb = ByteBuffer.wrap(baos.toByteArray());
 //		int sum = crc16(bb);
 //		try {
@@ -261,6 +261,7 @@ public final class BellcoreWriter {
 	/**
 	 * @todo Method never read locally.
 	 */
+	@SuppressWarnings("unusedPrivate")
 	private static int crc16(ByteBuffer bb) {
 		int sum = 0;
 		while (bb.hasRemaining()) {

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.16 2005/06/17 07:12:06 saa Exp $
+ * $Id: BellcoreStructure.java,v 1.17 2005/06/20 14:24:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/17 07:12:06 $
- * @author $Author: saa $
+ * @version $Revision: 1.17 $, $Date: 2005/06/20 14:24:40 $
+ * @author $Author: bass $
  * @module util
  */
 public class BellcoreStructure {
@@ -47,6 +47,7 @@ public class BellcoreStructure {
 	/**
 	 * @todo Field is never read locally.
 	 */
+	@SuppressWarnings("unusedPrivate")
 	private boolean hasSpecial = false;
 	private int blocks = 0; // общее число полей
 	int specials = 0; // число полей specials (может быть произвольным)

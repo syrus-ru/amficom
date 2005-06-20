@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.9 2005/06/16 10:48:15 bob Exp $
+ * $Id: ApplicationLogger.java,v 1.10 2005/06/20 14:24:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ public final class ApplicationLogger extends AbstractLogger {
 		super(appName, hostName);
 	}
 
+	@Override
 	void initSpec() {
 		super.echoDebug = Boolean.valueOf(ApplicationProperties.getString(KEY_ECHO_DEBUG, DEFAULT_LOG_ECHO_DEBUG)).booleanValue();
 		super.echoError = Boolean.valueOf(ApplicationProperties.getString(KEY_ECHO_ERROR, DEFAULT_LOG_ECHO_ERROR)).booleanValue();

@@ -1,5 +1,5 @@
 /*
- * $Id: TraceReader.java,v 1.11 2005/06/17 11:25:48 bass Exp $
+ * $Id: TraceReader.java,v 1.12 2005/06/20 14:24:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import com.syrus.util.TraceDataReader;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/17 11:25:48 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/20 14:24:40 $
  * @author $Author: bass $
  * @module util
  */
@@ -40,11 +40,13 @@ public final class TraceReader extends DataReader {
 
 	}
 
+	@Override
 	public BellcoreStructure getData(byte[] b) {
 		throw new UnsupportedOperationException("Method not implemented");
 		//return null;
 	}
 
+	@Override
 	public BellcoreStructure getData(File f) {
 		BellcoreStructure bs = null;
 		// then Bellcore

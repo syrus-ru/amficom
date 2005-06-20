@@ -1,5 +1,5 @@
 /*
- * $Id: WavetekReader.java,v 1.10 2005/06/17 11:25:48 bass Exp $
+ * $Id: WavetekReader.java,v 1.11 2005/06/20 14:24:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/17 11:25:48 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/20 14:24:40 $
  * @author $Author: bass $
  * @module util
  */
@@ -42,6 +42,7 @@ public final class WavetekReader extends DataReader {
 	private int pos = 0;
 	int i;
 
+	@Override
 	public BellcoreStructure getData(byte[] raw_data) {
 		if (raw_data.length < 50)
 			return null;
