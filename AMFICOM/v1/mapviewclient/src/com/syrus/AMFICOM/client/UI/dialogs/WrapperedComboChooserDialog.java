@@ -1,5 +1,5 @@
 /**
- * $Id: WrapperedComboChooserDialog.java,v 1.2 2005/06/14 11:29:53 krupenn Exp $
+ * $Id: WrapperedComboChooserDialog.java,v 1.3 2005/06/20 15:29:11 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @module commonclient_v1
  */
 public class WrapperedComboChooserDialog {
@@ -77,7 +77,7 @@ public class WrapperedComboChooserDialog {
 		mainPanel.add(comboBox, BorderLayout.CENTER);
 
 		final String okButton = LangModelGeneral.getString("Choose");
-		final String cancelButton = LangModelGeneral.getString("Cancel");
+		final String cancelButton = LangModelGeneral.getString("Button.Cancel");
 
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
