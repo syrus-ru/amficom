@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.2 2005/06/14 12:06:18 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.3 2005/06/20 10:01:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/06/14 12:06:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/20 10:01:36 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -68,7 +68,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add(ApplicationModel.MENU_SESSION);
 		add(ApplicationModel.MENU_SESSION_NEW);
 		add(ApplicationModel.MENU_SESSION_CLOSE);
-		add(ApplicationModel.MENU_SESSION_CONNECTION);
+//		add(ApplicationModel.MENU_SESSION_CONNECTION);
 		add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
 		add(ApplicationModel.MENU_SESSION_DOMAIN);
 		add(ApplicationModel.MENU_EXIT);
