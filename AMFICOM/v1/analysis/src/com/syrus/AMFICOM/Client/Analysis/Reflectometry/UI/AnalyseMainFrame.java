@@ -294,17 +294,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		Heap.addPrimaryTraceListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
-		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-
-		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment.getDispatcher()));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher()));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(this.aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(),
-																				this.aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(),
-																						this.aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), this.aContext));
-		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(this.dispatcher, this.aContext));
 		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(this.dispatcher, this.aContext));
@@ -356,11 +345,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		setDefaultModel(aModel);
 
 		aModel.fireModelChanged("");
-
-		// if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
-		// this.dispatcher.firePropertyChange(new ContextChangeEvent(this,
-		// ContextChangeEvent.SESSION_OPENED_EVENT), true);
-		// }
 	}
 
 	private AbstractCommand getLazyCommand(final Object key) {
@@ -475,18 +459,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	}
 
 	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
-			Environment.setActiveWindow(this);
-			// ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-			// SessionInterface.setActiveSession(aContext.getSessionInterface());
-		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			// ColorManager.saveIni();
 			this.aManager.saveIni();
-			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			this.aContext.getApplicationModel().getCommand("menuExit").execute();
-			return;
 		}
 		super.processWindowEvent(e);
 	}

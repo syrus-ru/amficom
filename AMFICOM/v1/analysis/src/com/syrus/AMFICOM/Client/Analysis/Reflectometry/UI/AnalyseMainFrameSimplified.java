@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.client.model.ExitCommand;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
 import com.syrus.AMFICOM.client.model.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.client.model.SessionCloseCommand;
-import com.syrus.AMFICOM.client.model.SessionConnectionCommand;
 import com.syrus.AMFICOM.client.model.SessionDomainCommand;
 import com.syrus.AMFICOM.client.model.SessionOptionsCommand;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
@@ -174,17 +173,6 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
-		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-
-		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment.getDispatcher()));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher()));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(this.aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(),
-																				this.aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(),
-																						this.aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), this.aContext));
-		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(super.dispatcher, this.aContext));
 		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(super.dispatcher, this.aContext));
@@ -260,9 +248,6 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	public void setDomainSelected() {
 		super.setDomainSelected();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionClose", true);
-		aModel.setEnabled("menuSessionOptions", true);
-		aModel.setEnabled("menuSessionChangePassword", true);
 
 		aModel.setEnabled("menuFileOpen", true);
 		aModel.setEnabled("menuFileOpenAs", true);
@@ -304,18 +289,8 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	}
 
 	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
-			Environment.setActiveWindow(this);
-			// ConnectionInterface.setActiveConnection(this.aContext.getConnectionInterface());
-			// SessionInterface.setActiveSession(this.aContext.getSessionInterface());
-		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			// ColorManager.saveIni();
 			this.aManager.saveIni();
-			super.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			this.aContext.getApplicationModel().getCommand("menuExit").execute();
-			return;
 		}
 		super.processWindowEvent(e);
 	}

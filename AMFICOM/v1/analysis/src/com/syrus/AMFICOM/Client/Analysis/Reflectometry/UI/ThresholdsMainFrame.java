@@ -319,18 +319,8 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 
 
 	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
-			Environment.setActiveWindow(this);
-			// ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-			// SessionInterface.setActiveSession(aContext.getSessionInterface());
-		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			// ColorManager.saveIni();
 			this.aManager.saveIni();
-			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-			this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
-			return;
 		}
 		super.processWindowEvent(e);
 	}
