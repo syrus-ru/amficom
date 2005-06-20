@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.107 2005/06/20 13:57:37 max Exp $
+ * $Id: StorableObjectPool.java,v 1.108 2005/06/20 14:01:53 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/06/20 13:57:37 $
+ * @version $Revision: 1.108 $, $Date: 2005/06/20 14:01:53 $
  * @author $Author: max $
  * @module general_v1
  */
@@ -942,13 +942,13 @@ public abstract class StorableObjectPool {
 
 		Set<Identifiable> dependencies = storableObject.getDependencies();
 		StorableObject dependencyObject = null;
-		for (Identifiable object: dependencies) {
+		for (Identifiable identifiable: dependencies) {
 			// if (object == null)
 			// continue;
-			if (object instanceof Identifier)
-				dependencyObject = getStorableObject((Identifier) object, false);
-			else if (object instanceof StorableObject)
-				dependencyObject = (StorableObject) object;
+			if (identifiable instanceof Identifier)
+				dependencyObject = getStorableObject((Identifier) identifiable, false);
+			else if (identifiable instanceof StorableObject)
+				dependencyObject = (StorableObject) identifiable;
 			else
 				throw new IllegalDataException("dependency for object '" + id
 						+ "' neither Identifier nor StorableObject");
@@ -1127,7 +1127,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: max $
-	 * @version $Revision: 1.107 $, $Date: 2005/06/20 13:57:37 $
+	 * @version $Revision: 1.108 $, $Date: 2005/06/20 14:01:53 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
