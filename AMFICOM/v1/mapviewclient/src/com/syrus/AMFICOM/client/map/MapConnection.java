@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.8 2005/06/20 10:03:30 krupenn Exp $
+ * $Id: MapConnection.java,v 1.9 2005/06/20 15:16:26 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,8 +12,8 @@ import java.util.List;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/20 10:03:30 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2005/06/20 15:16:26 $
+ * @author $Author: peskovsky $
  * @module mapviewclient
  */
 public abstract class MapConnection {
@@ -33,7 +33,7 @@ public abstract class MapConnection {
 
 	public abstract String getView();
 	
-	public abstract MapImageLoader createImageLoader();
+	public abstract MapImageLoader createImageLoader() throws MapConnectionException;
 	
 	public abstract MapCoordinatesConverter createCoordinatesConverter();
 	
