@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.37 2005/06/17 13:06:53 bass Exp $
+ * $Id: SchemePath.java,v 1.38 2005/06/20 16:13:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
 import com.syrus.util.Log;
@@ -45,7 +44,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/17 13:06:53 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/20 16:13:01 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -62,7 +61,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	private Identifier parentSchemeId;
 
-	private Set characteristics;
+	private Set<Characteristic> characteristics;
 
 	private SchemePathDatabase schemePathDatabase;
 
@@ -265,7 +264,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		}
 	}
 
-	public SortedSet getPathElements() {
+	public SortedSet<PathElement> getPathElements() {
 		return Collections.unmodifiableSortedSet(new TreeSet(getPathElements0()));
 	}
 
@@ -285,13 +284,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IDLEntity getTransferable() {
+	public SchemePath_Transferable getTransferable() {
 		return new SchemePath_Transferable(
 				super.getHeaderTransferable(), this.name,
 				this.description,
-				(IdlIdentifier) this.transmissionPathId.getTransferable(),
-				(IdlIdentifier) this.parentSchemeMonitoringSolutionId.getTransferable(),
-				(IdlIdentifier) this.parentSchemeId.getTransferable(),
+				this.transmissionPathId.getTransferable(),
+				this.parentSchemeMonitoringSolutionId.getTransferable(),
+				this.parentSchemeId.getTransferable(),
 				Identifier.createTransferables(this.characteristics));
 	}
 
