@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.20 2005/06/21 12:43:47 bass Exp $
+ * $Id: CharacterizableDatabase.java,v 1.21 2005/06/21 14:26:05 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/21 12:43:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/06/21 14:26:05 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -49,10 +49,10 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		final String sql = CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
 		final CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<? extends StorableObject> storableObjects = characteristicDatabase.retrieveByCondition(sql);
+		final Set<? extends StorableObject> soCharacteristics = characteristicDatabase.retrieveByCondition(sql);
 		//@todo Find standart way
-		final Set<Characteristic> characteristics = new HashSet<Characteristic>(storableObjects.size());
-		for (StorableObject storableObject : storableObjects) {
+		final Set<Characteristic> characteristics = new HashSet<Characteristic>(soCharacteristics.size());
+		for (final StorableObject storableObject : soCharacteristics) {
 			characteristics.add((Characteristic) storableObject);
 		}
 		
@@ -65,53 +65,57 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			throws RetrieveObjectException, IllegalDataException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
+		assert StorableObject.hasSingleTypeEntities(storableObjects) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		final Set<? extends StorableObject> characteristics = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE)
-				.retrieveByCondition(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true)
-				.toString());
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
+		final String conditionString = idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true).toString();
+		final Set<? extends StorableObject> soCharacteristics = database.retrieveByCondition(conditionString);
+		//@todo Find standart way
+		final Set<Characteristic> characteristics = new HashSet<Characteristic>(soCharacteristics.size());
+		for (final StorableObject storableObject : storableObjects) {
+			characteristics.add((Characteristic) storableObject);
+		}
 
-		Map<Identifier, Set<StorableObject>> orderedCharacteristicsMap = new HashMap<Identifier, Set<StorableObject>>();
-		for (Iterator<? extends StorableObject> it = characteristics.iterator(); it.hasNext();) {
+		final Map<Identifier, Set<Characteristic>> orderedCharacteristicsMap = new HashMap<Identifier, Set<Characteristic>>();
+		for (final Iterator<? extends StorableObject> it = characteristics.iterator(); it.hasNext();) {
 			final Characteristic characteristic = (Characteristic) it.next();
 			final Identifier characterizableId = characteristic.getCharacterizableId();
-			Set<StorableObject> orderedCharacteristics = orderedCharacteristicsMap.get(characterizableId);
+			Set<Characteristic> orderedCharacteristics = orderedCharacteristicsMap.get(characterizableId);
 			if (orderedCharacteristics == null) {
-				orderedCharacteristics = new HashSet<StorableObject>();
+				orderedCharacteristics = new HashSet<Characteristic>();
 				orderedCharacteristicsMap.put(characterizableId, orderedCharacteristics);
 			}
 			orderedCharacteristics.add(characteristic);
 		}
 
-		Characterizable characterizable;
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			characterizable = this.fromStorableObject((StorableObject) it.next());
+		for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+			final Characterizable characterizable = this.fromStorableObject(it.next());
 			final Identifier characterizableId = characterizable.getId();
-			Set orderedCharacteristics = orderedCharacteristicsMap.get(characterizableId);
+			Set<Characteristic> orderedCharacteristics = orderedCharacteristicsMap.get(characterizableId);
 			if (orderedCharacteristics == null)
-				orderedCharacteristics = Collections.EMPTY_SET;
+				orderedCharacteristics = Collections.emptySet();
 
 			characterizable.setCharacteristics0(orderedCharacteristics);
 		}
 	}
 
 	@Override
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		super.insertEntity(storableObject);
 
-		Characterizable characterizable = this.fromStorableObject(storableObject);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
+		final Characterizable characterizable = this.fromStorableObject(storableObject);
+		final CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		characteristicDatabase.insert(characterizable.getCharacteristics());
 	}
 
 	@Override
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
-		Set characteristics = new HashSet();
+		final Set<Characteristic> characteristics = new HashSet<Characteristic>();
 		Characterizable characterizable;
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			characterizable = this.fromStorableObject((StorableObject) it.next());
+		for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+			characterizable = this.fromStorableObject(it.next());
 			characteristics.addAll(characterizable.getCharacteristics());
 		}
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
@@ -119,7 +123,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	public void update(final StorableObject storableObject, final Identifier modifierId, final int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 
@@ -132,136 +136,114 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(Set storableObjects, Identifier modifierId, int updateKind)
+	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		this.updateCharacteristics(storableObjects);
 	}
 
-	private void updateCharacteristics(Characterizable characterizable) throws UpdateObjectException {
-		Set characteristics;
-		Characteristic characteristic;
+	private void updateCharacteristics(final Characterizable characterizable) throws UpdateObjectException {
+		final Set<Identifier> dbCharacteristicIds = new HashSet<Identifier>();
 
-		String cdIdStr = DatabaseIdentifier.toSQLString(characterizable.getId());
-		String sql = CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
-
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
+		final String cdIdStr = DatabaseIdentifier.toSQLString(characterizable.getId());
+		final String sql = CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
+		final CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
-			characteristics = characteristicDatabase.retrieveByCondition(sql);
-		} catch (ApplicationException ae) {
+			final Set<? extends StorableObject> soCharacteristics = database.retrieveByCondition(sql);
+			dbCharacteristicIds.addAll(Identifier.createIdentifiers(soCharacteristics));
+		}
+		catch (ApplicationException ae) {
 			throw new UpdateObjectException("Cannot retrieve from database characteristics for " + this.getEntityName()
 					+ " '" + cdIdStr + "' -- " + ae.getMessage(), ae);
 		}
 
-		Set dbCharacteristicIds = new HashSet(characteristics.size());
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			characteristic = (Characteristic) it.next();
-			dbCharacteristicIds.add(characteristic.getId());
-		}
+		final Set<Characteristic> characteristics = characterizable.getCharacteristics();
+		final Set<Identifier> characteristicIds = Identifier.createIdentifiers(characteristics);
 
-		characteristics = characterizable.getCharacteristics();
-
-		Set characteristicIds = new HashSet(characteristics.size());
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			characteristic = (Characteristic) it.next();
-			characteristicIds.add(characteristic.getId());
-		}
-
-		Set insertCharacteristics = null;
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			characteristic = (Characteristic) it.next();
+		Set<Characteristic> insertCharacteristics = null;
+		for (final Characteristic characteristic : characteristics) {
 			if (!dbCharacteristicIds.contains(characteristic.getId())) {
 				if (insertCharacteristics == null)
-					insertCharacteristics = new HashSet();
+					insertCharacteristics = new HashSet<Characteristic>();
 				insertCharacteristics.add(characteristic);
 			}
 		}
 
-		Set deleteCharacteristicIds = null;
-		Identifier id;
-		for (Iterator it = dbCharacteristicIds.iterator(); it.hasNext();) {
-			id = (Identifier) it.next();
+		Set<Identifier> deleteCharacteristicIds = null;
+		for (final Identifier id : dbCharacteristicIds) {
 			if (!characteristicIds.contains(id)) {
 				if (deleteCharacteristicIds == null)
-					deleteCharacteristicIds = new HashSet();
+					deleteCharacteristicIds = new HashSet<Identifier>();
 				deleteCharacteristicIds.add(id);
 			}
 		}
 
 		try {
-			characteristicDatabase.insert(insertCharacteristics);
-		} catch (ApplicationException ae) {
+			database.insert(insertCharacteristics);
+		}
+		catch (ApplicationException ae) {
 			throw new UpdateObjectException("Cannot insert characteristics for " + this.getEntityName()
 					+ " " + cdIdStr + " -- " + ae.getMessage(), ae);
 		}
 
-		characteristicDatabase.delete(deleteCharacteristicIds);
+		database.delete(deleteCharacteristicIds);
 	}
 
-	private void updateCharacteristics(final Set storableObjects) throws UpdateObjectException {
-		assert StorableObject.hasSingleTypeEntities(storableObjects);
+	private void updateCharacteristics(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+		assert StorableObject.hasSingleTypeEntities(storableObjects) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		Set characteristics;
-		Characteristic characteristic;
+		final Set<Identifier> dbCharacteristicIds = new HashSet<Identifier>();
 
-		final StorableObjectDatabase characteristicDatabase = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
+		final CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
+		final String sql = idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true).toString();
 		try {
-			characteristics = characteristicDatabase.retrieveByCondition(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true).toString());
-		} catch (ApplicationException ae) {
+			final Set<? extends StorableObject> soCharacteristics = database.retrieveByCondition(sql);
+			dbCharacteristicIds.addAll(Identifier.createIdentifiers(soCharacteristics));
+		}
+		catch (ApplicationException ae) {
 			throw new UpdateObjectException(ae);
 		}
 
-		Set dbCharacteristicIds = new HashSet(characteristics.size());
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			characteristic = (Characteristic) it.next();
-			dbCharacteristicIds.add(characteristic.getId());
-		}
+		final Set<Characteristic> characteristics = new HashSet<Characteristic>();
 
-		Characterizable characterizable;
-		characteristics = new HashSet();
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+		for (final StorableObject storableObject : storableObjects) {
 			try {
-				characterizable = this.fromStorableObject((StorableObject) it.next());
-			} catch (IllegalDataException ide) {
+				final Characterizable characterizable = this.fromStorableObject(storableObject);
+				characteristics.addAll(characterizable.getCharacteristics());
+			}
+			catch (IllegalDataException ide) {
 				throw new UpdateObjectException(ide);
 			}
-			characteristics.addAll(characterizable.getCharacteristics());
 		}
 
-		Set characteristicIds = new HashSet();
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			characteristic = (Characteristic) it.next();
-			characteristicIds.add(characteristic.getId());
-		}
+		final Set<Identifier> characteristicIds = Identifier.createIdentifiers(characteristics);
 
-		Set insertCharacteristics = null;
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			characteristic = (Characteristic) it.next();
+		Set<Characteristic> insertCharacteristics = null;
+		for (final Characteristic characteristic : characteristics) {
 			if (!dbCharacteristicIds.contains(characteristic.getId())) {
 				if (insertCharacteristics == null)
-					insertCharacteristics = new HashSet();
+					insertCharacteristics = new HashSet<Characteristic>();
 				insertCharacteristics.add(characteristic);
 			}
 		}
 
-		Set deleteCharacteristicIds = null;
-		Identifier id;
-		for (Iterator it = dbCharacteristicIds.iterator(); it.hasNext();) {
-			id = (Identifier) it.next();
+		Set<Identifier> deleteCharacteristicIds = null;
+		for (final Identifier id : dbCharacteristicIds) {
 			if (!characteristicIds.contains(id)) {
 				if (deleteCharacteristicIds == null)
-					deleteCharacteristicIds = new HashSet();
+					deleteCharacteristicIds = new HashSet<Identifier>();
 				deleteCharacteristicIds.add(id);
 			}
 		}
 
 		try {
-			characteristicDatabase.insert(insertCharacteristics);
-		} catch (ApplicationException ae) {
+			database.insert(insertCharacteristics);
+		}
+		catch (ApplicationException ae) {
 			String mesg = "Cannot insert characteristics for multiple " + this.getEntityName() + " -- " + ae.getMessage();
 			throw new UpdateObjectException(mesg, ae);
 		}
 
-		characteristicDatabase.delete(deleteCharacteristicIds);
+		database.delete(deleteCharacteristicIds);
 	}
 }
