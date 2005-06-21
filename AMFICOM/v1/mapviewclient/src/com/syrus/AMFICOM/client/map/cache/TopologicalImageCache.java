@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.1 2005/06/20 15:26:09 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.2 2005/06/21 12:38:21 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,19 +19,18 @@ import java.util.List;
 import java.util.ListIterator;
 
 import com.syrus.AMFICOM.client.map.Logger;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
+import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
-import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/06/20 15:26:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/21 12:38:21 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -93,8 +92,6 @@ public class TopologicalImageCache implements MapImageRenderer
 	 * Работа кэша в режиме изменения масштаба
 	 */
 	private static final int MODE_SCALE_CHANGING = 2;
-
-	private LogicalNetLayer logicalNetLayer = null;
 
 	/**
 	 * Список уже подгруженных для текущего режима работы сегментов
@@ -161,30 +158,29 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private double yDifferenceSph = 0.D;
 
-	private final NetMapViewer netMapViewer;
-
 	private final MapImageLoader loader;
+
+	private final MapCoordinatesConverter coordsConverter;
+
+	private final MapContext mapContext;
 	
-	public TopologicalImageCache(NetMapViewer netMapViewer, MapImageLoader loader)
+	public TopologicalImageCache(MapCoordinatesConverter coordsConverter, MapContext mapContext, MapImageLoader loader)
 			throws MapConnectionException, MapDataException
 	{
-		this.netMapViewer = netMapViewer;
+		this.coordsConverter = coordsConverter;
+		this.mapContext = mapContext;
 		this.loader = loader;
-		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
-		this.scale = this.logicalNetLayer.getMapContext().getScale();
-		this.center = this.logicalNetLayer.getMapContext().getCenter();
+		this.scale = this.mapContext.getScale();
+		this.center = this.mapContext.getCenter();
 
-		this.sizeChanged();
 		this.loadingThread = new LoadingThread(loader);
 		this.loadingThread.start();
 	}
 
-	public void sizeChanged() throws MapConnectionException, MapDataException
+	public void setSize(Dimension newSize) throws MapConnectionException, MapDataException
 	{
 		Logger.log(" TIC - sizeChanged - just entered.");
 		
-		Dimension newSize = this.netMapViewer
-				.getVisualComponent().getSize();
 		if ((newSize.width <= 0) || (newSize.height <= 0))
 			return;
 
@@ -197,17 +193,17 @@ public class TopologicalImageCache implements MapImageRenderer
 		
 		//Координаты текущего центра
 		Point curCenterScr = new Point(this.imageSize.width / 2,this.imageSize.height / 2);
-		DoublePoint curCenterSph = this.logicalNetLayer.getConverter().convertScreenToMap(curCenterScr);
+		DoublePoint curCenterSph = this.coordsConverter.convertScreenToMap(curCenterScr);
 		
 		//Считаем координаты центра следующего по горизонтали сегмента 
 		Point nextHorizCenterScr = new Point(this.imageSize.width / 2 + xDifferenceScr,this.imageSize.height / 2);		
-		DoublePoint nextHorizCenterSph = this.logicalNetLayer.getConverter().convertScreenToMap(nextHorizCenterScr);
+		DoublePoint nextHorizCenterSph = this.coordsConverter.convertScreenToMap(nextHorizCenterScr);
 		//Считаем расстояние между центрами
 		this.xDifferenceSph = nextHorizCenterSph.getX() - curCenterSph.getX();
 
 		//Считаем координаты центра следующего по горизонтали сегмента 
 		Point nextVertCenterScr = new Point(this.imageSize.width / 2,this.imageSize.height / 2 + yDifferenceScr);		
-		DoublePoint nextVertCenterSph = this.logicalNetLayer.getConverter().convertScreenToMap(nextVertCenterScr);
+		DoublePoint nextVertCenterSph = this.coordsConverter.convertScreenToMap(nextVertCenterScr);
 		//Считаем расстояние между центрами
 		this.yDifferenceSph = nextVertCenterSph.getY() - curCenterSph.getY();
 		
@@ -737,8 +733,8 @@ public class TopologicalImageCache implements MapImageRenderer
 	double screenDistance(DoublePoint sphP1, DoublePoint sphP2)
 			throws MapConnectionException, MapDataException
 	{
-		Point p1 = this.logicalNetLayer.getConverter().convertMapToScreen(sphP1);
-		Point p2 = this.logicalNetLayer.getConverter().convertMapToScreen(sphP2);
+		Point p1 = this.coordsConverter.convertMapToScreen(sphP1);
+		Point p2 = this.coordsConverter.convertMapToScreen(sphP2);
 
 		double returnValue = Math.pow((Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y
 				- p1.y, 2)), 0.5);
@@ -840,10 +836,9 @@ public class TopologicalImageCache implements MapImageRenderer
 			MapDataException
 	{
 		Logger.log(" TIC - createScaleRequests - just entered.");		
-		MapContext mapContext = this.logicalNetLayer.getMapContext();
 		if ((this.cacheOfImages.size() == 0)
-				|| (	(!TopologicalImageCache.compare(this.scale, mapContext.getScale()	* MapContext.ZOOM_FACTOR))
-						&&(!TopologicalImageCache.compare(this.scale * MapContext.ZOOM_FACTOR, mapContext.getScale()))))
+				|| (	(!TopologicalImageCache.compare(this.scale, this.mapContext.getScale() * MapContext.ZOOM_FACTOR))
+						&&(!TopologicalImageCache.compare(this.scale * MapContext.ZOOM_FACTOR, this.mapContext.getScale()))))
 		{
 			// Если новый масштаб не является кратным предыдущему (zoom_to_box)
 			// или мы только что вышли из режима изменения центра
@@ -854,23 +849,21 @@ public class TopologicalImageCache implements MapImageRenderer
 		}
 
 		//Устанавливаем отображаемое изображение. Если его нет - ему самый высокий приоритет
-		this.requestToPaint = this.setPriorityForRequest(this.center,mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
+		this.requestToPaint = this.setPriorityForRequest(this.center,this.mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
 
 		// Массштаб, который возможно понадобится в направлении измененеия массштаба
 		double scaleToCheck = 1;
-		if (TopologicalImageCache.compare(this.scale, mapContext
-				.getScale()
-				* MapContext.ZOOM_FACTOR))
+		if (TopologicalImageCache.compare(this.scale, this.mapContext.getScale() * MapContext.ZOOM_FACTOR))
 		{
 			// Новый масштаб в ZOOM_FACTOR раз меньше предыдущего
-			scaleToCheck = mapContext.getScale()
+			scaleToCheck = this.mapContext.getScale()
 					/ Math.pow(MapContext.ZOOM_FACTOR,
 							TopologicalImageCache.CACHE_SIZE);
 		} else if (TopologicalImageCache.compare(this.scale
-				* MapContext.ZOOM_FACTOR, mapContext.getScale()))
+				* MapContext.ZOOM_FACTOR, this.mapContext.getScale()))
 		{
 			// Новый масштаб в ZOOM_FACTOR раз больше предыдущего
-			scaleToCheck = mapContext.getScale()
+			scaleToCheck = this.mapContext.getScale()
 					* Math.pow(MapContext.ZOOM_FACTOR,
 							TopologicalImageCache.CACHE_SIZE);
 		}
@@ -901,8 +894,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			MapDataException
 	{
 		//Устанавливаем отображаемое изображение. Грузим его с самым высоким приоритетом
-		MapContext mapContext = this.logicalNetLayer.getMapContext();
-		this.requestToPaint = this.setPriorityForRequest(this.center,mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
+		this.requestToPaint = this.setPriorityForRequest(this.center,this.mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
 
 		// Делаем изображения большего и меньшего изображения
 		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
@@ -910,13 +902,13 @@ public class TopologicalImageCache implements MapImageRenderer
 			// Маленькое
 			this.setPriorityForRequest(
 					this.center,
-					mapContext.getScale()	/ Math.pow(MapContext.ZOOM_FACTOR, i + 1),
+					this.mapContext.getScale() / Math.pow(MapContext.ZOOM_FACTOR, i + 1),
 					TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
 
 			// Большое
 			this.setPriorityForRequest(
 					this.center,
-					mapContext.getScale()	* Math.pow(MapContext.ZOOM_FACTOR, i + 1),
+					this.mapContext.getScale() * Math.pow(MapContext.ZOOM_FACTOR, i + 1),
 					TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
 		}
 	}
