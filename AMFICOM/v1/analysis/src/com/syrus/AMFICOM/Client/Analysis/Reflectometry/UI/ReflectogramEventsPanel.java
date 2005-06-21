@@ -79,7 +79,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			if (coord2index(currpos.x) > y.length)
 				return;
 
-			if(Math.abs(currpos.y-(int)((getMinTraceLevel() - top) * scaleY - 1)) < MOUSE_COUPLING)
+			if(Math.abs(currpos.y-(int)((-getMinTraceLevel() - top) * scaleY - 1)) < MOUSE_COUPLING)
 			{
 				moving_level = true;
 				setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
@@ -107,10 +107,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			upd_currpos(e);
 
-			//double pos = getMinTraceLevel() + (currpos.y - tmppos.y)/scaleY;
-            //updateMinTraceLevel(-pos);
 			double pos = coord2value(currpos.y);
-			updateMinTraceLevel(-pos);
+			updateMinTraceLevel(pos);
 			parent.repaint();
 			dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
 			return;
@@ -163,8 +161,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL));
-		g.drawLine(0, (int)((getMinTraceLevel() - top) * scaleY - 1),
-							 jw, (int)((getMinTraceLevel() - top) * scaleY - 1));
+		g.drawLine(0, (int)((-getMinTraceLevel() - top) * scaleY - 1),
+							 jw, (int)((-getMinTraceLevel() - top) * scaleY - 1));
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 
@@ -251,9 +249,9 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 
     protected void updateMinTraceLevel(double value)
     {
-        Heap.setMinTraceLevel(-value);
+        Heap.setMinTraceLevel(value);
     }
     protected double getMinTraceLevel() {
-        return -Heap.getMinTraceLevel();
+        return Heap.getMinTraceLevel();
     }
 }

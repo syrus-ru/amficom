@@ -51,7 +51,7 @@ implements PropertyChangeListener
 				{
 					if(rue.minTraceLevelChanged())
 					{
-						((ReflectogramEventsPanel)panel).updateMinTraceLevel(-Heap.getMinTraceLevel());
+						((ReflectogramEventsPanel)panel).updateMinTraceLevel(Heap.getMinTraceLevel());
 						jLayeredPane.repaint();
 					}
 				}
