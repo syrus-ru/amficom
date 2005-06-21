@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.9 2005/06/21 12:51:12 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.10 2005/06/21 14:58:43 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/06/21 12:51:12 $
+ * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/06/21 14:58:43 $
  * @module commonclient_v1
  */
 
@@ -163,6 +163,12 @@ public class CharacteristicAddDialog {
 			ex.printStackTrace();
 		}
 		
+		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);
+		final String cancelButton = LangModelGeneral.getString(ResourceKeys.I18N_CANCEL);
+		final JOptionPane optionPane = new JOptionPane(this.getPanel(), JOptionPane.PLAIN_MESSAGE,
+														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
+																cancelButton}, null);
+
 		if (this.characteristicTypeComboBox.getModel().getSize() == 0) {
 			this.existingRadioButton.setEnabled(false);
 			this.newRadioButton.doClick();
@@ -170,13 +176,6 @@ public class CharacteristicAddDialog {
 			this.existingRadioButton.doClick();
 		}
 		
-		
-		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);
-		final String cancelButton = LangModelGeneral.getString(ResourceKeys.I18N_CANCEL);
-		final JOptionPane optionPane = new JOptionPane(this.getPanel(), JOptionPane.PLAIN_MESSAGE,
-														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
-																cancelButton}, null);
-
 		final JDialog dialog = optionPane.createDialog(this.parent, this.title);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

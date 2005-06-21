@@ -1,5 +1,5 @@
 /*
- * $Id: ColorListCellRenderer.java,v 1.1 2005/05/19 14:06:41 bob Exp $
+ * $Id: ColorListCellRenderer.java,v 1.2 2005/06/21 14:58:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client.UI;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/21 14:58:43 $
  * @module generalclient_v1
  */
 
@@ -18,6 +18,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -25,7 +26,7 @@ import javax.swing.ListCellRenderer;
 /**
  * Renderer for java.awt.Color cell at JList.
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/21 14:58:43 $
  * @module generalclient_v1
  */
 
@@ -54,6 +55,10 @@ public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
 	
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean hasFocus) {
+
+		if (value instanceof JComponent)
+			return (JComponent)value;
+		
 		// Set the color to paint
 		if (this.curColor != null) {
 			//System.out.println(value.getClass().getName());

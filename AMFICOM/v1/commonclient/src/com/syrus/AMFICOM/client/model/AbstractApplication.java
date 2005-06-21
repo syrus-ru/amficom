@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.7 2005/06/17 13:53:51 bob Exp $
+ * $Id: AbstractApplication.java,v 1.8 2005/06/21 14:58:43 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/17 13:53:51 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/21 14:58:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -244,6 +244,11 @@ public abstract class AbstractApplication {
 					Toolkit.getDefaultToolkit().getImage("images/result.gif")
 						.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
 
+		UIManager.put(ResourceKeys.ICON_REFRESH, 
+				new ImageIcon(
+					Toolkit.getDefaultToolkit().getImage("images/refresh.gif")
+						.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+				
 		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, 
 			new UIDefaults.LazyValue() {
 
