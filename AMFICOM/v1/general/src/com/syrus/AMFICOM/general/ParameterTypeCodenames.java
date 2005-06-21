@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.16 2005/06/15 09:37:11 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.17 2005/06/21 09:25:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/15 09:37:11 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/21 09:25:34 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -35,10 +35,7 @@ public final class ParameterTypeCodenames {
 	public static final String PREDICTION_DATA_TO = "time_end";
 
 	// dadara etalon and thresholds
-	public static final String DADARA_MTAE = "dadara_mtae"; // raw,
-																													// ModelTraceAndEvents
-																													// for analysis
-																													// results
+	public static final String DADARA_ANALYSIS_RESULT = "dadara_analysis_result"; // Raw com.syrus.AMFICOM.analysis.dadara.AnalysisResult
 	public static final String DADARA_ETALON_MTM = "dadara_etalon_mtm"; // raw,
 																																			// ModeltraceMananger
 																																			// for
