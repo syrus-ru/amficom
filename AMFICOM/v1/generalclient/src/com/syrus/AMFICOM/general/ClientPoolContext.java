@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientPoolContext.java,v 1.4 2005/05/13 19:08:27 bass Exp $
+ * $Id: ClientPoolContext.java,v 1.5 2005/06/21 11:32:26 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,11 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.CORBAAdministrationObjectLoader;
 import com.syrus.AMFICOM.configuration.CORBAConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/13 19:08:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/21 11:32:26 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 class ClientPoolContext extends PoolContext {
@@ -26,6 +27,7 @@ class ClientPoolContext extends PoolContext {
 	}
 
 	public void init() {
+		Log.debugMessage("ClientPoolContext.init | cmServerConnectionManager " + cmServerConnectionManager, Log.FINEST);
 		GeneralStorableObjectPool.init(new CORBAGeneralObjectLoader(this.cmServerConnectionManager),
 				StorableObjectResizableLRUMap.class);
 		AdministrationStorableObjectPool.init(new CORBAAdministrationObjectLoader(this.cmServerConnectionManager),

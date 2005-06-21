@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.Client.General.Command;
 
 import java.awt.Window;
@@ -7,27 +8,23 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.General.UI.AboutBoxPanel;
 
-public class HelpAboutCommand extends VoidCommand
-{
-	Window parent;
-	JPanel about = new AboutBoxPanel();
+public class HelpAboutCommand extends VoidCommand {
 
-	public HelpAboutCommand()
-	{
+	Window	parent;
+	JPanel	about	= new AboutBoxPanel();
+
+	public HelpAboutCommand() {
 	}
 
-	public HelpAboutCommand(Window parent)
-	{
+	public HelpAboutCommand(Window parent) {
 		this.parent = parent;
 	}
 
-	public Object clone()
-	{
+	public Object clone() {
 		return new HelpAboutCommand(parent);
 	}
 
-	public void execute()
-	{
-		JOptionPane. showMessageDialog(parent, about, "О программе", JOptionPane.PLAIN_MESSAGE);
+	public void execute() {
+		JOptionPane.showMessageDialog(parent, about, "О программе", JOptionPane.PLAIN_MESSAGE);
 	}
 }
