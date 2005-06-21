@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.130 2005/06/20 17:29:55 bass Exp $
+ * $Id: Test.java,v 1.131 2005/06/21 05:31:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.130 $, $Date: 2005/06/20 17:29:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.131 $, $Date: 2005/06/21 05:31:11 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -272,13 +272,6 @@ public final class Test extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected boolean isValid() {
-		Log.debugMessage("Test.isValid | For '" + this.id + "' super.isValid():" + super.isValid(), Log.FINEST);
-		Log.debugMessage("Test.isValid | For '" + this.id + "' this.timeStamps != null && this.timeStamps.isValid(): " +  (this.timeStamps != null && this.timeStamps.isValid()), Log.FINEST);
-		Log.debugMessage("Test.isValid | For '" + this.id + "' this.measurementTypeId != null " + (this.measurementTypeId != null), Log.FINEST);
-		Log.debugMessage("Test.isValid | For '" + this.id + "' this.monitoredElement != null " + (this.monitoredElement != null), Log.FINEST);
-		Log.debugMessage("Test.isValid | For '" + this.id + "' this.description != null " + (this.description != null), Log.FINEST);
-		Log.debugMessage("Test.isValid | For '" + this.id + "' this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty() " + (this.measurementSetupIds != null && !this.measurementSetupIds.isEmpty()), Log.FINEST);
-		Log.debugMessage("Test.isValid | For '" + this.id + "' this.mainMeasurementSetup != null " + (this.mainMeasurementSetup != null), Log.FINEST);
 		return super.isValid() && this.timeStamps != null && this.timeStamps.isValid() && this.measurementTypeId != null && this.monitoredElement != null
 			&& this.description != null && this.measurementSetupIds != null
 			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
