@@ -204,7 +204,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		this.frames.put(commandKey, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults defaults) {
-				return new ShowWindowCommand(defaults.get(windowKey));
+				return new ShowWindowCommand((JInternalFrame) defaults.get(windowKey));
 			}
 		});
 		return new LazyCommand(this.frames, commandKey);

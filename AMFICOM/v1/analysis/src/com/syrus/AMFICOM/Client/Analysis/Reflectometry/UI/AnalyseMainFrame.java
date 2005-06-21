@@ -357,7 +357,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 					Object object = AnalyseMainFrame.this.frames.get(key);
 					if (object instanceof JInternalFrame) {
 						System.out.println("init getLazyCommand for " + key);
-						this.command = new ShowWindowCommand(object);
+						this.command = new ShowWindowCommand((JInternalFrame) object);
 					}
 				}
 				return this.command;
