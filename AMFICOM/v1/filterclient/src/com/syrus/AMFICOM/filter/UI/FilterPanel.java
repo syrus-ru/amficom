@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.6 2005/06/21 11:17:31 max Exp $
+ * $Id: FilterPanel.java,v 1.7 2005/06/21 14:50:37 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
-//import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.newFilter.DateCondition;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.newFilter.FilterController;
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/21 11:17:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/21 14:50:37 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -127,9 +127,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		
 	public FilterPanel(Filter filter) {
 		this();
-		this.filter = filter;
-		//this.parentFrame = Environment.getActiveWindow();
-		this.controller = new FilterController(filter, this);
+		this.parentFrame = Environment.getActiveWindow();
+		//this.controller = new FilterController(filter, this);
 		setFilter(filter);
 	}
 	
@@ -587,43 +586,32 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		return this.filter;
 	}
 	
-	public void setFilter(Filter filter) {
-		this.filter = filter;
-		if (this.controller == null) {
-			this.controller = new FilterController(filter, this);
+	public void setFilter(Filter f) {
+		this.filter = f;
+		clearPanel();
+		if(this.filter != null) {
+			if (this.controller == null) {
+				createController(this.filter);
+			}
+			this.controller.setFilter(this.filter);
+			
+			this.keysCombo.removeActionListener(this.controller);
+			String[] keyNames = this.filter.getKeyNames();
+			for (int i = 0; i < keyNames.length; i++) {
+				this.keysCombo.addItem(keyNames[i]);
+			}
 			this.keysCombo.addActionListener(this.controller);
-			this.keysCombo.addPopupMenuListener(this.controller);
-			this.createSchemeButton.addActionListener(this.controller);
-			this.addButton.addActionListener(this.controller);
-			this.removeButton.addActionListener(this.controller);
-			this.conditions.addListSelectionListener(this.controller);
-			this.startDayButton.addActionListener(this.controller);
-			this.endDayButton.addActionListener(this.controller);
-		} else {
-			this.controller.setFilter(filter);
-			clearPanel();
+			
+			this.keysCombo.setEnabled(true);
+			this.addButton.setEnabled(true);
+			this.keysCombo.setSelectedIndex(0);
 		}
-		
-		this.keysCombo.removeActionListener(this.controller);
-		this.keysCombo.removeAllItems();
-		
-		String[] keyNames = this.filter.getKeyNames();
-		for (int i = 0; i < keyNames.length; i++) {
-			this.keysCombo.addItem(keyNames[i]);
-		}
-		this.keysCombo.addActionListener(this.controller);
-		
-		this.keysCombo.setEnabled(true);
-		this.addButton.setEnabled(true);
-		this.keysCombo.setSelectedIndex(0);
-		
-		this.revalidate();
 	}
 	
 	private void clearPanel() {
-		/*Object[] nullStub = new Object[0];
+		Object[] nullStub = new Object[0];
 		this.conditions.setListData(nullStub);
-		this.linkedConditionList.setListData(nullStub);*/
+		this.linkedConditionList.setListData(nullStub);
 		
 		this.conditionTextField.setText("");
 		this.equalsField.setText("");
@@ -637,7 +625,30 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		this.endTimeSpinner.setValue(currentDate);
 		this.endDateSpinner.setValue(currentDate);
 		
+		this.keysCombo.removeActionListener(this.controller);
+		this.keysCombo.removeAllItems();
+		this.keysCombo.addActionListener(this.controller);
 		
+		this.keysCombo.setEnabled(false);
+		this.addButton.setEnabled(false);
+		this.changeButton.setEnabled(false);
+		this.removeButton.setEnabled(false);
+		
+		CardLayout cardLayout = (CardLayout) this.conditionPanel.getLayout();
+		cardLayout.show(this.conditionPanel, EMPTY_CARD);
 	}
+	
+	private void createController(Filter filter) {
+		this.controller = new FilterController(filter, this);
+		this.keysCombo.addActionListener(this.controller);
+		this.keysCombo.addPopupMenuListener(this.controller);
+		this.createSchemeButton.addActionListener(this.controller);
+		this.addButton.addActionListener(this.controller);
+		this.removeButton.addActionListener(this.controller);
+		this.conditions.addListSelectionListener(this.controller);
+		this.startDayButton.addActionListener(this.controller);
+		this.endDayButton.addActionListener(this.controller);
+	}
+	
 }
 
