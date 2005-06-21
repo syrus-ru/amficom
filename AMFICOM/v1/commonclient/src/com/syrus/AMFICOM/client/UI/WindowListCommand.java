@@ -1,4 +1,10 @@
-
+/*-
+ * $Id: WindowListCommand.java,v 1.2 2005/06/21 14:26:44 bob Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.client.UI;
 
 import javax.swing.JDesktopPane;
