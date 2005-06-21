@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.13 2005/06/21 07:12:11 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.14 2005/06/21 07:27:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.13 $, $Date: 2005/06/21 07:12:11 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/21 07:27:13 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -365,11 +365,17 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	protected void disposeDialog() {
-		this.loginTextField.removeActionListener(this.actionListener);
-		this.passwordTextField.removeActionListener(this.actionListener);
-		this.dialog.setVisible(false);
-		this.dialog.dispose();
-		this.dialog = null;
+		if (this.actionListener != null) {
+			if (this.loginTextField != null && this.passwordTextField != null) {
+				this.loginTextField.removeActionListener(this.actionListener);
+				this.passwordTextField.removeActionListener(this.actionListener);
+			}
+		}
+		if (this.dialog != null) {
+			this.dialog.setVisible(false);
+			this.dialog.dispose();
+			this.dialog = null;
+		}
 	}	
 	
 }
