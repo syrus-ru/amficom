@@ -187,12 +187,14 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		{
 			x = (int)(((int)(top * Ky / m) ) * delta - top * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)
-				g.drawLine(0, (int)(i * delta + x - 1), jw,	(int)(i * delta + x - 1));
+				g.drawLine(0, (int)Math.round(i * delta + x),
+						jw, (int)Math.round(i * delta + x));
 		} else
 		{
 			x = (int)(((int)(bottom * Ky / m) ) * delta - bottom * scaleY);
 			for (int i=0; i < jh / delta + 1; i++)
-				g.drawLine(0, (int)(jh - (i * delta + x) - 1), jw,	(int)(jh - (i * delta + x) - 1));
+				g.drawLine(0, (int)Math.round(jh - (i * delta + x)),
+						jw,	(int)Math.round(jh - (i * delta + x)));
 		}
 	}
 
