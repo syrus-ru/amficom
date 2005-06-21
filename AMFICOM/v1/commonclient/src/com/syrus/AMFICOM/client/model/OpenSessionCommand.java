@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.12 2005/06/17 12:40:36 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.13 2005/06/21 07:12:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.12 $, $Date: 2005/06/17 12:40:36 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/21 07:12:11 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -142,13 +142,16 @@ public class OpenSessionCommand extends AbstractCommand {
 				this, 
 				ContextChangeEvent.SESSION_CHANGING_EVENT));
 	
-		if (!this.logged && !this.showOpenSessionDialog(
-					Environment.getActiveWindow())) {
+		if (!this.logged) {
+			boolean wannaNotLogin = !this.showOpenSessionDialog(
+					Environment.getActiveWindow());
+			if (wannaNotLogin) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(
 					this, 
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelGeneral.getString("StatusBar.Aborted")));
-			return this.logged;
+				return wannaNotLogin;
+			}
 		}
 		
 		final Dispatcher dispatcher1 =  this.dispatcher;
@@ -345,10 +348,9 @@ public class OpenSessionCommand extends AbstractCommand {
 		}
 		
 		this.dialog.setModal(true);
-		this.dialog.show();
+		this.dialog.setVisible(true);
 
 		final Object selectedValue = this.optionPane.getValue();
-
 		if (selectedValue == this.okButton) {
 			this.login = this.loginTextField.getText();
 			this.password = new String(this.passwordTextField.getPassword());
@@ -365,6 +367,7 @@ public class OpenSessionCommand extends AbstractCommand {
 	protected void disposeDialog() {
 		this.loginTextField.removeActionListener(this.actionListener);
 		this.passwordTextField.removeActionListener(this.actionListener);
+		this.dialog.setVisible(false);
 		this.dialog.dispose();
 		this.dialog = null;
 	}	
