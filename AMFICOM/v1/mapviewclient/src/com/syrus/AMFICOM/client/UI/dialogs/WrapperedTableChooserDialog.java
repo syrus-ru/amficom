@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedTableChooserDialog.java,v 1.2 2005/06/20 15:30:56 krupenn Exp $
+ * $Id: WrapperedTableChooserDialog.java,v 1.3 2005/06/21 08:49:50 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ
@@ -11,6 +11,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.JButton;
@@ -38,7 +40,7 @@ import com.syrus.util.Wrapper;
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для того, чтобы включить эту возможность, используется параметр canDelete
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -74,6 +76,10 @@ public class WrapperedTableChooserDialog extends JDialog {
 		table.setBackground(SystemColor.window);
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
+
+//		String buttonOpen = LangModelGeneral.getString("Choose");
+//		String buttonCancel = LangModelGeneral.getString("Button.Cancel");
+//		String buttonDelete = LangModelGeneral.getString("Remove");
 
 		final JButton buttonOpen = new JButton();
 		final JButton buttonCancel = new JButton();
@@ -122,21 +128,22 @@ public class WrapperedTableChooserDialog extends JDialog {
 		int width = Math.min(screenDim.width / 2, 590);
 		int height = Math.min(screenDim.height / 2, 400);
 		dialog.setSize(new Dimension(width, height));
+		dialog.setModal(true);
 
-		while(true) {
-			dialog.setVisible(true);
-
-			Object selectedValue = optionPane.getValue();
-	
-			if (selectedValue == buttonOpen) {
-				returnObject = model.getObject(table.getSelectedRow());
-				break;
+		buttonOpen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				optionPane.setValue(buttonOpen);
 			}
-			if (selectedValue == buttonCancel) {
-				break;
+		});
+		buttonCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				optionPane.setValue(buttonCancel);
 			}
-			if (selectedValue == buttonDelete) {
-				Object obj = model.getObject(table.getSelectedRow());
+		});
+		buttonDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				Object obj = model.getObject(row);
 				Identifier id = ((StorableObject )obj).getId();
 				StorableObjectPool.delete(id);
 				try {
@@ -146,12 +153,56 @@ public class WrapperedTableChooserDialog extends JDialog {
 					buttonOpen.setEnabled(false);
 					buttonDelete.setEnabled(false);
 				} catch(ApplicationException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
+		});
+		dialog.setVisible(true);
+			
+		Object selectedValue = optionPane.getValue();
+		if (selectedValue == buttonOpen) {
+			int row = table.getSelectedRow();
+			if(row != -1) {
+				returnObject = model.getObject(row);
+			}
 		}
-		dialog.dispose();
+//		while(true) {
+//			dialog.setVisible(true);
+//
+//			Object selectedValue = optionPane.getValue();
+//	
+//			if (selectedValue == buttonOpen) {
+//				int row = table.getSelectedRow();
+//				if(row == -1) {
+//					continue;
+//				}
+//				returnObject = model.getObject(row);
+//				break;
+//			}
+//			if (selectedValue == buttonCancel) {
+//				break;
+//			}
+//			if (selectedValue == buttonDelete) {
+//				int row = table.getSelectedRow();
+//				if(row == -1) {
+//					continue;
+//				}
+//				Object obj = model.getObject(row);
+//				Identifier id = ((StorableObject )obj).getId();
+//				StorableObjectPool.delete(id);
+//				try {
+//					StorableObjectPool.flush(id, true);
+//					model.getValues().remove(obj);
+//					model.fireTableDataChanged();
+////					buttonOpen.setEnabled(false);
+////					buttonDelete.setEnabled(false);
+//				} catch(ApplicationException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
+//		}
+//		dialog.dispose();
 		return returnObject;
 	}
 
