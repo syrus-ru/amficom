@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.80 2005/06/15 10:55:30 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.81 2005/06/21 09:33:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.80 $, $Date: 2005/06/15 10:55:30 $
+ * @version $Revision: 1.81 $, $Date: 2005/06/21 09:33:31 $
  * @module
  */
 
@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
@@ -28,7 +29,6 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.AMFICOM.analysis.dadara.ReliabilityModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
@@ -311,7 +311,7 @@ public class CoreAnalysisManager
     /**
      * Проводит анализ и фитировку на основании результатов пред-анализа.
      * @param tpa результаты пред-анализа
-     *   {@link #makePreAnalysis(BellcoreStructure)}
+     *   {@link #makePreAnalysis(BellcoreStructure, boolean)}
      * @param ap набор параметров для IA
      * @return результат анализа в виде mtae
      */
@@ -509,7 +509,9 @@ public class CoreAnalysisManager
 	 * Делает анализ. Скрывает сложности, связанные с правильным
 	 * порядком вызова IA, fit, calcMutualParameters и выставлением нач. порогов.
 	 * @todo declare to throw "invalid parameters exception"
-	 * 
+	 * @deprecated use {@link #performAnalysis(BellcoreStructure,
+	 *     AnalysisParameters)}
+	 *   .{@link AnalysisResult#getMTAE()}
 	 * @param bs рефлектограмма
 	 * @param ap параметры анализа
 	 * @return массив событий
@@ -520,6 +522,20 @@ public class CoreAnalysisManager
 	{
         TracePreAnalysis tpa = makePreAnalysis(bs, true);
         return makeAnalysis(tpa, ap);
+	}
+
+	/**
+	 * Выполняет анализ одной рефлектограммы
+	 * @param bs рефлектограмма
+	 * @param ap параметры анализа
+	 * @return результаты анализа {@link AnalysisResult}
+	 */
+	public static AnalysisResult performAnalysis(
+			BellcoreStructure bs,
+			AnalysisParameters ap) {
+        TracePreAnalysis tpa = makePreAnalysis(bs, true);
+        ModelTraceAndEventsImpl mtae = makeAnalysis(tpa, ap);
+        return new AnalysisResult(tpa.y.length, tpa.traceLength, mtae);
 	}
 
 	/**
@@ -668,32 +684,42 @@ public class CoreAnalysisManager
 			dyFactor);
 	}
 
+	/**
+     * Проводит анализ рефлектограммы вызовом {@link #performAnalysis(BellcoreStructure, AnalysisParameters)},
+     * затем сравнивает ее с помощью {@link #compareAndMakeAlarms(AnalysisResult, double, ModelTraceManager)}
+	 * @param bs рефлектограмма
+	 * @param ap параметры анализа
+	 * @param breakThresh
+	 * @param etMTM
+	 * @return список алармов
+	 */
+    public static List analyseCompareAndMakeAlarms(BellcoreStructure bs,
+    		AnalysisParameters ap,
+            double breakThresh,
+            ModelTraceManager etMTM) {
+    	AnalysisResult ar = performAnalysis(bs, ap);
+    	return compareAndMakeAlarms(ar, breakThresh, etMTM);
+    }
+
     /**
-     * Проводит анализ рефлектограммы, сравнивает ее с порогом обнаружения
+     * Сравнивает результаты анализа с порогом обнаружения
      * обрыва и эталонным MTM, формирует список алармов.
      * Текущая версия возвращает 0 или 1 алармов.
-     * @param bs Анализируемая (текущая; пробная) рефлектограмма
-     * @param ap Параметры анализа (null, если сравнение событий не нужно)
+     * @param ar Результаты анализа
      * @param breakThresh Уровень обнаружения обрыва р/г
      * @param etMTM Эталонная р/г и события
      */
-    public static List analyseCompareAndMakeAlarms(BellcoreStructure bs,
-            AnalysisParameters ap,
+    public static List compareAndMakeAlarms(AnalysisResult ar,
             double breakThresh,
             ModelTraceManager etMTM) {
         // формируем выходной список
         List alarmList = new ArrayList();
 
-        // проводим пред-анализ
-        TracePreAnalysis tpa = makePreAnalysis(bs, true);
+        ModelTrace mt = ar.getMTAE().getModelTrace();
 
         // начало конца волокна по эталону 
         int etMinLength = etMTM.getMTAE().getSimpleEvent(
                 etMTM.getMTAE().getNEvents() - 1).getBegin();
-
-        // в любом случае - определение шума, анализ и и фитировка
-        ReliabilityModelTraceAndEvents mtae = makeAnalysis(tpa, ap);
-        ModelTrace mt = mtae.getModelTrace();
 
         // НЕ добавляем к результатам анализа найденную длину р/г и фитированную кривую - это пока не нужно
 //      outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
@@ -704,8 +730,8 @@ public class CoreAnalysisManager
         // XXX - надо ли было предварительно смещать р/г по вертикали?
         int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
         // (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала EOT ?
-        if (breakPos < 0 && tpa.traceLength < etMinLength)
-            breakPos = tpa.traceLength;
+        if (breakPos < 0 && ar.getTraceLength() < etMinLength)
+            breakPos = ar.getTraceLength();
 
         // @todo: проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
         if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
@@ -716,7 +742,7 @@ public class CoreAnalysisManager
             alarm.pointCoord = breakPos;
             alarm.deltaX = etMTM.getMTAE().getDeltaX();
             // конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
-            alarm.endPointCoord = Math.min(tpa.y.length, etMinLength);
+            alarm.endPointCoord = Math.min(ar.getDataLength(), etMinLength);
 
             // XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
             // мб, в таком случае не надо игнорировать HARD алармы?
@@ -728,7 +754,7 @@ public class CoreAnalysisManager
             ReflectogramAlarm alarm = null;
             if (true) { // @todo: проверять, запрошен такой тип сравнения
                 // XXX: в этом случае шум вычисляется дважды
-                alarm = ModelTraceComparer.compareMTAEToMTM(mtae, etMTM);
+                alarm = ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
             } else {
                 alarm = ModelTraceComparer.compareTraceToMTM(mt, etMTM);
             }
