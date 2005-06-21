@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedTableChooserDialog.java,v 1.3 2005/06/21 08:49:50 krupenn Exp $
+ * $Id: WrapperedTableChooserDialog.java,v 1.4 2005/06/21 08:50:36 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ
@@ -40,7 +40,7 @@ import com.syrus.util.Wrapper;
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для того, чтобы включить эту возможность, используется параметр canDelete
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -76,10 +76,6 @@ public class WrapperedTableChooserDialog extends JDialog {
 		table.setBackground(SystemColor.window);
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-//		String buttonOpen = LangModelGeneral.getString("Choose");
-//		String buttonCancel = LangModelGeneral.getString("Button.Cancel");
-//		String buttonDelete = LangModelGeneral.getString("Remove");
 
 		final JButton buttonOpen = new JButton();
 		final JButton buttonCancel = new JButton();
@@ -166,43 +162,6 @@ public class WrapperedTableChooserDialog extends JDialog {
 				returnObject = model.getObject(row);
 			}
 		}
-//		while(true) {
-//			dialog.setVisible(true);
-//
-//			Object selectedValue = optionPane.getValue();
-//	
-//			if (selectedValue == buttonOpen) {
-//				int row = table.getSelectedRow();
-//				if(row == -1) {
-//					continue;
-//				}
-//				returnObject = model.getObject(row);
-//				break;
-//			}
-//			if (selectedValue == buttonCancel) {
-//				break;
-//			}
-//			if (selectedValue == buttonDelete) {
-//				int row = table.getSelectedRow();
-//				if(row == -1) {
-//					continue;
-//				}
-//				Object obj = model.getObject(row);
-//				Identifier id = ((StorableObject )obj).getId();
-//				StorableObjectPool.delete(id);
-//				try {
-//					StorableObjectPool.flush(id, true);
-//					model.getValues().remove(obj);
-//					model.fireTableDataChanged();
-////					buttonOpen.setEnabled(false);
-////					buttonDelete.setEnabled(false);
-//				} catch(ApplicationException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			}
-//		}
-//		dialog.dispose();
 		return returnObject;
 	}
 
