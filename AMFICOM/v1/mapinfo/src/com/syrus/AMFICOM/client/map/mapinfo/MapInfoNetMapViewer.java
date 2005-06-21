@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -159,17 +160,17 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		this.renderer.analyzeMouseLocation(me);
 	}
 
-	public void setMapImageSize(int width, int height) throws MapConnectionException, MapDataException
+	public void setMapImageSize(Dimension newSize) throws MapConnectionException, MapDataException
 	{
-		if((width > 0) && (height > 0))
+		if((newSize.width > 0) && (newSize.height > 0))
 		{
 			this.mapConnection.getLocalMapJ().setDeviceBounds(new DoubleRect(
 					0,
 					0,
-					width,
-					height));
+					newSize.width,
+					newSize.height));
 
-			this.renderer.sizeChanged();
+			this.renderer.setSize(newSize);
 		}
 	}
 }

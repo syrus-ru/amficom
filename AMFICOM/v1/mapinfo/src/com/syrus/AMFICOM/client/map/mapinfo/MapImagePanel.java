@@ -50,9 +50,7 @@ public class MapImagePanel extends JPanel
 	{
 			try
 			{
-				this.viewer.setMapImageSize(
-						this.getWidth(),
-						this.getHeight());
+				this.viewer.setMapImageSize(this.getSize());
 			} catch (MapConnectionException e)
 			{
 				// TODO Auto-generated catch block
