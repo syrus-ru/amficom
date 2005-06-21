@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.5 2005/06/21 11:03:03 max Exp $
+ * $Id: FilterPanel.java,v 1.6 2005/06/21 11:17:31 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
-import com.syrus.AMFICOM.client.model.Environment;
+//import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.newFilter.DateCondition;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.newFilter.FilterController;
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/21 11:03:03 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/21 11:17:31 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -128,8 +128,9 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	public FilterPanel(Filter filter) {
 		this();
 		this.filter = filter;
-		this.parentFrame = Environment.getActiveWindow();
+		//this.parentFrame = Environment.getActiveWindow();
 		this.controller = new FilterController(filter, this);
+		setFilter(filter);
 	}
 	
 	public FilterPanel() {
@@ -600,8 +601,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 			this.endDayButton.addActionListener(this.controller);
 		} else {
 			this.controller.setFilter(filter);
+			clearPanel();
 		}
-		clearPanel();
 		
 		this.keysCombo.removeActionListener(this.controller);
 		this.keysCombo.removeAllItems();
@@ -611,6 +612,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 			this.keysCombo.addItem(keyNames[i]);
 		}
 		this.keysCombo.addActionListener(this.controller);
+		
 		this.keysCombo.setEnabled(true);
 		this.addButton.setEnabled(true);
 		this.keysCombo.setSelectedIndex(0);
