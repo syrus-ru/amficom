@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.16 2005/06/20 17:29:36 bass Exp $
+ * $Id: EventParameter.java,v 1.17 2005/06/21 08:28:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,23 +20,25 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/20 17:29:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/06/21 08:28:27 $
+ * @author $Author: bob $
  * @module event_v1
  */
-public final class EventParameter implements Identifiable, TransferableObject, TypedObject {
+public final class EventParameter implements Identifiable, 
+TransferableObject, TypedObject {
 
 	private Identifier id;
 	private ParameterType type;
 	private String value;
 
-	public EventParameter(EventParameter_Transferable ept) throws ApplicationException {
+	public EventParameter(EventParameter_Transferable ept) 
+	throws ApplicationException {
 		this.id = new Identifier(ept.id);
-		this.type = (ParameterType) StorableObjectPool.getStorableObject(new Identifier(ept.type_id), true);
+		this.type = (ParameterType) StorableObjectPool.getStorableObject(
+				new Identifier(ept.type_id), true);
 		this.value = ept.value;
 	}
 
@@ -46,12 +48,16 @@ public final class EventParameter implements Identifiable, TransferableObject, T
 		this.value = value;
 	}
 
-	public static EventParameter createInstance(ParameterType type, String value) throws CreateObjectException {
+	public static EventParameter createInstance(ParameterType type, 
+	                                            String value) 
+	throws CreateObjectException {
 		if (type == null || value == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			EventParameter eventParameter = new EventParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTPARAMETER_CODE),
+			EventParameter eventParameter = new EventParameter(
+					IdentifierPool.getGeneratedIdentifier(
+						ObjectEntities.EVENTPARAMETER_CODE),
 					type,
 					value);
 			return eventParameter;
@@ -62,8 +68,8 @@ public final class EventParameter implements Identifiable, TransferableObject, T
 	}
 
 	public EventParameter_Transferable getTransferable() {
-		return new EventParameter_Transferable((IdlIdentifier) this.id.getTransferable(),
-				(IdlIdentifier) this.type.getId().getTransferable(),
+		return new EventParameter_Transferable(this.id.getTransferable(),
+				this.type.getId().getTransferable(),
 				this.value);
 	}
 
@@ -79,7 +85,7 @@ public final class EventParameter implements Identifiable, TransferableObject, T
 		return this.value;
 	}
 
-	public int hashCode() {
+	public @Override int hashCode() {
 		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 		hashCodeGenerator.addObject(this.id);
 		hashCodeGenerator.addObject(this.type);
@@ -89,7 +95,7 @@ public final class EventParameter implements Identifiable, TransferableObject, T
 		return result;
 	}
 
-	public boolean equals(Object obj) {
+	public @Override  boolean equals(Object obj) {
 		boolean equals = (obj == this);
 		if ((!equals) && (obj instanceof EventParameter)) {
 			EventParameter eventParameter = (EventParameter) obj;

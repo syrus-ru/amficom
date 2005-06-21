@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.29 2005/06/20 17:29:36 bass Exp $
+ * $Id: Event.java,v 1.30 2005/06/21 08:28:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/20 17:29:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/06/21 08:28:27 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -54,8 +55,8 @@ public final class Event extends StorableObject implements TypedObject {
 
 	Event(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.eventParameters = new HashSet();
-		this.eventSourceIds = new HashSet();
+		this.eventParameters = new HashSet<EventParameter>();
+		this.eventSourceIds = new HashSet<Identifier>();
 
 		final EventDatabase database = (EventDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_CODE);
 		try {
@@ -82,8 +83,8 @@ public final class Event extends StorableObject implements TypedObject {
 			final long version,
 			final EventType type,
 			final String description,
-			final Set eventParameters,
-			final Set eventSourceIds) {
+			final Set<EventParameter> eventParameters,
+			final Set<Identifier> eventSourceIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -93,10 +94,10 @@ public final class Event extends StorableObject implements TypedObject {
 		this.type = type;
 		this.description = description;
 
-		this.eventParameters = new HashSet(eventParameters.size());
+		this.eventParameters = new HashSet<EventParameter>(eventParameters.size());
 		this.setEventParameters0(eventParameters);
 		
-		this.eventSourceIds = new HashSet(eventSourceIds.size());
+		this.eventSourceIds = new HashSet<Identifier>(eventSourceIds.size());
 		this.setEventSourceIds0(eventSourceIds);
 	}
 
@@ -112,8 +113,8 @@ public final class Event extends StorableObject implements TypedObject {
 	public static Event createInstance(final Identifier creatorId,
 		EventType type,
 		String description,
-		Set eventParameters,
-		Set eventSourceIds) throws CreateObjectException {
+		Set<EventParameter> eventParameters,
+		Set<Identifier> eventSourceIds) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null || eventParameters == null || eventSourceIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -137,7 +138,7 @@ public final class Event extends StorableObject implements TypedObject {
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected @Override void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		Event_Transferable et = (Event_Transferable) transferable;
 
 		super.fromTransferable(et.header);
@@ -146,11 +147,11 @@ public final class Event extends StorableObject implements TypedObject {
 
 		this.description = et.description;
 
-		this.eventParameters = new HashSet(et.parameters.length);
+		this.eventParameters = new HashSet<EventParameter>(et.parameters.length);
 		for (int i = 0; i < et.parameters.length; i++)
 			this.eventParameters.add(new EventParameter(et.parameters[i]));
 
-		this.eventSourceIds = new HashSet(et.event_source_ids.length);
+		this.eventSourceIds = new HashSet<Identifier>(et.event_source_ids.length);
 		this.setEventSourceIds0(Identifier.fromTransferables(et.event_source_ids));
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -192,7 +193,7 @@ public final class Event extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected boolean isValid() {
+	protected @Override boolean isValid() {
 		return super.isValid()
 				&& this.type != null
 				&& this.description != null
@@ -216,13 +217,13 @@ public final class Event extends StorableObject implements TypedObject {
 		this.description = description;
 	}
 
-	protected synchronized void setEventParameters0(final Set eventParameters) {
+	protected synchronized void setEventParameters0(final Set<EventParameter> eventParameters) {
 		this.eventParameters.clear();
 		if (eventParameters != null)
 			this.eventParameters.addAll(eventParameters);
 	}
 
-	protected synchronized void setEventSourceIds0(final Set eventSourceIds) {
+	protected synchronized void setEventSourceIds0(final Set<Identifier> eventSourceIds) {
 		this.eventSourceIds.clear();
 		if (eventSourceIds != null)
 			this.eventSourceIds.addAll(eventSourceIds);
@@ -250,7 +251,7 @@ public final class Event extends StorableObject implements TypedObject {
 	 * Set new array of event parameters
 	 * @param eventParameters
 	 */
-	public void setEventParameters(final Set eventParameters) {
+	public void setEventParameters(final Set<EventParameter> eventParameters) {
 		this.setEventParameters0(eventParameters);
 		super.markAsChanged();
 	}
@@ -259,19 +260,20 @@ public final class Event extends StorableObject implements TypedObject {
 	 * Set new list of event sources ids
 	 * @param eventSourceIds
 	 */
-	public void setEventSourceIds(final Set eventSourceIds) {
+	public void setEventSourceIds(final Set<Identifier> eventSourceIds) {
 		this.setEventSourceIds0(eventSourceIds);
 		super.markAsChanged();
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	public @Override Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
 		dependencies.add(this.type);
 
-		for (Iterator it = this.eventParameters.iterator(); it.hasNext();)
-			dependencies.add(((EventParameter) it.next()).getType());
-
+		for(EventParameter eventParameter: this.eventParameters) {
+			dependencies.add(eventParameter);
+		}
+		
 		return dependencies;
 	}
 }
