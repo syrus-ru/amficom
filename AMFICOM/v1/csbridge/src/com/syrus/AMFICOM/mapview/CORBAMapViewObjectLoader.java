@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapViewObjectLoader.java,v 1.6 2005/06/17 13:06:58 bass Exp $
+ * $Id: CORBAMapViewObjectLoader.java,v 1.7 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,16 +20,16 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/21 12:44:27 $
  * @module csbridge_v1
  */
 public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements MapViewObjectLoader {
@@ -47,7 +47,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMapViews(ids1, sessionKey);
 			}
@@ -63,8 +63,8 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMapViewsButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -77,10 +77,10 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 
 	public void saveMapViews(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.MAPVIEW_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveMapViews((MapView_Transferable[]) transferables, force, sessionKey);
 			}

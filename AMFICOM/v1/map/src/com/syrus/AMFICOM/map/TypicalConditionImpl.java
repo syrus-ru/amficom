@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.8 2005/06/10 14:06:12 max Exp $
+ * $Id: TypicalConditionImpl.java,v 1.9 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.TypicalSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/10 14:06:12 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/06/21 12:44:27 $
+ * @author $Author: bass $
  * @module map_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {

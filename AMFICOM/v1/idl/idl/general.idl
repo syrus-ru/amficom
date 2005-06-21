@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.91 2005/06/17 15:08:41 bass Exp $
+ * $Id: general.idl,v 1.92 2005/06/21 12:43:33 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ module corba {
 	typedef wstring<128> WString128;
 
 //////////////////// SecurityKey ///////////////////
-	typedef struct SessionKey_Transferable {
-		WString128 session_code;
+	typedef struct IdlSessionKey {
+		WString128 sessionCode;
 	} SessionKey;
 };
 };
@@ -41,12 +41,12 @@ module corba {
 
 	typedef sequence<Identifier> IdentifierSeq;
 
-	typedef struct StorableObject_Transferable {
+	typedef struct IdlStorableObject {
 		Identifier id;
 		long long created;
 		long long modified;
-		Identifier creator_id;
-		Identifier modifier_id;
+		Identifier creatorId;
+		Identifier modifierId;
 		long long version;
 	} StorableObject;
 
@@ -80,12 +80,12 @@ module corba {
 			ERROR_ALREADY_LOGGED,
 			ERROR_ACCESS_VALIDATION,
 			ERROR_UNKNOWN
-		} error_code;
+		} errorCode;
 		enum CompletionStatus {
 			COMPLETED_YES,
 			COMPLETED_NO,
 			COMPLETED_PARTIALLY
-		} completion_status;
+		} completionStatus;
 		wstring message;
 	};
 /*
@@ -98,29 +98,29 @@ module corba {
 
 ////////////////////// ParameterType //////////////////////
 
-	typedef struct ParameterType_Transferable {
+	typedef struct IdlParameterType {
 		StorableObject header;
 
 		WString32 codename;
 		WString256 description;
 
 		WString128 name;
-		DataType data_type;
+		DataType dataType;
 
-		IdentifierSeq characteristic_ids;
+		IdentifierSeq characteristicIds;
 	} ParameterType;
 
 	typedef sequence<ParameterType> ParameterTypeSeq;
 
 //////////////////// CharacteristicType ///////////////////
 
-	typedef struct CharacteristicType_Transferable {
+	typedef struct IdlCharacteristicType {
 		StorableObject header;
 
 		WString32 codename;
 		WString256 description;
 		WString128 name;
-		DataType data_type;
+		DataType dataType;
 		enum CharacteristicTypeSort {
 			CHARACTERISTICTYPESORT_OPTICAL,
 			CHARACTERISTICTYPESORT_ELECTRICAL,
@@ -133,16 +133,16 @@ module corba {
 	typedef sequence<CharacteristicType> CharacteristicTypeSeq;
 
 ////////////////////// Characteristic /////////////////////
-	typedef struct Characteristic_Transferable {
+	typedef struct IdlCharacteristic {
 		StorableObject header;
 
-		Identifier type_id;
+		Identifier _typeId;
 		WString128 name;
 		WString256 description;
 		WString256 value;
-		Identifier characterizable_id;
-		boolean is_editable;
-		boolean is_visible;
+		Identifier characterizableId;
+		boolean editable;
+		boolean visible;
 
 	} Characteristic;
 
@@ -165,39 +165,39 @@ module corba {
 	abstract interface CommonServer:
 			Verifiable,
 			IdentifierGeneratorServer {
-		void delete(in general::corba::IdentifierSeq ids,
+		void delete(in IdentifierSeq ids,
 				in security::corba::SessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
+				raises (AMFICOMRemoteException);
 
-		general::corba::IdentifierSeq transmitRefreshedStorableObjects(
-				in general::corba::StorableObjectSeq storableObjects,
+		IdentifierSeq transmitRefreshedStorableObjects(
+				in StorableObjectSeq storableObjects,
 				in security::corba::SessionKey sessionKey)
-				raises (general::corba::AMFICOMRemoteException);
+				raises (AMFICOMRemoteException);
 	};
 
 ///////////////////////////// Condition ////////////////////////
 
-	typedef union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
+	typedef union IdlStorableObjectCondition switch(enum StorableObjectConditionSort {
 			LINKED_IDS,
 			COMPOUND,
 			TYPICAL,
 			EQUIVALENT}) {
 		case LINKED_IDS:
-			struct LinkedIdsCondition_Transferable {
-				short entity_code;
-				short linked_entity_code;
-				IdentifierSeq linked_ids;
+			struct IdlLinkedIdsCondition {
+				short entityCode;
+				short linkedEntityCode;
+				IdentifierSeq linkedIds;
 			} linkedIdsCondition;
 		case COMPOUND:
-			struct CompoundCondition_Transferable {
+			struct IdlCompoundCondition {
 				enum CompoundConditionSort {
 					AND,
 					OR} sort;
-				sequence<StorableObjectCondition_Transferable> innerConditions;
+				sequence<IdlStorableObjectCondition> innerConditions;
 			} compoundCondition;
 		case TYPICAL:
-			struct TypicalCondition_Transferable {
-				short entity_code;
+			struct IdlTypicalCondition {
+				short entityCode;
 				WString256 key;
 				WString256 value;
 				WString256 otherValue;
@@ -221,8 +221,8 @@ module corba {
 				} operation;
 			} typicalCondition;
 		case EQUIVALENT:
-			struct EquivalentCondition_Transferable {
-				short entity_code;
+			struct IdlEquivalentCondition {
+				short entityCode;
 			} equivalentCondition;
 	} StorableObjectCondition;
 };

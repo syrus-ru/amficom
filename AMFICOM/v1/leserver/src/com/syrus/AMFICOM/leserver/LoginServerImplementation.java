@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.21 2005/06/20 15:28:02 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.22 2005/06/21 12:44:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,18 +30,18 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.leserver.corba.LoginServerPOA;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.ShadowDatabase;
 import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.AMFICOM.security.UserLoginDatabase;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/20 15:28:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/06/21 12:44:26 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -57,7 +57,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		this.shadowDatabase = new ShadowDatabase();
 	}
 
-	public SessionKey_Transferable login(String login, String password, IdlIdentifierHolder userIdTH)
+	public IdlSessionKey login(String login, String password, IdlIdentifierHolder userIdTH)
 			throws AMFICOMRemoteException {
 		this.tc.setValue(login);
 		Set set = null;
@@ -97,12 +97,12 @@ final class LoginServerImplementation extends LoginServerPOA {
 			}
 
 			userIdTH.value = userId.getTransferable();
-			return (SessionKey_Transferable) userLogin.getSessionKey().getTransferable();
+			return (IdlSessionKey) userLogin.getSessionKey().getTransferable();
 		}
 		throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_PASSWORD, CompletionStatus.COMPLETED_YES, "Illegal password");
 	}
 
-	public void logout(SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public void logout(IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		SessionKey sessionKey = new SessionKey(sessionKeyT);
 		final UserLogin userLogin = LoginProcessor.removeUserLogin(sessionKey);
 		if (userLogin != null)
@@ -116,7 +116,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * No checks user's access on domains.
 	 * TODO Implement check user access on domains and return only accesible for the user.
 	 */
-	public Domain_Transferable[] transmitAvailableDomains(SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public Domain_Transferable[] transmitAvailableDomains(IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		SessionKey sessionKey = new SessionKey(sessionKeyT);
 		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin == null)
@@ -142,7 +142,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		}
 	}
 
-	public void selectDomain(SessionKey_Transferable sessionKeyT, IdlIdentifier domainIdT) throws AMFICOMRemoteException {
+	public void selectDomain(IdlSessionKey sessionKeyT, IdlIdentifier domainIdT) throws AMFICOMRemoteException {
 		SessionKey sessionKey = new SessionKey(sessionKeyT);
 		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin != null) {
@@ -163,9 +163,9 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * @param userIdTH an "out" parameter representing a user id.
 	 * @param domainIdTH an "out" parameter representing a domain id.
 	 * @throws AMFICOMRemoteException if user not logged in.
-	 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateAccess(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
+	 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateAccess(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
 	 */
-	public void validateAccess(final SessionKey_Transferable sessionKeyT,
+	public void validateAccess(final IdlSessionKey sessionKeyT,
 			final IdlIdentifierHolder userIdTH,
 			final IdlIdentifierHolder domainIdTH) throws AMFICOMRemoteException {
 		final UserLogin userLogin = LoginProcessor.getUserLogin(new SessionKey(sessionKeyT));
@@ -185,7 +185,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		domainIdTH.value = (domainId == null ? Identifier.VOID_IDENTIFIER : domainId).getTransferable();
 	}
 
-	public void setPassword(final SessionKey_Transferable sessionKeyT, final IdlIdentifier userIdT, final String password) throws AMFICOMRemoteException {
+	public void setPassword(final IdlSessionKey sessionKeyT, final IdlIdentifier userIdT, final String password) throws AMFICOMRemoteException {
 		this.validateAccess(sessionKeyT, new IdlIdentifierHolder(), new IdlIdentifierHolder());
 
 		final Identifier userId = new Identifier(userIdT);

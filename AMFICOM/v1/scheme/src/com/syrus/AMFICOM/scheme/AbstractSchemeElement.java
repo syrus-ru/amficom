@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.24 2005/06/20 17:29:57 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.25 2005/06/21 12:44:31 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/20 17:29:57 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/21 12:44:31 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -237,7 +237,7 @@ public abstract class AbstractSchemeElement extends
 	 * @param characteristicIds
 	 * @throws CreateObjectException
 	 */
-	void fromTransferable(final StorableObject_Transferable header,
+	void fromTransferable(final IdlStorableObject header,
 			final String name1, final String description1,
 			final IdlIdentifier parentSchemeId1,
 			final IdlIdentifier characteristicIds[])

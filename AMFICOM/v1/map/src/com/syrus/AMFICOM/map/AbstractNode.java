@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.25 2005/06/20 17:31:02 bass Exp $
+ * $Id: AbstractNode.java,v 1.26 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/06/20 17:31:02 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/21 12:44:27 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -97,7 +97,7 @@ public abstract class AbstractNode
 		this.characteristics = new HashSet();
 	}
 
-	AbstractNode(final StorableObject_Transferable transferable) throws CreateObjectException {
+	AbstractNode(final IdlStorableObject transferable) throws CreateObjectException {
 		try {
 			this.fromTransferable(transferable);
 		} catch (ApplicationException ae) {
@@ -106,7 +106,7 @@ public abstract class AbstractNode
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
+		IdlStorableObject sot = (IdlStorableObject) transferable;
 		super.fromTransferable(sot);
 		this.characteristics = new HashSet();
 	}

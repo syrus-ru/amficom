@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.34 2005/06/17 13:06:58 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.35 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,14 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -59,12 +59,12 @@ public abstract class CORBAObjectLoader {
 	public Set refresh(final Set storableObjects) throws ApplicationException {
 		try {
 			final CommonServer commonServer = this.serverConnectionManager.getServerReference();
-			final StorableObject_Transferable[] headers = StorableObject.createHeadersTransferable(storableObjects);
+			final IdlStorableObject[] headers = StorableObject.createHeadersTransferable(storableObjects);
 			return Identifier.fromTransferables(commonServer.transmitRefreshedStorableObjects(headers,
 					LoginManager.getSessionKeyTransferable()));
 		}
 		catch (final AMFICOMRemoteException are) {
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+			if (are.errorCode.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
 				throw new LoginException("Not logged in");
 			throw new ApplicationException(are);
 		}
@@ -72,18 +72,18 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
+	 * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
 		IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
 				final IdlIdentifier[] idsT,
-				final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException;
+				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
 	}
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
+	 * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -92,20 +92,20 @@ public abstract class CORBAObjectLoader {
 	public interface TransmitButIdsByConditionProcedure {
 		IDLEntity[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
 				final IdlIdentifier[] idsT,
-				final SessionKey_Transferable sessionKeyT,
-				final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException;
+				final IdlSessionKey sessionKeyT,
+				final IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException;
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.34 $, $Date: 2005/06/17 13:06:58 $
+	 * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
-		StorableObject_Transferable[] receiveStorableObjects(final CommonServer commonServer,
+		IdlStorableObject[] receiveStorableObjects(final CommonServer commonServer,
 				final IDLEntity[] transferables,
-				final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException;
+				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
 	}
 
 	/**
@@ -125,12 +125,12 @@ public abstract class CORBAObjectLoader {
 		int numEfforts = 0;
 		while (true) {
 			try {
-				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(server, idsT, sessionKeyT);
 				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
 			}
 			catch (final AMFICOMRemoteException are) {
-				switch (are.error_code.value()) {
+				switch (are.errorCode.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
 							if (LoginManager.restoreLogin()) {
@@ -164,7 +164,7 @@ public abstract class CORBAObjectLoader {
 	 * 		public IDLEntity[] transmitStorableObjects(
 	 * 				final CommonServer server,
 	 * 				final IdlIdentifier[] idsT,
-	 * 				final SessionKey_Transferable sessionKeyT)
+	 * 				final IdlSessionKey sessionKeyT)
 	 * 				throws AMFICOMRemoteException {
 	 * 			return ((CMServer) server).transmitUsersButIdsCondition(ids1, sessionKeyT, (StorableObjectCondition_Transferable) condition.getTransferable());
 	 * 		}
@@ -176,7 +176,7 @@ public abstract class CORBAObjectLoader {
 	 * 		public IDLEntity[] transmitStorableObjectsButIdsCondition(
 	 * 				final CommonServer server,
 	 * 				final IdlIdentifier[] idsT,
-	 * 				final SessionKey_Transferable sessionKeyT,
+	 * 				final IdlSessionKey sessionKeyT,
 	 * 				final StorableObjectCondition_Transferable[] conditionT)
 	 * 				throws AMFICOMRemoteException {
 	 * 			return ((CMServer) server).transmitUsersButIdsCondition(ids1, sessionKeyT, condition1);
@@ -198,11 +198,11 @@ public abstract class CORBAObjectLoader {
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
-		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
+		final IdlStorableObjectCondition conditionT = (IdlStorableObjectCondition) condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
-				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitButIdsConditionProcedure.transmitStorableObjectsButIdsCondition(server,
 						idsT,
 						sessionKeyT,
@@ -210,7 +210,7 @@ public abstract class CORBAObjectLoader {
 				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
 			}
 			catch (final AMFICOMRemoteException are) {
-				switch (are.error_code.value()) {
+				switch (are.errorCode.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
 							if (LoginManager.restoreLogin()) {
@@ -243,15 +243,15 @@ public abstract class CORBAObjectLoader {
 		}
 
 		try {
-			final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
-			final StorableObject_Transferable[] headers = receiveProcedure.receiveStorableObjects(server, transferables, sessionKeyT);
+			final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
+			final IdlStorableObject[] headers = receiveProcedure.receiveStorableObjects(server, transferables, sessionKeyT);
 			StorableObject.updateHeaders(storableObjects, headers);
 		}
 		catch (final AMFICOMRemoteException are) {
 			final String mesg = "Cannot save objects -- ";
-			if (are.error_code.value() == ErrorCode._ERROR_VERSION_COLLISION)
+			if (are.errorCode.value() == ErrorCode._ERROR_VERSION_COLLISION)
 				throw new VersionCollisionException(mesg + are.message, 0L, 0L);
-			if (are.error_code.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
+			if (are.errorCode.value() == ErrorCode._ERROR_NOT_LOGGED_IN)
 				throw new LoginException("Not logged in");
 			throw new UpdateObjectException(mesg + are.message);
 		}

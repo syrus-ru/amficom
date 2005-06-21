@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.150 2005/06/20 20:54:25 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.151 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.150 $, $Date: 2005/06/20 20:54:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.151 $, $Date: 2005/06/21 12:43:48 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -376,12 +376,12 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public final Set<StorableObject> retrieveByCondition(final StorableObjectCondition condition)
+	public final Set<? extends StorableObject> retrieveByCondition(final StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
-	protected Set<StorableObject> retrieveByCondition(final String conditionQuery)
+	protected Set<? extends StorableObject> retrieveByCondition(final String conditionQuery)
 			throws RetrieveObjectException, IllegalDataException {
 		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
 
@@ -418,7 +418,7 @@ public abstract class StorableObjectDatabase {
 		return storableObjects;
 	}
 
-	public final Set<StorableObject> retrieveButIdsByCondition(final Set<Identifier> ids,
+	public final Set<? extends StorableObject> retrieveButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 
@@ -432,17 +432,15 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByCondition(stringBuffer.toString());
 	}
 
-	public final Set<StorableObject> retrieveAll() throws RetrieveObjectException {
-		Set<StorableObject> objects = null;
+	public final Set<? extends StorableObject> retrieveAll() throws RetrieveObjectException {
 		try {
-			objects = this.retrieveByCondition((String) null);
-		} catch (IllegalDataException ide) {
+			return this.retrieveByCondition((String) null);
+		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
 		}
-		return objects;
 	}
 
-	public final Set<StorableObject> retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
+	public final Set<? extends StorableObject> retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
@@ -822,14 +820,14 @@ public abstract class StorableObjectDatabase {
 				storableObjectIds.add(id);
 		}
 
-		Set<StorableObject> dbstorableObjects = null;
+		Set<? extends StorableObject> dbstorableObjects = null;
 		try {
 			dbstorableObjects = this.retrieveByIdsByCondition(storableObjectIds, null);
 		} catch (ApplicationException e) {
 			throw new UpdateObjectException(e);
 		}
 		final Map<Identifier, StorableObject> dbstorableObjectsMap = new HashMap<Identifier, StorableObject>();
-		for (final Iterator<StorableObject> it = dbstorableObjects.iterator(); it.hasNext();) {
+		for (final Iterator<? extends StorableObject> it = dbstorableObjects.iterator(); it.hasNext();) {
 			final StorableObject storableObject = it.next();
 			final Identifier id = storableObject.getId();
 			dbstorableObjectsMap.put(id, storableObject);

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.69 2005/06/20 17:29:37 bass Exp $
+ * $Id: StorableObject.java,v 1.70 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 import java.io.Serializable;
@@ -29,7 +29,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/06/20 17:29:37 $
+ * @version $Revision: 1.70 $, $Date: 2005/06/21 12:43:48 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -106,12 +106,12 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	@SuppressWarnings("unusedThrown")
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
+		IdlStorableObject sot = (IdlStorableObject) transferable;
 		this.id = new Identifier(sot.id);
 		this.created = new Date(sot.created);
 		this.modified = new Date(sot.modified);
-		this.creatorId = new Identifier(sot.creator_id);
-		this.modifierId = new Identifier(sot.modifier_id);
+		this.creatorId = new Identifier(sot.creatorId);
+		this.modifierId = new Identifier(sot.modifierId);
 		this.version = sot.version;
 
 		this.changed = false;
@@ -151,8 +151,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		return new StorableObject_Transferable(this.id.getTransferable(),
+	public IdlStorableObject getHeaderTransferable() {
+		return new IdlStorableObject(this.id.getTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
@@ -328,10 +328,10 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return clone;
 	}
 
-	public static final StorableObject_Transferable[] createHeadersTransferable(final Collection<? extends StorableObject> storableObjects) {
+	public static final IdlStorableObject[] createHeadersTransferable(final Collection<? extends StorableObject> storableObjects) {
 		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		StorableObject_Transferable[] headersT = new StorableObject_Transferable[storableObjects.size()];
+		IdlStorableObject[] headersT = new IdlStorableObject[storableObjects.size()];
 		int i = 0;
 		for (Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();i ++) {
 			final StorableObject storableObject = it.next();
@@ -482,7 +482,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @param storableObjects
 	 * @param headers
 	 */
-	protected static final void updateHeaders(final Set<? extends StorableObject> storableObjects, final StorableObject_Transferable[] headers) {
+	protected static final void updateHeaders(final Set<? extends StorableObject> storableObjects, final IdlStorableObject[] headers) {
 		for (int i = 0; i < headers.length; i++) {
 			final Identifier id = new Identifier(headers[i].id);
 			for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
@@ -500,9 +500,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @param sot
 	 */
-	private final void updateFromHeaderTransferable(StorableObject_Transferable sot) {
+	private final void updateFromHeaderTransferable(IdlStorableObject sot) {
 		this.modified = new Date(sot.modified);
-		this.modifierId = new Identifier(sot.modifier_id);
+		this.modifierId = new Identifier(sot.modifierId);
 		if (this.version != sot.version || (this.version == 0 && sot.version == 0))
 			this.changed = false;
 		this.version = sot.version;

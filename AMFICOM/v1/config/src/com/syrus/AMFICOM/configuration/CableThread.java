@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.30 2005/06/20 17:29:36 bass Exp $
+ * $Id: CableThread.java,v 1.31 2005/06/21 12:44:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlCableThread;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/21 12:44:28 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -54,7 +54,7 @@ public final class CableThread extends DomainMember implements TypedObject {
 		}
 	}
 
-	public CableThread(final CableThread_Transferable ctt) throws CreateObjectException {
+	public CableThread(final IdlCableThread ctt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ctt);
 		} catch (ApplicationException ae) {
@@ -109,16 +109,16 @@ public final class CableThread extends DomainMember implements TypedObject {
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		CableThread_Transferable ctt = (CableThread_Transferable) transferable;
-		super.fromTransferable(ctt.header, new Identifier(ctt.domain_id));
+		IdlCableThread ctt = (IdlCableThread) transferable;
+		super.fromTransferable(ctt.header, new Identifier(ctt.domainId));
 
 		this.name = ctt.name;
 		this.description = ctt.description;
-		this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
+		this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
 	}
 
-	public CableThread_Transferable getTransferable() {
-		return new CableThread_Transferable(super.getHeaderTransferable(),
+	public IdlCableThread getTransferable() {
+		return new IdlCableThread(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

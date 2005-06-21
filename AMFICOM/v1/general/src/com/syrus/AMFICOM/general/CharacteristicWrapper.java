@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.12 2005/05/26 14:04:28 bass Exp $
+ * $Id: CharacteristicWrapper.java,v 1.13 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/26 14:04:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/21 12:43:47 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -74,6 +74,7 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof Characteristic) {
 			Characteristic characteristic = (Characteristic) object;

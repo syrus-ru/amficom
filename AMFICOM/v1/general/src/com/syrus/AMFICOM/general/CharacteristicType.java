@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.36 2005/06/20 20:54:25 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.37 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,14 +14,14 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/20 20:54:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/06/21 12:43:48 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -49,7 +49,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public CharacteristicType(final CharacteristicType_Transferable ctt) {
+	public CharacteristicType(final IdlCharacteristicType ctt) {
 		this.fromTransferable(ctt);
 	}
 
@@ -80,8 +80,9 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) {
-		CharacteristicType_Transferable ctt = (CharacteristicType_Transferable) transferable;
+		IdlCharacteristicType ctt = (IdlCharacteristicType) transferable;
 		try {
 			super.fromTransferable(ctt.header, ctt.codename, ctt.description);
 		} catch (ApplicationException ae) {
@@ -89,7 +90,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 			Log.errorException(ae);
 		}
 		this.name = ctt.name;
-		this.dataType = ctt.data_type.value();
+		this.dataType = ctt.dataType.value();
 		this.sort = ctt.sort.value();
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -134,9 +135,9 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public CharacteristicType_Transferable getTransferable() {
+	public IdlCharacteristicType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL + ", id: '" + this.id + "'";
-		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
+		return new IdlCharacteristicType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
@@ -199,6 +200,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 		this.sort = sort;
 	}
 
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.name != null && this.name.length() != 0;
@@ -206,6 +208,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	public Set<Identifiable> getDependencies() {
 		return Collections.emptySet();
 	}	

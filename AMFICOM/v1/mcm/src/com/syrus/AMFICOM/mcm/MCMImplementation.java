@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.39 2005/06/19 14:00:50 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.40 2005/06/21 12:44:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.mcm.corba.MCMPOA;
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/19 14:00:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/06/21 12:44:30 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -140,7 +140,7 @@ public class MCMImplementation extends MCMPOA {
 	}
 
 	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
-			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
 		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
@@ -154,7 +154,7 @@ public class MCMImplementation extends MCMPOA {
 	}
 
 	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(IdlIdentifier[] identifier_Transferables,
-			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
 		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
@@ -168,7 +168,7 @@ public class MCMImplementation extends MCMPOA {
 	}
 
 	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
-			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
 		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
@@ -182,7 +182,7 @@ public class MCMImplementation extends MCMPOA {
 	}
 
   private Set getObjectsButIdsCondition(IdlIdentifier[] identifier_Transferables,
-			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		try {
 
 			StorableObjectCondition condition = null;

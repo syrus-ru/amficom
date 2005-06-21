@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.8 2005/06/20 15:41:35 arseniy Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.9 2005/06/21 12:44:29 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,15 +27,15 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.mcm.corba.MCM;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/20 15:41:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/06/21 12:44:29 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 final class CORBAMServerObjectLoader {
@@ -53,28 +53,28 @@ final class CORBAMServerObjectLoader {
 
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.8 $, $Date: 2005/06/20 15:41:35 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.9 $, $Date: 2005/06/21 12:44:29 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
 	interface TransmitProcedure {
 		IDLEntity[] transmitStorableObjects(final MCM mcmRef,
 				final IdlIdentifier loadIdsT[],
-				final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException;
+				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.8 $, $Date: 2005/06/20 15:41:35 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.9 $, $Date: 2005/06/21 12:44:29 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
 	interface TransmitButIdsByConditionProcedure {
 		IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
 				final IdlIdentifier loadButIdsT[],
-				final StorableObjectCondition_Transferable conditionT,
-				final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException;
+				final IdlStorableObjectCondition conditionT,
+				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
 	}
 
 
@@ -182,7 +182,7 @@ final class CORBAMServerObjectLoader {
 		int numEfforts = 0;
 		while (true) {
 			try {
-				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(mcmRef, loadIdsT, sessionKeyT);
 
 				final Set mcmLoadedObjects = StorableObjectPool.fromTransferables(entityCode, transferables, true);
@@ -203,7 +203,7 @@ final class CORBAMServerObjectLoader {
 				break;
 			}
 			catch (AMFICOMRemoteException are) {
-				switch (are.error_code.value()) {
+				switch (are.errorCode.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
 							if (LoginManager.restoreLogin()) {
@@ -313,11 +313,11 @@ final class CORBAMServerObjectLoader {
 		/*	^Just debug output -- nothing more^*/
 
 		final IdlIdentifier[] loadButIdsT = Identifier.createTransferables(loadButIds);
-		final StorableObjectCondition_Transferable conditionT = (StorableObjectCondition_Transferable) condition.getTransferable();
+		final IdlStorableObjectCondition conditionT = (IdlStorableObjectCondition) condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
-				final SessionKey_Transferable sessionKeyT = LoginManager.getSessionKeyTransferable();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IDLEntity[] transferables = transmitButIdsByConditionProcedure.transmitStorableObjectsButIdsByCondition(mcmRef,
 						loadButIdsT,
 						conditionT,
@@ -342,7 +342,7 @@ final class CORBAMServerObjectLoader {
 				break;
 			}
 			catch (AMFICOMRemoteException are) {
-				switch (are.error_code.value()) {
+				switch (are.errorCode.value()) {
 					case ErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
 							if (LoginManager.restoreLogin()) {

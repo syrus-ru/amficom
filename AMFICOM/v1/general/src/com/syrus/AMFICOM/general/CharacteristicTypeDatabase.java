@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.25 2005/06/17 11:00:57 bass Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.26 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/21 12:43:48 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -29,10 +29,12 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns  = StorableObjectWrapper.COLUMN_CODENAME + COMMA
@@ -44,6 +46,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues  = QUESTION + COMMA
@@ -55,6 +58,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
@@ -65,6 +69,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
 			PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
@@ -84,11 +89,13 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("CharacteristicTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(characteristicType);
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
@@ -118,6 +125,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return characteristicType;
 	}
 
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -127,11 +135,13 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	@Override
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		super.insertEntity(characteristicType);		
 	}
 
+	@Override
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}

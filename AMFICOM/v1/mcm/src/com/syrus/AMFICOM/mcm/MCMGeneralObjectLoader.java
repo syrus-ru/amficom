@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.29 2005/06/17 13:06:56 bass Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.30 2005/06/21 12:44:30 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,13 +20,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.30 $, $Date: 2005/06/21 12:44:30 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -42,7 +42,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		return super.loadStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitParameterTypes(idsT, sessionKey);
 			}
 		});
@@ -52,7 +52,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitCharacteristicTypes(idsT, sessionKey);
 			}
 		});
@@ -62,7 +62,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitCharacteristics(idsT, sessionKey);
 			}
 		});
@@ -79,8 +79,8 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 				new TransmitButIdsByConditionProcedure() {
 					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
-							SessionKey_Transferable sessionKey,
-							StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+							IdlSessionKey sessionKey,
+							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
 						return ((MServer) server).transmitParameterTypesButIdsByCondition(idsT, conditionT, sessionKey);
 					}
 				});

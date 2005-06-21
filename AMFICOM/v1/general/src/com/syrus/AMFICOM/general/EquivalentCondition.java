@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.10 2005/06/20 17:29:37 bass Exp $
+* $Id: EquivalentCondition.java,v 1.11 2005/06/21 12:43:47 bass Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,14 +10,14 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.EquivalentCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlEquivalentCondition;
 
 
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.10 $, $Date: 2005/06/20 17:29:37 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/21 12:43:47 $
  * @author ÷÷œ‘ $Author: bass $
  * @module general_v1
  */
@@ -33,8 +33,8 @@ public final class EquivalentCondition implements StorableObjectCondition {
 		this.entityCode = entityCode;
 	}
 
-	public EquivalentCondition(EquivalentCondition_Transferable transferable) {
-		this(transferable.entity_code);
+	public EquivalentCondition(IdlEquivalentCondition transferable) {
+		this(transferable.entityCode);
 	}
 
 	public boolean isConditionTrue(final StorableObject storableObject) {
@@ -59,10 +59,10 @@ public final class EquivalentCondition implements StorableObjectCondition {
 
 	}
 
-	public StorableObjectCondition_Transferable getTransferable() {
-		final EquivalentCondition_Transferable transferable = new EquivalentCondition_Transferable(this.entityCode.shortValue());
+	public IdlStorableObjectCondition getTransferable() {
+		final IdlEquivalentCondition transferable = new IdlEquivalentCondition(this.entityCode.shortValue());
 
-		final StorableObjectCondition_Transferable condition = new StorableObjectCondition_Transferable();
+		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
 		condition.equivalentCondition(transferable);
 		return condition;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.89 2005/06/14 11:47:13 arseniy Exp $
+ * $Id: configuration.idl,v 1.90 2005/06/21 12:43:33 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -139,7 +139,7 @@ module corba {
 	typedef CableLinkType_Transferable CableLinkType;
 	typedef sequence<CableLinkType> CableLinkTypeSeq;
 
-	struct CableThreadType_Transferable {
+	typedef struct IdlCableThreadType {
 		general::corba::StorableObject header;
 		
 		general::corba::WString32 codename;
@@ -150,9 +150,8 @@ module corba {
 		
 		general::corba::Identifier linkTypeId;
 		general::corba::Identifier cableLinkTypeId;
-	};
-	typedef sequence<CableThreadType_Transferable> CableThreadTypeSeq_Transferable;
-	typedef CableThreadType_Transferable CableThreadType;
+	} CableThreadType;
+
 	typedef sequence<CableThreadType> CableThreadTypeSeq;
 /*
 	union AbstractLinkType_Transferable switch (AbstractLinkTypeSort) {
@@ -331,19 +330,16 @@ module corba {
 	typedef sequence<Link> LinkSeq;
 	
 ///////////////////// CableThread /////////////////////
-	struct CableThread_Transferable {
+	typedef struct IdlCableThread {
 		general::corba::StorableObject header;
-		general::corba::Identifier domain_id;
+		general::corba::Identifier domainId;
 		
 		general::corba::WString128 name;
 		general::corba::WString256 description;
-		general::corba::Identifier type_id;		
-	};
+		general::corba::Identifier _typeId;		
+	} CableThread;
 
-	typedef sequence <CableThread_Transferable> CableThreadSeq_Transferable;
-	typedef CableThread_Transferable CableThread;
-	typedef sequence<Link> CableThreadSeq;
-	
+	typedef sequence <CableThread> CableThreadSeq;
 };
 };
 };

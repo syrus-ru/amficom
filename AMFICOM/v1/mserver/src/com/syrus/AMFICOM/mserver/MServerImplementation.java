@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.62 2005/06/17 20:45:54 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.63 2005/06/21 12:44:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,19 +20,19 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/17 20:45:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/06/21 12:44:29 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 public class MServerImplementation extends MServerMeasurementTransmit {
 
 	private static final long serialVersionUID = 395371850379497709L;
 
-	protected void validateAccess(final SessionKey_Transferable sessionKeyT,
+	protected void validateAccess(final IdlSessionKey sessionKeyT,
 			final IdlIdentifierHolder userId,
 			final IdlIdentifierHolder domainId) throws AMFICOMRemoteException {
 		try {
@@ -55,7 +55,7 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 		}
 	}
 
-	public void deleteTests(IdlIdentifier[] ids, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public void deleteTests(IdlIdentifier[] ids, IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 		this.validateAccess(sessionKeyT, userId, domainId);

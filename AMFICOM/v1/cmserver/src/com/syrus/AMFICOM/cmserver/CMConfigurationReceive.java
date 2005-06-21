@@ -1,5 +1,5 @@
 /*-
- * $Id: CMConfigurationReceive.java,v 1.26 2005/06/17 11:01:01 bass Exp $
+ * $Id: CMConfigurationReceive.java,v 1.27 2005/06/21 12:44:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.cmserver;
 
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
+import com.syrus.AMFICOM.configuration.corba.IdlCableThread;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
@@ -25,133 +25,133 @@ import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/17 11:01:01 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/21 12:44:32 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	private static final long serialVersionUID = 5462858483804681509L;
 
-	public final StorableObject_Transferable[] receiveEquipmentTypes(
+	public final IdlStorableObject[] receiveEquipmentTypes(
 			final EquipmentType_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.EQUIPMENT_TYPE_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receivePortTypes(
+	public final IdlStorableObject[] receivePortTypes(
 			final PortType_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.PORT_TYPE_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveMeasurementPortTypes(
+	public final IdlStorableObject[] receiveMeasurementPortTypes(
 			final MeasurementPortType_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveTransmissionPathTypes(
+	public final IdlStorableObject[] receiveTransmissionPathTypes(
 			final TransmissionPathType_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.TRANSPATH_TYPE_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveLinkTypes(
+	public final IdlStorableObject[] receiveLinkTypes(
 			final LinkType_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.LINK_TYPE_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveCableLinkTypes(
+	public final IdlStorableObject[] receiveCableLinkTypes(
 			final CableLinkType_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.CABLELINK_TYPE_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveCableThreadTypes(
-			final CableThreadType_Transferable transferables[],
+	public final IdlStorableObject[] receiveCableThreadTypes(
+			final IdlCableThreadType transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.CABLETHREAD_TYPE_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveEquipments(
+	public final IdlStorableObject[] receiveEquipments(
 			final Equipment_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.EQUIPMENT_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receivePorts(
+	public final IdlStorableObject[] receivePorts(
 			final Port_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.PORT_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveMeasurementPorts(
+	public final IdlStorableObject[] receiveMeasurementPorts(
 			final MeasurementPort_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.MEASUREMENTPORT_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveTransmissionPaths(
+	public final IdlStorableObject[] receiveTransmissionPaths(
 			final TransmissionPath_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.TRANSPATH_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveKISs(
+	public final IdlStorableObject[] receiveKISs(
 			final KIS_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.KIS_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveMonitoredElements(
+	public final IdlStorableObject[] receiveMonitoredElements(
 			final MonitoredElement_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.MONITOREDELEMENT_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveLinks(
+	public final IdlStorableObject[] receiveLinks(
 			final Link_Transferable transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.LINK_CODE, transferables, force, sessionKey);
 	}
 
-	public final StorableObject_Transferable[] receiveCableThreads(
-			final CableThread_Transferable transferables[],
+	public final IdlStorableObject[] receiveCableThreads(
+			final IdlCableThread transferables[],
 			final boolean force,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		return super.receiveStorableObjects(ObjectEntities.CABLETHREAD_CODE, transferables, force, sessionKey);
 	}

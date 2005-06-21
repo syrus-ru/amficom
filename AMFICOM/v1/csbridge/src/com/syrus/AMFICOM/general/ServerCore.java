@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.18 2005/06/17 13:21:38 bass Exp $
+ * $Id: ServerCore.java,v 1.19 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,17 +20,17 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/06/17 13:21:38 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/21 12:44:27 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -45,7 +45,7 @@ public abstract class ServerCore implements CommonServer {
 	 * @throws AMFICOMRemoteException
 	 * @todo Move method body here (declaring method itself as final)
 	 */
-	protected abstract void validateAccess(final SessionKey_Transferable sessionKeyT,
+	protected abstract void validateAccess(final IdlSessionKey sessionKeyT,
 			final IdlIdentifierHolder userIdH,
 			final IdlIdentifierHolder domainIdH)
 			throws AMFICOMRemoteException;
@@ -56,7 +56,7 @@ public abstract class ServerCore implements CommonServer {
 	 * @throws AMFICOMRemoteException
 	 */
 	public final void delete(final IdlIdentifier[] idsT,
-			final SessionKey_Transferable sessionKeyT)
+			final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
 			this.validateAccess(sessionKeyT,
@@ -125,7 +125,7 @@ public abstract class ServerCore implements CommonServer {
 	}
 
 	protected final IDLEntity[] transmitStorableObjects(final IdlIdentifier[] idsT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			assert idsT != null && sessionKeyT != null: ErrorMessages.NON_NULL_EXPECTED;
 			final int length = idsT.length;
@@ -158,8 +158,8 @@ public abstract class ServerCore implements CommonServer {
 	}
 
 	protected final IDLEntity[] transmitStorableObjectsButIdsByCondition(final IdlIdentifier[] idsT,
-			final SessionKey_Transferable sessionKeyT,
-			final StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+			final IdlSessionKey sessionKeyT,
+			final IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
 		try {
 			assert idsT != null && sessionKeyT != null && conditionT != null : ErrorMessages.NON_NULL_EXPECTED;
 
@@ -200,10 +200,10 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	protected final StorableObject_Transferable[] receiveStorableObjects(final short entityCode,
+	protected final IdlStorableObject[] receiveStorableObjects(final short entityCode,
 			final IDLEntity[] transferables,
 			final boolean force,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
@@ -245,11 +245,11 @@ public abstract class ServerCore implements CommonServer {
 	 * @param headers
 	 * @param sessionKeyT
 	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.general.corba.CommonServer#transmitRefreshedStorableObjects(com.syrus.AMFICOM.general.corba.StorableObject_Transferable[], com.syrus.AMFICOM.security.corba.SessionKey_Transferable)
+	 * @see com.syrus.AMFICOM.general.corba.CommonServer#transmitRefreshedStorableObjects(com.syrus.AMFICOM.general.corba.IdlStorableObject[], com.syrus.AMFICOM.security.corba.IdlSessionKey)
 	 */
 	public final IdlIdentifier[] transmitRefreshedStorableObjects(
-			final StorableObject_Transferable headers[],
-			final SessionKey_Transferable sessionKeyT)
+			final IdlStorableObject headers[],
+			final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		this.validateAccess(sessionKeyT,
 				new IdlIdentifierHolder(),
@@ -265,7 +265,7 @@ public abstract class ServerCore implements CommonServer {
 			final Set storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
 				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-				final StorableObject_Transferable header = (StorableObject_Transferable) headerMap.get(storableObject.getId());
+				final IdlStorableObject header = (IdlStorableObject) headerMap.get(storableObject.getId());
 				/*
 				 * Remove objects with older versions as well as objects with the same versions.
 				 * Not only with older ones!

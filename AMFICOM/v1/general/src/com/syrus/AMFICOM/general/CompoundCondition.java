@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.27 2005/06/20 17:29:37 bass Exp $
+ * $Id: CompoundCondition.java,v 1.28 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,15 +14,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 
 /**
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.27 $, $Date: 2005/06/20 17:29:37 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/21 12:43:47 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -94,9 +94,9 @@ public final class CompoundCondition implements StorableObjectCondition {
 					+ "' to set of condition for entity '" + ObjectEntities.codeToString(this.entityCode) + "'");
 	}
 
-	public CompoundCondition(CompoundCondition_Transferable transferable) throws IllegalDataException {
+	public CompoundCondition(IdlCompoundCondition transferable) throws IllegalDataException {
 		this.operation = transferable.sort.value();
-		final StorableObjectCondition_Transferable innerConditions[] = transferable.innerConditions;
+		final IdlStorableObjectCondition innerConditions[] = transferable.innerConditions;
 		if (innerConditions.length <= 1)
 			throw new IllegalDataException("Unable to create CompoundCondition for " + innerConditions.length + "  condition");
 		this.conditions = new HashSet(innerConditions.length);
@@ -156,17 +156,17 @@ public final class CompoundCondition implements StorableObjectCondition {
 		throw new UnsupportedOperationException("Cannot set entity code " + entityCode + " for this condition");
 	}
 
-	public StorableObjectCondition_Transferable getTransferable() {
-		final CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
+	public IdlStorableObjectCondition getTransferable() {
+		final IdlCompoundCondition transferable = new IdlCompoundCondition();
 		transferable.sort = CompoundConditionSort.from_int(this.operation);
-		transferable.innerConditions = new StorableObjectCondition_Transferable[this.conditions.size()];
+		transferable.innerConditions = new IdlStorableObjectCondition[this.conditions.size()];
 		int i = 0;
 		for (final Iterator<StorableObjectCondition> storableObjectConditionIterator = this.conditions.iterator(); storableObjectConditionIterator.hasNext(); i++) {
 			final StorableObjectCondition storableObjectCondition = storableObjectConditionIterator.next();
-			transferable.innerConditions[i] = (StorableObjectCondition_Transferable) storableObjectCondition.getTransferable();
+			transferable.innerConditions[i] = (IdlStorableObjectCondition) storableObjectCondition.getTransferable();
 		}
 		
-		final StorableObjectCondition_Transferable condition = new StorableObjectCondition_Transferable();
+		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
 		condition.compoundCondition(transferable);
 		return condition;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.5 2005/06/17 20:49:26 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.6 2005/06/21 12:44:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,12 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.AMFICOM.map.corba.RenderedImage_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalImageQuery_Transferable;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 20:49:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/06/21 12:44:26 $
+ * @author $Author: bass $
  * @module mscharserver_v1
  */
 public final class MscharServerImpl extends MscharServerSchemeTransmit {
@@ -33,9 +33,9 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 	 * @param userId
 	 * @param domainId
 	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
+	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
 	 */
-	protected void validateAccess(final SessionKey_Transferable sessionKey,
+	protected void validateAccess(final IdlSessionKey sessionKey,
 			final IdlIdentifierHolder userId,
 			final IdlIdentifierHolder domainId)
 			throws AMFICOMRemoteException {
@@ -57,7 +57,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 
 	public RenderedImage_Transferable transmitTopologicalImage(
 			final TopologicalImageQuery_Transferable topologicalImageQuery_Transferable,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		try {
 			Log.debugMessage("MscharServerImpl.transmitTopologicalImage() | Trying to transmit "
@@ -80,7 +80,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 	
 	public void stopRenderTopologicalImage(
 			final long userId,
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		try {
 			Log.debugMessage("MscharServerImpl.stopRenderTopologicalImage() | Trying to stop rendering image"

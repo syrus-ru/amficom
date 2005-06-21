@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.15 2005/06/20 09:28:56 max Exp $
+ * $Id: FilterController.java,v 1.16 2005/06/21 12:44:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.util.Log;
 
 
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/20 09:28:56 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2005/06/21 12:44:28 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {

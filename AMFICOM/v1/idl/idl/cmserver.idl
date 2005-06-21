@@ -137,7 +137,7 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq receiveCableThreads(in configuration::corba::CableThreadSeq_Transferable cableThreads_Transferable,
+		general::corba::StorableObjectSeq receiveCableThreads(in configuration::corba::CableThreadSeq cableThreads_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -406,7 +406,7 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		configuration::corba::CableThreadSeq_Transferable transmitCableThreads(
+		configuration::corba::CableThreadSeq transmitCableThreads(
 						in general::corba::IdentifierSeq idsT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -450,7 +450,7 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		configuration::corba::CableThreadTypeSeq_Transferable transmitCableThreadTypesButIdsByCondition(
+		configuration::corba::CableThreadTypeSeq transmitCableThreadTypesButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)
@@ -498,7 +498,7 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		configuration::corba::CableThreadSeq_Transferable transmitCableThreadsButIdsByCondition(
+		configuration::corba::CableThreadSeq transmitCableThreadsButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)

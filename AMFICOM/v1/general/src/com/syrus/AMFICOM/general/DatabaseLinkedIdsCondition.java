@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.9 2005/06/04 16:56:18 bass Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.10 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  *	}
  * </pre>
  *
- * @version $Revision: 1.9 $, $Date: 2005/06/04 16:56:18 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/21 12:43:47 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -104,6 +104,7 @@ public final class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsC
 		return this.delegate.getSQLQuery();
 	}
 
+	@Override
 	public Short getEntityCode() {
 		return this.delegate.getEntityCode();
 	}

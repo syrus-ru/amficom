@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.102 2005/06/17 13:06:56 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.103 2005/06/21 12:44:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.103 $, $Date: 2005/06/21 12:44:30 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -367,7 +367,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					super.sleepCauseOfFall();
 				}
 				catch (AMFICOMRemoteException are) {
-					switch (are.error_code.value()) {
+					switch (are.errorCode.value()) {
 						case ErrorCode._ERROR_NOT_LOGGED_IN:
 							try {
 								LoginManager.restoreLogin();

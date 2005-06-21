@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.9 2005/06/06 12:22:32 arseniy Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.10 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/06 12:22:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/06/21 12:43:48 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper {
@@ -69,6 +69,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof CharacteristicType) {
 			CharacteristicType characteristicType = (CharacteristicType) object;

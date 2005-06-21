@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.26 2005/06/17 11:00:57 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.27 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/21 12:43:48 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -27,10 +27,12 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.PARAMETER_TYPE_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null){
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
@@ -41,6 +43,7 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 		return columns;
 	}	
 	
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -52,6 +55,7 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 	}
 	
 	
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 		return APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
@@ -66,6 +70,7 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 		throw new IllegalDataException("ParameterTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		ParameterType parameterType = (storableObject == null)
@@ -89,6 +94,7 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 		return parameterType;
 	}
 
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
@@ -99,6 +105,7 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 		return startParameterNumber;
 	}
 
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {

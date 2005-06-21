@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.13 2005/06/17 13:06:58 bass Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.14 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
@@ -32,12 +32,12 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/21 12:44:27 $
  * @module csbridge_v1
  */
 public final class CORBAMapObjectLoader extends CORBAObjectLoader implements MapObjectLoader {
@@ -55,7 +55,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitCollectors(ids1, sessionKey);
 			}
@@ -67,7 +67,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMaps(ids1, sessionKey);
 			}
@@ -79,7 +79,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMarks(ids1, sessionKey);
 			}
@@ -91,7 +91,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitNodeLinks(ids1, sessionKey);
 			}
@@ -103,7 +103,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitPhysicalLinks(ids1, sessionKey);
 			}
@@ -115,7 +115,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitPhysicalLinkTypes(ids1, sessionKey);
 			}
@@ -127,7 +127,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitSiteNodes(ids1, sessionKey);
 			}
@@ -139,7 +139,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitSiteNodeTypes(ids1, sessionKey);
 			}
@@ -151,7 +151,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitTopologicalNodes(ids1, sessionKey);
 			}
@@ -167,8 +167,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitCollectorsButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -180,8 +180,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMapsButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -193,8 +193,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitMarksButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -206,8 +206,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitNodeLinksButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -219,8 +219,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitPhysicalLinksButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -232,8 +232,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitPhysicalLinkTypesButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -245,8 +245,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitSiteNodesButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -258,8 +258,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitSiteNodeTypesButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -271,8 +271,8 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable condition1)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition condition1)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).transmitTopologicalNodesButIdsCondition(ids1, sessionKey, condition1);
 			}
@@ -285,10 +285,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void saveCollectors(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.COLLECTOR_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveCollectors((Collector_Transferable[]) transferables, force, sessionKey);
 			}
@@ -297,10 +297,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void saveMaps(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.MAP_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveMaps((Map_Transferable[]) transferables, force, sessionKey);
 			}
@@ -309,10 +309,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void saveMarks(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.MARK_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveMarks((Mark_Transferable[]) transferables, force, sessionKey);
 			}
@@ -321,10 +321,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void saveNodeLinks(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.NODELINK_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveNodeLinks((NodeLink_Transferable[]) transferables, force, sessionKey);
 			}
@@ -333,10 +333,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void savePhysicalLinks(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.PHYSICALLINK_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receivePhysicalLinks((PhysicalLink_Transferable[]) transferables, force, sessionKey);
 			}
@@ -345,10 +345,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void savePhysicalLinkTypes(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.PHYSICALLINK_TYPE_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receivePhysicalLinkTypes((PhysicalLinkType_Transferable[]) transferables, force, sessionKey);
 			}
@@ -357,10 +357,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void saveSiteNodes(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.SITENODE_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSiteNodes((SiteNode_Transferable[]) transferables, force, sessionKey);
 			}
@@ -369,10 +369,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void saveSiteNodeTypes(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.SITENODE_TYPE_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSiteNodeTypes((SiteNodeType_Transferable[]) transferables, force, sessionKey);
 			}
@@ -381,10 +381,10 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	public void saveTopologicalNodes(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.TOPOLOGICALNODE_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveTopologicalNodes((TopologicalNode_Transferable[]) transferables, force, sessionKey);
 			}

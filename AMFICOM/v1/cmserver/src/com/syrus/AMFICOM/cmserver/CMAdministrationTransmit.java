@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.28 2005/06/17 13:07:00 bass Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.29 2005/06/21 12:44:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.SystemUser_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/17 13:07:00 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/21 12:44:32 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -33,7 +33,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 	/* Transmit multiple objects*/
 
-	public SystemUser_Transferable[] transmitSystemUsers(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
+	public SystemUser_Transferable[] transmitSystemUsers(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -42,7 +42,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		return users;
 	}
 
-	public Domain_Transferable[] transmitDomains(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
+	public Domain_Transferable[] transmitDomains(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -51,7 +51,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		return domains;
 	}
 
-	public Server_Transferable[] transmitServers(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
+	public Server_Transferable[] transmitServers(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -60,7 +60,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		return servers;
 	}
 
-	public MCM_Transferable[] transmitMCMs(final IdlIdentifier[] idsT, final SessionKey_Transferable sessionKeyT)
+	public MCM_Transferable[] transmitMCMs(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
@@ -70,7 +70,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public ServerProcess_Transferable[] transmitServerProcesses(final IdlIdentifier[] idsT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
 		final ServerProcess_Transferable[] serverProcesses = new ServerProcess_Transferable[length];
@@ -83,8 +83,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	/* Transmit multiple objects but ids by condition */
 
 	public SystemUser_Transferable[] transmitSystemUsersButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final SystemUser_Transferable[] users = new SystemUser_Transferable[length];
@@ -93,8 +93,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Domain_Transferable[] transmitDomainsButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Domain_Transferable[] domains = new Domain_Transferable[length];
@@ -103,8 +103,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public Server_Transferable[] transmitServersButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final Server_Transferable[] servers = new Server_Transferable[length];
@@ -113,8 +113,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public MCM_Transferable[] transmitMCMsButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final MCM_Transferable[] mcms = new MCM_Transferable[length];
@@ -123,8 +123,8 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 	}
 
 	public ServerProcess_Transferable[] transmitServerProcessesButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final ServerProcess_Transferable[] serverProcesses = new ServerProcess_Transferable[length];

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.17 2005/06/17 20:45:54 arseniy Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.18 2005/06/21 12:44:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.measurement.Result;
@@ -26,19 +26,19 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServerOperations;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/17 20:45:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/06/21 12:44:29 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends ServerCore implements MServerOperations {
 
 	private static final long serialVersionUID = 8337247295980850931L;
 
-	public void receiveResults(Result_Transferable[] resultsT, IdlIdentifier mcmIdT, SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public void receiveResults(Result_Transferable[] resultsT, IdlIdentifier mcmIdT, IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
@@ -82,7 +82,7 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 		}
 	}
 
-	public StorableObject_Transferable[] receiveTests(Test_Transferable[] testsT, boolean force, SessionKey_Transferable sessionKeyT)
+	public IdlStorableObject[] receiveTests(Test_Transferable[] testsT, boolean force, IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("MServerImplementation.receiveTests | Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
 		return super.receiveStorableObjects(ObjectEntities.TEST_CODE, testsT, force, sessionKeyT);

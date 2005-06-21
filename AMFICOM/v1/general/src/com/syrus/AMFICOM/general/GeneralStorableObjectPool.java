@@ -1,5 +1,5 @@
 /*-
- * $Id: GeneralStorableObjectPool.java,v 1.35 2005/06/17 12:38:53 bass Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.36 2005/06/21 12:43:47 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/21 12:43:47 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -105,10 +105,12 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	}
 
 
+	@Override
 	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
 		return gObjectLoader.refresh(storableObjects);
 	}
 
+	@Override
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
@@ -125,6 +127,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
@@ -141,6 +144,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
@@ -162,6 +166,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected void deleteStorableObjects(final Set identifiables) {
 		gObjectLoader.delete(identifiables);
 	}

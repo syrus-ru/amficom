@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.42 2005/06/20 17:29:35 bass Exp $
+ * $Id: CableThreadType.java,v 1.43 2005/06/21 12:44:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.42 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/21 12:44:28 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -65,7 +65,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		}
 	}
 
-	CableThreadType(final CableThreadType_Transferable cttt) throws CreateObjectException {
+	CableThreadType(final IdlCableThreadType cttt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cttt);
 		} catch (ApplicationException ae) {
@@ -136,7 +136,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		CableThreadType_Transferable cttt = (CableThreadType_Transferable) transferable;
+		IdlCableThreadType cttt = (IdlCableThreadType) transferable;
 		super.fromTransferable(cttt.header, cttt.codename, cttt.description);
 		this.name = cttt.name;
 		this.color = cttt.color;
@@ -145,8 +145,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 				true);
 	}
 
-	public CableThreadType_Transferable getTransferable() {
-		return new CableThreadType_Transferable(super.getHeaderTransferable(),
+	public IdlCableThreadType getTransferable() {
+		return new IdlCableThreadType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

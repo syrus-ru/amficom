@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.21 2005/06/20 17:30:17 bass Exp $
+ * $Id: Marker.java,v 1.22 2005/06/21 12:44:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.21 $, $Date: 2005/06/20 17:30:17 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/21 12:44:31 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -477,7 +477,7 @@ public class Marker extends AbstractNode
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public StorableObject_Transferable getHeaderTransferable()
+	public IdlStorableObject getHeaderTransferable()
 	{
 		throw new UnsupportedOperationException();
 	}

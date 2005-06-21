@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeFactory.java,v 1.2 2005/06/01 18:49:43 bass Exp $
+ * $Id: CharacteristicTypeFactory.java,v 1.3 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.general;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/01 18:49:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/21 12:43:48 $
  * @module general_v1
  */
 final class CharacteristicTypeFactory extends StorableObjectFactory {
@@ -24,23 +24,26 @@ final class CharacteristicTypeFactory extends StorableObjectFactory {
 	 * @throws CreateObjectException
 	 * @see StorableObjectFactory#newInstance(IDLEntity)
 	 */
+	@Override
 	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
-		return new CharacteristicType((CharacteristicType_Transferable) transferable);
+		return new CharacteristicType((IdlCharacteristicType) transferable);
 	}
 
 	/**
 	 * @param transferable
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
 	 */
+	@Override
 	protected Identifier getId(final IDLEntity transferable) {
-		return new Identifier(((CharacteristicType_Transferable) transferable).header.id);
+		return new Identifier(((IdlCharacteristicType) transferable).header.id);
 	}
 
 	/**
 	 * @param length
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
+	@Override
 	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
-		return new CharacteristicType_Transferable[length];
+		return new IdlCharacteristicType[length];
 	}
 }

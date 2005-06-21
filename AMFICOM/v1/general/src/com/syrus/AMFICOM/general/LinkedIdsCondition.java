@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.37 2005/06/20 20:54:25 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.38 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.LinkedIdsCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlLinkedIdsCondition;
 import com.syrus.util.Log;
 
 /**
@@ -65,8 +65,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/06/20 20:54:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/06/21 12:43:48 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -107,13 +107,13 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this(linkedIds, new Short(entityCode));
 	}
 
-	public LinkedIdsCondition(final LinkedIdsCondition_Transferable transferable) {
-		final Short code = new Short(transferable.entity_code);
-		short linkedCode = transferable.linked_entity_code;
+	public LinkedIdsCondition(final IdlLinkedIdsCondition transferable) {
+		final Short code = new Short(transferable.entityCode);
+		short linkedCode = transferable.linkedEntityCode;
 
-		final Set<Identifier> linkIds = new HashSet<Identifier>(transferable.linked_ids.length);
-		for (int i = 0; i < transferable.linked_ids.length; i++) {
-			linkIds.add(new Identifier(transferable.linked_ids[i]));
+		final Set<Identifier> linkIds = new HashSet<Identifier>(transferable.linkedIds.length);
+		for (int i = 0; i < transferable.linkedIds.length; i++) {
+			linkIds.add(new Identifier(transferable.linkedIds[i]));
 		}
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
@@ -175,6 +175,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new LinkedIdsCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "Object: " + storableObject.toString() + "; "
@@ -266,6 +267,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new LinkedIdsCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "Object: " + storableObject.toString() + "; "
@@ -297,17 +299,17 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 *
 	 * @see StorableObjectCondition#getTransferable()
 	 */
-	public final StorableObjectCondition_Transferable getTransferable() {
+	public final IdlStorableObjectCondition getTransferable() {
 		IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIds.size()];
 		int i = 0;
 		for (Iterator<Identifier> it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
 			linkedIdTransferable[i] = it.next().getTransferable();
 
-		final LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable(this.delegate.entityCode.shortValue(),
+		final IdlLinkedIdsCondition transferable = new IdlLinkedIdsCondition(this.delegate.entityCode.shortValue(),
 				this.delegate.linkedEntityCode,
 				linkedIdTransferable);
 
-		final StorableObjectCondition_Transferable condition = new StorableObjectCondition_Transferable();
+		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
 		condition.linkedIdsCondition(transferable);
 		return condition;
 	}

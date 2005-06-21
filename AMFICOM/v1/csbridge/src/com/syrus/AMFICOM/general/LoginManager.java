@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.12 2005/06/17 13:21:38 bass Exp $
+ * $Id: LoginManager.java,v 1.13 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.SessionKey;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/17 13:21:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/21 12:44:27 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -30,7 +30,7 @@ public final class LoginManager {
 	private static LoginServerConnectionManager loginServerConnectionManager;
 	private static LoginRestorer loginRestorer;
 	private static SessionKey sessionKey;
-	private static SessionKey_Transferable sessionKeyT;
+	private static IdlSessionKey sessionKeyT;
 	private static Identifier userId;
 	private static Identifier domainId;
 
@@ -56,7 +56,7 @@ public final class LoginManager {
 			userId = new Identifier(userIdHolder.value);
 		}
 		catch (AMFICOMRemoteException are) {
-			switch (are.error_code.value()) {
+			switch (are.errorCode.value()) {
 				case ErrorCode._ERROR_ILLEGAL_LOGIN:
 					throw new LoginException("Illegal login");
 				case ErrorCode._ERROR_ILLEGAL_PASSWORD:
@@ -75,10 +75,10 @@ public final class LoginManager {
 	public static void logout() throws CommunicationException, LoginException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.logout((SessionKey_Transferable) sessionKey.getTransferable());
+			loginServer.logout((IdlSessionKey) sessionKey.getTransferable());
 		}
 		catch (AMFICOMRemoteException are) {
-			switch (are.error_code.value()) {
+			switch (are.errorCode.value()) {
 				case ErrorCode._ERROR_NOT_LOGGED_IN:
 					throw new LoginException("Not logged in");
 				default:
@@ -93,7 +93,7 @@ public final class LoginManager {
 	public static Set getAvailableDomains() throws CommunicationException, LoginException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			Domain_Transferable[] domainsT = loginServer.transmitAvailableDomains((SessionKey_Transferable) sessionKey.getTransferable());
+			Domain_Transferable[] domainsT = loginServer.transmitAvailableDomains((IdlSessionKey) sessionKey.getTransferable());
 			Set domains = new HashSet(domainsT.length);
 			for (int i = 0; i < domainsT.length; i++) {
 				try {
@@ -106,7 +106,7 @@ public final class LoginManager {
 			return domains;
 		}
 		catch (AMFICOMRemoteException are) {
-			switch (are.error_code.value()) {
+			switch (are.errorCode.value()) {
 				case ErrorCode._ERROR_NO_DOMAINS_AVAILABLE:
 					throw new LoginException("No domains available");
 				default:
@@ -121,7 +121,7 @@ public final class LoginManager {
 	public static void selectDomain(Identifier domainId1) throws CommunicationException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.selectDomain((SessionKey_Transferable) sessionKey.getTransferable(),
+			loginServer.selectDomain((IdlSessionKey) sessionKey.getTransferable(),
 					(IdlIdentifier) domainId1.getTransferable());
 			domainId = domainId1;
 		}
@@ -134,7 +134,7 @@ public final class LoginManager {
 		return sessionKey;
 	}
 
-	public static SessionKey_Transferable getSessionKeyTransferable() {
+	public static IdlSessionKey getSessionKeyTransferable() {
 		return sessionKeyT;
 	}
 

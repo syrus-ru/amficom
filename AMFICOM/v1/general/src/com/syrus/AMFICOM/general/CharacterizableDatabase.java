@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.19 2005/06/20 20:58:06 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.20 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/20 20:58:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/06/21 12:43:47 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -28,6 +28,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 				+ storableObject.getClass().getName());
 	}
 
+	@Override
 	public void retrieve(final StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		this.retrieveEntity(storableObject);
@@ -36,9 +37,9 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set<StorableObject> retrieveByCondition(final String conditionQuery)
+	protected Set<? extends StorableObject> retrieveByCondition(final String conditionQuery)
 			throws RetrieveObjectException, IllegalDataException {
-		Set<StorableObject> collection = super.retrieveByCondition(conditionQuery);
+		Set<? extends StorableObject> collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveCharacteristicsByOneQuery(collection);
 		return collection;
 	}
@@ -60,23 +61,23 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		characterizable.setCharacteristics0(characteristics);
 	}
 
-	private void retrieveCharacteristicsByOneQuery(final Set storableObjects)
+	private void retrieveCharacteristicsByOneQuery(final Set<? extends StorableObject> storableObjects)
 			throws RetrieveObjectException, IllegalDataException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
 		assert StorableObject.hasSingleTypeEntities(storableObjects);
 
-		final Set characteristics = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE)
+		final Set<? extends StorableObject> characteristics = DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE)
 				.retrieveByCondition(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true)
 				.toString());
 
-		Map orderedCharacteristicsMap = new HashMap();
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
+		Map<Identifier, Set<StorableObject>> orderedCharacteristicsMap = new HashMap<Identifier, Set<StorableObject>>();
+		for (Iterator<? extends StorableObject> it = characteristics.iterator(); it.hasNext();) {
 			final Characteristic characteristic = (Characteristic) it.next();
 			final Identifier characterizableId = characteristic.getCharacterizableId();
-			Set orderedCharacteristics = (Set) orderedCharacteristicsMap.get(characterizableId);
+			Set<StorableObject> orderedCharacteristics = orderedCharacteristicsMap.get(characterizableId);
 			if (orderedCharacteristics == null) {
-				orderedCharacteristics = new HashSet();
+				orderedCharacteristics = new HashSet<StorableObject>();
 				orderedCharacteristicsMap.put(characterizableId, orderedCharacteristics);
 			}
 			orderedCharacteristics.add(characteristic);
@@ -86,7 +87,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			characterizable = this.fromStorableObject((StorableObject) it.next());
 			final Identifier characterizableId = characterizable.getId();
-			Set orderedCharacteristics = (Set) orderedCharacteristicsMap.get(characterizableId);
+			Set orderedCharacteristics = orderedCharacteristicsMap.get(characterizableId);
 			if (orderedCharacteristics == null)
 				orderedCharacteristics = Collections.EMPTY_SET;
 

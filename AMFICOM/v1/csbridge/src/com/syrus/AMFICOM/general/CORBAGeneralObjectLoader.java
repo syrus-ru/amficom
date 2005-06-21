@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAGeneralObjectLoader.java,v 1.23 2005/06/17 13:06:58 bass Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.24 2005/06/21 12:44:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,17 +14,17 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
-import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/21 12:44:27 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -43,7 +43,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitParameterTypes(idsT, sessionKey);
 			}
@@ -55,7 +55,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitCharacteristicTypes(idsT, sessionKey);
 			}
@@ -67,7 +67,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitCharacteristics(idsT, sessionKey);
 			}
@@ -83,8 +83,8 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable conditionT)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition conditionT)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitParameterTypesButIdsByCondition(idsT, conditionT, sessionKey);
 			}
@@ -96,8 +96,8 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable conditionT)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition conditionT)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitCharacteristicTypesButIdsByCondition(idsT, conditionT, sessionKey);
 			}
@@ -109,8 +109,8 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
-					final SessionKey_Transferable sessionKey,
-					final StorableObjectCondition_Transferable conditionT)
+					final IdlSessionKey sessionKey,
+					final IdlStorableObjectCondition conditionT)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).transmitCharacteristicsButIdsByCondition(idsT, conditionT, sessionKey);
 			}
@@ -123,36 +123,36 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 
 	public void saveParameterTypes(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveParameterTypes((ParameterType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveParameterTypes((IdlParameterType[]) transferables, force, sessionKey);
 			}
 		});
 	}
 
 	public void saveCharacteristicTypes(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveCharacteristicTypes((CharacteristicType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveCharacteristicTypes((IdlCharacteristicType[]) transferables, force, sessionKey);
 			}
 		});
 	}
 
 	public void saveCharacteristics(final Set storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, storableObjects, new ReceiveProcedure() {
-			public StorableObject_Transferable[] receiveStorableObjects(
+			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
 					final IDLEntity transferables[],
-					final SessionKey_Transferable sessionKey)
+					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveCharacteristics((Characteristic_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveCharacteristics((IdlCharacteristic[]) transferables, force, sessionKey);
 			}
 		});
 	}

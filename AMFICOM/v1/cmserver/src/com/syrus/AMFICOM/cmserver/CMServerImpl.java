@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.109 2005/06/17 20:48:39 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.110 2005/06/21 12:44:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/06/17 20:48:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.110 $, $Date: 2005/06/21 12:44:32 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
@@ -31,9 +31,9 @@ public class CMServerImpl extends CMMeasurementTransmit {
 	 * @param userId
 	 * @param domainId
 	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
+	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
 	 */
-	protected void validateAccess(final SessionKey_Transferable sessionKey,
+	protected void validateAccess(final IdlSessionKey sessionKey,
 			final IdlIdentifierHolder userId,
 			final IdlIdentifierHolder domainId) throws AMFICOMRemoteException {
 		try {

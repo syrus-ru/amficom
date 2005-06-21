@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.42 2005/06/20 17:29:37 bass Exp $
+ * $Id: Characteristic.java,v 1.43 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,10 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/20 17:29:37 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/21 12:43:47 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -55,7 +55,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	 * @param ct
 	 * @throws CreateObjectException
 	 */
-	public Characteristic(final Characteristic_Transferable ct) throws CreateObjectException {
+	public Characteristic(final IdlCharacteristic ct) throws CreateObjectException {
 		try {
 			this.fromTransferable(ct);
 		} catch (ApplicationException ae) {
@@ -98,6 +98,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.type != null
@@ -152,18 +153,19 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Characteristic_Transferable ct = (Characteristic_Transferable) transferable;
+		IdlCharacteristic ct = (IdlCharacteristic) transferable;
 		
 		super.fromTransferable(ct.header);
 		
-		this.type = (CharacteristicType) StorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
+		this.type = (CharacteristicType) StorableObjectPool.getStorableObject(new Identifier(ct._typeId), true);
 		this.name = ct.name;
 		this.description = ct.description;
 		this.value = ct.value;
-		this.characterizableId = new Identifier(ct.characterizable_id);
-		this.editable = ct.is_editable;
-		this.visible = ct.is_visible;
+		this.characterizableId = new Identifier(ct.characterizableId);
+		this.editable = ct.editable;
+		this.visible = ct.visible;
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -171,10 +173,10 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Characteristic_Transferable getTransferable() {
+	public IdlCharacteristic getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new Characteristic_Transferable(super.getHeaderTransferable(),
+		return new IdlCharacteristic(super.getHeaderTransferable(),
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,
@@ -322,6 +324,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		Set<Identifiable> dependencies = new HashSet<Identifiable>(2);

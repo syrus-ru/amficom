@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.10 2005/06/20 13:42:48 max Exp $
+ * $Id: LogicalScheme.java,v 1.11 2005/06/21 12:44:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,13 +19,13 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/20 13:42:48 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/06/21 12:44:28 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class LogicalScheme {

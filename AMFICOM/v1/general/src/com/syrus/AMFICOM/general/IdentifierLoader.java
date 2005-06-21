@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.9 2005/06/17 13:06:59 bass Exp $
+ * $Id: IdentifierLoader.java,v 1.10 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/17 13:06:59 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/21 12:43:47 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -37,6 +37,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 		this.running = true;
 	}
 
+	@Override
 	public void run() {
 		synchronized (this.idPool) {
 			int numberToLoad = this.idPool.capacity() - this.idPool.getNumber();
@@ -56,6 +57,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 		}
 	}
 
+	@Override
 	protected void processFall() {
 		Log.errorMessage("Aboting load of identifiers for entity '"
 				+ ObjectEntities.codeToString(this.entityCode) + "'/" + this.entityCode);

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.36 2005/06/20 17:29:37 bass Exp $
+ * $Id: ParameterType.java,v 1.37 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/20 17:29:37 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/21 12:43:48 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -55,7 +55,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ParameterType(final ParameterType_Transferable ptt) throws CreateObjectException {
+	public ParameterType(final IdlParameterType ptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ptt);
 		} catch (ApplicationException ae) {
@@ -126,6 +126,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.name != null && this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
 	}
@@ -133,8 +134,9 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		ParameterType_Transferable ptt = (ParameterType_Transferable) transferable;
+		IdlParameterType ptt = (IdlParameterType) transferable;
 		try {
 			super.fromTransferable(ptt.header, ptt.codename, ptt.description);
 		} catch (ApplicationException ae) {
@@ -142,10 +144,10 @@ public final class ParameterType extends StorableObjectType implements Character
 			Log.errorException(ae);
 		}
 		this.name = ptt.name;
-		this.dataType = ptt.data_type.value();
+		this.dataType = ptt.dataType.value();
 		
-		Set characteristicIds = Identifier.fromTransferables(ptt.characteristic_ids);
-		this.characteristics = new HashSet(ptt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
+		this.characteristics = new HashSet(ptt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -154,12 +156,12 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ParameterType_Transferable getTransferable() {
+	public IdlParameterType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new ParameterType_Transferable(super.getHeaderTransferable(),
+		return new IdlParameterType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
@@ -261,6 +263,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	public Set getDependencies() {
 		return Collections.EMPTY_SET;
 	}

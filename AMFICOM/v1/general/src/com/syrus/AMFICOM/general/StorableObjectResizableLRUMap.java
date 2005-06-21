@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.4 2005/05/18 11:07:38 bass Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.5 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 11:07:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/21 12:43:47 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -34,6 +34,7 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 		this.initialCapacity = initialCapacity;
 	}
 
+	@Override
 	public synchronized Object put(Object key, Object value) {
 		assert (value instanceof StorableObject) : "Use only StorableObject as value";
 		StorableObject throwedObject = (StorableObject) super.put(key, value);

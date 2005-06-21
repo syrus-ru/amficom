@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.30 2005/06/17 13:07:00 bass Exp $
+ * $Id: CMGeneralTransmit.java,v 1.31 2005/06/21 12:44:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,15 +11,15 @@ package com.syrus.AMFICOM.cmserver;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
-import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/17 13:07:00 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/21 12:44:32 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -30,29 +30,29 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	/* Transmit multiple objects*/
 
-	public ParameterType_Transferable[] transmitParameterTypes(final IdlIdentifier[] idsT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IdlParameterType[] transmitParameterTypes(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
-		final ParameterType_Transferable[] parameterTypes = new ParameterType_Transferable[length];
+		final IdlParameterType[] parameterTypes = new IdlParameterType[length];
 		System.arraycopy(storableObjects, 0, parameterTypes, 0, length);
 		return parameterTypes;
 	}
 
-	public CharacteristicType_Transferable[] transmitCharacteristicTypes(final IdlIdentifier[] idsT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IdlCharacteristicType[] transmitCharacteristicTypes(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
-		final CharacteristicType_Transferable[] characteristicTypes = new CharacteristicType_Transferable[length];
+		final IdlCharacteristicType[] characteristicTypes = new IdlCharacteristicType[length];
 		System.arraycopy(storableObjects, 0, characteristicTypes, 0, length);
 		return characteristicTypes;
 	}
 
-	public Characteristic_Transferable[] transmitCharacteristics(final IdlIdentifier[] idsT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IdlCharacteristic[] transmitCharacteristics(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjects.length;
-		final Characteristic_Transferable[] characteristics = new Characteristic_Transferable[length];
+		final IdlCharacteristic[] characteristics = new IdlCharacteristic[length];
 		System.arraycopy(storableObjects, 0, characteristics, 0, length);
 		return characteristics;
 	}
@@ -61,32 +61,32 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	/* Transmit multiple objects but ids by condition */
 
-	public ParameterType_Transferable[] transmitParameterTypesButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IdlParameterType[] transmitParameterTypesButIdsByCondition(final IdlIdentifier[] idsT,
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
-		final ParameterType_Transferable[] parameterTypes = new ParameterType_Transferable[length];
+		final IdlParameterType[] parameterTypes = new IdlParameterType[length];
 		System.arraycopy(storableObjects, 0, parameterTypes, 0, length);
 		return parameterTypes;
 	}
 
-	public CharacteristicType_Transferable[] transmitCharacteristicTypesButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IdlCharacteristicType[] transmitCharacteristicTypesButIdsByCondition(final IdlIdentifier[] idsT,
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
-		final CharacteristicType_Transferable[] characteristicTypes = new CharacteristicType_Transferable[length];
+		final IdlCharacteristicType[] characteristicTypes = new IdlCharacteristicType[length];
 		System.arraycopy(storableObjects, 0, characteristicTypes, 0, length);
 		return characteristicTypes;
 	}
 
-	public Characteristic_Transferable[] transmitCharacteristicsButIdsByCondition(final IdlIdentifier[] idsT,
-			final StorableObjectCondition_Transferable conditionT,
-			final SessionKey_Transferable sessionKeyT) throws AMFICOMRemoteException {
+	public IdlCharacteristic[] transmitCharacteristicsButIdsByCondition(final IdlIdentifier[] idsT,
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjects = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
-		final Characteristic_Transferable[] characteristics = new Characteristic_Transferable[length];
+		final IdlCharacteristic[] characteristics = new IdlCharacteristic[length];
 		System.arraycopy(storableObjects, 0, characteristics, 0, length);
 		return characteristics;
 	}

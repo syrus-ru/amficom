@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.47 2005/06/17 13:06:56 bass Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.48 2005/06/21 12:44:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/06/17 13:06:56 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/21 12:44:30 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -42,7 +42,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitMeasurementPortTypes(idsT, sessionKey);
 			}
 		});
@@ -55,7 +55,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitMeasurementPorts(idsT, sessionKey);
 			}
 		});
@@ -65,7 +65,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 		return super.loadStorableObjects(ObjectEntities.KIS_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitKISs(idsT, sessionKey);
 			}
 		});
@@ -75,7 +75,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 		return super.loadStorableObjects(ObjectEntities.MONITOREDELEMENT_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
-					SessionKey_Transferable sessionKey) throws AMFICOMRemoteException {
+					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitKISs(idsT, sessionKey);
 			}
 		});
@@ -93,8 +93,8 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 				new TransmitButIdsByConditionProcedure() {
 					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
-							SessionKey_Transferable sessionKey,
-							StorableObjectCondition_Transferable conditionT) throws AMFICOMRemoteException {
+							IdlSessionKey sessionKey,
+							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
 						return ((MServer) server).transmitKISsButIdsByCondition(idsT, conditionT, sessionKey);
 					}
 				});

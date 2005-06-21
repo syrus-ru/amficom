@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectConditionBuilder.java,v 1.4 2005/06/04 16:56:18 bass Exp $
+ * $Id: StorableObjectConditionBuilder.java,v 1.5 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.StorableObjectConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.StorableObjectConditionSort;
 import com.syrus.util.Log;
 
 public final class StorableObjectConditionBuilder {
@@ -19,7 +19,7 @@ public final class StorableObjectConditionBuilder {
 		assert false;
 	}
 
-	public static StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable)
+	public static StorableObjectCondition restoreCondition(IdlStorableObjectCondition transferable)
 			throws IllegalDataException {
 		StorableObjectCondition condition = null;
 		switch (transferable.discriminator().value()) {

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.23 2005/06/20 17:29:37 bass Exp $
+ * $Id: TypicalCondition.java,v 1.24 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.TypicalSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
 import com.syrus.util.Log;
 
 /**
@@ -120,7 +120,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.23 $, $Date: 2005/06/20 17:29:37 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/21 12:43:48 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -290,6 +290,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...",
@@ -397,6 +398,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...",
@@ -504,6 +506,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...",
@@ -597,6 +600,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...",
@@ -707,6 +711,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...",
@@ -725,8 +730,8 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
-	public TypicalCondition(TypicalCondition_Transferable transferable) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entity_code).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
+	public TypicalCondition(IdlTypicalCondition transferable) {
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entityCode).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		Log.debugMessage(TYPICAL_CONDITION_INIT
 			+ "Try reflect class " + className ,
 		Log.INFO);
@@ -739,7 +744,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Integer(transferable.value),
 							new Integer(transferable.otherValue), transferable.operation,
-							new Short(transferable.entity_code), transferable.key});
+							new Short(transferable.entityCode), transferable.key});
 
 					break;
 				case TypicalSort._TYPE_NUMBER_LONG:
@@ -748,7 +753,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Long(transferable.value),
 							new Long(transferable.otherValue), transferable.operation,
-							new Short(transferable.entity_code), transferable.key});
+							new Short(transferable.entityCode), transferable.key});
 
 					break;
 				case TypicalSort._TYPE_NUMBER_DOUBLE:
@@ -757,7 +762,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Double(transferable.value),
 							new Double(transferable.otherValue), transferable.operation,
-							new Short(transferable.entity_code), transferable.key});
+							new Short(transferable.entityCode), transferable.key});
 
 					break;
 				case TypicalSort._TYPE_STRING:
@@ -765,7 +770,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						new Class[] { String.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { transferable.value,
-							transferable.operation, new Short(transferable.entity_code),
+							transferable.operation, new Short(transferable.entityCode),
 							transferable.key});
 
 					break;
@@ -776,13 +781,14 @@ public class TypicalCondition implements StorableObjectCondition {
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] {
 							new Date(Long.parseLong(transferable.value)),
 							new Date(Long.parseLong(transferable.otherValue)), transferable.operation,
-							new Short(transferable.entity_code), transferable.key});
+							new Short(transferable.entityCode), transferable.key});
 
 					break;
 				default: {
 					if (this.delegate == null) {
 						this.delegate = new TypicalCondition() {
 
+							@Override
 							public boolean isConditionTrue(final StorableObject storableObject) {
 								Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 										+ "This is a dummy condition; evaluation result is always false...",
@@ -848,6 +854,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
+					@Override
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...",
@@ -901,8 +908,8 @@ public class TypicalCondition implements StorableObjectCondition {
 		this.delegate.key = key;
 	}
 
-	public final StorableObjectCondition_Transferable getTransferable() {
-		TypicalCondition_Transferable transferable = new TypicalCondition_Transferable();
+	public final IdlStorableObjectCondition getTransferable() {
+		IdlTypicalCondition transferable = new IdlTypicalCondition();
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
 				transferable.value = Integer.toString(this.delegate.firstInt);
@@ -930,11 +937,11 @@ public class TypicalCondition implements StorableObjectCondition {
 
 		}
 		transferable.key = this.delegate.key;
-		transferable.entity_code = this.delegate.entityCode.shortValue();
+		transferable.entityCode = this.delegate.entityCode.shortValue();
 		transferable.type = TypicalSort.from_int(this.delegate.type);
 		transferable.operation = OperationSort.from_int(this.delegate.operation);
 
-		final StorableObjectCondition_Transferable condition = new StorableObjectCondition_Transferable();
+		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
 		condition.typicalCondition(transferable);
 		return condition;
 	}

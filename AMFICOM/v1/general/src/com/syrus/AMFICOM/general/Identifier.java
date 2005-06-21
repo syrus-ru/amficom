@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.46 2005/06/20 20:55:07 arseniy Exp $
+ * $Id: Identifier.java,v 1.47 2005/06/21 12:43:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.46 $, $Date: 2005/06/20 20:55:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2005/06/21 12:43:48 $
+ * @author $Author: bass $
  * @module general_v1
  */
-public final class Identifier implements Comparable, TransferableObject, Serializable, Identifiable {
+public final class Identifier<T> implements Comparable<Identifier>, TransferableObject, Serializable, Identifiable {
 	private static final long serialVersionUID = 1721559813677093072L;
 
 	public static final char SEPARATOR = '_';
@@ -69,6 +69,7 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 
 	/**
 	 * @param anotherIdentifier
+	 * @see Comparable#compareTo(Object)
 	 */
 	public int compareTo(final Identifier anotherIdentifier) {
 		final short thatMajor = anotherIdentifier.getMajor();
@@ -76,14 +77,6 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 		return this.major == thatMajor
 			? this.minor <= thatMinor ? this.minor < thatMinor ? -1 : 0 : 1
 			: this.major - thatMajor;
-	}
-
-	/**
-	 * @param o
-	 * @see Comparable#compareTo(Object)
-	 */
-	public int compareTo(final Object o) {
-		return compareTo((Identifier) o);
 	}
 
 	@Override
@@ -298,7 +291,7 @@ public final class Identifier implements Comparable, TransferableObject, Seriali
 	/**
 	 * @see Identifiable#getId()
 	 */
-	public final Identifier getId() {
+	public final Identifier<T> getId() {
 		return this;
 	}
 

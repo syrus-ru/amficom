@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.7 2005/05/23 12:50:17 bob Exp $
+ * $Id: StorableObjectWrapper.java,v 1.8 2005/06/21 12:43:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/05/23 12:50:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/21 12:43:47 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -35,10 +35,10 @@ import com.syrus.util.Wrapper;
 public abstract class StorableObjectWrapper implements Wrapper {
 
 	public static final String COLUMN_CREATED = "created";
-	public static final String COLUMN_CREATOR_ID = "creator_id";
+	public static final String COLUMN_CREATOR_ID = "creatorId";
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_MODIFIED = "modified";
-	public static final String COLUMN_MODIFIER_ID = "modifier_id";
+	public static final String COLUMN_MODIFIER_ID = "modifierId";
 	public static final String COLUMN_VERSION = "version";
 
 	public static final String COLUMN_CODENAME = "codename";

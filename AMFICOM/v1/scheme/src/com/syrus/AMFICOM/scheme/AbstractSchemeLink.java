@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.19 2005/06/17 13:06:54 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.20 2005/06/21 12:44:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/06/17 13:06:54 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/21 12:44:31 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -388,7 +388,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param characteristicIds
 	 * @throws CreateObjectException
 	 */
-	void fromTransferable(final StorableObject_Transferable header,
+	void fromTransferable(final IdlStorableObject header,
 			final String name, final String description,
 			final double physicalLength1, final double opticalLength1,
 			final IdlIdentifier abstractLinkTypeId1,

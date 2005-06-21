@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerMapTransmit.java,v 1.2 2005/06/17 13:06:59 bass Exp $
+ * $Id: MscharServerMapTransmit.java,v 1.3 2005/06/21 12:44:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/17 13:06:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/21 12:44:26 $
  * @module mscharserver_v1
  */
 abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
@@ -37,7 +37,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public SiteNode_Transferable[] transmitSiteNodes(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -48,8 +48,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public SiteNode_Transferable[] transmitSiteNodesButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -60,7 +60,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public TopologicalNode_Transferable[] transmitTopologicalNodes(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -71,8 +71,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public TopologicalNode_Transferable[] transmitTopologicalNodesButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -83,7 +83,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public NodeLink_Transferable[] transmitNodeLinks(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -94,8 +94,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public NodeLink_Transferable[] transmitNodeLinksButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -106,7 +106,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public Mark_Transferable[] transmitMarks(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -117,8 +117,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public Mark_Transferable[] transmitMarksButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -129,7 +129,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public PhysicalLink_Transferable[] transmitPhysicalLinks(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -140,8 +140,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public PhysicalLink_Transferable[] transmitPhysicalLinksButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -152,7 +152,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public Collector_Transferable[] transmitCollectors(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -163,8 +163,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public Collector_Transferable[] transmitCollectorsButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -175,7 +175,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public Map_Transferable[] transmitMaps(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -186,8 +186,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public Map_Transferable[] transmitMapsButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -198,7 +198,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public SiteNodeType_Transferable[] transmitSiteNodeTypes(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -209,8 +209,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public SiteNodeType_Transferable[] transmitSiteNodeTypesButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -221,7 +221,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public PhysicalLinkType_Transferable[] transmitPhysicalLinkTypes(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -232,8 +232,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public PhysicalLinkType_Transferable[] transmitPhysicalLinkTypesButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
@@ -244,7 +244,7 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public final MapView_Transferable[] transmitMapViews(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey)
+			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
@@ -255,8 +255,8 @@ abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 
 	public final MapView_Transferable[] transmitMapViewsButIdsCondition(
 			final IdlIdentifier ids[],
-			final SessionKey_Transferable sessionKey,
-			final StorableObjectCondition_Transferable storableObjectCondition)
+			final IdlSessionKey sessionKey,
+			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;

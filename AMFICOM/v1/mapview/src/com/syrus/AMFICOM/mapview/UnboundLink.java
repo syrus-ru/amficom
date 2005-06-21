@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.18 2005/06/20 17:30:17 bass Exp $
+ * $Id: UnboundLink.java,v 1.19 2005/06/21 12:44:31 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/06/20 17:30:17 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/21 12:44:31 $
  * @module mapviewclient_v1
  */
 public final class UnboundLink extends PhysicalLink {
@@ -134,7 +134,7 @@ public final class UnboundLink extends PhysicalLink {
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public StorableObject_Transferable getHeaderTransferable()
+	public IdlStorableObject getHeaderTransferable()
 	{
 		throw new UnsupportedOperationException();
 	}
