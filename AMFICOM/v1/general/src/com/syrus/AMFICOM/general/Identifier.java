@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.48 2005/06/21 14:21:36 arseniy Exp $
+ * $Id: Identifier.java,v 1.49 2005/06/21 14:41:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.48 $, $Date: 2005/06/21 14:21:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/06/21 14:41:33 $
+ * @author $Author: bass $
  * @module general_v1
  */
-public final class Identifier<T> implements Comparable<Identifier>, TransferableObject, Serializable, Identifiable {
+public final class Identifier implements Comparable<Identifier>, TransferableObject, Serializable, Identifiable {
 	private static final long serialVersionUID = 1721559813677093072L;
 
 	public static final char SEPARATOR = '_';
@@ -290,7 +290,7 @@ public final class Identifier<T> implements Comparable<Identifier>, Transferable
 	/**
 	 * @see Identifiable#getId()
 	 */
-	public final Identifier<T> getId() {
+	public final Identifier getId() {
 		return this;
 	}
 
