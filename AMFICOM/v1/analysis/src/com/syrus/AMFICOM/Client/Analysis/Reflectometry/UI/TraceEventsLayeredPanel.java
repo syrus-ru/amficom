@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.beans.*;
 import java.beans.PropertyChangeListener;
 
-import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 
@@ -51,7 +50,6 @@ implements PropertyChangeListener
 				{
 					if(rue.minTraceLevelChanged())
 					{
-						((ReflectogramEventsPanel)panel).updateMinTraceLevel(Heap.getMinTraceLevel());
 						jLayeredPane.repaint();
 					}
 				}

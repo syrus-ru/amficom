@@ -108,7 +108,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			upd_currpos(e);
 
 			double pos = coord2value(currpos.y);
-			updateMinTraceLevel(pos);
+			Heap.setMinTraceLevel(pos);
 			parent.repaint();
 			dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
 			return;
@@ -246,14 +246,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
         paint_events(g);
     }
 
-    protected void updateMinTraceLevel(double value)
-    {
-        Heap.setMinTraceLevel(value);
-    }
-    private double getMinTraceLevel() {
-        return Heap.getMinTraceLevel();
-    }
     private int getMinTraceLevelCoord() {
-    	return value2coord(getMinTraceLevel());
+    	return value2coord(Heap.getMinTraceLevel());
     }
 }
