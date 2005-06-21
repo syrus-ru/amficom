@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.34 2005/06/20 17:29:36 bass Exp $
+ * $Id: Server.java,v 1.35 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.Server_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlServer;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/21 14:13:36 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -69,7 +69,7 @@ public final class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Server(final Server_Transferable st) throws CreateObjectException {
+	public Server(final IdlServer st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
 		}
@@ -106,14 +106,14 @@ public final class Server extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Server_Transferable st = (Server_Transferable) transferable;
-		super.fromTransferable(st.header, new Identifier(st.domain_id));
+		IdlServer st = (IdlServer) transferable;
+		super.fromTransferable(st.header, new Identifier(st.domainId));
 		this.name = st.name;
 		this.description = st.description;
 		this.hostname = st.hostname;
 
-		Set characteristicIds = Identifier.fromTransferables(st.characteristic_ids);
-		this.characteristics = new HashSet(st.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(st.characteristicIds);
+		this.characteristics = new HashSet(st.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -122,12 +122,12 @@ public final class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Server_Transferable getTransferable() {
+	public IdlServer getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new Server_Transferable(super.getHeaderTransferable(),
+		return new IdlServer(super.getHeaderTransferable(),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

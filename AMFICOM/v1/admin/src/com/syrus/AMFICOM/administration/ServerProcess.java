@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.12 2005/06/20 17:29:36 bass Exp $
+ * $Id: ServerProcess.java,v 1.13 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.ServerProcess_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/21 14:13:36 $
  * @author $Author: bass $
  * @module admin_v1
  */
@@ -63,7 +63,7 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	ServerProcess(final ServerProcess_Transferable spt) {
+	ServerProcess(final IdlServerProcess spt) {
 		this.fromTransferable(spt);
 	}
 
@@ -100,7 +100,7 @@ public final class ServerProcess extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		ServerProcess_Transferable spt = (ServerProcess_Transferable) transferable;
+		IdlServerProcess spt = (IdlServerProcess) transferable;
 		try {
 			super.fromTransferable(spt.header);
 		}
@@ -109,8 +109,8 @@ public final class ServerProcess extends StorableObject {
 			Log.errorException(ae);
 		}
 		this.codename = spt.codename;
-		this.serverId = new Identifier(spt.server_id);
-		this.userId = new Identifier(spt.user_id);
+		this.serverId = new Identifier(spt.serverId);
+		this.userId = new Identifier(spt.userId);
 		this.description = spt.description;
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -119,10 +119,10 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ServerProcess_Transferable getTransferable() {
+	public IdlServerProcess getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new ServerProcess_Transferable(super.getHeaderTransferable(),
+		return new IdlServerProcess(super.getHeaderTransferable(),
 				this.codename,
 				this.serverId.getTransferable(),
 				this.userId.getTransferable(),

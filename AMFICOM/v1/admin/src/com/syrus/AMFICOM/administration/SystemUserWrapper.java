@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.2 2005/06/17 17:26:37 arseniy Exp $
+ * $Id: SystemUserWrapper.java,v 1.3 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 17:26:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/06/21 14:13:36 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public class SystemUserWrapper extends StorableObjectWrapper {

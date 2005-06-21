@@ -1,5 +1,5 @@
 /*
- * $Id: MServerAdministrationTransmit.java,v 1.7 2005/06/21 12:44:29 bass Exp $
+ * $Id: MServerAdministrationTransmit.java,v 1.8 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,14 @@ package com.syrus.AMFICOM.mserver;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.administration.corba.Server_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlMCM;
+import com.syrus.AMFICOM.administration.corba.IdlServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/21 12:44:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/21 14:13:36 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -26,20 +26,20 @@ abstract class MServerAdministrationTransmit extends MServerGeneralTransmit {
 
 	/* Transmit multiple objects*/
 
-	public Server_Transferable[] transmitServers(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
+	public IdlServer[] transmitServers(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
-		final Server_Transferable[] ret = new Server_Transferable[length];
+		final IdlServer[] ret = new IdlServer[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}
 
-	public MCM_Transferable[] transmitMCMs(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
+	public IdlMCM[] transmitMCMs(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
-		final MCM_Transferable[] ret = new MCM_Transferable[length];
+		final IdlMCM[] ret = new IdlMCM[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}

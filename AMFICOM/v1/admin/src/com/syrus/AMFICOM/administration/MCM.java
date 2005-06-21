@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.31 2005/06/20 17:29:36 bass Exp $
+ * $Id: MCM.java,v 1.32 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlMCM;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/21 14:13:36 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -71,7 +71,7 @@ public final class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MCM(final MCM_Transferable mt) throws CreateObjectException {
+	public MCM(final IdlMCM mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		}
@@ -112,16 +112,16 @@ public final class MCM extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		MCM_Transferable mt = (MCM_Transferable)transferable;
-		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
+		IdlMCM mt = (IdlMCM)transferable;
+		super.fromTransferable(mt.header, new Identifier(mt.domainId));
 		this.name = mt.name;
 		this.description = mt.description;
 		this.hostname = mt.hostname;
-		this.userId = new Identifier(mt.user_id);
-		this.serverId = new Identifier(mt.server_id);
+		this.userId = new Identifier(mt.userId);
+		this.serverId = new Identifier(mt.serverId);
 
-		Set characteristicIds = Identifier.fromTransferables(mt.characteristic_ids);
-		this.characteristics = new HashSet(mt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(mt.characteristicIds);
+		this.characteristics = new HashSet(mt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -130,12 +130,12 @@ public final class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MCM_Transferable getTransferable() {
+	public IdlMCM getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new MCM_Transferable(super.getHeaderTransferable(),
+		return new IdlMCM(super.getHeaderTransferable(),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

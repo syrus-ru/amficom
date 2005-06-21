@@ -1,5 +1,5 @@
 /*-
- * $Id: CMAdministrationReceive.java,v 1.17 2005/06/21 12:44:32 bass Exp $
+ * $Id: CMAdministrationReceive.java,v 1.18 2005/06/21 14:13:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,18 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.administration.corba.ServerProcess_Transferable;
-import com.syrus.AMFICOM.administration.corba.Server_Transferable;
-import com.syrus.AMFICOM.administration.corba.SystemUser_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlDomain;
+import com.syrus.AMFICOM.administration.corba.IdlMCM;
+import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
+import com.syrus.AMFICOM.administration.corba.IdlServer;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/21 12:44:32 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/21 14:13:37 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -27,7 +27,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	private static final long serialVersionUID = 1181253000011968750L;
 
 	public final IdlStorableObject[] receiveSystemUsers(
-			final SystemUser_Transferable transferables[],
+			final IdlSystemUser transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -35,7 +35,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	}
 
 	public final IdlStorableObject[] receiveDomains(
-			final Domain_Transferable transferables[],
+			final IdlDomain transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -43,7 +43,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	}
 
 	public final IdlStorableObject[] receiveServers(
-			final Server_Transferable transferables[],
+			final IdlServer transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -51,7 +51,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	}
 
 	public final IdlStorableObject[] receiveMCMs(
-			final MCM_Transferable transferables[],
+			final IdlMCM transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -59,7 +59,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	}
 
 	public final IdlStorableObject[] receiveServerProcesses(
-			final ServerProcess_Transferable transferables[],
+			final IdlServerProcess transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {

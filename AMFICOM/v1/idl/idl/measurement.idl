@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.67 2005/06/16 10:23:50 bass Exp $
+ * $Id: measurement.idl,v 1.68 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ module corba {
 		general::corba::IdentifierSeq measurement_port_type_ids;
 	};
 
-	typedef sequence <MeasurementType_Transferable> MeasurementTypeSeq_Transferable;
+	typedef sequence<MeasurementType_Transferable> MeasurementTypeSeq_Transferable;
 
 	struct AnalysisType_Transferable {
 		general::corba::StorableObject header;
@@ -46,7 +46,7 @@ module corba {
 		general::corba::IdentifierSeq measurement_type_ids;
 	};
 
-	typedef sequence <AnalysisType_Transferable> AnalysisTypeSeq_Transferable;
+	typedef sequence<AnalysisType_Transferable> AnalysisTypeSeq_Transferable;
 
 	struct EvaluationType_Transferable {
 		general::corba::StorableObject header;
@@ -62,7 +62,7 @@ module corba {
 		general::corba::IdentifierSeq measurement_type_ids;
 	};
 
-	typedef sequence <EvaluationType_Transferable> EvaluationTypeSeq_Transferable;
+	typedef sequence<EvaluationType_Transferable> EvaluationTypeSeq_Transferable;
 
 	struct ModelingType_Transferable {
 		general::corba::StorableObject header;
@@ -74,17 +74,17 @@ module corba {
 		general::corba::IdentifierSeq out_parameter_type_ids;
 	};
 
-	typedef sequence <ModelingType_Transferable> ModelingTypeSeq_Transferable;
+	typedef sequence<ModelingType_Transferable> ModelingTypeSeq_Transferable;
 
 /////////////////// Parameter and Set /////////////////////
 
 	typedef struct Parameter_Transferable {
 		general::corba::Identifier id;
 		general::corba::Identifier type_id;
-		sequence <octet> value;
+		sequence<octet> value;
 	} Parameter;
 
-	typedef sequence <Parameter> ParameterSeq;
+	typedef sequence<Parameter> ParameterSeq;
 
 
 	typedef struct ParameterSet_Transferable {
@@ -103,7 +103,7 @@ module corba {
 		general::corba::IdentifierSeq monitored_element_ids;
 	} ParameterSet;
 
-	typedef sequence <ParameterSet> ParameterSetSeq;
+	typedef sequence<ParameterSet> ParameterSetSeq;
 
 /////////////////// Modeling /////////////////////
 
@@ -118,7 +118,7 @@ module corba {
 		general::corba::Identifier argument_set_id;
 	};
 
-	typedef sequence <Modeling_Transferable> ModelingSeq_Transferable;
+	typedef sequence<Modeling_Transferable> ModelingSeq_Transferable;
 
 /////////////////// Measurement /////////////////////
 
@@ -135,7 +135,7 @@ module corba {
 		general::corba::IdentifierSeq measurement_type_ids;
 	};
 
-	typedef sequence <MeasurementSetup_Transferable> MeasurementSetupSeq_Transferable;
+	typedef sequence<MeasurementSetup_Transferable> MeasurementSetupSeq_Transferable;
 
 	enum MeasurementStatus {
 		MEASUREMENT_STATUS_SCHEDULED,
@@ -162,7 +162,7 @@ module corba {
 		general::corba::Identifier test_id;
 	};
 
-	typedef sequence <Measurement_Transferable> MeasurementSeq_Transferable;
+	typedef sequence<Measurement_Transferable> MeasurementSeq_Transferable;
 
 /////////////////////// Temporal Pattern ////////////////////////
 
@@ -170,10 +170,10 @@ module corba {
 		general::corba::StorableObject header;
 
 		general::corba::WString256 description;
-		sequence <general::corba::WString64> cron_strings;
+		sequence<general::corba::WString64> cron_strings;
 	};
 
-	typedef sequence <CronTemporalPattern_Transferable> CronTemporalPatternSeq_Transferable;
+	typedef sequence<CronTemporalPattern_Transferable> CronTemporalPatternSeq_Transferable;
 
 
 
@@ -190,11 +190,11 @@ module corba {
 	struct IntervalsTemporalPattern_Transferable {
 		general::corba::StorableObject header;
 
-		sequence <ITP_Interval_Temporal_Pattern_Id> intervals_temporal_pattern_id;
-		sequence <ITP_Interval_Duration> intervals_duration;
+		sequence<ITP_Interval_Temporal_Pattern_Id> intervals_temporal_pattern_id;
+		sequence<ITP_Interval_Duration> intervals_duration;
 	};
 	
-	typedef sequence <IntervalsTemporalPattern_Transferable> IntervalsTemporalPatternSeq_Transferable;
+	typedef sequence<IntervalsTemporalPattern_Transferable> IntervalsTemporalPatternSeq_Transferable;
 	
 	struct PeriodicalTemporalPattern_Transferable {
 		general::corba::StorableObject header;
@@ -202,7 +202,7 @@ module corba {
 		long long period;
 	};
 	
-	typedef sequence <PeriodicalTemporalPattern_Transferable> PeriodicalTemporalPatternSeq_Transferable;
+	typedef sequence<PeriodicalTemporalPattern_Transferable> PeriodicalTemporalPatternSeq_Transferable;
 
 /////////////////////// Test ////////////////////////
 
@@ -259,7 +259,7 @@ module corba {
 		general::corba::IdentifierSeq measurement_setup_ids;
 	};
 
-	typedef sequence <Test_Transferable> TestSeq_Transferable;
+	typedef sequence<Test_Transferable> TestSeq_Transferable;
 
 //////////////////// Analysis ///////////////////////
 
@@ -275,7 +275,7 @@ module corba {
 		general::corba::Identifier criteria_set_id;
 	};
 
-	typedef sequence <Analysis_Transferable> AnalysisSeq_Transferable;
+	typedef sequence<Analysis_Transferable> AnalysisSeq_Transferable;
 
 //////////////////// Evaluation /////////////////////
 
@@ -289,7 +289,7 @@ module corba {
 		general::corba::Identifier threshold_set_id;
 	};
 
-	typedef sequence <Evaluation_Transferable> EvaluationSeq_Transferable;
+	typedef sequence<Evaluation_Transferable> EvaluationSeq_Transferable;
 
 ////////////////////// Result ///////////////////////
 
@@ -308,10 +308,10 @@ module corba {
 		general::corba::Identifier evaluation_id;
 		general::corba::Identifier modeling_id;
 		ResultSort sort;
-		sequence <Parameter_Transferable> parameters;
+		sequence<Parameter_Transferable> parameters;
 	};
 
-	typedef sequence <Result_Transferable> ResultSeq_Transferable;
+	typedef sequence<Result_Transferable> ResultSeq_Transferable;
 
 };
 };

@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.3 2005/06/20 17:29:36 bass Exp $
+ * $Id: SystemUser.java,v 1.4 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.SystemUser_Transferable;
-import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/21 14:13:36 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -64,7 +64,7 @@ public final class SystemUser extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	SystemUser(final SystemUser_Transferable ut) {
+	SystemUser(final IdlSystemUser ut) {
 		this.fromTransferable(ut);
 	}
 
@@ -94,7 +94,7 @@ public final class SystemUser extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		SystemUser_Transferable ut = (SystemUser_Transferable) transferable;
+		IdlSystemUser ut = (IdlSystemUser) transferable;
 		try {
 			super.fromTransferable(ut.header);
 		}
@@ -113,9 +113,9 @@ public final class SystemUser extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public SystemUser_Transferable getTransferable() {
+	public IdlSystemUser getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return new SystemUser_Transferable(super.getHeaderTransferable(),
+		return new IdlSystemUser(super.getHeaderTransferable(),
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,

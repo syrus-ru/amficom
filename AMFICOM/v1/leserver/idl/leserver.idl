@@ -21,7 +21,7 @@ module corba {
 		void logout(in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::DomainSeq_Transferable transmitAvailableDomains(in security::corba::SessionKey sessionKeyT)
+		administration::corba::DomainSeq transmitAvailableDomains(in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void selectDomain(in security::corba::SessionKey sessionKeyT, in general::corba::Identifier domain_id)

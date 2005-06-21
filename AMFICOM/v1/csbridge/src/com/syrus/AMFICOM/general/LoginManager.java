@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.13 2005/06/21 12:44:27 bass Exp $
+ * $Id: LoginManager.java,v 1.14 2005/06/21 14:13:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/21 12:44:27 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/21 14:13:37 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -93,7 +93,7 @@ public final class LoginManager {
 	public static Set getAvailableDomains() throws CommunicationException, LoginException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			Domain_Transferable[] domainsT = loginServer.transmitAvailableDomains((IdlSessionKey) sessionKey.getTransferable());
+			IdlDomain[] domainsT = loginServer.transmitAvailableDomains((IdlSessionKey) sessionKey.getTransferable());
 			Set domains = new HashSet(domainsT.length);
 			for (int i = 0; i < domainsT.length; i++) {
 				try {

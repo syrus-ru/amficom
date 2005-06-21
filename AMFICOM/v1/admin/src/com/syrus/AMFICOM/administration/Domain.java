@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.37 2005/06/20 17:29:36 bass Exp $
+ * $Id: Domain.java,v 1.38 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/21 14:13:36 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -67,7 +67,7 @@ public final class Domain extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Domain(final Domain_Transferable dt) throws CreateObjectException {
+	public Domain(final IdlDomain dt) throws CreateObjectException {
 		try {
 			this.fromTransferable(dt);
 		}
@@ -102,13 +102,13 @@ public final class Domain extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Domain_Transferable dt = (Domain_Transferable)transferable;
-		super.fromTransferable(dt.header, new Identifier(dt.domain_id));
+		IdlDomain dt = (IdlDomain)transferable;
+		super.fromTransferable(dt.header, new Identifier(dt.domainId));
 		this.name = dt.name;
 		this.description = dt.description;
 
-		Set characteristicIds = Identifier.fromTransferables(dt.characteristic_ids);
-		this.characteristics = new HashSet(dt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(dt.characteristicIds);
+		this.characteristics = new HashSet(dt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -117,9 +117,9 @@ public final class Domain extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Domain_Transferable getTransferable() {
+	public IdlDomain getTransferable() {
 		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return new Domain_Transferable(super.getHeaderTransferable(),
+		return new IdlDomain(super.getHeaderTransferable(),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

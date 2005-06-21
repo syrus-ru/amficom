@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.11 2005/06/21 12:51:12 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.12 2005/06/21 14:14:04 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import org.omg.CORBA.SetOverrideType;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/21 12:51:12 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/21 14:14:04 $
  * @author $Author: bass $
  * @module commonclient_v1
  */
@@ -58,14 +58,14 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 		this.loginServer = new LoginServer() {
 			private static final long serialVersionUID = 6881608272719879636L;
 
-			public Domain_Transferable[] transmitAvailableDomains(IdlSessionKey arg0) throws AMFICOMRemoteException {
+			public IdlDomain[] transmitAvailableDomains(IdlSessionKey arg0) throws AMFICOMRemoteException {
 				try {
 					Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_CODE), true, true);
-					Domain_Transferable[] transferables = new Domain_Transferable[storableObjectsByCondition.size()];
+					IdlDomain[] transferables = new IdlDomain[storableObjectsByCondition.size()];
 					int i = 0;
 					for (Iterator iterator = storableObjectsByCondition.iterator(); iterator.hasNext();i++) {
 						Domain domain = (Domain) iterator.next();
-						transferables[i] = (Domain_Transferable) domain.getTransferable();
+						transferables[i] = (IdlDomain) domain.getTransferable();
 					}
 					return transferables;
 				} catch (ApplicationException e) {

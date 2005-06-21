@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.22 2005/06/21 12:44:26 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.23 2005/06/21 14:13:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/06/21 12:44:26 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/21 14:13:35 $
  * @author $Author: bass $
  * @module leserver_v1
  */
@@ -116,7 +116,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * No checks user's access on domains.
 	 * TODO Implement check user access on domains and return only accesible for the user.
 	 */
-	public Domain_Transferable[] transmitAvailableDomains(IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+	public IdlDomain[] transmitAvailableDomains(IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		SessionKey sessionKey = new SessionKey(sessionKeyT);
 		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin == null)
@@ -131,10 +131,10 @@ final class LoginServerImplementation extends LoginServerPOA {
 						CompletionStatus.COMPLETED_YES,
 						"No domains found for user '" + userLogin.getUserId() + "'");
 
-			Domain_Transferable[] domainsT = new Domain_Transferable[domains.size()];
+			IdlDomain[] domainsT = new IdlDomain[domains.size()];
 			int i = 0;
 			for (Iterator it = domains.iterator(); it.hasNext(); i++)
-				domainsT[i] = (Domain_Transferable) ((Domain) it.next()).getTransferable();
+				domainsT[i] = (IdlDomain) ((Domain) it.next()).getTransferable();
 			return domainsT;
 		}
 		catch (ApplicationException ae) {

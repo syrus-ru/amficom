@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.90 2005/06/21 12:43:33 bass Exp $
+ * $Id: configuration.idl,v 1.91 2005/06/21 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
-	typedef sequence <EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
+	typedef sequence<EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
 	typedef EquipmentType_Transferable EquipmentType;
 	typedef sequence<EquipmentType> EquipmentTypeSeq;
 	
@@ -53,7 +53,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
-	typedef sequence <TransmissionPathType_Transferable> TransmissionPathTypeSeq_Transferable;
+	typedef sequence<TransmissionPathType_Transferable> TransmissionPathTypeSeq_Transferable;
 	typedef TransmissionPathType_Transferable TransmissionPathType;
 	typedef sequence<TransmissionPathType> TransmissionPathTypeSeq;
 
@@ -75,7 +75,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
-	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
+	typedef sequence<PortType_Transferable> PortTypeSeq_Transferable;
 	typedef PortType_Transferable PortType;
 	typedef sequence<PortType> PortTypeSeq;
 
@@ -89,7 +89,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 
-	typedef sequence <MeasurementPortType_Transferable> MeasurementPortTypeSeq_Transferable;
+	typedef sequence<MeasurementPortType_Transferable> MeasurementPortTypeSeq_Transferable;
 	typedef MeasurementPortType_Transferable MeasurementPortType;
 	typedef sequence<MeasurementPortType> MeasurementPortTypeSeq;
 	
@@ -161,7 +161,7 @@ module corba {
 			CableLinkType_Transferable cableLinkType;
 	};
 	
-	typedef sequence <AbstractLinkType_Transferable> AbstractLinkTypeSeq_Transferable;	
+	typedef sequence<AbstractLinkType_Transferable> AbstractLinkTypeSeq_Transferable;	
 	typedef AbstractLinkType_Transferable AbstractLinkType;	
 	typedef sequence<AbstractLinkType> AbstractLinkTypeSeq;	
 */
@@ -194,7 +194,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
-	typedef sequence <Equipment_Transferable> EquipmentSeq_Transferable;
+	typedef sequence<Equipment_Transferable> EquipmentSeq_Transferable;
 	typedef Equipment_Transferable Equipment;
 	typedef sequence<Equipment> EquipmentSeq;
 
@@ -215,7 +215,7 @@ module corba {
 
 	};
 	
-	typedef sequence <TransmissionPath_Transferable> TransmissionPathSeq_Transferable;
+	typedef sequence<TransmissionPath_Transferable> TransmissionPathSeq_Transferable;
 	typedef TransmissionPath_Transferable TransmissionPath;
 	typedef sequence<TransmissionPath> TransmissionPathSeq;
 
@@ -236,7 +236,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 
-	typedef sequence <Port_Transferable> PortSeq_Transferable;
+	typedef sequence<Port_Transferable> PortSeq_Transferable;
 	typedef Port_Transferable Port;
 	typedef sequence<Port> PortSeq;
 
@@ -255,7 +255,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 	
-	typedef sequence <KIS_Transferable> KISSeq_Transferable;
+	typedef sequence<KIS_Transferable> KISSeq_Transferable;
 	typedef KIS_Transferable Rtu;
 	typedef sequence<Rtu> RtuSeq;
 
@@ -271,7 +271,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;
 	};
 
-	typedef sequence <MeasurementPort_Transferable> MeasurementPortSeq_Transferable;
+	typedef sequence<MeasurementPort_Transferable> MeasurementPortSeq_Transferable;
 	typedef MeasurementPort_Transferable MeasurementPort;
 	typedef sequence<MeasurementPort> MeasurementPortSeq;
 
@@ -297,7 +297,7 @@ module corba {
 		general::corba::IdentifierSeq monitored_domain_member_ids;
 	};
 
-	typedef sequence <MonitoredElement_Transferable> MonitoredElementSeq_Transferable;
+	typedef sequence<MonitoredElement_Transferable> MonitoredElementSeq_Transferable;
 
 ///////////////////// Link /////////////////////
 	enum LinkSort{
@@ -325,7 +325,7 @@ module corba {
 		general::corba::IdentifierSeq characteristic_ids;		
 	};
 
-	typedef sequence <Link_Transferable> LinkSeq_Transferable;
+	typedef sequence<Link_Transferable> LinkSeq_Transferable;
 	typedef Link_Transferable Link;
 	typedef sequence<Link> LinkSeq;
 	
@@ -339,7 +339,7 @@ module corba {
 		general::corba::Identifier _typeId;		
 	} CableThread;
 
-	typedef sequence <CableThread> CableThreadSeq;
+	typedef sequence<CableThread> CableThreadSeq;
 };
 };
 };

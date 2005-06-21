@@ -46,11 +46,11 @@ module corba {
 
 		/* Transmit multiple objects*/
 
-		administration::corba::ServerSeq_Transferable transmitServers(in general::corba::IdentifierSeq idsT,
+		administration::corba::ServerSeq transmitServers(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::MCMSeq_Transferable transmitMCMs(in general::corba::IdentifierSeq idsT,
+		administration::corba::MCMSeq transmitMCMs(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 

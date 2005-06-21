@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.26 2005/06/21 12:44:28 bass Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.27 2005/06/21 14:13:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.administration.corba.ServerProcess_Transferable;
-import com.syrus.AMFICOM.administration.corba.Server_Transferable;
-import com.syrus.AMFICOM.administration.corba.SystemUser_Transferable;
+import com.syrus.AMFICOM.administration.corba.IdlDomain;
+import com.syrus.AMFICOM.administration.corba.IdlMCM;
+import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
+import com.syrus.AMFICOM.administration.corba.IdlServer;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/21 12:44:28 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/21 14:13:37 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -185,7 +185,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveSystemUsers((SystemUser_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveSystemUsers((IdlSystemUser[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -197,7 +197,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveDomains((Domain_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveDomains((IdlDomain[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -209,7 +209,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveServers((Server_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveServers((IdlServer[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -221,7 +221,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveMCMs((MCM_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveMCMs((IdlMCM[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -233,7 +233,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveServerProcesses((ServerProcess_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveServerProcesses((IdlServerProcess[]) transferables, force, sessionKey);
 			}
 		});
 	}

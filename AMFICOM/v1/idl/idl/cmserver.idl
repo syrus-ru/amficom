@@ -40,22 +40,22 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq receiveDomains(in administration::corba::DomainSeq_Transferable domains_Transferable,
+		general::corba::StorableObjectSeq receiveDomains(in administration::corba::DomainSeq domains_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq receiveServers(in administration::corba::ServerSeq_Transferable servers_Transferable,
+		general::corba::StorableObjectSeq receiveServers(in administration::corba::ServerSeq servers_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq receiveMCMs(in administration::corba::MCMSeq_Transferable mcms_Transferable,
+		general::corba::StorableObjectSeq receiveMCMs(in administration::corba::MCMSeq mcms_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		general::corba::StorableObjectSeq receiveServerProcesses(in administration::corba::ServerProcessSeq_Transferable serverProcesses_Transferable,
+		general::corba::StorableObjectSeq receiveServerProcesses(in administration::corba::ServerProcessSeq serverProcesses_Transferable,
 						in boolean force, 	
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -276,22 +276,22 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::DomainSeq_Transferable transmitDomains(
+		administration::corba::DomainSeq transmitDomains(
 						in general::corba::IdentifierSeq idsT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::ServerSeq_Transferable transmitServers(
+		administration::corba::ServerSeq transmitServers(
 						in general::corba::IdentifierSeq idsT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::MCMSeq_Transferable transmitMCMs(
+		administration::corba::MCMSeq transmitMCMs(
 						in general::corba::IdentifierSeq idsT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::ServerProcessSeq_Transferable transmitServerProcesses(
+		administration::corba::ServerProcessSeq transmitServerProcesses(
 						in general::corba::IdentifierSeq idsT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
@@ -305,25 +305,25 @@ module corba {
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::DomainSeq_Transferable transmitDomainsButIdsByCondition(
+		administration::corba::DomainSeq transmitDomainsButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::ServerSeq_Transferable transmitServersButIdsByCondition(
+		administration::corba::ServerSeq transmitServersButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::MCMSeq_Transferable transmitMCMsButIdsByCondition(
+		administration::corba::MCMSeq transmitMCMsButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::ServerProcessSeq_Transferable transmitServerProcessesButIdsByCondition(
+		administration::corba::ServerProcessSeq transmitServerProcessesButIdsByCondition(
 						in general::corba::IdentifierSeq idsT,
 						in general::corba::StorableObjectCondition conditionT,
 						in security::corba::SessionKey sessionKeyT)
