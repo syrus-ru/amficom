@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.18 2005/06/16 14:40:18 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.19 2005/06/21 08:37:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -71,7 +71,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/16 14:40:18 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/21 08:37:08 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -117,7 +117,7 @@ public abstract class NetMapViewer {
 		this.ttm.registerComponent(this.mttp);
 		this.ml = new MapMouseListener(this);
 		this.mml = new MapMouseMotionListener(this);
-		this.mka = new MapKeyAdapter(null);
+		this.mka = new MapKeyAdapter(this);
 	}
 
 	public void dispose() {
