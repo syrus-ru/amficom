@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.1 2005/06/20 15:26:09 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.2 2005/06/21 12:36:26 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -114,26 +114,7 @@ public class LoadingThread extends Thread {
                 Logger.log(" TIC - loadingThread - run - processing request ("
                         + this.requestCurrentlyProcessed + ")");
 
-                Iterator layersIt = this.mapImageLoader.getMapConnection().getLayers().iterator();
-                int index = 0;
-                for(; layersIt.hasNext();)
-                {
-                    SpatialLayer spL = (SpatialLayer)layersIt.next();
-                    
-                    // Видимость слоя зависит от того, хочет ли его видеть клиент, виден ли он
-                    // при текущем масштабе на сервере
-                    // и надо ли отображать объекты для текущего запроса
-                    this.layerVisibilities[index] =    spL.isVisible()
-                        && spL.isVisibleAtScale(this.requestCurrentlyProcessed.getTopoScale());
-                
-                    // то же самое для надписей
-                    this.labelVisibilities[index] = spL.isLabelVisible()
-                        && spL.isVisibleAtScale(this.requestCurrentlyProcessed.getTopoScale());
-                    
-                    index++;
-                }
-
-                Logger.log(" TIC - loadingThread - run - visibilities are set.");
+                this.setQueryLayerVisibilities(this.requestCurrentlyProcessed);
 
                 imageForRequest = this.mapImageLoader
                         .renderMapImage(this.requestCurrentlyProcessed);
@@ -176,6 +157,37 @@ public class LoadingThread extends Thread {
         }
     }
 
+    /**
+     * Устанавливает параметры видимости слоёв и надписей на них для заданного запроса 
+     * @param query Запрос
+     * @throws MapDataException
+     * @throws MapConnectionException
+     */
+    private void setQueryLayerVisibilities(TopologicalImageQuery query)
+    	throws MapDataException,MapConnectionException {
+		Logger.log(" TIC - loadingThread - run - visibilities are set.");
+		Iterator layersIt = this.mapImageLoader.getMapConnection().getLayers()
+				.iterator();
+		int index = 0;
+		for (; layersIt.hasNext();) {
+			SpatialLayer spL = (SpatialLayer) layersIt.next();
+
+			// Видимость слоя зависит от того, хочет ли его видеть клиент и виден
+			// ли он при текущем масштабе на сервере
+			this.layerVisibilities[index] = spL.isVisible()
+					&& spL.isVisibleAtScale(query.getTopoScale());
+			// то же самое для надписей
+			this.labelVisibilities[index] = spL.isLabelVisible()
+					&& spL.isVisibleAtScale(query.getTopoScale());
+			index++;
+		}
+
+		query.setLayerVisibilities(this.layerVisibilities);		
+		query.setLabelVisibilities(this.labelVisibilities);
+		
+		Logger.log(" TIC - loadingThread - run - visibilities are set.");
+	}
+    
     private void add(TopologicalImageQuery requestToAdd) {
         // Ищем первый запрос с приоритетом ниже, чем у нового запроса
         ListIterator lIt = this.requestQueue.listIterator();
