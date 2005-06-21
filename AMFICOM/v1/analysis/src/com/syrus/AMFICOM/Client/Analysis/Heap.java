@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.68 2005/06/16 11:31:11 bass Exp $
+ * $Id: Heap.java,v 1.69 2005/06/21 11:40:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * нужен, а на refAnalysisPrimary - в случаях, когда refAnalysisPrimary нужен.
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/06/16 11:31:11 $
+ * @author $Author: saa $
+ * @version $Revision: 1.69 $, $Date: 2005/06/21 11:40:28 $
  * @module
  */
 public class Heap
@@ -315,6 +315,7 @@ public class Heap
     }
 
     public static void setMinTraceLevel(double minTraceLevel) {
+    	minTraceLevel = Math.round(minTraceLevel);
         Heap.minTraceLevel = minTraceLevel;
     }
 

@@ -107,8 +107,10 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			upd_currpos(e);
 
-			double pos = getMinTraceLevel() + (currpos.y - tmppos.y)/scaleY;
-            updateMinTraceLevel(pos);
+			//double pos = getMinTraceLevel() + (currpos.y - tmppos.y)/scaleY;
+            //updateMinTraceLevel(-pos);
+			double pos = coord2value(currpos.y);
+			updateMinTraceLevel(-pos);
 			parent.repaint();
 			dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
 			return;
