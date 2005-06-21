@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -75,7 +77,8 @@ public final class MapViewTableController implements Wrapper {
 		else
 		if(key.equals(KEY_DOMAIN)) {
 			try {
-				result = StorableObjectPool.getStorableObject(view.getDomainId(), false);
+				Domain domain = (Domain )StorableObjectPool.getStorableObject(view.getDomainId(), false);
+				result = domain.getName();
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
@@ -83,7 +86,8 @@ public final class MapViewTableController implements Wrapper {
 		else
 		if(key.equals(KEY_USER)) {
 			try {
-				result = StorableObjectPool.getStorableObject(view.getCreatorId(), false);
+				SystemUser user = (SystemUser )StorableObjectPool.getStorableObject(view.getCreatorId(), false);
+				result = user.getName();
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
