@@ -1,10 +1,11 @@
-/*
- * $Id: CollectorDatabase.java,v 1.32 2005/06/17 12:40:40 bass Exp $
+/*-
+ * $Id: CollectorDatabase.java,v 1.33 2005/06/21 14:26:52 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.map;
 
 import java.sql.Connection;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/21 14:26:52 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -153,12 +154,13 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 
 	}
 
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updatePhysicalLinks(storableObjects);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
+		} catch (final UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 

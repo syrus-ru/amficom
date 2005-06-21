@@ -1,10 +1,11 @@
-/*
- * $Id: MapDatabase.java,v 1.31 2005/06/17 12:40:40 bass Exp $
+/*-
+ * $Id: MapDatabase.java,v 1.32 2005/06/21 14:26:52 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.map;
 
 import java.sql.Connection;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/17 12:40:40 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/21 14:26:52 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -300,7 +301,8 @@ public final class MapDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
@@ -309,8 +311,8 @@ public final class MapDatabase extends CharacterizableDatabase {
 			this.updateLinkedObjectIds(storableObjects, _MAP_PHYSICAL_LINK);
 			this.updateLinkedObjectIds(storableObjects, _MAP_SITE_NODE);
 			this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
+		} catch (final UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 

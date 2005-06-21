@@ -1,10 +1,11 @@
-/*
-* $Id: MapViewDatabase.java,v 1.26 2005/06/17 12:38:52 bass Exp $
-*
-* Copyright ¿ 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+/*-
+ * $Id: MapViewDatabase.java,v 1.27 2005/06/21 14:26:52 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.mapview;
 
 import java.sql.Connection;
@@ -41,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/17 12:38:52 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/21 14:26:52 $
  * @author $Author: bass $
  * @module mapview_v1
  */
@@ -208,12 +209,13 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updateSchemeIds(storableObjects);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
+		} catch (final UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 
