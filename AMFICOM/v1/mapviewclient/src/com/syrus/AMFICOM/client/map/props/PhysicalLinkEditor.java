@@ -11,11 +11,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -107,7 +109,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.dimensionPanel.add(this.mTextField, constraints);
@@ -133,7 +135,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.dimensionPanel.add(this.nTextField, constraints);
@@ -148,7 +150,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.streetPanel.add(this.streetTextField, constraints);
@@ -174,7 +176,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.streetPanel.add(this.buildingTextField, constraints);
@@ -188,7 +190,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameLabel, constraints);
@@ -201,7 +203,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameTextField, constraints);
@@ -214,7 +216,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.typeLabel, constraints);
@@ -227,7 +229,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.typeComboBox, constraints);
@@ -240,7 +242,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.startLabel, constraints);
@@ -253,7 +255,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.startComboBox, constraints);
@@ -266,7 +268,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.endLabel, constraints);
@@ -279,7 +281,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.endComboBox, constraints);
@@ -292,7 +294,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.topologicalLengthLabel, constraints);
@@ -305,7 +307,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.topologicalLengthTextField, constraints);
@@ -318,7 +320,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.addressLabel, constraints);
@@ -344,7 +346,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.cityTextField, constraints);
@@ -370,7 +372,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.streetPanel, constraints);
@@ -386,7 +388,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.dimensionLabel, constraints);
@@ -399,7 +401,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.dimensionPanel, constraints);
@@ -412,7 +414,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.descLabel, constraints);
@@ -425,7 +427,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 1.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(new JScrollPane(this.descTextArea), constraints);

@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -32,6 +33,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -197,7 +199,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.1;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.cablesScrollPane, constraints);
@@ -210,7 +212,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.buttonsPanel, constraints);
@@ -223,7 +225,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.SOUTHEAST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.directionPanel, constraints);
@@ -236,7 +238,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(Box.createVerticalStrut(3), constraints);
@@ -249,7 +251,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.9;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.tunnelsScrollPane, constraints);

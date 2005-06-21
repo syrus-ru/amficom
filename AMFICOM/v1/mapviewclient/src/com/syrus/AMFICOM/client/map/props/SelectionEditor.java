@@ -9,12 +9,14 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.Selection;
 
 public class SelectionEditor extends DefaultStorableObjectEditor {
@@ -60,7 +62,7 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.countLabel, constraints);
@@ -73,7 +75,7 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.countTextField, constraints);
@@ -86,7 +88,7 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.elementsLabel, constraints);
@@ -99,7 +101,7 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 1.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.elementsList, constraints);

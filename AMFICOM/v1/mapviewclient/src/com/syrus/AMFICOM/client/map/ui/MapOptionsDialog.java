@@ -16,8 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
 
@@ -237,7 +239,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.visualPropsPanel.add(this.thicknessLanel, constraints);
@@ -250,7 +252,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.visualPropsPanel.add(this.thicknessComboBox, constraints);
@@ -263,7 +265,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.visualPropsPanel.add(this.colorLabel, constraints);
@@ -276,7 +278,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.visualPropsPanel.add(this.colorComboBox, constraints);
@@ -289,7 +291,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.visualPropsPanel.add(this.styleLabel, constraints);
@@ -302,7 +304,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.visualPropsPanel.add(this.styleComboBox, constraints);
@@ -316,7 +318,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.selectionThicknessLabel, constraints);
@@ -329,7 +331,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.selectionThicknessComboBox, constraints);
@@ -342,7 +344,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.selectionColorLabel, constraints);
@@ -355,7 +357,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.selectionColorComboBox, constraints);
@@ -368,7 +370,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.selectionStyleLabel, constraints);
@@ -381,7 +383,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.selectionStyleComboBox, constraints);
@@ -394,7 +396,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.firstSelectionColorLabel, constraints);
@@ -407,7 +409,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.firstSelectionColorComboBox, constraints);
@@ -420,7 +422,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.secondSelectionColorLabel, constraints);
@@ -433,7 +435,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.selectionPropsPanel.add(this.secondSelectionColorComboBox, constraints);
@@ -447,7 +449,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.alarmedPropsPanel.add(this.alarmedThicknessLabel, constraints);
@@ -460,7 +462,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.alarmedPropsPanel.add(this.alarmedThicknessComboBox, constraints);
@@ -473,7 +475,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.alarmedPropsPanel.add(this.alarmedColorLabel, constraints);
@@ -486,7 +488,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.alarmedPropsPanel.add(this.alarmedColorComboBox, constraints);
@@ -499,7 +501,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.alarmedPropsPanel.add(this.alarmedStyleLabel, constraints);
@@ -512,7 +514,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.alarmedPropsPanel.add(this.alarmedStyleComboBox, constraints);
@@ -526,7 +528,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.borderThicknessLanel, constraints);
@@ -539,7 +541,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.borderThicknessComboBox, constraints);
@@ -552,7 +554,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.borderColorLabel, constraints);
@@ -565,7 +567,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.borderColorComboBox, constraints);
@@ -578,7 +580,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.textColorLabel, constraints);
@@ -591,7 +593,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.textColorComboBox, constraints);
@@ -604,7 +606,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.backgroundColorLabel, constraints);
@@ -617,7 +619,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.backgroundColorComboBox, constraints);
@@ -630,7 +632,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.fontLabel, constraints);
@@ -643,7 +645,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.fontComboBox, constraints);
@@ -656,7 +658,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.metricLabel, constraints);
@@ -669,7 +671,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.textPropsPanel.add(this.metricTextField, constraints);
@@ -683,7 +685,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundThicknessLanel, constraints);
@@ -696,7 +698,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundThicknessComboBox, constraints);
@@ -709,7 +711,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundLinkColorLabel, constraints);
@@ -722,7 +724,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundLinkColorComboBox, constraints);
@@ -735,7 +737,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundLinkPositionColorLabel, constraints);
@@ -748,7 +750,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundLinkPositionColorComboBox, constraints);
@@ -761,7 +763,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundElementColorLabel, constraints);
@@ -774,7 +776,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.unboundElementColorComboBox, constraints);
@@ -787,7 +789,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 1.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.canBindColorLabel, constraints);
@@ -800,7 +802,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.canBindColorComboBox, constraints);
@@ -813,7 +815,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 1.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.spareLabel, constraints);
@@ -826,7 +828,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
 		this.unboundPropsPanel.add(this.spareTextField, constraints);
@@ -840,7 +842,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.showModesPanel.add(this.showLengthCheckBox, constraints);
@@ -853,7 +855,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.showModesPanel.add(this.showLinkNamesCheckBox, constraints);
@@ -866,7 +868,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.showModesPanel.add(this.showNodeNamesCheckBox, constraints);
@@ -879,7 +881,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.showModesPanel.add(this.showPhysicalNodesCheckBox, constraints);
@@ -896,7 +898,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.visualPropsPanel, constraints);
@@ -909,7 +911,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.jSeparator1, constraints);
@@ -922,7 +924,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.selectionPropsPanel, constraints);
@@ -935,7 +937,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.jSeparator2, constraints);
@@ -948,7 +950,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.alarmedPropsPanel, constraints);
@@ -961,7 +963,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.jSeparator3, constraints);
@@ -974,7 +976,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.textPropsPanel, constraints);
@@ -987,7 +989,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.jSeparator4, constraints);
@@ -1000,7 +1002,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.unboundPropsPanel, constraints);
@@ -1013,7 +1015,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.jSeparator5, constraints);
@@ -1026,7 +1028,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.showModesPanel, constraints);
@@ -1039,7 +1041,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.jSeparator6, constraints);
@@ -1052,7 +1054,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.getContentPane().add(this.buttonsPanel, constraints);

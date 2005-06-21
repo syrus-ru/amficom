@@ -10,10 +10,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
@@ -27,7 +29,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -76,7 +78,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameLabel, constraints);
@@ -89,7 +91,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameTextField, constraints);
@@ -102,7 +104,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.domainLabel, constraints);
@@ -115,7 +117,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.domainComboBox, constraints);
@@ -128,7 +130,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.descLabel, constraints);
@@ -141,7 +143,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 1.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(new JScrollPane(this.descTextArea), constraints);

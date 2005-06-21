@@ -16,6 +16,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -27,6 +28,7 @@ import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -142,7 +144,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.3;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.treeScrollPane, constraints);
@@ -155,7 +157,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.buttonsPanel, constraints);
@@ -168,7 +170,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(Box.createVerticalStrut(5), constraints);
@@ -181,7 +183,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.7;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.crossingScrollPane, constraints);
@@ -194,7 +196,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.7;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = null;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.schemePanel.getGraph(), constraints);
