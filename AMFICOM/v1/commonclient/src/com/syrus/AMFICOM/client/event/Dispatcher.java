@@ -13,7 +13,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.6 $, $Date: 2005/06/15 05:43:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/21 12:24:21 $
  * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -21,10 +21,10 @@ import com.syrus.util.Log;
  */
 public class Dispatcher {
 
-	private Map	events; // список событий
+	private Map<String, List<PropertyChangeListener>>	events; // список событий
 
 	public Dispatcher() {
-		this.events = new HashMap();
+		this.events = new HashMap<String, List<PropertyChangeListener>>();
 	}
 
 	// регистрация связывает подписчика с определенным событием
@@ -32,9 +32,9 @@ public class Dispatcher {
 														PropertyChangeListener listener) {
 		Log.debugMessage("Dispatcher.addPropertyChangeListener | propertyName:" + propertyName + ", listener: "
 			+ listener.getClass().getName(), Log.DEBUGLEVEL10);
-		List listeners = (List) this.events.get(propertyName);
+		List<PropertyChangeListener> listeners = this.events.get(propertyName);
 		if (listeners == null) {
-			listeners = new LinkedList();
+			listeners = new LinkedList<PropertyChangeListener>();
 			this.events.put(propertyName, listeners);
 		}
 		
@@ -48,7 +48,7 @@ public class Dispatcher {
 	// унрегистрация убирает связь подписчика с определенным событием
 	public synchronized void removePropertyChangeListener(	String propertyName,
 															PropertyChangeListener listener) {
-		List listeners = (List) this.events.get(propertyName);
+		List<PropertyChangeListener> listeners = this.events.get(propertyName);
 		Log.debugMessage("Dispatcher.removePropertyChangeListener | propertyName:" + propertyName + ", listener: "
 			+ listener.getClass().getName(), Log.DEBUGLEVEL10);
 		if (listeners != null) {
@@ -66,7 +66,7 @@ public class Dispatcher {
 		Log.debugMessage("Dispatcher.printListeners | this.hashCode(): " + this.hashCode(), Log.FINEST);
 		for (Iterator iterator = this.events.keySet().iterator(); iterator.hasNext();) {
 			String propertyName = (String)iterator.next();
-			List listeners = (List) this.events.get(propertyName);
+			List<PropertyChangeListener> listeners = this.events.get(propertyName);
 			Log.debugMessage("Dispatcher.printListeners | propertyName: " + propertyName, Log.FINEST);
 			for (Iterator iterator2 = listeners.iterator(); iterator2.hasNext();) {
 				PropertyChangeListener changeListener = (PropertyChangeListener) iterator2.next();
@@ -78,7 +78,7 @@ public class Dispatcher {
 	public synchronized void firePropertyChange(PropertyChangeEvent event, boolean canSendToSelf) {
 		String propertyName = event.getPropertyName();
 		
-		List listeners = (List) this.events.get(propertyName);
+		List<PropertyChangeListener> listeners = this.events.get(propertyName);
 
 		if (listeners != null && !listeners.isEmpty()) {
 			Object source = event.getSource();
