@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomInCommand.java,v 1.8 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: ZoomInCommand.java,v 1.9 2005/06/21 12:43:11 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,15 +10,17 @@
 package com.syrus.AMFICOM.client.map.command.navigate;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 
 /**
  * Команда "Приблизить вид со стандартным коэффициентом" 
- * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/16 10:57:20 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.9 $, $Date: 2005/06/21 12:43:11 $
  * @module mapviewclient_v1
  */
 public class ZoomInCommand extends MapNavigateCommand {
@@ -28,7 +30,10 @@ public class ZoomInCommand extends MapNavigateCommand {
 
 	public void execute() {
 		try {
-			this.netMapViewer.getMapContext().zoomIn();
+			MapContext mapContext = this.netMapViewer.getMapContext();
+			MapImageRenderer mapRenderer = this.netMapViewer.getRenderer();			
+			mapContext.zoomIn();
+			mapRenderer.setScale(mapContext.getScale());
 			this.netMapViewer.repaint(true);
 		} catch(MapConnectionException e) {
 			setException(e);

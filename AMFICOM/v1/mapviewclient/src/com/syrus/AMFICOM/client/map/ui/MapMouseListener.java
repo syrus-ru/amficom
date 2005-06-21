@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.34 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.35 2005/06/21 12:45:23 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.34 $, $Date: 2005/06/16 10:57:21 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/06/21 12:45:23 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -268,6 +268,7 @@ public final class MapMouseListener implements MouseListener
 					converter.convertScreenToMap(new Point(mouseX, mouseY));
 				
 				this.netMapViewer.getMapContext().setCenter(newCenter);
+				this.netMapViewer.getRenderer().setCenter(newCenter);
 				
 				//Курсор ставим в ту же (в топографических координатах) точку - 
 				//центр уже сменен
@@ -530,6 +531,7 @@ public final class MapMouseListener implements MouseListener
 			double dy = p1.getY() - p2.getY();
 			center.setLocation(center.getX() + dx, center.getY() + dy);
 			this.netMapViewer.getMapContext().setCenter(center);
+			this.netMapViewer.getRenderer().setCenter(center);
 			logicalNetLayer.getMapView().setCenter(center);
 		}
 		this.netMapViewer.repaint(true);
@@ -546,6 +548,7 @@ public final class MapMouseListener implements MouseListener
 		DoublePoint newCenter = converter.convertScreenToMap(point); 
 		this.netMapViewer.getMapContext().setCenter(newCenter);
 		logicalNetLayer.getMapView().setCenter(newCenter);
+		this.netMapViewer.getRenderer().setCenter(newCenter);
 		logicalNetLayer.getContext().getApplicationModel().setSelected(
 				MapApplicationModel.OPERATION_MOVE_TO_CENTER, 
 				false);
@@ -572,6 +575,8 @@ public final class MapMouseListener implements MouseListener
 			this.netMapViewer.getMapContext().zoomToBox(
 					converter.convertScreenToMap(logicalNetLayer.getStartPoint()),
 					converter.convertScreenToMap(logicalNetLayer.getEndPoint()));
+			this.netMapViewer.getRenderer().setCenter(mapContext.getCenter());
+			this.netMapViewer.getRenderer().setScale(mapContext.getScale());
 
 			logicalNetLayer.getMapView().setScale(
 					mapContext.getScale());
@@ -600,6 +605,8 @@ public final class MapMouseListener implements MouseListener
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 		logicalNetLayer.getMapView().setScale(mapContext.getScale());
 		logicalNetLayer.getMapView().setCenter(mapContext.getCenter());
+		this.netMapViewer.getRenderer().setCenter(mapContext.getCenter());
+		this.netMapViewer.getRenderer().setScale(mapContext.getScale());
 		this.netMapViewer.repaint(true);
 	}
 
