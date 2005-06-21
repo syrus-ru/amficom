@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.70 2005/06/21 12:43:48 bass Exp $
+ * $Id: StorableObject.java,v 1.71 2005/06/21 14:22:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/06/21 12:43:48 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/06/21 14:22:43 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -439,7 +439,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	public static final short getEntityCodeOfIdentifiables(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
-		assert hasSingleTypeEntities(identifiables);
+		assert hasSingleTypeEntities(identifiables) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
 		return identifiables.iterator().next().getId().getMajor();
 	}

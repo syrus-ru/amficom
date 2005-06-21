@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.18 2005/06/17 15:22:39 arseniy Exp $
+ * $Id: ErrorMessages.java,v 1.19 2005/06/21 14:22:43 arseniy Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/06/17 15:22:39 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/21 14:22:43 $
  * @module general_v1
  */
 public interface ErrorMessages {
@@ -36,5 +36,6 @@ public interface ErrorMessages {
 	String CHILDREN_ALIEN = "object(s) alien with respect to this parent";
 	String TIMEOUT_TOO_SHORT = "Timeout too short, should be at least 10 min";
 	String METHOD_NOT_NEEDED = "Method not needed";
+	String OBJECTS_NOT_OF_THE_SAME_ENTITY = "Objects not of the same entity";
 	String ËıÏÈ_ıÛÙÔÍ = "Ë’Ã… –’”‘œ -‘œ, ¡?";
 }
