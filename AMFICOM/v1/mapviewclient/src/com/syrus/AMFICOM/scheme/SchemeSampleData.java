@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.14 2005/06/17 11:01:08 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.15 2005/06/21 07:41:53 krupenn Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: bass $
- * @version $Revision: 1.14 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -265,9 +265,9 @@ public final class SchemeSampleData {
 		path.add(path0);
 
 		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
-		pel0.setStartAbstractSchemePort(port01);
-		pel0.setEndAbstractSchemePort(port00);
-		pel0.setAbstractSchemeElement(link0);
+//		pel0.setStartAbstractSchemePort(port01);
+//		pel0.setEndAbstractSchemePort(port00);
+//		pel0.setAbstractSchemeElement(link0);
 		SchemeUtils.setOpticalLength(pel0, 3.0);
 		SchemeUtils.setPhysicalLength(pel0, 3.0);
 		
@@ -275,29 +275,29 @@ public final class SchemeSampleData {
 		pel1.setAbstractSchemeElement(el0);
 		
 		PathElement pel2 = PathElement.createInstance(userId, path0, clink0th);
-		pel2.setStartAbstractSchemePort(cport00);
-		pel2.setEndAbstractSchemePort(cport10);
-		pel2.setAbstractSchemeElement(clink0);
+//		pel2.setStartAbstractSchemePort(cport00);
+//		pel2.setEndAbstractSchemePort(cport10);
+//		pel2.setAbstractSchemeElement(clink0);
 		SchemeUtils.setOpticalLength(pel2, 1000.0);
 		SchemeUtils.setPhysicalLength(pel2, 1000.0);
 		
 		PathElement pel3 = PathElement.createInstance(userId, path0, cport10, cport11);
-		pel3.setAbstractSchemeElement(el1);
+//		pel3.setAbstractSchemeElement(el1);
 		
 		PathElement pel4 = PathElement.createInstance(userId, path0, clink1th);
-		pel4.setStartAbstractSchemePort(cport11);
-		pel4.setEndAbstractSchemePort(cport20);
-		pel4.setAbstractSchemeElement(clink1);
+//		pel4.setStartAbstractSchemePort(cport11);
+//		pel4.setEndAbstractSchemePort(cport20);
+//		pel4.setAbstractSchemeElement(clink1);
 		SchemeUtils.setOpticalLength(pel4, 1000.0);
 		SchemeUtils.setPhysicalLength(pel4, 1000.0);
 		
 		PathElement pel5 = PathElement.createInstance(userId, path0, cport20, cport21);
-		pel5.setAbstractSchemeElement(el2);
+//		pel5.setAbstractSchemeElement(el2);
 		
 		PathElement pel6 = PathElement.createInstance(userId, path0, clink2th);
-		pel6.setStartAbstractSchemePort(cport21);
-		pel6.setEndAbstractSchemePort(cport30);
-		pel6.setAbstractSchemeElement(clink2);
+//		pel6.setStartAbstractSchemePort(cport21);
+//		pel6.setEndAbstractSchemePort(cport30);
+//		pel6.setAbstractSchemeElement(clink2);
 		SchemeUtils.setOpticalLength(pel6, 1000.0);
 		SchemeUtils.setPhysicalLength(pel6, 1000.0);
 
@@ -431,17 +431,17 @@ public final class SchemeSampleData {
 		path0.setParentScheme(scheme);
 
 		PathElement pel0 = PathElement.createInstance(userId, path0, link0);
-		pel0.setStartAbstractSchemePort(port00);
-		pel0.setEndAbstractSchemePort(port10);
-		pel0.setAbstractSchemeElement(link0);
+//		pel0.setStartAbstractSchemePort(port00);
+//		pel0.setEndAbstractSchemePort(port10);
+//		pel0.setAbstractSchemeElement(link0);
 		
 		PathElement pel1 = PathElement.createInstance(userId, path0, port10, cport10);
-		pel1.setAbstractSchemeElement(el1);
+//		pel1.setAbstractSchemeElement(el1);
 		
 		PathElement pel2 = PathElement.createInstance(userId, path0, clink0th);
-		pel2.setStartAbstractSchemePort(cport10);
-		pel2.setEndAbstractSchemePort(cport00);
-		pel2.setAbstractSchemeElement(clink0);
+//		pel2.setStartAbstractSchemePort(cport10);
+//		pel2.setEndAbstractSchemePort(cport00);
+//		pel2.setAbstractSchemeElement(clink0);
 
 		pel.add(pel0);
 		pel.add(pel1);
