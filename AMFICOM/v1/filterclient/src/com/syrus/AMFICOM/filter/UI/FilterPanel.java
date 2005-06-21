@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.3 2005/06/20 09:33:34 max Exp $
+ * $Id: FilterPanel.java,v 1.4 2005/06/21 10:54:43 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
-import com.syrus.AMFICOM.client.model.Environment;
+//import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.newFilter.DateCondition;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.newFilter.FilterController;
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/20 09:33:34 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/21 10:54:43 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -66,7 +66,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	private static final String	CREATED_CONDITON_LABEL	= "Result condition";
 	private static final String KEYS_LABEL 				= "Criterion";
 	private static final String ADD_BUTTON 				= "Add";
-	private static final String CHANGE_BUTTON 				= "Change";
+	private static final String CHANGE_BUTTON 			= "Change";
 	private static final String REMOVE_BUTTON 			= "Remove";
 	private static final String	LOGIC_SCHEME_BUTTON		= ">>";
 	private static final String STRING_CONDITION_LABEL 	= "Please, inter a string";
@@ -84,6 +84,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	private static final String STRING_CARD	= "string";
 	private static final String LIST_CARD	= "list";
 	private static final String	DATE_CARD	= "date";
+	private static final String	EMPTY_CARD	= "empty";
 	
 	private Filter filter;
 	
@@ -125,9 +126,13 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	private JFrame parentFrame;
 		
 	public FilterPanel(Filter filter) {
+		this();
 		this.filter = filter;
 		this.parentFrame = Environment.getActiveWindow();
 		this.controller = new FilterController(filter, this);
+	}
+	
+	public FilterPanel() {
 		this.setBorder(null);
 		createFrame();
 	}
@@ -169,8 +174,13 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		JPanel secondSubPanel = 		new JPanel(flowLayout);
 		JPanel thirdSubPanel = 			new JPanel(flowLayout);
 		JPanel datePanel = 				new JPanel(gbl);
+		JPanel emptyPanel = 			new JPanel();
+		JPanel keysLine = 				new JPanel(gbl);
+		JPanel typeLine = 				new JPanel(gbl);
+		JPanel buttonLine = 			new JPanel(gbl);
+		JPanel textConditionAndSchemeLine = new JPanel(gbl);
 		
-		this.keysCombo = 				new JComboBox(this.filter.getKeyNames());
+		this.keysCombo = 				new JComboBox();
 		
 		//this.filteredList = 			new JList();
 		this.conditions = 				new JList();
@@ -184,7 +194,6 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		//JScrollPane filterScroller = 	new JScrollPane(this.filteredList);
 		JScrollPane conditionScroller =	new JScrollPane(this.conditions);
 		
-		this.removeButton.setEnabled(false);
 		//TODO: all setIcons move to Enviroment.java
 		JRadioButton eqRadioButton = new JRadioButton();
 		eqRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
@@ -217,11 +226,6 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		typePanel.add(listRadioButton, null);
 		
 		this.boundaryCheckBox.setSelected(true);
-		
-		//filterScroller.setPreferredSize(new Dimension(0,0));
-		conditionScroller.setPreferredSize(new Dimension(0,0));
-		linkedConditionListScroller.setPreferredSize(new Dimension(0,0));
-		
 		radio = new ButtonGroup();
 		
 		radio.add(eqRadioButton);
@@ -242,10 +246,20 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		Insets topLeftRight = new Insets(VERTICAL_GAP, HORISONTAL_GAP, 0, HORISONTAL_GAP);
 		Insets both = new Insets(VERTICAL_GAP, HORISONTAL_GAP, VERTICAL_GAP, HORISONTAL_GAP);
 		
-		JPanel keysLine = new JPanel(gbl);
-		JPanel typeLine = new JPanel(gbl);
-		JPanel buttonLine = new JPanel(gbl);
-		JPanel textConditionAndSchemeLine = new JPanel(gbl);
+		this.keysCombo.setEnabled(false);
+		this.addButton.setEnabled(false);
+		this.changeButton.setEnabled(false);
+		this.removeButton.setEnabled(false);
+		
+		this.resultConditionTextField.setEditable(false);
+		this.conditionPanel.setPreferredSize(new Dimension(0,0));
+		Dimension prefSize = this.resultConditionTextField.getPreferredSize();
+		prefSize.width = 0;
+		this.resultConditionTextField.setPreferredSize(prefSize);
+		conditionScroller.setPreferredSize(new Dimension(0, 50));
+		linkedConditionListScroller.setPreferredSize(new Dimension(0,0));
+		
+		
 		//keysLine
 		gbc.insets = right;
 		gbc.weightx = 0;
@@ -301,7 +315,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		this.mainPanel.add(typeLine, gbc);
 		gbc.weighty = 0;
 		this.mainPanel.add(buttonLine, gbc);
-		gbc.weighty = 1;
+		gbc.weighty = 0;
 		this.mainPanel.add(conditionScroller, gbc);
 		gbc.weighty = 0;
 		this.mainPanel.add(resultConditionLabel, gbc);
@@ -373,18 +387,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		this.conditionPanel.add(linkedPanel, LIST_CARD);
 		this.conditionPanel.add(stringPanel, STRING_CARD);
 		this.conditionPanel.add(datePanel, DATE_CARD);
-		this.conditionPanel.setPreferredSize(new Dimension(0,0));
-		
-		this.keysCombo.addActionListener(this.controller);
-		this.keysCombo.addPopupMenuListener(this.controller);
-		this.keysCombo.setSelectedIndex(0);
-		
-		this.createSchemeButton.addActionListener(this.controller);
-		this.addButton.addActionListener(this.controller);
-		this.removeButton.addActionListener(this.controller);
-		this.conditions.addListSelectionListener(this.controller);
-		this.startDayButton.addActionListener(this.controller);
-		this.endDayButton.addActionListener(this.controller);
+		this.conditionPanel.add(emptyPanel, EMPTY_CARD);
+		cardLayout.show(this.conditionPanel, EMPTY_CARD);
 		
 		this.getViewport().add(this.mainPanel);
 	}
@@ -584,7 +588,19 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	
 	public void setFilter(Filter filter) {
 		this.filter = filter;
-		this.controller.setFilter(filter);
+		if (this.controller == null) {
+			this.controller = new FilterController(filter, this);
+			this.keysCombo.addActionListener(this.controller);
+			this.keysCombo.addPopupMenuListener(this.controller);
+			this.createSchemeButton.addActionListener(this.controller);
+			this.addButton.addActionListener(this.controller);
+			this.removeButton.addActionListener(this.controller);
+			this.conditions.addListSelectionListener(this.controller);
+			this.startDayButton.addActionListener(this.controller);
+			this.endDayButton.addActionListener(this.controller);
+		} else {
+			this.controller.setFilter(filter);
+		}
 		clearPanel();
 		
 		this.keysCombo.removeActionListener(this.controller);
@@ -595,7 +611,10 @@ public class FilterPanel extends JScrollPane implements FilterView {
 			this.keysCombo.addItem(keyNames[i]);
 		}
 		this.keysCombo.addActionListener(this.controller);
+		this.keysCombo.setEnabled(true);
+		this.addButton.setEnabled(true);
 		this.keysCombo.setSelectedIndex(0);
+		
 		this.revalidate();
 	}
 	
