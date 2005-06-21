@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/06/17 11:01:18 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/06/21 11:54:48 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/06/17 11:01:18 $
+ * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/06/21 11:54:48 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -104,6 +104,22 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						final boolean precondition2 = super.conditionTest(schemeCableThread.targetSchemePortId);
 						assert !(precondition1 && precondition2);
 						return precondition1 ^ precondition2;
+					default:
+						throw newIllegalObjectEntityException();
+				}
+			case ObjectEntities.SCHEMEELEMENT_CODE:
+				final SchemeElement schemeElement = (SchemeElement) storableObject;
+				switch (super.linkedEntityCode) {
+					case ObjectEntities.SCHEMEELEMENT_CODE:
+						return super.conditionTest(schemeElement.parentSchemeId);
+					default:
+						throw newIllegalObjectEntityException();
+				}
+			case ObjectEntities.SCHEMEDEVICE_CODE:
+				final SchemeDevice schemeDevice = (SchemeDevice) storableObject;
+				switch (super.linkedEntityCode) {
+					case ObjectEntities.SCHEMEELEMENT_CODE:
+						return super.conditionTest(schemeDevice.getParentSchemeElement().getId());
 					default:
 						throw newIllegalObjectEntityException();
 				}
