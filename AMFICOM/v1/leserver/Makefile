@@ -30,6 +30,9 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
+.PHONY: interface
+interface: $(LIBNAME_INTERFACE)
+
 $(LIBNAME_INTERFACE):	.corba
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/LoginServer.class \

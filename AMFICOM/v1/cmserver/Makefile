@@ -29,6 +29,8 @@ all:	$(LIBNAME) $(LIBNAME_INTERFACE)
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
+.PHONY: interface
+interface: $(LIBNAME_INTERFACE)
 
 $(LIBNAME_INTERFACE):	.corba
 	$(JAR) -cf $@ \
