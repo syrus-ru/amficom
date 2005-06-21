@@ -304,7 +304,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(this.aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, this.aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
+		//aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
 		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(this.aContext));
 		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(this.aContext));
 		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(this.aContext, SaveTestSetupCommand.ETALON

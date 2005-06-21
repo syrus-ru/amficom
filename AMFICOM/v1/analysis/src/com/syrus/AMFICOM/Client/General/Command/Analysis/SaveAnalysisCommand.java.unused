@@ -22,11 +22,9 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
-import com.syrus.io.ByteArrayCollector;
 
 public class SaveAnalysisCommand extends AbstractCommand
 {
@@ -89,6 +87,7 @@ public class SaveAnalysisCommand extends AbstractCommand
 		{
 			type = AnalysisUtil.getAnalysisType(ParameterTypeCodenames.DADARA);
 			ptype0 = AnalysisUtil.getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
+			// FIXME: should save whole DADARA_ANALYSIS_RESULT, not only MTAE
 			ptype1 = AnalysisUtil.getParameterType(ParameterTypeCodenames.DADARA_MTAE, DataType.DATA_TYPE_RAW);
 		} catch (ApplicationException e) {
 			// FIXME: exceptions: add a better error processing

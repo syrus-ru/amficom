@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveAnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
@@ -212,7 +211,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(this.aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, this.aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
+		//aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
 		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(this.aContext, SaveTestSetupCommand.CRITERIA
 				+ SaveTestSetupCommand.ETALON));// +
 												// SaveTestSetupCommand.THRESHOLDS));

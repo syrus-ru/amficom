@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveAnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -183,7 +182,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(this.aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, this.aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
+		//aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(super.dispatcher, this.aContext));
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(this.aContext));
