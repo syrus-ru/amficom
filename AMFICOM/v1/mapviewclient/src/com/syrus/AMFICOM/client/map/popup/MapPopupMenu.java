@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.43 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.44 2005/06/21 12:48:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,9 +7,7 @@
 */
 package com.syrus.AMFICOM.client.map.popup;
 
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,7 +17,11 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
@@ -35,11 +37,6 @@ import com.syrus.AMFICOM.client.map.command.action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
-import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
-import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -59,7 +56,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.44 $, $Date: 2005/06/21 12:48:47 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {

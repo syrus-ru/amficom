@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.6 2005/06/20 12:10:57 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.7 2005/06/21 12:48:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,13 +25,12 @@ import javax.swing.JPanel;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.6 $, $Date: 2005/06/20 12:10:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/21 12:48:47 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -80,9 +79,46 @@ public class MapChooserPanel extends JPanel
 					mapSelected();
 				}
 			});
-		this.add(this.combo, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(this.selectButton, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(5, 5, 5, 5), 0, 0));
+		GridBagConstraints constraints = new GridBagConstraints();
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(5, 5, 5, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.combo, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(5, 5, 5, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.selectButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.VERTICAL;
+		constraints.insets = new Insets(5, 5, 5, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(Box.createVerticalGlue(), constraints);
 	}
 
 	/**

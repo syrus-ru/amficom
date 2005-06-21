@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -33,8 +32,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.8 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapViewEditor extends DefaultStorableObjectEditor {
@@ -96,23 +95,228 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 
 		this.descLabel.setText(LangModelMap.getString("Description"));
 
-		this.jPanel.add(this.nameLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.mapLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.mapComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.domainLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.domainComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.longLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.longTextField, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.latLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.latTextField, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.scaleLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.scaleTextField, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.schemesLabel, ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.schemesScrollPane, ReusedGridBagConstraints.get(0, 7, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(Box.createHorizontalStrut(5), ReusedGridBagConstraints.get(1, 8, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 9, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(new JScrollPane(this.descTextArea), ReusedGridBagConstraints.get(0, 10, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		GridBagConstraints constraints = new GridBagConstraints();
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.nameLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.nameTextField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.mapLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.mapComboBox, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.domainLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.domainComboBox, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.longLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.longTextField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.latLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.latTextField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 5;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.scaleLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 5;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.scaleTextField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 6;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.schemesLabel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 7;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.schemesScrollPane, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 8;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(Box.createHorizontalStrut(5), constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 9;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.descLabel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 10;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(new JScrollPane(this.descTextArea), constraints);
 
 		this.mapComboBox.setEnabled(false);
 		this.domainComboBox.setEnabled(false);

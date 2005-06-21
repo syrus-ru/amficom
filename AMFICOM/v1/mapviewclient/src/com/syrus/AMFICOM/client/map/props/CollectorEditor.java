@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.map.Collector;
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -83,16 +82,125 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		this.piquetsScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.piquetsScrollPane.getViewport().add(this.piquetsList);
 
-		this.jPanel.add(this.nameLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.topologicalLengthLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.topologicalLengthTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.piquetsLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.piquetsScrollPane, ReusedGridBagConstraints.get(0, 3, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(new JSeparator(SwingConstants.HORIZONTAL), ReusedGridBagConstraints.get(0, 4, 2, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		GridBagConstraints constraints = new GridBagConstraints();
 
-		this.jPanel.add(this.descLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(new JScrollPane(this.descTextArea), ReusedGridBagConstraints.get(0, 6, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.nameLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.nameTextField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.topologicalLengthLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.topologicalLengthTextField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.piquetsLabel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.piquetsScrollPane, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(new JSeparator(SwingConstants.HORIZONTAL), constraints);
+
+
+		constraints.gridx = 0;
+		constraints.gridy = 5;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.descLabel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 6;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(new JScrollPane(this.descTextArea), constraints);
 
 		super.addToUndoableListener(this.nameTextField);
 		super.addToUndoableListener(this.descTextArea);

@@ -25,7 +25,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
@@ -188,11 +187,72 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getUgoPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);
 
-		this.jPanel.add(this.cablesScrollPane, ReusedGridBagConstraints.get(0, 0, 1, 2, 1.0, 0.1, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
-		this.jPanel.add(this.buttonsPanel, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(this.directionPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.NONE, null, 0, 0));
-		this.jPanel.add(Box.createVerticalStrut(3), ReusedGridBagConstraints.get(0, 2, 2, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.jPanel.add(this.tunnelsScrollPane, ReusedGridBagConstraints.get(0, 3, 2, 3, 1.0, 0.9, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		GridBagConstraints constraints = new GridBagConstraints();
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 2;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.1;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.cablesScrollPane, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.buttonsPanel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.SOUTHEAST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.directionPanel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(Box.createVerticalStrut(3), constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 3;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.9;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = null;
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.tunnelsScrollPane, constraints);
 
 		this.bindButton.setEnabled(false);
 		this.unbindButton.setEnabled(false);

@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.8 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.9 2005/06/21 12:48:48 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,16 +20,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.client.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/21 12:48:48 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel {
@@ -42,7 +40,7 @@ public final class MapStatusBar extends JPanel {
 	JTextField scaleField = new JTextField();
 
 	private static Dimension fieldSize = new Dimension(120, 24);
-	private final NetMapViewer netMapViewer;
+	final NetMapViewer netMapViewer;
 
 	public MapStatusBar(NetMapViewer netMapViewer) {
 		super();
@@ -140,13 +138,84 @@ public final class MapStatusBar extends JPanel {
 		this.latitudeTextField.addKeyListener(longlatKeyListener);
 		this.longitudeField.addKeyListener(longlatKeyListener);
 
-		this.add(this.longitudeLabel, ReusedGridBagConstraints.get(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,0,1,0),0,0));
-		this.add(this.longitudeField, ReusedGridBagConstraints.get(1,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets(1,5,1,0),0,0));
-		this.add(this.latitudeLabel, ReusedGridBagConstraints.get(2,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,10,1,0),0,0));
-		this.add(this.latitudeTextField, ReusedGridBagConstraints.get(3,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets(1,5,1,0),0,0));
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(1, 0, 1, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.longitudeLabel, constraints);
 
-		this.add(this.scaleLabel, ReusedGridBagConstraints.get(4,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(1,40,1,0),0,0));
-		this.add(this.scaleField, ReusedGridBagConstraints.get(5,0,1,1,1,0,GridBagConstraints.WEST,GridBagConstraints.BOTH,new Insets(1,5,1,300),0,0));
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = new Insets(1, 5, 1, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.longitudeField, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(1, 10, 1, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.latitudeLabel, constraints);
+
+		constraints.gridx = 3;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = new Insets(1, 5, 1, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.latitudeTextField, constraints);
+
+		constraints.gridx = 4;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(1, 40, 1, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.scaleLabel, constraints);
+
+		constraints.gridx = 5;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = new Insets(1, 5, 1, 300);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.add(this.scaleField, constraints);
 	}
 }
 

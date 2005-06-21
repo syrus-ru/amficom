@@ -234,6 +234,7 @@ public final class MapCablePathBindPanel {
 //		this.scrollPane.getViewport().setBackground(SystemColor.window);
 //		this.table.setBackground(SystemColor.window);
 //
+//GridBagConstraints constraints = new GridBagConstraints();
 ////		this.this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
 ////		this.this.add(this.bindingPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 //		
