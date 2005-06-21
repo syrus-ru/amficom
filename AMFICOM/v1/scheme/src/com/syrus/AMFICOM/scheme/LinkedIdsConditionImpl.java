@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/06/21 11:54:48 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/06/21 12:21:40 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/06/21 11:54:48 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/21 12:21:40 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -104,6 +104,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						final boolean precondition2 = super.conditionTest(schemeCableThread.targetSchemePortId);
 						assert !(precondition1 && precondition2);
 						return precondition1 ^ precondition2;
+					case ObjectEntities.SCHEMECABLELINK_CODE:
+						return super.conditionTest(schemeCableThread.getParentSchemeCableLink().getId());
 					default:
 						throw newIllegalObjectEntityException();
 				}
@@ -120,6 +122,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (super.linkedEntityCode) {
 					case ObjectEntities.SCHEMEELEMENT_CODE:
 						return super.conditionTest(schemeDevice.getParentSchemeElement().getId());
+					default:
+						throw newIllegalObjectEntityException();
+				}
+			case ObjectEntities.PATHELEMENT_CODE:
+				final PathElement pathElement = (PathElement) storableObject;
+				switch (super.linkedEntityCode) {
+					case ObjectEntities.SCHEMEPATH_CODE:
+						return super.conditionTest(pathElement.getParentSchemePath().getId());
 					default:
 						throw newIllegalObjectEntityException();
 				}
