@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.47 2005/06/17 11:01:01 bass Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.48 2005/06/21 10:08:51 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/06/17 11:01:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/06/21 10:08:51 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -63,6 +64,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 //	public static final String CODENAME_DARARA_MODELFUNCTION = "modelfunction";
 //	public static final String CODENAME_DARARA_SIMPLEEVENTS = "simpleevents";
 	public static final String CODENAME_ALARMS = ParameterTypeCodenames.DADARA_ALARMS;
+	public static final String CODENAME_ANALYSIS_RESULT = ParameterTypeCodenames.DADARA_ANALYSIS_RESULT;
 
 	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
@@ -201,8 +203,14 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		// Получаем параметры анализа (могут быть null, тогда анализ не проводим)
 		AnalysisParameters ap = this.obtainAnalysisParameters();
 
+		// проводим анализ
+		AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
+
 		// сравниваем
-		List alarmList = CoreAnalysisManager.analyseCompareAndMakeAlarms(bs, ap, breakThresh, etMTM);
+		List alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, breakThresh, etMTM);
+
+		// добавляем AnalysisResult в результаты анализа
+		outParameters.put(CODENAME_ANALYSIS_RESULT, ar.toByteArray());
 
 		// добавляем алармы в результаты анализа
 		ReflectogramAlarm[] alarms = (ReflectogramAlarm[]) alarmList.toArray(new ReflectogramAlarm[alarmList.size()]);
