@@ -1,5 +1,5 @@
 /**
- * $Id: SimpleMapImageRenderer.java,v 1.5 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: SimpleMapImageRenderer.java,v 1.6 2005/06/21 12:34:21 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,19 +14,24 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/16 10:57:19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/06/21 12:34:21 $
+ * @author $Author: peskovsky $
  * @module mapviewclient
  */
 public class SimpleMapImageRenderer implements MapImageRenderer {
 
-	MapImageLoader loader;
+	private final MapContext mapContext;
+	private final MapImageLoader loader;
+	private final MapCoordinatesConverter coordsConverter;
 
-	public SimpleMapImageRenderer(MapImageLoader loader) {
+	public SimpleMapImageRenderer(MapCoordinatesConverter coordsConverter, MapContext mapContext, MapImageLoader loader)
+	{
+		this.coordsConverter = coordsConverter;
+		this.mapContext = mapContext;
 		this.loader = loader;
 	}
 	
-	public void sizeChanged() throws MapConnectionException, MapDataException {
+	public void setSize(Dimension newSize) throws MapConnectionException, MapDataException {
 		// nothing
 	}
 
@@ -68,7 +73,6 @@ public class SimpleMapImageRenderer implements MapImageRenderer {
 	}
 
 	public MapImageLoader getLoader() {
-		// TODO Auto-generated method stub
 		return this.loader;
 	}
 }
