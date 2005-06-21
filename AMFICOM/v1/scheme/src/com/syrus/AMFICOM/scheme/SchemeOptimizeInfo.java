@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.31 2005/06/20 17:29:57 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.32 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/06/20 17:29:57 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/21 15:10:05 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -240,7 +240,8 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this);
 	}
 
-	public Object clone() {
+	@Override
+	public SchemeOptimizeInfo clone() {
 		final SchemeOptimizeInfo schemeOptimizeInfo = (SchemeOptimizeInfo) super
 				.clone();
 		/**

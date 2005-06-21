@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCloneableDomainMember.java,v 1.3 2005/04/01 14:41:33 bob Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.4 2005/06/21 15:10:04 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/04/01 14:41:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/21 15:10:04 $
  * @module admin_v1
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
@@ -57,9 +57,10 @@ public abstract class AbstractCloneableDomainMember extends DomainMember
 	 * @see Object#clone()
 	 * @see CloneableStorableObject#clone()
 	 */
-	public Object clone() {
+	@Override
+	public AbstractCloneableDomainMember clone() {
 		try {
-			return super.clone();
+			return (AbstractCloneableDomainMember) super.clone();
 		} catch (final CloneNotSupportedException cnse) {
 			/*
 			 * Never.

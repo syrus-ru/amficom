@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.35 2005/06/20 17:29:57 bass Exp $
+ * $Id: SchemeDevice.java,v 1.36 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/20 17:29:57 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/21 15:10:05 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -288,7 +288,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		schemePort.setParentSchemeDevice(this);
 	}
 
-	public Object clone() {
+	@Override
+	public SchemeDevice clone() {
 		final SchemeDevice schemeDevice = (SchemeDevice) super.clone();
 		/**
 		 * @todo Update the newly created object.

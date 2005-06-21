@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCloneableStorableObject.java,v 1.4 2005/06/21 12:43:47 bass Exp $
+ * $Id: AbstractCloneableStorableObject.java,v 1.5 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/21 12:43:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/21 15:10:05 $
  * @module general_v1
  */
 public abstract class AbstractCloneableStorableObject extends StorableObject implements CloneableStorableObject {
@@ -51,9 +51,9 @@ public abstract class AbstractCloneableStorableObject extends StorableObject imp
 	 * @see CloneableStorableObject#clone()
 	 */
 	@Override
-	public Object clone() {
+	public AbstractCloneableStorableObject clone() {
 		try {
-			return super.clone();
+			return (AbstractCloneableStorableObject) super.clone();
 		} catch (final CloneNotSupportedException cnse) {
 			/*
 			 * Never.

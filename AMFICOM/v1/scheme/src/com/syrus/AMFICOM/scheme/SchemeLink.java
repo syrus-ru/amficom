@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.35 2005/06/20 17:29:57 bass Exp $
+ * $Id: SchemeLink.java,v 1.36 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/20 17:29:57 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/21 15:10:05 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -385,7 +385,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 		}
 	}
 
-	public Object clone() {
+	@Override
+	public SchemeLink clone() {
 		final SchemeLink schemeLink = (SchemeLink) super.clone();
 		/**
 		 * @todo Update the newly created object.

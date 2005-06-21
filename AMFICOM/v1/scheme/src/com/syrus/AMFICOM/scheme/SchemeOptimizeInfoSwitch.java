@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.3 2005/06/20 17:29:57 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.4 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoSwitch_Transferable;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/20 17:29:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/21 15:10:05 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoSwitch extends AbstractCloneableStorableObject {
@@ -44,5 +44,14 @@ public final class SchemeOptimizeInfoSwitch extends AbstractCloneableStorableObj
 
 	public SchemeOptimizeInfoSwitch_Transferable getTransferable() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public SchemeOptimizeInfoSwitch clone() {
+		final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch = (SchemeOptimizeInfoSwitch) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeOptimizeInfoSwitch;
 	}
 }

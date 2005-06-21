@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.71 2005/06/21 14:22:43 arseniy Exp $
+ * $Id: StorableObject.java,v 1.72 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.71 $, $Date: 2005/06/21 14:22:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.72 $, $Date: 2005/06/21 15:10:05 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -298,7 +298,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	protected StorableObject clone() throws CloneNotSupportedException {
 		final StorableObject clone = (StorableObject) super.clone();
 		try {
 			clone.id = IdentifierPool.getGeneratedIdentifier(this.id.getMajor());

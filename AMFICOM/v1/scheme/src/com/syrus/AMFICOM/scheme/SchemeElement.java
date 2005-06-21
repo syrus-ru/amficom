@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.38 2005/06/20 17:29:57 bass Exp $
+ * $Id: SchemeElement.java,v 1.39 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/20 17:29:57 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/21 15:10:05 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -317,7 +317,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		schemeLink.setParentSchemeElement(this);
 	}
 
-	public Object clone() {
+	@Override
+	public SchemeElement clone() {
 		final SchemeElement schemeElement = (SchemeElement) super
 				.clone();
 		/**

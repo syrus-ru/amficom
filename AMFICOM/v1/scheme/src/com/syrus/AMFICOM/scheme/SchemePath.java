@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.38 2005/06/20 16:13:01 bass Exp $
+ * $Id: SchemePath.java,v 1.39 2005/06/21 15:10:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/20 16:13:01 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/21 15:10:05 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -198,7 +198,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		pathElement.setParentSchemePath(this);
 	}
 
-	public Object clone() {
+	@Override
+	public SchemePath clone() {
 		final SchemePath schemePath = (SchemePath) super.clone();
 		/**
 		 * @todo Update the newly created object.
