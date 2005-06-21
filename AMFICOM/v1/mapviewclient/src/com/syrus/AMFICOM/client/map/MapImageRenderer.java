@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageRenderer.java,v 1.5 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: MapImageRenderer.java,v 1.6 2005/06/21 12:30:26 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,12 +14,12 @@ import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/16 10:57:19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/06/21 12:30:26 $
+ * @author $Author: peskovsky $
  * @module mapviewclient
  */
 public interface MapImageRenderer {
-	void sizeChanged() throws MapConnectionException, MapDataException;
+	void setSize(Dimension newSize) throws MapConnectionException, MapDataException;
 	void setCenter(DoublePoint newCenter) throws MapConnectionException, MapDataException;
 	void setScale(double newScale) throws MapConnectionException, MapDataException;
 	void analyzeMouseLocation(MouseEvent event) throws MapDataException, MapConnectionException;
