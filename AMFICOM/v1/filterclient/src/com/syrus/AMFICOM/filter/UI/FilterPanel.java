@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.4 2005/06/21 10:54:43 max Exp $
+ * $Id: FilterPanel.java,v 1.5 2005/06/21 11:03:03 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
-//import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.newFilter.DateCondition;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.newFilter.FilterController;
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/21 10:54:43 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/21 11:03:03 $
  * @author $Author: max $
  * @module filter_v1
  */
