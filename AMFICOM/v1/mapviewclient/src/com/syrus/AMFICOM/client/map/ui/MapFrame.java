@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.48 2005/06/16 14:41:53 krupenn Exp $
+ * $Id: MapFrame.java,v 1.49 2005/06/21 12:44:54 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,8 +82,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.48 $, $Date: 2005/06/16 14:41:53 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.49 $, $Date: 2005/06/21 12:44:54 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -157,6 +157,8 @@ public class MapFrame extends JInternalFrame
 
 		MapImageRenderer renderer = MapImageRendererFactory.create(
 				MapPropertiesManager.getMapImageRendererClassName(),
+				converter,
+				mapContext,
 				loader); 
 
 		LogicalNetLayer logicalNetLayer = new LogicalNetLayer(
