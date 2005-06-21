@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.10 2005/06/20 10:13:33 arseniy Exp $
+ * $Id: XMLClientServantManager.java,v 1.11 2005/06/21 12:51:12 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,14 +33,14 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/20 10:13:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/06/21 12:51:12 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
 abstract class XMLClientServantManager implements BaseConnectionManager {
@@ -58,7 +58,7 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 		this.loginServer = new LoginServer() {
 			private static final long serialVersionUID = 6881608272719879636L;
 
-			public Domain_Transferable[] transmitAvailableDomains(SessionKey_Transferable arg0) throws AMFICOMRemoteException {
+			public Domain_Transferable[] transmitAvailableDomains(IdlSessionKey arg0) throws AMFICOMRemoteException {
 				try {
 					Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_CODE), true, true);
 					Domain_Transferable[] transferables = new Domain_Transferable[storableObjectsByCondition.size()];
@@ -135,10 +135,10 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 				return null;
 			}
 			
-			public SessionKey_Transferable login(	String login,
+			public IdlSessionKey login(	String login,
 													String password,
 													IdlIdentifierHolder identifierTransferableHolder) throws AMFICOMRemoteException {
-				SessionKey_Transferable transferable = new SessionKey_Transferable(new Date().toString());
+				IdlSessionKey transferable = new IdlSessionKey(new Date().toString());
 				try {
 					Set users = StorableObjectPool.getStorableObjectsByCondition(new TypicalCondition(login, OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN), true, true);
 					if (users.isEmpty()) {
@@ -152,20 +152,20 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 				return transferable;
 			}
 			
-			public void logout(SessionKey_Transferable arg0) throws AMFICOMRemoteException {
+			public void logout(IdlSessionKey arg0) throws AMFICOMRemoteException {
 				// nothing				
 			}
 			
 			/* (non-Javadoc)
-			 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#selectDomain(com.syrus.AMFICOM.security.corba.SessionKey_Transferable, com.syrus.AMFICOM.general.corba.IdlIdentifier)
+			 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#selectDomain(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.IdlIdentifier)
 			 */
-			public void selectDomain(	SessionKey_Transferable arg0,
+			public void selectDomain(	IdlSessionKey arg0,
 										IdlIdentifier arg1) throws AMFICOMRemoteException {
 				// TODO Auto-generated method stub
 				
 			}
 			
-			public void validateAccess(	SessionKey_Transferable arg0,
+			public void validateAccess(	IdlSessionKey arg0,
 										IdlIdentifierHolder arg1,
 										IdlIdentifierHolder arg2) throws AMFICOMRemoteException {
 				//	nothing		
@@ -178,7 +178,7 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 			/**
 			 * @todo This is just to enable compatibility and compile. No sense. 
 			 */
-			public void setPassword(SessionKey_Transferable arg0, IdlIdentifier arg1, String arg2) throws AMFICOMRemoteException {
+			public void setPassword(IdlSessionKey arg0, IdlIdentifier arg1, String arg2) throws AMFICOMRemoteException {
 				/*Don't know, what to write here*/
 				throw new UnsupportedOperationException(ErrorMessages.METHOD_NOT_NEEDED);
 			}

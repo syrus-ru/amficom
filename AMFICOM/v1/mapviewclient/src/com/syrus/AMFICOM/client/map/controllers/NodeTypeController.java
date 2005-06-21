@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.25 2005/06/20 12:10:29 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.26 2005/06/21 12:52:14 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNodeTypeSort;
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/20 12:10:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/06/21 12:52:14 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {

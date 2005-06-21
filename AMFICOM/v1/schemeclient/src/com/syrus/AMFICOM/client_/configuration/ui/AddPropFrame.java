@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.9 2005/06/17 11:36:21 bass Exp $
+ * $Id: AddPropFrame.java,v 1.10 2005/06/21 12:52:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,13 +36,13 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/06/17 11:36:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/21 12:52:14 $
  * @module schemeclient_v1
  */
 

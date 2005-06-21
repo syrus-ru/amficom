@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.5 2005/06/17 11:36:21 bass Exp $
+ * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.6 2005/06/21 12:52:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.general.corba.CharacteristicType_TransferablePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/21 12:52:14 $
  * @module schemeclient_v1
  */
 
