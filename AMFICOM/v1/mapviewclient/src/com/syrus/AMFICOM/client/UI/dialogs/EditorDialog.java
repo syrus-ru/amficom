@@ -1,5 +1,5 @@
 /**
- * $Id: EditorDialog.java,v 1.6 2005/06/21 11:27:29 krupenn Exp $
+ * $Id: EditorDialog.java,v 1.7 2005/06/22 10:09:47 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -51,6 +51,7 @@ public class EditorDialog
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = Math.min(screenDim.width / 2, 590);
 		int height = Math.min(screenDim.height / 2, 400);
+		dialog.setLocation(screenDim.width / 2 - width / 2, screenDim.height / 2 - height / 2);
 		dialog.setSize(new Dimension(width, height));
 
 		dialog.setModal(true);

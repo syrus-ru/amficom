@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedTableChooserDialog.java,v 1.5 2005/06/21 11:27:58 krupenn Exp $
+ * $Id: WrapperedTableChooserDialog.java,v 1.6 2005/06/22 10:09:47 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.client.UI.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -40,7 +41,7 @@ import com.syrus.util.Wrapper;
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для того, чтобы включить эту возможность, используется параметр canDelete
  *
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -127,6 +128,7 @@ public class WrapperedTableChooserDialog extends JDialog {
 		int width = Math.min(screenDim.width / 2, 590);
 		int height = Math.min(screenDim.height / 2, 400);
 		dialog.setSize(new Dimension(width, height));
+		dialog.setLocation(screenDim.width / 2 - width / 2, screenDim.height / 2 - height / 2);
 		dialog.setModal(true);
 
 		buttonOpen.addActionListener(new ActionListener() {
