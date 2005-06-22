@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.4 2005/06/17 11:36:22 bass Exp $
+ * $Id: SchemeTreeUI.java,v 1.5 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,30 +8,47 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import java.beans.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
 
-import javax.swing.event.*;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.UIManager;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.VisualManager;
-import com.syrus.AMFICOM.client.UI.tree.*;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
+import com.syrus.AMFICOM.client.UI.tree.Visualizable;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.logic.*;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/17 11:36:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
 public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener {
 	ApplicationContext aContext;
+	SchemeTreeToolBar toolBar;
+	boolean linkToScheme = false;
 	
 	public SchemeTreeUI(Item rootItem, ApplicationContext aContext) {
 		super(rootItem);
@@ -53,11 +70,17 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 		this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
 	}
 	
+	public JToolBar getToolBar() {
+		if (this.toolBar == null)
+			this.toolBar = new SchemeTreeToolBar();
+		return this.toolBar;
+	}
+	
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)e;
 			Object selected = ev.getSelectedObject();
-			if (selected != null) {
+			if (selected != null && linkToScheme) {
 				ItemTreeModel model = this.treeUI.getTreeModel();
 				Item node = findNode((Item)model.getRoot(), selected, true);
 				if (node != null)
@@ -67,7 +90,7 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 			SchemeEvent ev = (SchemeEvent)e;
 			if (ev.isType(SchemeEvent.CREATE_OBJECT) || ev.isType(SchemeEvent.DELETE_OBJECT)) {
 				ItemTreeModel model = this.treeUI.getTreeModel();
-				updateRecursively((Item)model.getRoot());
+				toolBar.updateRecursively((Item)model.getRoot());
 			}
 			if (ev.isType(SchemeEvent.UPDATE_OBJECT)) {
 				Object obj = ev.getObject();
@@ -81,16 +104,6 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 		}
 	}
 	
-	void updateRecursively(Item item) {
-		if (item instanceof Populatable) {
-			Populatable populatable = (Populatable)item;
-			if (populatable.isPopulated())
-				populatable.populate();
-			for (Iterator it = item.getChildren().iterator(); it.hasNext();)
-				updateRecursively((Item)it.next());
-		}
-	}
-
 	void tree_valueChanged(TreeSelectionEvent e) {
 		Item node = (Item)e.getPath().getLastPathComponent();
 		if (node == null)
@@ -123,5 +136,22 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 		}
 		ObjectSelectedEvent ev = new ObjectSelectedEvent(e.getSource(), object, manager, type);
 		aContext.getDispatcher().firePropertyChange(ev);
+	}
+	
+	public class SchemeTreeToolBar extends IconedTreeToolBar {
+		JToggleButton		syncButton;
+		
+		public SchemeTreeToolBar() {
+			this.syncButton = new JToggleButton();
+			this.syncButton.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_SYNCHRONIZE));
+			this.syncButton.setToolTipText(LangModelScheme.getString(SchemeResourceKeys.SYNCHRONIZE));
+			this.syncButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			this.syncButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					linkToScheme = ((JToggleButton)e.getSource()).isSelected();
+				}
+			});
+			this.add(this.syncButton);
+		}
 	}
 }

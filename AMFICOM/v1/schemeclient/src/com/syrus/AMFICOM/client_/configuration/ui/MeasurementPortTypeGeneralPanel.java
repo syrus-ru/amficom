@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.14 2005/06/17 11:36:21 bass Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.15 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/06/17 11:36:21 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -40,11 +40,11 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 	protected MeasurementPortType type;
 
 	JPanel pnPanel0 = new JPanel();
-	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2,10);
-	JLabel lbTestTypeLabel = new JLabel(LangModelScheme.getString(Constants.MEASUREMENT_TYPES));
+	JLabel lbTestTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_TYPES));
 	JPanel pnGeneralPanel = new JPanel();
 	JTree trTestTypeTree;
 	List measurementTypeNodes;
@@ -171,11 +171,11 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 		
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
 //		pnPanel0.setBackground(Color.WHITE);
 //		pnGeneralPanel.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
-		scpTestTypeTree.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+		scpTestTypeTree.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(tfNameText);
 		addToUndoableListener(taDescriptionArea);
@@ -213,8 +213,8 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 				e.printStackTrace();
 			}
 		} else {
-			this.tfNameText.setText(Constants.EMPTY);
-			this.taDescriptionArea.setText(Constants.EMPTY);
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
 			for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
@@ -268,7 +268,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 	}
 	
 	Item createRoot() {
-		Item root1 = new IconedNode(Constants.ROOT, LangModelScheme.getString(Constants.ROOT));
+		Item root1 = new IconedNode(SchemeResourceKeys.ROOT, LangModelScheme.getString(SchemeResourceKeys.ROOT));
 		
 		EquivalentCondition condition = new EquivalentCondition(
 				ObjectEntities.MEASUREMENT_TYPE_CODE);

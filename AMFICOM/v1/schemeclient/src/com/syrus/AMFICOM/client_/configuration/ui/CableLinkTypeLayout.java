@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.2 2005/06/09 10:53:29 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.3 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.*;
 import java.beans.*;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.JComponent;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/06/09 10:53:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -65,12 +66,12 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 
 		if (this.type != null) {
 		// TODO разобраться с числом модулей
-			int nModules = 8;
+			int nModules = 6;
 			if (type.getCodename().equals("okst8")
 					|| type.getCodename().equals("okst16"))
 				nModules = 6;
 
-			Set ctts = type.getCableThreadTypes(false);
+			Set ctts = type.getCableThreadTypes(true);
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					ctts.size() / (double) nModules + 0.499)));
 			if (tmp > radius)

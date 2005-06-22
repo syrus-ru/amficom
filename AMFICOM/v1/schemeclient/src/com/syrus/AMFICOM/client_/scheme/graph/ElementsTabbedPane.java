@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.3 2005/05/26 07:40:51 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.4 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
+import java.awt.BorderLayout;
 import java.awt.Point;
 import java.awt.event.*;
 
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -28,6 +29,7 @@ public class ElementsTabbedPane extends UgoTabbedPane {
 	
 	public ElementsTabbedPane(ApplicationContext aContext) {
 		super(aContext);
+		add(createToolBar(), BorderLayout.NORTH);
 	}
 	
 	protected JComponent createPanel() {
@@ -37,6 +39,10 @@ public class ElementsTabbedPane extends UgoTabbedPane {
 		graph.addKeyListener(new SchemeKeyListener());
 		JScrollPane graphView = new JScrollPane(graph);
 		return graphView;
+	}
+	
+	protected JComponent createToolBar() {
+		return new ElementsToolBar(this, aContext);
 	}
 
 	public void openScheme(Scheme sch) {

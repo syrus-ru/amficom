@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.8 2005/06/22 10:10:50 bass Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.9 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,16 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/22 10:10:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -33,17 +35,17 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected PortType portType;
 	protected String[] sorts = new String[] {
-			LangModelScheme.getString(Constants.PORTTYPESORT_OPTICAL),
-			LangModelScheme.getString(Constants.PORTTYPESORT_THERMAL),
-			LangModelScheme.getString(Constants.PORTTYPESORT_ELECTICAL)
+			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_OPTICAL),
+			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_THERMAL),
+			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_ELECTICAL)
 	};  
 	
 	JPanel pnPanel0 = new JPanel();
-	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbSortLabel = new JLabel(LangModelScheme.getString(Constants.CODENAME));
+	JLabel lbSortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
 	JComboBox cmbSortCombo = new AComboBox(sorts);
-	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2,10);
 	JPanel pnGeneralPanel = new JPanel();
 	
@@ -161,10 +163,10 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder(Constants.EMPTY));
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 //		pnGeneralPanel.setBackground(Color.WHITE);
 //		pnPanel0.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(tfNameText);
 		addToUndoableListener(cmbSortCombo);
@@ -197,8 +199,8 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 			}
 		} 
 		else {
-			this.tfNameText.setText(Constants.EMPTY);
-			this.taDescriptionArea.setText(Constants.EMPTY);
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 
@@ -224,6 +226,11 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 			else if (cmbSortCombo.getSelectedItem().equals(sorts[2]))
 				portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
 			
+			try {
+				StorableObjectPool.flush(portType.getId(), true);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.UPDATE_OBJECT));
 		}
 	}

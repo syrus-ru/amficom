@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
@@ -29,7 +29,7 @@ public class SchemeNewCommand extends AbstractCommand {
 		final Identifier domainId = LoginManager.getDomainId();
 		
 		try {
-			Scheme scheme = Scheme.createInstance(userId, LangModelScheme.getString(Constants.NEW_SCHEME)
+			Scheme scheme = Scheme.createInstance(userId, LangModelScheme.getString(SchemeResourceKeys.NEW_SCHEME)
 					+ (counter == 1 ? "" : "(" + counter + ")"), Kind.NETWORK, domainId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			counter++;
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme, SchemeEvent.OPEN_SCHEME));

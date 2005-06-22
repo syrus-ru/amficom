@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.4 2005/05/26 07:40:51 stas Exp $
+ * $Id: UgoToolBar.java,v 1.5 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
@@ -37,6 +37,7 @@ public class UgoToolBar extends JToolBar {
 
 	protected UgoToolBar(UgoTabbedPane pane) {
 		this.pane = pane;
+		createToolBar();
 	}
 	
 	public void setOrientation(int o) {
@@ -49,7 +50,7 @@ public class UgoToolBar extends JToolBar {
 		}
 	}
 	
-	public void createToolBar() {
+	protected void createToolBar() {
 		commands.putAll(createGraphButtons());
 
 		String[] butt = getButtons();

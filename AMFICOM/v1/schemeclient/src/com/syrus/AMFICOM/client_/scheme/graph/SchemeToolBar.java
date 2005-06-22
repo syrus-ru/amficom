@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.4 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.5 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,12 @@ import java.util.Map;
 
 import javax.swing.ButtonGroup;
 
-import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
@@ -41,21 +40,10 @@ public class SchemeToolBar extends ElementsToolBar {
 			Constants.SEPARATOR, Constants.TOP_LEVEL_MODE 
 	};
 	
-	public SchemeToolBar(UgoTabbedPane sourcePane, AbstractPropertiesFrame additionalFrame,
+	public SchemeToolBar(UgoTabbedPane sourcePane,
 			ApplicationContext aContext) {
-		super(sourcePane, additionalFrame, aContext);
+		super(sourcePane, aContext);
 	}
-	
-//	public void createToolBar() {
-//		commands.putAll(createGraphButtons());
-//
-//		for (int i = 0; i < buttons.length; i++) {
-//			if (buttons[i].equals(Constants.separator))
-//				insert(new JToolBar.Separator());
-//			else
-//				insert((JComponent)commands.get(buttons[i]));
-//		}
-//	}
 
 	protected String[] getButtons() {
 		return buttons;
@@ -71,7 +59,7 @@ public class SchemeToolBar extends ElementsToolBar {
 		bttns.put(Constants.CREATE_UGO, createToolButton(
 				mh.scheme_ugo, btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), 
 				Constants.ICON_CREATE_UGO,
-				new CreateTopLevelSchemeAction(pane, additionalFrame, aContext), true));
+				new CreateTopLevelSchemeAction(pane, aContext), true));
 		bttns.put(Constants.BACKGROUND_SIZE, createToolButton(mh.bSize, btn_size,
 				null, LangModelGraph.getString(Constants.BACKGROUND_SIZE), Constants.ICON_SCHEME_SIZE, new SetBackgroundSizeAction(
 						pane), true));

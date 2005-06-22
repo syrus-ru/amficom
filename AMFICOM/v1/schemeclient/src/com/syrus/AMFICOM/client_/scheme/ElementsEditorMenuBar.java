@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMenuBar.java,v 1.3 2005/06/17 11:36:22 bass Exp $
+ * $Id: ElementsEditorMenuBar.java,v 1.4 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,103 +8,42 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/17 11:36:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
-public class ElementsEditorMenuBar extends JMenuBar implements ApplicationModelListener
+public class ElementsEditorMenuBar extends AbstractMainMenuBar
 {
-	private ApplicationModel aModel;
-
-	JMenu menuSession = new JMenu();
-	JMenuItem menuSessionNew = new JMenuItem();
-	JMenuItem menuSessionClose = new JMenuItem();
-	JMenuItem menuSessionOptions = new JMenuItem();
-	JMenuItem menuSessionConnection = new JMenuItem();
-	JMenuItem menuSessionChangePassword = new JMenuItem();
-	JMenuItem menuSessionDomain = new JMenuItem();
-	JMenuItem menuExit = new JMenuItem();
-
-	JMenu menuComponent = new JMenu();
-	JMenuItem menuComponentNew = new JMenuItem();
-	JMenuItem menuComponentSave = new JMenuItem();
-
-	JMenu menuWindow = new JMenu();
-	JMenuItem menuWindowArrange = new JMenuItem();
-	JMenuItem menuWindowTree = new JMenuItem();
-	JMenuItem menuWindowScheme = new JMenuItem();
-	JMenuItem menuWindowUgo = new JMenuItem();
-	JMenuItem menuWindowProps = new JMenuItem();
-	JMenuItem menuWindowList = new JMenuItem();
-
-	public ElementsEditorMenuBar()
-	{
-		super();
-		try
-		{
-			jbInit();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
 
 	public ElementsEditorMenuBar(ApplicationModel aModel)
 	{
-		this();
-		this.aModel = aModel;
+		super(aModel);
 	}
 
-	private void jbInit() throws Exception
+	protected void addMenuItems()
 	{
-		ElementsEditorMenuBar_this_actionAdapter actionAdapter =
-		new ElementsEditorMenuBar_this_actionAdapter(this);
+		final JMenu menuComponent = new JMenu();
+		final JMenuItem menuComponentNew = new JMenuItem();
+		final JMenuItem menuComponentSave = new JMenuItem();
 
-		menuSession.setText(LangModel.getString("menuSession"));
-		menuSession.setName("menuSession");
-		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
-		menuSessionNew.setName("menuSessionNew");
-		menuSessionNew.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
-		menuSessionClose.setName("menuSessionClose");
-		menuSessionClose.addActionListener(actionAdapter);
-		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
-		menuSessionOptions.setName("menuSessionOptions");
-		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
-		menuSessionConnection.setName("menuSessionConnection");
-		menuSessionConnection.addActionListener(actionAdapter);
-		menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
-		menuSessionChangePassword.setName("menuSessionChangePassword");
-		menuSessionChangePassword.addActionListener(actionAdapter);
-		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
-		menuSessionDomain.setName("menuSessionDomain");
-		menuSessionDomain.addActionListener(actionAdapter);
-		menuExit.setText(LangModel.getString("menuExit"));
-		menuExit.setName("menuExit");
-		menuExit.addActionListener(actionAdapter);
-
-		menuSession.add(menuSessionNew);
-		menuSession.add(menuSessionClose);
-		menuSession.add(menuSessionOptions);
-		menuSession.add(menuSessionChangePassword);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionConnection);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionDomain);
-		menuSession.addSeparator();
-		menuSession.add(menuExit);
-
+		final JMenu menuWindow = new JMenu();
+		final JMenuItem menuWindowArrange = new JMenuItem();
+		final JMenuItem menuWindowTree = new JMenuItem();
+		final JMenuItem menuWindowScheme = new JMenuItem();
+		final JMenuItem menuWindowUgo = new JMenuItem();
+		final JMenuItem menuWindowProps = new JMenuItem();
+		final JMenuItem menuWindowList = new JMenuItem();
+		
 		menuComponent.setText(LangModelSchematics.getString("menuComponent"));
 		menuComponent.setName("menuComponent");
 		menuComponentNew.setText(LangModelSchematics.getString("menuComponentNew"));
@@ -146,32 +85,18 @@ public class ElementsEditorMenuBar extends JMenuBar implements ApplicationModelL
 		menuWindow.add(menuWindowProps);
 		menuWindow.add(menuWindowList);
 
-		this.add(menuSession);
 		this.add(menuComponent);
 		this.add(menuWindow);
-	}
+
 	
-	public void modelChanged(String e) {
-		modelChanged(new String[]{e});
-	}
+	this.addApplicationModelListener(new ApplicationModelListener() {
+		public void modelChanged(String e) {
+			modelChanged(new String[] { e});
+		}
 
 	public void modelChanged(String e[])
 	{
-		menuSession.setVisible(aModel.isVisible("menuSession"));
-		menuSession.setEnabled(aModel.isEnabled("menuSession"));
-		menuSessionNew.setVisible(aModel.isVisible("menuSessionNew"));
-		menuSessionNew.setEnabled(aModel.isEnabled("menuSessionNew"));
-		menuSessionClose.setVisible(aModel.isVisible("menuSessionClose"));
-		menuSessionClose.setEnabled(aModel.isEnabled("menuSessionClose"));
-		menuSessionOptions.setVisible(aModel.isVisible("menuSessionOptions"));
-		menuSessionOptions.setEnabled(aModel.isEnabled("menuSessionOptions"));
-		menuSessionConnection.setVisible(aModel.isVisible("menuSessionConnection"));
-		menuSessionConnection.setEnabled(aModel.isEnabled("menuSessionConnection"));
-		menuSessionChangePassword.setVisible(aModel.isVisible("menuSessionChangePassword"));
-		menuSessionChangePassword.setEnabled(aModel.isEnabled("menuSessionChangePassword"));
-		menuSessionDomain.setVisible(aModel.isVisible("menuSessionDomain"));
-		menuSessionDomain.setEnabled(aModel.isEnabled("menuSessionDomain"));
-
+		ApplicationModel aModel = ElementsEditorMenuBar.this.getApplicationModel();
 		menuComponentSave.setVisible(aModel.isVisible("menuComponentSave"));
 		menuComponentSave.setEnabled(aModel.isEnabled("menuComponentSave"));
 		menuComponentNew.setVisible(aModel.isVisible("menuComponentNew"));
@@ -191,37 +116,8 @@ public class ElementsEditorMenuBar extends JMenuBar implements ApplicationModelL
 		menuWindowProps.setEnabled(aModel.isEnabled("menuWindowProps"));
 		menuWindowList.setVisible(aModel.isVisible("menuWindowList"));
 		menuWindowList.setEnabled(aModel.isEnabled("menuWindowList"));
-
 	}
-
-	public void setModel (ApplicationModel aModel)
-	{
-		this.aModel = aModel;
-	}
-
-	public void this_actionPerformed(ActionEvent e)
-	{
-		if(aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command.execute();
-	}
-}
-
-class ElementsEditorMenuBar_this_actionAdapter implements java.awt.event.ActionListener
-{
-	ElementsEditorMenuBar adaptee;
-
-	ElementsEditorMenuBar_this_actionAdapter(ElementsEditorMenuBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.this_actionPerformed(e);
+	});
 	}
 }
 

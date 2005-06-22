@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.9 2005/05/26 07:40:50 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.10 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/05/26 07:40:50 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -31,13 +31,13 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 	protected AbstractLinkType linkType;
 
 	JPanel pnPanel0 = new JPanel();
-	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER));
+	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField tfManufacturerText = new JTextField();
-	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER_CODE));
+	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
 	JTextField tfManufacturerCodeText = new JTextField();
-	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2,10);
 	JPanel pnGeneralPanel = new JPanel();
 	
@@ -180,10 +180,10 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
 		pnPanel0.add(scpDescriptionArea);
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
 //		pnGeneralPanel.setBackground(Color.WHITE);
 //		pnPanel0.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(tfNameText);
 		addToUndoableListener(tfManufacturerText);
@@ -209,10 +209,10 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 			this.tfManufacturerCodeText.setText(this.linkType.getManufacturerCode());
 		} 
 		else {
-			this.tfNameText.setText(Constants.EMPTY);
-			this.taDescriptionArea.setText(Constants.EMPTY);
-			this.tfManufacturerText.setText(Constants.EMPTY);
-			this.tfManufacturerCodeText.setText(Constants.EMPTY);
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 

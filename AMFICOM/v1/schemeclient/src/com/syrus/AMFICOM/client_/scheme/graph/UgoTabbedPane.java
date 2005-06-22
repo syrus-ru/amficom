@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.5 2005/06/17 11:36:21 bass Exp $
+ * $Id: UgoTabbedPane.java,v 1.6 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,28 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Point;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
@@ -64,8 +72,8 @@ public class UgoTabbedPane extends JPanel implements PropertyChangeListener {
 		add(createPanel(), BorderLayout.CENTER);
 	}
 	
-	public void setToolBar (JComponent toolBar) {
-		add(toolBar, BorderLayout.NORTH);
+	protected JComponent createToolBar() {
+		return new UgoToolBar(this);
 	}
 		
 	protected JComponent createPanel() {

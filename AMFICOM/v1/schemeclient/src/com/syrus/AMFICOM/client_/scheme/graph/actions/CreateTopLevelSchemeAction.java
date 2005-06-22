@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.5 2005/05/26 07:40:51 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.6 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,41 +11,53 @@ package com.syrus.AMFICOM.client_.scheme.graph.actions;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
-import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
 public class CreateTopLevelSchemeAction extends AbstractAction {
 	UgoTabbedPane sourcePane;
-	AbstractPropertiesFrame targetFrame;
 	ApplicationContext aContext;
 
-	public CreateTopLevelSchemeAction(UgoTabbedPane sourcePane, AbstractPropertiesFrame targetFrame, ApplicationContext aContext) {
+	public CreateTopLevelSchemeAction(UgoTabbedPane sourcePane, ApplicationContext aContext) {
 		super(Constants.CREATE_UGO);
 		this.sourcePane = sourcePane;
-		this.targetFrame = targetFrame;
 		this.aContext = aContext;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		Scheme scheme = sourcePane.getCurrentPanel().getSchemeResource().getScheme();
-		if (scheme == null) {
-			Log.debugMessage("Can't create top level for null scheme", Log.SEVERE); //$NON-NLS-1$
+		SchemeResource res = sourcePane.getCurrentPanel().getSchemeResource();
+		SchemeCellContainer cell = res.getCellContainer();
+		if (cell == null) {
+			Log.debugMessage(this.getClass().getName() + ": can't create top level for 'null' SchemeCellContainer", Log.SEVERE);
 			return;
 		}
 		
@@ -78,33 +90,38 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 
 //		Rectangle oldrect = graph.getCellBounds(cells);
 		ImageIcon icon = null;
-		BitmapImageResource ir = scheme.getSymbol();
+		BitmapImageResource ir = null;
+		String label;
+		if (cell instanceof Scheme) {
+			ir = ((Scheme)cell).getSymbol();
+			label = ((Scheme)cell).getLabel();
+		} else if (cell instanceof SchemeElement) {
+			ir = ((SchemeElement)cell).getSymbol();
+			label = ((SchemeElement)cell).getLabel();
+		} else if (cell instanceof SchemeProtoElement) {
+			ir = ((SchemeProtoElement)cell).getSymbol();
+			label = ((SchemeProtoElement)cell).getLabel();
+		} else {
+			label = ""; //$NON-NLS-1$
+		}
 		if (ir != null) {
 			icon = new ImageIcon(ir.getImage());
 			if (icon.getIconWidth() > 20 || icon.getIconHeight() > 20)
 				icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 		}
 		
-// TODO write SchemePropertiesManager
-		/*StorableObjectEditor editor = targetFrame.getEditor(SchemePropertiesManager);
-		editor.setObject(scheme);
-		UgoTabbedPane targetPane = (UgoTabbedPane)editor.getGUI(); 
-		
-		CreateUgo.create(targetPane.getGraph(), icon, scheme.getLabel(), blockports_in, blockports_out);
-		CreateGroup action = new CreateGroup(targetPane);
-		action.actionPerformed(null);
-		
-		SchemeImageResource ugo = scheme.getUgoCell();
-		if (ugo == null) {
-			Identifier userId = new Identifier(((RISDSessionInfo)this.aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		SchemeGraph invisibleGraph = new SchemeGraph(new ApplicationContext()); 
+		CreateUgo.create(invisibleGraph, icon, label, blockports_in, blockports_out);
+		SchemeImageResource sir = cell.getUgoCell();
+		if (sir == null) {
 			try {
-				ugo = SchemeImageResource.createInstance(userId);
-				scheme.setUgoCell(ugo);
-			} catch (CreateObjectException e1) {
-				Log.errorException(e1);
+				sir = SchemeImageResource.createInstance(LoginManager.getUserId());
+				cell.setUgoCell(sir);
+			} catch (ApplicationException ex) {
+				Log.errorException(ex);
 				return;
 			}
 		}
-		ugo.setData((List)targetPane.getGraph().getArchiveableState());*/
+		sir.setData((List)invisibleGraph.getArchiveableState(invisibleGraph.getRoots()));
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.4 2005/05/26 07:40:51 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.5 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,12 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -48,15 +48,15 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		};
 	
 	JPanel pnPanel0 = new JPanel();
-	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(Constants.CODENAME));
+	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
 	JComboBox tfCodenameCombo = new AComboBox();
-	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER));
+	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField tfManufacturerText = new JTextField();
-	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER_CODE));
+	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
 	JTextField tfManufacturerCodeText = new JTextField();
-	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2,10);
 	JPanel pnGeneralPanel = new JPanel();
 	
@@ -224,8 +224,8 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
 		pnPanel0.add(scpDescriptionArea);
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
-		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		for (int i = 0; i < eqtCodenames.length; i++) {
 			tfCodenameCombo.addItem(EquipmentTypeCodenames.getName(eqtCodenames[i]));			
 		} 
@@ -256,10 +256,10 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfCodenameCombo.setSelectedItem(EquipmentTypeCodenames.getName(eqt.getCodename()));
 		} 
 		else {
-			this.tfNameText.setText(Constants.EMPTY);
-			this.taDescriptionArea.setText(Constants.EMPTY);
-			this.tfManufacturerText.setText(Constants.EMPTY);
-			this.tfManufacturerCodeText.setText(Constants.EMPTY);
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 

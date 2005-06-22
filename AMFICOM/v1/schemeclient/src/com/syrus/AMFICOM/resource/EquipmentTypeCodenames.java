@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeCodenames.java,v 1.1 2005/05/26 07:32:04 stas Exp $
+ * $Id: EquipmentTypeCodenames.java,v 1.2 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.util.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 07:32:04 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/22 10:16:06 $
  * @module generalclient_v1
  */
 
 public class EquipmentTypeCodenames {
-	private static final String BUNDLE_NAME = "com.syrus.AMFICOM.general.EquipmentTypeCodenames";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "com.syrus.AMFICOM.resource.EquipmentTypeCodenames";//$NON-NLS-1$
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 	
 	public static final String	REFLECTOMETER	= "reflectometer";

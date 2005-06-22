@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.2 2005/06/17 11:36:22 bass Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.3 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,14 +25,14 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.Constants;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:36:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
@@ -41,28 +41,28 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	protected Scheme scheme;
 	private Identifier imageId;
 	private static final Item[] schemeKinds = new IconedNode[] { 
-		new IconedNode(Kind.NETWORK, LangModelScheme.getString(Constants.SCHEME_TYPE_NETWORK)),
-		new IconedNode(Kind.BUILDING, LangModelScheme.getString(Constants.SCHEME_TYPE_BUILDING)),
-		new IconedNode(Kind.CABLE_SUBNETWORK, LangModelScheme.getString(Constants.SCHEME_TYPE_CABLE))
+		new IconedNode(Kind.NETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_NETWORK)),
+		new IconedNode(Kind.BUILDING, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_BUILDING)),
+		new IconedNode(Kind.CABLE_SUBNETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_CABLE))
 	};
 	
 	JPanel pnPanel0 = new JPanel();
 	JPanel pnGeneralPanel = new JPanel();
-	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbSymbolLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
+	JLabel lbSymbolLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
 	JTextField tfLabelText= new JTextField();
 	JButton btSymbolBut = new JButton();
-	JLabel lbKindLabel = new JLabel(LangModelScheme.getString(Constants.SCHEME_KIND));
+	JLabel lbKindLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_KIND));
 	JComboBox cmbKindCombo = new JComboBox();
-	JLabel lbDimensionLabel = new JLabel(LangModelScheme.getString(Constants.SCHEME_DIMENSION));
-	JLabel lbWidthLabel = new JLabel(LangModelScheme.getString(Constants.SCHEME_SHORT_WIDTH));
+	JLabel lbDimensionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_DIMENSION));
+	JLabel lbWidthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_SHORT_WIDTH));
 	JFormattedTextField tfWidthText = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
-	JLabel lbHeightLabel = new JLabel(LangModelScheme.getString(Constants.SCHEME_SHORT_HEIGHT));
+	JLabel lbHeightLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_SHORT_HEIGHT));
 	JFormattedTextField tfHeightText = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
-	JLabel lbSizeLabel = new JLabel(LangModelScheme.getString(Constants.SCHEME_SIZE));
+	JLabel lbSizeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_SIZE));
 	JComboBox cmbSizeCombo = new AComboBox();
-	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescrArea = new JTextArea(2,10);
 	private static final Integer ZERO = new Integer(0);
 	
@@ -280,13 +280,13 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
 		pnPanel0.add( scpDescrArea );
 		
-		for (int i = 0; i < Constants.SIZES.length; i++) {
-			cmbSizeCombo.addItem(LangModelScheme.getString(Constants.SIZES[i]));			
+		for (int i = 0; i < SchemeResourceKeys.SIZES.length; i++) {
+			cmbSizeCombo.addItem(LangModelScheme.getString(SchemeResourceKeys.SIZES[i]));			
 		}
 		for (int i = 0; i < schemeKinds.length; i++) {
 			cmbSizeCombo.addItem(schemeKinds[i]);			
 		}
-		pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(Constants.EMPTY));
+		pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		cmbSizeCombo.addItemListener(new java.awt.event.ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				cmbSizeCombo_itemStateChanged(e);
@@ -304,10 +304,10 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	
 	void cmbSizeCombo_itemStateChanged(ItemEvent e) {
 		Object selected = e.getItem();
-		for (int i = 0; i < Constants.SIZES.length - 1; i++) {
-			if (Constants.SIZES[i].equals(selected)) {
-				tfWidthText.setValue(Constants.WIDTHS[i]);
-				tfWidthText.setValue(Constants.HEIGHTS[i]);
+		for (int i = 0; i < SchemeResourceKeys.SIZES.length - 1; i++) {
+			if (SchemeResourceKeys.SIZES[i].equals(selected)) {
+				tfWidthText.setValue(SchemeResourceKeys.WIDTHS[i]);
+				tfWidthText.setValue(SchemeResourceKeys.HEIGHTS[i]);
 				break;
 			}
 		}
@@ -318,9 +318,9 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		int h = scheme.getHeight() / 4; // in mm
 		
 		boolean sizeSet = false;
-		for (int i = 0; i < Constants.WIDTHS.length; i++) {
-			if (Constants.WIDTHS[i].intValue() == w && Constants.HEIGHTS[i].intValue() == h) {
-				cmbSizeCombo.setSelectedItem(Constants.SIZES[i]);
+		for (int i = 0; i < SchemeResourceKeys.WIDTHS.length; i++) {
+			if (SchemeResourceKeys.WIDTHS[i].intValue() == w && SchemeResourceKeys.HEIGHTS[i].intValue() == h) {
+				cmbSizeCombo.setSelectedItem(SchemeResourceKeys.SIZES[i]);
 				sizeSet = true;
 				break;
 			}
@@ -351,9 +351,9 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			}
 		} else {
-			this.tfNameText.setText(Constants.EMPTY);
-			this.taDescrArea.setText(Constants.EMPTY);
-			this.tfLabelText.setText(Constants.EMPTY);
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			this.taDescrArea.setText(SchemeResourceKeys.EMPTY);
+			this.tfLabelText.setText(SchemeResourceKeys.EMPTY);
 			this.cmbSizeCombo.setSelectedIndex(cmbSizeCombo.getItemCount() - 1);
 			this.tfWidthText.setValue(ZERO);
 			this.tfHeightText.setValue(ZERO);

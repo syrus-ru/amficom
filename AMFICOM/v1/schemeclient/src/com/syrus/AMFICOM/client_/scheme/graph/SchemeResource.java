@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.2 2005/05/26 08:42:42 stas Exp $
+ * $Id: SchemeResource.java,v 1.3 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,15 +19,18 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 08:42:42 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
 public class SchemeResource {
+	public static int SCHEME = 0;
+	public static int SCHEME_ELEMENT = 1;
+	public static int SCHEME_PROTO_ELEMENT = 2;
+	
 	private SchemeGraph graph;
-	private Scheme scheme;
-	private SchemeElement schemeElement;
-	private SchemeProtoElement schemeProtoElement;
+	private SchemeCellContainer object;
+	private int objectType;
 	private SchemePath schemePath;
 
 	public SchemeResource(SchemeGraph graph) {
@@ -37,64 +40,84 @@ public class SchemeResource {
 	public void setSchemePath(SchemePath path) {
 		this.schemePath = path;
 	}
+	
+	public SchemeCellContainer getCellContainer() {
+		return this.object;
+	}
+	
+	public int getCellContainerType() {
+		return this.objectType;
+	}
 
 	public Scheme getScheme() {
-		return scheme;
+		if (this.objectType == SCHEME)
+			return (Scheme)this.object;
+		return null;
 	}
 	
 	public void setScheme(Scheme scheme) {
-		this.scheme = scheme;
+		this.object = scheme;
+		this.objectType = SCHEME;
 	}
 	
 	public SchemeElement getSchemeElement() {
-		return schemeElement;
+		if (this.objectType == SCHEME_ELEMENT)
+			return (SchemeElement)this.object;
+		return null;
 	}
 	
 	public SchemeProtoElement getSchemeProtoElement() {
-		return schemeProtoElement;
+		if (this.objectType == SCHEME_PROTO_ELEMENT)
+			return (SchemeProtoElement)this.object;
+		return null;
 	}
 	
 	public void setSchemeElement(SchemeElement schemeElement) {
-		this.schemeElement = schemeElement;
+		this.object = schemeElement;
+		this.objectType = SCHEME_ELEMENT;
 	}
 	
 	public void setSchemeProtoElement(SchemeProtoElement schemeProtoElement) {
-		this.schemeProtoElement = schemeProtoElement;
+		this.object = schemeProtoElement;
+		this.objectType = SCHEME_PROTO_ELEMENT;
 	}
 	
 	public SchemePath getSchemePath() {
 		return schemePath;
 	}
 	
-	public void updateScheme() {
-		SchemeImageResource ir = this.scheme.getUgoCell();
-		this.scheme.setUgoCell(updateElement(ir));
-	}
-	
-	public void updateSchemeElement() {
-		SchemeImageResource ir = this.schemeElement.getUgoCell();
-		this.schemeElement.setUgoCell(updateElement(ir));
-	}
-	
-	public void updateSchemeProtoElement() {
-		SchemeImageResource ir = this.schemeProtoElement.getUgoCell();
-		this.schemeProtoElement.setUgoCell(updateElement(ir));
-	}
-	
-	private SchemeImageResource updateElement(SchemeImageResource ir) {
+	private void updateObject() {
+		SchemeImageResource ir = object.getUgoCell();
 		if (ir == null) {
 			try {
 				ir = SchemeImageResource.createInstance(LoginManager.getUserId());
+				object.setUgoCell(ir);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
-				return null;
-			} 
+				return;
+			}
 		}
 		ir.setData((List)this.graph.getArchiveableState(this.graph.getRoots()));
-		return ir;
 	}
 	
-
+	public void updateScheme() {
+		if (this.objectType == SCHEME) {
+			updateObject();
+		}
+	}
+	
+	public void updateSchemeElement() {
+		if (this.objectType == SCHEME_ELEMENT) {
+			updateObject();
+		}
+	}
+	
+	public void updateSchemeProtoElement() {
+		if (this.objectType == SCHEME_PROTO_ELEMENT) {
+			updateObject();
+		}
+	}
+	
 	public Object[] getPathElements(SchemePath path) {
 		Object[] cells = graph.getAll();
 		ArrayList new_cells = new ArrayList();

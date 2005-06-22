@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.7 2005/06/17 11:36:22 bass Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.8 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/17 11:36:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
@@ -38,19 +38,19 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
-	JLabel nameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField nameText = new JTextField();
-	JLabel symbolLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
+	JLabel symbolLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
 	JTextField labelText = new JTextField();
 	JButton symbolBut = new JButton();
-	JCheckBox typeBox = new JCheckBox(LangModelScheme.getString(Constants.EQUIPMENT_TYPE));
-	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
+	JCheckBox typeBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.EQUIPMENT_TYPE));
+	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox typeCombo = new WrapperedComboBox(EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER));
+	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField manufacturerText = new JTextField();
-	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER_CODE));
+	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
 	JTextField manufacturerCodeText = new JTextField();
-	JLabel descrLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel descrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea descrArea = new JTextArea(2,10);
 	
 	protected SchemeProtoElementGeneralPanel() {
@@ -266,13 +266,13 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 					manufacturerText.setText(eqt.getManufacturer());
 					manufacturerCodeText.setText(eqt.getManufacturerCode());
 				} else {
-					manufacturerText.setText(Constants.EMPTY);
-					manufacturerCodeText.setText(Constants.EMPTY);
+					manufacturerText.setText(SchemeResourceKeys.EMPTY);
+					manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 				}
 			}
 		});
-		generalPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
-		descrArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		generalPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(nameText);
 		addToUndoableListener(labelText);
@@ -314,9 +314,9 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				Log.errorException(e);
 			}
 		} else {
-			this.nameText.setText(Constants.EMPTY);
-			this.descrArea.setText(Constants.EMPTY);
-			this.labelText.setText(Constants.EMPTY);
+			this.nameText.setText(SchemeResourceKeys.EMPTY);
+			this.descrArea.setText(SchemeResourceKeys.EMPTY);
+			this.labelText.setText(SchemeResourceKeys.EMPTY);
 		}
 		
 		if (eqt != null) {
@@ -326,8 +326,8 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			this.manufacturerCodeText.setText(eqt.getManufacturerCode());
 		} else {
 			this.typeBox.setSelected(false);
-			this.manufacturerText.setText(Constants.EMPTY);
-			this.manufacturerCodeText.setText(Constants.EMPTY);
+			this.manufacturerText.setText(SchemeResourceKeys.EMPTY);
+			this.manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 		}
 		this.symbolBut.setIcon(symbol);
 	}

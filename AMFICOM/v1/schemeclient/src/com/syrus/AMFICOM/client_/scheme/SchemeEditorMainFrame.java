@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.8 2005/06/09 10:53:52 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.9 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/06/09 10:53:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -193,11 +193,8 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext));
 		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext, schemeTab));
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab));
-		// aModel.setCommand("menuInsertToCatalog", new
-		// InsertToCatalogCommand(aContext, epanel.getGraph()));
-		// aModel.setCommand("menuInsertToCatalog", new
-		// InsertToCatalogCommand(aContext,
-		// schemeTab));
+
+		
 //		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment
 //				.getDispatcher(), aContext));
 		// aModel.setCommand("menuSchemeImport", new
@@ -346,7 +343,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 					Object object = SchemeEditorMainFrame.this.frames.get(key);
 					if (object instanceof JInternalFrame) {
 						System.out.println("init getLazyCommand for " + key);
-						this.command = new ShowWindowCommand(object);
+						this.command = new ShowWindowCommand((JInternalFrame)object);
 					}
 				}
 				return this.command;
@@ -361,13 +358,6 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	public void setSessionOpened() {
 		super.setSessionOpened();
 
-
-//		editorFrame.setVisible(true);
-//		additionalFrame.setVisible(true);
-//		generalFrame.setVisible(true);
-//		characteristicFrame.setVisible(true);
-//		treeFrame.setVisible(true);
-
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSchemeExport", true);
 		aModel.setEnabled("menuSchemeImport", true);
@@ -380,7 +370,6 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
 		aModel.fireModelChanged("");
-		
 	}
 
 	public void setDomainSelected() {
@@ -421,14 +410,6 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuWindowList", false);
 
 		aModel.fireModelChanged("");
-
-//		editorFrame.setVisible(false);
-//		additionalFrame.setVisible(false);
-//		generalFrame.setVisible(false);
-//		characteristicFrame.setVisible(false);
-//		treeFrame.setVisible(false);
-
-		statusBar.setText("domain", "Домен не установлен");
 	}
 
 	void this_windowClosing(WindowEvent e) {
@@ -465,19 +446,12 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		 * return; } else if (res == JOptionPane.CANCEL_OPTION) return; } if
 		 * (!schemeTab.removePanel(p[i])) return; }
 		 */
-		dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 	
 	
 	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
-			Environment.setActiveWindow(this);
-		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this_windowClosing(e);
-			return;
 		}
 		super.processWindowEvent(e);
 	}

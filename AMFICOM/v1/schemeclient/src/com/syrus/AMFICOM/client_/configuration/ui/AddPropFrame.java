@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.10 2005/06/21 12:52:14 bass Exp $
+ * $Id: AddPropFrame.java,v 1.11 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,50 +26,56 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
-import com.syrus.AMFICOM.resource.Constants;
 import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/06/21 12:52:14 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
 public class AddPropFrame extends JDialog {
-	private ApplicationContext aContext;
-
-	protected int res = Constants._CANCEL;
+	protected int res = JOptionPane.CANCEL_OPTION;
 	protected CharacteristicTypeSort sort;
 	
 	private CharacteristicType selectedType;
 	WrapperedComboBox characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper
 			.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
-	JRadioButton existingRadioButton = new JRadioButton(LangModelScheme.getString(Constants.EXISTING_TYPE));
-	JRadioButton newRadioButton = new JRadioButton(LangModelScheme.getString(Constants.NEW_TYPE));
+	JRadioButton existingRadioButton = new JRadioButton(LangModelScheme.getString(SchemeResourceKeys.EXISTING_TYPE));
+	JRadioButton newRadioButton = new JRadioButton(LangModelScheme.getString(SchemeResourceKeys.NEW_TYPE));
 	ButtonGroup buttonGroup = new ButtonGroup();
 	JPanel panel = new JPanel();
 	JPanel buttonPanel = new JPanel();
 	JTextField nameField = new JTextField();
 	JTextArea descrArea = new JTextArea();
-	JLabel name = new JLabel(LangModelScheme.getString(Constants.NAME));
-	JLabel descr = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
-	JButton okButton = new JButton(LangModelScheme.getString(Constants.OK));
-	JButton cancelButton = new JButton(LangModelScheme.getString(Constants.CANCEL));
+	JLabel name = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
+	JLabel descr = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
+	JButton okButton = new JButton(LangModelScheme.getString(SchemeResourceKeys.OK));
+	JButton cancelButton = new JButton(LangModelScheme.getString(SchemeResourceKeys.CANCEL));
 
-	public AddPropFrame(Frame parent, String title, ApplicationContext aContext) {
+	public AddPropFrame(Frame parent, String title) {
 		super(parent, title);
-		this.aContext = aContext;
 
 		try {
 			jbInit();
@@ -98,7 +104,7 @@ public class AddPropFrame extends JDialog {
 		setLocation((screenSize.width - frameSize.width) / 2,
 				(screenSize.height - frameSize.height) / 2);
 		setSize(frameSize);
-		setTitle(LangModelScheme.getString(Constants.CHARACTERISTIC));
+		setTitle(LangModelScheme.getString(SchemeResourceKeys.CHARACTERISTIC));
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(descrArea);
@@ -171,11 +177,11 @@ public class AddPropFrame extends JDialog {
 				return;
 		} 
 		else {
-			if (!nameField.getText().equals(Constants.EMPTY)) {
+			if (!nameField.getText().equals(SchemeResourceKeys.EMPTY)) {
 				try {
 					Identifier userId = LoginManager.getUserId();
 					selectedType = CharacteristicType
-							.createInstance(userId, nameField.getText(), nameField.getText(),
+							.createInstance(userId, nameField.getText(), "", nameField.getText(),
 									DataType.DATA_TYPE_STRING, sort);
 				} catch (CreateObjectException ex) {
 					ex.printStackTrace();
@@ -184,7 +190,7 @@ public class AddPropFrame extends JDialog {
 			} else
 				return;
 		}
-		res = Constants._OK;
+		res = JOptionPane.OK_OPTION;
 		dispose();
 	}
 

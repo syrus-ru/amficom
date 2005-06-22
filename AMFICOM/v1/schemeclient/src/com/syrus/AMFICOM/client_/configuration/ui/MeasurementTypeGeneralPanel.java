@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.12 2005/06/17 11:36:21 bass Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.13 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/06/17 11:36:21 $
+ * @author $Author: stas $
+ * @version $Revision: 1.13 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
@@ -38,12 +38,12 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	protected MeasurementType type;
 	
 	JPanel pnPanel0 = new JPanel();
-	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
-	JLabel lbParametersLabel = new JLabel(LangModelScheme.getString(Constants.PARAMETERS));
+	JLabel lbParametersLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PARAMETERS));
 	Item parametersRoot;
 	JTree trParametersTree;
-	JLabel lbPortTypesLabel = new JLabel(LangModelScheme.getString(Constants.MEASUREMENT_PORT_TYPES));
+	JLabel lbPortTypesLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_PORT_TYPES));
 	Item portsRoot;
 	JTree trPortTypesTree;
 	JPanel pnGeneralPanel = new JPanel();
@@ -80,8 +80,8 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		trPortTypesTree = portsTreeUI.getTree();
 		trPortTypesTree.setRootVisible(false);
 				
-		allInPTypeNodes = getParameterTypeNodes(Constants.INPUT);
-		allOutPTypeNodes = getParameterTypeNodes(Constants.OUTPUT);
+		allInPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.INPUT);
+		allOutPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.OUTPUT);
 		allMPTypeNodes = getMeasurementPortTypeNodes();
 
 		GridBagLayout gbPanel0 = new GridBagLayout();
@@ -180,11 +180,11 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
 //		pnGeneralPanel.setBackground(Color.WHITE);
 //		pnPanel0.setBackground(Color.WHITE);
-		scpParametersTree.setPreferredSize(Constants.DIMENSION_TEXTAREA);
-		scpPortTypesTree.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		scpParametersTree.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+		scpPortTypesTree.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(tfNameText);
 		addToUndoableListener(trPortTypesTree);
@@ -236,7 +236,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 			}
 			trPortTypesTree.updateUI();
 		} else {
-			tfNameText.setText(Constants.EMPTY);
+			tfNameText.setText(SchemeResourceKeys.EMPTY);
 			for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
@@ -313,9 +313,9 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	Item createParametersRoot() {
-		Item root = new IconedNode(Constants.ROOT, LangModelScheme.getString(Constants.ROOT));
-		Item input = new IconedNode(Constants.INPUT, LangModelScheme.getString(Constants.INPUT));
-		Item output = new IconedNode(Constants.OUTPUT, LangModelScheme.getString(Constants.OUTPUT));
+		Item root = new IconedNode(SchemeResourceKeys.ROOT, LangModelScheme.getString(SchemeResourceKeys.ROOT));
+		Item input = new IconedNode(SchemeResourceKeys.INPUT, LangModelScheme.getString(SchemeResourceKeys.INPUT));
+		Item output = new IconedNode(SchemeResourceKeys.OUTPUT, LangModelScheme.getString(SchemeResourceKeys.OUTPUT));
 		root.addChild(input);
 		root.addChild(output);
 		
@@ -336,7 +336,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	Item createPortsRoot() {
-		Item root = new IconedNode(Constants.ROOT, Constants.ROOT);
+		Item root = new IconedNode(SchemeResourceKeys.ROOT, SchemeResourceKeys.ROOT);
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 		try {
 			Collection mpTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);

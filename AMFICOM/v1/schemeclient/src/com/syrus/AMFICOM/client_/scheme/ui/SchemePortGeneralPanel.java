@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.9 2005/06/22 10:10:50 bass Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.10 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:10:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
@@ -39,19 +39,19 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	static JColorChooser tcc;
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
-	JLabel nameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField nameText = new JTextField();
-	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
+	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox typeCombo = new WrapperedComboBox(PortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JCheckBox portBox = new JCheckBox(LangModelScheme.getString(Constants.INSTANCE));
-	JLabel markLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
+	JCheckBox portBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
+	JLabel markLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
 	JTextField markText = new JTextField();
-	JLabel colorLabel = new JLabel(LangModelScheme.getString(Constants.COLOR));
+	JLabel colorLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.COLOR));
 	JComboBox colorCombo = new ColorChooserComboBox();
-	JCheckBox mpBox = new JCheckBox(LangModelScheme.getString(Constants.MEASUREMENTPORT_TYPE));
-	JLabel mpTypeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
+	JCheckBox mpBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.MEASUREMENTPORT_TYPE));
+	JLabel mpTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox mpTypeCombo = new WrapperedComboBox(MeasurementPortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JLabel descrLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel descrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea descrArea = new JTextArea(2,10);
 	
 	protected SchemePortGeneralPanel(SchemePort schemePort) {
@@ -262,10 +262,6 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbpanel0.setConstraints(scpdescrArea, gbcpanel0);
 		panel0.add(scpdescrArea);
 		
-		colorCombo.setRenderer(ColorListCellRenderer.getInstance());
-		for (int i = 0; i < Constants.DEFAULT_COLOR_SET.length; i++)
-			colorCombo.addItem(Constants.DEFAULT_COLOR_SET[i]);
-		
 		portBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				setPortEnabled(portBox.isSelected());
@@ -276,8 +272,8 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				setMPTypeEnabled(mpBox.isSelected());
 			}
 		});
-		generalPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
-		descrArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		generalPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(nameText);
 		addToUndoableListener(typeCombo);
@@ -320,7 +316,12 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		mpTypeCombo.removeAllItems();
 		
 		if (schemePort != null) {
-			parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
+			try {
+				parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
+			} catch (IllegalStateException e1) {
+				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Log.FINEST); //$NON-NLS-1$
+				parent = null;
+			}
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 			try {
 				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
@@ -351,7 +352,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		} else {
 			portBox.setSelected(false);
 			setPortEnabled(false);
-			markText.setText(Constants.EMPTY);
+			markText.setText(SchemeResourceKeys.EMPTY);
 			
 			if (parent == null || parent.getEquipment() == null)
 				portBox.setEnabled(false);

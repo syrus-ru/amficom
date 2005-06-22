@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorToolBar.java,v 1.3 2005/06/17 11:36:22 bass Exp $
+ * $Id: ElementsEditorToolBar.java,v 1.4 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,132 +8,65 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.UIManager;
 
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/17 11:36:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
-public class ElementsEditorToolBar extends JToolBar implements ApplicationModelListener
+public class ElementsEditorToolBar extends AbstractMainToolBar
 {
-	private ApplicationModel aModel;
-
-	JButton sessionOpen = new JButton();
-
-	JButton componentNew = new JButton();
-	JButton componentSave = new JButton();
-
-	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
-
 	public ElementsEditorToolBar()
 	{
-		super();
-
-		try
-		{
-			jbInit();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		initItems();
 	}
 
-	private void jbInit() throws Exception
-	{
-		ElementsEditorToolBar_this_actionAdapter actionAdapter =
-				new ElementsEditorToolBar_this_actionAdapter(this);
-
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
-
-		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif")
-																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		sessionOpen.setMaximumSize(buttonSize);
-		sessionOpen.setPreferredSize(buttonSize);
-		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		sessionOpen.setName("menuSessionNew");
-		sessionOpen.addActionListener(actionAdapter);
-
-		componentNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif")
-																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		componentNew.setMaximumSize(buttonSize);
-		componentNew.setPreferredSize(buttonSize);
+	private void initItems() {
+		
+		final JButton componentNew = new JButton();
+		componentNew.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_NEW));
+		componentNew.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		componentNew.setToolTipText(LangModelSchematics.getString("menuComponentNew"));
 		componentNew.setName("menuComponentNew");
-		componentNew.addActionListener(actionAdapter);
+		componentNew.addActionListener(super.actionListener);
 
-		componentSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif")
-																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		componentSave.setMaximumSize(buttonSize);
-		componentSave.setPreferredSize(buttonSize);
+		final JButton componentSave = new JButton();
+		componentSave.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_SAVE));
+		componentSave.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		componentSave.setToolTipText(LangModelSchematics.getString("menuComponentSave"));
 		componentSave.setName("menuComponentSave");
-		componentSave.addActionListener(actionAdapter);
-
-		add(sessionOpen);
+		componentSave.addActionListener(super.actionListener);
+		
 		addSeparator();
 		add(componentNew);
 		add(componentSave);
 
-	}
+		addApplicationModelListener(new ApplicationModelListener() {
+			public void modelChanged(String e) {
+				modelChanged(new String[] { e });
+			}
 
-	public void setModel(ApplicationModel a)
-	{
-		aModel = a;
-	}
+			public void modelChanged(String e[]) {
+				ApplicationModel aModel = ElementsEditorToolBar.this.getApplicationModel();
 
-	public ApplicationModel getModel()
-	{
-		return aModel;
-	}
-	
-	public void modelChanged(String e) {
-		this.modelChanged(new String[] {e});
-	}
-
-	public void modelChanged(String e[])
-	{
-		sessionOpen.setVisible(aModel.isVisible("menuSessionNew"));
-		sessionOpen.setEnabled(aModel.isEnabled("menuSessionNew"));
-		componentNew.setVisible(aModel.isVisible("menuComponentNew"));
-		componentNew.setEnabled(aModel.isEnabled("menuComponentNew"));
-		componentSave.setVisible(aModel.isVisible("menuComponentSave"));
-		componentSave.setEnabled(aModel.isEnabled("menuComponentSave"));
-	}
-
-	public void this_actionPerformed(ActionEvent e)
-	{
-		if(aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command.execute();
+				componentNew.setVisible(aModel.isVisible("menuComponentNew"));
+				componentNew.setEnabled(aModel.isEnabled("menuComponentNew"));
+				componentSave.setVisible(aModel.isVisible("menuComponentSave"));
+				componentSave.setEnabled(aModel.isEnabled("menuComponentSave"));
+			}
+		});
 	}
 }
 
-class ElementsEditorToolBar_this_actionAdapter implements java.awt.event.ActionListener
-{
-	ElementsEditorToolBar adaptee;
 
-	ElementsEditorToolBar_this_actionAdapter(ElementsEditorToolBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		adaptee.this_actionPerformed(e);
-	}
-}
 

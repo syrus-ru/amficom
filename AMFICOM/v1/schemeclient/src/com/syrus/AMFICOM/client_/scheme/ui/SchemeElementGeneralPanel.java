@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.6 2005/06/17 11:36:21 bass Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.7 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:36:21 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
@@ -39,45 +39,45 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
-	JLabel nameLabel = new JLabel(LangModelScheme.getString(Constants.NAME));
+	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField nameText = new JTextField();
-	JLabel symbolLabel = new JLabel(LangModelScheme.getString(Constants.LABEL));
+	JLabel symbolLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
 	JTextField labelText = new JTextField();
 	JButton symbolBut = new JButton();
-	JCheckBox typeBox = new JCheckBox(LangModelScheme.getString(Constants.EQUIPMENT_TYPE));
-	JLabel typeLabel = new JLabel(LangModelScheme.getString(Constants.TYPE));
+	JCheckBox typeBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.EQUIPMENT_TYPE));
+	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox typeCombo = new WrapperedComboBox(EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER));
+	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField manufacturerText = new JTextField();
-	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(Constants.MANUFACTURER_CODE));
+	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
 	JTextField manufacturerCodeText = new JTextField();
-	JCheckBox equipmentBox = new JCheckBox(LangModelScheme.getString(Constants.INSTANCE));
-	JLabel supplierLabel = new JLabel(LangModelScheme.getString(Constants.SUPPLIER));
+	JCheckBox equipmentBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
+	JLabel supplierLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER));
 	JTextField supplierText = new JTextField();
-	JLabel supplierCodeLabel = new JLabel(LangModelScheme.getString(Constants.SUPPLIER_CODE));
+	JLabel supplierCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER_CODE));
 	JTextField supplierCodeText = new JTextField();
-	JLabel hwLabel = new JLabel(LangModelScheme.getString(Constants.HARDWARE));
-	JLabel hwsnLabel = new JLabel(LangModelScheme.getString(Constants.SERNUM));
+	JLabel hwLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.HARDWARE));
+	JLabel hwsnLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SERNUM));
 	JTextField hwsnText = new JTextField();
-	JLabel hwvLabel = new JLabel(LangModelScheme.getString(Constants.VERSION));
+	JLabel hwvLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.VERSION));
 	JTextField hwvText = new JTextField();
-	JLabel swLabel = new JLabel(LangModelScheme.getString(Constants.SOFTWARE));
-	JLabel swsnLabel = new JLabel(LangModelScheme.getString(Constants.SERNUM));
+	JLabel swLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SOFTWARE));
+	JLabel swsnLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SERNUM));
 	JTextField swsnText = new JTextField();
-	JLabel swvLabel = new JLabel(LangModelScheme.getString(Constants.VERSION));
+	JLabel swvLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.VERSION));
 	JTextField swvText = new JTextField();
-	JLabel longLabel = new JLabel(LangModelScheme.getString(Constants.LONGITUDE));
+	JLabel longLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LONGITUDE));
 	JTextField longText = new JTextField();
-	JLabel latLabel = new JLabel(LangModelScheme.getString(Constants.LATITUDE));
+	JLabel latLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LATITUDE));
 	JTextField latText = new JTextField();
-	JCheckBox kisBox = new JCheckBox(LangModelScheme.getString(Constants.KIS));
-	JLabel kisLabel = new JLabel(LangModelScheme.getString(Constants.KIS));
+	JCheckBox kisBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.KIS));
+	JLabel kisLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.KIS));
 	WrapperedComboBox kisCombo = new WrapperedComboBox(KISWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JLabel kisAddrLabel = new JLabel(LangModelScheme.getString(Constants.ADDRESS));
+	JLabel kisAddrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.ADDRESS));
 	JTextField kisAddrText = new JTextField();
-	JLabel kisPortLabel = new JLabel(LangModelScheme.getString(Constants.PORT));
+	JLabel kisPortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PORT));
 	JTextField kisPortText = new JTextField();
-	JLabel descrLabel = new JLabel(LangModelScheme.getString(Constants.DESCRIPTION));
+	JLabel descrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea descrArea = new JTextArea(2,10);
 	
 	protected SchemeElementGeneralPanel() {
@@ -591,8 +591,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					manufacturerText.setText(eqt.getManufacturer());
 					manufacturerCodeText.setText(eqt.getManufacturerCode());
 				} else {
-					manufacturerText.setText(Constants.EMPTY);
-					manufacturerCodeText.setText(Constants.EMPTY);
+					manufacturerText.setText(SchemeResourceKeys.EMPTY);
+					manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 				}
 			}
 		});
@@ -608,8 +608,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				setKISEnabled(kisBox.isSelected());
 			}
 		});
-		generalPanel.setBorder( BorderFactory.createTitledBorder( Constants.EMPTY ));
-		descrArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		generalPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(nameText);
 		addToUndoableListener(labelText);
@@ -708,9 +708,9 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			}
 		} 
 		else {
-			this.nameText.setText(Constants.EMPTY);
-			this.descrArea.setText(Constants.EMPTY);
-			this.labelText.setText(Constants.EMPTY);
+			this.nameText.setText(SchemeResourceKeys.EMPTY);
+			this.descrArea.setText(SchemeResourceKeys.EMPTY);
+			this.labelText.setText(SchemeResourceKeys.EMPTY);
 		}
 		
 		if (eqt != null) {
@@ -720,8 +720,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.manufacturerCodeText.setText(eqt.getManufacturerCode());
 		} else {
 			this.typeBox.setSelected(false);
-			this.manufacturerText.setText(Constants.EMPTY);
-			this.manufacturerCodeText.setText(Constants.EMPTY);
+			this.manufacturerText.setText(SchemeResourceKeys.EMPTY);
+			this.manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (kis != null) {
 			this.kisBox.setSelected(true);
@@ -730,8 +730,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.kisPortText.setText(Short.toString(kis.getTCPPort()));
 		} else {
 			this.kisBox.setSelected(false);
-			this.kisAddrText.setText(Constants.EMPTY);
-			this.kisPortText.setText(Constants.EMPTY);
+			this.kisAddrText.setText(SchemeResourceKeys.EMPTY);
+			this.kisPortText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (eq != null) {
 			this.equipmentBox.setSelected(true);
@@ -745,14 +745,14 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.latText.setText(Float.toString(eq.getLatitude()));
 		} else {
 			this.equipmentBox.setSelected(false);
-			this.supplierText.setText(Constants.EMPTY);
-			this.supplierCodeText.setText(Constants.EMPTY);
-			this.hwsnText.setText(Constants.EMPTY);
-			this.hwvText.setText(Constants.EMPTY);
-			this.swsnText.setText(Constants.EMPTY);
-			this.swvText.setText(Constants.EMPTY);
-			this.longText.setText(Constants.EMPTY);
-			this.latText.setText(Constants.EMPTY);
+			this.supplierText.setText(SchemeResourceKeys.EMPTY);
+			this.supplierCodeText.setText(SchemeResourceKeys.EMPTY);
+			this.hwsnText.setText(SchemeResourceKeys.EMPTY);
+			this.hwvText.setText(SchemeResourceKeys.EMPTY);
+			this.swsnText.setText(SchemeResourceKeys.EMPTY);
+			this.swvText.setText(SchemeResourceKeys.EMPTY);
+			this.longText.setText(SchemeResourceKeys.EMPTY);
+			this.latText.setText(SchemeResourceKeys.EMPTY);
 		}
 		this.symbolBut.setIcon(symbol);
 	}

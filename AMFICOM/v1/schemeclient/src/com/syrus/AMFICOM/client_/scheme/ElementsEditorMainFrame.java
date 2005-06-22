@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.5 2005/06/16 11:43:31 bass Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.6 2005/06/22 10:16:05 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,249 +8,256 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.text.SimpleDateFormat;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ComponentNewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ComponentSaveCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client.event.*;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.resource.LangModel;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.WindowArranger;
+import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
+import com.syrus.AMFICOM.filter.UI.FilterPanel;
+import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.filterclient.MeasurementConditionWrapper;
+import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/16 11:43:31 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:05 $
  * @module schemeclient_v1
  */
 
-public class ElementsEditorMainFrame extends JFrame implements PropertyChangeListener {
-	public ApplicationContext aContext;
+public class ElementsEditorMainFrame extends AbstractMainFrame {
 
-	static SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-	private Dispatcher internal_dispatcher = new Dispatcher();
-	JPanel mainPanel = new JPanel();
-	ElementsEditorToolBar toolBar = new ElementsEditorToolBar();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	JDesktopPane desktopPane = new JDesktopPane();
-	JPanel statusBarPanel = new JPanel();
-	StatusBarModel statusBar = new StatusBarModel(0);
-	ElementsEditorMenuBar menuBar = new ElementsEditorMenuBar();
+	public static final String	EDITOR_FRAME	= "editorFrame";
+	public static final String	GENERAL_PROPERIES_FRAME	= "generalFrame";
+	public static final String	CHARACTERISTIC_PROPERIES_FRAME = "characteristicFrame";
+	public static final String	ADDITIONAL_PROPERIES_FRAME = "additionalFrame";
+	public static final String	TREE_FRAME = "treeFrame";
 	
-	SchemeViewerFrame editorFrame;
-	SchemeViewerFrame ugoFrame;
-
-	// UgoPanel upanel;
-	// PropsFrame propsFrame;
-	// ElementsListFrame elementsListFrame;
-	// ElementsUploadListFrame elementsListFrame;
-	JInternalFrame treeFrame;
-	UgoTabbedPane ugoPane;
+	UIDefaults					frames;
+	
 	ElementsTabbedPane elementsTab;
 
-	public ElementsEditorMainFrame(ApplicationContext aContext) {
-		super();
-		setContext(aContext);
-		this.aContext.setDispatcher(internal_dispatcher);
+	public ElementsEditorMainFrame(final ApplicationContext aContext) {
+		super(aContext, LangModelSchematics.getString("ElementsEditorTitle"),
+				new ElementsEditorMenuBar(aContext.getApplicationModel()),
+				new ElementsEditorToolBar());
+		
+		this.addComponentListener(new ComponentAdapter() {
+			/* (non-Javadoc)
+			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
+			 */
+			public void componentShown(ComponentEvent e) {
+				initModule();
+				ElementsEditorMainFrame.this.desktopPane.setPreferredSize(ElementsEditorMainFrame.this.desktopPane.getSize());
+				ElementsEditorMainFrame.this.windowArranger.arrange();
+			}
+		});
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				ElementsEditorMainFrame.this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE,
+						ElementsEditorMainFrame.this);
+				Environment.getDispatcher()
+						.removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
+				aContext.getApplicationModel().getCommand("menuExit").execute();
+			}
+		});
 
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Environment.addWindow(this);
+		this.frames = new UIDefaults();
+		
+		this.frames.put(EDITOR_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | EDITOR_FRAME", Log.FINEST);
+				elementsTab = new ElementsTabbedPane(aContext);
+				SchemeViewerFrame editorFrame = new SchemeViewerFrame(aContext, elementsTab);
+				editorFrame.setClosable(false);
+				editorFrame.setTitle(LangModelSchematics.getString("elementsMainTitle"));
+				desktopPane.add(editorFrame);
+				return editorFrame;
+			}
+		});
+		
+		this.frames.put(GENERAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Log.FINEST);
+				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
+				desktopPane.add(generalFrame);
+				new SchemeEventHandler(generalFrame, ElementsEditorMainFrame.this.aContext);
+				return generalFrame;
+			}
+		});
+
+		this.frames.put(CHARACTERISTIC_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Log.FINEST);
+				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
+				desktopPane.add(characteristicFrame);
+				new SchemeEventHandler(characteristicFrame, ElementsEditorMainFrame.this.aContext);
+				return characteristicFrame;
+			}
+		});
+
+		this.frames.put(ADDITIONAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Log.FINEST);
+				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
+				desktopPane.add(additionalFrame);
+				new SchemeEventHandler(additionalFrame, ElementsEditorMainFrame.this.aContext);
+				return additionalFrame;
+			}
+		});
+		
+		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | TREE_FRAME", Log.FINEST);
+				JInternalFrame treeFrame = new JInternalFrame();
+				treeFrame.setIconifiable(true);
+				treeFrame.setClosable(true);
+				treeFrame.setResizable(true);
+				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
+				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
+				treeFrame.setSize(new Dimension(100,200));
+				treeFrame.setMinimumSize(treeFrame.getSize());
+				treeFrame.setPreferredSize(treeFrame.getSize());
+
+				
+				SchemeTreeModel model = new SchemeTreeModel(ElementsEditorMainFrame.this.aContext);
+				PopulatableIconedNode root = new PopulatableIconedNode(model, "root", "Сеть");
+				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(root, aContext), new FilterPanel());
+
+				treeFrame.getContentPane().setLayout(new BorderLayout());
+				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
+
+				desktopPane.add(treeFrame);
+				return treeFrame;
+			}
+		});
+		
+		super.setWindowArranger(new WindowArranger(ElementsEditorMainFrame.this) {
+
+			public void arrange() {
+				ElementsEditorMainFrame f = (ElementsEditorMainFrame) mainframe;
+
+				int w = f.desktopPane.getSize().width;
+				int h = f.desktopPane.getSize().height;
+
+				JInternalFrame editorFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.EDITOR_FRAME);
+				JInternalFrame generalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.GENERAL_PROPERIES_FRAME);
+				JInternalFrame characteristicsFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.CHARACTERISTIC_PROPERIES_FRAME);
+				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.ADDITIONAL_PROPERIES_FRAME);
+				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.TREE_FRAME);
+				
+				normalize(editorFrame);
+				normalize(generalFrame);
+				normalize(characteristicsFrame);
+				normalize(additionalFrame);
+				normalize(treeFrame);
+
+				editorFrame.setSize(3 * w / 5, h);
+				additionalFrame.setSize(w / 5, h / 3);
+				generalFrame.setSize(w/5, h / 3);
+				characteristicsFrame.setSize(w/5, h / 3);
+				treeFrame.setSize(w / 5, h);
+
+				editorFrame.setLocation(w / 5, 0);
+				additionalFrame.setLocation(4 * w / 5, 2 * h / 3);
+				generalFrame.setLocation(4*w/5, 0);
+				characteristicsFrame.setLocation(4*w/5, h/3);
+				treeFrame.setLocation(0, 0);
+			}
+		});
 	}
 
 	public ElementsEditorMainFrame() {
 		this(new ApplicationContext());
 	}
 
-	private void jbInit() throws Exception {
-		this.addComponentListener(new ElementsEditorMainFrame_this_componentAdapter(this));
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				this_windowClosing(e);
-			}
-		});
-
-		setContentPane(mainPanel);
-		setResizable(true);
-		setTitle(LangModelSchematics.getString("ElementsEditorTitle"));
-		setJMenuBar(menuBar);
-
-		mainPanel.setLayout(new BorderLayout());
-		desktopPane.setBackground(SystemColor.control.darker().darker());
-
-		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		statusBarPanel.setLayout(new BorderLayout());
-		statusBarPanel.add(statusBar, BorderLayout.CENTER);
-
-		statusBar.add("status");
-		statusBar.add("server");
-		statusBar.add("session");
-		statusBar.add("user");
-		statusBar.add("domain");
-		statusBar.add("time");
-
-		viewport.setView(desktopPane);
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
-
-		mainPanel.add(toolBar, BorderLayout.NORTH);
-		mainPanel.add(statusBarPanel, BorderLayout.SOUTH);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-		elementsTab = new ElementsTabbedPane(aContext);
-		editorFrame = new SchemeViewerFrame(aContext, elementsTab);
-		editorFrame.setClosable(false);
-		editorFrame.setTitle(LangModelSchematics.getString("elementsMainTitle"));
-		desktopPane.add(editorFrame);
-
-		ugoPane = new UgoTabbedPane(aContext);
-		ugoFrame = new SchemeViewerFrame(aContext, ugoPane);
-		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
-		desktopPane.add(ugoFrame);
-
-		// propsFrame = new PropsFrame(aContext, true);
-		// desktopPane.add(propsFrame);
-
-		// elementsListFrame = new ElementsListFrame(aContext, true);
-		// elementsListFrame = new ElementsUploadListFrame(aContext, true);
-		// desktopPane.add(elementsListFrame);
-
-		// SchemeTreeFrame treeFrame = new SchemeTreeFrame(aContext,
-		// SchemeTreeFrame.COMPONENT);
-		// desktopPane.add(treeFrame);
-
-		treeFrame = new JInternalFrame();
-		treeFrame.setIconifiable(true);
-		treeFrame.setClosable(true);
-		treeFrame.setResizable(true);
-		treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		treeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/general.gif")));
-		treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
-		treeFrame.getContentPane().setLayout(new BorderLayout());
-		desktopPane.add(treeFrame);
-
-		// new ViewElementsNavigatorCommand(desktopPane, aContext, "").execute();
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(screenSize.width,
-				screenSize.height - 24);
-		setSize(frameSize);
-		setLocation(0, 0);
-
-		// treeFrame.setVisible(true);
-	}
-
-	public void init_module() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-
-		statusBar.distribute();
-		statusBar.setWidth("status", 100);
-		statusBar.setWidth("server", 250);
-		statusBar.setWidth("session", 200);
-		statusBar.setWidth("user", 100);
-		statusBar.setWidth("time", 50);
-
-		statusBar.setText("status", LangModel.getString("statusReady"));
-		statusBar.setText("server", LangModel.getString("statusNoConnection"));
-		statusBar.setText("session", LangModel.getString("statusNoSession"));
-		statusBar.setText("user", LangModel.getString("statusNoUser"));
-		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
-		statusBar.setText("time", " ");
-		statusBar.organize();
-
-		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-
-		setContext(aContext);
-		setDefaultModel(aModel);
-
-		aModel.setCommand("menuSessionNew", new OpenSessionCommand(Environment
-				.getDispatcher()));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment
-				.getDispatcher()));
-		aModel
-				.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(
-				Environment.getDispatcher(), aContext));
-		aModel
-				.setCommand("menuSessionChangePassword",
-						new SessionChangePasswordCommand(Environment.getDispatcher(),
-								aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(
-				internal_dispatcher, aContext));
-		aModel.setCommand("menuExit", new ExitCommand(this));
-
+	public void initModule() {
+		super.initModule();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		
 		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext,
-				elementsTab, ugoPane));
+				elementsTab, null));
 		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(aContext,
-				elementsTab, ugoPane));
+				elementsTab, null));
 
-		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(
-				new ElementsEditorWindowArranger(this)));
-		aModel.setCommand("menuWindowTree", new ShowFrameCommand(desktopPane,
-				treeFrame));
-		aModel.setCommand("menuWindowScheme", new ShowFrameCommand(desktopPane,
-				editorFrame));
-		// aModel.setCommand("menuWindowCatalog", new
-		// ShowCatalogFrameCommand(aContext, desktopPane));
-		aModel.setCommand("menuWindowUgo", new ShowFrameCommand(desktopPane,
-				ugoFrame));
-		// aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane,
-		// propsFrame));
-		// aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane,
-		// elementsListFrame));
-
-		aModel.fireModelChanged("");
-
-		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
-			internal_dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_OPENED_EVENT), true);
-		}
-	}
-
-	public void setContext(ApplicationContext aContext) {
-		this.aContext = aContext;
-		if (aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(ApplicationModel.getInstance());
-		setModel(aContext.getApplicationModel());
-	}
-
-	public ApplicationContext getContext() {
-		return aContext;
-	}
-
-	public void setModel(ApplicationModel aModel) {
-		toolBar.setModel(aModel);
-		menuBar.setModel(aModel);
-		aModel.addListener(menuBar);
-		aModel.addListener(toolBar);
+		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
+		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
+		aModel.setCommand("menuWindowScheme", this.getLazyCommand(EDITOR_FRAME));
+		aModel.setCommand("menuWindowUgo", this.getLazyCommand(ADDITIONAL_PROPERIES_FRAME));
+		aModel.setCommand("menuWindowProps", this.getLazyCommand(CHARACTERISTIC_PROPERIES_FRAME));
+		aModel.setCommand("menuWindowList", this.getLazyCommand(GENERAL_PROPERIES_FRAME));
+		
+		setDefaultModel(aModel);
 		aModel.fireModelChanged("");
 	}
 
-	public ApplicationModel getModel() {
-		return aContext.getApplicationModel();
+	private AbstractCommand getLazyCommand(final Object key) {
+		return new AbstractCommand() {
+
+			private Command	command;
+
+			private Command getLazyCommand() {
+				if (this.command == null) {
+					Object object = ElementsEditorMainFrame.this.frames.get(key);
+					if (object instanceof JInternalFrame) {
+						System.out.println("init getLazyCommand for " + key);
+						this.command = new ShowWindowCommand((JInternalFrame)object);
+					}
+				}
+				return this.command;
+			}
+
+			public void execute() {
+				this.getLazyCommand().execute();
+			}
+		};
 	}
 
-	public Dispatcher getInternalDispatcher() {
-		return internal_dispatcher;
-	}
+	protected void setDefaultModel(ApplicationModel aModel) {
+		super.setDefaultModel(aModel);
 
-	void setDefaultModel(ApplicationModel aModel) {
-		aModel.setAllItemsEnabled(false);
 		aModel.setEnabled("menuSession", true);
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionConnection", true);
@@ -262,129 +269,34 @@ public class ElementsEditorMainFrame extends JFrame implements PropertyChangeLis
 		aModel.setVisible("menuSchemeImport", false);
 	}
 
-	public void propertyChange(PropertyChangeEvent ae) {
-		//TODO обработка установления сессии
-		
-		if (ae.getPropertyName().equals(ContextChangeEvent.TYPE)) {
-			ContextChangeEvent cce = (ContextChangeEvent) ae;
-			System.out.println("perform context change \""
-					+ "\" at " + this.getTitle());
-			if (cce.isSessionOpened()) {
-					setSessionOpened();
-
-				statusBar.setText("status", LangModel.getString("statusReady"));
-				statusBar.setText("session", sdf.format(ClientSessionEnvironment.getInstance().getSessionEstablishDate()));
-				try {
-					SystemUser user = (SystemUser)StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
-					statusBar.setText("user", user.getName());
-				} catch (ApplicationException e) {
-					Log.errorException(e);
-				}
-			}
-			if (cce.isSessionClosed()) {
-				setSessionClosed();
-				statusBar.setText("status", LangModel.getString("statusReady"));
-				statusBar.setText("session", LangModel.getString("statusNoSession"));
-				statusBar.setText("user", LangModel.getString("statusNoUser"));
-			}
-			if (cce.isDomainSelected()) {
-				setDomainSelected();
-			}
-		}
-	}
-
-	public void setConnectionOpened() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.fireModelChanged("");
-	}
-
-	public void setConnectionClosed() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.fireModelChanged("");
-	}
-
-	public void setConnectionFailed() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew", false);
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.fireModelChanged("");
-	}
-
 	public void setSessionOpened() {
-
+		super.setSessionOpened();
+		
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionDomain", true);
-		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuWindowArrange", true);
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
-		aModel.setEnabled("menuWindowCatalog", true);
 		aModel.setEnabled("menuWindowUgo", true);
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
 
 		aModel.fireModelChanged("");
-		internal_dispatcher.firePropertyChange(new ContextChangeEvent(this,
-				ContextChangeEvent.DOMAIN_SELECTED_EVENT), true);
 
+		JInternalFrame editorFrame = (JInternalFrame)this.frames.get(EDITOR_FRAME);
 		editorFrame.setVisible(true);
-		ugoFrame.setVisible(true);
-		// propsFrame.setVisible(true);
-		// elementsListFrame.setVisible(true);
+		JInternalFrame addFrame = (JInternalFrame)this.frames.get(ADDITIONAL_PROPERIES_FRAME);
+		addFrame.setVisible(true);
+		JInternalFrame generalFrame = (JInternalFrame)this.frames.get(GENERAL_PROPERIES_FRAME);
+		generalFrame.setVisible(true);
+		JInternalFrame charFrame = (JInternalFrame)this.frames.get(CHARACTERISTIC_PROPERIES_FRAME);
+		charFrame.setVisible(true);
+		JInternalFrame treeFrame = (JInternalFrame)this.frames.get(TREE_FRAME);
 		treeFrame.setVisible(true);
-
-		// ElementsTreeModel model = new ElementsTreeModel(aContext);
-		// ElementsNavigatorPanel utp = new ElementsNavigatorPanel(aContext,
-		// internal_dispatcher, model);
-		// utp.getTree().setRootVisible(false);
-		// UniTreePanel utp = new UniTreePanel(internal_dispatcher, aContext,
-		// model);
-		// utp.setBorder(BorderFactory.createLoweredBevelBorder());
-		treeFrame.getContentPane().removeAll();
-		// treeFrame.getContentPane().add(utp, BorderLayout.CENTER);
-		treeFrame.updateUI();
-	}
-
-	public void setDomainSelected() {
-		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionClose", true);
-		aModel.setEnabled("menuSessionOptions", true);
-		aModel.setEnabled("menuSessionClose", true);
-		aModel.setEnabled("menuSessionOptions", true);
-		aModel.setEnabled("menuSessionChangePassword", true);
-		aModel.setEnabled("menuComponentNew", true);
-		aModel.setEnabled("menuComponentSave", true);
-		aModel.fireModelChanged("");
-
-		try {
-			Identifier domain_id = LoginManager.getDomainId();
-			Domain domain = (Domain)StorableObjectPool.getStorableObject(domain_id, true);
-			statusBar.setText("domain", domain.getName());
-		} catch (ApplicationException ex) {
-			Log.errorException(ex);
-		}
 	}
 
 	public void setSessionClosed() {
+		super.setSessionClosed();
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionClose", false);
-		aModel.setEnabled("menuSessionOptions", false);
-		aModel.setEnabled("menuSessionChangePassword", false);
-		aModel.setEnabled("menuTrace", false);
-		aModel.setEnabled("menuAnalyseUpload", false);
-		aModel.setEnabled("menuSessionDomain", false);
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuWindowArrange", false);
 		aModel.setEnabled("menuWindowTree", false);
 		aModel.setEnabled("menuWindowScheme", false);
 		aModel.setEnabled("menuWindowCatalog", false);
@@ -394,88 +306,16 @@ public class ElementsEditorMainFrame extends JFrame implements PropertyChangeLis
 
 		aModel.fireModelChanged("");
 
+		JInternalFrame editorFrame = (JInternalFrame)this.frames.get(EDITOR_FRAME);
 		editorFrame.setVisible(false);
-		ugoFrame.setVisible(false);
-		// propsFrame.setVisible(false);
-		// elementsListFrame.setVisible(false);
+		JInternalFrame addFrame = (JInternalFrame)this.frames.get(ADDITIONAL_PROPERIES_FRAME);
+		addFrame.setVisible(false);
+		JInternalFrame generalFrame = (JInternalFrame)this.frames.get(GENERAL_PROPERIES_FRAME);
+		generalFrame.setVisible(false);
+		JInternalFrame charFrame = (JInternalFrame)this.frames.get(CHARACTERISTIC_PROPERIES_FRAME);
+		charFrame.setVisible(false);
+		JInternalFrame treeFrame = (JInternalFrame)this.frames.get(TREE_FRAME);
 		treeFrame.setVisible(false);
-
-		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
-	void this_componentShown(ComponentEvent e) {
-		init_module();
-
-		desktopPane.setPreferredSize(desktopPane.getSize());
-		new ElementsEditorWindowArranger(this).arrange();
-	}
-
-	void this_windowClosing(WindowEvent e) {
-		internal_dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
-		aContext.getApplicationModel().getCommand("menuExit").execute();
-	}
-
-	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
-			Environment.setActiveWindow(this);
-			// ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-			// SessionInterface.setActiveSession(aContext.getSessionInterface());
-		}
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			this_windowClosing(e);
-			return;
-		}
-		super.processWindowEvent(e);
-	}
-}
-
-class ElementsEditorWindowArranger extends WindowArranger {
-	public ElementsEditorWindowArranger(ElementsEditorMainFrame mainframe) {
-		super(mainframe);
-	}
-
-	public void arrange() {
-		ElementsEditorMainFrame f = (ElementsEditorMainFrame) mainframe;
-
-		int w = f.desktopPane.getSize().width;
-		int h = f.desktopPane.getSize().height;
-
-		// f.editorFrame.setVisible(true);
-		// f.ugoFrame.setVisible(true);
-		// f.elementsListFrame.setVisible(true);
-		// f.propsFrame.setVisible(true);
-		//f.treeFrame.setVisible(true);
-
-		normalize(f.editorFrame);
-		normalize(f.ugoFrame);
-		//normalize(f.elementsListFrame);
-		//normalize(f.propsFrame);
-		normalize(f.treeFrame);
-
-		f.editorFrame.setSize(3 * w / 5, h);
-		f.ugoFrame.setSize(w / 5, 2 * h / 5);
-		//f.elementsListFrame.setSize(w/5, 3 * h / 10);
-		//f.propsFrame.setSize(w/5, 3 * h / 10);
-		f.treeFrame.setSize(w / 5, 2 * h / 5);
-
-		f.editorFrame.setLocation(2 * w / 5, 0);
-		f.ugoFrame.setLocation(w / 5, 0);
-		//f.elementsListFrame.setLocation(4*w/5, 0);
-		//f.propsFrame.setLocation(4*w/5, 3*h/10);
-		f.treeFrame.setLocation(0, 0);
-	}
-}
-
-class ElementsEditorMainFrame_this_componentAdapter extends
-		java.awt.event.ComponentAdapter {
-	ElementsEditorMainFrame adaptee;
-
-	ElementsEditorMainFrame_this_componentAdapter(ElementsEditorMainFrame adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void componentShown(ComponentEvent e) {
-		adaptee.this_componentShown(e);
-	}
 }

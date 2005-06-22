@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.22 2005/06/17 11:36:22 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.23 2005/06/22 10:16:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,22 +9,43 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/17 11:36:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.23 $, $Date: 2005/06/22 10:16:06 $
  * @module schemeclient_v1
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.VisualManager;
-import com.syrus.AMFICOM.client.UI.tree.*;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.configuration.ui.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.logic.*;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.configuration.ui.CableLinkTypePropertiesManager;
+import com.syrus.AMFICOM.client_.configuration.ui.EquipmentTypePropertiesManager;
+import com.syrus.AMFICOM.client_.configuration.ui.LinkTypePropertiesManager;
+import com.syrus.AMFICOM.client_.configuration.ui.MeasurementPortTypePropertiesManager;
+import com.syrus.AMFICOM.client_.configuration.ui.MeasurementTypePropertiesManager;
+import com.syrus.AMFICOM.client_.configuration.ui.PortTypePropertiesManager;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.logic.ChildrenFactory;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
@@ -34,9 +55,9 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			Kind.CABLE_SUBNETWORK };
 
 	private static String[] schemeTypeNames = new String[] {
-			LangModelScheme.getString(Constants.SCHEME_TYPE_NETWORK),
-			LangModelScheme.getString(Constants.SCHEME_TYPE_BUILDING),
-			LangModelScheme.getString(Constants.SCHEME_TYPE_CABLE) };
+			LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_NETWORK),
+			LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_BUILDING),
+			LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_CABLE) };
 
 	public SchemeTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -62,19 +83,19 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			 * @todo write SchemeProtoGroupController return
 			 *       SchemeProtoGroupController.getInstance();
 			 */
-			if (s.equals(Constants.LINK_TYPE))
+			if (s.equals(SchemeResourceKeys.LINK_TYPE))
 				return LinkTypePropertiesManager.getInstance(aContext);
-			if (s.equals(Constants.CABLE_LINK_TYPE))
+			if (s.equals(SchemeResourceKeys.CABLE_LINK_TYPE))
 				return CableLinkTypePropertiesManager.getInstance(aContext);
-			if (s.equals(Constants.PORT_TYPE))
+			if (s.equals(SchemeResourceKeys.PORT_TYPE))
 				return PortTypePropertiesManager.getInstance(aContext);
-			if (s.equals(Constants.EQUIPMENT_TYPE))
+			if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE))
 				return EquipmentTypePropertiesManager.getInstance(aContext);
-			if (s.equals(Constants.MEASUREMENT_PORT_TYPES))
+			if (s.equals(SchemeResourceKeys.MEASUREMENT_PORT_TYPES))
 				return MeasurementPortTypePropertiesManager.getInstance(aContext);
-			if (s.equals(Constants.MEASUREMENT_TYPES))
+			if (s.equals(SchemeResourceKeys.MEASUREMENT_TYPES))
 				return MeasurementTypePropertiesManager.getInstance(aContext);
-			if (s.equals(Constants.SCHEME_TYPE))
+			if (s.equals(SchemeResourceKeys.SCHEME_TYPE))
 				return null;
 			// for any other strings return null Manager
 			return null;
@@ -139,45 +160,46 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
-			if (s.equals(Constants.ROOT)) {
-				if (!contents.contains(Constants.CONFIGURATION))
-					node.addChild(new PopulatableIconedNode(this, Constants.CONFIGURATION, LangModelScheme.getString(Constants.CONFIGURATION), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.SCHEME_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_TYPE, LangModelScheme.getString(Constants.SCHEME_TYPE), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.SCHEME_PROTO_GROUP))
-					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_PROTO_GROUP, LangModelScheme.getString(Constants.SCHEME_PROTO_GROUP), Constants.ICON_CATALOG));
+			if (s.equals(SchemeResourceKeys.ROOT)) {
+				if (!contents.contains(SchemeResourceKeys.CONFIGURATION))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.CONFIGURATION, LangModelScheme.getString(SchemeResourceKeys.CONFIGURATION),
+							UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+				if (!contents.contains(SchemeResourceKeys.SCHEME_TYPE))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_TYPE, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+				if (!contents.contains(SchemeResourceKeys.SCHEME_PROTO_GROUP))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_PROTO_GROUP, LangModelScheme.getString(SchemeResourceKeys.SCHEME_PROTO_GROUP), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 			} 
-			else if (s.equals(Constants.CONFIGURATION)) {
-				if (!contents.contains(Constants.NETWORK_DIRECTORY))
-					node.addChild(new PopulatableIconedNode(this, Constants.NETWORK_DIRECTORY, LangModelScheme.getString(Constants.NETWORK_DIRECTORY), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.MONITORING_DIRECTORY))
-					node.addChild(new PopulatableIconedNode(this, Constants.MONITORING_DIRECTORY, LangModelScheme.getString(Constants.MONITORING_DIRECTORY), Constants.ICON_CATALOG));
+			else if (s.equals(SchemeResourceKeys.CONFIGURATION)) {
+				if (!contents.contains(SchemeResourceKeys.NETWORK_DIRECTORY))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.NETWORK_DIRECTORY, LangModelScheme.getString(SchemeResourceKeys.NETWORK_DIRECTORY), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+				if (!contents.contains(SchemeResourceKeys.MONITORING_DIRECTORY))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.MONITORING_DIRECTORY, LangModelScheme.getString(SchemeResourceKeys.MONITORING_DIRECTORY), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 			} 
-			else if (s.equals(Constants.NETWORK_DIRECTORY)) {
-				if (!contents.contains(Constants.LINK_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.LINK_TYPE, LangModelScheme.getString(Constants.LINK_TYPE), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.CABLE_LINK_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.CABLE_LINK_TYPE, LangModelScheme.getString(Constants.CABLE_LINK_TYPE), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.PORT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.PORT_TYPE, LangModelScheme.getString(Constants.PORT_TYPE), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.EQUIPMENT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, Constants.EQUIPMENT_TYPE, LangModelScheme.getString(Constants.EQUIPMENT_TYPE), Constants.ICON_CATALOG));
+			else if (s.equals(SchemeResourceKeys.NETWORK_DIRECTORY)) {
+				if (!contents.contains(SchemeResourceKeys.LINK_TYPE))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.LINK_TYPE, LangModelScheme.getString(SchemeResourceKeys.LINK_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+				if (!contents.contains(SchemeResourceKeys.CABLE_LINK_TYPE))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.CABLE_LINK_TYPE, LangModelScheme.getString(SchemeResourceKeys.CABLE_LINK_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+				if (!contents.contains(SchemeResourceKeys.PORT_TYPE))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.PORT_TYPE, LangModelScheme.getString(SchemeResourceKeys.PORT_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+				if (!contents.contains(SchemeResourceKeys.EQUIPMENT_TYPE))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.EQUIPMENT_TYPE, LangModelScheme.getString(SchemeResourceKeys.EQUIPMENT_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 			} 
-			else if (s.equals(Constants.MONITORING_DIRECTORY)) {
-				if (!contents.contains(Constants.MEASUREMENT_TYPES))
-					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENT_TYPES, LangModelScheme.getString(Constants.MEASUREMENT_TYPES), Constants.ICON_CATALOG));
-				if (!contents.contains(Constants.MEASUREMENT_PORT_TYPES))
-					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENT_PORT_TYPES, LangModelScheme.getString(Constants.MEASUREMENT_PORT_TYPES), Constants.ICON_CATALOG));
+			else if (s.equals(SchemeResourceKeys.MONITORING_DIRECTORY)) {
+				if (!contents.contains(SchemeResourceKeys.MEASUREMENT_TYPES))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.MEASUREMENT_TYPES, LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_TYPES), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+				if (!contents.contains(SchemeResourceKeys.MEASUREMENT_PORT_TYPES))
+					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.MEASUREMENT_PORT_TYPES, LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_PORT_TYPES), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 				// vec.add(new PopulatableIconedNode(this, "TransmissionPathType",
 				// LangModelConfig.getString("menuJDirPathText"), true));
 			} 
-			else if (s.equals(Constants.SCHEME_TYPE)) {
+			else if (s.equals(SchemeResourceKeys.SCHEME_TYPE)) {
 				for (int i = 0; i < schemeTypes.length; i++) {
 					if (!contents.contains(schemeTypes[i]))
-						node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], Constants.ICON_CATALOG));
+						node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 				}
 			} 
-			else if (s.equals(Constants.LINK_TYPE)) {
+			else if (s.equals(SchemeResourceKeys.LINK_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -198,7 +220,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					ex.printStackTrace();
 				}
 			} 
-			else if (s.equals(Constants.CABLE_LINK_TYPE)) {
+			else if (s.equals(SchemeResourceKeys.CABLE_LINK_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
 					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -219,7 +241,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					ex.printStackTrace();
 				}
 			} 
-			else if (s.equals(Constants.PORT_TYPE)) {
+			else if (s.equals(SchemeResourceKeys.PORT_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 					Collection portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -239,7 +261,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				catch (ApplicationException ex) {
 					ex.printStackTrace();
 				}
-			} else if (s.equals(Constants.EQUIPMENT_TYPE)) {
+			} else if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 					Collection equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -277,7 +299,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			// ex.printStackTrace();
 			// }
 			// }
-			else if (s.equals(Constants.MEASUREMENT_PORT_TYPES)) {
+			else if (s.equals(SchemeResourceKeys.MEASUREMENT_PORT_TYPES)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
 							ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
@@ -299,7 +321,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					ex.printStackTrace();
 				}
 			} 
-			else if (s.equals(Constants.MEASUREMENT_TYPES)) {
+			else if (s.equals(SchemeResourceKeys.MEASUREMENT_TYPES)) {
 				try {
 					EquivalentCondition condition = new EquivalentCondition(
 							ObjectEntities.MEASUREMENT_TYPE_CODE);
