@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.19 2005/06/17 13:34:32 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.20 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.strategy.MapStrategy;
 import com.syrus.AMFICOM.client.map.strategy.MapStrategyManager;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.util.Log;
 
 /**
  * Обработчик перемещения мыши в окне карты. При обработке смотрится состояние
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.19 $, $Date: 2005/06/17 13:34:32 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:49 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -126,7 +126,8 @@ public final class MapMouseMotionListener implements MouseMotionListener
 					}
 					catch(Exception e)
 					{
-						Environment.log(Environment.LOG_LEVEL_FINER, "current execution point with call stack:", null, null, e);
+						Log.debugMessage("MapMouseMotionListener::mouseDragged | current execution point with call stack:", Log.FINER);
+						Log.debugException(e, Log.FINER);
 					}
 					break;
 			}//switch (mapState.getOperationMode()

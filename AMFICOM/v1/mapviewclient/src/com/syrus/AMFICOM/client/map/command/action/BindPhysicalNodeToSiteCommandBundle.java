@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.23 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.24 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,29 +11,29 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
-
-import java.util.Iterator;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.util.Log;
 
 /**
  *   оманда прив€зывани€ топологического узла, принадлежащего
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/22 08:43:46 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -78,11 +78,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 	
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		try
 		{

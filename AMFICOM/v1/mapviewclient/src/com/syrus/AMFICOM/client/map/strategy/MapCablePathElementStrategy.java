@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElementStrategy.java,v 1.16 2005/06/06 12:20:34 krupenn Exp $
+ * $Id: MapCablePathElementStrategy.java,v 1.17 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.client.map.strategy;
 
+import java.awt.Point;
+
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
@@ -18,13 +20,11 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.Selection;
 
-import java.awt.Point;
-
 /**
  * Стратегия управления кабельным путем.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:20:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public final class MapCablePathElementStrategy extends AbstractMapStrategy 

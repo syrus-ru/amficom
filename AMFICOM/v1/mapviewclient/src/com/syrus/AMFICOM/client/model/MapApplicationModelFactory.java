@@ -1,5 +1,5 @@
 /**
- * $Id: MapApplicationModelFactory.java,v 1.1 2005/06/06 12:19:08 krupenn Exp $
+ * $Id: MapApplicationModelFactory.java,v 1.2 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,12 +11,11 @@
 
 package com.syrus.AMFICOM.client.model;
 
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 /**
  * ‘абричный класс создани€ модели приложени€ дл€ работы с картой.
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/06/06 12:19:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/22 08:43:49 $
  * @module mapviewclient_v1
  */
 public class MapApplicationModelFactory

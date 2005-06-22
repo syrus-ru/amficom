@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapViewNavigatorCommand.java,v 1.5 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: ViewMapViewNavigatorCommand.java,v 1.6 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,13 +9,6 @@
 
 package com.syrus.AMFICOM.client.map.command.editor;
 
-import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
-import com.syrus.AMFICOM.client.map.ui.MapViewTreePanel;
-import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Command;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -23,10 +16,17 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
+import com.syrus.AMFICOM.client.map.ui.MapViewTreePanel;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
+
 /**
  * отобразить окно привязки схем к карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class ViewMapViewNavigatorCommand extends AbstractCommand {

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.13 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.14 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,6 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import com.syrus.AMFICOM.general.Identifier;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -25,13 +24,14 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {

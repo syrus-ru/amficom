@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.25 2005/06/15 07:42:28 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.26 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,12 +11,14 @@
 
 package com.syrus.AMFICOM.client.map.strategy;
 
-import com.syrus.AMFICOM.client.map.command.action.MoveMarkCommand;
-import com.syrus.AMFICOM.client.map.controllers.MarkController;
+import java.awt.Point;
+
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.command.action.MoveMarkCommand;
+import com.syrus.AMFICOM.client.map.controllers.MarkController;
 import com.syrus.AMFICOM.client.map.ui.MotionDescriptor;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -25,12 +27,10 @@ import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.Selection;
 
-import java.awt.Point;
-
 /**
  * —тратеги€ управлени€ метки на физической линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/15 07:42:28 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public final class MapMarkElementStrategy extends AbstractMapStrategy 

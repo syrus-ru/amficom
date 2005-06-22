@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.18 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.19 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,22 +11,22 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
-
-import java.util.Iterator;
-import java.util.List;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.util.Log;
 
 /**
  * В данном классе реализуется алгоритм удаления связи. В зависимости
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -60,11 +60,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 		
 		// связь может быть удалена в результате атомарной команды в составе
 		// другой команды удаления, в этом случае у неё будет выставлен

@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.29 2005/06/17 11:01:08 bass Exp $
+ * $Id: MapImportCommand.java,v 1.30 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,8 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
@@ -32,8 +34,6 @@ import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
@@ -64,8 +64,8 @@ import com.syrus.AMFICOM.mapview.MapView;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/06/17 11:01:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand {

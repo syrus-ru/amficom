@@ -1,5 +1,5 @@
 /**
- * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.9 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.10 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,16 +11,16 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.map.controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.controllers.TopologicalNodeController;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.util.Log;
 
 /**
  * »зменение активности топологического узла - атомарное действие
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v1
  */
 public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
@@ -59,11 +59,7 @@ public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		this.controller.setActive(this.node, this.active);
 		setResult(Command.RESULT_OK);

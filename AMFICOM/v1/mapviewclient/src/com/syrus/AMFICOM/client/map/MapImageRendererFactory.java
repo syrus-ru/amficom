@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageRendererFactory.java,v 1.2 2005/06/21 12:32:44 peskovsky Exp $
+ * $Id: MapImageRendererFactory.java,v 1.3 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.client.map;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/21 12:32:44 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 08:43:46 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapImageRendererFactory {
@@ -26,8 +26,7 @@ public final class MapImageRendererFactory {
 			MapCoordinatesConverter coordsConverter,
 			MapContext mapContext, 
 			MapImageLoader loader) throws MapDataException {
-		Environment.log(Environment.LOG_LEVEL_FINER,
-				"method call MapImageRendererFactory.create()");
+		Log.debugMessage("method call MapImageRendererFactory.create()", Log.FINER);
 
 		try {
 			Class clazz = Class.forName(className);

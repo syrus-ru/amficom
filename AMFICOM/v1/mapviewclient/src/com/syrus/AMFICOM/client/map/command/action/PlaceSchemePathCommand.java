@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.26 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.27 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,6 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -29,13 +28,14 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.util.Log;
 
 /**
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -63,11 +63,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();

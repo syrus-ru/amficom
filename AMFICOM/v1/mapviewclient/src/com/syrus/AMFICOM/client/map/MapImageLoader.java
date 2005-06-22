@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageLoader.java,v 1.5 2005/06/20 15:18:10 peskovsky Exp $
+ * $Id: MapImageLoader.java,v 1.6 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,12 +10,11 @@ package com.syrus.AMFICOM.client.map;
 import java.awt.Image;
 import java.util.List;
 
-
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/20 15:18:10 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 08:43:46 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public interface MapImageLoader

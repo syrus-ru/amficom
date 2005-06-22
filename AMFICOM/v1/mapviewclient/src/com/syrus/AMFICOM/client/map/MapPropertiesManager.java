@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.22 2005/06/14 14:05:23 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.23 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,6 @@ import java.util.Properties;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,6 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.util.Log;
 
 /**
  * Класс управляет инициализацией картографического отображения.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/14 14:05:23 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -444,7 +444,7 @@ public final class MapPropertiesManager
 	 */
 	public static void saveIniFile()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call MapPropertiesManager.saveIniFile()");
+		Log.debugMessage("method call MapPropertiesManager.saveIniFile()", Log.FINER);
 
 		try
 		{

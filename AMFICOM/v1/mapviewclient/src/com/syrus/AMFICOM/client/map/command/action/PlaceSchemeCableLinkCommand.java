@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.25 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.26 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
@@ -26,12 +25,13 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.util.Log;
 
 /**
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -68,11 +68,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();

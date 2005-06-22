@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewVisualManagerFactory.java,v 1.3 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: MapViewVisualManagerFactory.java,v 1.4 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,11 @@
 
 package com.syrus.AMFICOM.client.map.props;
 
+import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.ui.MapTreeModel;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeModel;
-import com.syrus.AMFICOM.client.UI.VisualManager;
-import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:33 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 08:43:48 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

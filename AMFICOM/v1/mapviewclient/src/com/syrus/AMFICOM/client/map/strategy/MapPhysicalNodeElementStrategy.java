@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.23 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.24 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,17 +11,20 @@
 
 package com.syrus.AMFICOM.client.map.strategy;
 
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import java.awt.Point;
+import java.util.Iterator;
+
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.command.action.BindPhysicalNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -30,14 +33,10 @@ import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
-import java.awt.Point;
-
-import java.util.Iterator;
-
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.78 2005/06/22 07:27:32 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.79 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandList;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -57,6 +56,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
+import com.syrus.util.Log;
 
 /**
  * ”правл€ет отображением логической структуры сети.
@@ -64,7 +64,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.78 $, $Date: 2005/06/22 07:27:32 $
+ * @version $Revision: 1.79 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -180,7 +180,7 @@ public class LogicalNetLayer
 	 */
 	public void updateZoom()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateZoom()");
+		Log.debugMessage(getClass().getName() + "::" + "updateZoom()" + " | " + "method call", Log.FINER);
 		
 		if(getMapView() == null)
 			return;
@@ -228,7 +228,7 @@ public class LogicalNetLayer
 	public void setMapView(MapView mapView)
 		throws MapConnectionException, MapDataException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapView(" + mapView + ")");
+		Log.debugMessage(getClass().getName() + "::" + "setMapView(" + mapView + ")" + " | " + "method call", Log.FINER);
 
 //		if(this.animateThread != null)
 //			this.animateThread.stopRunning();
@@ -293,7 +293,7 @@ public class LogicalNetLayer
 	 */
 	public void setMap( Map map)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMap(" + map + ")");
+		Log.debugMessage(getClass().getName() + "::" + "setMap(" + map + ")" + " | " + "method call", Log.FINER);
 		
 		getMapView().setMap(map);
 	}
@@ -313,7 +313,7 @@ public class LogicalNetLayer
 	 */
 	public void setDefaultScale(double defaultScale)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setDefaultScale(" + defaultScale + ")");
+		Log.debugMessage(getClass().getName() + "::" + "setDefaultScale(" + defaultScale + ")" + " | " + "method call", Log.FINER);
 		
 		this.defaultScale = defaultScale;
 		updateZoom();
@@ -334,7 +334,7 @@ public class LogicalNetLayer
 	 */
 //	public void setCurrentScale(double currentScale)
 //	{
-//		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentScale(" + currentScale + ")");
+//		Log.debugMessage(getClass().getName() + "::" + "setCurrentScale(" + currentScale + ")" + " | " + "method call", Log.FINER);
 //		this.currentScale = currentScale;
 //		updateZoom();
 //	}
@@ -354,7 +354,7 @@ public class LogicalNetLayer
 	 */
 	public void setMapState(MapState state)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapState(" + state + ")");
+		Log.debugMessage(getClass().getName() + "::" + "setMapState(" + state + ")" + " | " + "method call", Log.FINER);
 		
 		this.mapState = state;
 	}
@@ -709,7 +709,7 @@ public class LogicalNetLayer
 	 */
 	public void notifySchemeEvent(MapElement mapElement)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifySchemeEvent(" + mapElement + ")");
+		Log.debugMessage(getClass().getName() + "::" + "notifySchemeEvent(" + mapElement + ")" + " | " + "method call", Log.FINER);
 /*		
 		SchemeNavigateEvent sne;
 		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.this.aContext.getDispatcher();
@@ -807,7 +807,7 @@ public class LogicalNetLayer
 	 */
 	public void setCurrentMapElement(MapElement curMapElement)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentMapElement(" + curMapElement + ")");
+		Log.debugMessage(getClass().getName() + "::" + "setCurrentMapElement(" + curMapElement + ")" + " | " + "method call", Log.FINER);
 		
 		this.currentMapElement = curMapElement;
 
@@ -851,7 +851,7 @@ public class LogicalNetLayer
 	public MapElement getMapElementAtPoint(Point point, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapElementAtPoint(" + point + ")");
+		Log.debugMessage(getClass().getName() + "::" + "getMapElementAtPoint(" + point + ")" + " | " + "method call", Log.FINER);
 		
 		int showMode = getMapState().getShowMode();
 		MapElement curME = VoidElement.getInstance(this.getMapView());
@@ -938,7 +938,7 @@ public class LogicalNetLayer
 	 */
 	public void deselectAll()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
+		Log.debugMessage(getClass().getName() + "::" + "deselectAll()" + " | " + "method call", Log.FINER);
 
 		Collection selectedElements = new LinkedList();
 		selectedElements.addAll(this.mapView.getMap().getSelectedElements());
@@ -958,7 +958,7 @@ public class LogicalNetLayer
 	 */
 	public void selectAll()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "selectAll()");
+		Log.debugMessage(getClass().getName() + "::" + "selectAll()" + " | " + "method call", Log.FINER);
 		
 		Iterator e = this.mapView.getAllElements().iterator();
 		Map map = this.mapView.getMap();
@@ -997,7 +997,7 @@ public class LogicalNetLayer
 	 */
 	public NodeLink getEditedNodeLink(Point point)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getEditedNodeLink(" + point + ")");
+		Log.debugMessage(getClass().getName() + "::" + "getEditedNodeLink(" + point + ")" + " | " + "method call", Log.FINER);
 		
 		NodeLinkController nlc = null;
 		

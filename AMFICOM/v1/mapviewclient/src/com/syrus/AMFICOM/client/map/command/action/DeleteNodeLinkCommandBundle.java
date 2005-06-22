@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.24 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.25 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,23 +11,23 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.MapView;
-
-import java.util.Iterator;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.util.Log;
 
 /**
  * В данном классе реализуется алгоритм удаления NodeLink. В зависимости
@@ -35,7 +35,7 @@ import java.util.Iterator;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -234,11 +234,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 		
 		// фрагмент может быть удален в результате атомарной команды в составе
 		// другой команды удаления, в этом случае у него будет выставлен

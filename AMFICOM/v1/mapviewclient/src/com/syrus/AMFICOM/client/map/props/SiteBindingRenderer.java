@@ -1,12 +1,14 @@
 package com.syrus.AMFICOM.client.map.props;
 
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import java.awt.Component;
+
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 
 class SiteBindingRenderer extends DefaultTreeCellRenderer {
 	SiteNode site;

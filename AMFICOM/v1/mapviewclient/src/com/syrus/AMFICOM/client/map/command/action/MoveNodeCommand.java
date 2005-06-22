@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.11 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.12 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,16 +11,16 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Перемещение узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/06 12:20:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class MoveNodeCommand extends MapActionCommand
@@ -77,11 +77,7 @@ public class MoveNodeCommand extends MapActionCommand
 	
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 		
 		DoublePoint nodeLocation = this.node.getLocation();
 

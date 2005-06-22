@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.14 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.15 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.controllers.MarkController;
 import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -28,12 +27,13 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.util.Log;
 
 /**
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v1
  */
 public class CreateMarkCommandAtomic extends MapActionCommand
@@ -73,11 +73,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 	{
 		try
 		{
-			Environment.log(
-					Environment.LOG_LEVEL_FINER, 
-					"method call", 
-					getClass().getName(), 
-					"execute()");
+			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 			if ( !getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 				return;

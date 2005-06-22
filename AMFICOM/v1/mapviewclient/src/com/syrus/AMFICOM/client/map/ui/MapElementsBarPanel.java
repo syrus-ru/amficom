@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.16 2005/06/06 12:20:35 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.17 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,13 +11,8 @@
 
 package com.syrus.AMFICOM.client.map.ui;
 
-import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.map.SiteNodeType;
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -27,12 +22,16 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.map.SiteNodeType;
+
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:20:35 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/22 08:43:49 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

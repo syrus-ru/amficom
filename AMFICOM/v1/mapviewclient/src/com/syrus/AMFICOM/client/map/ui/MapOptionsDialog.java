@@ -18,10 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class MapOptionsDialog extends JDialog 
 {

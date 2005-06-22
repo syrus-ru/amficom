@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.16 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.17 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,10 +12,10 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.util.Log;
 
 /**
  * создание пути рпокладки кабел€, внесение его в пул и на карту - 
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v1
  */
 public class CreateCablePathCommandAtomic extends MapActionCommand
@@ -59,11 +59,7 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 		
 		this.cablePath = com.syrus.AMFICOM.mapview.CablePath.createInstance(
 				this.schemeCableLink,

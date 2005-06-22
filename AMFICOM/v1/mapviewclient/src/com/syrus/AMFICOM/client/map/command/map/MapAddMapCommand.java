@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.9 2005/06/20 15:30:56 krupenn Exp $
+ * $Id: MapAddMapCommand.java,v 1.10 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,14 +16,14 @@ import java.util.Iterator;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.AbstractNodeController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapTableController;
-import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
-import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/20 15:30:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class MapAddMapCommand extends AbstractCommand

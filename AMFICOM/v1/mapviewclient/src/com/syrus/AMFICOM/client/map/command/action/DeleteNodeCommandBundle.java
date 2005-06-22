@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.28 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.29 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,10 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -35,12 +34,13 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.util.Log;
 
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -417,11 +417,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		// узел может быть удален в результате атомарной команда в составе
 		// другой команды удаления, в этом случае у него будет выставлен

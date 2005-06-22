@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.49 2005/06/21 12:44:54 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.50 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,9 @@ import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -50,9 +53,6 @@ import com.syrus.AMFICOM.client.map.command.navigate.ZoomInCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ZoomOutCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ZoomToPointCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
-import com.syrus.AMFICOM.client.event.ContextChangeEvent;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -82,8 +82,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.49 $, $Date: 2005/06/21 12:44:54 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.50 $, $Date: 2005/06/22 08:43:49 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 

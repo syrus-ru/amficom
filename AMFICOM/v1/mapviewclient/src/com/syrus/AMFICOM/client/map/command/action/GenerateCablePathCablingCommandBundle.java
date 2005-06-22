@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.22 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.23 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,9 +16,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -29,6 +28,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.util.Log;
 
 /**
  *  Команда генерации тоннелей в соответствии с прохождением кабеля.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
  *  Уже существующая привязка сохраняется. По непривязанным элементам 
  *  генерируются сетевые узла и схемные элементы привязываются к ним.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -68,11 +68,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();

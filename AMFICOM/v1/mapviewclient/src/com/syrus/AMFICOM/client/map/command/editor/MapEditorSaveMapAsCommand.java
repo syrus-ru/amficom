@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveMapAsCommand.java,v 1.9 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: MapEditorSaveMapAsCommand.java,v 1.10 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,22 +8,23 @@
 
 package com.syrus.AMFICOM.client.map.command.editor;
 
-import com.syrus.AMFICOM.client.map.command.map.MapSaveAsCommand;
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapSaveAsCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Map;
-import javax.swing.JDesktopPane;
 
 /**
  * Класс $RCSfile: MapEditorSaveMapAsCommand.java,v $ используется для сохранения топологической схемы в модуле
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.9 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:47 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand

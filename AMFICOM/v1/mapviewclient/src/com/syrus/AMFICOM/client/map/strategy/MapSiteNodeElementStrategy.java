@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.19 2005/06/06 12:20:34 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.20 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,24 +11,24 @@
 
 package com.syrus.AMFICOM.client.map.strategy;
 
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandBundle;
-import com.syrus.AMFICOM.client.map.command.action.MoveFixedDistanceCommand;
-import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
+import java.awt.Point;
+
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.MoveFixedDistanceCommand;
+import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.Selection;
 
-import java.awt.Point;
-
 /**
  * Стратегия управления узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/06 12:20:34 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:49 $
  * @module mapviewclient_v1
  */
 public final class MapSiteNodeElementStrategy extends AbstractMapStrategy 

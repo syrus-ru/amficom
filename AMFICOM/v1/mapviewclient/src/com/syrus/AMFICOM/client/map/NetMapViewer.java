@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.19 2005/06/21 08:37:08 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.20 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
 import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
 import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
 import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -59,6 +58,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 /**
  * Класс, являясь абстрактным, реализует в себе общую 
@@ -71,7 +71,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/21 08:37:08 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -708,7 +708,7 @@ public abstract class NetMapViewer {
 			MapContext mapContext,
 			MapImageRenderer renderer)
 				throws MapDataException {
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call NetMapViewer.create()");
+		Log.debugMessage("method call NetMapViewer.create()", Log.FINER);
 
 		try {
 			Class clazz = Class.forName(viewerClass);

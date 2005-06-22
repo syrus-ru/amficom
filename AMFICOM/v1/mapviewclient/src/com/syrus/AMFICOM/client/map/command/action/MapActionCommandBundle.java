@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.23 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.24 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,13 +33,14 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/06 12:20:30 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/22 08:43:47 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle

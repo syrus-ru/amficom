@@ -1,13 +1,10 @@
 /**
- * $Id: NamedObjectWrapper.java,v 1.1 2005/06/14 11:30:32 krupenn Exp $
+ * $Id: NamedObjectWrapper.java,v 1.2 2005/06/22 08:43:46 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.client.UI.dialogs;
-
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.util.Wrapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +14,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.util.Wrapper;
+
 /**
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */

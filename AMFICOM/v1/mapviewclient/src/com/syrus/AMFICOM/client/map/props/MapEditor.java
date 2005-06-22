@@ -12,14 +12,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.client.resource.MiscUtil;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

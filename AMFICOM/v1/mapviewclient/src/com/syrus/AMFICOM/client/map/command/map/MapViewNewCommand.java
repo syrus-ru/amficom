@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.22 2005/06/06 12:57:02 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.23 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -9,12 +9,11 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -25,11 +24,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 /**
  * создать новый вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/06 12:57:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends AbstractCommand {
@@ -45,11 +45,7 @@ public class MapViewNewCommand extends AbstractCommand {
 	}
 
 	public void execute() {
-		Environment.log(
-				Environment.LOG_LEVEL_CONFIG,
-				"Creating new map view",
-				getClass().getName(),
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "Creating new map view", Log.CONFIG);
 
 		System.out.println("Creating new map view");
 		this.aContext.getDispatcher().firePropertyChange(

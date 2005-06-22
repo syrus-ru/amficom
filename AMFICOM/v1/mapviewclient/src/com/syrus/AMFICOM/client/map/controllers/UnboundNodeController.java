@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.8 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.9 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,12 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
+import java.awt.BasicStroke;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
+
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -19,16 +25,10 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.geom.Rectangle2D;
-
 /**
  * Контроллер непривязанного узела (элемент схемы).
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public class UnboundNodeController extends SiteNodeController

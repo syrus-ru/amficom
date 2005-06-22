@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.12 2005/06/06 12:20:35 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.13 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,11 +10,6 @@
  */
 
 package com.syrus.AMFICOM.client.map.ui;
-
-import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.map.popup.ProtoPopupMenu;
-import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -38,13 +33,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.map.popup.ProtoPopupMenu;
+import com.syrus.AMFICOM.map.SiteNodeType;
+
 /**
  * Визуальный компонент на панели компонентов, с помощью которых создаются
  * узла (посредством drag/drop)
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/06/06 12:20:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/22 08:43:49 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

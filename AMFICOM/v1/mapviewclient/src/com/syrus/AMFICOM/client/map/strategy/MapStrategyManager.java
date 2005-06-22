@@ -1,5 +1,5 @@
 /**
- * $Id: MapStrategyManager.java,v 1.12 2005/06/06 12:20:34 krupenn Exp $
+ * $Id: MapStrategyManager.java,v 1.13 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,14 @@
 
 package com.syrus.AMFICOM.client.map.strategy;
 
-import com.syrus.AMFICOM.map.MapElement;
-
 import java.util.HashMap;
+
+import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Хранилище стратегий для элементов карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/06 12:20:34 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/22 08:43:49 $
  * @module mapviewclient_v1
  */
 public final class MapStrategyManager 

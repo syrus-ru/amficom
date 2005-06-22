@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.19 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.20 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapOpenCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
-import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.19 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:47 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand

@@ -21,6 +21,10 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
@@ -29,10 +33,6 @@ import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
-import com.syrus.AMFICOM.client.UI.WrapperedTable;
-import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

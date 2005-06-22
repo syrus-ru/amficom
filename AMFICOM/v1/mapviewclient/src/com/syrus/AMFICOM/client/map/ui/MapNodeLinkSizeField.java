@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.9 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.10 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,17 +11,17 @@
 
 package com.syrus.AMFICOM.client.map.ui;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.NodeLink;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTextField;
+
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.NodeLink;
 
 /**
  * Поле редактирования длины фрагмента линии. При отображении компонент
@@ -31,7 +31,7 @@ import javax.swing.JTextField;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:49 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

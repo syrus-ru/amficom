@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.19 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.20 2005/06/22 08:43:47 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Collector;
@@ -25,12 +24,13 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.util.Log;
 
 /**
  * вставить сетевой узел вместо топологического узла
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -67,8 +67,8 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 	}
 
 	public void execute() {
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "execute()");
+		Log.debugMessage(getClass()
+				.getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		if(!getLogicalNetLayer().getContext().getApplicationModel().isEnabled(
 				MapApplicationModel.ACTION_EDIT_MAP))

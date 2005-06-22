@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveCommand.java,v 1.16 2005/06/14 10:11:17 krupenn Exp $
+ * $Id: MapSaveCommand.java,v 1.17 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
-import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/14 10:11:17 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public class MapSaveCommand extends AbstractCommand {

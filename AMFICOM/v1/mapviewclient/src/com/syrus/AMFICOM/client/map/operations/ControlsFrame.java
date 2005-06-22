@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.7 2005/06/06 12:57:02 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.8 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,14 +7,6 @@
 */
 
 package com.syrus.AMFICOM.client.map.operations;
-
-import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.mapview.MapView;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -27,13 +19,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JTabbedPane;
 
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.mapview.MapView;
+
 /**
  * Окно операций на карте - содержит панель с 4 закладками
  * <li> Выбор вида
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.18 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.19 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,19 +17,19 @@ import java.util.LinkedList;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapState;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.util.Log;
 
 /**
  * Удалить выбранные элементы карты. Команда является пучком команд 
  * (CommandBundle), удаляющих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle
@@ -214,11 +214,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 	 */
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 		
 		// выполнить все команды в списке
 		super.execute();

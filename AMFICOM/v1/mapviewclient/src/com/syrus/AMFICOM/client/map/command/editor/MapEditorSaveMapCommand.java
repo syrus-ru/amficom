@@ -1,25 +1,25 @@
 /*
- * $Id: MapEditorSaveMapCommand.java,v 1.8 2005/06/06 12:20:31 krupenn Exp $
+ * $Id: MapEditorSaveMapCommand.java,v 1.9 2005/06/22 08:43:47 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
 
-import com.syrus.AMFICOM.client.map.command.map.MapSaveCommand;
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapSaveCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-
-import javax.swing.JDesktopPane;
 
 /**
  * Класс MapEditorSaveContextCommand используется для сохранения топологической
  * схемы в модуле "Редактор топологических схем". Использует команду
  * MapSaveCommand
  * 
- * @version $Revision: 1.8 $, $Date: 2005/06/06 12:20:31 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 08:43:47 $
  * @author $Author: krupenn $
  * @module
  * @see MapSaveCommand

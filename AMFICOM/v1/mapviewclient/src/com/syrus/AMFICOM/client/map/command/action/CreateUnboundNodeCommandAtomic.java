@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.17 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.18 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import com.syrus.AMFICOM.client.map.controllers.UnboundNodeController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -20,13 +19,14 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.util.Log;
 
 /**
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand
@@ -62,11 +62,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
 				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))

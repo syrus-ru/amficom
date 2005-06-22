@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.17 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.18 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,17 +17,17 @@ import java.util.List;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.util.Log;
 
 /**
  * убрать кабельный путь с привязкой из карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -42,11 +42,7 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		try {
 			SchemeCableLink scl = this.cablePath.getSchemeCableLink();

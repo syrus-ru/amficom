@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.13 2005/06/14 12:01:20 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.14 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,15 +17,15 @@ import java.util.Collection;
 
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.dialogs.NamedObjectWrapper;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * @version $Revision: 1.13 $, $Date: 2005/06/14 12:01:20 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/22 08:43:49 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

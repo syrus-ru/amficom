@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.17 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.18 2005/06/22 08:43:47 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,9 +14,8 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -24,11 +23,12 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.util.Log;
 
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:47 $
  * @module mapviewclient_v1
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
@@ -63,11 +63,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 	
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.15 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.16 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,10 +12,10 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 /**
  * создание прокладки измерительного пути 
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/06/06 12:20:30 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v1
  */
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand
@@ -58,11 +58,7 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 		
 		this.measurementPath = MeasurementPath.createInstance(
 				this.schemePath,

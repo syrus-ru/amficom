@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.19 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.20 2005/06/22 08:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,17 +15,17 @@ import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.util.Log;
 
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:48 $
  * @module mapviewclient_v1
  */
 public class MapNewCommand extends AbstractCommand {
@@ -38,11 +38,7 @@ public class MapNewCommand extends AbstractCommand {
 	}
 
 	public void execute() {
-		Environment.log(
-				Environment.LOG_LEVEL_CONFIG,
-				"Creating new map",
-				getClass().getName(),
-				"execute()");
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "Creating new map", Log.CONFIG);
 
 		System.out.println("Creating new map context");
 		this.aContext.getDispatcher().firePropertyChange(

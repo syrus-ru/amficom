@@ -1,15 +1,27 @@
 /**
- * $Id: TristateCheckBox.java,v 1.2 2005/06/06 12:20:36 krupenn Exp $ 
+ * $Id: TristateCheckBox.java,v 1.3 2005/06/22 08:43:49 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ
  */
 package com.syrus.AMFICOM.client.map.ui;
 
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.Icon;
+import javax.swing.JCheckBox;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.ActionMapUIResource;
-import java.awt.event.*;
 
 /**
  * http://www.javaspecialists.co.za/archive/Issue082.html

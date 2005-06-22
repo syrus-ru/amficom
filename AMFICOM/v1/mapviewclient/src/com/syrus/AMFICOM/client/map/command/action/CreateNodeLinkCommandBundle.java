@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.17 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.18 2005/06/22 08:43:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.util.Log;
 
 /**
  * создание фрагмента линии, которое строится из 
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:46 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -248,11 +248,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	{
 		try
 		{
-			Environment.log(
-					Environment.LOG_LEVEL_FINER, 
-					"method call", 
-					getClass().getName(), 
-					"execute()");
+			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 			// анализируется элемент в точке, в которой отпущена мышка		
 			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint, this.netMapViewer.getVisibleBounds());
 			// если мышка отпущена на том же элементе, то линию не рисовать

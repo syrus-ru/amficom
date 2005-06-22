@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.35 2005/06/21 12:45:23 peskovsky Exp $
+ * $Id: MapMouseListener.java,v 1.36 2005/06/22 08:43:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,14 +48,15 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
+import com.syrus.util.Log;
 
 /**
  * Обработчик мыши в окне карты. При обработке смотрится состояние
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.35 $, $Date: 2005/06/21 12:45:23 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.36 $, $Date: 2005/06/22 08:43:49 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -192,7 +193,8 @@ public final class MapMouseListener implements MouseListener
 					}
 					catch(Exception e)
 					{
-						Environment.log(Environment.LOG_LEVEL_FINER, "current execution point with call stack:", null, null, e);
+						Log.debugMessage("MapMouseListener::mousePressed | current execution point with call stack:", Log.FINER);
+						Log.debugException(e, Log.FINER);
 					}
 					break;
 			}//switch (mapState.getOperationMode()
@@ -469,7 +471,8 @@ public final class MapMouseListener implements MouseListener
 						}
 						catch(Exception e)
 						{
-							Environment.log(Environment.LOG_LEVEL_FINER, "current execution point with call stack:", null, null, e);
+							Log.debugMessage("MapMouseListener::mouseReleased | current execution point with call stack:", Log.FINER);
+							Log.debugException(e, Log.FINER);
 						}
 						break;
 				}//switch (mapState.getOperationMode()
