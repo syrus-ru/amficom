@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.13 2005/06/17 11:01:10 bass Exp $
+ * $Id: EquipmentWrapper.java,v 1.14 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/17 11:01:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/22 10:21:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class EquipmentWrapper extends StorableObjectWrapper {
@@ -81,7 +81,8 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Equipment) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Equipment) {
 			Equipment equipment = (Equipment) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return equipment.getDescription();
@@ -114,7 +115,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 			if (key.equals(ObjectEntities.EQUIPMENTMELINK))
 				return equipment.getMonitoredElementIds();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -155,10 +156,6 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -169,8 +166,31 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK))
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_SUPPLIER)
+				|| key.equals(COLUMN_SUPPLIER_CODE)
+				|| key.equals(COLUMN_HW_SERIAL) 
+				|| key.equals(COLUMN_HW_VERSION)
+				|| key.equals(COLUMN_SW_SERIAL)
+				|| key.equals(COLUMN_SW_VERSION)
+				|| key.equals(COLUMN_INVENTORY_NUMBER)) {
+			return String.class;
+		} else if (key.equals(COLUMN_TYPE_ID)) {
+			return EquipmentType.class;
+		} else if (key.equals(COLUMN_IMAGE_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_LONGITUDE) 
+				|| key.equals(COLUMN_LATITUDE)) {
+			return Float.class;
+		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 			return Set.class;
-		return String.class;
+		}
+		return null;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.9 2005/05/23 12:49:46 bob Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.10 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/23 12:49:46 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 10:22:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -94,10 +94,6 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(MODE_ETALON))
 				evaluationType.setEtalonParameterTypeIds((java.util.Set) value);
 		}
-	}
-
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {

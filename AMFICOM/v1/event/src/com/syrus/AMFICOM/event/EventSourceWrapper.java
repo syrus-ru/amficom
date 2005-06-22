@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceWrapper.java,v 1.4 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventSourceWrapper.java,v 1.5 2005/06/22 10:24:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 11:16:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 10:24:10 $
+ * @author $Author: bob $
  * @module event_v1
  */
 public class EventSourceWrapper extends StorableObjectWrapper {
@@ -58,13 +58,14 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof EventSource) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof EventSource) {
 			EventSource eventSource = (EventSource) object;
 			if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID))
 				return eventSource.getSourceEntityId();
 		}
 		
-		return null;
+		return value;
 	}
 
 	public void setValue(Object object, final String key, final Object value) {
@@ -79,10 +80,6 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(String key) {
 		/* there is no properties */
 		return null;
@@ -93,7 +90,13 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID))
+			return Identifier.class;
+		return null;
 	}
 
 }

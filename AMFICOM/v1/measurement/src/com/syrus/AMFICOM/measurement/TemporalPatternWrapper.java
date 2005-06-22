@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternWrapper.java,v 1.6 2005/04/22 16:04:39 arseniy Exp $
+ * $Id: TemporalPatternWrapper.java,v 1.7 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/22 16:04:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 10:22:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class TemporalPatternWrapper extends StorableObjectWrapper {
@@ -51,7 +51,8 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof CronTemporalPattern) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof CronTemporalPattern) {
 			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return temporalPattern.getDescription();
@@ -59,7 +60,7 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 				return Arrays.asList(temporalPattern.getCronStrings());
 
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -82,10 +83,6 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -96,9 +93,15 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION))
+			return String.class;
 		if (key.equals(COLUMN_VALUE))
 			return List.class;
-		return String.class;
+		return null;
 	}
 
 }

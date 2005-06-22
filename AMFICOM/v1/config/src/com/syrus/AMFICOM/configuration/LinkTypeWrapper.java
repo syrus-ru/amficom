@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeWrapper.java,v 1.10 2005/06/22 10:05:17 bass Exp $
+ * $Id: LinkTypeWrapper.java,v 1.11 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 10:21:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class LinkTypeWrapper extends StorableObjectWrapper {
@@ -68,7 +68,8 @@ public final class LinkTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof LinkType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof LinkType) {
 			LinkType type = (LinkType) object;			
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
@@ -87,7 +88,7 @@ public final class LinkTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -116,10 +117,6 @@ public final class LinkTypeWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -130,8 +127,23 @@ public final class LinkTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME) 
+				|| key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_MANUFACTURER)
+				|| key.equals(COLUMN_MANUFACTURER_CODE)) {
+			return String.class;
+		} else if (key.equals(COLUMN_KIND)) {
+			return Integer.class;			
+		} else if (key.equals(COLUMN_IMAGE_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 			return Set.class;
-		return String.class;
+		}
+		return null;
 	}
 }

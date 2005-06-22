@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.9 2005/06/16 10:34:04 bass Exp $
+ * $Id: ResultWrapper.java,v 1.10 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:34:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 10:22:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class ResultWrapper extends StorableObjectWrapper {
@@ -71,7 +71,8 @@ public class ResultWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Result) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Result) {
 			Result result = (Result) object;
 			if (key.equals(COLUMN_ACTION_ID))
 				return result.getAction();
@@ -88,7 +89,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 				return values;
 			}
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -135,13 +136,17 @@ public class ResultWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
 		if (key.equals(COLUMN_ACTION_ID))
 			return Action.class;
 		if (key.equals(COLUMN_SORT))
 			return Integer.class;
 		if (key.equals(LINK_FIELD_RESULT_PARAMETERS))
 			return Map.class;
-		return String.class;
+		return null;
 	}
 
 }

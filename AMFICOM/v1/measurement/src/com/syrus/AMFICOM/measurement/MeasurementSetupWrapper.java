@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.14 2005/06/16 10:34:03 bass Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.15 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/06/22 10:22:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
@@ -192,8 +193,24 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID) || key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
-			return java.util.Set.class;
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_PARAMETER_SET_ID) 
+				|| key.equals(COLUMN_CRITERIA_SET_ID)
+				|| key.equals(COLUMN_THRESHOLD_SET_ID)
+				|| key.equals(COLUMN_ETALON_ID)) {
+			return ParameterSet.class;
+		}
+		if (key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(SUMMARY_INFO)) {
+			return String.class;
+		}
+		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID) 
+				|| key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID)) {
+			return Set.class;
+		}
+		return null;
 	}
 }

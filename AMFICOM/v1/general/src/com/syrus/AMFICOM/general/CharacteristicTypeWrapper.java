@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.10 2005/06/21 12:43:48 bass Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.11 2005/06/22 10:24:25 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/21 12:43:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 10:24:25 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper {
@@ -57,7 +57,19 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME)
+				|| key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(COLUMN_DATA_TYPE)
+				|| key.equals(COLUMN_SORT)) {
+			return Integer.class;	
+		}
+		return null;
 	}
 
 	public Object getPropertyValue(String key) {
@@ -71,7 +83,8 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(Object object, String key) {
-		if (object instanceof CharacteristicType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof CharacteristicType) {
 			CharacteristicType characteristicType = (CharacteristicType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return characteristicType.getCodename();
@@ -84,7 +97,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_SORT))
 				return new Integer(characteristicType.getSort().value());
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(String key) {

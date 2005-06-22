@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.9 2005/04/11 11:48:36 bob Exp $
+ * $Id: KISWrapper.java,v 1.10 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/11 11:48:36 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 10:21:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -65,7 +65,8 @@ public final class KISWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof KIS) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof KIS) {
 			KIS kis = (KIS) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return kis.getDescription();
@@ -82,7 +83,7 @@ public final class KISWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return kis.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -123,8 +124,22 @@ public final class KISWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_HOSTNAME)) {
+			return String.class;
+		} else if (key.equals(COLUMN_TCP_PORT)) {
+			return Short.class;			
+		} else if (key.equals(COLUMN_EQUIPMENT_ID)
+				|| key.equals(COLUMN_MCM_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 			return Set.class;
-		return String.class;
+		}
+		return null;
 	}
 }

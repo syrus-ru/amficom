@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternWrapper.java,v 1.2 2005/04/25 14:17:54 bob Exp $
+ * $Id: PeriodicalTemporalPatternWrapper.java,v 1.3 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/25 14:17:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 10:22:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -50,12 +50,13 @@ public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof PeriodicalTemporalPattern) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof PeriodicalTemporalPattern) {
 			PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) object;
 			if (key.equals(COLUMN_PERIOD))
 				return new Long(periodicalTemporalPattern.getPeriod());
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -70,10 +71,6 @@ public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -84,9 +81,13 @@ public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
 		if (key.equals(COLUMN_PERIOD))
 			return Long.class;
-		return String.class;
+		return null;
 	}
 
 }

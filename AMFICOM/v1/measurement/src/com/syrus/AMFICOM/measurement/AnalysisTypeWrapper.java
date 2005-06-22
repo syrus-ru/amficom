@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.11 2005/05/23 12:49:46 bob Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.12 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/23 12:49:46 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 10:22:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -86,18 +87,14 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				analysisType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				analysisType.setInParameterTypeIds((java.util.Set) value);
+				analysisType.setInParameterTypeIds((Set) value);
 			else if (key.equals(MODE_OUT))
-				analysisType.setOutParameterTypeIds((java.util.Set) value);
+				analysisType.setOutParameterTypeIds((Set) value);
 			else if (key.equals(MODE_CRITERION))
-				analysisType.setCriteriaParameterTypeIds((java.util.Set) value);
+				analysisType.setCriteriaParameterTypeIds((Set) value);
 			else if (key.equals(MODE_ETALON))
-				analysisType.setEtalonParameterTypeIds((java.util.Set) value);
+				analysisType.setEtalonParameterTypeIds((Set) value);
 		}
-	}
-
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -110,9 +107,19 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(MODE_IN) || key.equals(MODE_OUT) || key.equals(MODE_CRITERION) || key.equals(MODE_ETALON))
-			return java.util.Set.class;
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(MODE_IN) 
+				|| key.equals(MODE_OUT) 
+				|| key.equals(MODE_CRITERION) 
+				|| key.equals(MODE_ETALON)) {
+			return Set.class;
+		}
+		return null;
 	}
-
 }

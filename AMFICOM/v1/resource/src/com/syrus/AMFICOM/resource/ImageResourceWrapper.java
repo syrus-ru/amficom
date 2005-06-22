@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.5 2005/05/18 11:37:17 bass Exp $
+ * $Id: ImageResourceWrapper.java,v 1.6 2005/06/22 10:22:40 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/18 11:37:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 10:22:40 $
+ * @author $Author: bob $
  * @module resource_v1
  */
 public class ImageResourceWrapper extends StorableObjectWrapper {
@@ -48,17 +49,24 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 		return this.keys;
 	}
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public String getName(String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME)) {
+			return String.class;
+		} else if (key.equals(COLUMN_SORT)) {
+			return Integer.class;			
+		} else if (key.equals(COLUMN_DATA)){
+			return byte[].class;
+		}
+		return null;
 	}
 
 	public Object getPropertyValue(String key) {
@@ -71,7 +79,8 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(Object object, String key) {
-		if (object instanceof AbstractImageResource) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof AbstractImageResource) {
 			AbstractImageResource abstractImageResource = (AbstractImageResource) object;
 			if (key.equals(COLUMN_SORT))
 				return new Integer(abstractImageResource.getSort().value());
@@ -94,7 +103,7 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 				}
 			}
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(String key) {

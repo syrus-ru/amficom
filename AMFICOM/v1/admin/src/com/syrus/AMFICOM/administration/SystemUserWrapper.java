@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.3 2005/06/21 14:13:36 bass Exp $
+ * $Id: SystemUserWrapper.java,v 1.4 2005/06/22 10:22:27 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSor
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/21 14:13:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 10:22:27 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 public class SystemUserWrapper extends StorableObjectWrapper {
@@ -64,7 +64,8 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof SystemUser) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof SystemUser) {
 			SystemUser user = (SystemUser) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return user.getDescription();
@@ -75,7 +76,7 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_SORT))
 				return new Integer(user.getSort().value());
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -110,7 +111,17 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_LOGIN)
+				|| key.equals(COLUMN_NAME))
+			return String.class;
+		if (key.equals(COLUMN_SORT))
+			return Integer.class;
+		return null;
 	}
 
 }

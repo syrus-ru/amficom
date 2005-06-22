@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.6 2005/06/08 09:33:18 arseniy Exp $
+ * $Id: ServerProcessWrapper.java,v 1.7 2005/06/22 10:22:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/08 09:33:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 10:22:27 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 public class ServerProcessWrapper extends StorableObjectWrapper {
@@ -61,7 +62,8 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof ServerProcess) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof ServerProcess) {
 			ServerProcess serverProcess = (ServerProcess) object;
 			if (key.equals(COLUMN_CODENAME))
 				return serverProcess.getCodename();
@@ -72,7 +74,7 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return serverProcess.getDescription();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -87,10 +89,6 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -101,7 +99,20 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME)
+				|| key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_SERVER_ID)
+				|| key.equals(COLUMN_USER_ID)) {
+			return Identifier.class;
+		}
+		return null;
 	}
 
 }

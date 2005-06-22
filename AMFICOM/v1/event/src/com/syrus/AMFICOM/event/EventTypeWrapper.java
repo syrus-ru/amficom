@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.10 2005/05/27 18:38:15 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.11 2005/06/22 10:24:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/27 18:38:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 10:24:10 $
+ * @author $Author: bob $
  * @module event_v1
  */
 public class EventTypeWrapper extends StorableObjectWrapper {
@@ -53,7 +53,8 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof EventType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof EventType) {
 			EventType eventType = (EventType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return eventType.getCodename();
@@ -62,7 +63,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(LINK_FIELD_PARAMETER_TYPES))
 				return eventType.getParameterTypeIds();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -97,9 +98,17 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME)
+				|| key.equals(COLUMN_DESCRIPTION))
+			return String.class;
 		if (key.equals(LINK_FIELD_PARAMETER_TYPES))
 			return Set.class;
-		return String.class;
+		
+		return null;
 	}
 
 }

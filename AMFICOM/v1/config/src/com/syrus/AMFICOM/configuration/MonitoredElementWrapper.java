@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.10 2005/06/22 10:05:17 bass Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.11 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 10:21:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class MonitoredElementWrapper extends StorableObjectWrapper {
@@ -66,7 +66,8 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof MonitoredElement) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof MonitoredElement) {
 			MonitoredElement me = (MonitoredElement) object;
 			if (key.equals(COLUMN_NAME))
 				return me.getName();
@@ -79,7 +80,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))
 				return me.getMonitoredDomainMemberIds();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -92,22 +93,18 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_NAME))
 				me.setName((String) value);
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
-				me.setMeasurementPortId(new Identifier((String) value));
+				me.setMeasurementPortId((Identifier) value);
 			else if (key.equals(COLUMN_SORT))
-				me.setSort(MonitoredElementSort.from_int(Integer.parseInt((String) value)));
+				me.setSort(MonitoredElementSort.from_int((Integer)value));
 			else if (key.equals(COLUMN_LOCAL_ADDRESS))
 				me.setLocalAddress((String) value);
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
 				Set meDomainMemeberIds = new HashSet(((Set) value).size());
 				for (Iterator it = ((List) value).iterator(); it.hasNext();)
-					meDomainMemeberIds.add(new Identifier((String) it.next()));
+					meDomainMemeberIds.add((Identifier)it.next());
 				me.setMonitoredDomainMemberIds(meDomainMemeberIds);
 			}
 		}
-	}
-
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -120,8 +117,20 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_LOCAL_ADDRESS)) {
+			return String.class;
+		} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_SORT)) {
+			return Integer.class;
+		} else if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
 			return Set.class;
-		return String.class;
+		}
+		return null;
 	}
 }

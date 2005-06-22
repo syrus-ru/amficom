@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingWrapper.java,v 1.6 2005/06/16 10:34:03 bass Exp $
+ * $Id: ModelingWrapper.java,v 1.7 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 10:22:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class ModelingWrapper extends StorableObjectWrapper {
@@ -53,7 +53,8 @@ public class ModelingWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Modeling) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Modeling) {
 			Modeling modeling = (Modeling) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return modeling.getType();
@@ -64,7 +65,7 @@ public class ModelingWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_NAME))
 				return modeling.getName();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -99,7 +100,23 @@ public class ModelingWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_TYPE_ID)) {
+			return ModelingType.class;
+		}
+		if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
+			return Identifier.class;
+		}
+		if (key.equals(COLUMN_ARGUMENT_SET_ID)) {
+			return ParameterSet.class;
+		}
+		if (key.equals(COLUMN_NAME)) {
+			return String.class;
+		}
+		return null;
 	}
 
 }

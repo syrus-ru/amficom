@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.12 2005/05/13 10:50:54 bob Exp $
+ * $Id: TestWrapper.java,v 1.13 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/13 10:50:54 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/22 10:22:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -82,7 +83,8 @@ public class TestWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Test) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Test) {
 			Test test = (Test) object;
 			if (key.equals(COLUMN_TEMPORAL_TYPE))
 				return new Integer(test.getTemporalType().value());
@@ -115,7 +117,7 @@ public class TestWrapper extends StorableObjectWrapper {
 			if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
 				return test.getMeasurementSetupIds();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -168,7 +170,36 @@ public class TestWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_TEMPORAL_TYPE)
+				|| key.equals(COLUMN_RETURN_TYPE)
+				|| key.equals(COLUMN_STATUS)) {
+			return Integer.class;
+		}
+		if (key.equals(COLUMN_START_TIME)
+				|| key.equals(COLUMN_END_TIME)) {
+			return Date.class;
+		}
+		if (key.equals(COLUMN_TEMPORAL_PATTERN_ID)
+				|| key.equals(COLUMN_MEASUREMENT_TYPE_ID)
+				|| key.equals(COLUMN_ANALYSIS_TYPE_ID)
+				|| key.equals(COLUMN_EVALUATION_TYPE_ID)
+				|| key.equals(COLUMN_GROUP_TEST_ID)) {
+			return Identifier.class;
+		}
+		if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
+			return MonitoredElement.class;
+		}
+		if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID)) {
+			return Set.class;
+		}
+		return null;
 	}
 
 }

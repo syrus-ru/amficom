@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.8 2005/05/18 11:27:15 bass Exp $
+ * $Id: CableThreadWrapper.java,v 1.9 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/18 11:27:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:21:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -49,7 +49,8 @@ public final class CableThreadWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof CableThread) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof CableThread) {
 			CableThread thread = (CableThread) object;		
 			if (key.equals(COLUMN_DESCRIPTION))
 				return thread.getDescription();
@@ -58,7 +59,7 @@ public final class CableThreadWrapper extends StorableObjectWrapper {
 			if (key.equals(StorableObjectWrapper.COLUMN_TYPE_ID))
 				return thread.getType();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -77,20 +78,28 @@ public final class CableThreadWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, 
+	                             final Object objectKey, 
+	                             final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public Class getPropertyClass(String key) {
-		return String.class;
+	public Class getPropertyClass(final String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(StorableObjectWrapper.COLUMN_TYPE_ID)) {
+			return CableThreadType.class;			
+		}
+		return null;
 	}
 }

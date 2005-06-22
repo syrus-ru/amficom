@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.13 2005/06/21 12:43:47 bass Exp $
+ * $Id: CharacteristicWrapper.java,v 1.14 2005/06/22 10:24:25 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/21 12:43:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/22 10:24:25 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class CharacteristicWrapper extends StorableObjectWrapper {
@@ -52,17 +52,29 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 		return this.keys;
 	}
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public String getName(String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_TYPE_ID)) {
+			return CharacteristicType.class;
+		} else if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_VALUE)) {
+			return String.class;
+		} else if (key.equals(COLUMN_CHARACTERIZABLE_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_EDITABLE)
+				|| key.equals(COLUMN_VISIBLE)) {
+			return Boolean.class;
+		}
+		return null;
 	}
 
 	public Object getPropertyValue(String key) {
@@ -76,7 +88,8 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(Object object, String key) {
-		if (object instanceof Characteristic) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Characteristic) {
 			Characteristic characteristic = (Characteristic) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return characteristic.getType();
@@ -93,7 +106,7 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_VALUE))
 				return characteristic.getValue();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(String key) {

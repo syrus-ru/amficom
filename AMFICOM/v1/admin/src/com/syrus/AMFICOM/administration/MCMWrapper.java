@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.7 2005/04/11 11:48:27 bob Exp $
+ * $Id: MCMWrapper.java,v 1.8 2005/06/22 10:22:27 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:48:27 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/22 10:22:27 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -59,7 +59,8 @@ public class MCMWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof MCM) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof MCM) {
 			MCM mcm = (MCM) object;
 			if (key.equals(COLUMN_NAME))
 				return mcm.getName();
@@ -74,7 +75,7 @@ public class MCMWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return mcm.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -114,9 +115,23 @@ public class MCMWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_HOSTNAME)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_USER_ID)
+				|| key.equals(COLUMN_SERVER_ID)) {
+			return Identifier.class;
+		}
+		if (key.equals(COLUMN_CHARACTERISTICS)) {
 			return Set.class;
-		return String.class;
+		}
+		return null;
 	}
 
 }

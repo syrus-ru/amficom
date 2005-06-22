@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortWrapper.java,v 1.8 2005/04/11 11:48:36 bob Exp $
+ * $Id: MeasurementPortWrapper.java,v 1.9 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/11 11:48:36 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:21:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -60,7 +60,8 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof MeasurementPort) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof MeasurementPort) {
 			MeasurementPort port = (MeasurementPort) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return port.getDescription();
@@ -75,7 +76,7 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return port.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -100,10 +101,6 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -114,7 +111,21 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		Class clazz = String.class;
-		return clazz;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(COLUMN_TYPE_ID)) {
+			return MeasurementPortType.class;
+		} else if (key.equals(COLUMN_KIS_ID)
+				|| key.equals(COLUMN_PORT_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
+			return Set.class;
+		}
+		return null;
 	}
 }

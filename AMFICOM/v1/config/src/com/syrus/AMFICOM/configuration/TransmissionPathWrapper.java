@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.11 2005/06/17 11:01:10 bass Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.12 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/17 11:01:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 10:21:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class TransmissionPathWrapper extends StorableObjectWrapper {
@@ -61,7 +61,8 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof TransmissionPath) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof TransmissionPath) {
 			TransmissionPath path = (TransmissionPath) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return path.getDescription();
@@ -78,7 +79,7 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 			if (key.equals(ObjectEntities.TRANSPATHMELINK))
 				return path.getMonitoredElementIds();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -103,10 +104,6 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -117,8 +114,21 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_TYPE_ID))
+			return TransmissionPathType.class;
+		else if (key.equals(COLUMN_START_PORT_ID)
+				|| key.equals(COLUMN_FINISH_PORT_ID))
+			return Identifier.class;
 		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK))
 			return Set.class;
-		return String.class;
+		return null;
 	}
 }

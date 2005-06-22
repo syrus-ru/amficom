@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.2 2005/06/17 12:38:55 bass Exp $
+ * $Id: ParameterSetWrapper.java,v 1.3 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -20,8 +21,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 12:38:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 10:22:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class ParameterSetWrapper extends StorableObjectWrapper {
@@ -62,7 +63,8 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof ParameterSet) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof ParameterSet) {
 			ParameterSet set = (ParameterSet) object;
 			if (key.equals(COLUMN_SORT))
 				return new Integer(set.getSort().value());
@@ -81,7 +83,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 				return values;
 			}
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -131,13 +133,19 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION))
+			return String.class;
 		if (key.equals(COLUMN_SORT))
 			return Integer.class;
 		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
-			return java.util.Set.class;
+			return Set.class;
 		if (key.equals(LINK_FIELD_SET_PARAMETERS))
 			return Map.class;
-		return String.class;
+		return null;
 	}
 
 }

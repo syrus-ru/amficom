@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.9 2005/05/18 11:16:58 bass Exp $
+ * $Id: EventWrapper.java,v 1.10 2005/06/22 10:24:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/18 11:16:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 10:24:10 $
+ * @author $Author: bob $
  * @module event_v1
  */
 public class EventWrapper extends StorableObjectWrapper {
@@ -58,7 +58,8 @@ public class EventWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Event) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Event) {
 			Event event = (Event) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return event.getType();
@@ -69,7 +70,7 @@ public class EventWrapper extends StorableObjectWrapper {
 			if (key.equals(LINK_FIELD_EVENT_SOURCES))
 				return event.getEventSourceIds();
 		}
-		return null;
+		return value;
 	}
 
 	public void setValue(Object object, final String key, final Object value) {
@@ -93,10 +94,6 @@ public class EventWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(String key) {
 		/* there is no properties */
 		return null;
@@ -107,13 +104,19 @@ public class EventWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION))
+			return String.class;
 		if (key.equals(COLUMN_TYPE_ID))
 			return EventType.class;
 		if (key.equals(LINK_FIELD_EVENT_PARAMETERS))
 			return Set.class;
 		if (key.equals(LINK_FIELD_EVENT_SOURCES))
 			return Set.class;
-		return String.class;
+		return null;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.5 2005/04/11 11:49:13 bob Exp $
+ * $Id: MeasurementWrapper.java,v 1.6 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/04/11 11:49:13 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 10:22:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -60,7 +60,8 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Measurement) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Measurement) {
 			Measurement measurement = (Measurement) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return measurement.getType();
@@ -78,9 +79,8 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 				return measurement.getLocalAddress();
 			if (key.equals(COLUMN_TEST_ID))
 				return measurement.getTestId();
-
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -110,21 +110,43 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, 
+	                             final Object objectKey, 
+	                             final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public Class getPropertyClass(String key) {
-		return String.class;
+	public Class getPropertyClass(final String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_TYPE_ID)) {
+			return MeasurementType.class;
+		}
+		if (key.equals(COLUMN_MONITORED_ELEMENT_ID)
+				|| key.equals(COLUMN_TEST_ID)) {
+			return Identifier.class;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_STATUS)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_SETUP_ID)) {
+			return MeasurementSetup.class;
+		}
+		if (key.equals(COLUMN_START_TIME)) {
+			return Date.class;
+		}
+		if (key.equals(COLUMN_STATUS)) {
+			return Integer.class;
+		}
+		return null;
 	}
 
 }

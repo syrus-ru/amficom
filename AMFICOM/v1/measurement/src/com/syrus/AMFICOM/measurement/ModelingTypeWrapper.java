@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.8 2005/05/13 21:17:13 arseniy Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.9 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,14 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/13 21:17:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:22:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class ModelingTypeWrapper extends StorableObjectWrapper {
@@ -52,7 +54,8 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof ModelingType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof ModelingType) {
 			ModelingType modelingType = (ModelingType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return modelingType.getCodename();
@@ -63,7 +66,7 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(MODE_OUT))
 				return modelingType.getOutParameterTypeIds();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -78,9 +81,9 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				modelingType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				modelingType.setInParameterTypeIds((java.util.Set) value);
+				modelingType.setInParameterTypeIds((Set) value);
 			else if (key.equals(MODE_OUT))
-				modelingType.setOutParameterTypeIds((java.util.Set) value);
+				modelingType.setOutParameterTypeIds((Set) value);
 		}
 	}
 
@@ -98,9 +101,16 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(MODE_IN) || key.equals(MODE_OUT))
-			return List.class;
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(MODE_IN) || key.equals(MODE_OUT))
+			return Set.class;
+		return null;
 	}
 
 }

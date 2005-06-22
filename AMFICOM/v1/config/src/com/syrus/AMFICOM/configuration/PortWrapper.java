@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.10 2005/06/22 10:05:17 bass Exp $
+ * $Id: PortWrapper.java,v 1.11 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 10:21:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class PortWrapper extends StorableObjectWrapper {
@@ -60,7 +60,8 @@ public final class PortWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Port) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Port) {
 			Port port = (Port) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return port.getDescription();
@@ -73,7 +74,7 @@ public final class PortWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return port.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -110,8 +111,20 @@ public final class PortWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION))
+			return String.class;
+		else if (key.equals(COLUMN_TYPE_ID))
+			return PortType.class;
+		else if (key.equals(COLUMN_SORT))
+			return Integer.class;
+		else if (key.equals(COLUMN_EQUIPMENT_ID))
+			return Identifier.class;
 		if (key.equals(COLUMN_CHARACTERISTICS))
 			return Set.class;
-		return String.class;
+		return null;
 	}
 }

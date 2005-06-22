@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisWrapper.java,v 1.7 2005/06/16 10:34:03 bass Exp $
+ * $Id: AnalysisWrapper.java,v 1.8 2005/06/22 10:22:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,14 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/16 10:34:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/06/22 10:22:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class AnalysisWrapper extends StorableObjectWrapper {
@@ -57,7 +58,8 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Analysis) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Analysis) {
 			Analysis analysis = (Analysis) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return analysis.getType();
@@ -70,7 +72,7 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CRITERIA_SET_ID))
 				return analysis.getCriteriaSet();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -93,10 +95,6 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -107,7 +105,26 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_TYPE_ID)) {
+			return AnalysisType.class;
+		}
+		if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
+			return Identifier.class;
+		}
+		if (key.equals(COLUMN_MEASUREMENT_ID)) {
+			return Measurement.class;
+		}
+		if (key.equals(COLUMN_NAME)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_CRITERIA_SET_ID)) {
+			return Set.class;
+		}
+		return null;
 	}
 
 }

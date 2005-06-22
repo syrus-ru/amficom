@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeWrapper.java,v 1.8 2005/04/11 11:48:36 bob Exp $
+ * $Id: TransmissionPathTypeWrapper.java,v 1.9 2005/06/22 10:21:41 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/11 11:48:36 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:21:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,7 +49,8 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof TransmissionPathType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof TransmissionPathType) {
 			TransmissionPathType type = (TransmissionPathType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
@@ -60,7 +61,7 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -95,8 +96,17 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME)
+				|| key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		}
 		if (key.equals(COLUMN_CHARACTERISTICS))
 			return Set.class;
-		return String.class;
+		return null;
 	}
 }

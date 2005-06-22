@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.6 2005/04/27 17:47:58 arseniy Exp $
+ * $Id: ServerWrapper.java,v 1.7 2005/06/22 10:22:27 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/27 17:47:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 10:22:27 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 public class ServerWrapper extends StorableObjectWrapper {
@@ -56,7 +56,8 @@ public class ServerWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof Server) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof Server) {
 			Server server = (Server) object;
 			if (key.equals(COLUMN_NAME))
 				return server.getName();
@@ -69,7 +70,7 @@ public class ServerWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return server.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -106,8 +107,22 @@ public class ServerWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS)) { return Set.class; }
-		return String.class;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_HOSTNAME)) {
+			return String.class;
+		}
+		if (key.equals(DomainMember.COLUMN_DOMAIN_ID)) {
+			return Identifier.class;
+		}
+		if (key.equals(COLUMN_CHARACTERISTICS)) { 
+			return Set.class; 
+		}
+		return null;
 	}
 
 }
