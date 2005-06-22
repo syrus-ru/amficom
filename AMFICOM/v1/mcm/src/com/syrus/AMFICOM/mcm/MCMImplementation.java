@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.40 2005/06/21 12:44:30 bass Exp $
+ * $Id: MCMImplementation.java,v 1.41 2005/06/22 14:01:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/21 12:44:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/06/22 14:01:19 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -49,7 +49,7 @@ public class MCMImplementation extends MCMPOA {
 
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
 		Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
-		List tests = new LinkedList();
+		List<Test> tests = new LinkedList<Test>();
 		for (int i = 0; i < testsT.length; i++) {
 			try {
 				Test test = new Test(testsT[i]);
@@ -65,7 +65,7 @@ public class MCMImplementation extends MCMPOA {
 	}
 
 	public void abortTests(IdlIdentifier[] testIdsT) throws AMFICOMRemoteException {
-		Set ids = Identifier.fromTransferables(testIdsT);
+		Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
 		MeasurementControlModule.abortTests(ids);
 	}
 
@@ -90,7 +90,7 @@ public class MCMImplementation extends MCMPOA {
 		Measurement measurement;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 			measurement = (Measurement) it.next();
-			transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			transferables[i] = measurement.getTransferable();
 		}
 		return transferables;
 	}
@@ -112,7 +112,7 @@ public class MCMImplementation extends MCMPOA {
 		Analysis analysis;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 			analysis = (Analysis) it.next();
-			transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			transferables[i] = analysis.getTransferable();
 		}
 		return transferables;
 	}
@@ -134,7 +134,7 @@ public class MCMImplementation extends MCMPOA {
 		Evaluation evaluation;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 			evaluation = (Evaluation) it.next();
-			transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			transferables[i] = evaluation.getTransferable();
 		}
 		return transferables;
 	}
@@ -148,7 +148,7 @@ public class MCMImplementation extends MCMPOA {
 		Measurement measurement;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 			measurement = (Measurement) it.next();
-			transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			transferables[i] = measurement.getTransferable();
 		}
 		return transferables;
 	}
@@ -162,7 +162,7 @@ public class MCMImplementation extends MCMPOA {
 		Analysis analysis;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 			analysis = (Analysis) it.next();
-			transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			transferables[i] = analysis.getTransferable();
 		}
 		return transferables;
 	}
@@ -176,7 +176,7 @@ public class MCMImplementation extends MCMPOA {
 		Evaluation evaluation;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
 			evaluation = (Evaluation) it.next();
-			transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			transferables[i] = evaluation.getTransferable();
 		}
 		return transferables;
 	}

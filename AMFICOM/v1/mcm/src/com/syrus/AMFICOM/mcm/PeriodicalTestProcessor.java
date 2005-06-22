@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.39 2005/05/23 08:28:54 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.40 2005/06/22 13:59:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/05/23 08:28:54 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/22 13:59:17 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -38,7 +38,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 	private long endTime;
 	private CronTemporalPattern temporalPattern;
 
-	private List timeStampsList;	//List <Date timeStamp>
+	private List<Date> timeStampsList;
 	private Date currentTimeStamp;
 
 	public PeriodicalTestProcessor(Test test) {
@@ -53,7 +53,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			this.abort();
 		}
 
-		this.timeStampsList = new LinkedList();
+		this.timeStampsList = new LinkedList<Date>();
 		this.currentTimeStamp = null;
 	}
 
@@ -61,7 +61,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 		Date timeStamp = null;
 		if (!super.lastMeasurementAcquisition) {
 			if (!this.timeStampsList.isEmpty()) {
-				timeStamp = (Date) this.timeStampsList.remove(0);
+				timeStamp = this.timeStampsList.remove(0);
 			}
 			else {
 				long start = System.currentTimeMillis();
@@ -75,7 +75,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 //--------
 					this.timeStampsList.addAll(times);
 					if (!this.timeStampsList.isEmpty())
-						timeStamp = (Date) this.timeStampsList.remove(0);
+						timeStamp = this.timeStampsList.remove(0);
 				}
 				else
 					super.lastMeasurementAcquisition = true;

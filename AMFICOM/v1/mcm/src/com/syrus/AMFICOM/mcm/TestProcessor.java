@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.55 2005/06/17 11:01:01 bass Exp $
+ * $Id: TestProcessor.java,v 1.56 2005/06/22 13:59:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/06/17 11:01:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/06/22 13:59:16 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -47,7 +47,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	boolean lastMeasurementAcquisition;
 	private long currentMeasurementStartTime;
 	long forgetFrame;
-	private List measurementResultList;	//List <Result measurementResult>
+	private List<Result> measurementResultList;
 	boolean running;
 
 
@@ -61,7 +61,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.lastMeasurementAcquisition = false;
 		this.currentMeasurementStartTime = this.test.getStartTime().getTime();
 		this.forgetFrame = ApplicationProperties.getInt(MeasurementControlModule.KEY_FORGET_FRAME, MeasurementControlModule.FORGET_FRAME) * 1000;
-		this.measurementResultList = Collections.synchronizedList(new LinkedList());
+		this.measurementResultList = Collections.synchronizedList(new LinkedList<Result>());
 		this.running = true;
 
 		//	Проверить, не устарел ли этот тест
@@ -75,7 +75,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		if (this.running) {
 			// Проверить правильность КИС. Найти приёмопередатчик.
 			Identifier kisId = test.getKISId();
-			this.transceiver = (Transceiver) MeasurementControlModule.transceivers.get(kisId);
+			this.transceiver = MeasurementControlModule.transceivers.get(kisId);
 			if (this.transceiver == null) {
 				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
 				this.abort();
@@ -235,7 +235,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		Result measurementResult;
 		Measurement measurement;
 		if (!this.measurementResultList.isEmpty()) {
-			measurementResult = (Result) this.measurementResultList.remove(0);
+			measurementResult = this.measurementResultList.remove(0);
 			this.numberOfReceivedMResults++;
 			measurement = (Measurement) measurementResult.getAction();
 
