@@ -5,8 +5,6 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 JAVAC=javac
 
-JAVAC=javac
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 

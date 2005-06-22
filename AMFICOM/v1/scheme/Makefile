@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.23 2005/06/03 20:45:33 arseniy Exp $
+# $Id: Makefile,v 1.24 2005/06/22 10:58:00 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -12,10 +12,6 @@ ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.bz2
 IDLDIR=../idl_v1/idl
 
 JAVAC=javac
-ENCODING = KOI8-R
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
