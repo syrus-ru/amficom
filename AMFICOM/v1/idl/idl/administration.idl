@@ -1,5 +1,5 @@
 /*
- * $Id: administration.idl,v 1.9 2005/06/21 14:13:36 bass Exp $
+ * $Id: administration.idl,v 1.10 2005/06/22 12:13:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,8 @@ module corba {
 		} sort;
 		general::corba::WString128 name;
 		general::corba::WString256 description;
+
+		general::corba::IdentifierSeq characteristicIds;
 	} SystemUser;
 
 	typedef sequence<SystemUser> SystemUserSeq;
