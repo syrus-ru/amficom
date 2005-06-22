@@ -29,8 +29,8 @@ public class Transceiver extends SleepButWorkThread {
 
 	private KIS kis;
 	private KISConnection kisConnection;
-	private List scheduledMeasurements;
-	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
+	private List<Measurement> scheduledMeasurements;
+	private Map<Identifier, TestProcessor> testProcessors;
 
 	private KISReport kisReport;
 	private Measurement measurementToRemove;
@@ -48,14 +48,14 @@ public class Transceiver extends SleepButWorkThread {
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
 		}
-		this.scheduledMeasurements = Collections.synchronizedList(new ArrayList());
-		this.testProcessors = Collections.synchronizedMap(new HashMap());
+		this.scheduledMeasurements = Collections.synchronizedList(new ArrayList<Measurement>());
+		this.testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
 
 		this.running = true;
 	}
 
 	public void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
-		Identifier measurementId = measurement.getId();
+		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
 			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.scheduledMeasurements.add(measurement);
@@ -66,7 +66,7 @@ public class Transceiver extends SleepButWorkThread {
 	}
 
 	protected void addAcquiringMeasurement(Measurement measurement, TestProcessor testProcessor) {
-		Identifier measurementId = measurement.getId();
+		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
@@ -76,16 +76,13 @@ public class Transceiver extends SleepButWorkThread {
 	}
 
 	protected void abortMeasurementsForTestProcessor(TestProcessor testProcessor) {
-		Identifier measurementId;
-		Measurement measurement = null;
-		TestProcessor tp;
 		synchronized (this.testProcessors) {
 			for (Iterator it = this.testProcessors.keySet().iterator(); it.hasNext();) {
-				measurementId = (Identifier) it.next();
-				tp = (TestProcessor) this.testProcessors.get(measurementId);
+				final Identifier measurementId = (Identifier) it.next();
+				final TestProcessor tp = this.testProcessors.get(measurementId);
 				if (tp.getTestId().equals(testProcessor.getTestId())) {
 					try {
-						measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
+						final Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
 
 						it.remove();
 						this.scheduledMeasurements.remove(measurement);
@@ -108,19 +105,14 @@ public class Transceiver extends SleepButWorkThread {
 	}
 
 	public void run() {
-		Measurement measurement;
-		Identifier measurementId;
-		TestProcessor testProcessor;
-		Result result;
-
 		while (this.running) {
 
 			if (this.kisConnection != null) {
 				if (this.kisConnection.isEstablished()) {
 
 					if (! this.scheduledMeasurements.isEmpty()) {
-						measurement = (Measurement) this.scheduledMeasurements.get(0);
-						measurementId = measurement.getId();
+						final Measurement measurement = this.scheduledMeasurements.get(0);
+						final Identifier measurementId = measurement.getId();
 						try {
 							this.kisConnection.transmitMeasurement(measurement, super.initialTimeToSleep);
 
@@ -155,9 +147,9 @@ public class Transceiver extends SleepButWorkThread {
 						}
 					}// if (this.kisReport == null)
 					else {
-						measurementId = this.kisReport.getMeasurementId();
+						final Identifier measurementId = this.kisReport.getMeasurementId();
 						Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
-						measurement = null;
+						Measurement measurement = null;
 						try {
 							measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
 						}
@@ -165,9 +157,9 @@ public class Transceiver extends SleepButWorkThread {
 							Log.errorException(ae);
 						}
 						if (measurement != null) {
-							testProcessor = (TestProcessor) this.testProcessors.remove(measurementId);
+							final TestProcessor testProcessor = this.testProcessors.remove(measurementId);
 							if (testProcessor != null) {
-								result = null;
+								 Result result = null;
 
 								try {
 									result = this.kisReport.createResult();
