@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.151 2005/06/21 12:43:48 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.152 2005/06/22 19:21:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.151 $, $Date: 2005/06/21 12:43:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.152 $, $Date: 2005/06/22 19:21:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -241,7 +241,7 @@ public abstract class StorableObjectDatabase {
 	 * @return List&lt;Identifier&gt; of changed storable objects
 	 * @throws RetrieveObjectException
 	 */
-	public final Set<Identifier> refresh(final Set<StorableObject> storableObjects) throws RetrieveObjectException {
+	public final Set<Identifier> refresh(final Set<?  extends StorableObject> storableObjects) throws RetrieveObjectException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return Collections.emptySet();
 
@@ -256,7 +256,7 @@ public abstract class StorableObjectDatabase {
 				+ SQL_FROM + this.getEntityName()
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 		Set<Identifier> refreshObjectIds = new HashSet<Identifier>();
-		for (final Iterator<StorableObject> it = storableObjects.iterator(); it.hasNext();) {
+		for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
 			storableObject = it.next();
 			id = storableObject.getId();
 			storableObjectsMap.put(id, storableObject);
