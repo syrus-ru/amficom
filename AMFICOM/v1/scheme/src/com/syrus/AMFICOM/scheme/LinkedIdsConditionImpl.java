@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/06/21 12:21:40 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.12 2005/06/22 13:02:40 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.11 $, $Date: 2005/06/21 12:21:40 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 13:02:40 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -58,6 +58,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 */
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		switch (super.entityCode.shortValue()) {
+			case ObjectEntities.SCHEME_CODE:
+				final Scheme scheme = (Scheme) storableObject;
+				switch (super.linkedEntityCode) {
+					case ObjectEntities.DOMAIN_CODE:
+						return super.conditionTest(scheme.getDomainId());
+					default:
+						throw newIllegalObjectEntityException();	
+				}
 			case ObjectEntities.SCHEMEPORT_CODE:
 				final SchemePort schemePort = (SchemePort) storableObject;
 				switch (super.linkedEntityCode) {
