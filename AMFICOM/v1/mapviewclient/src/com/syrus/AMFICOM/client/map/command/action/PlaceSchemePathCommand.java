@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.27 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.28 2005/06/22 15:05:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/06/22 08:43:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/06/22 15:05:20 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -91,8 +91,8 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 						break;
 					case Kind._SCHEME_LINK:
 						SchemeLink schemeLink = (SchemeLink )pe.getAbstractSchemeElement();
-						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceSchemePort().getParentSchemeDevice());
-						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetSchemePort().getParentSchemeDevice());
+						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
+						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
 						SiteNode startSite = this.mapView.findElement(startSchemeElement);
 						SiteNode endSite = this.mapView.findElement(endSchemeElement);
 						if(startSite.equals(endSite))

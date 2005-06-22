@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.92 2005/06/22 10:05:18 bass Exp $
+ * $Id: configuration.idl,v 1.93 2005/06/22 15:05:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -260,14 +260,6 @@ module corba {
 	typedef sequence<MonitoredElement> MonitoredElementSeq;
 
 ///////////////////// Link /////////////////////
-	/**
-	 * @deprecated
-	 */
-	enum LinkSort {
-		LINKSORT_LINK,
-		LINKSORT_CABLELINK
-	};
-
 	typedef struct IdlLink {
 		general::corba::StorableObject header;
 
@@ -276,11 +268,6 @@ module corba {
 		general::corba::WString128 name;
 		general::corba::WString256 description;
 		general::corba::Identifier _typeId;
-
-		/**
-		 * @deprecated
-		 */
-		LinkSort sort;
 
 		wstring inventoryNo;
 		general::corba::WString128 supplier;

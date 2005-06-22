@@ -1,5 +1,5 @@
 /*
- * $Id: LinkWrapper.java,v 1.9 2005/06/22 10:21:41 bob Exp $
+ * $Id: LinkWrapper.java,v 1.10 2005/06/22 15:05:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,20 +13,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:21:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 15:05:18 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class LinkWrapper extends StorableObjectWrapper {
-
-	// table :: Link
-	// sort NUMBER(2,0),
-	public static final String	COLUMN_SORT				= "sort";
-
 	// name VARCHAR2(64) NOT NULL,
 	// description VARCHAR2(256),
 	// inventory_no VARCHAR2(64),
@@ -50,7 +44,7 @@ public final class LinkWrapper extends StorableObjectWrapper {
 
 	private LinkWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID, COLUMN_SORT,
+		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
 				COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE, COLUMN_COLOR, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -71,6 +65,7 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof Link) {
@@ -81,8 +76,6 @@ public final class LinkWrapper extends StorableObjectWrapper {
 				return link.getName();
 			if (key.equals(COLUMN_TYPE_ID))
 				return link.getType();
-			if (key.equals(COLUMN_SORT))
-				return new Integer(link.getSort().value());
 			if (key.equals(COLUMN_SUPPLIER))
 				return link.getSupplier();
 			if (key.equals(COLUMN_SUPPLIER_CODE))
@@ -110,8 +103,6 @@ public final class LinkWrapper extends StorableObjectWrapper {
 				link.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID))
 				link.setType((LinkType) value);
-			else if (key.equals(COLUMN_SORT))
-				link.setSort(LinkSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_SUPPLIER))
 				link.setSupplier((String) value);
 			else if (key.equals(COLUMN_SUPPLIER_CODE))
@@ -136,6 +127,7 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(final String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -151,8 +143,7 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		if (key.equals(COLUMN_TYPE_ID)) {
 			return LinkType.class;
 		}
-		if (key.equals(COLUMN_SORT)
-				|| key.equals(COLUMN_COLOR)) {
+		if (key.equals(COLUMN_COLOR)) {
 			return Integer.class;
 		}
 		if (key.equals(COLUMN_CHARACTERISTICS)) {

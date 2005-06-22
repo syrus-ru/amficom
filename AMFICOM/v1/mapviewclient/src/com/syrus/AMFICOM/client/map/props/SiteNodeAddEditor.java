@@ -447,8 +447,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			final SchemeCableLink schemeCableLink,
 			final SchemeElement schemeElement) {
 		final Set schemeCablePorts = schemeElement.getSchemeCablePorts();
-		return schemeCablePorts.contains(schemeCableLink.getSourceSchemeCablePort())
-			|| schemeCablePorts.contains(schemeCableLink.getTargetSchemeCablePort());
+		return schemeCablePorts.contains(schemeCableLink.getSourceAbstractSchemePort())
+			|| schemeCablePorts.contains(schemeCableLink.getTargetAbstractSchemePort());
 	}
 
 	public JComponent getGUI() {

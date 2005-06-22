@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.9 2005/06/22 10:10:51 bass Exp $
+ * $Id: SchemeActions.java,v 1.10 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:10:51 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 15:05:19 $
  * @module schemeclient_v1
  */
 
@@ -397,9 +397,9 @@ public class SchemeActions {
 		}
 
 		if (is_source)
-			sl.setSourceSchemePort(sp);
+			sl.setSourceAbstractSchemePort(sp);
 		else
-			sl.setTargetSchemePort(sp);
+			sl.setTargetAbstractSchemePort(sp);
 
 		PortType pt = sp.getPortType();
 		if (pt == null)
@@ -422,12 +422,12 @@ public class SchemeActions {
 		}
 		SchemePort sp;
 		if (is_source) {
-			sp = sl.getSourceSchemePort();
-			sl.setSourceSchemePort(null);
+			sp = sl.getSourceAbstractSchemePort();
+			sl.setSourceAbstractSchemePort(null);
 		} 
 		else {
-			sp = sl.getTargetSchemePort();
-			sl.setTargetSchemePort(null);
+			sp = sl.getTargetAbstractSchemePort();
+			sl.setTargetAbstractSchemePort(null);
 		}
 		if (sp != null) {
 			PortType pt = sp.getPortType();
@@ -467,9 +467,9 @@ public class SchemeActions {
 		}
 
 		if (is_source)
-			sl.setSourceSchemeCablePort(sp);
+			sl.setSourceAbstractSchemePort(sp);
 		else
-			sl.setTargetSchemeCablePort(sp);
+			sl.setTargetAbstractSchemePort(sp);
 
 		PortType pt = sp.getPortType();
 		if (pt == null)
@@ -491,11 +491,11 @@ public class SchemeActions {
 		}
 		SchemeCablePort sp;
 		if (is_source) {
-			sp = sl.getSourceSchemeCablePort();
-			sl.setSourceSchemeCablePort(null);
+			sp = sl.getSourceAbstractSchemePort();
+			sl.setSourceAbstractSchemePort(null);
 		} else {
-			sp = sl.getTargetSchemeCablePort();
-			sl.setTargetSchemeCablePort(null);
+			sp = sl.getTargetAbstractSchemePort();
+			sl.setTargetAbstractSchemePort(null);
 		}
 
 		PortType pt = sp.getPortType();

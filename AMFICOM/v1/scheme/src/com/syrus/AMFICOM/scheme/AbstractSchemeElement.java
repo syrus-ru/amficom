@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.25 2005/06/21 12:44:31 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.26 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/06/21 12:44:31 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/22 15:05:19 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -113,9 +114,10 @@ public abstract class AbstractSchemeElement extends
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeId);
 		dependencies.remove(null);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.42 2005/06/17 12:32:20 bass Exp $
+ * $Id: LinkDatabase.java,v 1.43 2005/06/22 15:05:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/22 15:05:18 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -50,15 +50,16 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("LinkDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.LINK_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-				+ LinkWrapper.COLUMN_SORT + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ LinkWrapper.COLUMN_INVENTORY_NO + COMMA
@@ -70,10 +71,10 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 	
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -86,6 +87,7 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 	
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Link link = this.fromStorableObject(storableObject);
 		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
@@ -94,7 +96,6 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
 		String sql = DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(link.getType().getId()) + COMMA
-			+ link.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + (inventoryNo != null ? inventoryNo : "") + APOSTOPHE + COMMA
@@ -105,12 +106,12 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 	
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		Link link = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getDomainId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getType().getId());
-		preparedStatement.setInt( ++startParameterNumber, link.getSort().value());
 		preparedStatement.setString( ++startParameterNumber, link.getName());
 		preparedStatement.setString( ++startParameterNumber, link.getDescription());
 		preparedStatement.setString( ++startParameterNumber, link.getInventoryNo());
@@ -121,6 +122,7 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Link link = storableObject == null ? null : this.fromStorableObject(storableObject);
@@ -136,7 +138,6 @@ public final class LinkDatabase extends CharacterizableDatabase {
 					null,
 					null,
 					0,
-					0,
 					null);
 		}
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
@@ -144,9 +145,9 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_INVENTORY_NO));
 		String supplier = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER));
 		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER_CODE));
-		AbstractLinkType linkType;
+		LinkType linkType;
 		try {
-			linkType = (AbstractLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			linkType = (LinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_TYPE_ID), true);
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -163,13 +164,13 @@ public final class LinkDatabase extends CharacterizableDatabase {
 				(inventoryNo != null) ? inventoryNo : "",
 				(supplier != null) ? supplier : "",
 				(supplierCode != null) ? supplierCode : "",
-				resultSet.getInt(LinkWrapper.COLUMN_SORT),
 				resultSet.getInt(LinkWrapper.COLUMN_COLOR),
 				DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_MARK)));
 
 		return link;
 	}
 
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Link link = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {

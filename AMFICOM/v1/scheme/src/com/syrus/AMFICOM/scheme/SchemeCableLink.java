@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.38 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.39 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,11 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Link;
-import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -39,13 +40,11 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/22 15:05:19 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
 	private static final long serialVersionUID = 3760847878314274867L;
-
-	private SchemeCableLinkDatabase schemeCableLinkDatabase;
 
 	/**
 	 * @param id
@@ -55,9 +54,8 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	SchemeCableLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE);
 		try {
-			this.schemeCableLinkDatabase.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -87,8 +85,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				opticalLength, cableLinkType, link,
 				sourceSchemeCablePort, targetSchemeCablePort,
 				parentScheme);
-
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE);
 	}
 
 	/**
@@ -96,7 +92,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	SchemeCableLink(final SchemeCableLink_Transferable transferable) throws CreateObjectException {
-		this.schemeCableLinkDatabase = (SchemeCableLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -186,40 +181,39 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getCableChannelingItems() {
+	public Set<CableChannelingItem> getCableChannelingItems() {
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.CABLECHANNELINGITEM_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
 	/**
-	 * @see AbstractSchemeLink#getLink()
+	 * @see AbstractSchemeLink#getAbstractLink()
 	 */
-	public Link getLink() {
-		final Link link = super.getLink();
-		assert link == null || link.getSort().value() == LinkSort._LINKSORT_CABLELINK: ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		return link;
+	@Override
+	public CableLink getAbstractLink() {
+		final AbstractLink abstractLink = super.getAbstractLink();
+		assert abstractLink == null || abstractLink instanceof CableLink : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return (CableLink) abstractLink;
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getAbstractLinkType()
 	 */
-	public AbstractLinkType getAbstractLinkType() {
+	@Override
+	public CableLinkType getAbstractLinkType() {
 		final AbstractLinkType abstractLinkType = super.getAbstractLinkType();
 		assert abstractLinkType instanceof CableLinkType;
-		return abstractLinkType;
-	}
-
-	public CableLinkType getCableLinkType() {
-		return (CableLinkType) this.getAbstractLinkType();
+		return (CableLinkType) abstractLinkType;
 	}
 
 	/**
 	 * @see AbstractSchemeElement#getParentScheme()
 	 */
+	@Override
 	public Scheme getParentScheme() {
 		assert super.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !super.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
@@ -231,39 +225,33 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemeCableThreads() {
+	public Set<SchemeCableThread> getSchemeCableThreads() {
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLETHREAD_CODE), true, true));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getSourceAbstractSchemePort()
 	 */
-	public AbstractSchemePort getSourceAbstractSchemePort() {
+	@Override
+	public SchemeCablePort getSourceAbstractSchemePort() {
 		final AbstractSchemePort sourceAbstractSchemePort = super.getSourceAbstractSchemePort();
 		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		return sourceAbstractSchemePort;
-	}
-
-	public SchemeCablePort getSourceSchemeCablePort() {
-		return (SchemeCablePort) getSourceAbstractSchemePort();
+		return (SchemeCablePort) sourceAbstractSchemePort;
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getTargetAbstractSchemePort()
 	 */
-	public AbstractSchemePort getTargetAbstractSchemePort() {
+	@Override
+	public SchemeCablePort getTargetAbstractSchemePort() {
 		final AbstractSchemePort targetAbstractSchemePort = super.getTargetAbstractSchemePort();
 		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		return targetAbstractSchemePort;
-	}
-
-	public SchemeCablePort getTargetSchemeCablePort() {
-		return (SchemeCablePort) getTargetAbstractSchemePort();
+		return (SchemeCablePort) targetAbstractSchemePort;
 	}
 
 	/**
@@ -312,6 +300,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @param parentSchemeId
 	 * @see AbstractSchemeLink#setAttributes(Date, Date, Identifier, Identifier, long, String, String, double, double, Identifier, Identifier, Identifier, Identifier, Identifier)
 	 */
+	@Override
 	synchronized void setAttributes(final Date created, final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
@@ -328,10 +317,10 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		assert !parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 	}
 
-	public void setCableChannelingItems(final Set cableChannelingItems) {
+	public void setCableChannelingItems(final Set<CableChannelingItem> cableChannelingItems) {
 		assert cableChannelingItems != null: ErrorMessages.NON_NULL_EXPECTED;
-		for (final Iterator oldCableChannelingItemIterator = getCableChannelingItems().iterator(); oldCableChannelingItemIterator.hasNext();) {
-			final CableChannelingItem oldCableChannelingItem = (CableChannelingItem) oldCableChannelingItemIterator.next();
+		for (final Iterator<CableChannelingItem> oldCableChannelingItemIterator = getCableChannelingItems().iterator(); oldCableChannelingItemIterator.hasNext();) {
+			final CableChannelingItem oldCableChannelingItem = oldCableChannelingItemIterator.next();
 			/*
 			 * Check is made to prevent CableChannelingItems from
 			 * permanently losing their parents.
@@ -339,49 +328,60 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			assert !cableChannelingItems.contains(oldCableChannelingItem);
 			removeCableChannelingItem(oldCableChannelingItem);
 		}
-		for (final Iterator cableChannelingItemIterator = cableChannelingItems.iterator(); cableChannelingItemIterator.hasNext();)
-			addCableChannelingItem((CableChannelingItem) cableChannelingItemIterator.next());
+		for (final Iterator<CableChannelingItem> cableChannelingItemIterator = cableChannelingItems.iterator(); cableChannelingItemIterator.hasNext();)
+			addCableChannelingItem(cableChannelingItemIterator.next());
 	}
 
 	/**
-	 * @param link
-	 * @see AbstractSchemeLink#setLink(Link)
+	 * @param abstractLink
+	 * @see AbstractSchemeLink#setAbstractLink(AbstractLink)
 	 */
-	public void setLink(final Link link) {
-		assert link == null || link.getSort().value() == LinkSort._LINKSORT_CABLELINK: ErrorMessages.NATURE_INVALID;
-		super.setLink(link);
+	@Override
+	public void setAbstractLink(final AbstractLink abstractLink) {
+		assert abstractLink == null || abstractLink instanceof CableLink : ErrorMessages.NATURE_INVALID;
+		this.setAbstractLink((CableLink) abstractLink);
+	}
+
+	/**
+	 * @param cableLink
+	 * @see AbstractSchemeLink#setAbstractLink(AbstractLink)
+	 */
+	public void setAbstractLink(final CableLink cableLink) {
+		super.setAbstractLink(cableLink);
 	}
 
 	/**
 	 * @param abstractLinkType
 	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
 	 */
+	@Override
 	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		assert abstractLinkType instanceof CableLinkType;
-		super.setAbstractLinkType(abstractLinkType);
+		assert abstractLinkType instanceof CableLinkType : ErrorMessages.NATURE_INVALID;
+		this.setAbstractLinkType((CableLinkType) abstractLinkType);
 	}
 
 	/**
 	 * @param cableLinkType
 	 */
-	public void setCableLinkType(final CableLinkType cableLinkType) {
-		this.setAbstractLinkType(cableLinkType);
+	public void setAbstractLinkType(final CableLinkType cableLinkType) {
+		super.setAbstractLinkType(cableLinkType);
 	}
 
 	/**
 	 * @param parentScheme
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
+	@Override
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !super.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		super.setParentScheme(parentScheme);
 	}
 
-	public void setSchemeCableThreads(final Set schemeCableThreads) {
+	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) {
 		assert schemeCableThreads != null: ErrorMessages.NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeCableThreadIterator = getSchemeCableThreads().iterator(); oldSchemeCableThreadIterator.hasNext();) {
-			final SchemeCableThread oldSchemeCableThread = (SchemeCableThread) oldSchemeCableThreadIterator.next();
+		for (final Iterator<SchemeCableThread> oldSchemeCableThreadIterator = getSchemeCableThreads().iterator(); oldSchemeCableThreadIterator.hasNext();) {
+			final SchemeCableThread oldSchemeCableThread = oldSchemeCableThreadIterator.next();
 			/*
 			 * Check is made to prevent SchemeCableThreads from
 			 * permanently losing their parents.
@@ -389,34 +389,36 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			assert !schemeCableThreads.contains(oldSchemeCableThread);
 			removeSchemeCableThread(oldSchemeCableThread);
 		}
-		for (final Iterator schemeCableThreadIterator = schemeCableThreads.iterator(); schemeCableThreadIterator.hasNext();)
-			addSchemeCableThread((SchemeCableThread) schemeCableThreadIterator.next());
+		for (final Iterator<SchemeCableThread> schemeCableThreadIterator = schemeCableThreads.iterator(); schemeCableThreadIterator.hasNext();)
+			addSchemeCableThread(schemeCableThreadIterator.next());
 	}
 
 	/**
 	 * @param sourceAbstractSchemePort
 	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
 	 */
+	@Override
 	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
 		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.NATURE_INVALID;
-		super.setSourceAbstractSchemePort(sourceAbstractSchemePort);
+		this.setSourceAbstractSchemePort((SchemeCablePort) sourceAbstractSchemePort);
 	}
 
-	public void setSourceSchemeCablePort(final SchemeCablePort sourceSchemeCablePort) {
-		this.setSourceAbstractSchemePort(sourceSchemeCablePort);
+	public void setSourceAbstractSchemePort(final SchemeCablePort sourceSchemeCablePort) {
+		super.setSourceAbstractSchemePort(sourceSchemeCablePort);
 	}
 
 	/**
 	 * @param targetAbstractSchemePort
 	 * @see AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)
 	 */
+	@Override
 	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
 		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.NATURE_INVALID;
-		super.setTargetAbstractSchemePort(targetAbstractSchemePort);
+		this.setTargetAbstractSchemePort((SchemeCablePort) targetAbstractSchemePort);
 	}
 
-	public void setTargetSchemeCablePort(final SchemeCablePort targetSchemeCablePort) {
-		this.setTargetAbstractSchemePort(targetSchemeCablePort);
+	public void setTargetAbstractSchemePort(final SchemeCablePort targetSchemeCablePort) {
+		super.setTargetAbstractSchemePort(targetSchemeCablePort);
 	}
 
 	/**
@@ -424,6 +426,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final SchemeCableLink_Transferable schemeCableLink = (SchemeCableLink_Transferable) transferable;
 		super.fromTransferable(schemeCableLink.header, schemeCableLink.name,

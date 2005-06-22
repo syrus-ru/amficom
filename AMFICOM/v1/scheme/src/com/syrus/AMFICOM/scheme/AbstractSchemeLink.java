@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.20 2005/06/21 12:44:31 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.21 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -30,7 +32,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/06/21 12:44:31 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/22 15:05:19 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -136,11 +138,11 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	/**
 	 * Overridden by descendants to add extra checks.
 	 */
-	public Link getLink() {
+	public AbstractLink getAbstractLink() {
 		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		try {
-			return (Link) StorableObjectPool.getStorableObject(this.linkId, true);
+			return (AbstractLink) StorableObjectPool.getStorableObject(this.linkId, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
@@ -154,7 +156,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.linkId.isVoid())
-			return (AbstractLinkType) getLink().getType();
+			return getAbstractLink().getType();
 
 		try {
 			return (AbstractLinkType) StorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
@@ -219,12 +221,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	/**
 	 * Overridden by descendants to add extra checks.
 	 *
-	 * @param link
+	 * @param abstractLink
 	 */
-	public void setLink(final Link link) {
+	public void setAbstractLink(final AbstractLink abstractLink) {
 		assert this.assertAbstractLinkTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
-		final Identifier newLinkId = Identifier.possiblyVoid(link);
+		final Identifier newLinkId = Identifier.possiblyVoid(abstractLink);
 		if (this.linkId.equals(newLinkId)) {
 			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 			return;
@@ -243,7 +245,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			 * initial object value has already been set (i. e.
 			 * there already is object-type value to preserve).
 			 */
-			this.abstractLinkTypeId = this.getLink().getType().getId();
+			this.abstractLinkTypeId = this.getAbstractLink().getType().getId();
 		this.linkId = newLinkId;
 		super.markAsChanged();
 	}
@@ -258,7 +260,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		assert abstractLinkType != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		if (!this.linkId.isVoid())
-			this.getLink().setType(abstractLinkType);
+			this.getAbstractLink().setType(abstractLinkType);
 		else {
 			final Identifier newAbstractLinkTypeId = abstractLinkType.getId();
 			if (this.abstractLinkTypeId.equals(newAbstractLinkTypeId)) {
@@ -359,11 +361,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.abstractLinkTypeId != null && this.linkId != null
 				&& this.sourceAbstractSchemePortId != null
 				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(super.getDependencies());
 		dependencies.add(this.abstractLinkTypeId);
 		dependencies.add(this.linkId);

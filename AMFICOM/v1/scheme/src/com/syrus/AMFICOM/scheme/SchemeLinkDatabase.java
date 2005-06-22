@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkDatabase.java,v 1.6 2005/06/17 11:01:18 bass Exp $
+ * $Id: SchemeLinkDatabase.java,v 1.7 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 15:05:19 $
  * @module scheme_v1
  */
 public final class SchemeLinkDatabase extends CharacterizableDatabase {
@@ -103,11 +103,11 @@ public final class SchemeLinkDatabase extends CharacterizableDatabase {
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeLink.getPhysicalLength() + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeLink.getOpticalLength() + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getLinkType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getLink().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLink().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getSiteNode().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getSourceSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getTargetSchemePort().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getSourceAbstractSchemePort().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getTargetAbstractSchemePort().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getParentScheme().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeElement().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeProtoElement().getId());
@@ -131,11 +131,11 @@ public final class SchemeLinkDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setDouble(++startParameterNumber, schemeLink.getPhysicalLength());
 		preparedStatement.setDouble(++startParameterNumber, schemeLink.getOpticalLength());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getLinkType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getLink().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLinkType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLink().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSiteNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSourceSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getTargetSchemePort().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSourceAbstractSchemePort().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getTargetAbstractSchemePort().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentScheme().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeElement().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeProtoElement().getId());

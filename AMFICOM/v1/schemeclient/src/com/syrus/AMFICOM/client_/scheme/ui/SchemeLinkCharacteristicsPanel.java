@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkCharacteristicsPanel.java,v 1.6 2005/06/21 12:52:14 bass Exp $
+ * $Id: SchemeLinkCharacteristicsPanel.java,v 1.7 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/21 12:52:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 15:05:19 $
  * @module schemeclient_v1
  */
 
@@ -46,7 +46,7 @@ public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
 					schemeLink.getId(), true);
 			super.addCharacteristics(schemeLink.getCharacteristics(), schemeLink.getId());
 			
-			Link link = schemeLink.getLink();
+			Link link = schemeLink.getAbstractLink();
 			if (link != null) {
 				for (int i = 0; i < sorts.length; i++)
 					super.setTypeSortMapping(sorts[i],
@@ -54,7 +54,7 @@ public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
 							link.getId(), true);
 				super.addCharacteristics(link.getCharacteristics(), link.getId());
 			} else {
-				LinkType linkType = schemeLink.getLinkType();
+				LinkType linkType = schemeLink.getAbstractLinkType();
 				if (linkType != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],

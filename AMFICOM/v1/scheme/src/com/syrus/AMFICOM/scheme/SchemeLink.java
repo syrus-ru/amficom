@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.36 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeLink.java,v 1.37 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,15 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -39,7 +40,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/22 15:05:19 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -51,8 +52,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 	private Identifier parentSchemeProtoElementId;
 
-	private SchemeLinkDatabase schemeLinkDatabase;
-
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -61,9 +60,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 	SchemeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMELINK_CODE);
 		try {
-			this.schemeLinkDatabase.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.SCHEMELINK_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -113,8 +111,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 				+ (parentSchemeProtoElement == null ? 0 : 1) <= 1: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
-
-		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMELINK_CODE);
 	}
 
 	/**
@@ -122,7 +118,6 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	SchemeLink(final SchemeLink_Transferable transferable) throws CreateObjectException {
-		this.schemeLinkDatabase = (SchemeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMELINK_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -397,11 +392,12 @@ public final class SchemeLink extends AbstractSchemeLink {
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.siteNodeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(super.getDependencies());
 		dependencies.add(this.siteNodeId);
 		dependencies.add(this.parentSchemeElementId);
@@ -412,30 +408,29 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @see AbstractSchemeLink#getLink()
+	 * @see AbstractSchemeLink#getAbstractLink()
 	 */
-	public Link getLink() {
-		final Link link = super.getLink();
-		assert link == null || link.getSort().value() == LinkSort._LINKSORT_LINK: ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		return link;
+	@Override
+	public Link getAbstractLink() {
+		final AbstractLink abstractLink = super.getAbstractLink();
+		assert abstractLink == null || abstractLink instanceof Link : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return (Link) abstractLink;
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getAbstractLinkType()
 	 */
-	public AbstractLinkType getAbstractLinkType() {
+	@Override
+	public LinkType getAbstractLinkType() {
 		final AbstractLinkType abstractLinkType = super.getAbstractLinkType();
 		assert abstractLinkType instanceof LinkType;
-		return abstractLinkType;
-	}
-
-	public LinkType getLinkType() {
-		return (LinkType) this.getAbstractLinkType();
+		return (LinkType) abstractLinkType;
 	}
 
 	/**
 	 * @see AbstractSchemeElement#getParentScheme()
 	 */
+	@Override
 	public Scheme getParentScheme() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 
@@ -501,27 +496,21 @@ public final class SchemeLink extends AbstractSchemeLink {
 	/**
 	 * @see AbstractSchemeLink#getSourceAbstractSchemePort()
 	 */
-	public AbstractSchemePort getSourceAbstractSchemePort() {
+	@Override
+	public SchemePort getSourceAbstractSchemePort() {
 		final AbstractSchemePort sourceAbstractSchemePort = super.getSourceAbstractSchemePort();
 		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		return sourceAbstractSchemePort;
-	}
-
-	public SchemePort getSourceSchemePort() {
-		return (SchemePort) this.getSourceAbstractSchemePort();
+		return (SchemePort) sourceAbstractSchemePort;
 	}
 
 	/**
 	 * @see AbstractSchemeLink#getTargetAbstractSchemePort()
 	 */
-	public AbstractSchemePort getTargetAbstractSchemePort() {
+	@Override
+	public SchemePort getTargetAbstractSchemePort() {
 		final AbstractSchemePort targetAbstractSchemePort = super.getTargetAbstractSchemePort();
 		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		return targetAbstractSchemePort;
-	}
-
-	public SchemePort getTargetSchemePort() {
-		return (SchemePort) this.getTargetAbstractSchemePort();
+		return (SchemePort) targetAbstractSchemePort;
 	}
 
 	/**
@@ -577,34 +566,45 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @param link
-	 * @see AbstractSchemeLink#setLink(Link)
+	 * @param abstractLink
+	 * @see AbstractSchemeLink#setAbstractLink(AbstractLink)
 	 */
-	public void setLink(final Link link) {
-		assert link == null || link.getSort().value() == LinkSort._LINKSORT_LINK: ErrorMessages.NATURE_INVALID;
-		super.setLink(link);
+	@Override
+	public void setAbstractLink(final AbstractLink abstractLink) {
+		assert abstractLink == null || abstractLink instanceof Link : ErrorMessages.NATURE_INVALID;
+		this.setAbstractLink((Link) abstractLink);
+	}
+
+	/**
+	 * @param link
+	 * @see AbstractSchemeLink#setAbstractLink(AbstractLink)
+	 */
+	public void setAbstractLink(final Link link) {
+		super.setAbstractLink(link);
 	}
 
 	/**
 	 * @param abstractLinkType
 	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
 	 */
+	@Override
 	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		assert abstractLinkType instanceof LinkType;
-		super.setAbstractLinkType(abstractLinkType);
+		assert abstractLinkType instanceof LinkType : ErrorMessages.NATURE_INVALID;
+		this.setAbstractLinkType((LinkType) abstractLinkType);
 	}
 
 	/**
 	 * @param linkType
 	 */
-	public void setLinkType(final LinkType linkType) {
-		this.setAbstractLinkType(linkType);
+	public void setAbstractLinkType(final LinkType linkType) {
+		super.setAbstractLinkType(linkType);
 	}
 
 	/**
 	 * @param parentScheme
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
+	@Override
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null
 				&& this.parentSchemeElementId != null
@@ -747,26 +747,28 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @param sourceAbstractSchemePort
 	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
 	 */
+	@Override
 	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
 		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemePort: ErrorMessages.NATURE_INVALID;
-		super.setSourceAbstractSchemePort(sourceAbstractSchemePort);
+		this.setSourceAbstractSchemePort((SchemePort) sourceAbstractSchemePort);
 	}
 
-	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
-		this.setSourceAbstractSchemePort(sourceSchemePort);
+	public void setSourceAbstractSchemePort(final SchemePort sourceSchemePort) {
+		super.setSourceAbstractSchemePort(sourceSchemePort);
 	}
 
 	/**
 	 * @param targetAbstractSchemePort
 	 * @see AbstractSchemeLink#setTargetAbstractSchemePort(AbstractSchemePort)
 	 */
+	@Override
 	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
 		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemePort: ErrorMessages.NATURE_INVALID;
-		super.setTargetAbstractSchemePort(targetAbstractSchemePort);
+		this.setTargetAbstractSchemePort((SchemePort) targetAbstractSchemePort);
 	}
 
-	public void setTargetSchemePort(final SchemePort targetSchemePort) {
-		this.setTargetAbstractSchemePort(targetSchemePort);
+	public void setTargetAbstractSchemePort(final SchemePort targetSchemePort) {
+		super.setTargetAbstractSchemePort(targetSchemePort);
 	}
 
 	/**
@@ -774,6 +776,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		final SchemeLink_Transferable schemeLink = (SchemeLink_Transferable) transferable;
 		super.fromTransferable(schemeLink.header, schemeLink.name,

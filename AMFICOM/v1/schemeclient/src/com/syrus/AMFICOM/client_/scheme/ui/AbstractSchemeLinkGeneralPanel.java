@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.6 2005/06/22 10:16:06 stas Exp $
+ * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.7 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,40 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
+import com.syrus.AMFICOM.client.UI.ColorListCellRenderer;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.AbstractLink;
+import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.LinkTypeWrapper;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 15:05:19 $
  * @module schemeclient_v1
  */
 
@@ -383,7 +401,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 	}
 
 	public void setObject(Object or) {
-		Link link = null;
+		AbstractLink link = null;
 		setLinkEnabled(false);
 		
 		if (schemeLink != null) {
@@ -392,7 +410,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 			this.opticalText.setText(Double.toString(schemeLink.getOpticalLength()));
 			this.physicalText.setText(Double.toString(schemeLink.getPhysicalLength()));
 			this.typeCombo.setSelectedItem(schemeLink.getAbstractLinkType());
-			link = schemeLink.getLink();
+			link = schemeLink.getAbstractLink();
 		} else {
 			this.nameText.setText(SchemeResourceKeys.EMPTY);
 			this.descrArea.setText(SchemeResourceKeys.EMPTY);
@@ -440,7 +458,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 			/**
 			 * create Link instance and binding to SchemeLink became in descendants
 			 */
-			Link link = schemeLink.getLink();
+			AbstractLink link = schemeLink.getAbstractLink();
 			if (link != null) {
 				link.setName(schemeLink.getName());
 				link.setDescription(schemeLink.getDescription());

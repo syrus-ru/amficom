@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.27 2005/06/17 12:38:52 bass Exp $
+ * $Id: MeasurementPath.java,v 1.28 2005/06/22 15:05:19 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
  * Элемент пути.
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/06/17 12:38:52 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/22 15:05:19 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -409,8 +409,8 @@ public class MeasurementPath implements MapElement
 						break;
 					case Kind._SCHEME_LINK:
 						SchemeLink schemeLink = (SchemeLink )pathElement.getAbstractSchemeElement();
-						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceSchemePort().getParentSchemeDevice());
-						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetSchemePort().getParentSchemeDevice());
+						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
+						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
 						SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
 						SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
 						if(startSiteNode == endSiteNode)

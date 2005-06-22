@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.71 2005/06/17 11:00:57 bass Exp $
+ * $Id: ObjectEntities.java,v 1.72 2005/06/22 15:05:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/06/17 11:00:57 $
+ * @version $Revision: 1.72 $, $Date: 2005/06/22 15:05:21 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -83,6 +83,7 @@ public final class ObjectEntities {
 	public static final String MONITOREDELEMENT = "MonitoredElement";
 	public static final String LINK = "Link";
 	public static final String CABLETHREAD = "CableThread";
+	public static final String CABLELINK = "CableLink";
 
 	/*	Measurement	*/
 	public static final String PARAMETERSET = "ParameterSet";
@@ -211,6 +212,7 @@ public final class ObjectEntities {
 	public static final short MONITOREDELEMENT_CODE = 0x0186;
 	public static final short LINK_CODE = 0x0187;
 	public static final short CABLETHREAD_CODE = 0x0188;
+	public static final short CABLELINK_CODE = 0x0189;
 
 	public static final short EQUIPMENT_TYPE_CODE = 0x01C1;
 	public static final short PORT_TYPE_CODE = 0x01C2;
@@ -380,6 +382,7 @@ public final class ObjectEntities {
 		registerEntity(MONITOREDELEMENT_CODE, MONITOREDELEMENT);
 		registerEntity(LINK_CODE, LINK);
 		registerEntity(CABLETHREAD_CODE, CABLETHREAD);
+		registerEntity(CABLELINK_CODE, CABLELINK);
 
 		registerEntity(PARAMETERSET_CODE, PARAMETERSET);
 		registerEntity(PARAMETER_CODE, PARAMETER);

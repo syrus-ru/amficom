@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.4 2005/06/17 11:36:21 bass Exp $
+ * $Id: DeleteAction.java,v 1.5 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/17 11:36:21 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 15:05:19 $
  * @module schemeclient_v1
  */
 
@@ -150,8 +150,8 @@ public class DeleteAction extends AbstractAction {
 		SchemeActions.disconnectSchemeCableLink(graph, cell, false);
 		if (resource.getScheme() != null)
 			resource.getScheme().removeSchemeCableLink(link);
-		if (link.getLink() != null) {
-			ConfigurationStorableObjectPool.delete(link.getLink().getId());
+		if (link.getAbstractLink() != null) {
+			ConfigurationStorableObjectPool.delete(link.getAbstractLink().getId());
 		}
 		SchemeStorableObjectPool.delete(link.getId());
 		return Arrays.asList(new DefaultCableLink[] { cell });
@@ -166,9 +166,9 @@ public class DeleteAction extends AbstractAction {
 			resource.getScheme().removeSchemeLink(link);
 		if (resource.getSchemeElement() != null)
 			resource.getSchemeElement().removeSchemeLink(link);
-		if (link.getLink() != null) {
-			link.setLink(null);
-			ConfigurationStorableObjectPool.delete(link.getLink().getId());
+		if (link.getAbstractLink() != null) {
+			link.setAbstractLink(null);
+			ConfigurationStorableObjectPool.delete(link.getAbstractLink().getId());
 		}
 		SchemeStorableObjectPool.delete(link.getId());
 		return Arrays.asList(new DefaultLink[] { cell });

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.17 2005/06/22 10:59:08 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.18 2005/06/22 15:05:20 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -149,8 +149,8 @@ public final class SchemeSampleData {
 		SchemeLink link0 = SchemeLink.createInstance(userId, "Патчкорд", scheme);
 		link0.setOpticalLength(3.0D);
 		link0.setPhysicalLength(3.0D);
-		link0.setSourceSchemePort(port01);
-		link0.setTargetSchemePort(port00);
+		link0.setSourceAbstractSchemePort(port01);
+		link0.setTargetAbstractSchemePort(port00);
 
 		link.add(link0);
 
@@ -161,36 +161,36 @@ public final class SchemeSampleData {
 		SchemeCableLink clink0 = SchemeCableLink.createInstance(userId, "Кабелёк1", scheme);
 		clink0.setOpticalLength(1000.0D);
 		clink0.setPhysicalLength(1000.0D);
-		clink0.setSourceSchemeCablePort(cport10);
-		clink0.setTargetSchemeCablePort(cport00);
+		clink0.setSourceAbstractSchemePort(cport10);
+		clink0.setTargetAbstractSchemePort(cport00);
 		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink0);
 
 		SchemeCableLink clink1 = SchemeCableLink.createInstance(userId, "Кабелёк2", scheme);
 		clink1.setOpticalLength(1000.0D);
 		clink1.setPhysicalLength(1000.0D);
-		clink1.setSourceSchemeCablePort(cport11);
-		clink1.setTargetSchemeCablePort(cport20);
+		clink1.setSourceAbstractSchemePort(cport11);
+		clink1.setTargetAbstractSchemePort(cport20);
 		SchemeCableThread clink1th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink1);
 
 		SchemeCableLink clink2 = SchemeCableLink.createInstance(userId, "Кабелёк3", scheme);
 		clink2.setOpticalLength(1000.0D);
 		clink2.setPhysicalLength(1000.0D);
-		clink2.setSourceSchemeCablePort(cport21);
-		clink2.setTargetSchemeCablePort(cport30);
+		clink2.setSourceAbstractSchemePort(cport21);
+		clink2.setTargetAbstractSchemePort(cport30);
 		SchemeCableThread clink2th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink2);
 
 		SchemeCableLink clink3 = SchemeCableLink.createInstance(userId, "Кабелёк4", scheme);
 		clink3.setOpticalLength(1000.0D);
 		clink3.setPhysicalLength(1000.0D);
-		clink3.setSourceSchemeCablePort(cport31);
-		clink3.setTargetSchemeCablePort(cport40);
+		clink3.setSourceAbstractSchemePort(cport31);
+		clink3.setTargetAbstractSchemePort(cport40);
 		SchemeCableThread clink3th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink3);
 
 		SchemeCableLink clink4 = SchemeCableLink.createInstance(userId, "Кабелёк5", scheme);
 		clink4.setOpticalLength(1000.0D);
 		clink4.setPhysicalLength(1000.0D);
-		clink4.setSourceSchemeCablePort(cport41);
-		clink4.setTargetSchemeCablePort(cport22);
+		clink4.setSourceAbstractSchemePort(cport41);
+		clink4.setTargetAbstractSchemePort(cport22);
 		SchemeCableThread clink4th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink4);
 
 		clink.add(clink0);
@@ -287,8 +287,8 @@ public final class SchemeSampleData {
 		link.add(link0);
 		link0.setOpticalLength(1000.0D);
 		link0.setPhysicalLength(1000.0D);
-		link0.setSourceSchemePort(port10);
-		link0.setTargetSchemePort(port00);
+		link0.setSourceAbstractSchemePort(port10);
+		link0.setTargetAbstractSchemePort(port00);
 
 		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
@@ -298,8 +298,8 @@ public final class SchemeSampleData {
 		clink.add(clink0);
 		clink0.setOpticalLength(1000.0D);
 		clink0.setPhysicalLength(1000.0D);
-		clink0.setSourceSchemeCablePort(cport10);
-		clink0.setTargetSchemeCablePort(cport00);
+		clink0.setSourceAbstractSchemePort(cport10);
+		clink0.setTargetAbstractSchemePort(cport00);
 		SchemeCableThread clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, clink0);
 
 		SchemePath path0 = SchemePath.createInstance(userId, "Путяра измерений", scheme);

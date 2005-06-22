@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.8 2005/06/22 10:10:50 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.9 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/22 10:10:50 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 15:05:19 $
  * @module schemeclient_v1
  */
 
@@ -119,10 +119,10 @@ public class SchemeObjectsFactory {
 		return kis;
 	}
 	
-	public static Link createLink(LinkSort sort) throws CreateObjectException {
+	public static Link createLink() throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
-		Link link = Link.createInstance(userId, domainId, "", "", null, "", "", "", sort, 0, "");
+		Link link = Link.createInstance(userId, domainId, "", "", null, "", "", "", 0, "");
 		try {
 			StorableObjectPool.putStorableObject(link);
 		} catch (IllegalObjectEntityException e) {
@@ -130,7 +130,19 @@ public class SchemeObjectsFactory {
 		}
 		return link;
 	}
-	
+
+	public static CableLink createCableLink() throws CreateObjectException {
+		Identifier userId = LoginManager.getUserId();
+		Identifier domainId = LoginManager.getDomainId();
+		CableLink cableLink = CableLink.createInstance(userId, domainId, "", "", null, "", "", "", 0, "");
+		try {
+			StorableObjectPool.putStorableObject(cableLink);
+		} catch (IllegalObjectEntityException e) {
+			Log.debugException(e, Log.SEVERE);
+		}
+		return cableLink;
+	}
+
 	public static Port createPort(PortSort sort) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		Port port = Port.createInstance(userId, null, "", null, sort);

@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.61 2005/06/22 15:05:18 bass Exp $
+ * $Id: CableLink.java,v 1.1 2005/06/22 15:05:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.IdlLink;
+import com.syrus.AMFICOM.configuration.corba.IdlCableLink;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,40 +31,41 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
+ * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/06/22 15:05:18 $
+ * @version $Revision: 1.1 $, $Date: 2005/06/22 15:05:18 $
  * @module config_v1
  */
-public final class Link extends AbstractLink {
-	private static final long serialVersionUID = 3257283626012783672L;
+public final class CableLink extends AbstractLink {
+	private static final long serialVersionUID = 7733720151418798562L;
 
-	Link(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	CableLink(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristics = new HashSet<Characteristic>();
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.LINK_CODE).retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.CABLELINK_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
-	Link(final IdlLink idlLink) throws CreateObjectException {
+	CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
 		try {
-			this.fromTransferable(idlLink);
+			this.fromTransferable(idlCableLink);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
 
-	Link(final Identifier id,
+	CableLink(final Identifier id,
 			final Identifier creatorId,
 			final long version,
 			final Identifier domainId,
 			final String name,
 			final String description,
-			final LinkType type,
+			final CableLinkType type,
 			final String inventoryNo,
 			final String supplier,
 			final String supplierCode,
@@ -94,11 +95,11 @@ public final class Link extends AbstractLink {
 	 *
 	 * @throws CreateObjectException
 	 */
-	public static Link createInstance(final Identifier creatorId,
+	public static CableLink createInstance(final Identifier creatorId,
 			final Identifier domainId,
 			final String name,
 			final String description,
-			final LinkType type,
+			final CableLinkType type,
 			final String inventoryNo,
 			final String supplier,
 			final String supplierCode,
@@ -116,7 +117,7 @@ public final class Link extends AbstractLink {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Link link = new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_CODE),
+			CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -129,11 +130,11 @@ public final class Link extends AbstractLink {
 					color,
 					mark);
 
-			assert link.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert cableLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-			link.markAsChanged();
+			cableLink.markAsChanged();
 
-			return link;
+			return cableLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
@@ -141,29 +142,29 @@ public final class Link extends AbstractLink {
 
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlLink idlLink = (IdlLink) transferable;
-		super.fromTransferable(idlLink.header, new Identifier(idlLink.domainId));
+		IdlCableLink idlCableLink = (IdlCableLink) transferable;
+		super.fromTransferable(idlCableLink.header, new Identifier(idlCableLink.domainId));
 
-		this.name = idlLink.name;
-		this.description = idlLink.description;
-		this.inventoryNo = idlLink.inventoryNo;
-		this.supplier = idlLink.supplier;
-		this.supplierCode = idlLink.supplierCode;
+		this.name = idlCableLink.name;
+		this.description = idlCableLink.description;
+		this.inventoryNo = idlCableLink.inventoryNo;
+		this.supplier = idlCableLink.supplier;
+		this.supplierCode = idlCableLink.supplierCode;
 
-		Set characteristicIds = Identifier.fromTransferables(idlLink.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(idlLink.characteristicIds.length);
+		Set characteristicIds = Identifier.fromTransferables(idlCableLink.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(idlCableLink.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 
-		super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
+		super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public IdlLink getTransferable() {
+	public IdlCableLink getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlLink(super.getHeaderTransferable(),
+		return new IdlCableLink(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
@@ -184,7 +185,7 @@ public final class Link extends AbstractLink {
 			final Identifier domainId,
 			final String name,
 			final String description,
-			final LinkType type,
+			final CableLinkType type,
 			final String inventoryNo,
 			final String supplier,
 			final String supplierCode,
@@ -210,22 +211,22 @@ public final class Link extends AbstractLink {
 	 * @see com.syrus.AMFICOM.general.TypedObject#getType()
 	 */
 	@Override
-	public LinkType getType() {
+	public CableLinkType getType() {
 		final AbstractLinkType type1 = super.getType();
-		assert type1 == null || type1 instanceof LinkType : ErrorMessages.NATURE_INVALID;
-		return (LinkType) type1;
+		assert type1 == null || type1 instanceof CableLinkType : ErrorMessages.NATURE_INVALID;
+		return (CableLinkType) type1;
 	}
 
 	@Override
 	public void setType(final AbstractLinkType type) {
-		assert type == null || type instanceof LinkType : ErrorMessages.NATURE_INVALID;
-		this.setType((LinkType) type);
+		assert type == null || type instanceof CableLinkType : ErrorMessages.NATURE_INVALID;
+		this.setType((CableLinkType) type);
 	}
 
 	/**
 	 * @param type The type to set.
 	 */
-	public void setType(final LinkType type) {
+	public void setType(final CableLinkType type) {
 		super.setType(type);
 	}
 }

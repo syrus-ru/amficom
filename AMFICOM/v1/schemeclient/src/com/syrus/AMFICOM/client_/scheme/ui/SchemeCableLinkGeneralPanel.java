@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.6 2005/06/17 11:01:04 bass Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.7 2005/06/22 15:05:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 15:05:19 $
  * @module schemeclient_v1
  */
 
@@ -49,19 +48,19 @@ public class SchemeCableLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel 
 
 	public void commitChanges() {
 		if (schemeLink != null && MiscUtil.validName(nameText.getText())) {
-			Link link = schemeLink.getLink();
+			AbstractLink link = schemeLink.getAbstractLink();
 			if (linkBox.isSelected()) {
 				if (link == null) {
 					try {
-						link = SchemeObjectsFactory.createLink(LinkSort.LINKSORT_CABLELINK);
-						schemeLink.setLink(link);
+						link = SchemeObjectsFactory.createCableLink();
+						schemeLink.setAbstractLink(link);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
 					}
 				}
 			} else if (link != null) {
 				StorableObjectPool.delete(link.getId());
-				schemeLink.setLink(null);
+				schemeLink.setAbstractLink(null);
 			}
 			super.commitChanges();
 		}
