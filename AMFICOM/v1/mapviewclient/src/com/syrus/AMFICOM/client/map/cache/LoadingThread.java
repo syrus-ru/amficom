@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.2 2005/06/21 12:36:26 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.3 2005/06/22 12:18:26 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,12 +14,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.syrus.AMFICOM.client.map.Logger;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.util.Log;
 
 public class LoadingThread extends Thread {
     private MapImageLoader mapImageLoader = null;
@@ -111,8 +111,8 @@ public class LoadingThread extends Thread {
             // Посылаем запрос на рендеринг
             Image imageForRequest = null;
             try {
-                Logger.log(" TIC - loadingThread - run - processing request ("
-                        + this.requestCurrentlyProcessed + ")");
+            	Log.debugMessage(" TIC - loadingThread - run - processing request ("
+                        + this.requestCurrentlyProcessed + ")",Log.DEBUGLEVEL10);
 
                 this.setQueryLayerVisibilities(this.requestCurrentlyProcessed);
 
@@ -147,9 +147,8 @@ public class LoadingThread extends Thread {
                 this.requestCurrentlyProcessed
                         .setPriority(TopologicalImageQuery.PRIORITY_ALREADY_LOADED);
 
-                Logger
-                        .log(" TIC - loadingThread - run - image loaded for request ("
-                                + this.requestCurrentlyProcessed + ")");
+                Log.debugMessage(" TIC - loadingThread - run - image loaded for request ("
+                                + this.requestCurrentlyProcessed + ")",Log.DEBUGLEVEL10);
 
                 this.state.setValue(State.STATE_IDLE);
                 this.requestCurrentlyProcessed = null;
@@ -165,7 +164,7 @@ public class LoadingThread extends Thread {
      */
     private void setQueryLayerVisibilities(TopologicalImageQuery query)
     	throws MapDataException,MapConnectionException {
-		Logger.log(" TIC - loadingThread - run - visibilities are set.");
+		Log.debugMessage(" TIC - loadingThread - run - visibilities are set.",Log.DEBUGLEVEL10);
 		Iterator layersIt = this.mapImageLoader.getMapConnection().getLayers()
 				.iterator();
 		int index = 0;
@@ -185,7 +184,7 @@ public class LoadingThread extends Thread {
 		query.setLayerVisibilities(this.layerVisibilities);		
 		query.setLabelVisibilities(this.labelVisibilities);
 		
-		Logger.log(" TIC - loadingThread - run - visibilities are set.");
+		Log.debugMessage(" TIC - loadingThread - run - visibilities are set.",Log.DEBUGLEVEL10);
 	}
     
     private void add(TopologicalImageQuery requestToAdd) {
@@ -221,8 +220,8 @@ public class LoadingThread extends Thread {
      */
     public void addRequest(TopologicalImageQuery requestToAdd)
             throws MapConnectionException, MapDataException {
-        Logger.log(" TIC - loadingThread - addRequest - adding request ("
-                + requestToAdd + ")");
+        Log.debugMessage(" TIC - loadingThread - addRequest - adding request ("
+                + requestToAdd + ")",Log.DEBUGLEVEL10);
 
         add(requestToAdd);
 
@@ -265,17 +264,15 @@ public class LoadingThread extends Thread {
     public void changeRequestPriority(TopologicalImageQuery request,
             int newPriority) throws MapConnectionException, MapDataException {
         if (request.getPriority() == newPriority) {
-            Logger
-                    .log(" TIC - loadingThread - changeRequestPriority - the request ("
+        	Log.debugMessage(" TIC - loadingThread - changeRequestPriority - the request ("
                             + request
                             + ") already has the priority "
-                            + newPriority + ". Exiting.");
+                            + newPriority + ". Exiting.",Log.DEBUGLEVEL10);
             return;
         }
 
-        Logger
-                .log(" TIC - loadingThread - changeRequestPriority - changing request's ("
-                        + request + ") priority for " + newPriority);
+        Log.debugMessage(" TIC - loadingThread - changeRequestPriority - changing request's ("
+                        + request + ") priority for " + newPriority,Log.DEBUGLEVEL10);
 
         synchronized (this.state) {
             if ((this.state.getValue() == State.STATE_RENDERING)
@@ -319,8 +316,7 @@ public class LoadingThread extends Thread {
      * EXPRESS, на самый низкий
      */
     public void setTheLowestPriorityForAll() {
-        Logger
-                .log(" TIC - loadingThread - setTheLowestPriorityForAll - entering");
+    	Log.debugMessage(" TIC - loadingThread - setTheLowestPriorityForAll - entering",Log.DEBUGLEVEL10);
 
         Iterator it = this.requestQueue.iterator();
         for (; it.hasNext();) {
@@ -338,7 +334,7 @@ public class LoadingThread extends Thread {
                             .setPriority(TopologicalImageQuery.PRIORITY_BACKGROUND_LOW);
             }
         }
-        Logger.log(" TIC - loadingThread - setTheLowestPriorityForAll - done");
+        Log.debugMessage(" TIC - loadingThread - setTheLowestPriorityForAll - done",Log.DEBUGLEVEL10);
     }
 
     public void clearQueue() throws MapConnectionException, MapDataException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.2 2005/06/21 12:38:21 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.3 2005/06/22 12:18:26 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.syrus.AMFICOM.client.map.Logger;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
@@ -27,10 +26,11 @@ import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/06/21 12:38:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 12:18:26 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -179,11 +179,14 @@ public class TopologicalImageCache implements MapImageRenderer
 
 	public void setSize(Dimension newSize) throws MapConnectionException, MapDataException
 	{
-		Logger.log(" TIC - sizeChanged - just entered.");
+		Log.debugMessage(" TIC - sizeChanged - just entered.",Log.DEBUGLEVEL10);
 		
 		if ((newSize.width <= 0) || (newSize.height <= 0))
 			return;
 
+		if (newSize.equals(this.imageSize))
+			return;
+		
 		this.imageSize = newSize;
 		
 		//Разница между центрами соседних по горизонтали сегментов в пикселах 
@@ -243,6 +246,10 @@ public class TopologicalImageCache implements MapImageRenderer
 		this.edgePointsAngles[7] = this.getAngleForPoint(this.imageSize.width,
 				this.imageSize.height * (1 - TopologicalImageCache.ACTIVE_AREA_SIZE),
 				this.imageSize.width / 2, this.imageSize.height / 2);
+		
+		//Удаляем изображения в кэше и создаём изображения
+		this.nulifyCache();
+		this.createMovingRequests();
 	}
 
 	/**
@@ -250,7 +257,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	public void setCenter(DoublePoint newCenter) throws MapConnectionException, MapDataException
 	{
-		Logger.log(" TIC - setCenter - just entered.");		
+		Log.debugMessage(" TIC - setCenter - just entered.",Log.DEBUGLEVEL10);		
 		if (this.imageSize == null)
 		{
 			this.center = newCenter;			
@@ -286,7 +293,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	public void setScale(double newScale) throws MapConnectionException, MapDataException
 	{
-		Logger.log(" TIC - setScale - just entered.");		
+		Log.debugMessage(" TIC - setScale - just entered.",Log.DEBUGLEVEL10);		
 		if (this.imageSize == null)
 		{
 			this.scale = newScale;			
@@ -313,7 +320,7 @@ public class TopologicalImageCache implements MapImageRenderer
 
 	private void nulifyCache() throws MapConnectionException, MapDataException
 	{
-		Logger.log(" TIC - nulifying cache.");		
+		Log.debugMessage(" TIC - nulifying cache.",Log.DEBUGLEVEL10);		
 //		this.requestToPaint = null;
 		this.cacheOfImages.clear();
 		this.loadingThread.clearQueue();
@@ -376,7 +383,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	public void analyzeMouseLocation(MouseEvent event)
 			throws MapDataException, MapConnectionException
 	{
-		Logger.log(" TIC - analyzeMouseLocation - just entered.");
+		Log.debugMessage(" TIC - analyzeMouseLocation - just entered.",Log.DEBUGLEVEL10);
 		
 		if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
 			//В том случае, если мы до этого переключали кэш, меняем режим.
@@ -643,10 +650,8 @@ public class TopologicalImageCache implements MapImageRenderer
 	{
 		// TODO Здесь по-хорошему надо перерисовывать отдельные слои,
 		// но такого механизма пока нет.
-//		this.requestToPaint = null;
-		this.cacheOfImages.clear();
-		this.loadingThread.clearQueue();
-
+		this.nulifyCache();
+		
 		this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
 		this.createMovingRequests();
 	}
@@ -677,7 +682,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			}
 		}
 
-		Logger.log(" TIC - getImage - returning image");
+		Log.debugMessage(" TIC - getImage - returning image",Log.DEBUGLEVEL10);
 
         Image imageToReturn = this.requestToPaint.getImage();
         this.requestToPaint = null;
@@ -748,9 +753,9 @@ public class TopologicalImageCache implements MapImageRenderer
 	private void createMovingRequests()
 			throws MapConnectionException, MapDataException
 	{
-		Logger.log(" TIC - createMovingRequests - just entered.");		
+		Log.debugMessage(" TIC - createMovingRequests - just entered.",Log.DEBUGLEVEL10);		
 		this.requestToPaint = this.setPriorityForRequest(this.center,this.scale,TopologicalImageQuery.PRIORITY_EXPRESS);
-		Logger.log(" TIC - createMovingRequests - exiting.");		
+		Log.debugMessage(" TIC - createMovingRequests - exiting.",Log.DEBUGLEVEL10);		
 	}
 
 	/**
@@ -764,7 +769,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private void clearFarAndUnloadedSegments() throws MapConnectionException, MapDataException
 	{
-		Logger.log(" TIC - clearFarAndUnloadedSegments - just entered.");
+		Log.debugMessage(" TIC - clearFarAndUnloadedSegments - just entered.",Log.DEBUGLEVEL10);
 		
 		double dX = TopologicalImageCache.CACHE_SIZE * 1.01 * this.xDifferenceSph;
 		double dY = TopologicalImageCache.CACHE_SIZE * 1.01 * this.yDifferenceSph;		
@@ -790,14 +795,14 @@ public class TopologicalImageCache implements MapImageRenderer
 					&& (curRequest != this.requestToPaint))
 			{
 				// Удаляем сегмент - не имеет смысла его подгружает
-				Logger.log(" TIC - clearFarAndUnloadedSegments - removing request."
-						+ curRequest);
+				Log.debugMessage(" TIC - clearFarAndUnloadedSegments - removing request."
+						+ curRequest,Log.DEBUGLEVEL10);
 				this.loadingThread.removeRequest(curRequest);
 				it.remove();
 			}
 		}
 		
-		Logger.log(" TIC - clearFarAndUnloadedSegments - exiting.");		
+		Log.debugMessage(" TIC - clearFarAndUnloadedSegments - exiting.",Log.DEBUGLEVEL10);		
 	}
 
 	/**
@@ -806,13 +811,13 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private void clearOldSegments()
 	{
-		Logger.log(" TIC - clearOldSegments - just entered.");
+		Log.debugMessage(" TIC - clearOldSegments - just entered.",Log.DEBUGLEVEL10);
 
 		// Сортируем отчёты (по убыванию, чтобы более новые потом и искать
 		// недолго было)
 		Collections.sort(this.cacheOfImages);
 
-		Logger.log(" TIC - clearOldSegments - Collection sorted.");
+		Log.debugMessage(" TIC - clearOldSegments - Collection sorted.",Log.DEBUGLEVEL10);
 
 		// Удаляем последние MAX_EXCEEDING_COUNT элементов
 		for (ListIterator lIt = this.cacheOfImages
@@ -823,7 +828,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			lIt.remove();
 		}
 
-		Logger.log(" TIC - clearOldSegments - Old elements removed. Exiting.");
+		Log.debugMessage(" TIC - clearOldSegments - Old elements removed. Exiting.",Log.DEBUGLEVEL10);
 	}
 
 	// ////////////////////////////////////Функции для кэша по масштабу
@@ -835,7 +840,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	private void createScaleRequests() throws MapConnectionException,
 			MapDataException
 	{
-		Logger.log(" TIC - createScaleRequests - just entered.");		
+		Log.debugMessage(" TIC - createScaleRequests - just entered.",Log.DEBUGLEVEL10);		
 		if ((this.cacheOfImages.size() == 0)
 				|| (	(!TopologicalImageCache.compare(this.scale, this.mapContext.getScale() * MapContext.ZOOM_FACTOR))
 						&&(!TopologicalImageCache.compare(this.scale * MapContext.ZOOM_FACTOR, this.mapContext.getScale()))))
@@ -844,7 +849,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			// или мы только что вышли из режима изменения центра
 			// грузим все изображения заново.
 			renewScaleImages();
-			Logger.log(" TIC - createScaleRequests - exiting.");			
+			Log.debugMessage(" TIC - createScaleRequests - exiting.",Log.DEBUGLEVEL10);			
 			return;
 		}
 
@@ -876,7 +881,7 @@ public class TopologicalImageCache implements MapImageRenderer
 				+ TopologicalImageCache.MAX_EXCEEDING_COUNT)
 			this.clearOldSegments();
 		
-		Logger.log(" TIC - createScaleRequests - exiting.");		
+		Log.debugMessage(" TIC - createScaleRequests - exiting.",Log.DEBUGLEVEL10);		
 	}
 
 	private static boolean compare(double p1, double p2)
