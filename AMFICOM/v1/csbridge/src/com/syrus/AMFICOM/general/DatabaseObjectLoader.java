@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.16 2005/06/22 17:32:40 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.17 2005/06/22 19:28:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/22 17:32:40 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/22 19:28:41 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -110,7 +110,7 @@ public abstract class DatabaseObjectLoader {
 	 *
 	 * @param identifiables
 	 */
-	public void delete(final Set<? extends Identifiable> identifiables) {
+	public void delete(final java.util.Set<? extends Identifiable> identifiables) {
 		if (identifiables == null || identifiables.isEmpty())
 			return;
 
