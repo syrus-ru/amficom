@@ -10,8 +10,6 @@ CLASS_SUFFIX = .class
 
 JAVAC=javac
 
-ENCODING=KOI8-R
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 

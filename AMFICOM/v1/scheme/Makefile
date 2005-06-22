@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.24 2005/06/22 10:58:00 arseniy Exp $
+# $Id: Makefile,v 1.25 2005/06/22 11:55:48 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -15,6 +15,7 @@ JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,IDLJ)
 
 
 # Directories that contain both hand-written and generated files.

@@ -4,6 +4,8 @@ LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
+JAVAC=javac
+
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 

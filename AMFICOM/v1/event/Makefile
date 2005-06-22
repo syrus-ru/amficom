@@ -7,7 +7,6 @@ IDLDIR = ../idl_v1/idl
 
 JAVAC=javac
 
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)

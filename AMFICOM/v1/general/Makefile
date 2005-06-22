@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.44 2005/06/20 14:37:12 arseniy Exp $
+# $Id: Makefile,v 1.45 2005/06/22 11:54:51 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -15,6 +15,7 @@ JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar

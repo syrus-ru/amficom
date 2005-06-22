@@ -9,7 +9,7 @@ JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDLJ)
 
 
 XMLDIR=./xml

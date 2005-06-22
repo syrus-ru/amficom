@@ -7,10 +7,11 @@ JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,IDLJ)
 
 
 APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xbean.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
