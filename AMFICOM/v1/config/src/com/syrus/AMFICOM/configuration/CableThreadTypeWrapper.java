@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.9 2005/05/18 11:27:16 bass Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.10 2005/06/22 07:43:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/18 11:27:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 07:43:48 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class CableThreadTypeWrapper extends StorableObjectWrapper {
@@ -61,7 +61,8 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof CableThreadType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof CableThreadType) {
 			CableThreadType type = (CableThreadType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
@@ -74,7 +75,7 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_LINK_TYPE_ID))
 				return type.getLinkType();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -97,10 +98,6 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -111,7 +108,21 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		Class clazz = String.class;
-		return clazz;
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_CODENAME)
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_NAME)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_COLOR)) {
+			return Integer.class;
+		}
+		if (key.equals(COLUMN_LINK_TYPE_ID)) {
+			return LinkType.class;
+		}
+		return null;
 	}
 }

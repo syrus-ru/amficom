@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.10 2005/06/22 07:37:53 bob Exp $
+ * $Id: PortTypeWrapper.java,v 1.11 2005/06/22 07:43:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 07:37:53 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 07:43:48 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -66,7 +66,7 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
