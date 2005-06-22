@@ -30,7 +30,7 @@ public class RefAnalysis
             new ClientAnalysisManager();
             ap = Heap.getMinuitAnalysisParams();
         }
-        mtae = CoreAnalysisManager.makeAnalysis(bs, ap);
+        mtae = CoreAnalysisManager.performAnalysis(bs, ap).getMTAE();
         decode();
 	}
 
