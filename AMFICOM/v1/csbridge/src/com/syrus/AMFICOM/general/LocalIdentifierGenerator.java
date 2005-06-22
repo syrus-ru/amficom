@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGenerator.java,v 1.5 2005/05/18 12:52:58 bass Exp $
+ * $Id: LocalIdentifierGenerator.java,v 1.6 2005/06/22 19:39:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 import java.util.List;
 import java.util.LinkedList;
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/18 12:52:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 19:39:20 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
@@ -30,14 +30,14 @@ public class LocalIdentifierGenerator {
 	}
 
 	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException {
-		List list = new LinkedList();
+		List<Identifier> list = new LinkedList<Identifier>();
 		short major = generateMajor(entityCode);
 		long minor;
 		for (int i = 0; i < rangeSize; i++) {
 			minor = generateMinor(entityCode);
 			list.add(new Identifier(major, minor));
 		}
-		return (Identifier[])list.toArray(new Identifier[list.size()]);
+		return list.toArray(new Identifier[list.size()]);
 	}
 
 	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {

@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.14 2005/06/21 14:13:37 bass Exp $
+ * $Id: LoginManager.java,v 1.15 2005/06/22 19:39:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
@@ -22,8 +21,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/21 14:13:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/06/22 19:39:20 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class LoginManager {
@@ -75,7 +74,7 @@ public final class LoginManager {
 	public static void logout() throws CommunicationException, LoginException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.logout((IdlSessionKey) sessionKey.getTransferable());
+			loginServer.logout(sessionKey.getTransferable());
 		}
 		catch (AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
@@ -93,8 +92,8 @@ public final class LoginManager {
 	public static Set getAvailableDomains() throws CommunicationException, LoginException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			IdlDomain[] domainsT = loginServer.transmitAvailableDomains((IdlSessionKey) sessionKey.getTransferable());
-			Set domains = new HashSet(domainsT.length);
+			IdlDomain[] domainsT = loginServer.transmitAvailableDomains(sessionKey.getTransferable());
+			Set<Domain> domains = new HashSet<Domain>(domainsT.length);
 			for (int i = 0; i < domainsT.length; i++) {
 				try {
 					domains.add(new Domain(domainsT[i]));
@@ -121,8 +120,7 @@ public final class LoginManager {
 	public static void selectDomain(Identifier domainId1) throws CommunicationException {
 		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.selectDomain((IdlSessionKey) sessionKey.getTransferable(),
-					(IdlIdentifier) domainId1.getTransferable());
+			loginServer.selectDomain(sessionKey.getTransferable(), domainId1.getTransferable());
 			domainId = domainId1;
 		}
 		catch (AMFICOMRemoteException are) {

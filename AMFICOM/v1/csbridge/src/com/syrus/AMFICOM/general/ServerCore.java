@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.19 2005/06/21 12:44:27 bass Exp $
+ * $Id: ServerCore.java,v 1.20 2005/06/22 19:39:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/06/21 12:44:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/06/22 19:39:20 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -114,7 +114,7 @@ public abstract class ServerCore implements CommonServer {
 			Log.debugMessage("ServerCore.getGeneratedIdentifier() | Generating an identifier of type: "
 					+ ObjectEntities.codeToString(entityCode),
 					Log.CONFIG);
-			return (IdlIdentifier) IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
+			return IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
 		} catch (final IllegalObjectEntityException ioee) {
 			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
 		} catch (final IdentifierGenerationException ige) {
@@ -255,7 +255,7 @@ public abstract class ServerCore implements CommonServer {
 				new IdlIdentifierHolder(),
 				new IdlIdentifierHolder());
 
-		final Map headerMap = new HashMap();
+		final Map<Identifier, IdlStorableObject> headerMap = new HashMap<Identifier, IdlStorableObject>();
 		for (int i = 0; i < headers.length; i++)
 			headerMap.put(new Identifier(headers[i].id), headers[i]);
 
@@ -265,7 +265,7 @@ public abstract class ServerCore implements CommonServer {
 			final Set storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
 				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-				final IdlStorableObject header = (IdlStorableObject) headerMap.get(storableObject.getId());
+				final IdlStorableObject header = headerMap.get(storableObject.getId());
 				/*
 				 * Remove objects with older versions as well as objects with the same versions.
 				 * Not only with older ones!

@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.11 2005/06/10 12:51:36 bob Exp $
+ * $Id: CORBAServer.java,v 1.12 2005/06/22 19:39:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/10 12:51:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 19:39:19 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
@@ -59,7 +59,7 @@ public class CORBAServer {
 	private NamingContextExt namingContext;
 
 	/*	Names of bound servants. Need for unbound all servants on shutdown*/
-	private Set servantNames;	//Set <String servantName>
+	private Set<String> servantNames;
 
 	/*	Wrapper class for shutdown hook*/
 	private class WrappedHook {
@@ -84,7 +84,7 @@ public class CORBAServer {
 	private boolean running;
 
 	/*	Hooks themselves*/
-	private Set hooks;	//Set <WrappedHook hook>	
+	private Set<WrappedHook> hooks;	
 
 	public CORBAServer(final String rootContextName) throws CommunicationException {
 		this.initORB();
@@ -139,7 +139,7 @@ public class CORBAServer {
 
 	private void initNamingContext(final String rootContextNameStr) throws CommunicationException {
 		this.bindIfNonExistingNamingContext(rootContextNameStr);
-		this.servantNames = Collections.synchronizedSet(new HashSet());
+		this.servantNames = Collections.synchronizedSet(new HashSet<String>());
 	}
 
 	private void bindIfNonExistingNamingContext(final String rootContextNameStr) throws CommunicationException {
@@ -269,7 +269,7 @@ public class CORBAServer {
 		if (this.running) {
 			if (!hook.isAlive()) {
 				if (this.hooks == null) {
-					this.hooks = new HashSet(1);
+					this.hooks = new HashSet<WrappedHook>(1);
 					this.hooks.add(new WrappedHook(hook));
 				}
 				else {
@@ -319,9 +319,9 @@ public class CORBAServer {
 		this.runHooks();
 
 		synchronized (this.servantNames) {
-			for (Iterator it = this.servantNames.iterator(); it.hasNext();) {
+			for (Iterator<String> it = this.servantNames.iterator(); it.hasNext();) {
 				try {
-					this.unbindServant((String) it.next());
+					this.unbindServant(it.next());
 					it.remove();
 				}
 				catch (CommunicationException ce) {
@@ -362,12 +362,12 @@ public class CORBAServer {
 		/*	No synchronization on hooks.
 		 *	The value false of field running guarantees,
 		 *	that hooks cannot be modified*/
-		for (final Iterator it = this.hooks.iterator(); it.hasNext();)
-			((WrappedHook) it.next()).hook.start();
+		for (final Iterator<WrappedHook> it = this.hooks.iterator(); it.hasNext();)
+			it.next().hook.start();
 
-		for (final Iterator it = this.hooks.iterator(); it.hasNext();)
+		for (final Iterator<WrappedHook> it = this.hooks.iterator(); it.hasNext();)
 			try {
-				((WrappedHook) it.next()).hook.join();
+				it.next().hook.join();
 			}
 			catch (final InterruptedException ie) {
 				continue;
