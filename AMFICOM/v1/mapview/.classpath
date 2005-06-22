@@ -10,5 +10,7 @@
 	<classpathentry kind="src" path="/scheme_v1"/>
 	<classpathentry kind="src" path="/map_v1"/>
 	<classpathentry kind="src" path="/admin_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/idl_v1"/>
+	<classpathentry kind="var" path="EXTLIB/xbean.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
