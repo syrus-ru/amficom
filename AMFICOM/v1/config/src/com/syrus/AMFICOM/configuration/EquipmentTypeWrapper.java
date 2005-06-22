@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeWrapper.java,v 1.10 2005/06/22 07:37:53 bob Exp $
+ * $Id: EquipmentTypeWrapper.java,v 1.11 2005/06/22 07:38:14 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 07:37:53 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/22 07:38:14 $
  * @author $Author: bob $
  * @module configuration_v1
  */
