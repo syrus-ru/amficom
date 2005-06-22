@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.7 2005/06/17 11:36:22 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.8 2005/06/22 10:10:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,9 @@ import java.util.Collections;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.*;
@@ -19,7 +22,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/17 11:36:22 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/22 10:10:50 $
  * @module schemeclient_v1
  */
 

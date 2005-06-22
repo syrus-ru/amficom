@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.6 2005/06/17 11:36:21 bass Exp $
+ * $Id: UgoPanel.java,v 1.7 2005/06/22 10:10:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 import java.awt.*;
 import java.awt.print.*;
 import java.beans.*;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.List;
 
@@ -25,13 +24,13 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:36:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 10:10:50 $
  * @module schemeclient_v1
  */
 

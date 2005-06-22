@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.29 2005/06/21 15:06:48 krupenn Exp $
+ * $Id: MapViewController.java,v 1.30 2005/06/22 10:10:50 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/06/21 15:06:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/06/22 10:10:50 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {

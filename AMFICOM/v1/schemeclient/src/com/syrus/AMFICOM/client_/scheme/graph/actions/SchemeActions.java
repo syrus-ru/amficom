@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.8 2005/06/17 11:36:21 bass Exp $
+ * $Id: SchemeActions.java,v 1.9 2005/06/22 10:10:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/17 11:36:21 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:10:51 $
  * @module schemeclient_v1
  */
 

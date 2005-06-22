@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.8 2005/06/17 11:36:22 bass Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.9 2005/06/22 10:10:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.scheme.*;
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/17 11:36:22 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 10:10:50 $
  * @module schemeclient_v1
  */
 

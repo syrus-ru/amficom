@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.15 2005/06/21 07:41:53 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.16 2005/06/22 10:10:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
+import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
