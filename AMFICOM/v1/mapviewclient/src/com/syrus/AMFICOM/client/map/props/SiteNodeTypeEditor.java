@@ -1,11 +1,9 @@
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -82,7 +80,12 @@ public final class SiteNodeTypeEditor
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					changeImage();
+					try {
+						changeImage();
+					} catch(ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
 
@@ -236,29 +239,13 @@ public final class SiteNodeTypeEditor
 		this.aContext = aContext;
 	}
 
-	void changeImage() {
-		ImagesDialog frame = new ImagesDialog(this.aContext);
+	void changeImage() throws ApplicationException {
+		
+		BitmapImageResource imageResource = (BitmapImageResource )StorableObjectPool.getStorableObject(this.imageId, true);
+		AbstractImageResource ir = ImagesDialog.showImageDialog(imageResource);
 
-		try {
-			AbstractImageResource imageResource = (AbstractImageResource )StorableObjectPool.getStorableObject(this.imageId, true);
-			frame.setImageResource((BitmapImageResource )imageResource);
-		} catch(ApplicationException e) {
-			e.printStackTrace();
-			return;
-		}
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = frame.getSize();
-		if (frameSize.height > screenSize.height) 
-			frameSize.height = screenSize.height;
-		if (frameSize.width > screenSize.width) 
-			frameSize.width = screenSize.width;
-		frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-		frame.setModal(true);
-		frame.setVisible(true);
-		if(frame.retCode == 1) {
+		if(ir != null) {
 			this.imagePanel.removeAll();
-			AbstractImageResource ir = frame.getImageResource();
 			this.imageId = ir.getId();
 			ImageIcon icon;
 
