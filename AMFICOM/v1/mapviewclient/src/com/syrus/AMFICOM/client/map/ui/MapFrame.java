@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.50 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapFrame.java,v 1.51 2005/06/22 12:20:56 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,8 +82,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.50 $, $Date: 2005/06/22 08:43:49 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.51 $, $Date: 2005/06/22 12:20:56 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -181,6 +181,8 @@ public class MapFrame extends JInternalFrame
 
 		mapContext.setCenter(MapPropertiesManager.getCenter());
 		mapContext.setScale(MapPropertiesManager.getZoom());
+		renderer.setScale(mapContext.getScale());
+		renderer.setCenter(mapContext.getCenter());		
 
 //		this.logicalNetLayer.repaint(true);
 	}
