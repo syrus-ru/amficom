@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.11 2005/06/20 15:37:11 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.12 2005/06/22 08:53:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,11 +26,11 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.util.Log;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.11 $, $Date: 2005/06/20 15:37:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 08:53:07 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -64,31 +64,19 @@ public class OfxConnection extends MapConnection
 	
 	public OfxConnection()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"constructor call", 
-				getClass().getName(), 
-				"OfxConnection()");
+		Log.debugMessage(getClass().getName() + "::" + "OfxConnection()" + " | " + "constructor call", Log.FINER);
 	}
 	
 	public void setPath(String path)
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setPath(" + path + ")");
+		Log.debugMessage(getClass().getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Log.FINER);
 		
 		this.dataBasePath = path;
 	}
 	
 	public void setView(String name)
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setView(" + name + ")");
+		Log.debugMessage(getClass().getName() + "::" + "setView(" + name + ")" + " | " + "method call", Log.FINER);
 
 		this.dataBaseView = name;
 	}
@@ -120,11 +108,7 @@ public class OfxConnection extends MapConnection
 			|| this.dataBasePath == null)
 				throw new MapConnectionException("insufficient data for map connection");
 	
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"connect()");
+		Log.debugMessage(getClass().getName() + "::" + "connect()" + " | " + "method call", Log.FINER);
 		
 		String sessionName = OFX_DATABASE_PREFIX + this.dataBasePath;
 /*		
@@ -232,11 +216,7 @@ public class OfxConnection extends MapConnection
 	
 	public boolean release() throws MapConnectionException
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"release()");
+		Log.debugMessage(getClass().getName() + "::" + "release()" + " | " + "method call", Log.FINER);
 
 		this.spatialLayer.release();
 		try
