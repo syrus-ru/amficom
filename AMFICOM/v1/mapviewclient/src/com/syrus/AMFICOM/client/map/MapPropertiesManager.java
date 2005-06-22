@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.23 2005/06/22 08:43:46 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.24 2005/06/22 13:20:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/22 08:43:46 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/22 13:20:47 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -281,7 +281,7 @@ public final class MapPropertiesManager
 		scaleFormat.setMinimumIntegerDigits(1);
 		scaleFormat.setMinimumFractionDigits(1);
 		scaleFormat.setGroupingUsed(false);
-		scaleFormat.setMaximumFractionDigits(4);
+		scaleFormat.setMaximumFractionDigits(8);
 		dfs = scaleFormat.getDecimalFormatSymbols();
 		dfs.setDecimalSeparator('.');
 		scaleFormat.setDecimalFormatSymbols(dfs);
