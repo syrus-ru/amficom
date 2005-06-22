@@ -10,7 +10,7 @@ JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
