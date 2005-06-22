@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.8 2005/06/22 10:22:27 bob Exp $
+ * $Id: MCMWrapper.java,v 1.9 2005/06/22 15:42:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/22 10:22:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 15:42:47 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class MCMWrapper extends StorableObjectWrapper {
@@ -96,7 +97,7 @@ public class MCMWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_HOSTNAME))
 				mcm.setHostName((String) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				mcm.setCharacteristics((Set) value);
+				mcm.setCharacteristics((Set<Characteristic>) value);
 
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.5 2005/06/22 12:14:16 bob Exp $
+ * $Id: SystemUserWrapper.java,v 1.6 2005/06/22 15:42:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/22 12:14:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 15:42:47 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class SystemUserWrapper extends StorableObjectWrapper {
@@ -99,7 +99,7 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_SORT))
 				user.setSort(SystemUserSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				user.setCharacteristics((Set<Characteristic>)value);
+				user.setCharacteristics((Set<Characteristic>) value);
 		}
 	}
 
