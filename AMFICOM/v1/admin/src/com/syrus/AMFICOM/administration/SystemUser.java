@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.4 2005/06/21 14:13:36 bass Exp $
+ * $Id: SystemUser.java,v 1.5 2005/06/22 12:14:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.administration;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -17,26 +18,32 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/21 14:13:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 12:14:16 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
-public final class SystemUser extends StorableObject {
+public final class SystemUser extends StorableObject implements Characterizable, Namable {
 	private static final long serialVersionUID = 7173419705878464356L;
 	
 	private String login;
@@ -44,6 +51,8 @@ public final class SystemUser extends StorableObject {
 	private String name;
 	private String description;
 
+	private Set<Characteristic> characteristics;
+	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -63,9 +72,14 @@ public final class SystemUser extends StorableObject {
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @throws CreateObjectException 
 	 */
-	SystemUser(final IdlSystemUser ut) {
-		this.fromTransferable(ut);
+	SystemUser(final IdlSystemUser ut) throws CreateObjectException {
+		try {
+			this.fromTransferable(ut);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
@@ -88,12 +102,16 @@ public final class SystemUser extends StorableObject {
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
+		
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @throws ApplicationException 
 	 */
-	protected void fromTransferable(final IDLEntity transferable) {
+	protected void fromTransferable(final IDLEntity transferable) 
+	throws ApplicationException {
 		IdlSystemUser ut = (IdlSystemUser) transferable;
 		try {
 			super.fromTransferable(ut.header);
@@ -107,6 +125,10 @@ public final class SystemUser extends StorableObject {
 		this.name = ut.name;
 		this.description = ut.description;
 		
+		Set characteristicIds = Identifier.fromTransferables(ut.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(ut.characteristicIds.length);
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -115,11 +137,15 @@ public final class SystemUser extends StorableObject {
 	 */
 	public IdlSystemUser getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
+		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
+		
 		return new IdlSystemUser(super.getHeaderTransferable(),
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,
-				this.description);
+				this.description,
+				charIds);
 	}
 
 	/**
@@ -131,7 +157,8 @@ public final class SystemUser extends StorableObject {
 		return super.isValid()
 				&& this.login != null && this.login.length() != 0
 				&& this.name != null && this.name.length() != 0
-				&& this.description != null;
+				&& this.description != null
+				&& this.characteristics != null;
 	}
 	
 	public String getLogin() {
@@ -152,6 +179,35 @@ public final class SystemUser extends StorableObject {
 	
 	public void setDescription(final String description) {
 		this.description = description;
+		super.markAsChanged();
+	}
+	
+	public void addCharacteristic(final Characteristic characteristic) {
+		if (characteristic != null) {
+			this.characteristics.add(characteristic);
+			super.markAsChanged();
+		}
+	}
+
+	public void removeCharacteristic(final Characteristic characteristic) {
+		if (characteristic != null) {
+			this.characteristics.remove(characteristic);
+			super.markAsChanged();
+		}
+	}
+
+	public Set<Characteristic> getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
+	}
+
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
+	}
+
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
+		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
 
@@ -218,8 +274,9 @@ public final class SystemUser extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set getDependencies() {		
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {		
+		return Collections.emptySet();
 	}
 	
 	public void setLogin(final String login) {

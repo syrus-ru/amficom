@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.3 2005/06/19 18:39:20 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.4 2005/06/22 12:14:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -20,19 +21,18 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/19 18:39:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 12:14:16 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
-public final class SystemUserDatabase extends StorableObjectDatabase {
+public final class SystemUserDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	static final int SIZE_LOGIN_COLUMN = 32;
