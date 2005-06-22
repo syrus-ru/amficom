@@ -1,5 +1,5 @@
 /*
- * $Id: SQLCommonTest.java,v 1.1 2005/06/20 17:35:13 arseniy Exp $
+ * $Id: SQLCommonTest.java,v 1.2 2005/06/22 14:45:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ public class SQLCommonTest extends CommonTest {
 		super.oneTimeTearDown();
 	}
 
-	private static final void establishDatabaseConnection() {
+	public static final void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
 		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;

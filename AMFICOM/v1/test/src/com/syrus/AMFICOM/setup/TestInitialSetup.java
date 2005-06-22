@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.3 2005/06/20 17:37:48 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.4 2005/06/22 14:45:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.TestDataType;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/20 17:37:48 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 14:45:47 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -43,15 +43,15 @@ public final class TestInitialSetup extends TestCase {
 
 		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 
-		//-2. Create default domain and server
+		//-3. Create default domain and server
 		databaseCommonTest.addTest(new TestDomain("testCreateInstance"));
 		databaseCommonTest.addTest(new TestServer("testCreateInstance"));
 
-		//-3. Create users for server processes and processes itself
+		//-4. Create users for server processes and processes itself
 		databaseCommonTest.addTest(new TestSystemUser("testCreateInstance"));
 		databaseCommonTest.addTest(new TestServerProcess("testCreateInstance"));
 
-		//-4. Create users for MCM and MCMs itself.
+		//-5. Create users for MCM and MCMs itself.
 		databaseCommonTest.addTest(new TestSystemUser("testCreateMCMUsers"));
 		databaseCommonTest.addTest(new TestMCM("testCreateInstance"));
 
