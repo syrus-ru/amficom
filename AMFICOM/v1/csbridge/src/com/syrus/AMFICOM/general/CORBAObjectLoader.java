@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.35 2005/06/21 12:44:27 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.36 2005/06/22 19:29:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader {
@@ -40,7 +40,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * Overridden in <code>MCMObjectLoader</code>.
 	 */
-	public void delete(final Set identifiables) {
+	public void delete(final Set<? extends Identifiable> identifiables) {
 		try {
 			this.serverConnectionManager.getServerReference().delete(Identifier.createTransferables(identifiables),
 					LoginManager.getSessionKeyTransferable());
@@ -56,7 +56,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * Overridden in <code>MCMObjectLoader</code>.
 	 */
-	public Set refresh(final Set storableObjects) throws ApplicationException {
+	public Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		try {
 			final CommonServer commonServer = this.serverConnectionManager.getServerReference();
 			final IdlStorableObject[] headers = StorableObject.createHeadersTransferable(storableObjects);
@@ -71,8 +71,8 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -82,8 +82,8 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -98,8 +98,8 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.35 $, $Date: 2005/06/21 12:44:27 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -118,7 +118,7 @@ public abstract class CORBAObjectLoader {
 	 * @param transmitProcedure
 	 * @throws ApplicationException
 	 */
-	protected Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
+	protected Set loadStorableObjects(final short entityCode, final Set<Identifier> ids, final TransmitProcedure transmitProcedure)
 			throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
@@ -193,7 +193,7 @@ public abstract class CORBAObjectLoader {
 	 * <p>Overridden in <code>MCMObjectLoader</code> and <code>CORBACMServerObjectLoader</code>.</p>
 	 */
 	protected Set loadStorableObjectsButIdsByCondition(final short entityCode,
-			final Set ids,
+			final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
@@ -232,7 +232,7 @@ public abstract class CORBAObjectLoader {
 	 * @todo Login restoration & error handling.
 	 */
 	protected final void saveStorableObjects(final short entityCode,
-			final Set storableObjects,
+			final Set<? extends StorableObject> storableObjects,
 			final ReceiveProcedure receiveProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 

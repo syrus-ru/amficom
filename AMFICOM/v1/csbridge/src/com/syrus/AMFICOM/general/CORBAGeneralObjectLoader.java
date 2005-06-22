@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAGeneralObjectLoader.java,v 1.24 2005/06/21 12:44:27 bass Exp $
+ * $Id: CORBAGeneralObjectLoader.java,v 1.25 2005/06/22 19:29:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/21 12:44:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/06/22 19:29:31 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements GeneralObjectLoader {
@@ -38,7 +38,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 
 	/* Load multiple objects*/
 
-	public Set loadParameterTypes(Set ids) throws ApplicationException {
+	public Set loadParameterTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -50,7 +50,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 		});
 	}
 
-	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
+	public Set loadCharacteristicTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -62,7 +62,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 		});
 	}
 
-	public Set loadCharacteristics(Set ids) throws ApplicationException {
+	public Set loadCharacteristics(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -78,7 +78,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 
 	/* Load multiple objects but ids by condition*/
 
-	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadParameterTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -91,7 +91,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 		});
 	}
 
-	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadCharacteristicTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CHARACTERISTIC_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -104,7 +104,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 		});
 	}
 
-	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadCharacteristicsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CHARACTERISTIC_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -121,7 +121,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 
 	/*	Save multiple objects*/
 
-	public void saveParameterTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveParameterTypes(final Set<ParameterType> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -133,7 +133,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 		});
 	}
 
-	public void saveCharacteristicTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveCharacteristicTypes(final Set<CharacteristicType> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -145,7 +145,7 @@ public class CORBAGeneralObjectLoader extends CORBAObjectLoader implements Gener
 		});
 	}
 
-	public void saveCharacteristics(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveCharacteristics(final Set<Characteristic> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,

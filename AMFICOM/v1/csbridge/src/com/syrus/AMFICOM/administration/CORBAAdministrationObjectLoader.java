@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.27 2005/06/21 14:13:37 bass Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.28 2005/06/22 19:29:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/21 14:13:37 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/06/22 19:29:31 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader implements AdministrationObjectLoader {
@@ -45,7 +46,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	/* Load multiple objects*/
 
-	public Set loadSystemUsers(Set ids) throws ApplicationException {
+	public Set loadSystemUsers(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SYSTEMUSER_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -57,7 +58,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadDomains(Set ids) throws ApplicationException {
+	public Set loadDomains(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.DOMAIN_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -69,7 +70,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadServers(Set ids) throws ApplicationException {
+	public Set loadServers(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SERVER_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -81,7 +82,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadMCMs(Set ids) throws ApplicationException {
+	public Set loadMCMs(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MCM_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -93,7 +94,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadServerProcesses(Set ids) throws ApplicationException {
+	public Set loadServerProcesses(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SERVERPROCESS_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -109,7 +110,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	/* Load multiple objects but ids by condition*/
 
-	public Set loadSystemUsersButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadSystemUsersButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SYSTEMUSER_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -122,7 +123,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadDomainsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.DOMAIN_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -135,7 +136,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadServersButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SERVER_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -148,7 +149,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadMCMsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MCM_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -161,7 +162,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public Set loadServerProcessesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	public Set loadServerProcessesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SERVERPROCESS_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -178,7 +179,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	/*	Save multiple objects*/
 
-	public void saveSystemUsers(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveSystemUsers(final Set<SystemUser> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.SYSTEMUSER_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -190,7 +191,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public void saveDomains(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveDomains(final Set<Domain> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.DOMAIN_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -202,7 +203,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public void saveServers(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveServers(final Set<Server> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.SERVER_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -214,7 +215,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public void saveMCMs(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveMCMs(final Set<MCM> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.MCM_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -226,7 +227,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		});
 	}
 
-	public void saveServerProcesses(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveServerProcesses(final Set<ServerProcess> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.SERVERPROCESS_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,

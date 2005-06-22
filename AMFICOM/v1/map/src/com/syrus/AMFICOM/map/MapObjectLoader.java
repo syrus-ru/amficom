@@ -1,5 +1,5 @@
 /*
- * $Id: MapObjectLoader.java,v 1.11 2005/05/23 13:51:17 bass Exp $
+ * $Id: MapObjectLoader.java,v 1.12 2005/06/22 19:24:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,87 +11,90 @@ package com.syrus.AMFICOM.map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/23 13:51:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 19:24:59 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public interface MapObjectLoader {
-	Set loadCollectors(final Set ids) throws ApplicationException;
+	Set loadCollectors(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMaps(final Set ids) throws ApplicationException;
+	Set loadMaps(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMarks(final Set ids) throws ApplicationException;
+	Set loadMarks(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadNodeLinks(final Set ids) throws ApplicationException;
+	Set loadNodeLinks(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadPhysicalLinks(final Set ids) throws ApplicationException;
+	Set loadPhysicalLinks(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadPhysicalLinkTypes(final Set ids) throws ApplicationException;
+	Set loadPhysicalLinkTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadSiteNodes(final Set ids) throws ApplicationException;
+	Set loadSiteNodes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadSiteNodeTypes(final Set ids) throws ApplicationException;
+	Set loadSiteNodeTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadTopologicalNodes(final Set ids) throws ApplicationException;
+	Set loadTopologicalNodes(final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadCollectorsButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadMapsButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadMarksButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadNodeLinksButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadPhysicalLinksButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadSiteNodesButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadSiteNodeTypesButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
 	Set loadTopologicalNodesButIds(final StorableObjectCondition condition,
-			final Set ids) throws ApplicationException;
+			final Set<Identifier> ids) throws ApplicationException;
 
-	java.util.Set refresh(final Set storableObjects) throws ApplicationException;
+	Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException;
 
-	void saveCollectors(final Set objects,
+	void saveCollectors(final Set<Collector> objects,
 			final boolean force) throws ApplicationException;
 
-	void saveMaps(final Set objects,
+	void saveMaps(final Set<Map> objects,
 			final boolean force) throws ApplicationException;
 
-	void saveMarks(final Set objects,
+	void saveMarks(final Set<Mark> objects,
 			final boolean force) throws ApplicationException;
 
-	void saveNodeLinks(final Set objects,
+	void saveNodeLinks(final Set<NodeLink> objects,
 			final boolean force) throws ApplicationException;
 
-	void savePhysicalLinks(final Set objects,
+	void savePhysicalLinks(final Set<PhysicalLink> objects,
 			final boolean force) throws ApplicationException;
 
-	void savePhysicalLinkTypes(final Set objects,
+	void savePhysicalLinkTypes(final Set<PhysicalLinkType> objects,
 			final boolean force) throws ApplicationException;
 
-	void saveSiteNodes(final Set objects,
+	void saveSiteNodes(final Set<SiteNode> objects,
 			final boolean force) throws ApplicationException;
 
-	void saveSiteNodeTypes(final Set objects,
+	void saveSiteNodeTypes(final Set<SiteNodeType> objects,
 			final boolean force) throws ApplicationException;
 
-	void saveTopologicalNodes(final Set objects,
+	void saveTopologicalNodes(final Set<TopologicalNode> objects,
 			final boolean force) throws ApplicationException;
 
-	void delete(final Set identifiables);
+	void delete(final Set<? extends Identifiable> objects);
 }

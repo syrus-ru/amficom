@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.14 2005/06/21 12:44:27 bass Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.15 2005/06/22 19:29:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/06/21 12:44:27 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/06/22 19:29:32 $
  * @module csbridge_v1
  */
 public final class CORBAMapObjectLoader extends CORBAObjectLoader implements MapObjectLoader {
@@ -50,7 +51,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	/* Load multiple objects*/
 
-	public Set loadCollectors(final Set ids) throws ApplicationException {
+	public Set loadCollectors(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.COLLECTOR_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -62,7 +63,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadMaps(final Set ids) throws ApplicationException {
+	public Set loadMaps(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MAP_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -74,7 +75,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadMarks(final Set ids) throws ApplicationException {
+	public Set loadMarks(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MARK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -86,7 +87,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadNodeLinks(final Set ids) throws ApplicationException {
+	public Set loadNodeLinks(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.NODELINK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -98,7 +99,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadPhysicalLinks(final Set ids) throws ApplicationException {
+	public Set loadPhysicalLinks(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PHYSICALLINK_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -110,7 +111,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadPhysicalLinkTypes(final Set ids) throws ApplicationException {
+	public Set loadPhysicalLinkTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PHYSICALLINK_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -122,7 +123,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadSiteNodes(final Set ids) throws ApplicationException {
+	public Set loadSiteNodes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SITENODE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -134,7 +135,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadSiteNodeTypes(final Set ids) throws ApplicationException {
+	public Set loadSiteNodeTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SITENODE_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -146,7 +147,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadTopologicalNodes(final Set ids) throws ApplicationException {
+	public Set loadTopologicalNodes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.TOPOLOGICALNODE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -162,7 +163,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	/* Load multiple objects but ids by condition*/
 
-	public Set loadCollectorsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadCollectorsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.COLLECTOR_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -175,7 +176,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadMapsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadMapsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MAP_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -188,7 +189,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadMarksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadMarksButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MARK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -201,7 +202,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadNodeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadNodeLinksButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.NODELINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -214,7 +215,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadPhysicalLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadPhysicalLinksButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PHYSICALLINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -227,7 +228,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadPhysicalLinkTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PHYSICALLINK_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -240,7 +241,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadSiteNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadSiteNodesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SITENODE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -253,7 +254,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadSiteNodeTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadSiteNodeTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SITENODE_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -266,7 +267,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public Set loadTopologicalNodesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadTopologicalNodesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TOPOLOGICALNODE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -283,7 +284,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 
 	/*	Save multiple objects*/
 
-	public void saveCollectors(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveCollectors(final Set<Collector> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.COLLECTOR_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -295,7 +296,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void saveMaps(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveMaps(final Set<Map> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.MAP_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -307,7 +308,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void saveMarks(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveMarks(final Set<Mark> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.MARK_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -319,7 +320,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void saveNodeLinks(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveNodeLinks(final Set<NodeLink> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.NODELINK_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -331,7 +332,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void savePhysicalLinks(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void savePhysicalLinks(final Set<PhysicalLink> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.PHYSICALLINK_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -343,7 +344,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void savePhysicalLinkTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void savePhysicalLinkTypes(final Set<PhysicalLinkType> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.PHYSICALLINK_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -355,7 +356,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void saveSiteNodes(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveSiteNodes(final Set<SiteNode> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.SITENODE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -367,7 +368,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void saveSiteNodeTypes(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveSiteNodeTypes(final Set<SiteNodeType> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.SITENODE_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
@@ -379,7 +380,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 		});
 	}
 
-	public void saveTopologicalNodes(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveTopologicalNodes(final Set<TopologicalNode> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.TOPOLOGICALNODE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,

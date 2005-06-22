@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.14 2005/06/21 12:44:28 bass Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.15 2005/06/22 19:29:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/06/21 12:44:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/06/22 19:29:32 $
  * @module csbridge_v1
  */
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
@@ -42,7 +43,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 
 	/* Load multiple objects*/
 
-	public Set loadImageResources(final Set ids) throws ApplicationException {
+	public Set loadImageResources(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.IMAGERESOURCE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(
 					final CommonServer server,
@@ -58,7 +59,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 
 	/* Load multiple objects but ids by condition*/
 
-	public Set loadImageResourcesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadImageResourcesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.IMAGERESOURCE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
 			public IDLEntity[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
@@ -75,7 +76,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 
 	/*	Save multiple objects*/
 
-	public void saveImageResources(final Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveImageResources(final Set<? extends AbstractImageResource> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.IMAGERESOURCE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectLoader.java,v 1.6 2005/05/26 19:13:23 bass Exp $
+ * $Id: SchemeObjectLoader.java,v 1.7 2005/06/22 19:25:35 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,18 @@ package com.syrus.AMFICOM.scheme;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/05/26 19:13:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 19:25:35 $
  * @module scheme_v1
  */
 public interface SchemeObjectLoader {
-	void delete(final Set identifiables);
+	void delete(final Set<? extends Identifiable> objects);
 
 	Set loadCableChannelingItems(final Set ids) throws ApplicationException;
 
@@ -90,7 +92,7 @@ public interface SchemeObjectLoader {
 
 	Set loadSchemesButIds(final StorableObjectCondition storableObjectCondition, final Set ids) throws ApplicationException;
 
-	Set refresh(final Set storableObjects) throws ApplicationException;
+	Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException;
 
 	void saveCableChannelingItems(final Set cableChannelingItems, final boolean force) throws ApplicationException;
 
