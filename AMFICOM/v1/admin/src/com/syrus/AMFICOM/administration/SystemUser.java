@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.5 2005/06/22 12:14:16 bob Exp $
+ * $Id: SystemUser.java,v 1.6 2005/06/22 15:13:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/22 12:14:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/06/22 15:13:36 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -275,7 +275,9 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set<Identifiable> getDependencies() {		
+	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		return Collections.emptySet();
 	}
 	
