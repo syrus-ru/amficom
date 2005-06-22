@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.35 2005/06/21 14:13:36 bass Exp $
+ * $Id: Server.java,v 1.36 2005/06/22 15:12:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/21 14:13:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/22 15:12:19 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -248,10 +249,11 @@ public final class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return Collections.EMPTY_SET;
+		return Collections.emptySet();
 	}
 
 	public void setHostName(final String hostname) {

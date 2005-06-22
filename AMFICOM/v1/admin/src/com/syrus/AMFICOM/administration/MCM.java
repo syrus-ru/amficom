@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.32 2005/06/21 14:13:36 bass Exp $
+ * $Id: MCM.java,v 1.33 2005/06/22 15:12:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -33,8 +34,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/21 14:13:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/06/22 15:12:19 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -274,10 +275,11 @@ public final class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		Set dependencies = new HashSet();
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);
 		return dependencies;
