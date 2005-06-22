@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.4 2005/05/23 12:56:33 bass Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.5 2005/06/22 19:27:53 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.XMLObjectLoader;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/23 12:56:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 19:27:53 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
@@ -48,6 +48,23 @@ public final class XMLConfigurationObjectLoader extends XMLObjectLoader implemen
 			this.configurationXML.delete(id);
 		}
 		this.configurationXML.flush();
+	}
+
+	public CableLink loadCableLink(Identifier id) throws ApplicationException {
+		return (CableLink) this.loadStorableObject(id);
+	}
+
+	public Set loadCableLinks(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			list.add(this.loadStorableObject(id));
+		}
+		return list;
+	}
+
+	public Set loadCableLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		return this.loadStorableObjectButIds(condition, ids);
 	}
 
 	public CableLinkType loadCableLinkType(Identifier id) throws ApplicationException {
@@ -307,6 +324,17 @@ public final class XMLConfigurationObjectLoader extends XMLObjectLoader implemen
 
 	public Set refresh(final Set storableObjects) throws ApplicationException {
 		return Collections.EMPTY_SET;
+	}
+
+	public void saveCableLink(CableLink cableLink, boolean force) throws ApplicationException {
+		this.saveStorableObject(cableLink, force);
+		this.configurationXML.flush();
+
+	}
+
+	public void saveCableLinks(Set list, boolean force) throws ApplicationException {
+		this.saveStorableObjects(list, force);
+
 	}
 
 	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException {
