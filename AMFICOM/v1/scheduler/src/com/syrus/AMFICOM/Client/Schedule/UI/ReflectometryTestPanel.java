@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,7 +51,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -67,8 +68,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/06/21 12:51:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/06/22 12:28:43 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -173,7 +174,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	long					maxPoints;
 	private Map				unchangedMeasurementSetupNewMap	= null;
 
-	private Map				unchangedObjects;
+	private Map<String, String>				unchangedObjects;
 	private Dispatcher		dispatcher;
 
 	public ReflectometryTestPanel(ApplicationContext aContext) {
@@ -438,7 +439,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private void refreshUnchangedMap() {
 		if (this.unchangedObjects == null) {
-			this.unchangedObjects = new HashMap();
+			this.unchangedObjects = new HashMap<String, String>();
 		} else {
 			this.unchangedObjects.clear();
 		}
@@ -489,57 +490,57 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			return;
 
 		try {
-			TypicalCondition waveLengthCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH,
+			TypicalCondition waveLengthCondition = new TypicalCondition(ParameterTypeCodename.TRACE_WAVELENGTH.name(),
 																		OperationSort.OPERATION_EQUALS,
 																		ObjectEntities.PARAMETER_TYPE_CODE,
 																		StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition traceLengthCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_LENGTH,
+			TypicalCondition traceLengthCondition = new TypicalCondition(ParameterTypeCodename.TRACE_LENGTH.toString(),
 																			OperationSort.OPERATION_EQUALS,
 																			ObjectEntities.PARAMETER_TYPE_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition resolutionCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_RESOLUTION,
+			TypicalCondition resolutionCondition = new TypicalCondition(ParameterTypeCodename.TRACE_RESOLUTION.toString(),
 																		OperationSort.OPERATION_EQUALS,
 																		ObjectEntities.PARAMETER_TYPE_CODE,
 																		StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition pulseWidthHiResCondition = new TypicalCondition(
-																				ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES,
+																				ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.toString(),
 																				OperationSort.OPERATION_EQUALS,
 																				ObjectEntities.PARAMETER_TYPE_CODE,
 																				StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition pulseWidthLowResCondition = new TypicalCondition(
-																				ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES,
+																				ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.toString(),
 																				OperationSort.OPERATION_EQUALS,
 																				ObjectEntities.PARAMETER_TYPE_CODE,
 																				StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition indexOfRefractionCondition = new TypicalCondition(
-																				ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
+																				ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.toString(),
 																				OperationSort.OPERATION_EQUALS,
 																				ObjectEntities.PARAMETER_TYPE_CODE,
 																				StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition averageCountCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
+			TypicalCondition averageCountCondition = new TypicalCondition(ParameterTypeCodename.TRACE_AVERAGE_COUNT.toString(),
 																			OperationSort.OPERATION_EQUALS,
 																			ObjectEntities.PARAMETER_TYPE_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition gainSpliceFlagCondition = new TypicalCondition(
-																			ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON,
+																			ParameterTypeCodename.TRACE_FLAG_GAIN_SPLICE_ON.toString(),
 																			OperationSort.OPERATION_EQUALS,
 																			ObjectEntities.PARAMETER_TYPE_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
 
 			TypicalCondition liveFiberDetectFlagCondition = new TypicalCondition(
-																					ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT,
+																					ParameterTypeCodename.TRACE_FLAG_LIVE_FIBER_DETECT.toString(),
 																					OperationSort.OPERATION_EQUALS,
 																					ObjectEntities.PARAMETER_TYPE_CODE,
 																					StorableObjectWrapper.COLUMN_CODENAME);
 
-			java.util.Set conditions = new HashSet(9);
+			Set<TypicalCondition> conditions = new HashSet<TypicalCondition>(9);
 			conditions.add(waveLengthCondition);
 			conditions.add(traceLengthCondition);
 			conditions.add(resolutionCondition);
@@ -594,26 +595,26 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			if (this.wvlenParameterType == null) { throw new IllegalArgumentException(LangModelSchedule
 					.getString("Error.CannotFindParameterType") + " " //$NON-NLS-2$
-					+ ParameterTypeCodenames.TRACE_WAVELENGTH); }
+					+ ParameterTypeCodename.TRACE_WAVELENGTH.toString()); }
 
 			if (this.trclenParameterType == null)
 				throw new IllegalArgumentException(
-													LangModelSchedule.getString("Error.CannotFindParameterType") + " " + ParameterTypeCodenames.TRACE_LENGTH); //$NON-NLS-2$
+													LangModelSchedule.getString("Error.CannotFindParameterType") + " " + ParameterTypeCodename.TRACE_LENGTH.toString()); //$NON-NLS-2$
 			if (this.trclenParameterType == null)
 				throw new IllegalArgumentException(LangModelSchedule.getString("Error.CannotFindParameterType") + " " //$NON-NLS-2$
-						+ ParameterTypeCodenames.TRACE_RESOLUTION);
+						+ ParameterTypeCodename.TRACE_RESOLUTION.toString());
 
 			if (this.pulswdHiResParameterType == null)
 				throw new IllegalArgumentException(LangModelSchedule.getString("Error.CannotFindParameterType") + " " //$NON-NLS-2$
-						+ ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES);
+						+ ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.toString());
 
 			if (this.iorParameterType == null)
 				throw new IllegalArgumentException(LangModelSchedule.getString("Error.CannotFindParameterType") + " " //$NON-NLS-2$
-						+ ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
+						+ ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.toString());
 
 			if (this.scansParameterType == null)
 				throw new IllegalArgumentException(LangModelSchedule.getString("Error.CannotFindParameterType") + " " //$NON-NLS-2$
-						+ ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
+						+ ParameterTypeCodename.TRACE_AVERAGE_COUNT.toString());
 
 			this.refractLabel.setText(this.iorParameterType.getDescription() + this.getUnit(this.iorParameterType));
 			this.waveLengthLabel.setText(this.wvlenParameterType.getDescription()
@@ -1029,9 +1030,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				String codename = parameterType.getCodename();
 				// Log.debugMessage("ReflectometryTestPanel.setSet | codename "
 				// + codename , Log.FINEST);
-				if (codename.equals(ParameterTypeCodenames.TRACE_LENGTH)) {
+				if (codename.equals(ParameterTypeCodename.TRACE_LENGTH.toString())) {
 					selectCBValue(this.maxDistanceComboBox, setParameters[i].getStringValue());
-				} else if (codename.equals(ParameterTypeCodenames.TRACE_FLAG_GAIN_SPLICE_ON)) {
+				} else if (codename.equals(ParameterTypeCodename.TRACE_FLAG_GAIN_SPLICE_ON.toString())) {
 					try {
 						boolean b = new ByteArray(setParameters[i].getValue()).toBoolean();
 						// Log.debugMessage("ReflectometryTestPanel.setSet |
@@ -1041,7 +1042,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					} catch (IOException e) {
 						AbstractMainFrame.showErrorMessage(this, e);
 					}
-				} else if (codename.equals(ParameterTypeCodenames.TRACE_FLAG_LIVE_FIBER_DETECT)) {
+				} else if (codename.equals(ParameterTypeCodename.TRACE_FLAG_LIVE_FIBER_DETECT.toString())) {
 					try {
 						boolean b = new ByteArray(setParameters[i].getValue()).toBoolean();
 						// Log.debugMessage("ReflectometryTestPanel.setSet |
@@ -1063,20 +1064,20 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				String codename = parameterType.getCodename();
 				String stringValue = setParameters[i].getStringValue();
 				Log.debugMessage("ReflectometryTestPanel.setSet | codename: " + codename + ", stringValue:" + stringValue, Log.FINEST);
-				if (codename.equals(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION)) {
+				if (codename.equals(ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.toString())) {
 					this.refractTextField.setText(stringValue);
-				} else if (codename.equals(ParameterTypeCodenames.TRACE_WAVELENGTH)) {
+				} else if (codename.equals(ParameterTypeCodename.TRACE_WAVELENGTH.toString())) {
 					selectCBValue(this.waveLengthComboBox, stringValue);
-				} else if (codename.equals(ParameterTypeCodenames.TRACE_AVERAGE_COUNT)) {
+				} else if (codename.equals(ParameterTypeCodename.TRACE_AVERAGE_COUNT.toString())) {
 					selectCBValue(this.averageQuantityComboBox, stringValue);
-				} else if (codename.equals(ParameterTypeCodenames.TRACE_RESOLUTION)) {
+				} else if (codename.equals(ParameterTypeCodename.TRACE_RESOLUTION.toString())) {
 					selectCBValue(this.resolutionComboBox, stringValue);
-				} else if (codename.equals(ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES)) {
+				} else if (codename.equals(ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.toString())) {
 					selectCBValue(this.pulseWidthHiResComboBox, stringValue);
 					if (!this.pulseWidthCheckBox.isSelected()) {
 						this.pulseWidthCheckBox.doClick();
 					}
-				}  else if (codename.equals(ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES)) {
+				}  else if (codename.equals(ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.toString())) {
 					selectCBValue(this.pulseWidthLowResComboBox, stringValue);
 					if (this.pulseWidthCheckBox.isSelected()) {
 						this.pulseWidthCheckBox.doClick();
