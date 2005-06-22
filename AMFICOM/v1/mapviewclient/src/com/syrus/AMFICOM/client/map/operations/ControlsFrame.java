@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.8 2005/06/22 08:43:48 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.9 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -44,22 +44,22 @@ import com.syrus.AMFICOM.mapview.MapView;
 	/**
 	 * панель выбора вида
 	 */
-	MapChooserPanel mapChooserPanel = new MapChooserPanel();
+	MapChooserPanel mapChooserPanel;
 	
 	/**
 	 * панель поиска географических объектов
 	 */
-	SpatialSearchPanel mapSearchPanel = new SpatialSearchPanel();
+	SpatialSearchPanel mapSearchPanel;
 	
 	/**
 	 * панель поиска элементов АМФИКОМ
 	 */
-	AMFICOMSearchPanel searchPanel = new AMFICOMSearchPanel();
+	AMFICOMSearchPanel searchPanel;
 	
 	/**
 	 * панель управления отображением слоев
 	 */
-	LayersPanel layersPanel = new LayersPanel();
+	LayersPanel layersPanel;
 	
 	/**
 	 * панель закладок
@@ -76,14 +76,11 @@ import com.syrus.AMFICOM.mapview.MapView;
 	 */
 	public ControlsFrame(MapFrame mapFrame, ApplicationContext aContext) {
 		setContext(aContext);
-
-		try {
-			jbInit();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		setMapFrame(mapFrame);
+		this.mapChooserPanel = new MapChooserPanel(mapFrame);
+		this.mapSearchPanel = new SpatialSearchPanel(mapFrame);
+		this.searchPanel = new AMFICOMSearchPanel(mapFrame);
+		this.layersPanel = new LayersPanel(mapFrame);
+		jbInit();
 	}
 
 	public void setContext(ApplicationContext aContext) {

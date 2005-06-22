@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.51 2005/06/22 12:20:56 peskovsky Exp $
+ * $Id: MapFrame.java,v 1.52 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,8 +82,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.51 $, $Date: 2005/06/22 12:20:56 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.52 $, $Date: 2005/06/22 13:21:53 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -179,12 +179,8 @@ public class MapFrame extends JInternalFrame
 
 		initModule();
 
-		mapContext.setCenter(MapPropertiesManager.getCenter());
-		mapContext.setScale(MapPropertiesManager.getZoom());
-		renderer.setScale(mapContext.getScale());
-		renderer.setCenter(mapContext.getCenter());		
-
-//		this.logicalNetLayer.repaint(true);
+		this.mapViewer.setScale(MapPropertiesManager.getZoom());
+		this.mapViewer.setCenter(MapPropertiesManager.getCenter());
 	}
 	
 	/**
@@ -377,14 +373,15 @@ public class MapFrame extends JInternalFrame
 		else
 		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
 		{
-			DoublePoint p = (DoublePoint )pce.getSource();
+			DoublePoint p = (DoublePoint )pce.getNewValue();
 			this.mapStatusbar.showLatLong(p.getY(), p.getX());
 		}
 		else
 		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
 		{
-			Double p = (Double )pce.getSource();
+			Double p = (Double )pce.getNewValue();
 			this.mapStatusbar.showScale(p.doubleValue());
+//			this.mapViewer.getLogicalNetLayer().updateZoom();
 		}
 		else
 		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED))
@@ -407,8 +404,8 @@ public class MapFrame extends JInternalFrame
 	{
 		getMapViewer().getLogicalNetLayer().setMapView(mapView);
 		if(mapView != null) {
-			this.mapViewer.getMapContext().setScale(mapView.getScale());
-			this.mapViewer.getMapContext().setCenter(mapView.getCenter());
+			this.mapViewer.setScale(mapView.getScale());
+			this.mapViewer.setCenter(mapView.getCenter());
 
 		}
 		this.mapViewer.repaint(true);

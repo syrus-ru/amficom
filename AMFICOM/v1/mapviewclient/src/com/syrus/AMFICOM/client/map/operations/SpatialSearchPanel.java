@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.8 2005/06/21 12:48:47 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.9 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.8 $, $Date: 2005/06/21 12:48:47 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 13:21:53 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -74,17 +74,10 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 	/**
 	 * По умолчанию
 	 */
-	public SpatialSearchPanel()
+	public SpatialSearchPanel(MapFrame mapFrame)
 	{
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		jbInit();
+		setMapFrame(mapFrame);
 	}
 
 	private void jbInit()

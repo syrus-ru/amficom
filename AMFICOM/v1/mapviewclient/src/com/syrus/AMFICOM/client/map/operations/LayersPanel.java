@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.11 2005/06/20 15:21:22 peskovsky Exp $
+ * Название: $Id: LayersPanel.java,v 1.12 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.11 $, $Date: 2005/06/20 15:21:22 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 13:21:53 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class LayersPanel extends JPanel {
@@ -96,12 +96,9 @@ public class LayersPanel extends JPanel {
 	/**
 	 * По умолчанию
 	 */
-	public LayersPanel() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public LayersPanel(MapFrame mapFrame) {
+		jbInit();
+		setMapFrame(mapFrame);
 	}
 
 	private void jbInit() {
@@ -268,6 +265,8 @@ public class LayersPanel extends JPanel {
 	 * списка слоев
 	 */
 	public void setVisibility() {
+		if (this.mapFrame == null)
+			return;
 		try {
 			double currentScale = this.mapFrame.getMapViewer().getMapContext()
 					.getScale();

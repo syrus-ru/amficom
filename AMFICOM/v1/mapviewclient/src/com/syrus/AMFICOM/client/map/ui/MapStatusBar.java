@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.9 2005/06/21 12:48:48 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.10 2005/06/22 13:21:53 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/21 12:48:48 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 13:21:53 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel {
@@ -108,8 +108,7 @@ public final class MapStatusBar extends JPanel {
 						double scale = Double.parseDouble(
 								MapStatusBar.this.scaleField.getText());
 						if(scale > 0) {
-							MapStatusBar.this.netMapViewer.getMapContext().setScale(scale);
-							MapStatusBar.this.netMapViewer.repaint(true);
+							MapStatusBar.this.netMapViewer.setScale(scale);
 						}
 					} catch(Exception ex) {
 						System.out.println("Wring number format");
@@ -126,9 +125,8 @@ public final class MapStatusBar extends JPanel {
 							MapStatusBar.this.longitudeField.getText());
 						double lat = Double.parseDouble(
 							MapStatusBar.this.latitudeTextField.getText());
-						MapStatusBar.this.netMapViewer.getMapContext().setCenter(
+						MapStatusBar.this.netMapViewer.setCenter(
 							new DoublePoint(lon, lat));
-						MapStatusBar.this.netMapViewer.repaint(true);
 					} catch(Exception ex) {
 						System.out.println(ex.getMessage());
 					}

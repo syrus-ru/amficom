@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.14 2005/06/21 12:48:47 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.15 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.14 $, $Date: 2005/06/21 12:48:47 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/22 13:21:53 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -92,7 +92,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 	/**
 	 * По умолчанию
 	 */
-	public AMFICOMSearchPanel()
+	public AMFICOMSearchPanel(MapFrame mapFrame)
 	{
 		this.controller = SimpleMapElementController.getInstance();
 		this.model = new WrapperedTableModel(this.controller, this.controller.getKeysArray());
@@ -106,6 +106,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 		{
 			e.printStackTrace();
 		}
+		setMapFrame(mapFrame);
 	}
 
 	private void jbInit()

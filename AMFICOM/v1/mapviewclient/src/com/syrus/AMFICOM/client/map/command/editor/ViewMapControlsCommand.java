@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapControlsCommand.java,v 1.4 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: ViewMapControlsCommand.java,v 1.5 2005/06/22 13:21:53 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.Command;
  * Команда отображает окно управления слоями и поиска
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/22 13:21:53 $
  * @module mapviewclient_v1
  */
 public class ViewMapControlsCommand extends AbstractCommand {
@@ -42,7 +42,7 @@ public class ViewMapControlsCommand extends AbstractCommand {
 		this.frame = MapDesktopCommand.findControlsFrame(this.desktop);
 
 		if(this.frame == null) {
-			this.frame = new ControlsFrame(null, this.aContext);
+			this.frame = new ControlsFrame(MapDesktopCommand.findMapFrame(this.desktop), this.aContext);
 
 			this.desktop.add(this.frame);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.79 2005/06/22 08:43:46 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.80 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.79 $, $Date: 2005/06/22 08:43:46 $
+ * @version $Revision: 1.80 $, $Date: 2005/06/22 13:21:53 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -662,6 +662,18 @@ public class LogicalNetLayer
 		{
 			MapElement el = (MapElement)e.next();
 			getMapViewController().getController(el).paint(el, g, visibleBounds);
+		}
+	}
+
+	/**
+	 * Отправить событие карты.
+	 */
+	public void sendScaleEvent(Double scale)
+	{
+		if(getContext() != null)
+			if(getContext().getDispatcher() != null)
+		{
+			getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_SCALE_CHANGED, scale));
 		}
 	}
 

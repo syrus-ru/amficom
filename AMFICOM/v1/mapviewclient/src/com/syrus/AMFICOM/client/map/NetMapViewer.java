@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.20 2005/06/22 08:43:46 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.21 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:46 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/22 13:21:53 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -218,11 +218,88 @@ public abstract class NetMapViewer {
 		throws MapConnectionException, MapDataException;
 
 	/**
+	 * Установить центральную точку вида карты.
+	 * @param center географическая координата центра
+	 */
+	public void setCenter(DoublePoint center)
+			throws MapConnectionException, MapDataException {
+		this.mapContext.setCenter(center);
+		this.showLatLong(center);
+		this.renderer.setCenter(center);
+		repaint(true);
+	}
+
+	/**
+	 * Установить заданный масштаб вида карты.
+	 * @param scale масштаб
+	 */
+	public void setScale(double scale)
+			throws MapConnectionException, MapDataException {
+		this.mapContext.setScale(scale);
+		this.logicalNetLayer.updateZoom();
+		this.logicalNetLayer.sendScaleEvent(new Double(this.mapContext.getScale()));
+		this.renderer.setScale(this.mapContext.getScale());
+		repaint(true);
+	}
+
+	/**
+	 * Изменить масштаб вида карты в заданное число раз.
+	 * @param scaleCoef коэффициент масштабирования
+	 */
+	public void scaleTo(double scaleCoef)
+			throws MapConnectionException, MapDataException {
+		this.mapContext.scaleTo(scaleCoef);
+		this.logicalNetLayer.updateZoom();
+		this.logicalNetLayer.sendScaleEvent(new Double(this.mapContext.getScale()));
+		this.renderer.setScale(this.mapContext.getScale());
+		repaint(true);
+	}
+
+	/**
+	 * Приблизить вид карты в стандартное число раз.
+	 */
+	public void zoomIn()
+			throws MapConnectionException, MapDataException {
+		this.mapContext.zoomIn();
+		this.logicalNetLayer.updateZoom();
+		this.logicalNetLayer.sendScaleEvent(new Double(this.mapContext.getScale()));
+		this.renderer.setScale(this.mapContext.getScale());
+		repaint(true);
+	}
+
+	/**
+	 * Отдалить вид карты в стандартное число раз.
+	 */
+	public void zoomOut()
+			throws MapConnectionException, MapDataException {
+		this.mapContext.zoomOut();
+		this.logicalNetLayer.updateZoom();
+		this.logicalNetLayer.sendScaleEvent(new Double(this.mapContext.getScale()));
+		this.renderer.setScale(this.mapContext.getScale());
+		repaint(true);
+	}
+
+	/**
+	 * Приблизить вид выделенного участка карты (в координатах карты)
+	 * по координатам угловых точек.
+	 * @param from географическая координата
+	 * @param to географическая координата
+	 */
+	public void zoomToBox(DoublePoint from, DoublePoint to)
+			throws MapConnectionException, MapDataException {
+		this.mapContext.zoomToBox(from, to);
+		this.logicalNetLayer.updateZoom();
+		this.logicalNetLayer.sendScaleEvent(new Double(this.mapContext.getScale()));
+		this.renderer.setScale(this.mapContext.getScale());
+		this.renderer.setCenter(this.mapContext.getCenter());
+		repaint(true);
+	}
+
+	/**
 	 * Передать команду на отображение координат текущей точки в окне координат.
-	 * @param point экранная координата мыши
+	 * @param doublePoint географическая координата мыши
 	 */	
-	public void showLatLong(Point point)
-		throws MapConnectionException, MapDataException
+	public void showLatLong(DoublePoint doublePoint)
 	{
 		LogicalNetLayer logicalNetLayer = this.getLogicalNetLayer();
 		if(logicalNetLayer.aContext == null)
@@ -230,8 +307,18 @@ public abstract class NetMapViewer {
 		Dispatcher disp = logicalNetLayer.aContext.getDispatcher();
 		if(disp == null)
 			return;
-		DoublePoint doublePoint = logicalNetLayer.getConverter().convertScreenToMap(point);
-		disp.firePropertyChange(new MapEvent(doublePoint, MapEvent.MAP_VIEW_CENTER_CHANGED));
+		disp.firePropertyChange(new MapEvent(logicalNetLayer, MapEvent.MAP_VIEW_CENTER_CHANGED, doublePoint));
+	}
+
+	/**
+	 * Передать команду на отображение координат текущей точки в окне координат.
+	 * @param point экранная координата мыши
+	 */	
+	public void showLatLong(Point point)
+		throws MapConnectionException, MapDataException
+	{
+		DoublePoint doublePoint = this.logicalNetLayer.getConverter().convertScreenToMap(point);
+		showLatLong(doublePoint);
 	}
 
 	/**

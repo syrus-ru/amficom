@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.7 2005/06/21 12:48:47 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.8 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.7 $, $Date: 2005/06/21 12:48:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/22 13:21:53 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -53,17 +53,10 @@ public class MapChooserPanel extends JPanel
 	/**
 	 * По умолчанию
 	 */
-	public MapChooserPanel()
+	public MapChooserPanel(MapFrame mapFrame)
 	{
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		jbInit();
+		setMapFrame(mapFrame);
 	}
 
 	private void jbInit()

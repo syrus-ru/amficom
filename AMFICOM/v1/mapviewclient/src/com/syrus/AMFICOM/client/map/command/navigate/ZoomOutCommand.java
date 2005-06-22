@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomOutCommand.java,v 1.9 2005/06/21 12:43:11 peskovsky Exp $
+ * $Id: ZoomOutCommand.java,v 1.10 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,17 +10,15 @@
 package com.syrus.AMFICOM.client.map.command.navigate;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 
 /**
  * Команда "Отдалить вид со стандартным коэффициентом" 
- * @author $Author: peskovsky $
- * @version $Revision: 1.9 $, $Date: 2005/06/21 12:43:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 13:21:53 $
  * @module mapviewclient_v1
  */
 public class ZoomOutCommand extends MapNavigateCommand {
@@ -30,11 +28,7 @@ public class ZoomOutCommand extends MapNavigateCommand {
 
 	public void execute() {
 		try {
-			MapContext mapContext = this.netMapViewer.getMapContext();
-			MapImageRenderer mapRenderer = this.netMapViewer.getRenderer();			
-			mapContext.zoomOut();
-			mapRenderer.setScale(mapContext.getScale());
-			this.netMapViewer.repaint(true);
+			this.netMapViewer.zoomOut();
 		} catch(MapConnectionException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);

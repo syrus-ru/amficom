@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.36 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.37 2005/06/22 13:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,6 @@ import javax.swing.SwingUtilities;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
@@ -55,7 +54,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.36 $, $Date: 2005/06/22 08:43:49 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/22 13:21:53 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -269,15 +268,14 @@ public final class MapMouseListener implements MouseListener
 				DoublePoint mousePositionSph = 
 					converter.convertScreenToMap(new Point(mouseX, mouseY));
 				
-				this.netMapViewer.getMapContext().setCenter(newCenter);
-				this.netMapViewer.getRenderer().setCenter(newCenter);
+				this.netMapViewer.setCenter(newCenter);
 				
 				//Курсор ставим в ту же (в топографических координатах) точку - 
 				//центр уже сменен
 				Point newMousePosition = 
 					converter.convertMapToScreen(mousePositionSph);
 				
-				Point frameLocation =this.netMapViewer.getVisualComponent().getLocationOnScreen();
+				Point frameLocation = this.netMapViewer.getVisualComponent().getLocationOnScreen();
 				
 				this.robot.mouseMove(
 						frameLocation.x + newMousePosition.x,
@@ -533,11 +531,9 @@ public final class MapMouseListener implements MouseListener
 			double dx = p1.getX() - p2.getX();
 			double dy = p1.getY() - p2.getY();
 			center.setLocation(center.getX() + dx, center.getY() + dy);
-			this.netMapViewer.getMapContext().setCenter(center);
-			this.netMapViewer.getRenderer().setCenter(center);
-			logicalNetLayer.getMapView().setCenter(center);
+			this.netMapViewer.setCenter(center);
+//			logicalNetLayer.getMapView().setCenter(center);
 		}
-		this.netMapViewer.repaint(true);
 	}
 
 	/**
@@ -549,15 +545,13 @@ public final class MapMouseListener implements MouseListener
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		MapCoordinatesConverter converter = logicalNetLayer.getConverter(); 
 		DoublePoint newCenter = converter.convertScreenToMap(point); 
-		this.netMapViewer.getMapContext().setCenter(newCenter);
-		logicalNetLayer.getMapView().setCenter(newCenter);
-		this.netMapViewer.getRenderer().setCenter(newCenter);
+		this.netMapViewer.setCenter(newCenter);
+//		logicalNetLayer.getMapView().setCenter(newCenter);
 		logicalNetLayer.getContext().getApplicationModel().setSelected(
 				MapApplicationModel.OPERATION_MOVE_TO_CENTER, 
 				false);
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 		this.netMapViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		this.netMapViewer.repaint(true);
 	}
 
 	/**
@@ -567,7 +561,6 @@ public final class MapMouseListener implements MouseListener
 	private void finishZoomToRect() throws MapConnectionException, MapDataException {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		MapCoordinatesConverter converter = logicalNetLayer.getConverter();
-		MapContext mapContext = this.netMapViewer.getMapContext();
 		this.netMapViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		logicalNetLayer.getContext().getApplicationModel().setSelected(
 				MapApplicationModel.OPERATION_ZOOM_BOX, 
@@ -575,17 +568,15 @@ public final class MapMouseListener implements MouseListener
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 		if (!logicalNetLayer.getStartPoint().equals(logicalNetLayer.getEndPoint()))
 		{
-			this.netMapViewer.getMapContext().zoomToBox(
+			this.netMapViewer.zoomToBox(
 					converter.convertScreenToMap(logicalNetLayer.getStartPoint()),
 					converter.convertScreenToMap(logicalNetLayer.getEndPoint()));
-			this.netMapViewer.getRenderer().setCenter(mapContext.getCenter());
-			this.netMapViewer.getRenderer().setScale(mapContext.getScale());
 
-			logicalNetLayer.getMapView().setScale(
-					mapContext.getScale());
-			logicalNetLayer.getMapView().setCenter(
-					mapContext.getCenter());
-			this.netMapViewer.repaint(true);
+			// todo where mapView center&scale should be set?
+//			logicalNetLayer.getMapView().setScale(
+//					mapContext.getScale());
+//			logicalNetLayer.getMapView().setCenter(
+//					mapContext.getCenter());
 		}
 	}
 
@@ -597,20 +588,16 @@ public final class MapMouseListener implements MouseListener
 	private void finishZoomToPoint(Point point) throws MapConnectionException, MapDataException {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		MapCoordinatesConverter converter = logicalNetLayer.getConverter();
-		MapContext mapContext = this.netMapViewer.getMapContext();
 		DoublePoint pp = converter.convertScreenToMap(point);
-		mapContext.setCenter(pp);
-		mapContext.zoomIn();
+		this.netMapViewer.setCenter(pp);
+		this.netMapViewer.zoomIn();
 		this.netMapViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		logicalNetLayer.getContext().getApplicationModel().setSelected(
 				MapApplicationModel.OPERATION_ZOOM_TO_POINT, 
 				false);
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
-		logicalNetLayer.getMapView().setScale(mapContext.getScale());
-		logicalNetLayer.getMapView().setCenter(mapContext.getCenter());
-		this.netMapViewer.getRenderer().setCenter(mapContext.getCenter());
-		this.netMapViewer.getRenderer().setScale(mapContext.getScale());
-		this.netMapViewer.repaint(true);
+//		logicalNetLayer.getMapView().setScale(mapContext.getScale());
+//		logicalNetLayer.getMapView().setCenter(mapContext.getCenter());
 	}
 
 	/**
