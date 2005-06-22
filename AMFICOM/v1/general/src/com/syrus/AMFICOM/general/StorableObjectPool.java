@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.110 2005/06/22 15:05:21 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.111 2005/06/22 16:31:43 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/06/22 15:05:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.111 $, $Date: 2005/06/22 16:31:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -1084,7 +1084,7 @@ public abstract class StorableObjectPool {
 			 * Водитель -- для Веры.
 			 * Фигурные скобки -- для Вовы.
 			 */
-			throw new ApplicationException(
+			throw new IllegalDataException(
 					"StorableObjectPool.fromTransferableImpl() | Don't know how to create an identifier/instance of type: "
 					+ ObjectEntities.codeToString(entityCode)
 					+ '(' + entityCode
@@ -1127,8 +1127,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.110 $, $Date: 2005/06/22 15:05:21 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.111 $, $Date: 2005/06/22 16:31:43 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
