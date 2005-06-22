@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.26 2005/06/22 07:27:32 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.27 2005/06/22 07:32:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.26 $, $Date: 2005/06/22 07:27:32 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/22 07:32:22 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -284,33 +284,225 @@ public final class MapToolBar extends JPanel
 		innerPanel.setLayout(new GridBagLayout());
 
 		GridBagConstraints constraints = new GridBagConstraints();
-		innerPanel.add(this.moveHandButton,new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,30,1,0),0,0));
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,30,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.moveHandButton, constraints);
 		
-		innerPanel.add(this.zoomInButton,new GridBagConstraints(1,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
-		innerPanel.add(this.zoomOutButton,new GridBagConstraints(2,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
-		innerPanel.add(this.zoomToRectButton,new GridBagConstraints(3,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.zoomInButton, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,0,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.zoomOutButton, constraints);
+
+		constraints.gridx = 3;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,0,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.zoomToRectButton, constraints);
 		//		this.add(this.zoomToPointButton,new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
 		
-		innerPanel.add(this.moveToCenterButton,new GridBagConstraints(4,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
-		innerPanel.add(this.centerObjectButton,new GridBagConstraints(5,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
 
-		innerPanel.add(this.measureDistanceButton,new GridBagConstraints(6,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		constraints.gridx = 4;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.moveToCenterButton, constraints);
+
+		constraints.gridx = 5;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,0,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.centerObjectButton, constraints);
+
+
+		constraints.gridx = 6;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.measureDistanceButton, constraints);
 //		this.add(this.moveFixedButton,new GridBagConstraints(7,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
 
-		innerPanel.add(this.showNodesButton,new GridBagConstraints(8,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,20,1,0),0,0));
 
-		innerPanel.add(this.showNodeLinkToggleButton,new GridBagConstraints(9,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
-		innerPanel.add(this.showPhysicalToggleButton,new GridBagConstraints(10,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
-		innerPanel.add(this.showCablePathToggleButton,new GridBagConstraints(11,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
-		innerPanel.add(this.showTransPathToggleButton,new GridBagConstraints(12,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
+		constraints.gridx = 8;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,20,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.showNodesButton, constraints);
 
-		innerPanel.add(this.nodeSizePanel,new GridBagConstraints(13,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
 
-		innerPanel.add(this.optionsButton,new GridBagConstraints(14,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		constraints.gridx = 9;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.showNodeLinkToggleButton, constraints);
 
-		innerPanel.add(this.layersButton,new GridBagConstraints(15,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		constraints.gridx = 10;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,0,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.showPhysicalToggleButton, constraints);
 
-		innerPanel.add(this.shotButton,new GridBagConstraints(16,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
+		constraints.gridx = 11;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,0,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.showCablePathToggleButton, constraints);
+
+		constraints.gridx = 12;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,0,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.showTransPathToggleButton, constraints);
+
+
+		constraints.gridx = 13;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.nodeSizePanel, constraints);
+
+
+		constraints.gridx = 14;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.optionsButton, constraints);
+
+
+		constraints.gridx = 15;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.layersButton, constraints);
+
+
+		constraints.gridx = 16;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.shotButton, constraints);
 		
 		this.setLayout(new BorderLayout());
 		this.add(innerPanel,BorderLayout.WEST);
