@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.103 2005/06/21 12:44:30 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.104 2005/06/22 13:54:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,12 +57,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/06/21 12:44:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.104 $, $Date: 2005/06/22 13:54:05 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-public final class MeasurementControlModule extends SleepButWorkThread {
+final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String APPLICATION_NAME = "mcm";
 
 	/*-********************************************************************
@@ -130,19 +130,19 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	static String login;
 
 	/*	Scheduled tests transferred from server	*/
-	protected static List testList;	//List <Test>
+	protected static List<Test> testList;
 
 	/*	Results for transfer to server	*/
-	protected static List resultList;	//List <Result>
+	protected static List<Result> resultList;
 
 	/*	key - test_id, value - corresponding test processor	*/
-	protected static Map testProcessors;	//Map <Identifier testId, TestProcessor testProcessor>
+	protected static Map<Identifier, TestProcessor> testProcessors;
 
 	/*	Reference to KISConnectionManager*/
 	protected static KISConnectionManager kisConnectionManager;
 
 	/*	Key - kisId, value - corresponding transmitter-receiver*/
-	protected static Map transceivers;	//Map <Identifier kisId, Transceiver transceiver>
+	protected static Map<Identifier, Transceiver> transceivers;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -206,7 +206,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			/*	Create map of test processors*/
-			testProcessors = Collections.synchronizedMap(new HashMap());
+			testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
 	
 			/*	Create (and start - ?) KIS connection manager*/
 			activateKISConnectionManager();
@@ -229,7 +229,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static void establishDatabaseConnection() {
+	static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
 		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
@@ -253,7 +253,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_CODE);
 			Collection kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true, false);
 
-			transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
+			transceivers = Collections.synchronizedMap(new HashMap<Identifier, Transceiver>(kiss.size()));
 			KIS kis;
 			Identifier kisId;
 			Transceiver transceiver;
@@ -272,7 +272,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	private static void prepareTestList() {
-		testList = Collections.synchronizedList(new ArrayList());
+		testList = Collections.synchronizedList(new ArrayList<Test>());
 		TypicalCondition tc;
 		CompoundCondition cc = null;
 		Collection tests;
@@ -327,7 +327,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void prepareResultList() {
 		/*!!	resultList - results (return later...)	!!*/
-		resultList = Collections.synchronizedList(new ArrayList());
+		resultList = Collections.synchronizedList(new ArrayList<Result>());
 	}
 
 	public void run() {
@@ -337,8 +337,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		Result_Transferable[] resultsT;
 		while (this.running) {
 			if (!testList.isEmpty()) {
-				if (((Test) testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
-					test = (Test) testList.remove(0);
+				if (testList.get(0).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
+					test = testList.remove(0);
 					testId = test.getId();
 					if (!testProcessors.containsKey(testId)) {
 						Log.debugMessage("Starting test processor for test '" + testId + "'", Log.DEBUGLEVEL07);
@@ -354,7 +354,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					resultsT = createTransferables();
 					mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 					mServerRef.receiveResults(resultsT,
-							(IdlIdentifier) mcmId.getTransferable(),
+							mcmId.getTransferable(),
 							LoginManager.getSessionKeyTransferable());
 					resultList.clear();
 					super.clearFalls();
@@ -399,8 +399,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		Result_Transferable[] resultsT = new Result_Transferable[resultList.size()];
 		int i = 0;
 		synchronized (resultList) {
-			for (Iterator it = resultList.iterator(); it.hasNext();)
-				resultsT[i++] = (Result_Transferable)((Result)it.next()).getTransferable();
+			for (Iterator<Result> it = resultList.iterator(); it.hasNext();)
+				resultsT[i++] = it.next().getTransferable();
 		}
 	
 		return resultsT;
@@ -424,34 +424,30 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static class TestStartTimeComparator implements Comparator {
+	private static class TestStartTimeComparator<T> implements Comparator<Test> {
 
-		public int compare(Object o1, Object o2) {
-			if (o1 instanceof Test && o2 instanceof Test) {
-				return ((Test) o1).getStartTime().compareTo(((Test) o2).getStartTime());
-			}
-			throw new IllegalArgumentException("Objects must be of type Test. 1: " + o1.getClass().getName()
-					+ ", 2: " + o2.getClass().getName());
+		public int compare(Test test1, Test test2) {
+			return test1.getStartTime().compareTo(test2.getStartTime());
 		}
 	}
 
-	private static void sortTestsByStartTime(Collection tests) {
-		List testsL;
+	private static void sortTestsByStartTime(final Collection<Test> tests) {
+		List<Test> testsL;
 		if (tests instanceof List)
-			testsL = (List) tests;
+			testsL = (List<Test>) tests;
 		else
-			testsL = new LinkedList(tests);
-		Collections.sort(testsL, new TestStartTimeComparator());
+			testsL = new LinkedList<Test>(tests);
+		Collections.sort(testsL, new TestStartTimeComparator<Test>());
 	}
 
-	protected static void addTests(List newTests) {
+	protected static void addTests(List<Test> newTests) {
 		sortTestsByStartTime(newTests);
 
 		synchronized (testList) {
-			ListIterator testIt = testList.listIterator();
-			ListIterator newTestIt = newTests.listIterator();
-			Test test = testIt.hasNext() ? (Test) testIt.next() : null;
-			Test newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
+			ListIterator<Test> testIt = testList.listIterator();
+			ListIterator<Test> newTestIt = newTests.listIterator();
+			Test test = testIt.hasNext() ? testIt.next() : null;
+			Test newTest = newTestIt.hasNext() ? newTestIt.next() : null;
 			while (newTest != null) {
 				while (test != null && test.getStartTime().before(newTest.getStartTime()))
 					test = testIt.hasNext() ? (Test) testIt.next() : null;
@@ -462,7 +458,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 				prepareTestToExecute(newTest);
 
-				newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
+				newTest = newTestIt.hasNext() ? newTestIt.next() : null;
 			}
 
 			try {
@@ -490,9 +486,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	protected static void abortTests(Set testIds) {
-		for (final Iterator it = testIds.iterator(); it.hasNext();) {
-			final Identifier id = (Identifier) it.next();
+	protected static void abortTests(Set<Identifier> testIds) {
+		for (final Iterator<Identifier> it = testIds.iterator(); it.hasNext();) {
+			final Identifier id = it.next();
 			try {
 				final Test test = (Test) StorableObjectPool.getStorableObject(id, true);
 				if (test != null)
@@ -531,7 +527,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		else {
 			if (testProcessors.containsKey(id)) {
 				Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
-				TestProcessor testProcessor = (TestProcessor) testProcessors.get(id);
+				TestProcessor testProcessor = testProcessors.get(id);
 				testProcessor.abort();
 			}
 		}
@@ -561,7 +557,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	protected void shutdown() {
 		this.running = false;
 		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
-			((Transceiver)transceivers.get(it.next())).shutdown();
+			transceivers.get(it.next()).shutdown();
 
 		DatabaseConnection.closeConnection();
 	}
