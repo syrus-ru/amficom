@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.3 2005/06/21 12:52:14 bass Exp $
+ * $Id: ImagesPanel.java,v 1.4 2005/06/22 13:20:07 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -26,7 +24,6 @@ import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -34,8 +31,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -49,8 +44,8 @@ import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -59,30 +54,20 @@ public class ImagesPanel extends JPanel
 	public static final String SELECT_IMAGE_RESOURCE = "selectir";
 	public static final String SELECT_IMAGE = "select";
 
-	public JPanel buttonsPanel = new JPanel();
-	public JButton cancelButton = new JButton();
-	public JButton chooseButton = new JButton();
 	public BitmapImageResource ir = null;
 
-	ApplicationContext applicationContext;
+	Dispatcher disp;
+	private JPanel imagesPanel;
+	private JScrollPane jScrollPane1;
 
-	Dispatcher disp = new Dispatcher();
-	private JButton addButton = new JButton();
-	private BorderLayout borderLayout1 = new BorderLayout();
-	private FlowLayout flowLayout1 = new FlowLayout();
-	private JPanel imagesPanel = new JPanel();
-	private JScrollPane jScrollPane1 = new JScrollPane();
+	public ImagesPanel() {
+		super(new BorderLayout());
 
-	public ImagesPanel(ApplicationContext aContext) {
-		this.applicationContext = aContext;
+		this.disp = new Dispatcher();
+
 		jbInit();
 		init();
 		initImages();
-	}
-
-	public ImagesPanel(ApplicationContext aContext, BitmapImageResource ir) {
-		this(aContext);
-		setImageResource(ir);
 	}
 
 	public BitmapImageResource getImageResource() {
@@ -132,16 +117,16 @@ public class ImagesPanel extends JPanel
 	}
 
 	public void propertyChange(PropertyChangeEvent pce) {
-		if(pce.getPropertyName().equals(SELECT_IMAGE)) {
-			ImagesPanelLabel ipl = (ImagesPanelLabel )pce.getNewValue();
-			this.ir = (BitmapImageResource )ipl.ir;
-			this.chooseButton.setEnabled(true);
-		}
-		else
-			if(pce.getPropertyName().equals(SELECT_IMAGE_RESOURCE)) {
-				this.ir = (BitmapImageResource )pce.getNewValue();
-				this.chooseButton.setEnabled(true);
-			}
+//		if(pce.getPropertyName().equals(SELECT_IMAGE)) {
+//			ImagesPanelLabel ipl = (ImagesPanelLabel )pce.getNewValue();
+//			this.ir = (BitmapImageResource )ipl.ir;
+//			this.chooseButton.setEnabled(true);
+//		}
+//		else
+//			if(pce.getPropertyName().equals(SELECT_IMAGE_RESOURCE)) {
+//				this.ir = (BitmapImageResource )pce.getNewValue();
+//				this.chooseButton.setEnabled(true);
+//			}
 	}
 
 	public void setImageResource(BitmapImageResource ir) {
@@ -152,7 +137,7 @@ public class ImagesPanel extends JPanel
 				ir));
 	}
 
-	void addButtonActionPerformed(ActionEvent e) {
+	public void showAddImageDialog() {
 		JFileChooser chooser = new JFileChooser();
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));
 		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -197,12 +182,12 @@ public class ImagesPanel extends JPanel
 	}
 
 	private void jbInit() {
-		this.setLayout(this.borderLayout1);
+		this.imagesPanel = new JPanel(new FlowLayout());
+		this.jScrollPane1 = new JScrollPane();
 
-		this.flowLayout1.setAlignment(FlowLayout.LEFT);
+		((FlowLayout)this.imagesPanel.getLayout()).setAlignment(FlowLayout.LEFT);
 		this.imagesPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		this.imagesPanel.setBackground(Color.white);
-		this.imagesPanel.setLayout(this.flowLayout1);
 		this.imagesPanel.setAutoscrolls(false);
 		this.imagesPanel.setMaximumSize(new Dimension(0, 1300));
 		this.imagesPanel.setMinimumSize(new Dimension(0, 100));
@@ -210,25 +195,10 @@ public class ImagesPanel extends JPanel
 
 		this.jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		this.jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-//		jScrollPane1.getViewport().setLayout();
 		this.jScrollPane1.getViewport().add(this.imagesPanel);
 		this.jScrollPane1.setWheelScrollingEnabled(true);
 		this.add(this.jScrollPane1, BorderLayout.CENTER);
 
-		this.chooseButton.setText(LangModelGeneral.getString("Choose"));
-		this.chooseButton.setEnabled(false);
-		this.addButton.setText(LangModelGeneral.getString("add"));
-		this.cancelButton.setText(LangModelGeneral.getString("Cancel"));
-		this.buttonsPanel.add(this.chooseButton, null);
-		this.buttonsPanel.add(this.addButton, null);
-		this.buttonsPanel.add(this.cancelButton, null);
-		this.add(this.buttonsPanel, BorderLayout.SOUTH);
-
-		this.addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addButtonActionPerformed(e);
-			}
-		});
 	}
 
 }

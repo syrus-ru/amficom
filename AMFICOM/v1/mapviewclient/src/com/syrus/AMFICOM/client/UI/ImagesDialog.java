@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesDialog.java,v 1.1 2005/06/08 13:44:06 krupenn Exp $
+ * $Id: ImagesDialog.java,v 1.2 2005/06/22 13:20:07 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,81 +8,88 @@
 
 package com.syrus.AMFICOM.client.UI;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @module commonclient_v1
  */
-public class ImagesDialog extends JDialog {
-	public static final int RET_CANCEL = 2;
-
-	public static final int RET_OK = 1;
-
-	ApplicationContext aContext;
-
-	ImagesPanel imagesPanel;
-
-	private BorderLayout borderLayout1 = new BorderLayout();
-
-	public int retCode = 0;
-
-	public ImagesDialog(ApplicationContext aContext) {
-		this(aContext, null, "", false);
+public class ImagesDialog {
+	public static Object showImageDialog() {
+		return showImageDialog(null);
 	}
 
-	public ImagesDialog(
-			ApplicationContext aContext,
-			Frame parent,
-			String title,
-			boolean modal) {
-		super(parent, title, modal);
-		this.aContext = aContext;
-		try {
-			jbInit();
-		} catch(Exception e) {
-			e.printStackTrace();
+	public static BitmapImageResource showImageDialog(BitmapImageResource ir) {
+
+		BitmapImageResource returnObject = null;
+		
+		final ImagesPanel imagesPanel = new ImagesPanel();
+		if(ir != null)
+			imagesPanel.setImageResource(ir);
+
+		final JButton cancelButton = new JButton(LangModelGeneral.getString("Button.Cancel"));
+		final JButton chooseButton = new JButton(LangModelGeneral.getString("Choose"));
+		final JButton addButton = new JButton(LangModelGeneral.getString("add"));
+
+		final JOptionPane optionPane = new JOptionPane(
+				imagesPanel,
+				JOptionPane.PLAIN_MESSAGE,
+				JOptionPane.OK_CANCEL_OPTION, 
+				null, 
+				new Object[] { chooseButton, addButton, cancelButton }); 
+
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				imagesPanel.showAddImageDialog();
+			}
+		});
+		chooseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				optionPane.setValue(chooseButton);
+				imagesPanel.deinit();
+			}
+		});
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				optionPane.setValue(cancelButton);
+				imagesPanel.deinit();
+			}
+		});
+
+		final JDialog dialog = optionPane.createDialog(
+				Environment.getActiveWindow(), "Выбор изображения");
+		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = Math.min(screenDim.width / 2, 590);
+		int height = Math.min(screenDim.height / 2, 400);
+		dialog.setLocation(screenDim.width / 2 - width / 2, screenDim.height / 2 - height / 2);
+		dialog.setSize(new Dimension(width, height));
+
+		dialog.setModal(true);
+		dialog.setVisible(true);
+		dialog.dispose();
+
+		final Object selectedValue = optionPane.getValue();
+
+		if (selectedValue == chooseButton) {
+			returnObject = imagesPanel.getImageResource();
 		}
+		
+		return returnObject;
 	}
 
-	private void jbInit() throws Exception {
-		this.imagesPanel = new ImagesPanel(this.aContext);
-		this.setSize(new Dimension(400, 300));
-		this.setResizable(false);
-		this.getContentPane().setLayout(this.borderLayout1);
-		this.getContentPane().add(this.imagesPanel, BorderLayout.CENTER);
-
-		this.imagesPanel.chooseButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ImagesDialog.this.retCode = ImagesDialog.RET_OK;
-				ImagesDialog.this.imagesPanel.deinit();
-				ImagesDialog.this.dispose();
-			}
-		});
-		this.imagesPanel.cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ImagesDialog.this.retCode = ImagesDialog.RET_CANCEL;
-				ImagesDialog.this.imagesPanel.deinit();
-				ImagesDialog.this.dispose();
-			}
-		});
-	}
-
-	public BitmapImageResource getImageResource() {
-		return this.imagesPanel.getImageResource();
-	}
-
-	public void setImageResource(BitmapImageResource ir) {
-		this.imagesPanel.setImageResource(ir);
+	private ImagesDialog() {
+		// empty
 	}
 }

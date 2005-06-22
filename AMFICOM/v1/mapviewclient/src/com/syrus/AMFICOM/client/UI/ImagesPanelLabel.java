@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanelLabel.java,v 1.1 2005/06/08 13:44:06 krupenn Exp $
+ * $Id: ImagesPanelLabel.java,v 1.2 2005/06/22 13:20:07 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,17 +23,13 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @module commonclient_v1
  */
 public class ImagesPanelLabel extends JLabel
 		implements PropertyChangeListener {
-	public AbstractImageResource ir = null;
-	Dispatcher disp = null;
-
-	public ImagesPanelLabel() {
-		// empty
-	}
+	public AbstractImageResource ir;
+	Dispatcher disp;
 
 	void init() {
 		this.disp.addPropertyChangeListener(ImagesPanel.SELECT_IMAGE, this);
