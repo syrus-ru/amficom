@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.43 2005/06/21 12:44:28 bass Exp $
+ * $Id: CableThreadType.java,v 1.44 2005/06/22 20:11:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.43 $, $Date: 2005/06/21 12:44:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/06/22 20:11:25 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -135,6 +136,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlCableThreadType cttt = (IdlCableThreadType) transferable;
 		super.fromTransferable(cttt.header, cttt.codename, cttt.description);
@@ -218,8 +220,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		super.markAsChanged();
 	}
 
-	public Set getDependencies() {
-		final Set dependencies = new HashSet(2);
+	public Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.linkType);
 		dependencies.add(this.cableLinkType);
 		return Collections.unmodifiableSet(dependencies);

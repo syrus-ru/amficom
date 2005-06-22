@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.69 2005/06/22 10:05:17 bass Exp $
+ * $Id: Port.java,v 1.70 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/06/22 20:11:26 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class Port extends StorableObject implements Characterizable, TypedObject {
@@ -54,9 +55,9 @@ public final class Port extends StorableObject implements Characterizable, Typed
 	Port(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		PortDatabase database = (PortDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_CODE);
+		final PortDatabase database = (PortDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -90,7 +91,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		this.equipmentId = equipmentId;
 		this.sort = sort;
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -112,7 +113,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Port port = new Port(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_CODE),
+			final Port port = new Port(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_CODE),
 						creatorId,
 						0L,
 						type,
@@ -130,6 +131,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlPort pt = (IdlPort) transferable;
 		super.fromTransferable(pt.header);
@@ -141,8 +143,8 @@ public final class Port extends StorableObject implements Characterizable, Typed
 
 		this.sort = pt.sort.value();
 
-		Set characteristicIds = Identifier.fromTransferables(pt.characteristicIds);
-		this.characteristics = new HashSet(pt.characteristicIds.length);
+		final Set characteristicIds = Identifier.fromTransferables(pt.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(pt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
@@ -199,17 +201,17 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
@@ -234,8 +236,8 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		this.sort = sort;
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet(2);
+	public Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.type);
 		dependencies.add(this.equipmentId);
 		return dependencies;

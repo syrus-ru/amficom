@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.48 2005/06/22 10:05:17 bass Exp $
+ * $Id: CableLinkType.java,v 1.49 2005/06/22 20:11:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/06/22 20:11:25 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -54,9 +55,9 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	CableLinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINK_TYPE_CODE);
+		final CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -96,7 +97,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -121,7 +122,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_TYPE_CODE),
+			final CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,
@@ -142,6 +143,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlCableLinkType cltt = (IdlCableLinkType) transferable;
 		super.fromTransferable(cltt.header, cltt.codename, cltt.description);
@@ -151,8 +153,8 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.imageId = new Identifier(cltt.imageId);
 		this.name = cltt.name;
 
-		Set characteristicIds = Identifier.fromTransferables(cltt.characteristicIds);
-		this.characteristics = new HashSet(cltt.characteristicIds.length);
+		final Set characteristicIds = Identifier.fromTransferables(cltt.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(cltt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
@@ -170,6 +172,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 				charIds);
 	}
 
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.name != null && this.manufacturer != null && this.manufacturerCode != null;
 	}
@@ -252,8 +255,8 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		return cableThreadTypes;
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	public void addCharacteristic(final Characteristic characteristic) {
@@ -270,17 +273,17 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}

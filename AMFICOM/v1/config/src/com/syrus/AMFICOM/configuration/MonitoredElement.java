@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.60 2005/06/22 10:05:17 bass Exp $
+ * $Id: MonitoredElement.java,v 1.61 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.Monitore
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/06/22 20:11:26 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -49,9 +50,9 @@ public final class MonitoredElement extends DomainMember {
 	MonitoredElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.monitoredDomainMemberIds = new HashSet();
+		this.monitoredDomainMemberIds = new HashSet<Identifier>();
 
-		MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITOREDELEMENT_CODE);
+		final MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITOREDELEMENT_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -71,7 +72,7 @@ public final class MonitoredElement extends DomainMember {
 			final Identifier measurementPortId,
 			final int sort,
 			final String localAddress,
-			final Set monitoredDomainMemberIds) {
+			final Set<Identifier> monitoredDomainMemberIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -84,7 +85,7 @@ public final class MonitoredElement extends DomainMember {
 		this.sort = sort;
 		this.localAddress = localAddress;
 
-		this.monitoredDomainMemberIds = new HashSet();
+		this.monitoredDomainMemberIds = new HashSet<Identifier>();
 		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
 	}
 	
@@ -103,21 +104,21 @@ public final class MonitoredElement extends DomainMember {
 			final Identifier measurementPortId,
 			final MonitoredElementSort sort,
 			final String localAddress,
-			final Set monitoredDomainMemberIds) throws CreateObjectException {
+			final Set<Identifier> monitoredDomainMemberIds) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || measurementPortId == null ||
 				localAddress == null || monitoredDomainMemberIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			MonitoredElement monitoredElement =  new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MONITOREDELEMENT_CODE),
-								creatorId,
-								0L,
-								domainId,
-								name,
-								measurementPortId,
-								sort.value(),
-								localAddress,
-								monitoredDomainMemberIds);
+			final MonitoredElement monitoredElement = new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MONITOREDELEMENT_CODE),
+					creatorId,
+					0L,
+					domainId,
+					name,
+					measurementPortId,
+					sort.value(),
+					localAddress,
+					monitoredDomainMemberIds);
 
 			assert monitoredElement.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -129,6 +130,7 @@ public final class MonitoredElement extends DomainMember {
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
 		IdlMonitoredElement met = (IdlMonitoredElement) transferable;
 		super.fromTransferable(met.header, new Identifier(met.domainId));
@@ -142,7 +144,7 @@ public final class MonitoredElement extends DomainMember {
 	}
 
 	public IdlMonitoredElement getTransferable() {
-		IdlIdentifier[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
+		final IdlIdentifier[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
 
 		return new IdlMonitoredElement(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
@@ -170,17 +172,17 @@ public final class MonitoredElement extends DomainMember {
 		super.markAsChanged();
 	}
 
-	public Set getMonitoredDomainMemberIds() {
+	public Set<Identifier> getMonitoredDomainMemberIds() {
 		return Collections.unmodifiableSet(this.monitoredDomainMemberIds);
 	}
 
-	protected synchronized void setMonitoredDomainMemberIds0(final Set monitoredDomainMemberIds) {
+	protected synchronized void setMonitoredDomainMemberIds0(final Set<Identifier> monitoredDomainMemberIds) {
 		this.monitoredDomainMemberIds.clear();
 		if (monitoredDomainMemberIds != null)
 			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
 	}
 
-	protected synchronized void setMonitoredDomainMemberIds(final Set monitoredDomainMemberIds) {
+	protected synchronized void setMonitoredDomainMemberIds(final Set<Identifier> monitoredDomainMemberIds) {
 		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
 		super.markAsChanged();
 	}
@@ -216,8 +218,9 @@ public final class MonitoredElement extends DomainMember {
 		super.markAsChanged();
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.monitoredDomainMemberIds);
 		dependencies.add(this.measurementPortId);
 		return dependencies;

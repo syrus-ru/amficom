@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.31 2005/06/21 12:44:28 bass Exp $
+ * $Id: CableThread.java,v 1.32 2005/06/22 20:11:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,8 +7,8 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/21 12:44:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/06/22 20:11:25 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class CableThread extends DomainMember implements TypedObject {
@@ -90,7 +91,7 @@ public final class CableThread extends DomainMember implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_CODE),
+			final CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -108,8 +109,9 @@ public final class CableThread extends DomainMember implements TypedObject {
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlCableThread ctt = (IdlCableThread) transferable;
+		final IdlCableThread ctt = (IdlCableThread) transferable;
 		super.fromTransferable(ctt.header, new Identifier(ctt.domainId));
 
 		this.name = ctt.name;
@@ -157,8 +159,11 @@ public final class CableThread extends DomainMember implements TypedObject {
 		return this.type;
 	}
 
-	public Set getDependencies() {
-		return Collections.singleton(this.type);
+	@Override
+	public Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
+		dependencies.add(this.type);
+		return dependencies;
 	}
 	/**
 	 * @param name The name to set.

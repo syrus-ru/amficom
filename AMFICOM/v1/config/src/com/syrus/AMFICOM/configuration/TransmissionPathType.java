@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.55 2005/06/22 10:05:17 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.56 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/06/22 20:11:26 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -51,9 +52,9 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 	TransmissionPathType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_TYPE_CODE);
+		final TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -84,7 +85,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 				codename,
 				description);
 		this.name = name;
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -120,13 +121,14 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
 		super.fromTransferable(tptt.header, tptt.codename, tptt.description);
 		this.name = tptt.name;
 
-		Set characteristicIds = Identifier.fromTransferables(tptt.characteristicIds);
-		this.characteristics = new HashSet(tptt.characteristicIds.length);
+		final Set characteristicIds = Identifier.fromTransferables(tptt.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(tptt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
@@ -161,8 +163,9 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		this.name = name;
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	public void addCharacteristic(final Characteristic characteristic) {
@@ -179,17 +182,17 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}

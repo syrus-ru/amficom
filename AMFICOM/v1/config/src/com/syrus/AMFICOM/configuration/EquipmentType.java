@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.69 2005/06/22 10:05:17 bass Exp $
+ * $Id: EquipmentType.java,v 1.70 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/06/22 20:11:26 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -52,9 +53,9 @@ public final class EquipmentType extends StorableObjectType implements Character
 	EquipmentType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		EquipmentTypeDatabase database = (EquipmentTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		final EquipmentTypeDatabase database = (EquipmentTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -89,7 +90,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 		this.name = name;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 
@@ -130,6 +131,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlEquipmentType ett = (IdlEquipmentType) transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
@@ -137,8 +139,8 @@ public final class EquipmentType extends StorableObjectType implements Character
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
 
-		Set characteristicIds = Identifier.fromTransferables(ett.characteristicIds);
-		this.characteristics = new HashSet(ett.characteristicIds.length);
+		final Set characteristicIds = Identifier.fromTransferables(ett.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(ett.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
@@ -179,8 +181,9 @@ public final class EquipmentType extends StorableObjectType implements Character
 		super.markAsChanged();
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	public void addCharacteristic(final Characteristic characteristic) {
@@ -197,17 +200,17 @@ public final class EquipmentType extends StorableObjectType implements Character
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}

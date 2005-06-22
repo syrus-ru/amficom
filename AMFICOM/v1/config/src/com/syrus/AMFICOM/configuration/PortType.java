@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.62 2005/06/22 10:05:17 bass Exp $
+ * $Id: PortType.java,v 1.63 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/06/22 20:11:26 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -52,9 +53,9 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	PortType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		PortTypeDatabase database = (PortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_TYPE_CODE);
+		final PortTypeDatabase database = (PortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -87,7 +88,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 				description);
 		this.name = name;
 		this.sort = sort;
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 
@@ -126,14 +127,16 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlPortType ptt = (IdlPortType) transferable;
 		super.fromTransferable(ptt.header, ptt.codename, ptt.description);
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
 
-		Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
-		this.characteristics = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		final Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
+		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
 	public IdlPortType getTransferable() {
@@ -184,8 +187,9 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		super.markAsChanged();
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	public void addCharacteristic(final Characteristic characteristic) {
@@ -202,17 +206,17 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}

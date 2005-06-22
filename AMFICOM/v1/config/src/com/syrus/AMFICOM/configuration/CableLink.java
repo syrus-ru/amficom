@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.1 2005/06/22 15:05:18 bass Exp $
+ * $Id: CableLink.java,v 1.2 2005/06/22 20:11:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/22 15:05:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/06/22 20:11:21 $
  * @module config_v1
  */
 public final class CableLink extends AbstractLink {
@@ -117,7 +117,7 @@ public final class CableLink extends AbstractLink {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_CODE),
+			final CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -142,7 +142,7 @@ public final class CableLink extends AbstractLink {
 
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlCableLink idlCableLink = (IdlCableLink) transferable;
+		final IdlCableLink idlCableLink = (IdlCableLink) transferable;
 		super.fromTransferable(idlCableLink.header, new Identifier(idlCableLink.domainId));
 
 		this.name = idlCableLink.name;

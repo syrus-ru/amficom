@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.61 2005/06/22 15:05:18 bass Exp $
+ * $Id: Link.java,v 1.62 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/06/22 15:05:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/06/22 20:11:26 $
  * @module config_v1
  */
 public final class Link extends AbstractLink {
@@ -116,7 +116,7 @@ public final class Link extends AbstractLink {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Link link = new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_CODE),
+			final Link link = new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -141,7 +141,7 @@ public final class Link extends AbstractLink {
 
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlLink idlLink = (IdlLink) transferable;
+		final IdlLink idlLink = (IdlLink) transferable;
 		super.fromTransferable(idlLink.header, new Identifier(idlLink.domainId));
 
 		this.name = idlLink.name;
@@ -150,7 +150,7 @@ public final class Link extends AbstractLink {
 		this.supplier = idlLink.supplier;
 		this.supplierCode = idlLink.supplierCode;
 
-		Set characteristicIds = Identifier.fromTransferables(idlLink.characteristicIds);
+		final Set characteristicIds = Identifier.fromTransferables(idlLink.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(idlLink.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 
@@ -161,7 +161,7 @@ public final class Link extends AbstractLink {
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
 	public IdlLink getTransferable() {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
+		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return new IdlLink(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),

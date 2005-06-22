@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.62 2005/06/22 10:05:17 bass Exp $
+ * $Id: MeasurementPort.java,v 1.63 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/06/22 20:11:26 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -56,9 +57,9 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	MeasurementPort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_CODE);
+		final MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -93,7 +94,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		this.description = description;
 		this.kisId = kisId;
 		this.portId = portId;
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 	
 	/**
@@ -117,7 +118,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			MeasurementPort measurementPort = new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_CODE),
+			final MeasurementPort measurementPort = new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_CODE),
 					creatorId,
 					0L,
 					type,
@@ -136,6 +137,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
 		super.fromTransferable(mpt.header);
@@ -148,8 +150,8 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		this.kisId = new Identifier(mpt.kisId);
 		this.portId = new Identifier(mpt.portId);
 
-		Set characteristicIds = Identifier.fromTransferables(mpt.characteristicIds);
-		this.characteristics = new HashSet(mpt.characteristicIds.length);
+		final Set characteristicIds = Identifier.fromTransferables(mpt.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(mpt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
@@ -212,8 +214,8 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		this.portId = portId;
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.kisId);
 		dependencies.add(this.portId);
@@ -244,17 +246,17 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}

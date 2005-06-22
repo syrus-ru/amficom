@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.88 2005/06/22 17:02:17 arseniy Exp $
+ * $Id: KIS.java,v 1.89 2005/06/22 20:11:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/06/22 17:02:17 $
+ * @version $Revision: 1.89 $, $Date: 2005/06/22 20:11:26 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -63,7 +63,7 @@ public final class KIS extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet<Characteristic>();
 
-		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_CODE);
+		final KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -128,7 +128,7 @@ public final class KIS extends DomainMember implements Characterizable {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_CODE),
+			final KIS kis = new KIS(IdentifierPool.getGeneratedIdentifier(ObjectEntities.KIS_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -149,8 +149,9 @@ public final class KIS extends DomainMember implements Characterizable {
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlKIS kt = (IdlKIS) transferable;
+		final IdlKIS kt = (IdlKIS) transferable;
 		super.fromTransferable(kt.header, new Identifier(kt.domainId));
 
 		this.equipmentId = new Identifier(kt.equipmentId);
@@ -160,7 +161,7 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.hostname = kt.hostname;
 		this.tcpPort = kt.tcpPort;
 
-		Set characteristicIds = Identifier.fromTransferables(kt.characteristicIds);
+		final Set characteristicIds = Identifier.fromTransferables(kt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(kt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 

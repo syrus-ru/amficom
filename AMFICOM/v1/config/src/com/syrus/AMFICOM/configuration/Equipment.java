@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.98 2005/06/22 10:05:17 bass Exp $
+ * $Id: Equipment.java,v 1.99 2005/06/22 20:11:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2005/06/22 20:11:25 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -66,9 +67,9 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	Equipment(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_CODE);
+		final EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -123,7 +124,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swVersion = swVersion;
 		this.inventoryNumber = inventoryNumber;
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -168,7 +169,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_CODE),
+			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_CODE),
 					creatorId,
 					0L,
 					domainId,
@@ -196,6 +197,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlEquipment et = (IdlEquipment) transferable;
 		super.fromTransferable(et.header, new Identifier(et.domainId));
@@ -215,8 +217,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
 
-		Set characteristicIds = Identifier.fromTransferables(et.characteristicIds);
-		this.characteristics = new HashSet(et.characteristicIds.length);
+		final Set characteristicIds = Identifier.fromTransferables(et.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(et.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
@@ -276,17 +278,17 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
@@ -326,8 +328,9 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.inventoryNumber = inventoryNumber;
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	public String getSupplier() {
