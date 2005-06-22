@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.57 2005/06/21 12:44:29 bass Exp $
+ * $Id: MeasurementServer.java,v 1.58 2005/06/22 17:32:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/06/21 12:44:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/06/22 17:32:49 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -106,13 +106,13 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static String processCodename;
 
 	/*	Map of tests to transmit to MCMs	*/
-	private static Map mcmTestQueueMap;	// Map <Identifier mcmId, ParameterSet <Test> testQueue >
+	private static Map<Identifier, Set<Test>> mcmTestQueueMap;	
 
 	private boolean running;
 
 	/*	Variables for method processFall()	(abort tests, ...)*/
 	/*	Identifiers of MCMs on which cannot transmit tests	*/
-	private static Set mcmIdsToAbortTests;	//ParameterSet <Identifier mcmId>
+	private static Set<Identifier> mcmIdsToAbortTests;	
 
 
 	public MeasurementServer() {
@@ -157,13 +157,14 @@ public class MeasurementServer extends SleepButWorkThread {
 			final Server server = new Server(serverId);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE)).retrieveForServerAndCodename(serverId, processCodename);
 			final SystemUser user = new SystemUser(serverProcess.getUserId());
-			final Set mcmIds = Identifier.createIdentifiers(((MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE)).retrieveForServer(serverId));
+			final MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
+			final Set<Identifier> mcmIds = Identifier.createIdentifiers(database.retrieveForServer(serverId));
 			login = user.getLogin();
 			
 			/*	Create map of test queues*/
-			mcmTestQueueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
-			for (Iterator it = mcmIds.iterator(); it.hasNext();)
-				mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet()));
+			mcmTestQueueMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Test>>(mcmIds.size()));
+			for (final Iterator<Identifier> it = mcmIds.iterator(); it.hasNext();)
+				mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet<Test>()));
 	
 			/*	Init database object loader*/
 			DatabaseObjectLoader.init(user.getId());
@@ -181,7 +182,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 	
 			/*	Create collection of MCM identifiers for aborting tests*/
-			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet());
+			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet<Identifier>());
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
@@ -226,9 +227,9 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 
 			synchronized (mcmTestQueueMap) {
-				for (Iterator it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
-					mcmId = (Identifier) it.next();
-					testQueue = (Set) mcmTestQueueMap.get(mcmId);
+				for (final Iterator<Identifier> it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
+					mcmId = it.next();
+					testQueue = mcmTestQueueMap.get(mcmId);
 					if (!testQueue.isEmpty()) {
 						try {
 							mcmRef = servantManager.getVerifiedMCMReference(mcmId);
@@ -285,32 +286,27 @@ public class MeasurementServer extends SleepButWorkThread {
 			Log.errorException(coe);
 		}
 
-		Identifier mcmId;
-		Set tests;
-		Test test;
-
-		Set addedTestIds = new HashSet();
+		final Set<Identifier> addedTestIds = new HashSet<Identifier>();
 		synchronized (mcmTestQueueMap) {
-			for (Iterator it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
-				mcmId = (Identifier) it.next();
-				tests = (Set) mcmTestQueueMap.get(mcmId);
+			for (final Iterator<Identifier> it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
+				final Identifier mcmId = it.next();
+				final Set<Test> tests = mcmTestQueueMap.get(mcmId);
 				synchronized (tests) {
-					for (Iterator it1 = tests.iterator(); it1.hasNext();) {
-						test = (Test) it1.next();
+					for (final Iterator<Test> it1 = tests.iterator(); it1.hasNext();) {
+						final Test test = it1.next();
 						addedTestIds.add(test.getId());
 					}
 				}
 			}
 		}
 
-		tests = StorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true, true);
+		final Set tests = StorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true, true);
 
-		Set testQueue;
-		for (Iterator it = tests.iterator(); it.hasNext();) {
-			test = (Test) it.next();
-			mcmId = test.getMCMId();
+		for (final Iterator it = tests.iterator(); it.hasNext();) {
+			final Test test = (Test) it.next();
+			final Identifier mcmId = test.getMCMId();
 
-			testQueue = (Set) mcmTestQueueMap.get(mcmId);
+			final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
 			if (testQueue != null) {
 				if (!testQueue.contains(test)) {
 					Log.debugMessage("Adding test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
@@ -333,18 +329,17 @@ public class MeasurementServer extends SleepButWorkThread {
 		synchronized (testQueue) {
 			for (Iterator it = testQueue.iterator(); it.hasNext(); i++) {
 				test = (Test) it.next();
-				testsT[i] = (Test_Transferable) test.getTransferable();
+				testsT[i] = test.getTransferable();
 			}
 		}
 
 		return testsT;
 	}
 
-	private static void updateTestsStatus(Set testQueue, TestStatus status) {
-		Test test;
+	private static void updateTestsStatus(Set<Test> testQueue, TestStatus status) {
 		synchronized (testQueue) {
-			for (Iterator it = testQueue.iterator(); it.hasNext();) {
-				test = (Test) it.next();
+			for (final Iterator<Test> it = testQueue.iterator(); it.hasNext();) {
+				final Test test = it.next();
 				if (test.getStatus().value() != status.value()) {
 					test.setStatus(status);
 				}
@@ -374,12 +369,10 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	private void abortTests() {
 		if (! mcmIdsToAbortTests.isEmpty()) {
-			Identifier mcmId;
-			Set testQueue;
 			synchronized (mcmIdsToAbortTests) {
-				for (Iterator it = mcmIdsToAbortTests.iterator(); it.hasNext();) {
-					mcmId = (Identifier) it.next();
-					testQueue = (Set) mcmTestQueueMap.get(mcmId);
+				for (final Iterator<Identifier> it = mcmIdsToAbortTests.iterator(); it.hasNext();) {
+					final Identifier mcmId = it.next();
+					final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
 
 					updateTestsStatus(testQueue, TestStatus.TEST_STATUS_ABORTED);
 
@@ -395,7 +388,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			Log.errorMessage("abortTests | Collection is NULL or empty");
 	}
 
-	protected static Set getMCMIds() {
+	protected static Set<Identifier> getMCMIds() {
 		return Collections.unmodifiableSet(mcmTestQueueMap.keySet());
 	}
 

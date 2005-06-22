@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.15 2005/06/22 16:20:24 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.16 2005/06/22 17:32:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/22 16:20:24 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/22 17:32:40 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -28,16 +28,18 @@ public abstract class DatabaseObjectLoader {
 		userId = userId1;
 	}
 
-	public static final Set loadStorableObjects(final Set ids) throws RetrieveObjectException {
+	public static final Set loadStorableObjects(final Set<Identifier> ids)
+			throws RetrieveObjectException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty())
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 		return retrieveFromDatabase(database, ids);
 	}
 
-	public static final Set loadStorableObjectsButIdsByCondition(final StorableObjectCondition condition, final Set ids) throws RetrieveObjectException {
+	public static final Set loadStorableObjectsButIdsByCondition(final StorableObjectCondition condition,
+			final Set<Identifier> ids) throws RetrieveObjectException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -46,19 +48,20 @@ public abstract class DatabaseObjectLoader {
 		return retrieveFromDatabaseButIdsByCondition(database, ids, condition);
 	}
 
-	private static final Set retrieveFromDatabase(final StorableObjectDatabase database, final Set ids) throws RetrieveObjectException {
+	private static final Set retrieveFromDatabase(final StorableObjectDatabase database,
+			final Set<Identifier> ids) throws RetrieveObjectException {
 		assert database != null : ErrorMessages.NON_NULL_EXPECTED;
 		try {
 			return database.retrieveByIdsByCondition(ids, null);
 		}
-		catch (IllegalDataException idse) {
+		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException("Cannot retrieve objects from database; database: "
-					+ database.getClass().getName() + ", ids: " + ids);
+					+ database.getClass().getName() + ", ids: " + ids, ide);
 		}
 	}
 
 	private static final Set retrieveFromDatabaseButIdsByCondition(final StorableObjectDatabase database,
-			final Set ids,
+			final Set<Identifier> ids,
 			final StorableObjectCondition condition)
 			throws RetrieveObjectException {
 		assert database != null : ErrorMessages.NON_NULL_EXPECTED;
@@ -71,7 +74,7 @@ public abstract class DatabaseObjectLoader {
 		}
 	}
 
-	public static final void saveStorableObjects(final Set storableObjects, boolean force)
+	public static final void saveStorableObjects(final Set<? extends StorableObject> storableObjects, final boolean force)
 			throws UpdateObjectException, VersionCollisionException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (storableObjects.isEmpty())
@@ -90,7 +93,7 @@ public abstract class DatabaseObjectLoader {
 	 * @param storableObjects
 	 * @throws ApplicationException
 	 */
-	public Set refresh(final Set storableObjects) throws ApplicationException {
+	public Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 
@@ -107,18 +110,18 @@ public abstract class DatabaseObjectLoader {
 	 *
 	 * @param identifiables
 	 */
-	public void delete(final Set identifiables) {
+	public void delete(final Set<? extends Identifiable> identifiables) {
 		if (identifiables == null || identifiables.isEmpty())
 			return;
 
 		final TShortObjectHashMap entityMap = new TShortObjectHashMap();
 
-		for (final Iterator it = identifiables.iterator(); it.hasNext();) {
-			final Identifiable identifiable = (Identifiable) it.next();
+		for (final Iterator<? extends Identifiable> it = identifiables.iterator(); it.hasNext();) {
+			final Identifiable identifiable = it.next();
 			final short entityCode = identifiable.getId().getMajor();
-			Set entityObjects = (Set) entityMap.get(entityCode);
+			Set<Identifiable> entityObjects = (Set<Identifiable>) entityMap.get(entityCode);
 			if (entityObjects == null) {
-				entityObjects = new HashSet();
+				entityObjects = new HashSet<Identifiable>();
 				entityMap.put(entityCode, entityObjects);
 			}
 			entityObjects.add(identifiable);
@@ -127,7 +130,7 @@ public abstract class DatabaseObjectLoader {
 		for (final TShortObjectIterator it = entityMap.iterator(); it.hasNext();) {
 			it.advance();
 			final short entityCode = it.key();
-			final Set entityObjects = (Set) it.value();
+			final Set<Identifiable> entityObjects = (Set<Identifiable>) it.value();
 			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 			database.delete(entityObjects);

@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.8 2005/06/08 15:21:09 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.9 2005/06/22 17:32:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/08 15:21:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 17:32:49 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -42,7 +42,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 	public MServerServantManager(final CORBAServer corbaServer,
 			final String loginServerServantName,
 			final String eventServerServantName,
-			final Set mcmIdStrings,
+			final Set<String> mcmIdStrings,
 			final long timeout) {
 		super(corbaServer, mcmIdStrings, timeout);
 		super.addServantName(loginServerServantName);
@@ -98,7 +98,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 		//@todo Generate event "Connection with servantName restored"
 	}
 
-	public static MServerServantManager createAndStart(final String serverHostName, final Set mcmIds) throws ApplicationException {
+	public static MServerServantManager createAndStart(final String serverHostName, final Set<Identifier> mcmIds) throws ApplicationException {
 		final String contextName = ContextNameFactory.generateContextName(serverHostName);
 		final CORBAServer corbaServer = new CORBAServer(contextName);
 
@@ -107,7 +107,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 		final String eventServerServantName = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 				ServerProcessWrapper.EVENT_PROCESS_CODENAME);
 
-		final Set mcmIdStrings = Identifier.createStrings(mcmIds);
+		final Set<String> mcmIdStrings = Identifier.createStrings(mcmIds);
 
 		final long timeout = ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 

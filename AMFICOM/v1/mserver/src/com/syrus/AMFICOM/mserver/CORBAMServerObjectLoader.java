@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.9 2005/06/21 12:44:29 bass Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.10 2005/06/22 17:32:49 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/21 12:44:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 17:32:49 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 final class CORBAMServerObjectLoader {
@@ -53,8 +53,8 @@ final class CORBAMServerObjectLoader {
 
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.9 $, $Date: 2005/06/21 12:44:29 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.10 $, $Date: 2005/06/22 17:32:49 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -65,8 +65,8 @@ final class CORBAMServerObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.9 $, $Date: 2005/06/21 12:44:29 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.10 $, $Date: 2005/06/22 17:32:49 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -91,8 +91,9 @@ final class CORBAMServerObjectLoader {
 	 * @return <code>ParameterSet</code> of <code>StorableObject</code>
 	 * @throws ApplicationException
 	 */
-	protected static final Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
-			throws ApplicationException {
+	protected static final Set loadStorableObjects(final short entityCode,
+			final Set<Identifier> ids,
+			final TransmitProcedure transmitProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 
 		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
