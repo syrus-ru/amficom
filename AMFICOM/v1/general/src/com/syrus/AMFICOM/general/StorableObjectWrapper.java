@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.9 2005/06/22 07:33:06 bob Exp $
+ * $Id: StorableObjectWrapper.java,v 1.10 2005/06/22 16:32:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.List;
 
 import com.syrus.util.Wrapper;
 
@@ -27,8 +26,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 07:33:06 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 16:32:16 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -37,10 +36,10 @@ import com.syrus.util.Wrapper;
 public abstract class StorableObjectWrapper implements Wrapper {
 
 	public static final String COLUMN_CREATED = "created";
-	public static final String COLUMN_CREATOR_ID = "creatorId";
+	public static final String COLUMN_CREATOR_ID = "creator_id";
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_MODIFIED = "modified";
-	public static final String COLUMN_MODIFIER_ID = "modifierId";
+	public static final String COLUMN_MODIFIER_ID = "modifier_id";
 	public static final String COLUMN_VERSION = "version";
 
 	public static final String COLUMN_CODENAME = "codename";
