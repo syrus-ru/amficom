@@ -6,9 +6,6 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 IDLDIR=../idl_v1/idl
 
 JAVAC=javac
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)

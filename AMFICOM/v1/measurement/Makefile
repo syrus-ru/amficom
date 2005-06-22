@@ -8,9 +8,7 @@ IDLDIR = ../idl_v1/idl
 HOST = aldan
 SERVICE_NAME = hodja
 
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4.2
+JAVAC=javac
 
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
