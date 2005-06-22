@@ -590,12 +590,12 @@ void InitialAnalysis::processEventsBeginsEnds(double *f_wletTEMP)
 
 		int type = ep->type;
 		if (pass) {
-			if (type == EventParams.GAIN || type == EventParams.LOSS)
+			if (type == EventParams::GAIN || type == EventParams::LOSS)
 				correctSpliceCoords(f_wletTEMP, ep->spliceSplash->scale, ep, minBegin, maxEnd);
 		}
 		else
 		{
-			if (type == EventParams.CONNECTOR || type == EventParams.ENDOFTRACE)
+			if (type == EventParams::CONNECTOR || type == EventParams::ENDOFTRACE)
 				correctConnectorFront(ep);
 		}
 	}
