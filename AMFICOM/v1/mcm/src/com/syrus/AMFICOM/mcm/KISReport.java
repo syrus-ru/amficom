@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.40 2005/06/21 12:44:30 bass Exp $
+ * $Id: KISReport.java,v 1.41 2005/06/22 12:59:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -29,13 +29,13 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/21 12:44:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/06/22 12:59:31 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -48,16 +48,16 @@ public class KISReport {
 
 	static {
 		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap(1);
-		addOutParameterTypeIds(new String[] {ParameterTypeCodenames.REFLECTOGRAMMA});
+		addOutParameterTypeIds(new ParameterTypeCodename[] {ParameterTypeCodename.REFLECTOGRAMMA});
 	}
 
-	private static void addOutParameterTypeIds(String[] codenames) {
+	private static void addOutParameterTypeIds(ParameterTypeCodename[] codenames) {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
 		final java.util.Set typicalConditions = new HashSet(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
-			typicalConditions.add(new TypicalCondition(codenames[i],
+			typicalConditions.add(new TypicalCondition(codenames[i].toString(),
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETER_TYPE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME));
