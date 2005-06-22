@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementController.java,v 1.8 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: MapElementController.java,v 1.9 2005/06/22 07:27:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,23 +22,16 @@ import com.syrus.AMFICOM.map.MapElement;
  * Интерфейс контроллера элемента карты. Позволяет управлять отображением
  * элементов карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 07:27:32 $
  * @module mapviewclient_v1
  */
 public interface MapElementController 
 {
 	/**
-	 * Установить логический слой .
-	 * @param lnl логический слой
+	 * Установить логический вид.
+	 * @param netMapViewer логический вид
 	 */
-//	void setLogicalNetLayer(LogicalNetLayer lnl);
 	void setNetMapViewer(NetMapViewer netMapViewer);
-
-	/**
-	 * Получить логический слой.
-	 * @return логический слой
-	 */
-//	LogicalNetLayer getLogicalNetLayer();
 
 	/**
 	 * Отрисовать элемент. При отрисовке необходимо производить проверку 

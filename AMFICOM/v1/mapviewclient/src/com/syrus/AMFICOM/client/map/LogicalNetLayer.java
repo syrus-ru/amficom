@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.77 2005/06/20 10:02:13 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.78 2005/06/22 07:27:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,7 +64,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.77 $, $Date: 2005/06/20 10:02:13 $
+ * @version $Revision: 1.78 $, $Date: 2005/06/22 07:27:32 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -666,8 +666,7 @@ public class LogicalNetLayer
 	}
 
 	/**
-	 * Отправить событие карты. Чтобы не отправить событие себе самому, 
-	 * используется флаг {@link #performProcessing}
+	 * Отправить событие карты.
 	 */
 	public void sendMapEvent(String eventString)
 	{

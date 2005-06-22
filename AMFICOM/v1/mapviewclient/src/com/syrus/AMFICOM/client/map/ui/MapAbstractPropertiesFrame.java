@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.6 2005/06/16 14:41:24 krupenn Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.7 2005/06/22 07:27:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,15 +17,14 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JDesktopPane;
 import javax.swing.event.ChangeEvent;
 
+import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.props.MapViewVisualManager;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.map.props.MarkerEditor;
-import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
-import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -33,7 +32,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.6 $, $Date: 2005/06/16 14:41:24 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 07:27:32 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

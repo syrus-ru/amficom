@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.25 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.26 2005/06/22 07:27:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,19 +29,18 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.ApplicationModelListener;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.25 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/22 07:27:32 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -283,7 +282,8 @@ public final class MapToolBar extends JPanel
 
 		JPanel innerPanel = new JPanel();
 		innerPanel.setLayout(new GridBagLayout());
-		
+
+		GridBagConstraints constraints = new GridBagConstraints();
 		innerPanel.add(this.moveHandButton,new GridBagConstraints(0,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,30,1,0),0,0));
 		
 		innerPanel.add(this.zoomInButton,new GridBagConstraints(1,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,10,1,0),0,0));
