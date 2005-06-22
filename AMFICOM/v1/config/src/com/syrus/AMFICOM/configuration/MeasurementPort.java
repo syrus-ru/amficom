@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.61 2005/06/20 17:29:35 bass Exp $
+ * $Id: MeasurementPort.java,v 1.62 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.62 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -66,7 +66,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		}
 	}
 
-	public MeasurementPort(final MeasurementPort_Transferable mpt) throws CreateObjectException {
+	public MeasurementPort(final IdlMeasurementPort mpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mpt);
 		} catch (ApplicationException ae) {
@@ -137,26 +137,26 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		MeasurementPort_Transferable mpt = (MeasurementPort_Transferable) transferable;
+		IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
 		super.fromTransferable(mpt.header);
 
-		this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(new Identifier(mpt.type_id), true);
+		this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(new Identifier(mpt._typeId), true);
 
 		this.name = mpt.name;
 		this.description = mpt.description;
 
-		this.kisId = new Identifier(mpt.kis_id);
-		this.portId = new Identifier(mpt.port_id);
+		this.kisId = new Identifier(mpt.kisId);
+		this.portId = new Identifier(mpt.portId);
 
-		Set characteristicIds = Identifier.fromTransferables(mpt.characteristic_ids);
-		this.characteristics = new HashSet(mpt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(mpt.characteristicIds);
+		this.characteristics = new HashSet(mpt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public MeasurementPort_Transferable getTransferable() {
+	public IdlMeasurementPort getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new MeasurementPort_Transferable(super.getHeaderTransferable(),
+		return new IdlMeasurementPort(super.getHeaderTransferable(),
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,

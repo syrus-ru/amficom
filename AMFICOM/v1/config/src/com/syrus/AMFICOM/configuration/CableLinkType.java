@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.47 2005/06/20 17:29:35 bass Exp $
+ * $Id: CableLinkType.java,v 1.48 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
+import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
+import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -64,7 +64,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	CableLinkType(final CableLinkType_Transferable cltt) throws CreateObjectException {
+	CableLinkType(final IdlCableLinkType cltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cltt);
 		} catch (ApplicationException ae) {
@@ -143,23 +143,23 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		CableLinkType_Transferable cltt = (CableLinkType_Transferable) transferable;
+		IdlCableLinkType cltt = (IdlCableLinkType) transferable;
 		super.fromTransferable(cltt.header, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();
 		this.manufacturer = cltt.manufacturer;
 		this.manufacturerCode = cltt.manufacturerCode;
-		this.imageId = new Identifier(cltt.image_id);
+		this.imageId = new Identifier(cltt.imageId);
 		this.name = cltt.name;
 
-		Set characteristicIds = Identifier.fromTransferables(cltt.characteristic_ids);
-		this.characteristics = new HashSet(cltt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(cltt.characteristicIds);
+		this.characteristics = new HashSet(cltt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
-	public CableLinkType_Transferable getTransferable() {
+	public IdlCableLinkType getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new CableLinkType_Transferable(super.getHeaderTransferable(),
+		return new IdlCableLinkType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

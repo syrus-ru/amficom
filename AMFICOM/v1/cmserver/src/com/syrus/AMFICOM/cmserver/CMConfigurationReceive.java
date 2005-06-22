@@ -1,5 +1,5 @@
 /*-
- * $Id: CMConfigurationReceive.java,v 1.27 2005/06/21 12:44:32 bass Exp $
+ * $Id: CMConfigurationReceive.java,v 1.28 2005/06/22 10:05:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,28 +8,28 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThread;
-import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
-import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipment;
+import com.syrus.AMFICOM.configuration.corba.IdlKIS;
+import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
+import com.syrus.AMFICOM.configuration.corba.IdlLink;
+import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPortType;
+import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPort;
+import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElement;
+import com.syrus.AMFICOM.configuration.corba.IdlPortType;
+import com.syrus.AMFICOM.configuration.corba.IdlPort;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathType;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPath;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/21 12:44:32 $
+ * @version $Revision: 1.28 $, $Date: 2005/06/22 10:05:18 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -37,7 +37,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	private static final long serialVersionUID = 5462858483804681509L;
 
 	public final IdlStorableObject[] receiveEquipmentTypes(
-			final EquipmentType_Transferable transferables[],
+			final IdlEquipmentType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -45,7 +45,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receivePortTypes(
-			final PortType_Transferable transferables[],
+			final IdlPortType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -53,7 +53,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveMeasurementPortTypes(
-			final MeasurementPortType_Transferable transferables[],
+			final IdlMeasurementPortType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -61,7 +61,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveTransmissionPathTypes(
-			final TransmissionPathType_Transferable transferables[],
+			final IdlTransmissionPathType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -69,7 +69,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveLinkTypes(
-			final LinkType_Transferable transferables[],
+			final IdlLinkType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -77,7 +77,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveCableLinkTypes(
-			final CableLinkType_Transferable transferables[],
+			final IdlCableLinkType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -93,7 +93,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveEquipments(
-			final Equipment_Transferable transferables[],
+			final IdlEquipment transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -101,7 +101,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receivePorts(
-			final Port_Transferable transferables[],
+			final IdlPort transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -109,7 +109,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveMeasurementPorts(
-			final MeasurementPort_Transferable transferables[],
+			final IdlMeasurementPort transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -117,7 +117,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveTransmissionPaths(
-			final TransmissionPath_Transferable transferables[],
+			final IdlTransmissionPath transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -125,7 +125,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveKISs(
-			final KIS_Transferable transferables[],
+			final IdlKIS transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -133,7 +133,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveMonitoredElements(
-			final MonitoredElement_Transferable transferables[],
+			final IdlMonitoredElement transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -141,7 +141,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public final IdlStorableObject[] receiveLinks(
-			final Link_Transferable transferables[],
+			final IdlLink transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {

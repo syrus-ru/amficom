@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.54 2005/06/20 17:29:35 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.55 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.55 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -61,7 +61,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		}
 	}
 
-	TransmissionPathType(final TransmissionPathType_Transferable tptt) throws CreateObjectException {
+	TransmissionPathType(final IdlTransmissionPathType tptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tptt);
 		} catch (ApplicationException ae) {
@@ -121,19 +121,19 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		TransmissionPathType_Transferable tptt = (TransmissionPathType_Transferable) transferable;
+		IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
 		super.fromTransferable(tptt.header, tptt.codename, tptt.description);
 		this.name = tptt.name;
 
-		Set characteristicIds = Identifier.fromTransferables(tptt.characteristic_ids);
-		this.characteristics = new HashSet(tptt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(tptt.characteristicIds);
+		this.characteristics = new HashSet(tptt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public TransmissionPathType_Transferable getTransferable() {
+	public IdlTransmissionPathType getTransferable() {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new TransmissionPathType_Transferable(super.getHeaderTransferable(),
+		return new IdlTransmissionPathType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

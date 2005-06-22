@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.9 2005/04/20 16:37:28 bass Exp $
+ * $Id: PortWrapper.java,v 1.10 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/20 16:37:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module configuration_v1
  */

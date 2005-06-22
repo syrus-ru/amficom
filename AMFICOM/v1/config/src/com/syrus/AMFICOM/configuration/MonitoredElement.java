@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.59 2005/06/20 17:29:35 bass Exp $
+ * $Id: MonitoredElement.java,v 1.60 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElement;
+import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.60 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -59,7 +59,7 @@ public final class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement(final MonitoredElement_Transferable met) throws CreateObjectException {
+	public MonitoredElement(final IdlMonitoredElement met) throws CreateObjectException {
 		this.fromTransferable(met);
 	}
 	
@@ -130,21 +130,21 @@ public final class MonitoredElement extends DomainMember {
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		MonitoredElement_Transferable met = (MonitoredElement_Transferable) transferable;
-		super.fromTransferable(met.header, new Identifier(met.domain_id));
-		this.measurementPortId = new Identifier(met.measurement_port_id);
+		IdlMonitoredElement met = (IdlMonitoredElement) transferable;
+		super.fromTransferable(met.header, new Identifier(met.domainId));
+		this.measurementPortId = new Identifier(met.measurementPortId);
 		this.sort = met.sort.value();
-		this.localAddress = met.local_address;
+		this.localAddress = met.localAddress;
 
 		this.name = met.name;
 
-		this.monitoredDomainMemberIds = Identifier.fromTransferables(met.monitored_domain_member_ids);
+		this.monitoredDomainMemberIds = Identifier.fromTransferables(met.monitoredDomainMemberIds);
 	}
 
-	public MonitoredElement_Transferable getTransferable() {
+	public IdlMonitoredElement getTransferable() {
 		IdlIdentifier[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
 
-		return new MonitoredElement_Transferable(super.getHeaderTransferable(),
+		return new IdlMonitoredElement(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.measurementPortId.getTransferable(),

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.97 2005/06/20 17:29:36 bass Exp $
+ * $Id: Equipment.java,v 1.98 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.98 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -76,7 +76,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 	}
 
-	Equipment(final Equipment_Transferable et) throws CreateObjectException {
+	Equipment(final IdlEquipment et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
 		} catch (ApplicationException ae) {
@@ -197,14 +197,14 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Equipment_Transferable et = (Equipment_Transferable) transferable;
-		super.fromTransferable(et.header, new Identifier(et.domain_id));
+		IdlEquipment et = (IdlEquipment) transferable;
+		super.fromTransferable(et.header, new Identifier(et.domainId));
 
-		this.type = (EquipmentType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		this.type = (EquipmentType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
 
 		this.name = et.name;
 		this.description = et.description;
-		this.imageId = new Identifier(et.image_id);
+		this.imageId = new Identifier(et.imageId);
 		this.supplier = et.supplier;
 		this.supplier = et.supplierCode;
 		this.longitude = et.longitude;
@@ -215,15 +215,15 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
 
-		Set characteristicIds = Identifier.fromTransferables(et.characteristic_ids);
-		this.characteristics = new HashSet(et.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(et.characteristicIds);
+		this.characteristics = new HashSet(et.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public Equipment_Transferable getTransferable() {
+	public IdlEquipment getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new Equipment_Transferable(super.getHeaderTransferable(),
+		return new IdlEquipment(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
 				this.type.getId().getTransferable(),
 				this.name != null ? this.name : "",

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.86 2005/06/20 17:29:35 bass Exp $
+ * $Id: KIS.java,v 1.87 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlKIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.87 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -70,7 +70,7 @@ public final class KIS extends DomainMember implements Characterizable {
 		}
 	}
 
-	public KIS(final KIS_Transferable kt) throws CreateObjectException {
+	public KIS(final IdlKIS kt) throws CreateObjectException {
 		try {
 			this.fromTransferable(kt);
 		} catch (ApplicationException ae) {
@@ -149,26 +149,26 @@ public final class KIS extends DomainMember implements Characterizable {
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		KIS_Transferable kt = (KIS_Transferable) transferable;
-		super.fromTransferable(kt.header, new Identifier(kt.domain_id));
+		IdlKIS kt = (IdlKIS) transferable;
+		super.fromTransferable(kt.header, new Identifier(kt.domainId));
 
-		this.equipmentId = new Identifier(kt.equipment_id);
-		this.mcmId = new Identifier(kt.mcm_id);
+		this.equipmentId = new Identifier(kt.equipmentId);
+		this.mcmId = new Identifier(kt.mcmId);
 		this.name = kt.name;
 		this.description = kt.description;
 		this.hostname = kt.hostname;
-		this.tcpPort = kt.tcp_port;
+		this.tcpPort = kt.tcpPort;
 
-		Set characteristicIds = Identifier.fromTransferables(kt.characteristic_ids);
-		this.characteristics = new HashSet(kt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(kt.characteristicIds);
+		this.characteristics = new HashSet(kt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 
 	}
 
-	public KIS_Transferable getTransferable() {
+	public IdlKIS getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new KIS_Transferable(super.getHeaderTransferable(),
+		return new IdlKIS(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

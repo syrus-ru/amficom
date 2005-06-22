@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.68 2005/06/20 17:29:35 bass Exp $
+ * $Id: EquipmentType.java,v 1.69 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -62,7 +62,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 		}
 	}
 
-	EquipmentType(final EquipmentType_Transferable ett) throws CreateObjectException {
+	EquipmentType(final IdlEquipmentType ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		} catch (ApplicationException ae) {
@@ -131,21 +131,21 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		EquipmentType_Transferable ett = (EquipmentType_Transferable) transferable;
+		IdlEquipmentType ett = (IdlEquipmentType) transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 		this.name = ett.name;
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
 
-		Set characteristicIds = Identifier.fromTransferables(ett.characteristic_ids);
-		this.characteristics = new HashSet(ett.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(ett.characteristicIds);
+		this.characteristics = new HashSet(ett.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public EquipmentType_Transferable getTransferable() {
+	public IdlEquipmentType getTransferable() {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new EquipmentType_Transferable(super.getHeaderTransferable(),
+		return new IdlEquipmentType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

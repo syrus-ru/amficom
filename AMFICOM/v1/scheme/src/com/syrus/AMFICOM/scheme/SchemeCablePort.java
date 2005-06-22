@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.34 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.35 2005/06/22 10:05:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/22 10:05:18 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {

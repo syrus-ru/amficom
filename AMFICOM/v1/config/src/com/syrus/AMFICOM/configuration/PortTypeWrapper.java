@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.11 2005/06/22 07:43:48 bob Exp $
+ * $Id: PortTypeWrapper.java,v 1.12 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/22 07:43:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/06/22 10:05:17 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class PortTypeWrapper extends StorableObjectWrapper {

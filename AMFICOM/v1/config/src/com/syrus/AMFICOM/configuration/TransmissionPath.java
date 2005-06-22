@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.71 2005/06/20 17:29:35 bass Exp $
+ * $Id: TransmissionPath.java,v 1.72 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
- * @version $Revision: 1.71 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.72 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -65,7 +65,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		}
 	}
 
-	TransmissionPath(final TransmissionPath_Transferable tpt) throws CreateObjectException {
+	TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tpt);
 		} catch (ApplicationException ae) {
@@ -136,23 +136,23 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		TransmissionPath_Transferable tpt = (TransmissionPath_Transferable) transferable;
-		super.fromTransferable(tpt.header, new Identifier(tpt.domain_id));
+		IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
+		super.fromTransferable(tpt.header, new Identifier(tpt.domainId));
 
 		this.name = tpt.name;
 		this.description = tpt.description;
-		this.startPortId = new Identifier(tpt.start_port_id);
-		this.finishPortId = new Identifier(tpt.finish_port_id);
+		this.startPortId = new Identifier(tpt.startPortId);
+		this.finishPortId = new Identifier(tpt.finishPortId);
 
-		Set characteristicIds = Identifier.fromTransferables(tpt.characteristic_ids);
-		this.characteristics = new HashSet(tpt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(tpt.characteristicIds);
+		this.characteristics = new HashSet(tpt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public TransmissionPath_Transferable getTransferable() {
+	public IdlTransmissionPath getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
+		return new IdlTransmissionPath(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

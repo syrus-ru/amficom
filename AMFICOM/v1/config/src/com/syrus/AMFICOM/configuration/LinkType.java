@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.55 2005/06/20 17:29:35 bass Exp $
+ * $Id: LinkType.java,v 1.56 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
-import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
+import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.56 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -66,7 +66,7 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 		}
 	}
 
-	LinkType(final LinkType_Transferable ltt) throws CreateObjectException {
+	LinkType(final IdlLinkType ltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ltt);
 		} catch (ApplicationException ae) {
@@ -144,24 +144,24 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		LinkType_Transferable ltt = (LinkType_Transferable) transferable;
+		IdlLinkType ltt = (IdlLinkType) transferable;
 		super.fromTransferable(ltt.header, ltt.codename, ltt.description);
 
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
 		this.manufacturerCode = ltt.manufacturerCode;
-		this.imageId = new Identifier(ltt.image_id);
+		this.imageId = new Identifier(ltt.imageId);
 		this.name = ltt.name;
 
-		Set characteristicIds = Identifier.fromTransferables(ltt.characteristic_ids);
-		this.characteristics = new HashSet(ltt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(ltt.characteristicIds);
+		this.characteristics = new HashSet(ltt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public LinkType_Transferable getTransferable() {
+	public IdlLinkType getTransferable() {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new LinkType_Transferable(super.getHeaderTransferable(),
+		return new IdlLinkType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

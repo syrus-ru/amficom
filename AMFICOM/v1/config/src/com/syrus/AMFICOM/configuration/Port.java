@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.68 2005/06/20 17:29:35 bass Exp $
+ * $Id: Port.java,v 1.69 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlPort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -64,7 +64,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		}
 	}
 
-	Port(final Port_Transferable pt) throws CreateObjectException {
+	Port(final IdlPort pt) throws CreateObjectException {
 		try {
 			this.fromTransferable(pt);
 		} catch (ApplicationException ae) {
@@ -131,26 +131,26 @@ public final class Port extends StorableObject implements Characterizable, Typed
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Port_Transferable pt = (Port_Transferable) transferable;
+		IdlPort pt = (IdlPort) transferable;
 		super.fromTransferable(pt.header);
 
-		this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
+		this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
 
 		this.description = pt.description;
-		this.equipmentId = new Identifier(pt.equipment_id);
+		this.equipmentId = new Identifier(pt.equipmentId);
 
 		this.sort = pt.sort.value();
 
-		Set characteristicIds = Identifier.fromTransferables(pt.characteristic_ids);
-		this.characteristics = new HashSet(pt.characteristic_ids.length);
+		Set characteristicIds = Identifier.fromTransferables(pt.characteristicIds);
+		this.characteristics = new HashSet(pt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
 
-	public Port_Transferable getTransferable() {
+	public IdlPort getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new Port_Transferable(super.getHeaderTransferable(),
+		return new IdlPort(super.getHeaderTransferable(),
 				 this.type.getId().getTransferable(),
 				 this.description,
 				 this.equipmentId.getTransferable(),

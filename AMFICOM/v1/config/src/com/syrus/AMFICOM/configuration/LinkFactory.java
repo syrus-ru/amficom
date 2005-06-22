@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkFactory.java,v 1.2 2005/06/01 18:49:44 bass Exp $
+ * $Id: LinkFactory.java,v 1.3 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlLink;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectFactory;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/01 18:49:44 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/22 10:05:17 $
  * @module config_v1
  */
 final class LinkFactory extends StorableObjectFactory {
@@ -29,7 +29,7 @@ final class LinkFactory extends StorableObjectFactory {
 	 * @see StorableObjectFactory#newInstance(IDLEntity)
 	 */
 	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
-		return new Link((Link_Transferable) transferable);
+		return new Link((IdlLink) transferable);
 	}
 
 	/**
@@ -37,7 +37,7 @@ final class LinkFactory extends StorableObjectFactory {
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
 	 */
 	protected Identifier getId(final IDLEntity transferable) {
-		return new Identifier(((Link_Transferable) transferable).header.id);
+		return new Identifier(((IdlLink) transferable).header.id);
 	}
 
 	/**
@@ -45,6 +45,6 @@ final class LinkFactory extends StorableObjectFactory {
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
 	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
-		return new Link_Transferable[length];
+		return new IdlLink[length];
 	}
 }

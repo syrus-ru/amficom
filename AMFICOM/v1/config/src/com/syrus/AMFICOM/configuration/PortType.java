@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.61 2005/06/20 17:29:35 bass Exp $
+ * $Id: PortType.java,v 1.62 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlPortType;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/20 17:29:35 $
+ * @version $Revision: 1.62 $, $Date: 2005/06/22 10:05:17 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -62,7 +62,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		}
 	}
 
-	PortType(final PortType_Transferable ptt) throws CreateObjectException {
+	PortType(final IdlPortType ptt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ptt);
 		} catch (ApplicationException ae) {
@@ -127,19 +127,19 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		PortType_Transferable ptt = (PortType_Transferable) transferable;
+		IdlPortType ptt = (IdlPortType) transferable;
 		super.fromTransferable(ptt.header, ptt.codename, ptt.description);
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
 
-		Set characteristicIds = Identifier.fromTransferables(ptt.characteristic_ids);
+		Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
 		this.characteristics = StorableObjectPool.getStorableObjects(characteristicIds, true);
 	}
 
-	public PortType_Transferable getTransferable() {
+	public IdlPortType getTransferable() {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new PortType_Transferable(super.getHeaderTransferable(),
+		return new IdlPortType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

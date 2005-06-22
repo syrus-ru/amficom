@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.71 2005/06/17 19:54:18 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.72 2005/06/22 10:05:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/06/17 19:54:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.72 $, $Date: 2005/06/22 10:05:17 $
+ * @author $Author: bass $
  * @module config_v1
  */
 

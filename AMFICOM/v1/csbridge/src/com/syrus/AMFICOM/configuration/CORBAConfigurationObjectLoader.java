@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAConfigurationObjectLoader.java,v 1.24 2005/06/21 12:44:28 bass Exp $
+ * $Id: CORBAConfigurationObjectLoader.java,v 1.25 2005/06/22 10:05:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,21 +13,21 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
-import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThread;
-import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
-import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipment;
+import com.syrus.AMFICOM.configuration.corba.IdlKIS;
+import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
+import com.syrus.AMFICOM.configuration.corba.IdlLink;
+import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPortType;
+import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPort;
+import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElement;
+import com.syrus.AMFICOM.configuration.corba.IdlPortType;
+import com.syrus.AMFICOM.configuration.corba.IdlPort;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathType;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/21 12:44:28 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/22 10:05:19 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -445,7 +445,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveEquipmentTypes((EquipmentType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveEquipmentTypes((IdlEquipmentType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -457,7 +457,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receivePortTypes((PortType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receivePortTypes((IdlPortType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -469,7 +469,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveMeasurementPortTypes((MeasurementPortType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveMeasurementPortTypes((IdlMeasurementPortType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -481,7 +481,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveTransmissionPathTypes((TransmissionPathType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveTransmissionPathTypes((IdlTransmissionPathType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -493,7 +493,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveLinkTypes((LinkType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveLinkTypes((IdlLinkType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -505,7 +505,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveCableLinkTypes((CableLinkType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveCableLinkTypes((IdlCableLinkType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -529,7 +529,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveEquipments((Equipment_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveEquipments((IdlEquipment[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -541,7 +541,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receivePorts((Port_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receivePorts((IdlPort[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -553,7 +553,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveMeasurementPorts((MeasurementPort_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveMeasurementPorts((IdlMeasurementPort[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -565,7 +565,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveTransmissionPaths((TransmissionPath_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveTransmissionPaths((IdlTransmissionPath[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -577,7 +577,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveKISs((KIS_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveKISs((IdlKIS[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -589,7 +589,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveMonitoredElements((MonitoredElement_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveMonitoredElements((IdlMonitoredElement[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -601,7 +601,7 @@ public final class CORBAConfigurationObjectLoader extends CORBAObjectLoader impl
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveLinks((Link_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveLinks((IdlLink[]) transferables, force, sessionKey);
 			}
 		});
 	}
