@@ -66,24 +66,24 @@ public abstract class MapInfoConnection extends MapConnection
 
 	public boolean release() throws MapConnectionException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "release()");
+		Log.debugMessage(getClass()
+				.getName() + "::" + "release()" + " | " + "method call", Log.FINER);
 
 		return true;
 	}
 
 	public void setPath(String path)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "setPath(" + path + ")");
+		Log.debugMessage(getClass()
+				.getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Log.FINER);
 
 		this.dataBasePath = path;
 	}
 
 	public void setView(String name)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "setView(" + name + ")");
+		Log.debugMessage(getClass()
+				.getName() + "::" + "setView(" + name + ")" + " | " + "method call", Log.FINER);
 
 		this.dataBaseView = name;
 	}
@@ -100,8 +100,8 @@ public abstract class MapInfoConnection extends MapConnection
 
 	public void setURL(String mapperURL)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "setURL(" + mapperURL + ")");
+		Log.debugMessage(getClass()
+				.getName() + "::" + "setURL(" + mapperURL + ")" + " | " + "method call", Log.FINER);
 		
 		this.mapperServletURL = mapperURL;
 	}
