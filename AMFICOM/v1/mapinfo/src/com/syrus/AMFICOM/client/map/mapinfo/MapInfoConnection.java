@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
-import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.util.Log;
 
 public abstract class MapInfoConnection extends MapConnection
 {
@@ -36,8 +36,8 @@ public abstract class MapInfoConnection extends MapConnection
 	
 	public boolean connect() throws MapConnectionException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
-				.getName(), "connect()");
+		Log.debugMessage(getClass()
+				.getName() + "::" + "connect()" + " | " + "method call", Log.FINER);
 		
 		// Инициализируем объект MapJ для локальных преобразований координат
 		this.localMapJ = new MapJ(); // this MapJ object
