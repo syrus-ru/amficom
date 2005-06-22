@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.41 2005/06/22 12:59:31 arseniy Exp $
+ * $Id: KISReport.java,v 1.42 2005/06/22 13:02:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,20 +34,20 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/22 12:59:31 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/22 13:02:54 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class KISReport {
-	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
+	private static final Map<String, Identifier> OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
 	private Identifier measurementId;
 	private String[] parameterCodenames;
 	private byte[][] parameterValues;
 
 	static {
-		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap(1);
+		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap<String, Identifier>(1);
 		addOutParameterTypeIds(new ParameterTypeCodename[] {ParameterTypeCodename.REFLECTOGRAMMA});
 	}
 
@@ -55,7 +55,7 @@ public class KISReport {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final java.util.Set typicalConditions = new HashSet(codenames.length);
+		final java.util.Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i].toString(),
 					OperationSort.OPERATION_EQUALS,
@@ -66,7 +66,7 @@ public class KISReport {
 		try {
 			final StorableObjectCondition condition;
 			if (typicalConditions.size() == 1)
-				condition = (StorableObjectCondition) typicalConditions.iterator().next();
+				condition = typicalConditions.iterator().next();
 			else
 				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
 			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
@@ -94,7 +94,7 @@ public class KISReport {
 
 			final Parameter[] parameters = new Parameter[this.parameterCodenames.length];
 			for (int i = 0; i < parameters.length; i++) {
-				final Identifier parameterTypeId = (Identifier) OUT_PARAMETER_TYPE_IDS_MAP.get(this.parameterCodenames[i]);
+				final Identifier parameterTypeId = OUT_PARAMETER_TYPE_IDS_MAP.get(this.parameterCodenames[i]);
 				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
 				parameters[i] = Parameter.createInstance(parameterType, this.parameterValues[i]);
 			}
