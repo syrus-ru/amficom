@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.13 2005/05/18 11:27:16 bass Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.14 2005/06/22 07:37:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/05/18 11:27:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/22 07:37:53 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class CableLinkTypeWrapper extends StorableObjectWrapper {
@@ -66,7 +66,8 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof CableLinkType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof CableLinkType) {
 			CableLinkType type = (CableLinkType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
@@ -85,7 +86,7 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
@@ -114,10 +115,6 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
@@ -128,8 +125,25 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(StorableObjectWrapper.COLUMN_CHARACTERISTICS))
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_MANUFACTURER)
+				|| key.equals(COLUMN_MANUFACTURER_CODE)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_KIND)) {
+			return Integer.class;
+		}
+		if (key.equals(COLUMN_IMAGE_ID)) {
+			return Identifier.class;
+		}
+		if (key.equals(COLUMN_CHARACTERISTICS)) {
 			return Set.class;
-		return String.class;
+		}
+		return null;
 	}
 }

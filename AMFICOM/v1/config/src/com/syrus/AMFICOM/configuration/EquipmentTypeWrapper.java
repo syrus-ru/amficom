@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeWrapper.java,v 1.9 2005/05/18 11:27:15 bass Exp $
+ * $Id: EquipmentTypeWrapper.java,v 1.10 2005/06/22 07:37:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/05/18 11:27:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 07:37:53 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -57,7 +58,8 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public Object getValue(final Object object, final String key) {
-		if (object instanceof EquipmentType) {
+		Object value = super.getValue(object, key);
+		if (value == null && object instanceof EquipmentType) {
 			EquipmentType type = (EquipmentType) object;			
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
@@ -97,22 +99,31 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public String getKey(final int index) {
-		return (String) this.keys.get(index);
-	}
-
 	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, 
+	                             final Object objectKey, 
+	                             final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
+	public Class getPropertyClass(final String key) {
+		Class clazz = super.getPropertyClass(key); 
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_MANUFACTURER)
+				|| key.equals(COLUMN_MANUFACTURER_CODE)) {
+			return String.class;
+		}
+		if (key.equals(COLUMN_CHARACTERISTICS)) {
 			return Set.class;
-		return String.class;
+		}
+		return null;
 	}
 }
