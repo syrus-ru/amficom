@@ -10,13 +10,10 @@ HOST=mongol
 SERVICE_NAME=mongol
 
 
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4.2
+JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
 $(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar

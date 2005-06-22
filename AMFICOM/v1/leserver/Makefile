@@ -14,7 +14,7 @@ JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/util.jar
 
