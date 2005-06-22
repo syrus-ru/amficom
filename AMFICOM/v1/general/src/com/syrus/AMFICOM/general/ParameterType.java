@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.37 2005/06/21 12:43:48 bass Exp $
+ * $Id: ParameterType.java,v 1.38 2005/06/22 20:17:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/21 12:43:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/06/22 20:17:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -40,9 +40,9 @@ public final class ParameterType extends StorableObjectType implements Character
 	ParameterType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 		
-		ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETER_TYPE_CODE);
+		final ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETER_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -84,7 +84,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		this.name = name;
 		this.dataType = dataType;
 		
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -102,7 +102,7 @@ public final class ParameterType extends StorableObjectType implements Character
 			final String name,
 			final DataType dataType) throws CreateObjectException {
 		try {
-			ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_TYPE_CODE),
+			final ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,
@@ -136,7 +136,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlParameterType ptt = (IdlParameterType) transferable;
+		final IdlParameterType ptt = (IdlParameterType) transferable;
 		try {
 			super.fromTransferable(ptt.header, ptt.codename, ptt.description);
 		} catch (ApplicationException ae) {
@@ -146,8 +146,8 @@ public final class ParameterType extends StorableObjectType implements Character
 		this.name = ptt.name;
 		this.dataType = ptt.dataType.value();
 		
-		Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
-		this.characteristics = new HashSet(ptt.characteristicIds.length);
+		final Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
+		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -242,20 +242,20 @@ public final class ParameterType extends StorableObjectType implements Character
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
@@ -264,7 +264,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 }

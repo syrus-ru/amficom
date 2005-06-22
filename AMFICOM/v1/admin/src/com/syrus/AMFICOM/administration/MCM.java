@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.35 2005/06/22 20:13:39 arseniy Exp $
+ * $Id: MCM.java,v 1.36 2005/06/22 20:17:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/22 20:13:39 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/22 20:17:06 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -114,7 +114,7 @@ public final class MCM extends DomainMember implements Characterizable {
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlMCM mt = (IdlMCM)transferable;
+		final IdlMCM mt = (IdlMCM)transferable;
 		super.fromTransferable(mt.header, new Identifier(mt.domainId));
 		this.name = mt.name;
 		this.description = mt.description;

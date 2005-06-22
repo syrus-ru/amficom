@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.15 2005/06/22 20:13:39 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.16 2005/06/22 20:17:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/22 20:13:39 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/22 20:17:06 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -102,7 +102,7 @@ public final class ServerProcess extends StorableObject {
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) {
-		IdlServerProcess spt = (IdlServerProcess) transferable;
+		final IdlServerProcess spt = (IdlServerProcess) transferable;
 		try {
 			super.fromTransferable(spt.header);
 		}

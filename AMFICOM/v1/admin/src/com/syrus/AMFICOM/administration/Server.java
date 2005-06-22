@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.38 2005/06/22 20:13:39 arseniy Exp $
+ * $Id: Server.java,v 1.39 2005/06/22 20:17:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/22 20:13:39 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/22 20:17:06 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -107,7 +107,7 @@ public final class Server extends DomainMember implements Characterizable {
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlServer st = (IdlServer) transferable;
+		final IdlServer st = (IdlServer) transferable;
 		super.fromTransferable(st.header, new Identifier(st.domainId));
 		this.name = st.name;
 		this.description = st.description;

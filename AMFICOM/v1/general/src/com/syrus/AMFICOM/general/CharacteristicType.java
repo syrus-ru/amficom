@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.37 2005/06/21 12:43:48 bass Exp $
+ * $Id: CharacteristicType.java,v 1.38 2005/06/22 20:17:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/21 12:43:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/06/22 20:17:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -38,7 +38,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	CharacteristicType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_TYPE_CODE);
+		final CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -82,7 +82,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) {
-		IdlCharacteristicType ctt = (IdlCharacteristicType) transferable;
+		final IdlCharacteristicType ctt = (IdlCharacteristicType) transferable;
 		try {
 			super.fromTransferable(ctt.header, ctt.codename, ctt.description);
 		} catch (ApplicationException ae) {

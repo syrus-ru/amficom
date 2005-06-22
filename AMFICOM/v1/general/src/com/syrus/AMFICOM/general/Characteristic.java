@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.43 2005/06/21 12:43:47 bass Exp $
+ * $Id: Characteristic.java,v 1.44 2005/06/22 20:17:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/21 12:43:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/06/22 20:17:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -42,7 +42,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	Characteristic(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
+		final CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -129,7 +129,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 			final boolean visible) throws CreateObjectException {
 		assert characterizable != null : ErrorMessages.NON_NULL_EXPECTED;
 		try {
-			Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
+			final Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
 					creatorId,
 					0L,
 					type,
@@ -155,7 +155,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlCharacteristic ct = (IdlCharacteristic) transferable;
+		final IdlCharacteristic ct = (IdlCharacteristic) transferable;
 		
 		super.fromTransferable(ct.header);
 		
