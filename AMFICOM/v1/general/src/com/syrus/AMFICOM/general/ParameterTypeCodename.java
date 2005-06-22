@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodename.java,v 1.2 2005/06/22 12:01:31 arseniy Exp $
+ * $Id: ParameterTypeCodename.java,v 1.3 2005/06/22 12:28:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,14 +20,19 @@ public enum ParameterTypeCodename {
 
 	REFLECTOGRAMMA("reflectogramma"),
 	REFLECTOGRAMMA_ETALON("reflectogramma_etalon"),
-	DADARA_ETALON_MTM("dadara_etalon_mtm"),
-	DADARA_MIN_TRACE_LEVEL("dadara_min_trace_level"),
+	DADARA_ETALON_MTM("dadara_etalon_mtm"), // Raw, ModeltraceMananger for etalon+thresholds
+	DADARA_MIN_TRACE_LEVEL("dadara_min_trace_level"), // double
+	DADARA_CRITERIA("dadara_criteria"), // Raw
 	DADARA_ANALYSIS_RESULT("dadara_analysis_result"), // Raw com.syrus.AMFICOM.analysis.dadara.AnalysisResult
 	DADARA_ALARMS("dadara_alarm_array"),
 
+	// prediction
 	PREDICTION_TIME("prediction_time"),
 	PREDICTION_DATA_FROM("time_start"),
-	PREDICTION_DATA_TO("time_end");
+	PREDICTION_DATA_TO("time_end"),
+
+	// Other useful things
+	ХУЙ_ЗНАЕТ_ЧТО("хуй_знает_что");
 
 
 	private String codename;
