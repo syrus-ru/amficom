@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.13 2005/06/21 14:13:36 bass Exp $
+ * $Id: ServerProcess.java,v 1.14 2005/06/22 15:37:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/21 14:13:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/22 15:37:09 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public final class ServerProcess extends StorableObject {
@@ -99,6 +100,7 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) {
 		IdlServerProcess spt = (IdlServerProcess) transferable;
 		try {
@@ -210,6 +212,7 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.codename != null && this.codename.length() != 0
@@ -220,8 +223,9 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.serverId);
 		dependencies.add(this.userId);
 		return dependencies;

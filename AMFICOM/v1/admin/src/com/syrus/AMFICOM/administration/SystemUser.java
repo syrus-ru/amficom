@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.6 2005/06/22 15:13:36 arseniy Exp $
+ * $Id: SystemUser.java,v 1.7 2005/06/22 15:37:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/22 15:13:36 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 15:37:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -110,6 +110,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws ApplicationException 
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) 
 	throws ApplicationException {
 		IdlSystemUser ut = (IdlSystemUser) transferable;
@@ -153,12 +154,13 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.login != null && this.login.length() != 0
 				&& this.name != null && this.name.length() != 0
 				&& this.description != null
-				&& this.characteristics != null;
+				&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
 	}
 	
 	public String getLogin() {

@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.33 2005/06/22 15:12:19 arseniy Exp $
+ * $Id: MCM.java,v 1.34 2005/06/22 15:37:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/22 15:12:19 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/22 15:37:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -56,16 +56,16 @@ public final class MCM extends DomainMember implements Characterizable {
 	public MCM(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
-		MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
+		final MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 		try {
 			database.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -106,12 +106,13 @@ public final class MCM extends DomainMember implements Characterizable {
 		this.userId = userId;
 		this.serverId = serverId;
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlMCM mt = (IdlMCM)transferable;
 		super.fromTransferable(mt.header, new Identifier(mt.domainId));
@@ -122,7 +123,7 @@ public final class MCM extends DomainMember implements Characterizable {
 		this.serverId = new Identifier(mt.serverId);
 
 		Set characteristicIds = Identifier.fromTransferables(mt.characteristicIds);
-		this.characteristics = new HashSet(mt.characteristicIds.length);
+		this.characteristics = new HashSet<Characteristic>(mt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -154,9 +155,14 @@ public final class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.name != null && this.name.length() != 0 && this.description != null && this.hostname != null && this.userId != null
-			&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
+		return super.isValid()
+				&& this.name != null && this.name.length() != 0
+				&& this.description != null
+				&& this.hostname != null
+				&& this.userId != null
+				&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
 	}
 
 	public String getName() {
@@ -198,20 +204,20 @@ public final class MCM extends DomainMember implements Characterizable {
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}

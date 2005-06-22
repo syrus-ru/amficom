@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.36 2005/06/22 15:12:19 arseniy Exp $
+ * $Id: Server.java,v 1.37 2005/06/22 15:37:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.administration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
@@ -35,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/22 15:12:19 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/22 15:37:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -54,7 +53,7 @@ public final class Server extends DomainMember implements Characterizable {
 	 */
 	public Server(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		this.characteristics = new LinkedHashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
 		ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
 		try {
@@ -100,12 +99,13 @@ public final class Server extends DomainMember implements Characterizable {
 		this.description = description;
 		this.hostname = hostname;
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IdlServer st = (IdlServer) transferable;
 		super.fromTransferable(st.header, new Identifier(st.domainId));
@@ -114,7 +114,7 @@ public final class Server extends DomainMember implements Characterizable {
 		this.hostname = st.hostname;
 
 		Set characteristicIds = Identifier.fromTransferables(st.characteristicIds);
-		this.characteristics = new HashSet(st.characteristicIds.length);
+		this.characteristics = new HashSet<Characteristic>(st.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -141,6 +141,7 @@ public final class Server extends DomainMember implements Characterizable {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.name != null && this.name.length() != 0
@@ -180,20 +181,20 @@ public final class Server extends DomainMember implements Characterizable {
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
