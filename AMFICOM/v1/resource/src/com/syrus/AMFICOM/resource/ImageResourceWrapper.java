@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.6 2005/06/22 10:22:40 bob Exp $
+ * $Id: ImageResourceWrapper.java,v 1.7 2005/06/22 10:37:03 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/22 10:22:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/22 10:37:03 $
  * @author $Author: bob $
  * @module resource_v1
  */
