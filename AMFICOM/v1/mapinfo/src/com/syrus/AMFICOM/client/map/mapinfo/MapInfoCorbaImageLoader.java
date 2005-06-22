@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.2 2005/06/21 13:17:06 peskovsky Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.3 2005/06/22 08:55:01 peskovsky Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
@@ -25,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2005/06/21 13:17:06 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2005/06/22 08:55:01 $
  * @author $Author: peskovsky $
  * @module map_v1
  */
