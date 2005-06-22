@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.34 2005/06/22 15:37:09 arseniy Exp $
+ * $Id: MCM.java,v 1.35 2005/06/22 20:13:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/22 15:37:09 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/22 20:13:39 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -122,7 +122,7 @@ public final class MCM extends DomainMember implements Characterizable {
 		this.userId = new Identifier(mt.userId);
 		this.serverId = new Identifier(mt.serverId);
 
-		Set characteristicIds = Identifier.fromTransferables(mt.characteristicIds);
+		final Set characteristicIds = Identifier.fromTransferables(mt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(mt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 		

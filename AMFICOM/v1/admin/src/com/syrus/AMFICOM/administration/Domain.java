@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.39 2005/06/22 15:37:09 arseniy Exp $
+ * $Id: Domain.java,v 1.40 2005/06/22 20:13:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/22 15:37:09 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/22 20:13:39 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -54,7 +54,7 @@ public final class Domain extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet<Characteristic>();
 
-		DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_CODE);
+		final DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_CODE);
 		try {
 			database.retrieve(this);
 		}
@@ -109,7 +109,7 @@ public final class Domain extends DomainMember implements Characterizable {
 		this.name = dt.name;
 		this.description = dt.description;
 
-		Set characteristicIds = Identifier.fromTransferables(dt.characteristicIds);
+		final Set characteristicIds = Identifier.fromTransferables(dt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(dt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 
