@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.38 2005/05/01 17:28:19 arseniy Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.39 2005/06/22 19:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,10 +11,13 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/05/01 17:28:19 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/22 19:23:01 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -23,120 +26,126 @@ public interface ConfigurationObjectLoader {
 
 	/* Load multiple objects*/
 
-	Set loadEquipmentTypes(Set ids) throws ApplicationException;
+	Set loadEquipmentTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadPortTypes(Set ids) throws ApplicationException;
+	Set loadPortTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMeasurementPortTypes(Set ids) throws ApplicationException;
+	Set loadMeasurementPortTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadTransmissionPathTypes(Set ids) throws ApplicationException;
+	Set loadTransmissionPathTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadLinkTypes(Set ids) throws ApplicationException;
+	Set loadLinkTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadCableLinkTypes(Set ids) throws ApplicationException;
+	Set loadCableLinkTypes(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadCableThreadTypes(Set ids) throws ApplicationException;
+	Set loadCableThreadTypes(final Set<Identifier> ids) throws ApplicationException;
 
 
 
-	Set loadEquipments(Set ids) throws ApplicationException;
+	Set loadEquipments(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadPorts(Set ids) throws ApplicationException;
+	Set loadPorts(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMeasurementPorts(Set ids) throws ApplicationException;
+	Set loadMeasurementPorts(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadTransmissionPaths(Set ids) throws ApplicationException;
+	Set loadTransmissionPaths(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadKISs(Set ids) throws ApplicationException;
+	Set loadKISs(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMonitoredElements(Set ids) throws ApplicationException;
+	Set loadMonitoredElements(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadLinks(Set ids) throws ApplicationException;
+	Set loadLinks(final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadCableThreads(Set ids) throws ApplicationException;
+	Set loadCableLinks(final Set<Identifier> ids) throws ApplicationException;
+
+	Set loadCableThreads(final Set<Identifier> ids) throws ApplicationException;
 
 
 
 	/* Load multiple objects but ids*/
 
-	Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadEquipmentTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadPortTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadMeasurementPortTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadTransmissionPathTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadLinkTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadCableLinkTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadCableThreadTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
 
 
-	Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadEquipmentsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadPortsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadMeasurementPortsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadTransmissionPathsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadKISsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadMonitoredElementsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadLinksButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
+	Set loadCableLinksButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
+
+	Set loadCableThreadsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
 
 
 	/* Save multiple objects*/
 
-	void saveEquipmentTypes(Set objects, boolean force) throws ApplicationException;
+	void saveEquipmentTypes(final Set<EquipmentType> objects, final boolean force) throws ApplicationException;
 
-	void savePortTypes(Set objects, boolean force) throws ApplicationException;
+	void savePortTypes(final Set<PortType> objects, final boolean force) throws ApplicationException;
 
-	void saveMeasurementPortTypes(Set objects, boolean force) throws ApplicationException;
+	void saveMeasurementPortTypes(final Set<MeasurementPortType> objects, final boolean force) throws ApplicationException;
 
-	void saveTransmissionPathTypes(Set objects, boolean force) throws ApplicationException;
+	void saveTransmissionPathTypes(final Set<TransmissionPathType> objects, final boolean force) throws ApplicationException;
 
-	void saveLinkTypes(Set objects, boolean force) throws ApplicationException;
+	void saveLinkTypes(final Set<LinkType> objects, final boolean force) throws ApplicationException;
 
-	void saveCableLinkTypes(Set objects, boolean force) throws ApplicationException;
+	void saveCableLinkTypes(final Set<CableLinkType> objects, final boolean force) throws ApplicationException;
 
-	void saveCableThreadTypes(Set objects, boolean force) throws ApplicationException;
+	void saveCableThreadTypes(final Set<CableThreadType> objects, final boolean force) throws ApplicationException;
 
 
 
-	void saveEquipments(Set objects, boolean force) throws ApplicationException;
+	void saveEquipments(final Set<Equipment> objects, final boolean force) throws ApplicationException;
 
-	void savePorts(Set objects, boolean force) throws ApplicationException;
+	void savePorts(final Set<Port> objects, final boolean force) throws ApplicationException;
 
-	void saveMeasurementPorts(Set objects, boolean force) throws ApplicationException;
+	void saveMeasurementPorts(final Set<MeasurementPort> objects, final boolean force) throws ApplicationException;
 
-	void saveTransmissionPaths(Set objects, boolean force) throws ApplicationException;
+	void saveTransmissionPaths(final Set<TransmissionPath> objects, final boolean force) throws ApplicationException;
 
-	void saveKISs(Set objects, boolean force) throws ApplicationException;
+	void saveKISs(final Set<KIS> objects, final boolean force) throws ApplicationException;
 
-	void saveMonitoredElements(Set objects, boolean force) throws ApplicationException;
+	void saveMonitoredElements(final Set<MonitoredElement> objects, final boolean force) throws ApplicationException;
 
-	void saveLinks(Set objects, boolean force) throws ApplicationException;
+	void saveLinks(final Set<Link> objects, final boolean force) throws ApplicationException;
 
-	void saveCableThreads(Set objects, boolean force) throws ApplicationException;
+	void saveCableLinks(final Set<CableLink> objects, final boolean force) throws ApplicationException;
+
+	void saveCableThreads(final Set<CableThread> objects, final boolean force) throws ApplicationException;
 
 
 
 	/*	Refresh*/
 
-	Set refresh(Set storableObjects) throws ApplicationException;
+	Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException;
 
 
 
 	/*	Delete*/
 
-	void delete(final Set identifiables);
+	void delete(final Set<? extends Identifiable> identifiables);
 
 }
