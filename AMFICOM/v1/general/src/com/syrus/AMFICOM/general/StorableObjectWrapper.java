@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.8 2005/06/21 12:43:47 bass Exp $
+ * $Id: StorableObjectWrapper.java,v 1.9 2005/06/22 07:33:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.List;
 
 import com.syrus.util.Wrapper;
 
@@ -25,8 +27,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/21 12:43:47 $
+ * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 07:33:06 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -104,6 +106,18 @@ public abstract class StorableObjectWrapper implements Wrapper {
 			} else if(key.equals(COLUMN_MODIFIER_ID)) {
 				return storableObject.getCreatorId();
 			}
+		}
+		return null;
+	}
+	
+	public Class getPropertyClass(String key) {
+		if (key.equals(COLUMN_ID) 
+				|| key.equals(COLUMN_CREATOR_ID)
+				|| key.equals(COLUMN_MODIFIER_ID)) {
+			return Identifier.class;
+		} else if(key.equals(COLUMN_CREATED) 
+				|| key.equals(COLUMN_MODIFIED)) {
+			return Date.class;
 		}
 		return null;
 	}
