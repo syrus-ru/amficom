@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.8 2005/06/10 17:20:04 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.9 2005/06/22 17:01:10 arseniy Exp $
  *
  * Copyright Ώ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,42 +27,40 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/10 17:20:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/22 17:01:10 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class VerifiedConnectionManager {
 	private CORBAServer corbaServer;
 
-	Map referencesMap; //Map <String servantName, Verifiable reference>
-	private Set disconnectedServants; //Set <String servantName>
+	Map<String, Verifiable> referencesMap;
+	private Set<String> disconnectedServants;
 	
-	private List connectionListeners;
+	private List<PropertyChangeListener> connectionListeners;
 
 	public VerifiedConnectionManager(final CORBAServer corbaServer, final String[] servantNames) {
-		this(corbaServer, new HashSet(Arrays.asList(servantNames)));
+		this(corbaServer, new HashSet<String>(Arrays.asList(servantNames)));
 	}
 
-	public VerifiedConnectionManager(final CORBAServer corbaServer, final Set servantNames) {
+	public VerifiedConnectionManager(final CORBAServer corbaServer, final Set<String> servantNames) {
 		assert corbaServer != null: "corbaServer is NULL";
 		assert servantNames != null: "Servant names is NULL";
 //		assert !servantNames.isEmpty(): ErrorMessages.θυμι_πυστοκ;
 
 		this.corbaServer = corbaServer;
 
-		this.referencesMap = Collections.synchronizedMap(new HashMap(servantNames.size()));
-		Object servantName;
-		for (Iterator it = servantNames.iterator(); it.hasNext();) {
-			servantName = it.next();
-			assert (servantName instanceof String): "Name of servant must be of type String";
+		this.referencesMap = Collections.synchronizedMap(new HashMap<String, Verifiable>(servantNames.size()));
+		for (Iterator<String> it = servantNames.iterator(); it.hasNext();) {
+			final String servantName = it.next();
 			this.referencesMap.put(servantName, null);
 		}
-		this.disconnectedServants = Collections.synchronizedSet(new HashSet(servantNames));
+		this.disconnectedServants = Collections.synchronizedSet(new HashSet<String>(servantNames));
 	}
 
 	public Verifiable getVerifiableReference(final String servantName) throws CommunicationException, IllegalDataException {
 		if (this.referencesMap.containsKey(servantName)) {
-			Verifiable reference = (Verifiable) this.referencesMap.get(servantName);
+			Verifiable reference = this.referencesMap.get(servantName);
 
 			if (reference == null)
 				reference = this.activateAndGet(servantName);
@@ -99,7 +97,7 @@ public class VerifiedConnectionManager {
 
 	private Verifiable activateAndGet(final String servantName) throws CommunicationException {
 		this.activateVerifiableReference(servantName);
-		Verifiable reference = (Verifiable) this.referencesMap.get(servantName);
+		Verifiable reference = this.referencesMap.get(servantName);
 		if (reference != null)
 			return reference;
 		throw new CommunicationException("Cannot establish connection with  '" + servantName + "'");
@@ -141,8 +139,8 @@ public class VerifiedConnectionManager {
 	
 	private void firePropertyChangeListners(PropertyChangeEvent propertyChangeEvent) {
 		if (this.connectionListeners != null && !this.connectionListeners.isEmpty()) {
-			for (Iterator iterator = this.connectionListeners.iterator(); iterator.hasNext();) {
-				PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+			for (Iterator<PropertyChangeListener> iterator = this.connectionListeners.iterator(); iterator.hasNext();) {
+				PropertyChangeListener listener = iterator.next();
 				listener.propertyChange(propertyChangeEvent);
 			}
 		}
@@ -150,7 +148,7 @@ public class VerifiedConnectionManager {
 
 	public void addPropertyListener(PropertyChangeListener listener) {
 		if (this.connectionListeners == null) {
-			this.connectionListeners = new LinkedList();
+			this.connectionListeners = new LinkedList<PropertyChangeListener>();
 		}
 		
 		if (!this.connectionListeners.contains(listener)) {

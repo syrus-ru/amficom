@@ -1,5 +1,5 @@
 /*
- * $Id: RunnableVerifiedConnectionManager.java,v 1.3 2005/05/18 12:52:59 bass Exp $
+ * $Id: RunnableVerifiedConnectionManager.java,v 1.4 2005/06/22 17:01:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 12:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/22 17:01:10 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class RunnableVerifiedConnectionManager extends VerifiedConnectionManager implements Runnable {
@@ -25,10 +25,10 @@ public class RunnableVerifiedConnectionManager extends VerifiedConnectionManager
 
 
 	public RunnableVerifiedConnectionManager(final CORBAServer corbaServer, final String[] servantNames, final long timeout) {
-		this(corbaServer, new HashSet(Arrays.asList(servantNames)), timeout);
+		this(corbaServer, new HashSet<String>(Arrays.asList(servantNames)), timeout);
 	}
 
-	public RunnableVerifiedConnectionManager(final CORBAServer corbaServer, final Set servantNames, final long timeout) {
+	public RunnableVerifiedConnectionManager(final CORBAServer corbaServer, final Set<String> servantNames, final long timeout) {
 		super(corbaServer, servantNames);
 
 		this.timeout = timeout;
@@ -39,8 +39,8 @@ public class RunnableVerifiedConnectionManager extends VerifiedConnectionManager
 			synchronized (super.referencesMap) {
 				String servantName;
 				Verifiable reference;
-				for (Iterator it = super.referencesMap.keySet().iterator(); it.hasNext();) {
-					servantName = (String) it.next();
+				for (Iterator<String> it = super.referencesMap.keySet().iterator(); it.hasNext();) {
+					servantName = it.next();
 					try {
 						reference = super.getVerifiableReference(servantName);
 						Log.debugMessage("RunnableVerifiedConnectionManager.run | Verified reference to '" + servantName + "'", Log.DEBUGLEVEL08);

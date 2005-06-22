@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.87 2005/06/22 10:05:17 bass Exp $
+ * $Id: KIS.java,v 1.88 2005/06/22 17:02:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2005/06/22 17:02:17 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -60,7 +61,7 @@ public final class KIS extends DomainMember implements Characterizable {
 	KIS(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 
 		KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_CODE);
 		try {
@@ -102,7 +103,7 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -160,7 +161,7 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.tcpPort = kt.tcpPort;
 
 		Set characteristicIds = Identifier.fromTransferables(kt.characteristicIds);
-		this.characteristics = new HashSet(kt.characteristicIds.length);
+		this.characteristics = new HashSet<Characteristic>(kt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 
 	}
@@ -239,8 +240,9 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.mcmId = mcmId;
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		return dependencies;
@@ -260,17 +262,17 @@ public final class KIS extends DomainMember implements Characterizable {
 		}
 	}
 
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
