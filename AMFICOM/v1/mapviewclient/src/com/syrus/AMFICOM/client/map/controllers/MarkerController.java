@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.25 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: MarkerController.java,v 1.26 2005/06/23 08:27:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,10 +9,8 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -27,8 +25,8 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -44,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/23 08:27:18 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController {
@@ -62,11 +60,7 @@ public class MarkerController extends AbstractNodeController {
 	 * маркера.
 	 */
 	private static boolean needInit = true;
-
-	/**
-	 * Instance.
-	 */
-//	private static MarkerController instance = null;
+	private static Identifier imageId;
 
 	/**
 	 * Private constructor.
@@ -75,17 +69,23 @@ public class MarkerController extends AbstractNodeController {
 		super(netMapViewer);
 	}
 
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
-
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new MarkerController(netMapViewer);
+	}
+
+	public static void init(Identifier creatorId) throws ApplicationException {
+		if(needInit) {
+			imageId = NodeTypeController.getImageId(
+					creatorId, 
+					MarkerController.IMAGE_NAME, 
+					MarkerController.IMAGE_PATH);
+
+			MapPropertiesManager.setOriginalImage(
+				imageId,
+				new ImageIcon(MarkerController.IMAGE_PATH).getImage());
+				
+			needInit = false;
+		}
 	}
 
 	/**
@@ -109,24 +109,6 @@ public class MarkerController extends AbstractNodeController {
 			+ " " + marker.getMeasurementPath().getName() + ")";
 
 		return s1;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(needInit) {
-			Identifier creatorId = LoginManager.getUserId();
-
-			MapPropertiesManager.setOriginalImage(
-				NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH),
-				new ImageIcon(IMAGE_PATH).getImage());
-		}
-		super.paint(mapElement, g, visibleBounds);
 	}
 
 	/**

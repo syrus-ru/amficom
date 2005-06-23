@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.18 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.19 2005/06/23 08:27:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.TopologicalNode;
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/23 08:27:19 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController {
@@ -67,28 +67,37 @@ public class TopologicalNodeController extends AbstractNodeController {
 	private static Identifier closedImageId;
 
 	/**
-	 * Instace.
-	 */
-//	private static TopologicalNodeController instance = null;
-
-	/**
 	 * Private constructor.
 	 */
 	private TopologicalNodeController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
-
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new TopologicalNodeController(netMapViewer);
+	}
+
+	public static void init(Identifier creatorId) throws ApplicationException {
+		if(needInit) {
+
+			openImageId = NodeTypeController.getImageId(
+					creatorId, 
+					TopologicalNodeController.OPEN_NODE, 
+					TopologicalNodeController.OPEN_NODE_IMAGE);
+			closedImageId = NodeTypeController.getImageId(
+					creatorId, 
+					TopologicalNodeController.CLOSED_NODE, 
+					TopologicalNodeController.CLOSED_NODE_IMAGE);
+
+			MapPropertiesManager.setOriginalImage(
+				openImageId,
+				new ImageIcon(TopologicalNodeController.OPEN_NODE_IMAGE).getImage());
+			MapPropertiesManager.setOriginalImage(
+				closedImageId,
+				new ImageIcon(TopologicalNodeController.CLOSED_NODE_IMAGE).getImage());
+				
+			needInit = false;
+		}
 	}
 
 	/**
@@ -122,9 +131,6 @@ public class TopologicalNodeController extends AbstractNodeController {
 	public void setActive(TopologicalNode node, boolean active) {
 		node.setActive(active);
 
-		Identifier creatorId = LoginManager.getUserId();
-		init(creatorId);
-
 		if(active)
 			node.setImageId(openImageId);
 		else
@@ -133,9 +139,6 @@ public class TopologicalNodeController extends AbstractNodeController {
 
 	public Identifier getImageId(AbstractNode node) {
 		if(node.getImageId() == null) {
-			Identifier creatorId = LoginManager.getUserId();
-			init(creatorId);
-
 			TopologicalNode topologicalNode = (TopologicalNode )node;
 
 			if(topologicalNode.isActive())
@@ -146,35 +149,10 @@ public class TopologicalNodeController extends AbstractNodeController {
 		return node.getImageId();
 	}
 
-	private void init(Identifier creatorId) {
-		if(needInit) {
-
-			openImageId = NodeTypeController.getImageId(
-					creatorId, 
-					TopologicalNodeController.OPEN_NODE, 
-					TopologicalNodeController.OPEN_NODE_IMAGE);
-			closedImageId = NodeTypeController.getImageId(
-					creatorId, 
-					TopologicalNodeController.CLOSED_NODE, 
-					TopologicalNodeController.CLOSED_NODE_IMAGE);
-
-			MapPropertiesManager.setOriginalImage(
-				openImageId,
-				new ImageIcon(TopologicalNodeController.OPEN_NODE_IMAGE).getImage());
-			MapPropertiesManager.setOriginalImage(
-				closedImageId,
-				new ImageIcon(TopologicalNodeController.CLOSED_NODE_IMAGE).getImage());
-				
-			needInit = false;
-		}
-	}
 	/**
 	 * {@inheritDoc}
 	 */
 	public Image getImage(AbstractNode node) {
-		Identifier creatorId = LoginManager.getUserId();
-		init(creatorId);
-
 		TopologicalNode topologicalNode = (TopologicalNode )node;
 
 		if(topologicalNode.isActive())

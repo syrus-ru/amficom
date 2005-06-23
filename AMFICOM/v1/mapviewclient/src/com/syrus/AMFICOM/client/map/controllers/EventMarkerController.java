@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarkerController.java,v 1.12 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: EventMarkerController.java,v 1.13 2005/06/23 08:27:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,25 +9,20 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import java.awt.Graphics;
-import java.awt.geom.Rectangle2D;
-
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.EventMarker;
 
 /**
  * Контроллер маркера события.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/23 08:27:18 $
  * @module mapviewclient_v1
  */
 public final class EventMarkerController extends MarkerController {
@@ -43,11 +38,8 @@ public final class EventMarkerController extends MarkerController {
 	 */
 	private static boolean needInit = true;
 
-	/**
-	 * Instace.
-	 */
-//	private static EventMarkerController instance = null;
-	
+	private static Identifier eventImageId;
+
 	/**
 	 * Private constructor.
 	 */
@@ -55,17 +47,23 @@ public final class EventMarkerController extends MarkerController {
 		super(netMapViewer);
 	}
 
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
-
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new EventMarkerController(netMapViewer);
+	}
+
+	public static void init(Identifier creatorId) throws ApplicationException {
+		if(needInit) {
+			eventImageId = NodeTypeController.getImageId(
+					creatorId, 
+					EventMarkerController.EVENT_IMAGE_NAME, 
+					EventMarkerController.EVENT_IMAGE_PATH);
+
+			MapPropertiesManager.setOriginalImage(
+				eventImageId,
+				new ImageIcon(EventMarkerController.EVENT_IMAGE_PATH).getImage());
+				
+			needInit = false;
+		}
 	}
 
 	/**
@@ -84,27 +82,5 @@ public final class EventMarkerController extends MarkerController {
 
 		return s1;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(needInit) {
-			Identifier creatorId = LoginManager.getUserId();
-
-			MapPropertiesManager.setOriginalImage(
-				NodeTypeController.getImageId(
-					creatorId, 
-					EventMarkerController.EVENT_IMAGE_NAME, 
-					EventMarkerController.EVENT_IMAGE_PATH),
-				new ImageIcon(EVENT_IMAGE_PATH).getImage());
-		}
-		super.paint(mapElement, g, visibleBounds);
-	}
-
 
 }

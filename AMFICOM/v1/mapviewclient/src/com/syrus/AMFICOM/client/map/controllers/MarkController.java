@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.13 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: MarkController.java,v 1.14 2005/06/23 08:27:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер метки.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/23 08:27:18 $
  * @module mapviewclient_v1
  */
 public final class MarkController extends AbstractNodeController {
@@ -45,10 +45,8 @@ public final class MarkController extends AbstractNodeController {
 	/** Пиктограмма. */
 	public static final String IMAGE_PATH = "images/mark.gif";
 
-	/**
-	 * Instance.
-	 */
-//	private static MarkController instance = null;
+	private static boolean needInit = true;
+	private static Identifier imageId;
 
 	/**
 	 * Private constructor.
@@ -57,33 +55,29 @@ public final class MarkController extends AbstractNodeController {
 		super(netMapViewer);
 	}
 
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
-
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new MarkController(netMapViewer);
+	}
+
+	public static void init(Identifier creatorId) throws ApplicationException {
+		if(needInit ) {
+			imageId = NodeTypeController.getImageId(
+					creatorId, 
+					MarkController.IMAGE_NAME, 
+					MarkController.IMAGE_PATH);
+
+			MapPropertiesManager.setOriginalImage(
+				imageId,
+				new ImageIcon(MarkController.IMAGE_PATH).getImage());
+				
+			needInit = false;
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Image getImage(AbstractNode node) {
-		Identifier creatorId = LoginManager.getUserId();
-
-		Identifier imageId = NodeTypeController.getImageId(
-			creatorId, 
-			MarkController.IMAGE_NAME, 
-			MarkController.IMAGE_PATH);
-		if(MapPropertiesManager.getImage(imageId) == null)
-			MapPropertiesManager.setOriginalImage(
-				imageId, 
-				new ImageIcon(MarkController.IMAGE_PATH).getImage());
 		node.setImageId(imageId);
 		return super.getImage(node);
 	}
