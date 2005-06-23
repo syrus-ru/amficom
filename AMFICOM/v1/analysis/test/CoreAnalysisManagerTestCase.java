@@ -1,5 +1,5 @@
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.1 2005/06/01 07:20:19 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.2 2005/06/23 06:39:53 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ public class CoreAnalysisManagerTestCase extends TestCase {
         BellcoreStructure bs = FileOpenCommand.readTraceFromFile(file);
         AnalysisParameters ap = new AnalysisParameters(
                 "0.001;0.01;0.5;1.5;1.0;");
-        SimpleReflectogramEvent re[] =
-            CoreAnalysisManager.makeAnalysis(bs, ap).getSimpleEvents();
+        SimpleReflectogramEvent re[] = CoreAnalysisManager.
+        		performAnalysis(bs, ap).getMTAE().getSimpleEvents();
         System.out.println("NEvents=" + re.length);
         for (int i = 0; i < re.length; i++) {
             System.out.println(re[i].toString());
