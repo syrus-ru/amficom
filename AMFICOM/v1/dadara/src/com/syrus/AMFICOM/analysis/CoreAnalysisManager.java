@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.81 2005/06/21 09:33:31 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.82 2005/06/23 06:38:43 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.81 $, $Date: 2005/06/21 09:33:31 $
+ * @version $Revision: 1.82 $, $Date: 2005/06/23 06:38:43 $
  * @module
  */
 
@@ -380,7 +380,7 @@ public class CoreAnalysisManager
 //      System.out.println("makeAnalysis: "
 //          + "getDataAndLengthAndNoise: " + (t1-t0)
 //          + "; IA: " + (t2-t1) + "; fit: " + (t3-t2)
-//          + "; makeMTM: " + (t4-t3)
+//          + "; makeMTAE: " + (t4-t3)
 //          );
 
         return mtae;
