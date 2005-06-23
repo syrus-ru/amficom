@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.31 2005/06/21 12:52:14 bass Exp $
+ * $Id: LinkTypeController.java,v 1.32 2005/06/23 08:28:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/06/21 12:52:14 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/06/23 08:28:21 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -618,16 +618,15 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param userId пользователь
 	 * @param codename кодовое имя
 	 * @return тип линии
+	 * @throws CreateObjectException 
 	 */
 	private static PhysicalLinkType getPhysicalLinkType(
 			Identifier userId,
 			PhysicalLinkTypeSort sort,
-			String codename)
+			String codename) throws ApplicationException
 	{
 		PhysicalLinkType type = getPhysicalLinkType(codename);
-		if(type == null)
-		try
-		{
+		if(type == null) {
 			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 
 			type = PhysicalLinkType.createInstance(
@@ -644,15 +643,10 @@ public final class LinkTypeController extends AbstractLinkController {
 			StorableObjectPool.putStorableObject(type);
 			StorableObjectPool.flush(type.getId(), true);
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			type = null;
-		}
 		return type;
 	}
 
-	public static void createDefaults(Identifier creatorId)
+	public static void createDefaults(Identifier creatorId) throws ApplicationException
 	{
 		// make sure PhysicalLinkType.TUNNEL is created
 		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL);
