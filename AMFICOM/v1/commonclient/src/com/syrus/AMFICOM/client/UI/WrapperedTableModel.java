@@ -10,11 +10,12 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/06 14:52:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/23 11:17:15 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -38,6 +39,9 @@ public class WrapperedTableModel extends AbstractTableModel {
 	 */
 	private boolean[]			ascendings;
 
+	
+	private boolean[]			editables;
+	
 	/**
 	 * @param wrapper
 	 *            see {@link #wrapper}
@@ -55,6 +59,7 @@ public class WrapperedTableModel extends AbstractTableModel {
 	public WrapperedTableModel(final Wrapper controller, final List objectResourceList, final String[] keys) {
 		this.wrapper = controller;
 		this.ascendings = new boolean[keys.length];
+		this.editables = new boolean[keys.length];
 		this.keys = keys;
 		this.setValues(objectResourceList);
 	}
@@ -125,16 +130,24 @@ public class WrapperedTableModel extends AbstractTableModel {
 		}
 		return obj;
 	}
+	
+	public void setColumnEditable(final int columnIndex,
+	                              final boolean editable) {
+		
+		assert columnIndex < this.editables.length : ErrorMessages.NATURE_INVALID;
+			
+		this.editables[columnIndex] = editable;
+	}
 
 	public boolean isCellEditable(	final int rowIndex,
 	                              	final int columnIndex) {
-		final String key = this.keys[columnIndex];
-		return this.wrapper.isEditable(key);
+		return this.editables[columnIndex];
 	}
 	
 	public void setKeys(final String[] keys) {
 		this.keys = keys;
 		this.ascendings = new boolean[this.keys.length];
+		this.editables = new boolean[this.keys.length];
 		super.fireTableStructureChanged();
 	}
 
