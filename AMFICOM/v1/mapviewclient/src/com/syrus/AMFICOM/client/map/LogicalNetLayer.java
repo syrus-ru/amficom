@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.80 2005/06/22 13:21:53 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.81 2005/06/23 08:23:06 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,15 +30,21 @@ import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveNodeCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.AbstractNodeController;
+import com.syrus.AMFICOM.client.map.controllers.AlarmMarkerController;
+import com.syrus.AMFICOM.client.map.controllers.EventMarkerController;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapElementController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.controllers.MarkController;
+import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
+import com.syrus.AMFICOM.client.map.controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandList;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -64,7 +70,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.80 $, $Date: 2005/06/22 13:21:53 $
+ * @version $Revision: 1.81 $, $Date: 2005/06/23 08:23:06 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -169,9 +175,21 @@ public class LogicalNetLayer
 	
 	private MapViewController mapViewController;
 
-	public LogicalNetLayer(MapCoordinatesConverter converter, MapContext mapContext) {
+	public LogicalNetLayer(ApplicationContext aContext, MapCoordinatesConverter converter, MapContext mapContext) throws ApplicationException {
+		this.aContext = aContext;
 		this.converter = converter;
 		this.mapContext = mapContext;
+
+		Identifier userId = LoginManager.getUserId();
+
+		LinkTypeController.createDefaults(userId);
+		NodeTypeController.createDefaults(userId);
+
+		AlarmMarkerController.init(userId);
+		TopologicalNodeController.init(userId);
+		EventMarkerController.init(userId);
+		MarkController.init(userId);
+		MarkerController.init(userId);
 	}
 	
 	/**
@@ -197,28 +215,17 @@ public class LogicalNetLayer
 	}
 
 	/**
-	 * ”становить контекст приложени€.
-	 * @param aContext контекст приложени€
-	 */
-	public void setContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-
-		if(aContext != null) {
-			Identifier userId = LoginManager.getUserId();
-
-			LinkTypeController.createDefaults(userId);
-			NodeTypeController.createDefaults(userId);
-		}
-	}
-
-	/**
 	 * ѕолучить контекст приложени€.
 	 * @return контекст приложени€
 	 */
 	public ApplicationContext getContext()
 	{
 		return this.aContext;
+	}
+
+	public void setContext(ApplicationContext aContext)
+	{
+		this.aContext = aContext;
 	}
 
 	/**
