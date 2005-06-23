@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.21 2005/06/21 14:26:05 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.22 2005/06/23 10:52:13 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/21 14:26:05 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/23 10:52:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -72,8 +72,8 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		final Set<? extends StorableObject> soCharacteristics = database.retrieveByCondition(conditionString);
 		//@todo Find standart way
 		final Set<Characteristic> characteristics = new HashSet<Characteristic>(soCharacteristics.size());
-		for (final StorableObject storableObject : storableObjects) {
-			characteristics.add((Characteristic) storableObject);
+		for (final StorableObject soCharacteristic : soCharacteristics) {
+			characteristics.add((Characteristic) soCharacteristic);
 		}
 
 		final Map<Identifier, Set<Characteristic>> orderedCharacteristicsMap = new HashMap<Identifier, Set<Characteristic>>();
