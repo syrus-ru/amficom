@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.22 $, $Date: 2005/06/15 10:55:30 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/23 07:57:37 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -64,6 +64,7 @@ public class ModelFunction {
 	 * @deprecated use only for debugging
 	 * @return Internal data: shape ID
 	 */
+	@Deprecated
 	public int snoopShapeID()
 	{
 		return shapeID;
@@ -73,6 +74,7 @@ public class ModelFunction {
 	 * @deprecated Use only for debugging
 	 * @return Internal data: parameters array
 	 */
+	@Deprecated
 	public double[] snoopPars()
 	{
 		return pars;
@@ -197,6 +199,7 @@ public class ModelFunction {
 	 * 
 	 * @deprecated Undefined for currently used curves!
 	 */
+	@Deprecated
 	public double getWidth0() {
 		return nGetAttr("width", 0);
 	}
@@ -205,6 +208,7 @@ public class ModelFunction {
 	 * @return the height of the event front.
 	 * @deprecated Undefined for currently used curves!
 	 */
+	@Deprecated
 	public double getFrontHeight0() {
 		return nGetAttr("fHeight", 0);
 	}
@@ -361,7 +365,8 @@ public class ModelFunction {
     /**
      * @deprecated use {@link #createFitedAsBreakL(double[], int, int, double[], SimpleReflectogramEvent[])}
      */
-    public static ModelFunction createFitedAsBreakL(double[] y,
+    @Deprecated
+	public static ModelFunction createFitedAsBreakL(double[] y,
             int begin, int end,
             double[] noise)
     {

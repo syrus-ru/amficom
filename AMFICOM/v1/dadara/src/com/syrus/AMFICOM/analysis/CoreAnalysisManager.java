@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.82 2005/06/23 06:38:43 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.83 2005/06/23 07:57:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.82 $, $Date: 2005/06/23 06:38:43 $
+ * @version $Revision: 1.83 $, $Date: 2005/06/23 07:57:37 $
  * @module
  */
 
@@ -516,6 +516,7 @@ public class CoreAnalysisManager
 	 * @param ap параметры анализа
 	 * @return массив событий
 	 */
+	@Deprecated
 	public static ModelTraceAndEventsImpl makeAnalysis(
 			BellcoreStructure bs,
 			AnalysisParameters ap)

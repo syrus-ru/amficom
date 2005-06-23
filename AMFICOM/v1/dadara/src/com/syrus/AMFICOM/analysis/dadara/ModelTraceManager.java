@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.81 2005/06/15 15:04:17 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.82 2005/06/23 08:00:33 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.81 $, $Date: 2005/06/15 15:04:17 $
+ * @version $Revision: 1.82 $, $Date: 2005/06/23 08:00:33 $
  * @module
  */
 public class ModelTraceManager
@@ -992,6 +992,7 @@ implements DataStreamable, Cloneable
 	/**
 	 * @deprecated use getMTAE().getNEvents()
 	 */
+	@Deprecated
 	public int getNEvents()
 	{
 		return mtae.getNEvents();
@@ -999,6 +1000,7 @@ implements DataStreamable, Cloneable
 	/**
 	 * @deprecated use getMTAE().getSimpleEvent()
 	 */
+	@Deprecated
 	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
 		return mtae.getSimpleEvent(nEvent);
