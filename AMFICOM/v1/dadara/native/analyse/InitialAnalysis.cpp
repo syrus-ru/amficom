@@ -47,7 +47,6 @@ InitialAnalysis::InitialAnalysis(
 		nonReflectiveSize, rACrit, rSBig, rSSmall, lengthTillZero, externalNoise ? "present" : "absent");
 	fflush(logf);
 #endif
-
 #ifdef debug_lines
     cou = 0;
     for(int i=0; i<sz; i++){col[i] = -1;}
@@ -63,11 +62,9 @@ InitialAnalysis::InitialAnalysis(
     this->rACrit 				= rACrit;
     this->rSSmall				= rSSmall;
     this->rSBig					= rSBig;
-
-    int scaleB				= nonReflectiveSize;
+    int scaleB					= nonReflectiveSize;
 
     events = new ArrList();
-
 	if (lengthTillZero <= 0){
 		lastPoint = getLastPoint();
     }
@@ -76,16 +73,12 @@ InitialAnalysis::InitialAnalysis(
     }
 
 	noise	= new double[lastPoint + 1];
-
 #ifdef debug_VCL
 	debug_f_wlet = new double[lastPoint + 1];
 	f_tmp   = new double[lastPoint + 1];
 	type	= new double[data_length];
 #endif
-
-	// если массив с уровнем шума не задан извне,
-	// либо пользователь IA не указал его размер,
-	// считаем шум сами
+	// если массив с уровнем шума не задан извне, либо пользователь IA не указал его размер, считаем шум сами
 	if (externalNoise == 0 || lengthTillZero <= 0)
 	{	prf_b("IA: noise");
 		// вычисляем уровень шума
@@ -102,19 +95,13 @@ InitialAnalysis::InitialAnalysis(
 	}
 
 	prf_b("IA: analyse");
-
 	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
-
 	performAnalysis(f_wletTEMP, scaleB);
-
 	delete[] f_wletTEMP;
-
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(logf, "IA: f_wletTEMP deleted\n");
 #endif
-
 	prf_b("IA: done");
-
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(logf, "IA: resulting nEvents = %d\n", (int)(getEvents().getLength()));
 #endif
@@ -148,7 +135,7 @@ int InitialAnalysis::splashesOverlap(Splash &spl1, Splash &spl2) {
 	return
 		spl1.begin_thr + 1 < spl2.end_thr + delta && spl2.begin_thr + 1 < spl1.end_thr + delta;
 }
-
+//------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
 	int j;
 	for (j = 0; j < arrList.getLength(); j++) {
@@ -157,7 +144,7 @@ int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList
 	}
 	return -1;
 }
-
+//------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::findMaxOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
 	int j;
 	int ret = -1;
@@ -850,10 +837,12 @@ return;
     //	if(w_l>old_left && w_l<old_right ) { ev.begin = w_l;}
     //	if(w_r<old_right && w_r>old_left)  { ev.end = w_r;}
     //}
+/*
 #ifdef debug_VCL
     double wn = getWLetNorma(wlet_width);
   	performTransformationAndCenter(data, 0, lastPoint + 1, f_wlet, wlet_width, wn);
 #endif
+*/
 	//prf_b("correctSpliceCoords: return");
 }
 // -------------------------------------------------------------------------------------------------
