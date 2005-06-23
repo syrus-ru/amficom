@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.6 2005/06/21 14:58:43 bob Exp $
+ * $Id: ResourceKeys.java,v 1.7 2005/06/23 14:44:52 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/21 14:58:43 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/23 14:44:52 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -41,6 +41,8 @@ public interface ResourceKeys {
 	String	ICON_ADD_FILE							= "com.syrus.AMFICOM.icon.general.addfile";
 	String	ICON_REMOVE_FILE						= "com.syrus.AMFICOM.icon.general.removefile";
 	String	ICON_REFRESH						= "com.syrus.AMFICOM.icon.general.refresh";
+	String	ICON_ADD							= "com.syrus.AMFICOM.icon.general.add";
+	String	ICON_COMMIT							= "com.syrus.AMFICOM.icon.general.commit";
 
 	/* Mini Icons */
 	Object	ICON_MINI_FOLDER						= "com.syrus.AMFICOM.icon.mini.general.folder";
