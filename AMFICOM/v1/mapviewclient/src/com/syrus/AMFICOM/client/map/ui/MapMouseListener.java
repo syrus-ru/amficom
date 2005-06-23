@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.37 2005/06/22 13:21:53 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.38 2005/06/23 12:56:55 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.37 $, $Date: 2005/06/22 13:21:53 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2005/06/23 12:56:55 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -242,21 +242,17 @@ public final class MapMouseListener implements MouseListener
 				//Разница между центрами соседних по вертикали сегментов в пикселах		
 				int yDifferenceScr = (int)Math.round(imageSize.height * (1.D - ACTIVE_AREA_SIZE));		
 				
-				//Координаты текущего центра
-				Point curCenterScr = new Point(imageSize.width / 2,imageSize.height / 2);
-				DoublePoint curCenterSph = converter.convertScreenToMap(curCenterScr);
-				
 				//Считаем координаты центра следующего по горизонтали сегмента 
 				Point nextHorizCenterScr = new Point(imageSize.width / 2 + xDifferenceScr,imageSize.height / 2);		
 				DoublePoint nextHorizCenterSph = converter.convertScreenToMap(nextHorizCenterScr);
 				//Считаем расстояние между центрами
-				double xDifferenceSph = nextHorizCenterSph.getX() - curCenterSph.getX();
+				double xDifferenceSph = nextHorizCenterSph.getX() - center.getX();
 
 				//Считаем координаты центра следующего по горизонтали сегмента 
 				Point nextVertCenterScr = new Point(imageSize.width / 2,imageSize.height / 2 + yDifferenceScr);		
 				DoublePoint nextVertCenterSph = converter.convertScreenToMap(nextVertCenterScr);
 				//Считаем расстояние между центрами
-				double yDifferenceSph = nextVertCenterSph.getY() - curCenterSph.getY();
+				double yDifferenceSph = nextVertCenterSph.getY() - center.getY();
 								
 				//Перемещаем центр
 				//Географические координаты нового центра
