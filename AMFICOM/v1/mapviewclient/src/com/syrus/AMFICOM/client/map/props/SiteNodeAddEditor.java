@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -55,7 +55,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	private SiteCrossingPanel crossingPanel = new SiteCrossingPanel();
 	private JScrollPane crossingScrollPane = new JScrollPane();
 
-	private UgoPanel schemePanel = new UgoPanel(null);
+	private UgoTabbedPane schemePane = new UgoTabbedPane();
 
 	DefaultMutableTreeNode root = new DefaultMutableTreeNode("ќбъекты в узле");
 	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode("Ёлементы");
@@ -132,7 +132,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 		this.treeScrollPane.getViewport().add(this.elementsTree);
 		this.crossingScrollPane.getViewport().add(this.crossingPanel);
-		this.schemePanel.getGraph().setGraphEditable(false);
+		this.schemePane.getGraph().setGraphEditable(false);
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -199,9 +199,9 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.schemePanel.getGraph(), constraints);
+		this.jPanel.add(this.schemePane.getGraph(), constraints);
 		
-		this.schemePanel.getGraph().setVisible(false);
+		this.schemePane.getGraph().setVisible(false);
 		this.crossingScrollPane.setVisible(true);
 	}
 
@@ -324,14 +324,14 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		if(element != null) {
 			if(element instanceof SchemeElement) {
 				SchemeElement schemeElement = (SchemeElement )element;
-				this.schemePanel.getSchemeResource().setSchemeElement(schemeElement);
+				this.schemePane.getCurrentPanel().getSchemeResource().setSchemeElement(schemeElement);
 				this.crossingScrollPane.setVisible(false);
-				this.schemePanel.getGraph().setVisible(true);
+				this.schemePane.getGraph().setVisible(true);
 				sen = true;
 			}
 			else
 			if(element instanceof SchemeCableLink) {
-				this.schemePanel.getGraph().setVisible(false);
+				this.schemePane.getGraph().setVisible(false);
 				this.crossingScrollPane.setVisible(true);
 				
 				SchemeCableLink scl = (SchemeCableLink )element;
@@ -355,13 +355,13 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 //			}
 			//
 			else {
-				this.schemePanel.getGraph().setVisible(false);
+				this.schemePane.getGraph().setVisible(false);
 				this.crossingPanel.setCable(null);
 				this.crossingScrollPane.setVisible(true);
 			}
 		}
 		else {
-			this.schemePanel.getGraph().setVisible(false);
+			this.schemePane.getGraph().setVisible(false);
 			this.crossingPanel.setCable(null);
 			this.crossingScrollPane.setVisible(true);
 		}
@@ -371,10 +371,10 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	public void setObject(Object objectResource) {
 		this.site = (SiteNode )objectResource;
 		createTree(this.site);
-		this.schemePanel.getGraph().removeAll();
+		this.schemePane.getGraph().removeAll();
 		this.crossingPanel.setSite(this.site);
 
-		this.schemePanel.getGraph().setVisible(false);
+		this.schemePane.getGraph().setVisible(false);
 		this.crossingPanel.setCable(null);
 		this.crossingScrollPane.setVisible(true);
 
