@@ -12,4 +12,6 @@ test
 *.tar
 *.gz
 *.swp
+*.pl
+*.txt
 Makefile.inc
