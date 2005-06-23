@@ -1,5 +1,5 @@
 /**
- * $Id: MapVisualManager.java,v 1.6 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapVisualManager.java,v 1.7 2005/06/23 14:28:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,26 @@ import java.util.HashMap;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.Mark;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.mapview.AlarmMarker;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.EventMarker;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.Selection;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/23 14:28:17 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -31,41 +48,41 @@ public class MapVisualManager implements VisualManager {
 
 	static
 	{
-		vmMap.put(com.syrus.AMFICOM.mapview.MapView.class,
+		vmMap.put(MapView.class,
 				MapViewVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.map.Map.class,
+		vmMap.put(Map.class,
 				MapVisualManager.getInstance());
 
-		vmMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
+		vmMap.put(TopologicalNode.class,
 				TopologicalNodeVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.map.SiteNode.class,
+		vmMap.put(SiteNode.class,
 				SiteNodeVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.map.NodeLink.class,
+		vmMap.put(NodeLink.class,
 				NodeLinkVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
+		vmMap.put(PhysicalLink.class,
 			PhysicalLinkVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.map.Collector.class,
+		vmMap.put(Collector.class,
 				CollectorVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.map.Mark.class,
+		vmMap.put(Mark.class,
 				MarkVisualManager.getInstance());
 
-		vmMap.put(com.syrus.AMFICOM.mapview.VoidElement.class,
+		vmMap.put(VoidElement.class,
 				MapVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.CablePath.class,
+		vmMap.put(CablePath.class,
 				CablePathVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.MeasurementPath.class,
+		vmMap.put(MeasurementPath.class,
 				MeasurementPathVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.Marker.class,
+		vmMap.put(Marker.class,
 				MarkerVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.AlarmMarker.class,
+		vmMap.put(AlarmMarker.class,
 				MarkerVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.EventMarker.class,
+		vmMap.put(EventMarker.class,
 				MarkerVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.Selection.class,
+		vmMap.put(Selection.class,
 				SelectionVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.UnboundLink.class,
+		vmMap.put(UnboundLink.class,
 				UnboundLinkVisualManager.getInstance());
-		vmMap.put(com.syrus.AMFICOM.mapview.UnboundNode.class,
+		vmMap.put(UnboundNode.class,
 				UnboundNodeVisualManager.getInstance());
 	}
 
