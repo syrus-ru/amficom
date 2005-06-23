@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.26 2005/06/21 12:52:14 bass Exp $
+ * $Id: NodeTypeController.java,v 1.27 2005/06/23 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -42,8 +41,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/06/21 12:52:14 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/06/23 08:28:52 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -137,47 +136,31 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @param codename кодовое имя
 	 * @param filename файл пиктограммы
 	 * @return Идентификатор пиктограммы ({@link com.syrus.AMFICOM.resource.AbstractImageResource})
+	 * @throws ApplicationException 
 	 */
 	public static Identifier getImageId(
 			Identifier userId,
 			String codename, 
-			String filename) {
-		try {
-			StorableObjectCondition condition = new TypicalCondition(
-				String.valueOf(ImageResourceSort._FILE),
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.IMAGERESOURCE_CODE,
-				ImageResourceWrapper.COLUMN_SORT);
-			Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//			List bitMaps = Collections.EMPTY_LIST;
+			String filename) throws ApplicationException {
+		StorableObjectCondition condition = new TypicalCondition(
+			String.valueOf(ImageResourceSort._FILE),
+			OperationSort.OPERATION_EQUALS,
+			ObjectEntities.IMAGERESOURCE_CODE,
+			ImageResourceWrapper.COLUMN_SORT);
+		Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			for(Iterator it = bitMaps.iterator(); it.hasNext();) {
-				FileImageResource ir = (FileImageResource )it.next();
-				if(ir.getCodename().equals(codename))
-					return ir.getId();
-				
-			}
-		} catch(ApplicationException ex) {
-			ex.printStackTrace();
+		for(Iterator it = bitMaps.iterator(); it.hasNext();) {
+			FileImageResource ir = (FileImageResource )it.next();
+			if(ir.getCodename().equals(codename))
+				return ir.getId();
 		}
-		try {
-			FileImageResource ir = FileImageResource.createInstance(
-					userId,
-					filename);
-			ir.setCodename(codename);
-			StorableObjectPool.putStorableObject(ir);
-			StorableObjectPool.flush(ir.getId(), true);
-			return ir.getId();
-		} catch(CreateObjectException e) {
-			e.printStackTrace();
-			return null;
-		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
-			return null;
-		} catch(ApplicationException e) {
-			e.printStackTrace();
-			return null;
-		}
+
+		FileImageResource ir = FileImageResource.createInstance(
+				userId,
+				filename);
+		ir.setCodename(codename);
+		StorableObjectPool.flush(ir.getId(), true);
+		return ir.getId();
 	}
 
 	/**
@@ -214,14 +197,15 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @param userId пользователь
 	 * @param codename кодовое имя
 	 * @return тип сетевого узла
+	 * @throws ApplicationException 
+	 * @throws CreateObjectException 
 	 */
 	private static SiteNodeType getSiteNodeType(
 			Identifier userId,
 			SiteNodeTypeSort sort,
-			String codename) {
+			String codename) throws ApplicationException {
 		SiteNodeType type = getSiteNodeType(codename);
-		if(type == null)
-			try {
+		if(type == null) {
 			type = SiteNodeType.createInstance(
 				userId,
 				sort,
@@ -236,14 +220,11 @@ public class NodeTypeController extends AbstractNodeController {
 				
 			StorableObjectPool.putStorableObject(type);
 			StorableObjectPool.flush(type.getId(), true);
-		} catch(Exception e) {
-			e.printStackTrace();
-			type = null;
 		}
 		return type;
 	}
 
-	public static void createDefaults(Identifier creatorId) {
+	public static void createDefaults(Identifier creatorId) throws ApplicationException {
 		// make sure SiteNodeType.ATS is created
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS);
 		// make sure SiteNodeType.BUILDING is created
