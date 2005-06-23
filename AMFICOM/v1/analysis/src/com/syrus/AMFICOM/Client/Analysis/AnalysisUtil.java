@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -48,9 +48,9 @@ public class AnalysisUtil
 	{ // non-instantiable
 	}
 
-	public static ParameterType getParameterType(String codename, DataType dataType) throws ApplicationException {
+	public static ParameterType getParameterType(ParameterTypeCodename codename, DataType dataType) throws ApplicationException {
 		TypicalCondition pTypeCondition = new TypicalCondition(
-				codename,
+				codename.toString(),
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
@@ -134,7 +134,7 @@ public class AnalysisUtil
 		for (int i = 0; i < params.length; i++)
 		{
 			ParameterType type = (ParameterType)params[i].getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_MTM))
+			if (type.getCodename().equals(ParameterTypeCodename.DADARA_ETALON_MTM))
 			{
 				ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
@@ -142,12 +142,12 @@ public class AnalysisUtil
 				Heap.setMTMEtalon(mtm);
 				Heap.setEtalonEtalonMetas(metas);
 			}
-            else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON))
+            else if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA_ETALON))
             {
                 bsEt = new BellcoreReader().getData(params[i].getValue());
                 Heap.setBSEtalonTrace(bsEt);
                 bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // XXX: externalized string
-            } else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL))
+            } else if (type.getCodename().equals(ParameterTypeCodename.DADARA_MIN_TRACE_LEVEL))
             {
                 try {
                     Heap.setMinTraceLevel(new ByteArray(params[i].getValue()).toDouble());
@@ -169,7 +169,7 @@ public class AnalysisUtil
 
 		{
 			ParameterType ptype = getParameterType(
-				ParameterTypeCodenames.DADARA_CRITERIA, DataType.DATA_TYPE_RAW);
+				ParameterTypeCodename.DADARA_CRITERIA, DataType.DATA_TYPE_RAW);
 			params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(analysisParams));
 		}
@@ -191,17 +191,17 @@ public class AnalysisUtil
 	{
 		Parameter[] params = new Parameter[3];
 
-		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
+		ParameterType ptype = getParameterType(ParameterTypeCodename.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
 		params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(mtm));
 
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
-		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
+		ptype = getParameterType(ParameterTypeCodename.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
 		params[1] = Parameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
 
-        ptype = getParameterType(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL, DataType.DATA_TYPE_DOUBLE);
+        ptype = getParameterType(ParameterTypeCodename.DADARA_MIN_TRACE_LEVEL, DataType.DATA_TYPE_DOUBLE);
         params[2] = Parameter.createInstance(ptype,
                 ByteArray.toByteArray(Heap.getMinTraceLevel()));
 
@@ -222,7 +222,7 @@ public class AnalysisUtil
         for (int i = 0; i < params.length; i++)
         {
             ParameterType p = (ParameterType)params[i].getType();
-            if (p.getCodename().equals(ParameterTypeCodenames.DADARA_CRITERIA))
+            if (p.getCodename().equals(ParameterTypeCodename.DADARA_CRITERIA))
         analysisParams = (AnalysisParameters)
         	DataStreamableUtil.readDataStreamableFromBA(
         		params[i].getValue(),
@@ -230,7 +230,7 @@ public class AnalysisUtil
         }
         if (analysisParams == null)
         throw new DataFormatException(
-                "No" + ParameterTypeCodenames.DADARA_CRITERIA);
+                "No" + ParameterTypeCodename.DADARA_CRITERIA);
 		Heap.setMinuitAnalysisParams(
 			(AnalysisParameters)analysisParams.clone());
 		Heap.setMinuitInitialParams(analysisParams);
