@@ -1,5 +1,5 @@
 /**
- * $Id: NamedObjectWrapper.java,v 1.2 2005/06/22 08:43:46 krupenn Exp $
+ * $Id: NamedObjectWrapper.java,v 1.3 2005/06/23 08:15:28 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -115,6 +115,7 @@ public class NamedObjectWrapper implements Wrapper {
 	}
 
 	public void setValue(Object object, final String key, final Object value) {
+		//empty
 	}
 
 	public String getKey(final int index) {
@@ -122,8 +123,7 @@ public class NamedObjectWrapper implements Wrapper {
 	}
 
 	public Object getPropertyValue(final String key) {
-		Object result = "";
-		return result;
+		return "";
 	}
 
 	public void setPropertyValue(
@@ -134,7 +134,6 @@ public class NamedObjectWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		Class clazz = String.class;
-		return clazz;
+		return String.class;
 	}
 }
