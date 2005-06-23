@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.9 2005/06/22 10:16:05 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.10 2005/06/23 06:56:56 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,28 +10,58 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/23 06:56:56 $
  * @module schemeclient_v1
  */
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
+import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.Schematics.UI.ElementsNavigatorPanel;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.WindowArranger;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.client_.scheme.ui.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
+import com.syrus.AMFICOM.filter.UI.FilterPanel;
+import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 public class SchemeEditorMainFrame extends AbstractMainFrame {
@@ -50,7 +80,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	
 	UIDefaults frames;
 
-	public SchemeEditorMainFrame(ApplicationContext aContext) {
+	public SchemeEditorMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelSchematics.getString("SchemeEditorTitle"), new SchemeEditorMenuBar(aContext.getApplicationModel()), new SchemeEditorToolBar());
 
 		this.addComponentListener(new ComponentAdapter() {
@@ -130,16 +160,20 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				treeFrame.setClosable(true);
 				treeFrame.setResizable(true);
 				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-				treeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-						"images/general.gif")));
+				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
+				treeFrame.setSize(new Dimension(100,200));
+				treeFrame.setMinimumSize(treeFrame.getSize());
+				treeFrame.setPreferredSize(treeFrame.getSize());
+
 				
 				SchemeTreeModel model = new SchemeTreeModel(SchemeEditorMainFrame.this.aContext);
-				ElementsNavigatorPanel utp = new ElementsNavigatorPanel(SchemeEditorMainFrame.this.aContext,
-						dispatcher, model);
+				PopulatableIconedNode root = new PopulatableIconedNode(model, "root", "Сеть");
+				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(root, aContext), new FilterPanel());
+
 				treeFrame.getContentPane().setLayout(new BorderLayout());
-				treeFrame.getContentPane().add(utp, BorderLayout.CENTER);
-				
+				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
+
 				desktopPane.add(treeFrame);
 				return treeFrame;
 			}

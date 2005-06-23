@@ -4,12 +4,17 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.Schematics.Elements.SaveComponentDialog;
-import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.SaveComponentDialog;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
@@ -97,8 +102,9 @@ public class ComponentSaveCommand extends AbstractCommand {
 			proto.setSchemeCell(schemeIr);
 			proto.setUgoCell(ugoIr);
 			
-			SaveComponentDialog frame = new SaveComponentDialog(aContext);
-			frame.init(proto);
+			//XXX create new save SaveComponentDialog
+//			SaveComponentDialog frame = new SaveComponentDialog(aContext);
+//			frame.init(proto);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 		}
