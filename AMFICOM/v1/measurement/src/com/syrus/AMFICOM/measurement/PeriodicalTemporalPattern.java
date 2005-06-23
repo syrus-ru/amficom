@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.10 2005/06/20 17:29:55 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.11 2005/06/23 11:54:10 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/20 17:29:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/23 11:54:10 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -74,8 +75,9 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		PeriodicalTemporalPattern_Transferable ptpt = (PeriodicalTemporalPattern_Transferable)transferable;
+		final PeriodicalTemporalPattern_Transferable ptpt = (PeriodicalTemporalPattern_Transferable)transferable;
 		super.fromTransferable(ptpt.header);
 		this.period = ptpt.period;
 		
@@ -112,6 +114,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.period > 0;
 	}
@@ -122,7 +125,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	protected void fillTimes() {
 		long time = this.startTime;
 		for(long i=0; time <= this.endTime; i++) {
-			Date date = new Date(time);
+			final Date date = new Date(time);
 			this.times.add(date);
 			time += this.period;
 		}
@@ -131,8 +134,9 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	/**

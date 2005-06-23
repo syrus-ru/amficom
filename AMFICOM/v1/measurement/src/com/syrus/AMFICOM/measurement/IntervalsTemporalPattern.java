@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.23 2005/06/20 17:29:55 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.24 2005/06/23 11:54:10 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -40,8 +41,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/06/20 17:29:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/23 11:54:10 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -57,14 +58,14 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 	private String name;
 
-	private SortedMap undoIntervalsAbstractTemporalPatternMap;
-	private SortedMap undoIntervalsDuration;
+	private SortedMap<Long, Identifier> undoIntervalsAbstractTemporalPatternMap;
+	private SortedMap<Long, Long> undoIntervalsDuration;
 
 	IntervalsTemporalPattern(final Identifier id,
 			final Identifier creatorId,
 			final long version,
-			final SortedMap intervalsAbstractTemporalPatternMap,
-			final SortedMap intervalsDuration) {
+			final SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap,
+			final SortedMap<Long, Long> intervalsDuration) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version);
 		this.setIntervalsAbstractTemporalPatternMap0(intervalsAbstractTemporalPatternMap);
 		this.setIntervalsDuration0(intervalsDuration);
@@ -79,8 +80,8 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	 * @param intervalsDuration
 	 */
 	public static IntervalsTemporalPattern createInstance(final Identifier creatorId,
-			final SortedMap intervalsAbstractTemporalPatternMap,
-			final SortedMap intervalsDuration) throws CreateObjectException {
+			final SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap,
+			final SortedMap<Long, Long> intervalsDuration) throws CreateObjectException {
 
 		try {
 			IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE),
@@ -105,8 +106,8 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			final Identifier modifierId,
 			final long version,
 			final String name,
-			final SortedMap intervalsAbstractTemporalPatternMap,
-			final SortedMap intervalsDuration) {
+			final SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap,
+			final SortedMap<Long, Long> intervalsDuration) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.setName(name);
 		this.setIntervalsAbstractTemporalPatternMap0(intervalsAbstractTemporalPatternMap);
@@ -122,12 +123,13 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		}
 	}
 
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		IntervalsTemporalPattern_Transferable itpt = (IntervalsTemporalPattern_Transferable) transferable;
 		super.fromTransferable(itpt.header);
 
 		{
-			final SortedMap map = new TreeMap();
+			final SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>();
 			for (int i = 0; i < itpt.intervals_temporal_pattern_id.length; i++) {
 				map.put(new Long(itpt.intervals_temporal_pattern_id[i].ms),
 						new Identifier(itpt.intervals_temporal_pattern_id[i].temporal_pattern_id));
@@ -136,7 +138,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		}
 
 		{
-			final SortedMap map = new TreeMap();
+			final SortedMap<Long, Long> map = new TreeMap<Long, Long>();
 			for (int i = 0; i < itpt.intervals_duration.length; i++) {
 				map.put(new Long(itpt.intervals_duration[i].ms), new Long(itpt.intervals_duration[i].duration));
 			}
@@ -145,6 +147,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 	}
 
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.intervalsAbstractTemporalPatternMap != null;
 	}
@@ -156,10 +159,10 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		Date previousDate = null;
 		final Date startDate = new Date(this.startTime);
 
-		final java.util.Set keys = this.intervalsAbstractTemporalPatternMap.keySet();
-		for (Iterator it = keys.iterator(); it.hasNext();) {
-			final Long milliseconds = (Long) it.next();
-			final Identifier abstractTemporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(milliseconds);
+		final Set<Long> keys = this.intervalsAbstractTemporalPatternMap.keySet();
+		for (final Iterator<Long> it = keys.iterator(); it.hasNext();) {
+			final Long milliseconds = it.next();
+			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(milliseconds);
 
 			AbstractTemporalPattern temporalPattern = null;
 			if (abstractTemporalPatternId != null && !abstractTemporalPatternId.isVoid()) {
@@ -175,7 +178,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			// milliseconds, Log.FINEST);
 			long localStartTime = startDate.getTime() + milliseconds.longValue();
 
-			Date localStartDate = new Date(localStartTime);
+			final Date localStartDate = new Date(localStartTime);
 
 			// Log.debugMessage("IntervalsTemporalPattern.fillTimes | previousDate:" +
 			// previousDate + " ,\n\t localStartDate:" + localStartDate + ",
@@ -228,18 +231,18 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	/**
 	 * @param intervalsAbstractTemporalPatternMap
 	 */
-	protected void setIntervalsAbstractTemporalPatternMap0(SortedMap intervalsAbstractTemporalPatternMap) {
+	protected void setIntervalsAbstractTemporalPatternMap0(final SortedMap intervalsAbstractTemporalPatternMap) {
 		/* save state before */
 		this.saveState();
 
 		if (this.intervalsAbstractTemporalPatternMap == null) {
-			this.intervalsAbstractTemporalPatternMap = new TreeMap();
+			this.intervalsAbstractTemporalPatternMap = new TreeMap<Long, Identifier>();
 		} else {
 			this.intervalsAbstractTemporalPatternMap.clear();
 		}
 
 		if (intervalsAbstractTemporalPatternMap != null) {
-			for (Iterator it = intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+			for (final Iterator it = intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
 				Long ms = (Long) it.next();
 				Identifier abstractTemporalPatternId = (Identifier) intervalsAbstractTemporalPatternMap.get(ms);
 				this.addIntervalItem0(ms, abstractTemporalPatternId);
@@ -249,12 +252,12 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 	}
 
-	protected void setIntervalsDuration0(SortedMap intervalsDuration) {
+	protected void setIntervalsDuration0(final SortedMap<Long, Long> intervalsDuration) {
 		/* save state before */
 		this.saveState();
 
 		if (this.intervalsDuration == null) {
-			this.intervalsDuration = new TreeMap();
+			this.intervalsDuration = new TreeMap<Long, Long>();
 		} else {
 			this.intervalsDuration.clear();
 		}
@@ -264,7 +267,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		}
 	}
 
-	public void addIntervalItems(final Map offsetId, final Map<?, Long> durations) throws IllegalDataException {
+	public void addIntervalItems(final Map<Long, Identifier> offsetId, final Map<?, Long> durations) throws IllegalDataException {
 		/* save state before */
 		this.saveState();
 
@@ -273,25 +276,25 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		}
 
 		if (this.intervalsAbstractTemporalPatternMap == null) {
-			this.intervalsAbstractTemporalPatternMap = new TreeMap();
+			this.intervalsAbstractTemporalPatternMap = new TreeMap<Long, Identifier>();
 		}
 
 		long minMs = 0;
 
 		{
-			Set idSet = this.intervalsAbstractTemporalPatternMap.keySet();
-			for (Iterator it = offsetId.keySet().iterator(); it.hasNext();) {
-				Long ms = (Long) it.next();
+			final Set<Long> idSet = this.intervalsAbstractTemporalPatternMap.keySet();
+			for (final Iterator<Long> it = offsetId.keySet().iterator(); it.hasNext();) {
+				Long ms = it.next();
 				long l = ms.longValue();
 				if (l < minMs) {
 					minMs = l;
 				}
-				Long duration = (Long) durations.get(ms);
+				Long duration = durations.get(ms);
 				long dur = duration != null ? duration.longValue() : 0;
 
-				for (Iterator iterator = idSet.iterator(); iterator.hasNext();) {
-					Long offset = (Long) iterator.next();
-					Long duration2 = (Long) this.intervalsDuration.get(ms);
+				for (final Iterator<Long> iterator = idSet.iterator(); iterator.hasNext();) {
+					Long offset = iterator.next();
+					Long duration2 = this.intervalsDuration.get(ms);
 					long l3 = offset.longValue();
 					long duration3 = duration2 != null ? duration2.longValue() : 0;
 					// Log.debugMessage("IntervalsTemporalPattern.addIntervalItems | 1: "
@@ -308,33 +311,33 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			}
 		}
 
-		for (Iterator it = offsetId.keySet().iterator(); it.hasNext();) {
-			Long ms = (Long) it.next();
-			Identifier temporalPatternId = (Identifier) offsetId.get(ms);
+		for (final Iterator<Long> it = offsetId.keySet().iterator(); it.hasNext();) {
+			final Long ms = it.next();
+			final Identifier temporalPatternId = offsetId.get(ms);
 			this.intervalsAbstractTemporalPatternMap.put(ms, temporalPatternId == null ? Identifier.VOID_IDENTIFIER : temporalPatternId);
 			this.intervalsDuration.put(ms, durations.get(ms));
 		}
 
 		if (minMs < 0) {
-			this.moveIntervalItems0(new TreeSet(this.intervalsAbstractTemporalPatternMap.keySet()), -minMs);
+			this.moveIntervalItems0(new TreeSet<Long>(this.intervalsAbstractTemporalPatternMap.keySet()), -minMs);
 		}
 
 		super.markAsChanged();
 	}
 
 	public final void printStructure() {
-		for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-			Long ms = (Long) it.next();
-			Identifier abstractTemporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(ms);
+		for (final Iterator<Long> it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+			final Long ms = it.next();
+			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
 			Log.debugMessage("IntervalsTemporalPattern.printStructure | ms:"
 					+ ms.longValue()
 					+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Log.FINEST);
 		}
 
 		if (this.undoIntervalsAbstractTemporalPatternMap != null) {
-			for (Iterator it = this.undoIntervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-				Long ms = (Long) it.next();
-				Identifier abstractTemporalPatternId = (Identifier) this.undoIntervalsAbstractTemporalPatternMap.get(ms);
+			for (final Iterator<Long> it = this.undoIntervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+				final Long ms = it.next();
+				final Identifier abstractTemporalPatternId = this.undoIntervalsAbstractTemporalPatternMap.get(ms);
 				Log.debugMessage("IntervalsTemporalPattern.printStructure | UNDO ms:"
 						+ ms.longValue()
 						+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Log.FINEST);
@@ -365,9 +368,9 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	}
 
 	public final Identifier getTemporalPatternId(final long milliseconds) {
-		Long ms = this.getStartedTime(milliseconds);
+		final Long ms = this.getStartedTime(milliseconds);
 		if (ms != null) {
-			return (Identifier) this.intervalsAbstractTemporalPatternMap.get(ms);
+			return this.intervalsAbstractTemporalPatternMap.get(ms);
 		}
 		return null;
 	}
@@ -379,12 +382,12 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	public final Long getStartedTime(final Long milliseconds) {
 		Long ms = null;
 		long long2 = milliseconds.longValue();
-		Set keys = this.intervalsAbstractTemporalPatternMap.keySet();
+		final Set<Long> keys = this.intervalsAbstractTemporalPatternMap.keySet();
 		if (keys.contains(milliseconds)) {
 			ms = milliseconds;
 		} else {
-			for (Iterator it = keys.iterator(); it.hasNext();) {
-				Long time = (Long) it.next();
+			for (final Iterator<Long> it = keys.iterator(); it.hasNext();) {
+				final Long time = it.next();
 				if (ms != null && ms.longValue() < long2 && long2 < time.longValue()) {
 					break;
 				}
@@ -399,9 +402,9 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		Long nextMs = null;
 		long ms = milliseconds.longValue();
 		{
-			SortedMap futureMap = this.intervalsAbstractTemporalPatternMap.tailMap(milliseconds);
-			for (Iterator it = futureMap.keySet().iterator(); it.hasNext();) {
-				nextMs = (Long) it.next();
+			final SortedMap<Long, Identifier> futureMap = this.intervalsAbstractTemporalPatternMap.tailMap(milliseconds);
+			for (final Iterator<Long> it = futureMap.keySet().iterator(); it.hasNext();) {
+				nextMs = it.next();
 				if (nextMs.longValue() == ms) {
 					nextMs = null;
 				} else {
@@ -424,7 +427,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		}
 
 		if (this.intervalsAbstractTemporalPatternMap == null) {
-			this.intervalsAbstractTemporalPatternMap = new TreeMap();
+			this.intervalsAbstractTemporalPatternMap = new TreeMap<Long, Identifier>();
 		}
 
 		this.intervalsAbstractTemporalPatternMap.put(milliseconds, temporalPatternId == null ? Identifier.VOID_IDENTIFIER
@@ -436,10 +439,11 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public Set getDependencies() {
-		java.util.Set dependencies = new HashSet();
-		for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-			Identifier abstractTemporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(it.next());
+	@Override
+	public Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		for (final Iterator<Long> it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+			Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(it.next());
 			dependencies.add(abstractTemporalPatternId);
 		}
 		return dependencies;
@@ -459,9 +463,9 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			final Set<Long> keys = this.intervalsAbstractTemporalPatternMap.keySet();
 			intervalTemporalPatternsIdT = new ITP_Interval_Temporal_Pattern_Id[keys.size()];
 			int i = 0;
-			for (Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
-				Long ms = it.next();
-				Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
+			for (final Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
+				final Long ms = it.next();
+				final Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
 				intervalTemporalPatternsIdT[i] = new ITP_Interval_Temporal_Pattern_Id(ms.longValue(),
 						temporalPatternId.getTransferable());
 			}
@@ -471,10 +475,10 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			if (this.intervalsDuration == null) {
 				durationsT = new ITP_Interval_Duration[0];
 			} else {
-				Set<Long> keys = this.intervalsDuration.keySet();
+				final Set<Long> keys = this.intervalsDuration.keySet();
 				durationsT = new ITP_Interval_Duration[keys.size()];
 				int i = 0;
-				for (Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
+				for (final Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
 					Long ms = it.next();
 					Long duration = this.intervalsDuration.get(ms);
 					durationsT[i] = new ITP_Interval_Duration(ms.longValue(), duration.longValue());
@@ -486,23 +490,23 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		return new IntervalsTemporalPattern_Transferable(super.getHeaderTransferable(), intervalTemporalPatternsIdT, durationsT);
 	}
 
-	public SortedMap getIntervalsAbstractTemporalPatternMap() {
+	public SortedMap<Long, Identifier> getIntervalsAbstractTemporalPatternMap() {
 		return Collections.unmodifiableSortedMap(this.intervalsAbstractTemporalPatternMap);
 	}
 
-	public void setIntervalsAbstractTemporalPatternMap(final SortedMap intervalsAbstractTemporalPatternMap) {
+	public void setIntervalsAbstractTemporalPatternMap(final SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap) {
 		/* save state before */
 		this.saveState();
 		this.setIntervalsAbstractTemporalPatternMap0(intervalsAbstractTemporalPatternMap);
 		this.markAsChanged();
 	}
 
-	public SortedMap getIntervalsDuration() {
+	public SortedMap<Long, Long> getIntervalsDuration() {
 		return Collections.unmodifiableSortedMap(this.intervalsDuration);
 	}
 
 	public void moveAllItems(long offset) throws IllegalDataException {
-		this.moveIntervalItems(new TreeSet(this.intervalsAbstractTemporalPatternMap.keySet()), offset);
+		this.moveIntervalItems(new TreeSet<Long>(this.intervalsAbstractTemporalPatternMap.keySet()), offset);
 	}
 
 	/**
@@ -513,26 +517,26 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	 *          to future if <code> offset &gt; 0 </code>, to past otherwise
 	 * @throws IllegalDataException
 	 */
-	public void moveIntervalItems(final java.util.Set offsets, final long offset) throws IllegalDataException {
+	public void moveIntervalItems(final Set<Long> offsets, final long offset) throws IllegalDataException {
 		/* save state before */
 		this.saveState();
 		moveIntervalItems0(offsets, offset);
 	}
 
-	protected void moveIntervalItems0(final java.util.Set offsets, final long offset) throws IllegalDataException {
+	protected void moveIntervalItems0(final Set<Long> offsets, final long offset) throws IllegalDataException {
 		if (super.times != null) {
 			super.times.clear();
 		}
 
 		long minOffset = 0;
 
-		for (Iterator it = offsets.iterator(); it.hasNext();) {
-			Long ms = (Long) it.next();
-			long ms1 = ms.longValue();
+		for (final Iterator<Long> it = offsets.iterator(); it.hasNext();) {
+			final Long ms = it.next();
+			final long ms1 = ms.longValue();
 			Long newMs = new Long(ms1 + offset);
 
-			Long duration = (Long) this.intervalsDuration.get(ms);
-			Identifier temporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(ms);
+			Long duration = this.intervalsDuration.get(ms);
+			Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
 			this.intervalsAbstractTemporalPatternMap.remove(ms);
 			this.intervalsAbstractTemporalPatternMap.put(newMs, temporalPatternId);
 			if (duration != null) {
@@ -546,11 +550,11 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		}
 
 		if (minOffset < 0) {
-			Map map = new HashMap();
-			Map durationMap = new HashMap();
-			for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-				Long ms = (Long) it.next();
-				Long newMs = new Long(ms.longValue() - minOffset);
+			final Map<Long, Identifier> map = new HashMap<Long, Identifier>();
+			final Map<Long, Long> durationMap = new HashMap<Long, Long>();
+			for (final Iterator<Long> it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+				final Long ms = it.next();
+				final Long newMs = new Long(ms.longValue() - minOffset);
 				map.put(newMs, this.intervalsAbstractTemporalPatternMap.get(ms));
 				durationMap.put(newMs, this.intervalsDuration.get(ms));
 			}
@@ -566,14 +570,14 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 	private void chechPositions() throws IllegalDataException {
 		Long prev = null;
-		for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
+		for (final Iterator<Long> it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+			final Long offset = it.next();
 			if (prev == null) {
 				prev = offset;
 				continue;
 			}
-			Long durationL = (Long) this.intervalsDuration.get(prev);
-			long duration = durationL != null ? durationL.longValue() : 0;
+			final Long durationL = this.intervalsDuration.get(prev);
+			final long duration = durationL != null ? durationL.longValue() : 0;
 
 			if (offset.longValue() < prev.longValue() + duration) {
 				this.undo();
@@ -593,7 +597,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 		if (this.intervalsAbstractTemporalPatternMap != null) {
 			if (this.undoIntervalsAbstractTemporalPatternMap == null) {
-				this.undoIntervalsAbstractTemporalPatternMap = new TreeMap();
+				this.undoIntervalsAbstractTemporalPatternMap = new TreeMap<Long, Identifier>();
 			} else {
 				this.undoIntervalsAbstractTemporalPatternMap.clear();
 			}
@@ -603,7 +607,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 		if (this.intervalsDuration != null) {
 			if (this.undoIntervalsDuration == null) {
-				this.undoIntervalsDuration = new TreeMap();
+				this.undoIntervalsDuration = new TreeMap<Long, Long>();
 			} else {
 				this.undoIntervalsDuration.clear();
 			}
@@ -623,7 +627,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			// Log.debugMessage("IntervalsTemporalPattern.undo | ", Log.FINEST);
 			this.printStructure();
 
-			SortedMap map = new TreeMap(this.intervalsAbstractTemporalPatternMap);
+			SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>(this.intervalsAbstractTemporalPatternMap);
 
 			this.intervalsAbstractTemporalPatternMap.clear();
 
@@ -631,7 +635,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 				this.intervalsAbstractTemporalPatternMap.putAll(this.undoIntervalsAbstractTemporalPatternMap);
 			}
 
-			SortedMap map2 = new TreeMap(this.intervalsDuration);
+			SortedMap<Long, Long> map2 = new TreeMap<Long, Long>(this.intervalsDuration);
 
 			this.intervalsDuration.clear();
 			if (this.undoIntervalsDuration != null) {
@@ -663,7 +667,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	 * @param offsets
 	 * @throws CreateObjectException
 	 */
-	public void joinIntervalItems(SortedSet offsets) throws CreateObjectException {
+	public void joinIntervalItems(final SortedSet<Long> offsets) throws CreateObjectException {
 		if (offsets == null || offsets.size() <= 1)
 			return;
 
@@ -680,8 +684,8 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 		Long lastOffset = null;
 
-		for (Iterator it = offsets.iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
+		for (final Iterator<Long> it = offsets.iterator(); it.hasNext();) {
+			final Long offset = it.next();
 			if (!initedFirst) {
 				initedFirst = true;
 				firstOffset = offset;
@@ -692,14 +696,14 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 		long lastTime = lastOffset.longValue();
 
-		SortedMap offsetIds = new TreeMap();
-		SortedMap offsetDuration = new TreeMap();
+		final SortedMap<Long, Identifier> offsetIds = new TreeMap<Long, Identifier>();
+		final SortedMap<Long, Long> offsetDuration = new TreeMap<Long, Long>();
 
 		long duration = 0;
 
-		for (Iterator it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
-			long offsetMs = offset.longValue();
+		for (final Iterator<Long> it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
+			final Long offset = it.next();
+			final long offsetMs = offset.longValue();
 
 			if (offsetMs < firstTime)
 				continue;
@@ -707,9 +711,9 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			if (offsetMs > lastTime)
 				break;
 
-			long newOffset = offset.longValue() - firstTime;
-			Long newMs = new Long(newOffset);
-			Long durationLong = (Long) this.intervalsDuration.get(offset);
+			final long newOffset = offset.longValue() - firstTime;
+			final Long newMs = new Long(newOffset);
+			final Long durationLong = this.intervalsDuration.get(offset);
 			offsetIds.put(newMs, this.intervalsAbstractTemporalPatternMap.get(offset));
 
 			/* remove it */
@@ -720,14 +724,14 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			duration = newOffset + (durationLong != null ? durationLong.longValue() : 0);
 		}
 
-		IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(this.modifierId,
+		final IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(this.modifierId,
 				offsetIds,
 				offsetDuration);
 		this.intervalsAbstractTemporalPatternMap.put(firstOffset, intervalsTemporalPattern.getId());
 		this.intervalsDuration.put(firstOffset, new Long(duration));
 	}
 
-	public void setIntervalsDuration(final SortedMap intervalsDuration) {
+	public void setIntervalsDuration(final SortedMap<Long, Long> intervalsDuration) {
 		this.setIntervalsDuration0(intervalsDuration);
 		this.markAsChanged();
 	}
@@ -740,7 +744,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		this.name = name;
 	}
 
-	public void disjoinIntervalItems(SortedSet offsets) throws ApplicationException {
+	public void disjoinIntervalItems(SortedSet<Long> offsets) throws ApplicationException {
 		if (offsets == null || offsets.isEmpty())
 			return;
 
@@ -751,21 +755,21 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			super.times.clear();
 		}
 
-		for (Iterator it = offsets.iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
-			long ms = offset.longValue();
+		for (Iterator<Long> it = offsets.iterator(); it.hasNext();) {
+			final Long offset = it.next();
+			final long ms = offset.longValue();
 			// Log.debugMessage("IntervalsTemporalPattern.disjoinIntervalItems | ms "
 			// + ms, Log.FINEST);
-			Identifier temporalPatternId = (Identifier) this.intervalsAbstractTemporalPatternMap.get(offset);
+			final Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(offset);
 			if (temporalPatternId.isVoid())
 				continue;
 			this.intervalsAbstractTemporalPatternMap.remove(offset);
-			Long duration = (Long) this.intervalsDuration.get(offset);
+			final Long duration = this.intervalsDuration.get(offset);
 			this.intervalsDuration.remove(offset);
-			short major = temporalPatternId.getMajor();
+			final short major = temporalPatternId.getMajor();
 			switch (major) {
 				case ObjectEntities.INTERVALSTEMPORALPATTERN_CODE:
-					IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
+					final IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
 					SortedMap<?, Identifier> intervalsAbstractTemporalPatternMap2 = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
 					SortedMap<?, Long> intervalsDuration2 = intervalsTemporalPattern.getIntervalsDuration();

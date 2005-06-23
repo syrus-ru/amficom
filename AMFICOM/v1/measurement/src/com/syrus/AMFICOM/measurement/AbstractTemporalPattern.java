@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractTemporalPattern.java,v 1.3 2005/05/18 11:34:42 bass Exp $
+ * $Id: AbstractTemporalPattern.java,v 1.4 2005/06/23 11:54:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:34:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/23 11:54:10 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -25,7 +25,7 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 
 	private static final long serialVersionUID = -4278178783985442738L;
 
-	protected SortedSet	times;
+	protected SortedSet<Date>	times;
 
 	protected long		startTime	= 0;
 	protected long		endTime		= 0;
@@ -70,9 +70,9 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	 *            Date
 	 * @param end
 	 *            Date
-	 * @return SortedSet of java.util.Data
+	 * @return SortedSet of java.util.Date
 	 */
-	public final SortedSet getTimes(final Date start,
+	public final SortedSet<Date> getTimes(final Date start,
 	                                final Date end) {
 		return this.getTimes(start.getTime(), end.getTime());
 	}
@@ -85,12 +85,12 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	 *            long
 	 * @param end
 	 *            long
-	 * @return SortedSet of java.util.Data
+	 * @return SortedSet of java.util.Date
 	 */
-	public final SortedSet getTimes(final long start,
+	public final SortedSet<Date> getTimes(final long start,
 	                                final long end) {
 		if (this.times == null)
-			this.times = new TreeSet();
+			this.times = new TreeSet<Date>();
 		if (this.startTime != start)
 			this.times.clear();
 		this.startTime = start;
