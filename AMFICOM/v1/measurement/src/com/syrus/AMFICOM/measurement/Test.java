@@ -1,7 +1,7 @@
-/*
- * $Id: Test.java,v 1.131 2005/06/21 05:31:11 bob Exp $
+/*-
+ * $Id: Test.java,v 1.132 2005/06/23 18:45:08 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
@@ -33,22 +33,22 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.measurement.corba.TestReturnType;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.ContinuousTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/06/21 05:31:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.132 $, $Date: 2005/06/23 18:45:08 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -227,7 +227,7 @@ public final class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Test(final Test_Transferable tt) throws CreateObjectException {
+	public Test(final IdlTest tt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tt);
 		} catch (ApplicationException ae) {
@@ -239,23 +239,23 @@ public final class Test extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		final Test_Transferable tt = (Test_Transferable)transferable;
+		final IdlTest tt = (IdlTest)transferable;
 		super.fromTransferable(tt.header);
-		this.temporalType = tt.temporal_type.value();
-		this.timeStamps = new TestTimeStamps(tt.time_stamps);
-		this.measurementTypeId = new Identifier(tt.measurement_type_id);
-		this.analysisTypeId = new Identifier(tt.analysis_type_id);
-		this.evaluationTypeId = new Identifier(tt.evaluation_type_id);
+		this.temporalType = tt.timeStamps.discriminator().value();
+		this.timeStamps = new TestTimeStamps(tt.timeStamps);
+		this.measurementTypeId = new Identifier(tt.measurementTypeId);
+		this.analysisTypeId = new Identifier(tt.analysisTypeId);
+		this.evaluationTypeId = new Identifier(tt.evaluationTypeId);
 
 		this.status = tt.status.value();
 
-		this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
+		this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitoredElementId), true);
 
-		this.returnType = tt.return_type.value();
+		this.returnType = tt.returnType.value();
 		this.description = tt.description;
-		this.numberOfMeasurements = tt.number_of_measurements;
+		this.numberOfMeasurements = tt.numberOfMeasurements;
 
-		this.measurementSetupIds = Identifier.fromTransferables(tt.measurement_setup_ids);
+		this.measurementSetupIds = Identifier.fromTransferables(tt.measurementSetupIds);
 		if (!this.measurementSetupIds.isEmpty()) {
 			Identifier msId = (Identifier) this.measurementSetupIds.iterator().next();
 			this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
@@ -344,13 +344,12 @@ public final class Test extends StorableObject {
 		return TestTemporalType.from_int(this.temporalType);
 	}
 
-	public Test_Transferable getTransferable() {
+	public IdlTest getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
-		return new Test_Transferable(super.getHeaderTransferable(),
-				TestTemporalType.from_int(this.temporalType),
+		return new IdlTest(super.getHeaderTransferable(),
 				this.timeStamps.getTransferable(),
 				this.measurementTypeId.getTransferable(),
 				this.analysisTypeId.getTransferable(),
@@ -627,24 +626,24 @@ public final class Test extends StorableObject {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		TestTimeStamps(TestTimeStamps_Transferable ttst) {
+		TestTimeStamps(IdlTestTimeStamps ttst) {
 			this.discriminator = ttst.discriminator().value();
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					this.startTime = new Date(ttst.start_time());
+					this.startTime = new Date(ttst.startTime());
 					this.endTime = null;
 					this.temporalPatternId = null;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					PeriodicalTestTimeStamps ptts = ttst.ptts();
-					this.startTime = new Date(ptts.start_time);
-					this.endTime = new Date(ptts.end_time);
-					this.temporalPatternId = new Identifier(ptts.temporal_pattern_id);
+					this.startTime = new Date(ptts.startTime);
+					this.endTime = new Date(ptts.endTime);
+					this.temporalPatternId = new Identifier(ptts.temporalPatternId);
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					ContinuousTestTimeStamps ctts = ttst.ctts();
-					this.startTime = new Date(ctts.start_time);
-					this.endTime = new Date(ctts.end_time);
+					this.startTime = new Date(ctts.startTime);
+					this.endTime = new Date(ctts.endTime);
 					this.temporalPatternId = null;
 					break;
 				default:
@@ -654,17 +653,17 @@ public final class Test extends StorableObject {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		TestTimeStamps_Transferable getTransferable() {
+		IdlTestTimeStamps getTransferable() {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			TestTimeStamps_Transferable ttst = new TestTimeStamps_Transferable();
+			IdlTestTimeStamps ttst = new IdlTestTimeStamps();
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					ttst.start_time(this.startTime.getTime());
+					ttst.startTime(this.startTime.getTime());
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
 						this.endTime.getTime(),
-						(IdlIdentifier)this.temporalPatternId.getTransferable()));
+						this.temporalPatternId.getTransferable()));
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),

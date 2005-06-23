@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.35 2005/06/20 17:29:55 bass Exp $
+ * $Id: ModelingType.java,v 1.36 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,10 +29,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -70,7 +70,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	ModelingType(final ModelingType_Transferable mtt) throws CreateObjectException {
+	ModelingType(final IdlModelingType mtt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mtt);
 		} catch (ApplicationException ae) {
@@ -144,11 +144,11 @@ public final class ModelingType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		ModelingType_Transferable mtt = (ModelingType_Transferable) transferable;
+		IdlModelingType mtt = (IdlModelingType) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
-		this.inParameterTypeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
-		this.outParameterTypeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
+		this.inParameterTypeIds = Identifier.fromTransferables(mtt.inParameterTypeIds);
+		this.outParameterTypeIds = Identifier.fromTransferables(mtt.outParameterTypeIds);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -156,13 +156,13 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ModelingType_Transferable getTransferable() {
+	public IdlModelingType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
 		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 
-		return new ModelingType_Transferable(super.getHeaderTransferable(),
+		return new IdlModelingType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

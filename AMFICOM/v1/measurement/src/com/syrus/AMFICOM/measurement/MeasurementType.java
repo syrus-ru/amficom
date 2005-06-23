@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.80 2005/06/20 17:29:55 bass Exp $
+ * $Id: MeasurementType.java,v 1.81 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,10 +30,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.81 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -73,7 +73,7 @@ public final class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MeasurementType(final MeasurementType_Transferable mtt) throws CreateObjectException {
+	public MeasurementType(final IdlMeasurementType mtt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mtt);
 		} catch (ApplicationException ae) {
@@ -151,12 +151,12 @@ public final class MeasurementType extends ActionType implements Namable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		MeasurementType_Transferable mtt = (MeasurementType_Transferable) transferable;
+		IdlMeasurementType mtt = (IdlMeasurementType) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
-		this.inParameterTypeIds = Identifier.fromTransferables(mtt.in_parameter_type_ids);
-		this.outParameterTypeIds = Identifier.fromTransferables(mtt.out_parameter_type_ids);
-		this.measurementPortTypeIds = Identifier.fromTransferables(mtt.measurement_port_type_ids);
+		this.inParameterTypeIds = Identifier.fromTransferables(mtt.inParameterTypeIds);
+		this.outParameterTypeIds = Identifier.fromTransferables(mtt.outParameterTypeIds);
+		this.measurementPortTypeIds = Identifier.fromTransferables(mtt.measurementPortTypeIds);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -164,14 +164,14 @@ public final class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MeasurementType_Transferable getTransferable() {
+	public IdlMeasurementType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
 		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 		IdlIdentifier[] measPortTypeIds = Identifier.createTransferables(this.measurementPortTypeIds);
 
-		return new MeasurementType_Transferable(super.getHeaderTransferable(),
+		return new IdlMeasurementType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

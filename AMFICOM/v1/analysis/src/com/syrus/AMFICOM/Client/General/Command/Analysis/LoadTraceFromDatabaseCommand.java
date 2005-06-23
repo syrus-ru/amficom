@@ -11,10 +11,9 @@ import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.*;
 
 public class LoadTraceFromDatabaseCommand extends AbstractCommand

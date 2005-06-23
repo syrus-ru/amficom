@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.6 2005/06/22 10:22:59 bob Exp $
+ * $Id: MeasurementWrapper.java,v 1.7 2005/06/23 18:45:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/06/23 18:45:09 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class MeasurementWrapper extends StorableObjectWrapper {

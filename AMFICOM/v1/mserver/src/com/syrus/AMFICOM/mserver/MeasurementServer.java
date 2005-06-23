@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.58 2005/06/22 17:32:49 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.59 2005/06/23 18:45:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/22 17:32:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/06/23 18:45:10 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
@@ -213,7 +213,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
 		Identifier mcmId;
 		Set testQueue;
-		Test_Transferable[] testsT;
+		IdlTest[] testsT;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		while (this.running) {
 			/*	Now Measurement Server can get new tests only from database
@@ -320,10 +320,10 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 	}
 
-	private static Test_Transferable[] createTransferables(Set testQueue) {
+	private static IdlTest[] createTransferables(Set testQueue) {
 		assert !testQueue.isEmpty() : "Test queue is NULL";
 
-		Test_Transferable[] testsT = new Test_Transferable[testQueue.size()];
+		IdlTest[] testsT = new IdlTest[testQueue.size()];
 		int i = 0;
 		Test test;
 		synchronized (testQueue) {

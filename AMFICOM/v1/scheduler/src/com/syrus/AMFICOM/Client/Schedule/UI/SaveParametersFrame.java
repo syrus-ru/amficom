@@ -29,13 +29,13 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.TestReturnType;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
 import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.13 $, $Date: 2005/06/15 14:24:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:05 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
  */

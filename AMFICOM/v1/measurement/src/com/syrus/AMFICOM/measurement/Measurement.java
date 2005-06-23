@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.77 2005/06/20 17:29:56 bass Exp $
+ * $Id: Measurement.java,v 1.78 2005/06/23 18:45:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/06/20 17:29:56 $
+ * @version $Revision: 1.78 $, $Date: 2005/06/23 18:45:09 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -74,7 +74,7 @@ public final class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Measurement(final Measurement_Transferable mt) throws CreateObjectException {
+	public Measurement(final IdlMeasurement mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		} catch (ApplicationException ae) {
@@ -118,21 +118,21 @@ public final class Measurement extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Measurement_Transferable mt = (Measurement_Transferable) transferable;
-		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
+		IdlMeasurement mt = (IdlMeasurement) transferable;
+		super.fromTransferable(mt.header, null, new Identifier(mt.monitoredElementId), null);
 
-		super.type = (MeasurementType) StorableObjectPool.getStorableObject(new Identifier(mt.type_id),
+		super.type = (MeasurementType) StorableObjectPool.getStorableObject(new Identifier(mt._typeId),
 			true);
 
 		this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(
-			new Identifier(mt.setup_id), true);
+			new Identifier(mt.setupId), true);
 
 		this.name = mt.name;
-		this.startTime = new Date(mt.start_time);
+		this.startTime = new Date(mt.startTime);
 		this.duration = mt.duration;
 		this.status = mt.status.value();
-		this.localAddress = mt.local_address;
-		this.testId = new Identifier(mt.test_id);
+		this.localAddress = mt.localAddress;
+		this.testId = new Identifier(mt.testId);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -140,11 +140,11 @@ public final class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Measurement_Transferable getTransferable() {
+	public IdlMeasurement getTransferable() {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new Measurement_Transferable(super.getHeaderTransferable(),
+		return new IdlMeasurement(super.getHeaderTransferable(),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				this.name,

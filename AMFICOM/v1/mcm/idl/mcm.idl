@@ -1,8 +1,8 @@
-#ifndef _MCM_IDL_
-#define _MCM_IDL_
+#ifndef MCM_IDL
+#define MCM_IDL
 
-#include <measurement.idl>
-#include <configuration.idl>
+#include "measurement.idl"
+#include "configuration.idl"
 
 module com {
 module syrus {
@@ -12,34 +12,34 @@ module corba {
 
 	interface MCM : general::corba::Verifiable {
 
-		void receiveTests(in measurement::corba::TestSeq_Transferable tests)
+		void receiveTests(in measurement::corba::TestSeq tests)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void abortTests(in general::corba::IdentifierSeq test_ids)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::MeasurementSeq_Transferable transmitMeasurements(in general::corba::IdentifierSeq ids)
+		measurement::corba::MeasurementSeq transmitMeasurements(in general::corba::IdentifierSeq ids)
 				raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsByCondition(
+		measurement::corba::MeasurementSeq transmitMeasurementsButIdsByCondition(
 				in general::corba::IdentifierSeq ids,
-				in general::corba::StorableObjectCondition storableObjectCondition_Transferable)
+				in general::corba::StorableObjectCondition storableObjectCondition)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::AnalysisSeq_Transferable transmitAnalyses(in general::corba::IdentifierSeq ids)
+		measurement::corba::AnalysisSeq transmitAnalyses(in general::corba::IdentifierSeq ids)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIdsByCondition(
+		measurement::corba::AnalysisSeq transmitAnalysesButIdsByCondition(
 				in general::corba::IdentifierSeq ids,
-				in general::corba::StorableObjectCondition storableObjectCondition_Transferable)
+				in general::corba::StorableObjectCondition storableObjectCondition)
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::EvaluationSeq_Transferable transmitEvaluations(in general::corba::IdentifierSeq ids)				
+		measurement::corba::EvaluationSeq transmitEvaluations(in general::corba::IdentifierSeq ids)				
 			raises (general::corba::AMFICOMRemoteException);
 
-		measurement::corba::EvaluationSeq_Transferable transmitEvaluationsButIdsByCondition(
+		measurement::corba::EvaluationSeq transmitEvaluationsButIdsByCondition(
 				in general::corba::IdentifierSeq ids,
-				in general::corba::StorableObjectCondition storableObjectCondition_Transferable)
+				in general::corba::StorableObjectCondition storableObjectCondition)
 			raises (general::corba::AMFICOMRemoteException);
 
 	};
@@ -50,4 +50,4 @@ module corba {
 };
 };
 
-#endif
+#endif // MCM_IDL

@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.11 2005/06/23 11:54:10 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.12 2005/06/23 18:45:09 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,13 +22,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/23 11:54:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/06/23 18:45:09 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -64,7 +64,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public PeriodicalTemporalPattern(final PeriodicalTemporalPattern_Transferable itpt) throws CreateObjectException {
+	public PeriodicalTemporalPattern(final IdlPeriodicalTemporalPattern itpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(itpt);
 		} catch (ApplicationException ae) {
@@ -77,7 +77,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		final PeriodicalTemporalPattern_Transferable ptpt = (PeriodicalTemporalPattern_Transferable)transferable;
+		final IdlPeriodicalTemporalPattern ptpt = (IdlPeriodicalTemporalPattern)transferable;
 		super.fromTransferable(ptpt.header);
 		this.period = ptpt.period;
 		
@@ -142,10 +142,10 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public PeriodicalTemporalPattern_Transferable getTransferable() {
+	public IdlPeriodicalTemporalPattern getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new PeriodicalTemporalPattern_Transferable(super.getHeaderTransferable(), this.period);
+		return new IdlPeriodicalTemporalPattern(super.getHeaderTransferable(), this.period);
 	}
 
 	

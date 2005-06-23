@@ -1,9 +1,9 @@
-/*
- * $Id: measurement.idl,v 1.68 2005/06/21 14:13:36 bass Exp $
+/*-
+ * $Id: measurement.idl,v 1.69 2005/06/23 18:45:09 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 #ifndef MEASUREMENT_IDL
@@ -19,75 +19,77 @@ module corba {
 
 ////////////////////////// Type ///////////////////////////	
 
-	struct MeasurementType_Transferable {
+	typedef struct IdlMeasurementType {
 		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 
-		general::corba::IdentifierSeq in_parameter_type_ids;
-		general::corba::IdentifierSeq out_parameter_type_ids;
-		general::corba::IdentifierSeq measurement_port_type_ids;
-	};
+		general::corba::IdentifierSeq inParameterTypeIds;
+		general::corba::IdentifierSeq outParameterTypeIds;
+		general::corba::IdentifierSeq measurementPortTypeIds;
+	} MeasurementType;
 
-	typedef sequence<MeasurementType_Transferable> MeasurementTypeSeq_Transferable;
+	typedef sequence<MeasurementType> MeasurementTypeSeq;
 
-	struct AnalysisType_Transferable {
+	typedef struct IdlAnalysisType {
 		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 
-		general::corba::IdentifierSeq in_parameter_type_ids;
-		general::corba::IdentifierSeq criteria_parameter_type_ids;
-		general::corba::IdentifierSeq etalon_parameter_type_ids;
-		general::corba::IdentifierSeq out_parameter_type_ids;
+		general::corba::IdentifierSeq inParameterTypeIds;
+		general::corba::IdentifierSeq criteriaParameterTypeIds;
+		general::corba::IdentifierSeq etalonParameterTypeIds;
+		general::corba::IdentifierSeq outParameterTypeIds;
 
-		general::corba::IdentifierSeq measurement_type_ids;
-	};
+		general::corba::IdentifierSeq measurementTypeIds;
+	} AnalysisType;
 
-	typedef sequence<AnalysisType_Transferable> AnalysisTypeSeq_Transferable;
+	typedef sequence<AnalysisType> AnalysisTypeSeq;
 
-	struct EvaluationType_Transferable {
+	typedef struct IdlEvaluationType {
 		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 
-		general::corba::IdentifierSeq in_parameter_type_ids;
-		general::corba::IdentifierSeq threshold_parameter_type_ids;
-		general::corba::IdentifierSeq etalon_parameter_type_ids;
-		general::corba::IdentifierSeq out_parameter_type_ids;
+		general::corba::IdentifierSeq inParameterTypeIds;
+		general::corba::IdentifierSeq thresholdParameterTypeIds;
+		general::corba::IdentifierSeq etalonParameterTypeIds;
+		general::corba::IdentifierSeq outParameterTypeIds;
 
-		general::corba::IdentifierSeq measurement_type_ids;
-	};
+		general::corba::IdentifierSeq measurementTypeIds;
+	} EvaluationType;
 
-	typedef sequence<EvaluationType_Transferable> EvaluationTypeSeq_Transferable;
+	typedef sequence<EvaluationType> EvaluationTypeSeq;
 
-	struct ModelingType_Transferable {
+	typedef struct IdlModelingType {
 		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 
-		general::corba::IdentifierSeq in_parameter_type_ids;
-		general::corba::IdentifierSeq out_parameter_type_ids;
-	};
+		general::corba::IdentifierSeq inParameterTypeIds;
+		general::corba::IdentifierSeq outParameterTypeIds;
+	} ModelingType;
 
-	typedef sequence<ModelingType_Transferable> ModelingTypeSeq_Transferable;
+	typedef sequence<ModelingType> ModelingTypeSeq;
 
 /////////////////// Parameter and Set /////////////////////
 
-	typedef struct Parameter_Transferable {
+//	XXX
+//	XXX A shared type that is NOT a StorableObject.
+//	XXX
+	typedef struct IdlParameter {
 		general::corba::Identifier id;
-		general::corba::Identifier type_id;
-		sequence<octet> value;
+		general::corba::Identifier _typeId;
+		::CORBA::OctetSeq value;
 	} Parameter;
 
 	typedef sequence<Parameter> ParameterSeq;
 
-
-	typedef struct ParameterSet_Transferable {
+	typedef struct IdlParameterSet {
 		general::corba::StorableObject header;
 
 		enum ParameterSetSort {
@@ -100,223 +102,217 @@ module corba {
 		} sort;
 		general::corba::WString256 description;
 		ParameterSeq parameters;
-		general::corba::IdentifierSeq monitored_element_ids;
+		general::corba::IdentifierSeq monitoredElementIds;
 	} ParameterSet;
 
 	typedef sequence<ParameterSet> ParameterSetSeq;
 
 /////////////////// Modeling /////////////////////
 
-	struct Modeling_Transferable {
+	typedef struct IdlModeling {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier type_id;
-		general::corba::Identifier monitored_element_id;
+		general::corba::Identifier _typeId;
+		general::corba::Identifier monitoredElementId;
 
 		general::corba::WString128 name;
 
-		general::corba::Identifier argument_set_id;
-	};
+		general::corba::Identifier argumentSetId;
+	} Modeling;
 
-	typedef sequence<Modeling_Transferable> ModelingSeq_Transferable;
+	typedef sequence<Modeling> ModelingSeq;
 
 /////////////////// Measurement /////////////////////
 
-	struct MeasurementSetup_Transferable {
+	typedef struct IdlMeasurementSetup {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier parameter_set_id;
-		general::corba::Identifier criteria_set_id;
-		general::corba::Identifier threshold_set_id;
-		general::corba::Identifier etalon_id;
+		general::corba::Identifier parameterSetId;
+		general::corba::Identifier criteriaSetId;
+		general::corba::Identifier thresholdSetId;
+		general::corba::Identifier etalonId;
 		general::corba::WString256 description;
-		long long measurement_duration;
-		general::corba::IdentifierSeq monitored_element_ids;
-		general::corba::IdentifierSeq measurement_type_ids;
-	};
+		long long measurementDuration;
+		general::corba::IdentifierSeq monitoredElementIds;
+		general::corba::IdentifierSeq measurementTypeIds;
+	} MeasurementSetup;
 
-	typedef sequence<MeasurementSetup_Transferable> MeasurementSetupSeq_Transferable;
+	typedef sequence<MeasurementSetup> MeasurementSetupSeq;
 
-	enum MeasurementStatus {
-		MEASUREMENT_STATUS_SCHEDULED,
-		MEASUREMENT_STATUS_ACQUIRING,
-		MEASUREMENT_STATUS_ACQUIRED,
-		MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
-		MEASUREMENT_STATUS_COMPLETED,
-		MEASUREMENT_STATUS_ABORTED
-	};
-
-	struct Measurement_Transferable {
+	typedef struct IdlMeasurement {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier type_id;
-		general::corba::Identifier monitored_element_id;
+		general::corba::Identifier _typeId;
+		general::corba::Identifier monitoredElementId;
 
 		general::corba::WString128 name;
 
-		general::corba::Identifier setup_id;
-		long long start_time;
+		general::corba::Identifier setupId;
+		long long startTime;
 		long long duration;
-		MeasurementStatus status;
-		general::corba::WString64 local_address;
-		general::corba::Identifier test_id;
-	};
+		enum MeasurementStatus {
+			MEASUREMENT_STATUS_SCHEDULED,
+			MEASUREMENT_STATUS_ACQUIRING,
+			MEASUREMENT_STATUS_ACQUIRED,
+			MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
+			MEASUREMENT_STATUS_COMPLETED,
+			MEASUREMENT_STATUS_ABORTED
+		} status;
+		general::corba::WString64 localAddress;
+		general::corba::Identifier testId;
+	} Measurement;
 
-	typedef sequence<Measurement_Transferable> MeasurementSeq_Transferable;
+	typedef sequence<Measurement> MeasurementSeq;
 
 /////////////////////// Temporal Pattern ////////////////////////
 
-	struct CronTemporalPattern_Transferable {
+	typedef struct IdlCronTemporalPattern {
 		general::corba::StorableObject header;
 
 		general::corba::WString256 description;
-		sequence<general::corba::WString64> cron_strings;
-	};
+		general::corba::WString64Seq cronStrings;
+	} CronTemporalPattern;
 
-	typedef sequence<CronTemporalPattern_Transferable> CronTemporalPatternSeq_Transferable;
+	typedef sequence<CronTemporalPattern> CronTemporalPatternSeq;
 
+//	XXX
+//	XXX Move _inside_ the valuetype
+//	XXX
+//	module IdlIntervalsTemporalPatternPackage {
+		struct IntervalTemporalPatternId {
+			long long ms;
+			general::corba::Identifier temporalPatternId;
+		};
 
+		typedef sequence<IntervalTemporalPatternId> IntervalTemporalPatternIdSeq;
 
-	struct ITP_Interval_Temporal_Pattern_Id {
-		long long ms;
-		general::corba::Identifier temporal_pattern_id;
-	};
+		struct IntervalDuration {
+			long long ms;
+			long long duration;
+		};
 
-	struct ITP_Interval_Duration {
-		long long ms;
-		long long duration;
-	};
+		typedef sequence<IntervalDuration> IntervalDurationSeq;
+//	};
 
-	struct IntervalsTemporalPattern_Transferable {
+	typedef struct IdlIntervalsTemporalPattern {
 		general::corba::StorableObject header;
 
-		sequence<ITP_Interval_Temporal_Pattern_Id> intervals_temporal_pattern_id;
-		sequence<ITP_Interval_Duration> intervals_duration;
-	};
-	
-	typedef sequence<IntervalsTemporalPattern_Transferable> IntervalsTemporalPatternSeq_Transferable;
-	
-	struct PeriodicalTemporalPattern_Transferable {
+//		IdlIntervalsTemporalPatternPackage::
+		IntervalTemporalPatternIdSeq intervalsTemporalPatternId;
+//		IdlIntervalsTemporalPatternPackage::
+		IntervalDurationSeq intervalsDuration;
+	} IntervalsTemporalPattern;
+
+	typedef sequence<IntervalsTemporalPattern> IntervalsTemporalPatternSeq;
+
+	typedef struct IdlPeriodicalTemporalPattern {
 		general::corba::StorableObject header;
 
 		long long period;
-	};
-	
-	typedef sequence<PeriodicalTemporalPattern_Transferable> PeriodicalTemporalPatternSeq_Transferable;
+	} PeriodicalTemporalPattern;
+
+	typedef sequence<PeriodicalTemporalPattern> PeriodicalTemporalPatternSeq;
 
 /////////////////////// Test ////////////////////////
 
-	enum TestStatus {
-		TEST_STATUS_NEW,				//Сохранён в БД на сервере
-		TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
-//		TEST_STATUS_QUEUED,		//Поставлен МУИ в очередь
-		TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
-		TEST_STATUS_COMPLETED,	//Последнее измерение завершено
-		TEST_STATUS_ABORTED			//Прерван
-	};
-
-	enum TestReturnType {
-		TEST_RETURN_TYPE_WHOLE,
-		TEST_RETURN_TYPE_EVENTS,
-		TEST_RETURN_TYPE_REFERENCE
-	};
-
-	enum TestTemporalType {
-		TEST_TEMPORAL_TYPE_ONETIME,
-		TEST_TEMPORAL_TYPE_PERIODICAL,
-		TEST_TEMPORAL_TYPE_CONTINUOUS
-	};
-
-	union TestTimeStamps_Transferable switch (TestTemporalType) {
-		case TEST_TEMPORAL_TYPE_ONETIME:
-			long long start_time;
-		case TEST_TEMPORAL_TYPE_PERIODICAL:
-			struct PeriodicalTestTimeStamps {
-				long long start_time;
-				long long end_time;
-				general::corba::Identifier temporal_pattern_id;
-			} ptts;
-		case TEST_TEMPORAL_TYPE_CONTINUOUS:
-			struct ContinuousTestTimeStamps {
-				long long start_time;
-				long long end_time;
-			} ctts;
-	};
-
-	struct Test_Transferable {
+	typedef struct IdlTest {
 		general::corba::StorableObject header;
-		TestTemporalType temporal_type;
-		TestTimeStamps_Transferable time_stamps;
-		general::corba::Identifier measurement_type_id;
-		general::corba::Identifier analysis_type_id;
-		general::corba::Identifier evaluation_type_id;
-		general::corba::Identifier group_test_id;
-		TestStatus status;		
-		general::corba::Identifier monitored_element_id;
-		TestReturnType return_type;
+		union IdlTestTimeStamps switch (enum TestTemporalType {
+				TEST_TEMPORAL_TYPE_ONETIME,
+				TEST_TEMPORAL_TYPE_PERIODICAL,
+				TEST_TEMPORAL_TYPE_CONTINUOUS}) {
+			case TEST_TEMPORAL_TYPE_ONETIME:
+				long long startTime;
+			case TEST_TEMPORAL_TYPE_PERIODICAL:
+				struct PeriodicalTestTimeStamps {
+					long long startTime;
+					long long endTime;
+					general::corba::Identifier temporalPatternId;
+				} ptts;
+			case TEST_TEMPORAL_TYPE_CONTINUOUS:
+				struct ContinuousTestTimeStamps {
+					long long startTime;
+					long long endTime;
+				} ctts;
+		} timeStamps;
+		general::corba::Identifier measurementTypeId;
+		general::corba::Identifier analysisTypeId;
+		general::corba::Identifier evaluationTypeId;
+		general::corba::Identifier groupTestId;
+		enum TestStatus {
+			TEST_STATUS_NEW,	//Сохранён в БД на сервере
+			TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
+//			TEST_STATUS_QUEUED,	//Поставлен МУИ в очередь
+			TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
+			TEST_STATUS_COMPLETED,	//Последнее измерение завершено
+			TEST_STATUS_ABORTED	//Прерван
+		} status;		
+		general::corba::Identifier monitoredElementId;
+		enum TestReturnType {
+			TEST_RETURN_TYPE_WHOLE,
+			TEST_RETURN_TYPE_EVENTS,
+			TEST_RETURN_TYPE_REFERENCE
+		} returnType;
 		general::corba::WString256 description;
-		long number_of_measurements;
-		general::corba::IdentifierSeq measurement_setup_ids;
-	};
+		long numberOfMeasurements;
+		general::corba::IdentifierSeq measurementSetupIds;
+	} Test;
 
-	typedef sequence<Test_Transferable> TestSeq_Transferable;
+	typedef sequence<Test> TestSeq;
 
 //////////////////// Analysis ///////////////////////
 
-	struct Analysis_Transferable {
+	typedef struct IdlAnalysis {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier type_id;
-		general::corba::Identifier monitored_element_id;
-		general::corba::Identifier measurement_id;
+		general::corba::Identifier _typeId;
+		general::corba::Identifier monitoredElementId;
+		general::corba::Identifier measurementId;
 
 		general::corba::WString128 name;
 
-		general::corba::Identifier criteria_set_id;
-	};
+		general::corba::Identifier criteriaSetId;
+	} Analysis;
 
-	typedef sequence<Analysis_Transferable> AnalysisSeq_Transferable;
+	typedef sequence<Analysis> AnalysisSeq;
 
 //////////////////// Evaluation /////////////////////
 
-	struct Evaluation_Transferable {
+	typedef struct IdlEvaluation {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier type_id;
-		general::corba::Identifier monitored_element_id;
-		general::corba::Identifier measurement_id;
+		general::corba::Identifier _typeId;
+		general::corba::Identifier monitoredElementId;
+		general::corba::Identifier measurementId;
 
-		general::corba::Identifier threshold_set_id;
-	};
+		general::corba::Identifier thresholdSetId;
+	} Evaluation;
 
-	typedef sequence<Evaluation_Transferable> EvaluationSeq_Transferable;
+	typedef sequence<Evaluation> EvaluationSeq;
 
 ////////////////////// Result ///////////////////////
 
-	enum ResultSort {
-		RESULT_SORT_MEASUREMENT,
-		RESULT_SORT_ANALYSIS,
-		RESULT_SORT_EVALUATION,
-		RESULT_SORT_MODELING
-	};
-
-	struct Result_Transferable {
+	typedef struct IdlResult {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier measurement_id;
-		general::corba::Identifier analysis_id;
-		general::corba::Identifier evaluation_id;
-		general::corba::Identifier modeling_id;
-		ResultSort sort;
-		sequence<Parameter_Transferable> parameters;
-	};
+		general::corba::Identifier measurementId;
+		general::corba::Identifier analysisId;
+		general::corba::Identifier evaluationId;
+		general::corba::Identifier modelingId;
+		enum ResultSort {
+			RESULT_SORT_MEASUREMENT,
+			RESULT_SORT_ANALYSIS,
+			RESULT_SORT_EVALUATION,
+			RESULT_SORT_MODELING
+		} sort;
+		ParameterSeq parameters;
+	} Result;
 
-	typedef sequence<Result_Transferable> ResultSeq_Transferable;
-
+	typedef sequence<Result> ResultSeq;
 };
 };
 };
 };
 };
 
-#endif
+#endif // MEASUREMENT_IDL

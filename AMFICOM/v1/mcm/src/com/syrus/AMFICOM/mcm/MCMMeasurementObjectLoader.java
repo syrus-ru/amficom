@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.65 2005/06/23 12:35:04 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.66 2005/06/23 18:45:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,13 +29,13 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/06/23 12:35:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/06/23 18:45:06 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends MCMObjectLoader implements MeasurementObjectLoader {
@@ -328,7 +328,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 			public IdlStorableObject[] receiveStorableObjects(final CommonServer server,
 					final IDLEntity[] transferables,
 					final IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).receiveTests((Test_Transferable[]) transferables, force, sessionKey);
+				return ((MServer) server).receiveTests((IdlTest[]) transferables, force, sessionKey);
 			}
 		});
 	}

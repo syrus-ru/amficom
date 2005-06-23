@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.5 2005/06/20 17:29:55 bass Exp $
+ * $Id: ParameterSet.java,v 1.6 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,13 +29,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
+import com.syrus.AMFICOM.measurement.corba.IdlParameter;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -76,7 +76,7 @@ public final class ParameterSet extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ParameterSet(final ParameterSet_Transferable st) throws CreateObjectException {
+	public ParameterSet(final IdlParameterSet st) throws CreateObjectException {
 		try {
 			this.fromTransferable(st);
 		} catch (ApplicationException ae) {
@@ -149,7 +149,7 @@ public final class ParameterSet extends StorableObject {
 	 * </p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		ParameterSet_Transferable st = (ParameterSet_Transferable)transferable;
+		IdlParameterSet st = (IdlParameterSet)transferable;
 		super.fromTransferable(st.header);
 		this.sort = st.sort.value();
 		this.description = st.description;
@@ -159,7 +159,7 @@ public final class ParameterSet extends StorableObject {
 			this.parameters[i] = new Parameter(st.parameters[i]);
 		}
 
-		this.monitoredElementIds = Identifier.fromTransferables(st.monitored_element_ids);
+		this.monitoredElementIds = Identifier.fromTransferables(st.monitoredElementIds);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -167,15 +167,15 @@ public final class ParameterSet extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public ParameterSet_Transferable getTransferable() {
+	public IdlParameterSet getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
+		IdlParameter[] pts = new IdlParameter[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = this.parameters[i].getTransferable();
 
 		IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
-		return new ParameterSet_Transferable(super.getHeaderTransferable(),
+		return new IdlParameterSet(super.getHeaderTransferable(),
 				ParameterSetSort.from_int(this.sort),
 				this.description,
 				pts,

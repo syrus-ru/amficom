@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.18 2005/06/21 12:44:29 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.19 2005/06/23 18:45:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,14 +23,14 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionS
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlResult;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.mserver.corba.MServerOperations;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/21 12:44:29 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/23 18:45:10 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -38,7 +38,7 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 
 	private static final long serialVersionUID = 8337247295980850931L;
 
-	public void receiveResults(Result_Transferable[] resultsT, IdlIdentifier mcmIdT, IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+	public void receiveResults(IdlResult[] resultsT, IdlIdentifier mcmIdT, IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
@@ -82,7 +82,7 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 		}
 	}
 
-	public IdlStorableObject[] receiveTests(Test_Transferable[] testsT, boolean force, IdlSessionKey sessionKeyT)
+	public IdlStorableObject[] receiveTests(IdlTest[] testsT, boolean force, IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		Log.debugMessage("MServerImplementation.receiveTests | Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
 		return super.receiveStorableObjects(ObjectEntities.TEST_CODE, testsT, force, sessionKeyT);

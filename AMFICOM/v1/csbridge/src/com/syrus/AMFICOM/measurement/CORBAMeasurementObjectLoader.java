@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMeasurementObjectLoader.java,v 1.24 2005/06/22 19:29:32 arseniy Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.25 2005/06/23 18:45:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,26 +24,26 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
-import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
-import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
+import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
+import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
+import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
+import com.syrus.AMFICOM.measurement.corba.IdlModeling;
+import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlResult;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/22 19:29:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/23 18:45:10 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implements MeasurementObjectLoader {
@@ -450,7 +450,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveMeasurementTypes((MeasurementType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveMeasurementTypes((IdlMeasurementType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -462,7 +462,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveAnalysisTypes((AnalysisType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveAnalysisTypes((IdlAnalysisType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -474,7 +474,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveEvaluationTypes((EvaluationType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveEvaluationTypes((IdlEvaluationType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -486,7 +486,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveModelingTypes((ModelingType_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveModelingTypes((IdlModelingType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -500,7 +500,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveMeasurements((Measurement_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveMeasurements((IdlMeasurement[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -512,7 +512,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveAnalyses((Analysis_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveAnalyses((IdlAnalysis[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -524,7 +524,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveEvaluations((Evaluation_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveEvaluations((IdlEvaluation[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -536,7 +536,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveModelings((Modeling_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveModelings((IdlModeling[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -548,7 +548,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveMeasurementSetups((MeasurementSetup_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveMeasurementSetups((IdlMeasurementSetup[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -560,7 +560,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveResults((Result_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveResults((IdlResult[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -572,7 +572,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveParameterSets((ParameterSet_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveParameterSets((IdlParameterSet[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -584,7 +584,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveTests((Test_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveTests((IdlTest[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -596,7 +596,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveCronTemporalPatterns((CronTemporalPattern_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveCronTemporalPatterns((IdlCronTemporalPattern[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -608,7 +608,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receiveIntervalsTemporalPatterns((IntervalsTemporalPattern_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receiveIntervalsTemporalPatterns((IdlIntervalsTemporalPattern[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -620,7 +620,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((CMServer) server).receivePeriodicalTemporalPatterns((PeriodicalTemporalPattern_Transferable[]) transferables, force, sessionKey);
+				return ((CMServer) server).receivePeriodicalTemporalPatterns((IdlPeriodicalTemporalPattern[]) transferables, force, sessionKey);
 			}
 		});
 	}

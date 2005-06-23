@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.92 2005/06/17 12:38:56 bass Exp $
+ * $Id: ResultDatabase.java,v 1.93 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,14 +32,14 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.93 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */

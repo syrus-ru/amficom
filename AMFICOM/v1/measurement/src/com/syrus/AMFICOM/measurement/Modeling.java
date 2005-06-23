@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.48 2005/06/20 17:29:55 bass Exp $
+ * $Id: Modeling.java,v 1.49 2005/06/23 18:45:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlModeling;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/23 18:45:09 $
  * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
@@ -63,7 +63,7 @@ public final class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Modeling(final Modeling_Transferable mt) throws CreateObjectException {
+	Modeling(final IdlModeling mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		} catch (ApplicationException ae) {
@@ -98,12 +98,12 @@ public final class Modeling extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Modeling_Transferable mt = (Modeling_Transferable) transferable;
-		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
+		IdlModeling mt = (IdlModeling) transferable;
+		super.fromTransferable(mt.header, null, new Identifier(mt.monitoredElementId), null);
 
-		super.type = (ModelingType) StorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
+		super.type = (ModelingType) StorableObjectPool.getStorableObject(new Identifier(mt._typeId), true);
 
-		this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
+		this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argumentSetId), true);
 
 		this.name = mt.name;
 		
@@ -113,10 +113,10 @@ public final class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Modeling_Transferable getTransferable() {
+	public IdlModeling getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new Modeling_Transferable(super.getHeaderTransferable(),
+		return new IdlModeling(super.getHeaderTransferable(),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				this.name,

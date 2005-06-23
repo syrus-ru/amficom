@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.5 2005/06/20 17:29:55 bass Exp $
+ * $Id: Parameter.java,v 1.6 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,13 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -48,9 +48,9 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Parameter(Parameter_Transferable pt) throws ApplicationException {
+	public Parameter(IdlParameter pt) throws ApplicationException {
 		this.id = new Identifier(pt.id);
-		this.type = (ParameterType) StorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
+		this.type = (ParameterType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
 		this.value = new byte[pt.value.length];
 		for (int i = 0; i < this.value.length; i++)
 			this.value[i] = pt.value[i];
@@ -82,13 +82,13 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Parameter_Transferable getTransferable() {
+	public IdlParameter getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		byte[] ptValue = new byte[this.value.length];
 		for (int i = 0; i < ptValue.length; i++)
 			ptValue[i] = this.value[i];
-		return new Parameter_Transferable((IdlIdentifier) this.id.getTransferable(),
+		return new IdlParameter((IdlIdentifier) this.id.getTransferable(),
 				(IdlIdentifier) this.type.getId().getTransferable(),
 				ptValue);
 	}

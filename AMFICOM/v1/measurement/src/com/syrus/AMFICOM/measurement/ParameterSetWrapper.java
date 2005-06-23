@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.3 2005/06/22 10:22:59 bob Exp $
+ * $Id: ParameterSetWrapper.java,v 1.4 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.measurement.corba.ParameterSet_TransferablePackage.ParameterSetSort;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/06/23 18:45:08 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class ParameterSetWrapper extends StorableObjectWrapper {

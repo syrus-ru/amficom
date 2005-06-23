@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.56 2005/06/22 13:59:16 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.57 2005/06/23 18:45:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,15 +28,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/06/22 13:59:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/06/23 18:45:06 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 

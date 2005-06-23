@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.73 2005/06/20 17:29:55 bass Exp $
+ * $Id: EvaluationType.java,v 1.74 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,10 +29,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.74 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -78,7 +78,7 @@ public final class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public EvaluationType(final EvaluationType_Transferable ett) throws CreateObjectException {
+	public EvaluationType(final IdlEvaluationType ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		} catch (ApplicationException ae) {
@@ -172,15 +172,15 @@ public final class EvaluationType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		EvaluationType_Transferable ett = (EvaluationType_Transferable)transferable;
+		IdlEvaluationType ett = (IdlEvaluationType)transferable;
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 
-		this.inParameterTypeIds = Identifier.fromTransferables(ett.in_parameter_type_ids);
-		this.thresholdParameterTypeIds = Identifier.fromTransferables(ett.threshold_parameter_type_ids);
-		this.etalonParameterTypeIds = Identifier.fromTransferables(ett.etalon_parameter_type_ids);
-		this.outParameterTypeIds = Identifier.fromTransferables(ett.out_parameter_type_ids);		
+		this.inParameterTypeIds = Identifier.fromTransferables(ett.inParameterTypeIds);
+		this.thresholdParameterTypeIds = Identifier.fromTransferables(ett.thresholdParameterTypeIds);
+		this.etalonParameterTypeIds = Identifier.fromTransferables(ett.etalonParameterTypeIds);
+		this.outParameterTypeIds = Identifier.fromTransferables(ett.outParameterTypeIds);		
 
-		this.measurementTypeIds = Identifier.fromTransferables(ett.measurement_type_ids);
+		this.measurementTypeIds = Identifier.fromTransferables(ett.measurementTypeIds);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -188,7 +188,7 @@ public final class EvaluationType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public EvaluationType_Transferable getTransferable() {
+	public IdlEvaluationType getTransferable() {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -198,7 +198,7 @@ public final class EvaluationType extends ActionType {
 		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 		IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
-		return new EvaluationType_Transferable(super.getHeaderTransferable(),
+		return new IdlEvaluationType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

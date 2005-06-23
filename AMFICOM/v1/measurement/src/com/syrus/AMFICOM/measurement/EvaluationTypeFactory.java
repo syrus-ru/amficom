@@ -1,5 +1,5 @@
 /*-
- * $Id: EvaluationTypeFactory.java,v 1.2 2005/06/01 18:49:44 bass Exp $
+ * $Id: EvaluationTypeFactory.java,v 1.3 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,12 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/01 18:49:44 $
+ * @version $Revision: 1.3 $, $Date: 2005/06/23 18:45:08 $
  * @module measurement_v1
  */
 final class EvaluationTypeFactory extends StorableObjectFactory {
@@ -29,7 +29,7 @@ final class EvaluationTypeFactory extends StorableObjectFactory {
 	 * @see StorableObjectFactory#newInstance(IDLEntity)
 	 */
 	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
-		return new EvaluationType((EvaluationType_Transferable) transferable);
+		return new EvaluationType((IdlEvaluationType) transferable);
 	}
 
 	/**
@@ -37,7 +37,7 @@ final class EvaluationTypeFactory extends StorableObjectFactory {
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
 	 */
 	protected Identifier getId(final IDLEntity transferable) {
-		return new Identifier(((EvaluationType_Transferable) transferable).header.id);
+		return new Identifier(((IdlEvaluationType) transferable).header.id);
 	}
 
 	/**
@@ -45,6 +45,6 @@ final class EvaluationTypeFactory extends StorableObjectFactory {
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
 	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
-		return new EvaluationType_Transferable[length];
+		return new IdlEvaluationType[length];
 	}
 }

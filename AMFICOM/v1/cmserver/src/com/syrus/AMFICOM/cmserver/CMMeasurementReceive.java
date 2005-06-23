@@ -1,5 +1,5 @@
 /*-
- * $Id: CMMeasurementReceive.java,v 1.23 2005/06/21 12:44:31 bass Exp $
+ * $Id: CMMeasurementReceive.java,v 1.24 2005/06/23 18:45:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,25 +11,25 @@ package com.syrus.AMFICOM.cmserver;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
-import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
-import com.syrus.AMFICOM.measurement.corba.PeriodicalTemporalPattern_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterSet_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
+import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
+import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
+import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
+import com.syrus.AMFICOM.measurement.corba.IdlModeling;
+import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlResult;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/06/21 12:44:31 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/23 18:45:06 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -37,7 +37,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	private static final long serialVersionUID = 2044666930827736818L;
 
 	public final IdlStorableObject[] receiveMeasurementTypes(
-			final MeasurementType_Transferable transferables[],
+			final IdlMeasurementType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -45,7 +45,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveAnalysisTypes(
-			final AnalysisType_Transferable transferables[],
+			final IdlAnalysisType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -53,7 +53,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveEvaluationTypes(
-			final EvaluationType_Transferable transferables[],
+			final IdlEvaluationType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -61,7 +61,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveModelingTypes(
-			final ModelingType_Transferable transferables[],
+			final IdlModelingType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -69,7 +69,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveMeasurements(
-			final Measurement_Transferable transferables[],
+			final IdlMeasurement transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -77,7 +77,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveAnalyses(
-			final Analysis_Transferable transferables[],
+			final IdlAnalysis transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -85,7 +85,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveEvaluations(
-			final Evaluation_Transferable transferables[],
+			final IdlEvaluation transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -93,7 +93,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveModelings(
-			final Modeling_Transferable transferables[],
+			final IdlModeling transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -101,7 +101,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveMeasurementSetups(
-			final MeasurementSetup_Transferable transferables[],
+			final IdlMeasurementSetup transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -109,7 +109,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveResults(
-			final Result_Transferable transferables[],
+			final IdlResult transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -117,7 +117,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveParameterSets(
-			final ParameterSet_Transferable transferables[],
+			final IdlParameterSet transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -125,7 +125,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveTests(
-			final Test_Transferable transferables[],
+			final IdlTest transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -133,7 +133,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveCronTemporalPatterns(
-			final CronTemporalPattern_Transferable transferables[],
+			final IdlCronTemporalPattern transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -141,7 +141,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receiveIntervalsTemporalPatterns(
-			final IntervalsTemporalPattern_Transferable transferables[],
+			final IdlIntervalsTemporalPattern transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -149,7 +149,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	}
 
 	public final IdlStorableObject[] receivePeriodicalTemporalPatterns(
-			final PeriodicalTemporalPattern_Transferable transferables[],
+			final IdlPeriodicalTemporalPattern transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {

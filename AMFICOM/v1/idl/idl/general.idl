@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.92 2005/06/21 12:43:33 bass Exp $
+ * $Id: general.idl,v 1.93 2005/06/23 18:45:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ module corba {
 	typedef string<32> String32;
 	typedef wstring<32> WString32;
 	typedef wstring<64> WString64;
+	typedef sequence<WString64> WString64Seq;
 	typedef wstring<128> WString128;
 	typedef wstring<256> WString256;
 

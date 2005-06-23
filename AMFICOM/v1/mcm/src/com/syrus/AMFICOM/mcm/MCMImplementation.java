@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.41 2005/06/22 14:01:19 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.42 2005/06/23 18:45:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,15 +30,15 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/22 14:01:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2005/06/23 18:45:06 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -47,7 +47,7 @@ public class MCMImplementation extends MCMPOA {
 	private static final long serialVersionUID = -3362347139575001444L;
 
 
-	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
+	public void receiveTests(IdlTest[] testsT) throws AMFICOMRemoteException {
 		Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
 		List<Test> tests = new LinkedList<Test>();
 		for (int i = 0; i < testsT.length; i++) {
@@ -73,7 +73,7 @@ public class MCMImplementation extends MCMPOA {
 
 
 
-	public Measurement_Transferable[] transmitMeasurements(IdlIdentifier[] identifier_Transferables)
+	public IdlMeasurement[] transmitMeasurements(IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
@@ -85,7 +85,7 @@ public class MCMImplementation extends MCMPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
+		IdlMeasurement[] transferables = new IdlMeasurement[objects.size()];
 		int i = 0;
 		Measurement measurement;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
@@ -95,7 +95,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Analysis_Transferable[] transmitAnalyses(IdlIdentifier[] identifier_Transferables)
+	public IdlAnalysis[] transmitAnalyses(IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
@@ -107,7 +107,7 @@ public class MCMImplementation extends MCMPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
+		IdlAnalysis[] transferables = new IdlAnalysis[objects.size()];
 		int i = 0;
 		Analysis analysis;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
@@ -117,7 +117,7 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-  public Evaluation_Transferable[] transmitEvaluations(IdlIdentifier[] identifier_Transferables)
+  public IdlEvaluation[] transmitEvaluations(IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
 		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
@@ -129,7 +129,7 @@ public class MCMImplementation extends MCMPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
+		IdlEvaluation[] transferables = new IdlEvaluation[objects.size()];
 		int i = 0;
 		Evaluation evaluation;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
@@ -139,11 +139,11 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
+	public IdlMeasurement[] transmitMeasurementsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
 			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
-		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
+		IdlMeasurement[] transferables = new IdlMeasurement[objects.size()];
 		int i = 0;
 		Measurement measurement;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
@@ -153,11 +153,11 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(IdlIdentifier[] identifier_Transferables,
+	public IdlAnalysis[] transmitAnalysesButIdsByCondition(IdlIdentifier[] identifier_Transferables,
 			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
-		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
+		IdlAnalysis[] transferables = new IdlAnalysis[objects.size()];
 		int i = 0;
 		Analysis analysis;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
@@ -167,11 +167,11 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
+	public IdlEvaluation[] transmitEvaluationsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
 			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
-		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
+		IdlEvaluation[] transferables = new IdlEvaluation[objects.size()];
 		int i = 0;
 		Evaluation evaluation;
 		for (Iterator it = objects.iterator(); it.hasNext(); i++) {

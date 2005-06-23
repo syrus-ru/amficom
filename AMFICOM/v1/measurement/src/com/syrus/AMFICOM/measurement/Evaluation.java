@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.65 2005/06/20 17:29:55 bass Exp $
+ * $Id: Evaluation.java,v 1.66 2005/06/23 18:45:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.66 $, $Date: 2005/06/23 18:45:09 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -61,7 +61,7 @@ public final class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Evaluation(final Evaluation_Transferable et) throws CreateObjectException {
+	public Evaluation(final IdlEvaluation et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
 		} catch (ApplicationException ae) {
@@ -96,15 +96,15 @@ public final class Evaluation extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Evaluation_Transferable et = (Evaluation_Transferable) transferable;
-		super.fromTransferable(et.header, null, new Identifier(et.monitored_element_id), null);
+		IdlEvaluation et = (IdlEvaluation) transferable;
+		super.fromTransferable(et.header, null, new Identifier(et.monitoredElementId), null);
 
-		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-		final Identifier parentActionId = new Identifier(et.measurement_id);
+		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
+		final Identifier parentActionId = new Identifier(et.measurementId);
 		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
 				? (Action) StorableObjectPool.getStorableObject(parentActionId, true) : null;
 
-		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
+		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(et.thresholdSetId), true);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -112,10 +112,10 @@ public final class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Evaluation_Transferable getTransferable() {
+	public IdlEvaluation getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new Evaluation_Transferable(super.getHeaderTransferable(),
+		return new IdlEvaluation(super.getHeaderTransferable(),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? super.parentAction.getId().getTransferable()

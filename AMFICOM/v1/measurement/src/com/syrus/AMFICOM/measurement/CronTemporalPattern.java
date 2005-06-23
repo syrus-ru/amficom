@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.13 2005/06/23 11:54:10 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.14 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,13 +35,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.measurement.corba.CronTemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/23 11:54:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:08 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -795,7 +795,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 		}
 	}
 
-	public CronTemporalPattern(final CronTemporalPattern_Transferable ctpt) throws CreateObjectException {
+	public CronTemporalPattern(final IdlCronTemporalPattern ctpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ctpt);
 		} catch (ApplicationException ae) {
@@ -918,16 +918,16 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		CronTemporalPattern_Transferable ctpt = (CronTemporalPattern_Transferable)transferable;
+		IdlCronTemporalPattern ctpt = (IdlCronTemporalPattern)transferable;
 		super.fromTransferable(ctpt.header);
 
 		this.description = ctpt.description;
-		this.setTemplates0(ctpt.cron_strings);
+		this.setTemplates0(ctpt.cronStrings);
 
 	}
 	
-	public CronTemporalPattern_Transferable getTransferable() {
-		return new CronTemporalPattern_Transferable(super.getHeaderTransferable(), this.description, getCronStrings());
+	public IdlCronTemporalPattern getTransferable() {
+		return new IdlCronTemporalPattern(super.getHeaderTransferable(), this.description, getCronStrings());
 	}
 
 	protected synchronized void setAttributes(	final Date created,

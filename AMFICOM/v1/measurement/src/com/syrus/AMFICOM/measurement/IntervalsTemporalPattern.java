@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.24 2005/06/23 11:54:10 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.25 2005/06/23 18:45:08 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,16 +33,16 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.Undoable;
-import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Duration;
-import com.syrus.AMFICOM.measurement.corba.ITP_Interval_Temporal_Pattern_Id;
-import com.syrus.AMFICOM.measurement.corba.IntervalsTemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IntervalDuration;
+import com.syrus.AMFICOM.measurement.corba.IntervalTemporalPatternId;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/23 11:54:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/23 18:45:08 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -114,7 +114,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		this.setIntervalsDuration0(intervalsDuration);
 	}
 
-	public IntervalsTemporalPattern(final IntervalsTemporalPattern_Transferable itpt) throws CreateObjectException {
+	public IntervalsTemporalPattern(final IdlIntervalsTemporalPattern itpt) throws CreateObjectException {
 
 		try {
 			this.fromTransferable(itpt);
@@ -125,22 +125,22 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IntervalsTemporalPattern_Transferable itpt = (IntervalsTemporalPattern_Transferable) transferable;
+		IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
 		super.fromTransferable(itpt.header);
 
 		{
 			final SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>();
-			for (int i = 0; i < itpt.intervals_temporal_pattern_id.length; i++) {
-				map.put(new Long(itpt.intervals_temporal_pattern_id[i].ms),
-						new Identifier(itpt.intervals_temporal_pattern_id[i].temporal_pattern_id));
+			for (int i = 0; i < itpt.intervalsTemporalPatternId.length; i++) {
+				map.put(new Long(itpt.intervalsTemporalPatternId[i].ms),
+						new Identifier(itpt.intervalsTemporalPatternId[i].temporalPatternId));
 			}
 			this.setIntervalsAbstractTemporalPatternMap0(map);
 		}
 
 		{
 			final SortedMap<Long, Long> map = new TreeMap<Long, Long>();
-			for (int i = 0; i < itpt.intervals_duration.length; i++) {
-				map.put(new Long(itpt.intervals_duration[i].ms), new Long(itpt.intervals_duration[i].duration));
+			for (int i = 0; i < itpt.intervalsDuration.length; i++) {
+				map.put(new Long(itpt.intervalsDuration[i].ms), new Long(itpt.intervalsDuration[i].duration));
 			}
 			this.setIntervalsDuration0(map);
 		}
@@ -454,40 +454,40 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public IntervalsTemporalPattern_Transferable getTransferable() {
+	public IdlIntervalsTemporalPattern getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		ITP_Interval_Temporal_Pattern_Id[] intervalTemporalPatternsIdT;
-		ITP_Interval_Duration[] durationsT;
+		IntervalTemporalPatternId[] intervalTemporalPatternsIdT;
+		IntervalDuration[] durationsT;
 		{
 			final Set<Long> keys = this.intervalsAbstractTemporalPatternMap.keySet();
-			intervalTemporalPatternsIdT = new ITP_Interval_Temporal_Pattern_Id[keys.size()];
+			intervalTemporalPatternsIdT = new IntervalTemporalPatternId[keys.size()];
 			int i = 0;
 			for (final Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
 				final Long ms = it.next();
 				final Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
-				intervalTemporalPatternsIdT[i] = new ITP_Interval_Temporal_Pattern_Id(ms.longValue(),
+				intervalTemporalPatternsIdT[i] = new IntervalTemporalPatternId(ms.longValue(),
 						temporalPatternId.getTransferable());
 			}
 		}
 
 		{
 			if (this.intervalsDuration == null) {
-				durationsT = new ITP_Interval_Duration[0];
+				durationsT = new IntervalDuration[0];
 			} else {
 				final Set<Long> keys = this.intervalsDuration.keySet();
-				durationsT = new ITP_Interval_Duration[keys.size()];
+				durationsT = new IntervalDuration[keys.size()];
 				int i = 0;
 				for (final Iterator<Long> it = keys.iterator(); it.hasNext(); i++) {
 					Long ms = it.next();
 					Long duration = this.intervalsDuration.get(ms);
-					durationsT[i] = new ITP_Interval_Duration(ms.longValue(), duration.longValue());
+					durationsT[i] = new IntervalDuration(ms.longValue(), duration.longValue());
 				}
 
 			}
 		}
 
-		return new IntervalsTemporalPattern_Transferable(super.getHeaderTransferable(), intervalTemporalPatternsIdT, durationsT);
+		return new IdlIntervalsTemporalPattern(super.getHeaderTransferable(), intervalTemporalPatternsIdT, durationsT);
 	}
 
 	public SortedMap<Long, Identifier> getIntervalsAbstractTemporalPatternMap() {

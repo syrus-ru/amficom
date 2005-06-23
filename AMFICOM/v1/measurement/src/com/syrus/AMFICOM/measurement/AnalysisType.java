@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.77 2005/06/20 17:29:55 bass Exp $
+ * $Id: AnalysisType.java,v 1.78 2005/06/23 18:45:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,10 +29,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.78 $, $Date: 2005/06/23 18:45:09 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -78,7 +78,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public AnalysisType(final AnalysisType_Transferable att) throws CreateObjectException {
+	public AnalysisType(final IdlAnalysisType att) throws CreateObjectException {
 		try {
 			this.fromTransferable(att);
 		} catch (ApplicationException ae) {
@@ -172,15 +172,15 @@ public final class AnalysisType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		AnalysisType_Transferable att = (AnalysisType_Transferable) transferable;
+		IdlAnalysisType att = (IdlAnalysisType) transferable;
 		super.fromTransferable(att.header, att.codename, att.description);
 
-		this.inParameterTypeIds = Identifier.fromTransferables(att.in_parameter_type_ids);
-		this.criteriaParameterTypeIds = Identifier.fromTransferables(att.criteria_parameter_type_ids);
-		this.etalonParameterTypeIds = Identifier.fromTransferables(att.etalon_parameter_type_ids);
-		this.outParameterTypeIds = Identifier.fromTransferables(att.out_parameter_type_ids);
+		this.inParameterTypeIds = Identifier.fromTransferables(att.inParameterTypeIds);
+		this.criteriaParameterTypeIds = Identifier.fromTransferables(att.criteriaParameterTypeIds);
+		this.etalonParameterTypeIds = Identifier.fromTransferables(att.etalonParameterTypeIds);
+		this.outParameterTypeIds = Identifier.fromTransferables(att.outParameterTypeIds);
 
-		this.measurementTypeIds = Identifier.fromTransferables(att.measurement_type_ids);
+		this.measurementTypeIds = Identifier.fromTransferables(att.measurementTypeIds);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -188,7 +188,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public AnalysisType_Transferable getTransferable() {
+	public IdlAnalysisType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
@@ -197,7 +197,7 @@ public final class AnalysisType extends ActionType {
 		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 		IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
-		return new AnalysisType_Transferable(super.getHeaderTransferable(),
+		return new IdlAnalysisType(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

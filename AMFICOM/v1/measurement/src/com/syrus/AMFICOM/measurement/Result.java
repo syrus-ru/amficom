@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.64 2005/06/20 17:29:55 bass Exp $
+ * $Id: Result.java,v 1.65 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlParameter;
+import com.syrus.AMFICOM.measurement.corba.IdlResult;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.65 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -66,7 +66,7 @@ public final class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Result(final Result_Transferable rt) throws CreateObjectException {
+	public Result(final IdlResult rt) throws CreateObjectException {
 		try {
 			this.fromTransferable(rt);
 		} catch (ApplicationException ae) {
@@ -98,23 +98,23 @@ public final class Result extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Result_Transferable rt = (Result_Transferable) transferable;
+		IdlResult rt = (IdlResult) transferable;
 		super.fromTransferable(rt.header);
 
 		this.sort = rt.sort.value();
 		Identifier actionId = null;
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				actionId = new Identifier(rt.measurement_id);
+				actionId = new Identifier(rt.measurementId);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				actionId = new Identifier(rt.analysis_id);
+				actionId = new Identifier(rt.analysisId);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				actionId = new Identifier(rt.evaluation_id);
+				actionId = new Identifier(rt.evaluationId);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				actionId = new Identifier(rt.modeling_id);
+				actionId = new Identifier(rt.modelingId);
 				break;
 			default:
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id + "'");
@@ -131,17 +131,17 @@ public final class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Result_Transferable getTransferable() {
+	public IdlResult getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
+		IdlParameter[] pts = new IdlParameter[this.parameters.length];
 		for (int i = 0; i < pts.length; i++) {
 			pts[i] = this.parameters[i].getTransferable();
 		}
 
 		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
 		final IdlIdentifier nonVoidIdlIdentifier = this.action.getId().getTransferable();
-		return new Result_Transferable(super.getHeaderTransferable(),
+		return new IdlResult(super.getHeaderTransferable(),
 				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT)
 						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,

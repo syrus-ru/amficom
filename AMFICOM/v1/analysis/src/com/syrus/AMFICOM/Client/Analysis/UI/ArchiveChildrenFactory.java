@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.13 2005/06/21 12:51:11 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.14 2005/06/23 18:45:05 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,13 +42,13 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/21 12:51:11 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:05 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis_v1

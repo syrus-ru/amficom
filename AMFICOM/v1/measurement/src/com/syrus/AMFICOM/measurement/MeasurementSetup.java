@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.79 2005/06/20 17:29:56 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.80 2005/06/23 18:45:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,10 +29,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/06/20 17:29:56 $
+ * @version $Revision: 1.80 $, $Date: 2005/06/23 18:45:08 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -76,7 +76,7 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MeasurementSetup(final MeasurementSetup_Transferable mst) throws CreateObjectException {
+	public MeasurementSetup(final IdlMeasurementSetup mst) throws CreateObjectException {
 		try {
 			this.fromTransferable(mst);
 		} catch (ApplicationException ae) {
@@ -167,28 +167,28 @@ public final class MeasurementSetup extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		MeasurementSetup_Transferable mst = (MeasurementSetup_Transferable) transferable;
+		IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
 		super.fromTransferable(mst.header);
 
-		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameter_set_id), true);
+		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameterSetId), true);
 
-		Identifier setId = new Identifier(mst.criteria_set_id);
+		Identifier setId = new Identifier(mst.criteriaSetId);
 		this.criteriaSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
 				true) : null;
 
-		setId = new Identifier(mst.threshold_set_id);
+		setId = new Identifier(mst.thresholdSetId);
 		this.thresholdSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
 				true) : null;
 
-		setId = new Identifier(mst.etalon_id);
+		setId = new Identifier(mst.etalonId);
 		this.etalon = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
 				true) : null;
 
 		this.description = mst.description;
-		this.measurementDuration = mst.measurement_duration;
+		this.measurementDuration = mst.measurementDuration;
 
-		this.monitoredElementIds = Identifier.fromTransferables(mst.monitored_element_ids);
-		this.measurementTypeIds = Identifier.fromTransferables(mst.measurement_type_ids);
+		this.monitoredElementIds = Identifier.fromTransferables(mst.monitoredElementIds);
+		this.measurementTypeIds = Identifier.fromTransferables(mst.measurementTypeIds);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -196,14 +196,14 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public MeasurementSetup_Transferable getTransferable() {
+	public IdlMeasurementSetup getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		final IdlIdentifier[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
-		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
+		return new IdlMeasurementSetup(super.getHeaderTransferable(),
 				this.parameterSet.getId().getTransferable(),
 				(this.criteriaSet != null) ? this.criteriaSet.getId().getTransferable() : voidIdlIdentifier,
 				(this.thresholdSet != null) ? this.thresholdSet.getId().getTransferable() : voidIdlIdentifier,

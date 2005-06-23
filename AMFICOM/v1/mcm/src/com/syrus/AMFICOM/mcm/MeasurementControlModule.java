@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.105 2005/06/23 12:35:04 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.106 2005/06/23 18:45:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,9 +47,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.AMFICOM.measurement.corba.IdlResult;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/06/23 12:35:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.106 $, $Date: 2005/06/23 18:45:06 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
@@ -347,7 +347,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		Test test;
 		Identifier testId;
 		MServer mServerRef;
-		Result_Transferable[] resultsT;
+		IdlResult[] resultsT;
 		while (this.running) {
 			if (!testList.isEmpty()) {
 				if (testList.get(0).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
@@ -408,8 +408,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}//while
 	}
 
-	private static Result_Transferable[] createTransferables() {
-		Result_Transferable[] resultsT = new Result_Transferable[resultList.size()];
+	private static IdlResult[] createTransferables() {
+		IdlResult[] resultsT = new IdlResult[resultList.size()];
 		int i = 0;
 		synchronized (resultList) {
 			for (Iterator<Result> it = resultList.iterator(); it.hasNext();)

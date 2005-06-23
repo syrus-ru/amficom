@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.68 2005/06/20 17:29:55 bass Exp $
+ * $Id: Analysis.java,v 1.69 2005/06/23 18:45:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/20 17:29:55 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/23 18:45:09 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -61,7 +61,7 @@ public final class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Analysis(final Analysis_Transferable at) throws CreateObjectException {
+	public Analysis(final IdlAnalysis at) throws CreateObjectException {
 		try {
 			this.fromTransferable(at);
 		} catch (ApplicationException ae) {
@@ -98,15 +98,15 @@ public final class Analysis extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Analysis_Transferable at = (Analysis_Transferable) transferable;
-		super.fromTransferable(at.header, null, new Identifier(at.monitored_element_id), null);
+		IdlAnalysis at = (IdlAnalysis) transferable;
+		super.fromTransferable(at.header, null, new Identifier(at.monitoredElementId), null);
 
-		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
-		final Identifier parentActionId = new Identifier(at.measurement_id);
+		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at._typeId), true);
+		final Identifier parentActionId = new Identifier(at.measurementId);
 		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
 				? (Action) StorableObjectPool.getStorableObject(parentActionId, true) : null;
 
-		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
+		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteriaSetId), true);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -114,11 +114,11 @@ public final class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public Analysis_Transferable getTransferable() {
+	public IdlAnalysis getTransferable() {
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new Analysis_Transferable(super.getHeaderTransferable(),
+		return new IdlAnalysis(super.getHeaderTransferable(),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? super.parentAction.getId().getTransferable()
