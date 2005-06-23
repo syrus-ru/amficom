@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.9 2005/06/22 10:16:05 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.10 2005/06/23 12:58:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,16 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -27,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/23 12:58:11 $
  * @module schemeclient_v1
  */
 
@@ -43,6 +47,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JPanel pnPanel0 = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
+	JButton commitButton = new JButton();
 	JLabel lbSortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
 	JComboBox cmbSortCombo = new AComboBox(sorts);
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
@@ -117,7 +122,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridwidth = 1;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 1;
@@ -126,6 +131,18 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
 		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
 		pnGeneralPanel.add( tfNameText );
+		
+		gbcGeneralPanel.gridx = 3;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
+		gbGeneralPanel.setConstraints( commitButton, gbcGeneralPanel );
+		pnGeneralPanel.add( commitButton );
 
 		lbSortLabel.setFocusable( false );
 		gbcGeneralPanel.gridx = 0;
@@ -171,6 +188,16 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		addToUndoableListener(tfNameText);
 		addToUndoableListener(cmbSortCombo);
 		addToUndoableListener(taDescriptionArea);
+		
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 	}
 	
 	public JComponent getGUI() {

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.10 2005/06/22 10:16:05 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.11 2005/06/23 12:58:11 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,20 +9,27 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/23 12:58:11 $
  * @module schemeclient_v1
  */
 
@@ -33,6 +40,7 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 	JPanel pnPanel0 = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
+	JButton commitButton = new JButton();
 	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField tfManufacturerText = new JTextField();
 	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
@@ -83,7 +91,7 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 4;
+		gbcGeneralPanel.gridwidth = 3;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 1;
@@ -92,6 +100,18 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
 		gbGeneralPanel.setConstraints(tfNameText, gbcGeneralPanel);
 		pnGeneralPanel.add(tfNameText);
+		
+		gbcGeneralPanel.gridx = 5;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(commitButton, gbcGeneralPanel);
+		pnGeneralPanel.add(commitButton);
 
 		lbManufacturerLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
@@ -189,6 +209,16 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 		addToUndoableListener(tfManufacturerText);
 		addToUndoableListener(tfManufacturerCodeText);
 		addToUndoableListener(taDescriptionArea);
+		
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 	}
 	
 	public JComponent getGUI() {
@@ -223,6 +253,11 @@ public abstract class AbstractLinkTypeGeneralPanel extends DefaultStorableObject
 			this.linkType.setManufacturer(this.tfManufacturerText.getText());
 			this.linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
 			
+			try {
+				StorableObjectPool.flush(this.linkType.getId(), true);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
