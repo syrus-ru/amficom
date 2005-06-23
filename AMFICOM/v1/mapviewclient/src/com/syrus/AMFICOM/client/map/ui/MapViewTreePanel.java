@@ -219,9 +219,9 @@ public final class MapViewTreePanel extends JPanel
 				if(node.getObject() instanceof MapElement) {
 					MapElement mapElement = (MapElement )node.getObject();
 					if(e.isAddedPath(paths[i]))
-						dispatcher.firePropertyChange(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+						dispatcher.firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT, mapElement));
 					else
-						dispatcher.firePropertyChange(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+						dispatcher.firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT, mapElement));
 				}
 				else if(node.getObject() instanceof Map) {
 					Map map = (Map )node.getObject();
