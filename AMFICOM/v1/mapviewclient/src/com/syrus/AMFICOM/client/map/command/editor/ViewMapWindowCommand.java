@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.23 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.24 2005/06/23 08:19:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,13 +28,14 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/23 08:19:51 $
  * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends AbstractCommand {
@@ -73,8 +74,7 @@ public class ViewMapWindowCommand extends AbstractCommand {
 				aC.setApplicationModel(this.factory.create());
 				aC.setDispatcher(this.aContext.getDispatcher());
 
-				this.mapFrame = new MapFrame();
-				this.mapFrame.setContext(aC);
+				this.mapFrame = new MapFrame(aC);
 
 				this.desktop.add(this.mapFrame);
 				Dimension dim = this.desktop.getSize();
@@ -105,6 +105,13 @@ public class ViewMapWindowCommand extends AbstractCommand {
 					"Ошибка доступа к картографическим данным",
 					"",
 					JOptionPane.ERROR_MESSAGE);
+		} catch(ApplicationException e) {
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Ошибка приложения",
+					"",
+					JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 	}
 
