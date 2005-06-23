@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.5 2005/06/23 10:49:47 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.6 2005/06/23 12:19:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/23 10:49:47 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/23 12:19:08 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -74,11 +74,6 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 			+ Integer.toString(user.getSort().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
-	}
-
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		SystemUser user = this.fromStorableObject(storableObject);
-		this.retrieveEntity(user);	
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -131,15 +126,6 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
-	}
-
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		SystemUser user = this.fromStorableObject(storableObject);
-		super.insertEntity(user);
-	}
-
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
 	}
 
 }
