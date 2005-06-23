@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.111 2005/06/22 16:31:43 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.112 2005/06/23 14:16:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/06/22 16:31:43 $
+ * @version $Revision: 1.112 $, $Date: 2005/06/23 14:16:34 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -165,7 +165,10 @@ public abstract class StorableObjectPool {
 
 	public static StorableObject getStorableObject(final Identifier id, final boolean useLoader) throws ApplicationException {
 		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert !id.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+
+		if (id.isVoid()) {
+			return null;
+		}
 
 		final short groupCode = ObjectGroupEntities.getGroupCode(id.getMajor());
 
@@ -1128,7 +1131,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.111 $, $Date: 2005/06/22 16:31:43 $
+	 * @version $Revision: 1.112 $, $Date: 2005/06/23 14:16:34 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
