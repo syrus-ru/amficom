@@ -80,6 +80,7 @@ private:
 
 	void performAnalysis(double *f_wletTEMP, int scaleB);
 	int getLastPoint();
+    static double get_wlet_fabs(int s, int x);//вернуть модуль текущего вейвлета
 
 	// splash comparison for many-scale analysis
 	static int splashesOverlap(Splash &spl1, Splash &spl2);
@@ -90,7 +91,7 @@ private:
     void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit
 
 	// работа с шумом
-	static void fillNoiseArray(double *y, int data_length, int N, double Neff, double NoiseFactor, double *outNoise);
+	static void fillNoiseArray(double *y, int data_length, int N, double Neff, double NoiseFactor, double *outNoise, int wlet_width);
 	static void getNoise(double *noise, int freq);
 	static double calcThresh(double thres, double noise); // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
 

@@ -245,4 +245,4 @@ UserWavelet::UserWavelet(int minScale, double(*fPtr)(int, int))
 	this->minScale = minScale;
 	this->fPtr = fPtr;
 }
-
+//===========================================================================

@@ -84,7 +84,7 @@ InitialAnalysis::InitialAnalysis(
 		// вычисляем уровень шума
 		{ const int sz = lastPoint + 1;
 		  //fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
-		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise);
+		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise, scaleB);
 		}
 	}
 	else
@@ -93,7 +93,6 @@ InitialAnalysis::InitialAnalysis(
 		{	noise[i] = externalNoise[i] * noiseFactor;
         }
 	}
-
 	prf_b("IA: analyse");
 	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
 	performAnalysis(f_wletTEMP, scaleB);
@@ -1189,7 +1188,11 @@ double InitialAnalysis::calcThresh(double thres, double noise)
 	//return thres+noise;
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double noiseFactor, double *outNoise)
+double InitialAnalysis::get_wlet_fabs(int s, int x)
+{	return fabs( wavelet.f(s,x) );
+}
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double noiseFactor, double *outNoise, int wlet_width)
 {	findNoiseArray(y, outNoise, data_length, N); // external function from findNoise.cpp
 	int i;
 	for (i = 0; i < N; i++)
@@ -1197,6 +1200,15 @@ void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double N
 		// быстродействие АМФИКОМа, того назову плохим словом.
 		outNoise[i] *= noiseFactor * 3 / sqrt(Neff);
 	}
+  	// noise convergence of  0.5*fabs(wavelet)/||wavelet|| function
+    double* noise_processed = new double[N+1];
+	UserWavelet fabs_wlet(wavelet.getMinScale(), get_wlet_fabs);
+	fabs_wlet.transform( wlet_width, outNoise, N, 0, N-1, noise_processed, 2*fabs_wlet.normStep(wlet_width));
+	for(i=0; i<N; i++){
+    outNoise[i] = noise_processed[i];
+    }
+    delete noise_processed;
+    // noise already convergenced
 }
 //------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getLastPoint()
