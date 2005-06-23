@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.9 2005/06/22 20:17:06 arseniy Exp $
+ * $Id: SystemUser.java,v 1.10 2005/06/23 12:19:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/22 20:17:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/23 12:19:55 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -58,6 +58,8 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	 */
 	public SystemUser(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
+
+		this.characteristics = new HashSet<Characteristic>();
 
 		final SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
 		try {
@@ -107,6 +109,41 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	}
 
 	/**
+	 * client constructor
+	 * @param creatorId
+	 * @param login
+	 * @param sort
+	 * @param name
+	 * @param description
+	 * @throws CreateObjectException
+	 */
+	public static SystemUser createInstance(final Identifier creatorId,
+			final String login,
+			final SystemUserSort sort,
+			final String name,
+			final String description) throws CreateObjectException {
+		try {
+			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
+			final SystemUser user = new SystemUser(generatedIdentifier,
+					creatorId != null ? creatorId : generatedIdentifier,
+					0L,
+					login,
+					sort.value(),
+					name,
+					description);
+
+			assert user.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			user.markAsChanged();
+
+			return user;
+		}
+		catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
+	}
+
+	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws ApplicationException 
 	 */
@@ -139,7 +176,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	public IdlSystemUser getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
+		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		
 		return new IdlSystemUser(super.getHeaderTransferable(),
 				this.login,
@@ -211,41 +248,6 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
-	}
-
-	/**
-	 * client constructor
-	 * @param creatorId
-	 * @param login
-	 * @param sort
-	 * @param name
-	 * @param description
-	 * @throws CreateObjectException
-	 */
-	public static SystemUser createInstance(final Identifier creatorId,
-			final String login,
-			final SystemUserSort sort,
-			final String name,
-			final String description) throws CreateObjectException {
-		try {
-			Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
-			SystemUser user = new SystemUser(generatedIdentifier,
-					creatorId != null ? creatorId : generatedIdentifier,
-					0L,
-					login,
-					sort.value(),
-					name,
-					description);
-
-			assert user.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-			user.markAsChanged();
-
-			return user;
-		}
-		catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
-		}
 	}
 
 	/**
