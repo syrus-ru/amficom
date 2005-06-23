@@ -1,4 +1,4 @@
--- $Id: porttype.sql,v 1.11 2005/06/15 17:03:09 bass Exp $
+-- $Id: porttype.sql,v 1.12 2005/06/23 14:41:08 arseniy Exp $
 
 CREATE TABLE PortType (
  id NUMBER(19),
@@ -15,6 +15,7 @@ CREATE TABLE PortType (
  sort NUMBER(2,0) NOT NULL,
 --
  CONSTRAINT porttype_pk PRIMARY KEY (id),
+ CONSTRAINT porttype_uniq UNIQUE (codename),
  CONSTRAINT porttype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT porttype_modifier_fk FOREIGN KEY (modifier_id)
