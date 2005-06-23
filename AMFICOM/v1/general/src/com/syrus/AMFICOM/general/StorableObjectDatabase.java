@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.153 2005/06/23 10:53:35 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.154 2005/06/23 11:51:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.153 $, $Date: 2005/06/23 10:53:35 $
+ * @version $Revision: 1.154 $, $Date: 2005/06/23 11:51:40 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -70,12 +70,21 @@ public abstract class StorableObjectDatabase {
 	public static final String SQL_WHERE = " WHERE ";
 	public static final String SQL_FUNCTION_EMPTY_BLOB = " EMPTY_BLOB() ";
 
+	@Deprecated
 	public static final int UPDATE_TOTAL = -1;
+	@Deprecated
 	public static final int UPDATE_FORCE = -2;
+	@Deprecated
 	public static final int UPDATE_CHECK = -3;
 
+	enum UpdateKind {UPDATE_TOTAL, UPDATE_FORCE, UPDATE_CHECK};
+
+	@Deprecated
 	public static final int MODE_INSERT = -10;
+	@Deprecated
 	public static final int MODE_UPDATE = -11;
+
+	enum ExecuteMode {MODE_INSERT, MODE_UPDATE};
 
 	public static final int SIZE_CODENAME_COLUMN = 32;
 	public static final int SIZE_NAME_COLUMN = 64;
@@ -376,12 +385,12 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public final Set<? extends StorableObject> retrieveByCondition(final StorableObjectCondition condition)
+	public final Set retrieveByCondition(final StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
-	protected Set<? extends StorableObject> retrieveByCondition(final String conditionQuery)
+	protected Set retrieveByCondition(final String conditionQuery)
 			throws RetrieveObjectException, IllegalDataException {
 		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
 
@@ -418,7 +427,7 @@ public abstract class StorableObjectDatabase {
 		return storableObjects;
 	}
 
-	public final Set<? extends StorableObject> retrieveButIdsByCondition(final Set<Identifier> ids,
+	public final Set retrieveButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 
@@ -432,7 +441,7 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByCondition(stringBuffer.toString());
 	}
 
-	public final Set<? extends StorableObject> retrieveAll() throws RetrieveObjectException {
+	public final Set retrieveAll() throws RetrieveObjectException {
 		try {
 			return this.retrieveByCondition((String) null);
 		} catch (final IllegalDataException ide) {
@@ -440,7 +449,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public final Set<? extends StorableObject> retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
+	public final Set retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
@@ -820,15 +829,15 @@ public abstract class StorableObjectDatabase {
 				storableObjectIds.add(id);
 		}
 
-		Set<? extends StorableObject> dbstorableObjects = null;
+		Set dbstorableObjects = null;
 		try {
 			dbstorableObjects = this.retrieveByIdsByCondition(storableObjectIds, null);
 		} catch (ApplicationException e) {
 			throw new UpdateObjectException(e);
 		}
 		final Map<Identifier, StorableObject> dbstorableObjectsMap = new HashMap<Identifier, StorableObject>();
-		for (final Iterator<? extends StorableObject> it = dbstorableObjects.iterator(); it.hasNext();) {
-			final StorableObject storableObject = it.next();
+		for (final Iterator it = dbstorableObjects.iterator(); it.hasNext();) {
+			final StorableObject storableObject = (StorableObject) it.next();
 			final Identifier id = storableObject.getId();
 			dbstorableObjectsMap.put(id, storableObject);
 		}
