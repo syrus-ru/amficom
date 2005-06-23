@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.22 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: CableController.java,v 1.23 2005/06/23 08:26:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,14 +43,10 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/23 08:26:04 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController {
-	/**
-	 * Instance.
-	 */
-//	private static CableController instance = null;
 
 	/**
 	 * Private constructor.
@@ -58,15 +54,6 @@ public final class CableController extends AbstractLinkController {
 	private CableController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
-
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
 
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new CableController(netMapViewer);

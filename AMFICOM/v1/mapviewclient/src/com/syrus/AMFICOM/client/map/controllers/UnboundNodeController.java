@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.9 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.10 2005/06/23 08:26:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,16 +28,11 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контроллер непривязанного узела (элемент схемы).
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/23 08:26:05 $
  * @module mapviewclient_v1
  */
 public class UnboundNodeController extends SiteNodeController
 {
-	/**
-	 * Instace.
-	 */
-//	private static UnboundNodeController instance = null;
-	
 	/**
 	 * Private constructor.
 	 */
@@ -45,15 +40,6 @@ public class UnboundNodeController extends SiteNodeController
 		super(netMapViewer);
 	}
 	
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
-
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new UnboundNodeController(netMapViewer);
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.24 2005/06/22 15:05:20 bass Exp $
+ * $Id: MeasurementPathController.java,v 1.25 2005/06/23 08:26:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,16 +43,11 @@ import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackag
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/22 15:05:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/06/23 08:26:05 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController {
-
-	/**
-	 * Instance.
-	 */
-//	private static MeasurementPathController instance = null;
 
 	/**
 	 * Private constructor.
@@ -60,15 +55,6 @@ public final class MeasurementPathController extends AbstractLinkController {
 	private MeasurementPathController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
-
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
 
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new MeasurementPathController(netMapViewer);

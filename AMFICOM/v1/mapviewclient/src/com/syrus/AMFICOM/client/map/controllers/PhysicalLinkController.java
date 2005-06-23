@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.18 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.19 2005/06/23 08:26:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,15 +37,10 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/23 08:26:05 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController {
-
-	/**
-	 * Instance
-	 */
-//	private static PhysicalLinkController instance = null;
 
 	/**
 	 * Private constructor.
@@ -53,15 +48,6 @@ public class PhysicalLinkController extends AbstractLinkController {
 	protected PhysicalLinkController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
-
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
 
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new PhysicalLinkController(netMapViewer);

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapElementController.java,v 1.5 2005/06/16 14:42:52 krupenn Exp $
+ * $Id: AbstractMapElementController.java,v 1.6 2005/06/23 08:23:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 /**
  * Контроллер элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/06/16 14:42:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/23 08:23:39 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractMapElementController implements
@@ -40,18 +40,4 @@ public abstract class AbstractMapElementController implements
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-//	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
-//		this.logicalNetLayer = logicalNetLayer;
-//	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-//	public LogicalNetLayer getLogicalNetLayer() {
-//		return this.logicalNetLayer;
-//	}
 }

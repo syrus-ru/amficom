@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.11 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.12 2005/06/23 08:26:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/23 08:26:05 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -53,27 +53,13 @@ public final class NodeLinkController extends AbstractLinkController {
 	 * угла наклона фрагмента линии в экранных координатах.
 	 */
 	protected double[] slope = new double[2];
-	
-	/**
-	 * Instance.
-	 */
-//	private static NodeLinkController instance = null;
-	
+
 	/**
 	 * Private constructor.
 	 */
 	private NodeLinkController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
-
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
 
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new NodeLinkController(netMapViewer);

@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.14 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.15 2005/06/23 08:26:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/23 08:26:05 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController {
@@ -40,25 +40,11 @@ public class SiteNodeController extends AbstractNodeController {
 					Image.SCALE_SMOOTH);
 
 	/**
-	 * Instance
-	 */
-//	private static SiteNodeController instance = null;
-
-	/**
 	 * Private constructor.
 	 */
 	protected SiteNodeController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
-
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
 
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new SiteNodeController(netMapViewer);

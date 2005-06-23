@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.30 2005/06/22 10:10:50 bass Exp $
+ * $Id: MapViewController.java,v 1.31 2005/06/23 08:26:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/06/22 10:10:50 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/06/23 08:26:05 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -112,9 +112,6 @@ public final class MapViewController {
 	/** Хэш-таблица контроллеров элементов карты. */
 	private java.util.Map ctlMap = new HashMap();
 	
-	/** Instance. */
-//	private static MapViewController instance = null;
-	
 	/** Ссылка на логический слой, на котором отображается вид. */
 	protected LogicalNetLayer logicalNetLayer = null;
 
@@ -157,36 +154,8 @@ public final class MapViewController {
 			MarkerController.createInstance(netMapViewer));
 	}
 	
-	/**
-	 * Instance getter.
-	 * @return контроллер вида
-	 */
-//	private static MapViewController getInstance() {
-//		return instance;
-//	}
-
 	public static MapViewController createInstance(NetMapViewer netMapViewer) {
-//		if(instance != null)
-//		{
-//			instance.setNetMapViewer(netMapViewer);
-//
-//			TopologicalNodeController.getInstance().setNetMapViewer(netMapViewer);
-//			SiteNodeController.getInstance().setNetMapViewer(netMapViewer);
-//			NodeLinkController.getInstance().setNetMapViewer(netMapViewer);
-//			PhysicalLinkController.getInstance().setNetMapViewer(netMapViewer);
-//			MarkController.getInstance().setNetMapViewer(netMapViewer);
-//			CollectorController.getInstance().setNetMapViewer(netMapViewer);
-//
-//			CableController.getInstance().setNetMapViewer(netMapViewer);
-//			MeasurementPathController.getInstance().setNetMapViewer(netMapViewer);
-//			UnboundNodeController.getInstance().setNetMapViewer(netMapViewer);
-//			UnboundLinkController.getInstance().setNetMapViewer(netMapViewer);
-//			MarkerController.getInstance().setNetMapViewer(netMapViewer);
-//			return instance;
-//		}
-		MapViewController instance = new MapViewController(netMapViewer);
-
-		return instance;
+		return new MapViewController(netMapViewer);
 	}
 
 	/**

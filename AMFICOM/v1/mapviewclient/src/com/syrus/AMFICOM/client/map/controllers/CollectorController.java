@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.9 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: CollectorController.java,v 1.10 2005/06/23 08:26:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,14 +27,10 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 /**
  * Контроллер коллектора.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/23 08:26:04 $
  * @module mapviewclient_v1
  */
 public final class CollectorController extends AbstractLinkController {
-	/**
-	 * Instance.
-	 */
-//	private static CollectorController instance = null;
 	
 	/**
 	 * Private constructor.
@@ -42,15 +38,6 @@ public final class CollectorController extends AbstractLinkController {
 	private CollectorController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
-
-	/**
-	 * Get instance.
-	 * 
-	 * @return instance
-	 */
-//	public static MapElementController getInstance() {
-//		return instance;
-//	}
 
 	public static MapElementController createInstance(NetMapViewer netMapViewer) {
 		return new CollectorController(netMapViewer);
