@@ -1,5 +1,5 @@
 /**
- * $Id: WrapperedComboChooserDialog.java,v 1.3 2005/06/20 15:29:11 krupenn Exp $
+ * $Id: WrapperedComboChooserDialog.java,v 1.4 2005/06/23 08:15:53 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,12 +22,12 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @module commonclient_v1
  */
 public class WrapperedComboChooserDialog {
 	public static Object showChooserDialog(Collection contents) {
-		return showChooserDialog(
+		return showNameChooserDialog(
 				contents, 
 				null, 
 				NamedObjectWrapper.getInstance(),
@@ -35,10 +35,10 @@ public class WrapperedComboChooserDialog {
 				NamedObjectWrapper.KEY_NAME);
 	}
 
-	public static Object showChooserDialog(
+	public static Object showNameChooserDialog(
 			Collection contents,
 			Object object) {
-		return showChooserDialog(
+		return showNameChooserDialog(
 				contents, 
 				object, 
 				NamedObjectWrapper.getInstance(),
@@ -51,10 +51,10 @@ public class WrapperedComboChooserDialog {
 			Wrapper wrapper,
 			String key,
 			String compareKey) {
-		return showChooserDialog(contents, null, wrapper, key, compareKey);
+		return showNameChooserDialog(contents, null, wrapper, key, compareKey);
 	}
 
-		public static Object showChooserDialog(
+		public static Object showNameChooserDialog(
 			Collection contents,
 			Object object,
 			Wrapper wrapper,
