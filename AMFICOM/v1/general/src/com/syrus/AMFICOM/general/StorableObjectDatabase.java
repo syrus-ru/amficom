@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.152 2005/06/22 19:21:43 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.153 2005/06/23 10:53:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.152 $, $Date: 2005/06/22 19:21:43 $
+ * @version $Revision: 1.153 $, $Date: 2005/06/23 10:53:35 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -462,7 +462,7 @@ public abstract class StorableObjectDatabase {
 	 * @param linkedIdColumnName
 	 * @throws RetrieveObjectException
 	 */
-	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(Set<StorableObject> storableObjects,
+	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(Set<? extends StorableObject> storableObjects,
 			String tableName,
 			String idColumnName,
 			String linkedIdColumnName)
