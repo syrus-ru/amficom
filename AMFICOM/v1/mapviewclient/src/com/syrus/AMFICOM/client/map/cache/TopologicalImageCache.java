@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.3 2005/06/22 12:18:26 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.4 2005/06/23 12:56:16 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/06/22 12:18:26 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/23 12:56:16 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -274,17 +274,21 @@ public class TopologicalImageCache implements MapImageRenderer
 				this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
 				nulifyCache();
 				
-				//Устанавливаем значения сектора неактивной области и послденей активной области на нули
-				this.lastActiveArea.setSize(0,0);
-				this.nonActiveZoneLastSector.setSize(0,0);				
+//				//Устанавливаем значения сектора неактивной области и послденей активной области на нули
+//				this.lastActiveArea.setSize(0,0);
+//				this.nonActiveZoneLastSector.setSize(0,0);				
 			}
 			
 			this.center = newCenter;			
 			this.createMovingRequests();
+	
+			//Устанавливаем значения сектора неактивной области и послденей активной области на нули
+			this.lastActiveArea.setSize(0,0);
+			this.nonActiveZoneLastSector.setSize(0,0);				
 			
 			//TODO эти строки должны быть закоментарены, если в MapMouseListener'е
 			//курсор сдвигается после изменения центра
-			reactMouseLocation();
+//			reactMouseLocation();
 		}
 	}
 
@@ -386,13 +390,7 @@ public class TopologicalImageCache implements MapImageRenderer
 		Log.debugMessage(" TIC - analyzeMouseLocation - just entered.",Log.DEBUGLEVEL10);
 		
 		if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
-			//В том случае, если мы до этого переключали кэш, меняем режим.
-			//Если мы этого не сделаем, то из-за изменения режима кэш обнулится
-			//при команде на изменение центра.
-		{
-			this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
-			nulifyCache();
-		}
+			return;
 		
 		int mouseX = event.getPoint().x;
 		int mouseY = event.getPoint().y;		
