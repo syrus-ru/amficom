@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.8 2005/06/21 12:51:12 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.9 2005/06/23 11:17:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/21 12:51:12 $
+ * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/06/23 11:17:33 $
  * @module commonclient_v1
  */
 
@@ -198,6 +198,10 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(tablePane, gbcPanel0);
 		this.pnPanel0.add(tablePane);
+	}
+	
+	public void setEditable(boolean editable) {
+		this.wtModel.setColumnEditable(1, editable);
 	}
 
 	public JComponent getGUI() {
