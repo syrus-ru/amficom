@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.52 2005/06/22 13:21:53 krupenn Exp $
+ * $Id: MapFrame.java,v 1.53 2005/06/23 08:21:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.52 $, $Date: 2005/06/22 13:21:53 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/23 08:21:09 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -130,15 +130,8 @@ public class MapFrame extends JInternalFrame
 
 	private MapConnection mapConnection;
 
-	protected MapFrame(ApplicationContext aContext)
-		throws MapConnectionException, MapDataException
-	{
-		this();
-		setContext(aContext);
-	}
-	
-	public MapFrame()
-		throws MapConnectionException, MapDataException
+	public MapFrame(ApplicationContext aContext)
+		throws MapConnectionException, MapDataException, ApplicationException
 	{
 		super();
 
@@ -162,8 +155,8 @@ public class MapFrame extends JInternalFrame
 				loader); 
 
 		LogicalNetLayer logicalNetLayer = new LogicalNetLayer(
-				converter,
-				mapContext);
+				null,
+				converter, mapContext);
 		
 		this.mapViewer = NetMapViewer.create(
 				MapPropertiesManager.getNetMapViewerClassName(),
@@ -181,6 +174,8 @@ public class MapFrame extends JInternalFrame
 
 		this.mapViewer.setScale(MapPropertiesManager.getZoom());
 		this.mapViewer.setCenter(MapPropertiesManager.getCenter());
+
+		setContext(aContext);
 	}
 	
 	/**
