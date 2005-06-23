@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.9 2005/06/23 11:17:33 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.10 2005/06/23 14:45:11 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.client.UI;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.SystemColor;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
@@ -37,7 +37,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
-import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -66,7 +65,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/06/23 11:17:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/23 14:45:11 $
  * @module commonclient_v1
  */
 
@@ -168,6 +167,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
+		gbcPanel0.insets = new Insets(2, 2, 0, 2);
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints(this.toolBar, gbcPanel0);
 		this.pnPanel0.add(this.toolBar);
@@ -236,6 +236,11 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				}
 			}
 		}
+		try {
+			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
 	}
 
 	public boolean save() {
@@ -284,12 +289,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.toolBar.setAddButtonEnabled(b && this.selectedTypeSort != null);
 		this.toolBar.setCancelButtonEnabled(!this.wTable.getSelectionModel()
 				.isSelectionEmpty() && b);
-		
-		// TODO editable columns
-		/*if (b)
-			wtModel.setEditableColumns(new int[] { 1 });
-		else
-			tModel.setEditableColumns(new int[0]);*/
+		this.toolBar.setCommitButtonEnabled(b);
+		this.wtModel.setColumnEditable(1, b);
 	}
 
 	void elementSelected(CharacteristicTypeSort selected_type) {
@@ -383,6 +384,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		private static final long serialVersionUID = 3544392491714752818L;
 		JButton addButton = new JButton();
 		JButton deleteButton = new JButton();
+		JButton commitButton = new JButton();
 
 		public PropsADToolBar() {
 			
@@ -396,13 +398,9 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		private void jbInit() throws Exception {
 			this.addButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
 			this.addButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-			// addButton.setFocusable(false);
-			this.addButton.setBorder(BorderFactory
-					.createEtchedBorder(EtchedBorder.LOWERED));
 			this.addButton.setFocusPainted(false);
 			this.addButton.setEnabled(false);
-			this.addButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-					"images/newprop.gif")));
+			this.addButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_ADD));
 			this.addButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					if (CharacteristicsPanel.this.selectedTypeSort == null) {
@@ -447,10 +445,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 			this.deleteButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_REMOVE_CHARACTERISTIC));
 			this.deleteButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-			// deleteButton.setFocusable(false);
 			this.deleteButton.setEnabled(false);
-			this.deleteButton.setBorder(BorderFactory
-					.createEtchedBorder(EtchedBorder.LOWERED));
 			this.deleteButton.setFocusPainted(false);
 			this.deleteButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DELETE));
 			this.deleteButton.addActionListener(new ActionListener() {
@@ -492,9 +487,22 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				
 				}
 			});
+			
+			this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+			this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+			this.commitButton.setFocusPainted(false);
+			this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+			this.commitButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					commitChanges();
+				}
+			});
+			
 			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			add(this.addButton);
-			add(this.deleteButton);
+			this.add(this.addButton);
+			this.add(this.deleteButton);
+			this.add(Box.createHorizontalGlue());
+			this.add(this.commitButton);
 		}
 
 		public void setAddButtonEnabled(boolean b) {
@@ -503,6 +511,10 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 		public void setCancelButtonEnabled(boolean b) {
 			this.deleteButton.setEnabled(b);
+		}
+		
+		public void setCommitButtonEnabled(boolean b) {
+			this.commitButton.setEnabled(b);
 		}
 	}
 }

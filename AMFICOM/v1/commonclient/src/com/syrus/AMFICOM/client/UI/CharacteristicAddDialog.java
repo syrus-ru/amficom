@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.10 2005/06/21 14:58:43 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.11 2005/06/23 14:45:11 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.10 $, $Date: 2005/06/21 14:58:43 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/23 14:45:11 $
  * @module commonclient_v1
  */
 
@@ -148,6 +148,12 @@ public class CharacteristicAddDialog {
 	public int showDialog(CharacteristicTypeSort sort, Collection characaterisctics) {
 		this.sort = sort;
 
+		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);
+		final String cancelButton = LangModelGeneral.getString(ResourceKeys.I18N_CANCEL);
+		final JOptionPane optionPane = new JOptionPane(this.getPanel(), JOptionPane.PLAIN_MESSAGE,
+														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
+																cancelButton}, null);
+
 		try {
 			TypicalCondition condition = new TypicalCondition(sort.value(), sort.value(), OperationSort.OPERATION_EQUALS,				
 					ObjectEntities.CHARACTERISTIC_TYPE_CODE, CharacteristicTypeWrapper.COLUMN_SORT);
@@ -163,12 +169,6 @@ public class CharacteristicAddDialog {
 			ex.printStackTrace();
 		}
 		
-		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);
-		final String cancelButton = LangModelGeneral.getString(ResourceKeys.I18N_CANCEL);
-		final JOptionPane optionPane = new JOptionPane(this.getPanel(), JOptionPane.PLAIN_MESSAGE,
-														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
-																cancelButton}, null);
-
 		if (this.characteristicTypeComboBox.getModel().getSize() == 0) {
 			this.existingRadioButton.setEnabled(false);
 			this.newRadioButton.doClick();
