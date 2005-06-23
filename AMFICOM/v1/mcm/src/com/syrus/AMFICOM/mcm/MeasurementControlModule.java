@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.104 2005/06/22 13:54:05 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.105 2005/06/23 12:35:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,13 +57,14 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/06/22 13:54:05 $
+ * @version $Revision: 1.105 $, $Date: 2005/06/23 12:35:04 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String APPLICATION_NAME = "mcm";
+	public static final String SETUP_OPTION = "-setup";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
@@ -158,6 +159,18 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
+
+		/*	Parse command-line options*/
+		if (args.length > 0) {
+			if (args[0].equalsIgnoreCase(SETUP_OPTION)) {
+				MCMSetup.setup();
+				System.exit(0);
+			}
+			else {
+				Log.errorMessage("Illegal options -- " + args);
+				System.exit(0);
+			}
+		}
 
 		/*	All preparations on startup*/
 		startup();

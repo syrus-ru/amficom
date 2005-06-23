@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.30 2005/06/21 12:44:30 bass Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.31 2005/06/23 12:35:04 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,9 +13,13 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.GeneralObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
@@ -26,8 +30,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/21 12:44:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/06/23 12:35:04 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObjectLoader {
@@ -38,7 +42,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 
 	/* Load multiple objects*/
 
-	public Set loadParameterTypes(final Set ids) throws ApplicationException {
+	public Set loadParameterTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -48,7 +52,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		});
 	}
 
-	public Set loadCharacteristicTypes(final Set ids) throws ApplicationException {
+	public Set loadCharacteristicTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -58,7 +62,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 		});
 	}
 
-	public Set loadCharacteristics(final Set ids) throws ApplicationException {
+	public Set loadCharacteristics(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -72,7 +76,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 
 	/* Load multiple objects but ids by condition*/
 
-	public Set loadParameterTypesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	public Set loadParameterTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_TYPE_CODE,
 				ids,
 				condition,
@@ -92,27 +96,27 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 	 * MCM do not need in all below methods
 	 * */
 
-	public Set loadCharacteristicTypesButIds(final StorableObjectCondition condition, final Set ids) {
+	public Set loadCharacteristicTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
 		return null;
 	}
 
-	public Set loadCharacteristicsButIds(final StorableObjectCondition condition, final Set ids) {
+	public Set loadCharacteristicsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
 		return null;
 	}
 
 
 
-	public void saveParameterTypes(final Set objects, boolean force) {
+	public void saveParameterTypes(final Set<ParameterType> objects, boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveCharacteristicTypes(final Set objects, boolean force) {
+	public void saveCharacteristicTypes(final Set<CharacteristicType> objects, boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveCharacteristics(final Set objects, boolean force) {
+	public void saveCharacteristics(final Set<Characteristic> objects, boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 }

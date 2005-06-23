@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.64 2005/06/21 12:44:30 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.65 2005/06/23 12:35:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,14 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Set;
+
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -20,14 +23,19 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.Evaluation;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/06/21 12:44:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/06/23 12:35:04 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends MCMObjectLoader implements MeasurementObjectLoader {
@@ -40,7 +48,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	/* Load multiple objects*/
 
-	public java.util.Set loadMeasurementTypes(final java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurementTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENT_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -50,7 +58,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		});
 	}
 
-	public java.util.Set loadAnalysisTypes(final java.util.Set ids) throws ApplicationException {
+	public Set loadAnalysisTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.ANALYSIS_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -60,7 +68,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		});
 	}
 
-	public java.util.Set loadEvaluationTypes(final java.util.Set ids) throws ApplicationException {
+	public Set loadEvaluationTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.EVALUATION_TYPE_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -72,19 +80,19 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 
 
-	public java.util.Set loadMeasurements(final java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurements(final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadAnalyses(final java.util.Set ids) throws ApplicationException {
+	public Set loadAnalyses(final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadEvaluations(final java.util.Set ids) throws ApplicationException {
+	public Set loadEvaluations(final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadMeasurementSetups(final java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurementSetups(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -94,11 +102,11 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		});
 	}
 
-	public java.util.Set loadResults(final java.util.Set ids) throws ApplicationException {
+	public Set loadResults(final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadParameterSets(final java.util.Set ids) throws ApplicationException {
+	public Set loadParameterSets(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PARAMETERSET_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -111,11 +119,11 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	/**
 	 * NOTE: New tests come to MCM only by CORBA call 'receiveTests'. 
 	 */
-	public java.util.Set loadTests(final java.util.Set ids) throws ApplicationException {
+	public Set loadTests(final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjects(ids);
 	}
 
-	public java.util.Set loadCronTemporalPatterns(final java.util.Set ids) throws ApplicationException {
+	public Set loadCronTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CRONTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -125,7 +133,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		});
 	}
 
-	public java.util.Set loadIntervalsTemporalPatterns(final java.util.Set ids) throws ApplicationException {
+	public Set loadIntervalsTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -135,7 +143,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 		});
 	}
 
-	public java.util.Set loadPeriodicalTemporalPatterns(final java.util.Set ids) throws ApplicationException {
+	public Set loadPeriodicalTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
 			public IDLEntity[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
@@ -149,7 +157,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	/* Load multiple objects but ids by condition*/
 
-	public java.util.Set loadMeasurementTypesButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadMeasurementTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_TYPE_CODE,
 				ids,
@@ -164,7 +172,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
-	public java.util.Set loadAnalysisTypesButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadAnalysisTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_TYPE_CODE,
 				ids,
@@ -179,7 +187,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
-	public java.util.Set loadEvaluationTypesButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadEvaluationTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_TYPE_CODE,
 				ids,
@@ -196,19 +204,19 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 
 
-	public java.util.Set loadMeasurementsButIds(final StorableObjectCondition condition, final java.util.Set ids) throws ApplicationException {
+	public Set loadMeasurementsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
-	public java.util.Set loadAnalysesButIds(final StorableObjectCondition condition, final java.util.Set ids) throws ApplicationException {
+	public Set loadAnalysesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
-	public java.util.Set loadEvaluationsButIds(final StorableObjectCondition condition, final java.util.Set ids) throws ApplicationException {
+	public Set loadEvaluationsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
-	public java.util.Set loadMeasurementSetupsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadMeasurementSetupsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTSETUP_CODE,
 				ids,
@@ -223,11 +231,11 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
-	public java.util.Set loadResultsButIds(final StorableObjectCondition condition, final java.util.Set ids) throws ApplicationException {
+	public Set loadResultsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
-	public java.util.Set loadParameterSetsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadParameterSetsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETERSET_CODE,
 				ids,
@@ -245,12 +253,12 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	/**
 	 * NOTE: New tests come to MCM only by CORBA call 'receiveTests'. 
 	 */
-	public java.util.Set loadTestsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadTestsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 	}
 
-	public java.util.Set loadCronTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadCronTemporalPatternsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CRONTEMPORALPATTERN_CODE,
 				ids,
@@ -265,7 +273,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
-	public java.util.Set loadIntervalsTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadIntervalsTemporalPatternsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE,
 				ids,
@@ -280,7 +288,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				});
 	}
 
-	public java.util.Set loadPeriodicalTemporalPatternsButIds(final StorableObjectCondition condition, final java.util.Set ids)
+	public Set loadPeriodicalTemporalPatternsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE,
 				ids,
@@ -299,23 +307,23 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	/*	Save multiple objects*/
 
-	public void saveMeasurements(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveMeasurements(final Set<Measurement> storableObjects, final boolean force) throws ApplicationException {
 		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
 	}
 
-	public void saveAnalyses(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveAnalyses(final Set<Analysis> storableObjects, final boolean force) throws ApplicationException {
 		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
 	}
 
-	public void saveEvaluations(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveEvaluations(final Set<Evaluation> storableObjects, final boolean force) throws ApplicationException {
 		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
 	}
 
-	public void saveResults(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveResults(final Set<Result> storableObjects, final boolean force) throws ApplicationException {
 		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
 	}
 
-	public void saveTests(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
+	public void saveTests(final Set<Test> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.TEST_CODE, storableObjects, force, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(final CommonServer server,
 					final IDLEntity[] transferables,
@@ -330,12 +338,12 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	 */	
 
 
-	public java.util.Set loadModelingTypes(final java.util.Set ids) {
+	public Set loadModelingTypes(final Set<Identifier> ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids;
 		return null;
 	}
 
-	public java.util.Set loadModelings(final java.util.Set ids) {
+	public Set loadModelings(final Set<Identifier> ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids;
 		return null;
 	}
@@ -344,55 +352,55 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 
 	
-	public java.util.Set loadModelingTypesButIds(final StorableObjectCondition condition, final java.util.Set ids) {
+	public Set loadModelingTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
 		return null;
 	}
 
-	public java.util.Set loadModelingsButIds(final StorableObjectCondition condition, final java.util.Set ids) {
+	public Set loadModelingsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", ids: " + ids + ", condition: " + condition;
 		return null;
 	}
 
 
 
-	public void saveMeasurementTypes(final java.util.Set objects, final boolean force) {
+	public void saveMeasurementTypes(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveAnalysisTypes(final java.util.Set objects, final boolean force) {
+	public void saveAnalysisTypes(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveEvaluationTypes(final java.util.Set objects, final boolean force) {
+	public void saveEvaluationTypes(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveModelingTypes(final java.util.Set objects, final boolean force) {
+	public void saveModelingTypes(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveMeasurementSetups(final java.util.Set objects, final boolean force) {
+	public void saveMeasurementSetups(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveModelings(final java.util.Set objects, final boolean force) {
+	public void saveModelings(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveParameterSets(final java.util.Set objects, final boolean force) {
+	public void saveParameterSets(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 
-	public void saveCronTemporalPatterns(final java.util.Set objects, final boolean force) {
+	public void saveCronTemporalPatterns(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 	
-	public void saveIntervalsTemporalPatterns(final java.util.Set objects, final boolean force) {
+	public void saveIntervalsTemporalPatterns(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 	
-	public void savePeriodicalTemporalPatterns(final java.util.Set objects, final boolean force) {
+	public void savePeriodicalTemporalPatterns(final Set objects, final boolean force) {
 		assert false : ErrorMessages.METHOD_NOT_NEEDED + ", objects: " + objects + ", force: " + force;
 	}
 }
