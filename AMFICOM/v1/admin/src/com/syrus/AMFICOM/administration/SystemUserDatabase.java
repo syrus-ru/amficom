@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.4 2005/06/22 12:14:16 bob Exp $
+ * $Id: SystemUserDatabase.java,v 1.5 2005/06/23 10:49:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/22 12:14:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/06/23 10:49:47 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -103,7 +103,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 				+ EQUALS
 				+ APOSTOPHE + DatabaseString.toQuerySubString(login, SIZE_LOGIN_COLUMN) + APOSTOPHE;
 		try {
-			Set set = this.retrieveByCondition(condition);
+			final Set set = this.retrieveByCondition(condition);
 			if (!set.isEmpty())
 				return (SystemUser) set.iterator().next();
 			throw new ObjectNotFoundException("SystemUser for login '" + login + "' not found");
