@@ -17,3 +17,4 @@ logs
 cache
 test
 .idl
+common.properties
