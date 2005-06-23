@@ -10,14 +10,14 @@ import java.awt.geom.Rectangle2D.Double;
 import javax.swing.JComponent;
 
 import com.mapinfo.util.DoubleRect;
-import com.syrus.AMFICOM.client.map.Logger;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.util.Log;
 
 public class MapInfoNetMapViewer extends NetMapViewer
 {
@@ -111,10 +111,10 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	{
 		if(fullRepaint)
 		{
-			Logger.log(" MIFLNL - repaint - Entered full repaint");
+			Log.debugMessage(" MIFLNL - repaint - Entered full repaint",Log.DEBUGLEVEL10);
 			
 			this.visualComponent.setImage(this.renderer.getImage());
-			Logger.log(" MIFLNL - repaint - Exiting full repaint");
+			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint",Log.DEBUGLEVEL10);
 			
 		}
 		this.visualComponent.repaint();		

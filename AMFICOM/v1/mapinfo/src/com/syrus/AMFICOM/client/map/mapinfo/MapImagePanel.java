@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.util.Log;
 
 public class MapImagePanel extends JPanel
 {
@@ -76,7 +77,8 @@ public class MapImagePanel extends JPanel
 	
 	public void paintComponent(Graphics g)
 	{
-		super.paintComponent(g);
+//		Log.debugMessage("MapImagePanel.paintComponent | " + , Log.FINEST);		
+//		super.paintComponent(g);
 		
 		if(this.mapImage != null && g != null)
 			g.drawImage(this.mapImage, 0, 0, this);
