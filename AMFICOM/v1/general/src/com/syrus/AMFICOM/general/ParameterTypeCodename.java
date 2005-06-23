@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodename.java,v 1.3 2005/06/22 12:28:52 arseniy Exp $
+ * $Id: ParameterTypeCodename.java,v 1.4 2005/06/23 11:01:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,6 +43,10 @@ public enum ParameterTypeCodename {
 
 	@Override
 	public String toString() {
+		return this.stringValue();
+	}
+
+	public String stringValue() {
 		return this.codename;
 	}
 }
