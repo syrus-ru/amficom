@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.23 2005/06/21 14:13:35 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.24 2005/06/23 11:58:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/06/21 14:13:35 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/23 11:58:03 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -97,7 +97,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			}
 
 			userIdTH.value = userId.getTransferable();
-			return (IdlSessionKey) userLogin.getSessionKey().getTransferable();
+			return userLogin.getSessionKey().getTransferable();
 		}
 		throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_PASSWORD, CompletionStatus.COMPLETED_YES, "Illegal password");
 	}
@@ -134,7 +134,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			IdlDomain[] domainsT = new IdlDomain[domains.size()];
 			int i = 0;
 			for (Iterator it = domains.iterator(); it.hasNext(); i++)
-				domainsT[i] = (IdlDomain) ((Domain) it.next()).getTransferable();
+				domainsT[i] = ((Domain) it.next()).getTransferable();
 			return domainsT;
 		}
 		catch (ApplicationException ae) {
