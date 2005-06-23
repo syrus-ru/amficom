@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.9 2005/06/22 10:16:06 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.10 2005/06/23 12:58:23 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -16,6 +18,8 @@ import javax.swing.event.*;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.*;
@@ -23,22 +27,25 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/23 12:58:23 $
  * @module schemeclient_v1
  */
 
 public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected SchemeCablePort schemePort;
+	protected SchemeElement parent;
 	
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
 	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField nameText = new JTextField();
+	JButton commitButton = new JButton();
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox typeCombo = new WrapperedComboBox(PortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JCheckBox portBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
@@ -91,7 +98,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 6;
+		gbcgeneralPanel.gridwidth = 5;
 		gbcgeneralPanel.gridheight = 1;
 		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcgeneralPanel.weightx = 1;
@@ -101,6 +108,18 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbgeneralPanel.setConstraints(nameText, gbcgeneralPanel);
 		generalPanel.add(nameText);
 
+		gbcgeneralPanel.gridx = 7;
+		gbcgeneralPanel.gridy = 0;
+		gbcgeneralPanel.gridwidth = 1;
+		gbcgeneralPanel.gridheight = 1;
+		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcgeneralPanel.weightx = 0;
+		gbcgeneralPanel.weighty = 0;
+		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcgeneralPanel.insets = new Insets(0,1,0,0);
+		gbgeneralPanel.setConstraints(commitButton, gbcgeneralPanel);
+		generalPanel.add(commitButton);
+		
 		typeLabel.setFocusable(false);
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 1;
@@ -223,8 +242,6 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		panel0.add(scpdescrArea);
 		
 		colorCombo.setRenderer(ColorListCellRenderer.getInstance());
-		for (int i = 0; i < SchemeResourceKeys.DEFAULT_COLOR_SET.length; i++)
-			colorCombo.addItem(SchemeResourceKeys.DEFAULT_COLOR_SET[i]);
 		
 		portBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -241,6 +258,16 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		addToUndoableListener(markText);
 		addToUndoableListener(colorCombo);
 		addToUndoableListener(descrArea);
+		
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 	}
 	
 	void setPortEnabled(boolean b) {
@@ -260,6 +287,13 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		typeCombo.removeAllItems();
 		
 		if (schemePort != null) {
+			try {
+				parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
+				port = schemePort.getPort();
+			} catch (IllegalStateException e1) {
+				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Log.FINEST); //$NON-NLS-1$
+				parent = null;
+			}
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 			try {
 				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
@@ -270,7 +304,6 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 			this.nameText.setText(schemePort.getName());
 			this.descrArea.setText(schemePort.getDescription());
 			this.typeCombo.setSelectedItem(schemePort.getPortType());
-			port = schemePort.getPort();
 		}
 		if (port != null) {
 			portBox.setSelected(true);
@@ -282,7 +315,11 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 //			colorCombo.setSelectedItem(color);
 		} else {
 			portBox.setSelected(false);
+			setPortEnabled(false);
 			markText.setText(SchemeResourceKeys.EMPTY);
+			
+			if (parent == null || parent.getEquipment() == null)
+				portBox.setEnabled(false);
 		}
 	}
 

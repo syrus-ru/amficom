@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.3 2005/06/22 10:16:06 stas Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.4 2005/06/23 12:58:23 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.*;
 import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 
@@ -17,6 +19,8 @@ import javax.swing.*;
 import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
@@ -32,7 +36,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/23 12:58:23 $
  * @module schemeclient_v1
  */
 
@@ -50,6 +54,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	JPanel pnGeneralPanel = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
+	JButton commitButton = new JButton();
 	JLabel lbSymbolLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
 	JTextField tfLabelText= new JTextField();
 	JButton btSymbolBut = new JButton();
@@ -106,7 +111,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 6;
+		gbcGeneralPanel.gridwidth = 5;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 1;
@@ -114,6 +119,17 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
 		pnGeneralPanel.add( tfNameText );
+		
+		gbcGeneralPanel.gridx = 7;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( commitButton, gbcGeneralPanel );
+		pnGeneralPanel.add( commitButton );
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
@@ -300,6 +316,16 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		addToUndoableListener(cmbSizeCombo);
 		addToUndoableListener(tfHeightText);
 		addToUndoableListener(tfWidthText);
+		
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 	}
 	
 	void cmbSizeCombo_itemStateChanged(ItemEvent e) {

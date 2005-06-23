@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.7 2005/06/22 15:05:19 bass Exp $
+ * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.8 2005/06/23 12:58:23 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,11 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -22,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -31,6 +35,8 @@ import com.syrus.AMFICOM.client.UI.ColorListCellRenderer;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.LinkTypeWrapper;
@@ -40,8 +46,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/22 15:05:19 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/06/23 12:58:23 $
  * @module schemeclient_v1
  */
 
@@ -53,6 +59,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 	JPanel generalPanel = new JPanel();
 	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField nameText = new JTextField();
+	JButton commitButton = new JButton();
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox typeCombo = new WrapperedComboBox(LinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel opticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
@@ -115,7 +122,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 
 		gbcgeneralPanel.gridx = 2;
 		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 6;
+		gbcgeneralPanel.gridwidth = 5;
 		gbcgeneralPanel.gridheight = 1;
 		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcgeneralPanel.weightx = 1;
@@ -124,6 +131,18 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		gbcgeneralPanel.insets = new Insets(0,1,0,0);
 		gbgeneralPanel.setConstraints(nameText, gbcgeneralPanel);
 		generalPanel.add(nameText);
+		
+		gbcgeneralPanel.gridx = 7;
+		gbcgeneralPanel.gridy = 0;
+		gbcgeneralPanel.gridwidth = 1;
+		gbcgeneralPanel.gridheight = 1;
+		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcgeneralPanel.weightx = 0;
+		gbcgeneralPanel.weighty = 0;
+		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcgeneralPanel.insets = new Insets(0,1,0,0);
+		gbgeneralPanel.setConstraints(commitButton, gbcgeneralPanel);
+		generalPanel.add(commitButton);
 
 		opticalLabel.setFocusable(false);
 		gbcgeneralPanel.gridx = 0;
@@ -394,6 +413,16 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		addToUndoableListener(markText);
 		addToUndoableListener(colorCombo);
 		addToUndoableListener(descrArea);
+		
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 	}
 	
 	public JComponent getGUI() {
