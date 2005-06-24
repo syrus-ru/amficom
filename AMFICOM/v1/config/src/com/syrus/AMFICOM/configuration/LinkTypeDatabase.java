@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.35 2005/06/17 11:01:09 bass Exp $
+ * $Id: LinkTypeDatabase.java,v 1.36 2005/06/24 10:09:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/06/17 11:01:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/06/24 10:09:50 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -69,7 +69,7 @@ public final class LinkTypeDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		LinkType linkType = this.fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ linkType.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTOPHE + COMMA
