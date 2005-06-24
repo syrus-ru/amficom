@@ -66,8 +66,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 	PhysicalLink physicalLink;
 	
-	private LogicalNetLayer logicalNetLayer;
-
 	boolean processSelection = true;
 
 	static Icon horverticon;
@@ -101,7 +99,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
-		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 	}
 
 	private void jbInit() {
