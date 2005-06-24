@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.31 2005/06/17 11:01:03 bass Exp $
+ * $Id: EventDatabase.java,v 1.32 2005/06/24 14:21:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/17 11:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/06/24 14:21:33 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -323,7 +323,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
@@ -334,7 +334,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(Set storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {

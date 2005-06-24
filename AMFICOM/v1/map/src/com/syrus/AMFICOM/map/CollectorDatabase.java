@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.33 2005/06/21 14:26:52 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.34 2005/06/24 14:20:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/21 14:26:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/06/24 14:20:29 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class CollectorDatabase extends CharacterizableDatabase {
@@ -164,14 +164,14 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
 			throws VersionCollisionException,
 				UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		this.updatePhysicalLinks(Collections.singleton(storableObject));
 	}
 
-	public void update(Set storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind)
 			throws VersionCollisionException,
 				UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);

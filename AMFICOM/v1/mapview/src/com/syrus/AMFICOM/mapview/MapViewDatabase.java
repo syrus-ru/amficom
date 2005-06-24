@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.27 2005/06/21 14:26:52 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.28 2005/06/24 14:19:36 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/21 14:26:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/06/24 14:19:36 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
 public final class MapViewDatabase extends CharacterizableDatabase {
@@ -219,12 +219,12 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind) throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		this.updateSchemeIds(Collections.singleton(storableObject));
 	}
 
-	public void update(Set storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
+	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind) throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		this.updateSchemeIds(storableObjects);
 	}	

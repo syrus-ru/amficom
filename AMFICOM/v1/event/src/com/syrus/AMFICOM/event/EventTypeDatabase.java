@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.28 2005/06/17 11:01:03 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.29 2005/06/24 14:21:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/17 11:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/06/24 14:21:33 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -251,7 +251,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	 * NOTE: Updates event type itself and identifiers of users, attached to it
 	 * Do not updates parameter types.
 	 */
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
@@ -267,7 +267,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	 * NOTE: Updates event type itself and identifiers of users, attached to it
 	 * Do not updates parameter types.
 	 */
-	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+	public void update(java.util.Set storableObjects, Identifier modifierId, UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
