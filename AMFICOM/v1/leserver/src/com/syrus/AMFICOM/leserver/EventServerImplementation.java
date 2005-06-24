@@ -1,5 +1,5 @@
 /*
- * $Id: EventServerImplementation.java,v 1.6 2005/06/20 15:28:02 arseniy Exp $
+ * $Id: EventServerImplementation.java,v 1.7 2005/06/24 09:28:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.AMFICOM.event.Event;
 import com.syrus.AMFICOM.event.EventType;
-import com.syrus.AMFICOM.event.corba.Event_Transferable;
+import com.syrus.AMFICOM.event.corba.IdlEvent;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/20 15:28:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/24 09:28:55 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public class EventServerImplementation extends EventServerPOA {
@@ -38,7 +38,7 @@ public class EventServerImplementation extends EventServerPOA {
 		userEventNotifiersMap = Collections.synchronizedMap(new HashMap<Identifier, UserEventNotifier>());
 	}
 
-	public void eventGeneration(Event_Transferable et) throws AMFICOMRemoteException {
+	public void eventGeneration(IdlEvent et) throws AMFICOMRemoteException {
 		try {
 			final Event event = new Event(et);
 			final EventType eventType = (EventType) event.getType();

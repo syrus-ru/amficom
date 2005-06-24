@@ -1,9 +1,9 @@
-/*
- * $Id: event.idl,v 1.18 2005/06/21 14:13:36 bass Exp $
+/*-
+ * $Id: event.idl,v 1.19 2005/06/24 09:28:55 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 #ifndef EVENT_IDL
@@ -21,58 +21,80 @@ module corba {
 
 /////////////////////// Event ////////////////////////
 
-	enum AlertKind {
-		ALERT_KIND_WINDOW,
-		ALERT_KIND_EMAIL,
-		ALERT_KIND_SMS
-	};
+//	module IdlEventTypePackage {
+//		XXX
+//		XXX NOT a storable object
+//		XXX
+		enum AlertKind {
+			ALERT_KIND_WINDOW,
+			ALERT_KIND_EMAIL,
+			ALERT_KIND_SMS
+		};
 
-	struct ETUserAlertKinds {
-		general::corba::Identifier user_id;
-		sequence<AlertKind> alert_kinds;
-	};
+		typedef sequence<AlertKind> AlertKindSeq;
 
-	struct EventType_Transferable {
+//		XXX
+//		XXX NOT a storable object
+//		XXX
+		struct UserAlertKinds {
+			general::corba::Identifier userId;
+			AlertKindSeq alertKinds;
+		};
+
+		typedef sequence<UserAlertKinds> UserAlertKindsSeq;
+//	};
+
+	typedef struct IdlEventType {
 		general::corba::StorableObject header;
 
 		general::corba::WString32 codename;
 		general::corba::WString256 description;
 
-		general::corba::IdentifierSeq parameter_type_ids;
-		sequence<ETUserAlertKinds> user_alert_kinds;
-	};
+		general::corba::IdentifierSeq parameterTypeIds;
+//		IdlEventTypePackage::
+		UserAlertKindsSeq userAlertKinds;
+	} EventType;
 
-	typedef sequence<EventType_Transferable> EventTypeSeq_Transferable;
+	typedef sequence<EventType> EventTypeSeq;
 
+//	module IdlEventPackage {
+//		XXX
+//		XXX NOT a storable object
+//		XXX
+		typedef struct IdlEventParameter {
+			general::corba::Identifier id;
+			general::corba::Identifier _typeId;
+			wstring value;
+		} EventParameter;
 
+		typedef sequence<EventParameter> EventParameterSeq;
+//	};
 
-	struct EventParameter_Transferable {
-		general::corba::Identifier id;
-		general::corba::Identifier type_id;
-		wstring value;
-	};
-
-	struct EventSource_Transferable {
+	typedef struct IdlEventSource {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier source_entity_id;
-	};
+		general::corba::Identifier sourceEntityId;
+	} EventSource;
 
-	struct Event_Transferable {
+	typedef sequence<EventSource> EventSourceSeq;
+
+	typedef struct IdlEvent {
 		general::corba::StorableObject header;
 
-		general::corba::Identifier type_id;
+		general::corba::Identifier _typeId;
 		general::corba::WString256 description;
 
-		sequence<EventParameter_Transferable> parameters;
-		sequence<general::corba::Identifier> event_source_ids;
-	};
+//		IdlEventPackage::
+		EventParameterSeq parameters;
+		general::corba::IdentifierSeq eventSourceIds;
+	} Event;
 
+	typedef sequence<Event> EventSeq;
 
 /////////////////// EventListener ////////////////////
 
 	abstract interface EventListener {
-		void receiveEvent(in Event_Transferable et) raises (general::corba::AMFICOMRemoteException);
+		void receiveEvent(in Event et) raises (general::corba::AMFICOMRemoteException);
 	};
 
 };
@@ -81,4 +103,4 @@ module corba {
 };
 };
 
-#endif
+#endif // EVENT_IDL

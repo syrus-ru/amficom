@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.21 2005/06/20 17:29:36 bass Exp $
+ * $Id: EventSource.java,v 1.22 2005/06/24 09:28:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
+import com.syrus.AMFICOM.event.corba.IdlEventSource;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/24 09:28:55 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -51,7 +51,7 @@ public final class EventSource extends StorableObject {
 		}
 	}
 
-	EventSource(final EventSource_Transferable est) {
+	EventSource(final IdlEventSource est) {
 		this.fromTransferable(est);
 	}
 
@@ -91,7 +91,7 @@ public final class EventSource extends StorableObject {
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) {
-		EventSource_Transferable est = (EventSource_Transferable) transferable;
+		IdlEventSource est = (IdlEventSource) transferable;
 		try {
 			super.fromTransferable(est);
 		}
@@ -99,11 +99,11 @@ public final class EventSource extends StorableObject {
 			// Never
 			Log.errorException(ae);
 		}
-		this.sourceEntityId = new Identifier(est.source_entity_id);
+		this.sourceEntityId = new Identifier(est.sourceEntityId);
 	}
 
-	public EventSource_Transferable getTransferable() {
-		return new EventSource_Transferable(super.getHeaderTransferable(),
+	public IdlEventSource getTransferable() {
+		return new IdlEventSource(super.getHeaderTransferable(),
 				this.sourceEntityId.getTransferable());
 	}
 

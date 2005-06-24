@@ -1,9 +1,17 @@
-#ifndef _LOGINSERVER_IDL_
-#define _LOGINSERVER_IDL_
+/*-
+ * $Id: leserver.idl,v 1.10 2005/06/24 09:28:55 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
-#include <general.idl>
-#include <administration.idl>
-#include <event.idl>
+#ifndef LOGINSERVER_IDL
+#define LOGINSERVER_IDL
+
+#include "general.idl"
+#include "administration.idl"
+#include "event.idl"
 
 module com {
 module syrus {
@@ -42,7 +50,7 @@ module corba {
 
 	interface EventServer : general::corba::Verifiable {
 
-		void eventGeneration(in event::corba::Event_Transferable event)
+		void eventGeneration(in event::corba::Event event)
 			raises (general::corba::AMFICOMRemoteException);
 	};
 
@@ -52,4 +60,4 @@ module corba {
 };
 };
 
-#endif
+#endif // LOGINSERVER_IDL

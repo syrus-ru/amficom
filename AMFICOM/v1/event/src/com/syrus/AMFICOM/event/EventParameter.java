@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.17 2005/06/21 08:28:27 bob Exp $
+ * $Id: EventParameter.java,v 1.18 2005/06/24 09:28:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,7 @@
  */
 package com.syrus.AMFICOM.event;
 
-import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
+import com.syrus.AMFICOM.event.corba.IdlEventParameter;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/21 08:28:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/06/24 09:28:55 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public final class EventParameter implements Identifiable, 
@@ -34,11 +34,11 @@ TransferableObject, TypedObject {
 	private ParameterType type;
 	private String value;
 
-	public EventParameter(EventParameter_Transferable ept) 
+	public EventParameter(IdlEventParameter ept) 
 	throws ApplicationException {
 		this.id = new Identifier(ept.id);
 		this.type = (ParameterType) StorableObjectPool.getStorableObject(
-				new Identifier(ept.type_id), true);
+				new Identifier(ept._typeId), true);
 		this.value = ept.value;
 	}
 
@@ -67,8 +67,8 @@ TransferableObject, TypedObject {
 		}
 	}
 
-	public EventParameter_Transferable getTransferable() {
-		return new EventParameter_Transferable(this.id.getTransferable(),
+	public IdlEventParameter getTransferable() {
+		return new IdlEventParameter(this.id.getTransferable(),
 				this.type.getId().getTransferable(),
 				this.value);
 	}

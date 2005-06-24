@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.30 2005/06/21 08:28:27 bob Exp $
+ * $Id: Event.java,v 1.31 2005/06/24 09:28:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
-import com.syrus.AMFICOM.event.corba.Event_Transferable;
+import com.syrus.AMFICOM.event.corba.IdlEventParameter;
+import com.syrus.AMFICOM.event.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/06/21 08:28:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/06/24 09:28:55 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -69,7 +69,7 @@ public final class Event extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public Event(final Event_Transferable et) throws CreateObjectException {
+	public Event(final IdlEvent et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
 		}
@@ -139,11 +139,11 @@ public final class Event extends StorableObject implements TypedObject {
 	}
 
 	protected @Override void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Event_Transferable et = (Event_Transferable) transferable;
+		IdlEvent et = (IdlEvent) transferable;
 
 		super.fromTransferable(et.header);
 
-		this.type = (EventType) StorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		this.type = (EventType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
 
 		this.description = et.description;
 
@@ -151,23 +151,23 @@ public final class Event extends StorableObject implements TypedObject {
 		for (int i = 0; i < et.parameters.length; i++)
 			this.eventParameters.add(new EventParameter(et.parameters[i]));
 
-		this.eventSourceIds = new HashSet<Identifier>(et.event_source_ids.length);
-		this.setEventSourceIds0(Identifier.fromTransferables(et.event_source_ids));
+		this.eventSourceIds = new HashSet<Identifier>(et.eventSourceIds.length);
+		this.setEventSourceIds0(Identifier.fromTransferables(et.eventSourceIds));
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public Event_Transferable getTransferable() {
+	public IdlEvent getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		int i = 0;
-		EventParameter_Transferable[] ept = new EventParameter_Transferable[this.eventParameters.size()];
+		IdlEventParameter[] ept = new IdlEventParameter[this.eventParameters.size()];
 		for (Iterator<EventParameter> it = this.eventParameters.iterator(); it.hasNext(); i++)
 			ept[i] = it.next().getTransferable();
 
 		IdlIdentifier[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
 
-		return new Event_Transferable(super.getHeaderTransferable(),
+		return new IdlEvent(super.getHeaderTransferable(),
 				this.type.getId().getTransferable(),
 				this.description,
 				ept,

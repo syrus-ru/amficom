@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.31 2005/06/20 17:29:36 bass Exp $
+ * $Id: EventType.java,v 1.32 2005/06/24 09:28:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import java.util.Set;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.event.corba.AlertKind;
-import com.syrus.AMFICOM.event.corba.ETUserAlertKinds;
-import com.syrus.AMFICOM.event.corba.EventType_Transferable;
+import com.syrus.AMFICOM.event.corba.UserAlertKinds;
+import com.syrus.AMFICOM.event.corba.IdlEventType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/20 17:29:36 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/24 09:28:55 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -68,7 +68,7 @@ public final class EventType extends StorableObjectType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	EventType(final EventType_Transferable ett) throws CreateObjectException {
+	EventType(final IdlEventType ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		}
@@ -139,19 +139,19 @@ public final class EventType extends StorableObjectType {
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		EventType_Transferable ett = (EventType_Transferable) transferable;
+		IdlEventType ett = (IdlEventType) transferable;
 
 		super.fromTransferable(ett.header, ett.codename, ett.description);
 
-		this.parameterTypeIds = Identifier.fromTransferables(ett.parameter_type_ids);
+		this.parameterTypeIds = Identifier.fromTransferables(ett.parameterTypeIds);
 
-		this.userAlertKindsMap = new HashMap(ett.user_alert_kinds.length);
-		for (int i = 0; i < ett.user_alert_kinds.length; i++) {
-			final ETUserAlertKinds userAlertKindsT = ett.user_alert_kinds[i];
-			final Identifier userId = new Identifier(userAlertKindsT.user_id);
-			final Set userAlertKinds = new HashSet(userAlertKindsT.alert_kinds.length);
-			for (int j = 0; j < userAlertKindsT.alert_kinds.length; j++) {
-				userAlertKinds.add(userAlertKindsT.alert_kinds[j]);
+		this.userAlertKindsMap = new HashMap(ett.userAlertKinds.length);
+		for (int i = 0; i < ett.userAlertKinds.length; i++) {
+			final UserAlertKinds userAlertKindsT = ett.userAlertKinds[i];
+			final Identifier userId = new Identifier(userAlertKindsT.userId);
+			final Set userAlertKinds = new HashSet(userAlertKindsT.alertKinds.length);
+			for (int j = 0; j < userAlertKindsT.alertKinds.length; j++) {
+				userAlertKinds.add(userAlertKindsT.alertKinds[j]);
 			}
 			this.userAlertKindsMap.put(userId, userAlertKinds);
 		}
@@ -159,12 +159,12 @@ public final class EventType extends StorableObjectType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public EventType_Transferable getTransferable() {
+	public IdlEventType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
 
-		final ETUserAlertKinds[] userAlertKindsT = new ETUserAlertKinds[this.userAlertKindsMap.size()];
+		final UserAlertKinds[] userAlertKindsT = new UserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
 		i = 0;
 		for (final Iterator<Identifier> it1 = this.userAlertKindsMap.keySet().iterator(); it1.hasNext(); i++) {
@@ -175,10 +175,10 @@ public final class EventType extends StorableObjectType {
 			for (final Iterator<AlertKind> it2 = userAlertKinds.iterator(); it2.hasNext(); j++) {
 				alertKindsT[j] = it2.next();
 			}
-			userAlertKindsT[i] = new ETUserAlertKinds(userId.getTransferable(), alertKindsT);
+			userAlertKindsT[i] = new UserAlertKinds(userId.getTransferable(), alertKindsT);
 		}
 
-		return new EventType_Transferable(
+		return new IdlEventType(
 				super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",
