@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.154 2005/06/23 11:51:40 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.155 2005/06/24 09:52:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.154 $, $Date: 2005/06/23 11:51:40 $
+ * @version $Revision: 1.155 $, $Date: 2005/06/24 09:52:33 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -70,14 +70,7 @@ public abstract class StorableObjectDatabase {
 	public static final String SQL_WHERE = " WHERE ";
 	public static final String SQL_FUNCTION_EMPTY_BLOB = " EMPTY_BLOB() ";
 
-	@Deprecated
-	public static final int UPDATE_TOTAL = -1;
-	@Deprecated
-	public static final int UPDATE_FORCE = -2;
-	@Deprecated
-	public static final int UPDATE_CHECK = -3;
-
-	enum UpdateKind {UPDATE_TOTAL, UPDATE_FORCE, UPDATE_CHECK};
+	protected enum UpdateKind {UPDATE_TOTAL, UPDATE_FORCE, UPDATE_CHECK};
 
 	@Deprecated
 	public static final int MODE_INSERT = -10;
@@ -703,7 +696,7 @@ public abstract class StorableObjectDatabase {
 
 	// //////////////////// update /////////////////////////
 
-	public void update(final StorableObject storableObject, final Identifier modifierId, final int updateKind)
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -716,7 +709,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final int updateKind)
+	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:

@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.23 2005/06/23 11:51:39 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.24 2005/06/24 09:52:33 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,11 @@ package com.syrus.AMFICOM.general;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/06/23 11:51:39 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/24 09:52:33 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -108,7 +107,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final int updateKind)
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 
@@ -121,7 +120,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final int updateKind)
+	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		this.updateCharacteristics(storableObjects);
