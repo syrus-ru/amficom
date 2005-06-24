@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.20 2005/06/22 19:39:20 arseniy Exp $
+ * $Id: ServerCore.java,v 1.21 2005/06/24 13:56:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.general.StorableObjectDatabase.UpdateKind;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/06/22 19:39:20 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/24 13:56:38 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -222,7 +223,7 @@ public abstract class ServerCore implements CommonServer {
 			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 			database.update(storableObjects,
 					new Identifier(userIdH.value),
-					force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+					force ? UpdateKind.UPDATE_FORCE : UpdateKind.UPDATE_CHECK);
 			return StorableObject.createHeadersTransferable(storableObjects);
 		}
 		catch (final VersionCollisionException vce) {

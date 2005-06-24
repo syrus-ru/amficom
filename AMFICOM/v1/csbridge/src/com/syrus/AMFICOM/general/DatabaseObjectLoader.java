@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.17 2005/06/22 19:28:41 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.18 2005/06/24 13:56:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.StorableObjectDatabase.UpdateKind;
+
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/22 19:28:41 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/24 13:56:38 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -82,7 +84,7 @@ public abstract class DatabaseObjectLoader {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-		database.update(storableObjects, userId, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+		database.update(storableObjects, userId, force ? UpdateKind.UPDATE_FORCE : UpdateKind.UPDATE_CHECK);
 	}
 
 	/**
