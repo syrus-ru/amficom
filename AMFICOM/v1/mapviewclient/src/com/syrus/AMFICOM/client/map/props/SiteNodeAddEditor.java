@@ -24,6 +24,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
@@ -67,6 +68,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	private LogicalNetLayer logicalNetLayer;
 
+	private NetMapViewer netMapViewer;
+
 	public SiteNodeAddEditor() {
 		this.root.add(this.elementsBranch);
 		this.root.add(this.cablesBranch);
@@ -79,9 +82,10 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
-		this.logicalNetLayer = logicalNetLayer;
-		this.crossingPanel.setMap(logicalNetLayer.getMapView().getMap());
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		this.crossingPanel.setMap(this.logicalNetLayer.getMapView().getMap());
 	}
 
 	private void jbInit() {
@@ -223,7 +227,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					CablePath cablePath = mapView.findCablePath(scl);
 
 					UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(cablePath);
-					command.setLogicalNetLayer(this.logicalNetLayer);
+					command.setNetMapViewer(this.netMapViewer);
 					command.execute();
 				}
 				break;
@@ -275,7 +279,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		if(linkRight instanceof UnboundLink) {
 			RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(
 					(UnboundLink )linkRight);
-			command.setLogicalNetLayer(this.logicalNetLayer);
+			command.setNetMapViewer(this.netMapViewer);
 			command.execute();
 		}
 		else {
@@ -295,7 +299,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 					linkLeft.getOtherNode(this.site),
 					linkRight.getOtherNode(this.site));
-			command.setLogicalNetLayer(this.logicalNetLayer);
+			command.setNetMapViewer(this.netMapViewer);
 			command.execute();
 
 			UnboundLink unbound = command.getUnbound();

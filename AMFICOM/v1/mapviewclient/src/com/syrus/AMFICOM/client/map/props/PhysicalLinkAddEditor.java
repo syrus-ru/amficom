@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
@@ -77,6 +78,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	static Icon leftrighticon;
 	static Icon rightlefticon;
 
+	private NetMapViewer netMapViewer;
+
 	static {
 		horverticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/horvert.gif"));
 		verthoricon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/verthor.gif"));
@@ -96,8 +99,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer lnl) {
-		this.logicalNetLayer = lnl;
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 	}
 
 	private void jbInit() {
@@ -352,7 +356,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 				this.physicalLink.getStartNode(),
 				this.physicalLink.getEndNode());
-		command.setLogicalNetLayer(this.logicalNetLayer);
+		command.setNetMapViewer(this.netMapViewer);
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
