@@ -91,14 +91,15 @@ private:
     void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit
 
 	// работа с шумом
-	// data - входная функция , data_length - длина фходной ф-ции,
+	// data - входная функция ,
+    // data_length - длина фходной ф-ции,
     // Neff - параметр опеределния шума,
     // noiseFactor - коэффициент для вычисления шума (обычно 1..3)
     // *outNoise - указатель на массив для записи выходных данных
 	static void fillNoiseArray(double *y, int data_length, int N, double Neff, double NoiseFactor, double *outNoise);
 	static void getNoise(double *noise, int freq);
-	static double calcThresh(double thres, double noise); // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию 
-	// свёртка входных данных с исользованием уже готового вейвлета 
+	static double calcThresh(double thres, double noise); // чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
+	// свёртка входных данных с исользованием уже готового вейвлета
 	// wlet_width - ширина вейвлета, с которым производится свёртка ( равна scaleB )
 	static void WaveletDataConvolution (double* dataIn, int dataInLength, int wletWidth ); // (c) Vit
 
