@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.40 2005/06/20 17:31:02 bass Exp $
+ * $Id: SiteNodeType.java,v 1.41 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/20 17:31:02 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/24 10:41:46 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -79,7 +79,7 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 		}
 	}
 
-	SiteNodeType(final SiteNodeType_Transferable sntt) throws CreateObjectException {
+	SiteNodeType(final IdlSiteNodeType sntt) throws CreateObjectException {
 		try {
 			this.fromTransferable(sntt);
 		} catch (ApplicationException ae) {
@@ -145,7 +145,7 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		SiteNodeType_Transferable sntt = (SiteNodeType_Transferable) transferable;
+		IdlSiteNodeType sntt = (IdlSiteNodeType) transferable;
 		super.fromTransferable(sntt.header, sntt.codename, sntt.description);
 
 		this.name = sntt.name;
@@ -175,9 +175,9 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 		return this.name;
 	}
 
-	public SiteNodeType_Transferable getTransferable() {
+	public IdlSiteNodeType getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new SiteNodeType_Transferable(super.getHeaderTransferable(),
+		return new IdlSiteNodeType(super.getHeaderTransferable(),
 				this.codename,
 				this.name,
 				this.description,

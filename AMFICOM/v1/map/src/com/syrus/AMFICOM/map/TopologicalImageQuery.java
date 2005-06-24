@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.4 2005/06/20 18:00:58 bass Exp $
+ * $Id: TopologicalImageQuery.java,v 1.5 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,13 @@ package com.syrus.AMFICOM.map;
 import java.awt.Image;
 
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.map.corba.TopologicalImageQuery_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/20 18:00:58 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/24 10:41:46 $
  * @module mapinfo_v1
  */
 public final class TopologicalImageQuery {
@@ -175,7 +175,7 @@ public final class TopologicalImageQuery {
 
 	}
 
-	public TopologicalImageQuery(TopologicalImageQuery_Transferable tit) {
+	public TopologicalImageQuery(IdlTopologicalImageQuery tit) {
 
 		this.mapImageWidth = tit.mapImageWidth;
 
@@ -210,9 +210,9 @@ public final class TopologicalImageQuery {
 	 * </p>
 	 * 
 	 */
-	public TopologicalImageQuery_Transferable getTransferable() {
+	public IdlTopologicalImageQuery getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return new TopologicalImageQuery_Transferable(
+		return new IdlTopologicalImageQuery(
 				this.mapImageWidth, this.mapImageHeight,
 				this.topoCenterX, this.topoCenterY,
 				this.topoScale, this.layerVisibilities,

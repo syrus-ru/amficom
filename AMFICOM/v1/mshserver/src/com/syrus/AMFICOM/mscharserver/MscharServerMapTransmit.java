@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerMapTransmit.java,v 1.3 2005/06/21 12:44:26 bass Exp $
+ * $Id: MscharServerMapTransmit.java,v 1.4 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,254 +13,254 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.AMFICOM.map.corba.Collector_Transferable;
-import com.syrus.AMFICOM.map.corba.MapView_Transferable;
-import com.syrus.AMFICOM.map.corba.Map_Transferable;
-import com.syrus.AMFICOM.map.corba.Mark_Transferable;
-import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
-import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
-import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
-import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
-import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
-import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlCollector;
+import com.syrus.AMFICOM.map.corba.IdlMapView;
+import com.syrus.AMFICOM.map.corba.IdlMap;
+import com.syrus.AMFICOM.map.corba.IdlMark;
+import com.syrus.AMFICOM.map.corba.IdlNodeLink;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNode;
+import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/21 12:44:26 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/24 10:41:46 $
  * @module mscharserver_v1
  */
 abstract class MscharServerMapTransmit extends MscharServerResourceTransmit {
 	private static final long serialVersionUID = 8672802938668842557L;
 
-	public SiteNode_Transferable[] transmitSiteNodes(
+	public IdlSiteNode[] transmitSiteNodes(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SiteNode_Transferable siteNodes[] = new SiteNode_Transferable[length];
+		final IdlSiteNode siteNodes[] = new IdlSiteNode[length];
 		System.arraycopy(storableObjects, 0, siteNodes, 0, length);
 		return siteNodes;
 	}
 
-	public SiteNode_Transferable[] transmitSiteNodesButIdsCondition(
+	public IdlSiteNode[] transmitSiteNodesButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SiteNode_Transferable siteNodes[] = new SiteNode_Transferable[length];
+		final IdlSiteNode siteNodes[] = new IdlSiteNode[length];
 		System.arraycopy(storableObjects, 0, siteNodes, 0, length);
 		return siteNodes;
 	}
 
-	public TopologicalNode_Transferable[] transmitTopologicalNodes(
+	public IdlTopologicalNode[] transmitTopologicalNodes(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final TopologicalNode_Transferable topologicalNodes[] = new TopologicalNode_Transferable[length];
+		final IdlTopologicalNode topologicalNodes[] = new IdlTopologicalNode[length];
 		System.arraycopy(storableObjects, 0, topologicalNodes, 0, length);
 		return topologicalNodes;
 	}
 
-	public TopologicalNode_Transferable[] transmitTopologicalNodesButIdsCondition(
+	public IdlTopologicalNode[] transmitTopologicalNodesButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final TopologicalNode_Transferable topologicalNodes[] = new TopologicalNode_Transferable[length];
+		final IdlTopologicalNode topologicalNodes[] = new IdlTopologicalNode[length];
 		System.arraycopy(storableObjects, 0, topologicalNodes, 0, length);
 		return topologicalNodes;
 	}
 
-	public NodeLink_Transferable[] transmitNodeLinks(
+	public IdlNodeLink[] transmitNodeLinks(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final NodeLink_Transferable nodeLinks[] = new NodeLink_Transferable[length];
+		final IdlNodeLink nodeLinks[] = new IdlNodeLink[length];
 		System.arraycopy(storableObjects, 0, nodeLinks, 0, length);
 		return nodeLinks;
 	}
 
-	public NodeLink_Transferable[] transmitNodeLinksButIdsCondition(
+	public IdlNodeLink[] transmitNodeLinksButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final NodeLink_Transferable nodeLinks[] = new NodeLink_Transferable[length];
+		final IdlNodeLink nodeLinks[] = new IdlNodeLink[length];
 		System.arraycopy(storableObjects, 0, nodeLinks, 0, length);
 		return nodeLinks;
 	}
 
-	public Mark_Transferable[] transmitMarks(
+	public IdlMark[] transmitMarks(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final Mark_Transferable marks[] = new Mark_Transferable[length];
+		final IdlMark marks[] = new IdlMark[length];
 		System.arraycopy(storableObjects, 0, marks, 0, length);
 		return marks;
 	}
 
-	public Mark_Transferable[] transmitMarksButIdsCondition(
+	public IdlMark[] transmitMarksButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final Mark_Transferable marks[] = new Mark_Transferable[length];
+		final IdlMark marks[] = new IdlMark[length];
 		System.arraycopy(storableObjects, 0, marks, 0, length);
 		return marks;
 	}
 
-	public PhysicalLink_Transferable[] transmitPhysicalLinks(
+	public IdlPhysicalLink[] transmitPhysicalLinks(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final PhysicalLink_Transferable physicalLinks[] = new PhysicalLink_Transferable[length];
+		final IdlPhysicalLink physicalLinks[] = new IdlPhysicalLink[length];
 		System.arraycopy(storableObjects, 0, physicalLinks, 0, length);
 		return physicalLinks;
 	}
 
-	public PhysicalLink_Transferable[] transmitPhysicalLinksButIdsCondition(
+	public IdlPhysicalLink[] transmitPhysicalLinksButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final PhysicalLink_Transferable physicalLinks[] = new PhysicalLink_Transferable[length];
+		final IdlPhysicalLink physicalLinks[] = new IdlPhysicalLink[length];
 		System.arraycopy(storableObjects, 0, physicalLinks, 0, length);
 		return physicalLinks;
 	}
 
-	public Collector_Transferable[] transmitCollectors(
+	public IdlCollector[] transmitCollectors(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final Collector_Transferable collectors[] = new Collector_Transferable[length];
+		final IdlCollector collectors[] = new IdlCollector[length];
 		System.arraycopy(storableObjects, 0, collectors, 0, length);
 		return collectors;
 	}
 
-	public Collector_Transferable[] transmitCollectorsButIdsCondition(
+	public IdlCollector[] transmitCollectorsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final Collector_Transferable collectors[] = new Collector_Transferable[length];
+		final IdlCollector collectors[] = new IdlCollector[length];
 		System.arraycopy(storableObjects, 0, collectors, 0, length);
 		return collectors;
 	}
 
-	public Map_Transferable[] transmitMaps(
+	public IdlMap[] transmitMaps(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final Map_Transferable maps[] = new Map_Transferable[length];
+		final IdlMap maps[] = new IdlMap[length];
 		System.arraycopy(storableObjects, 0, maps, 0, length);
 		return maps;
 	}
 
-	public Map_Transferable[] transmitMapsButIdsCondition(
+	public IdlMap[] transmitMapsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final Map_Transferable maps[] = new Map_Transferable[length];
+		final IdlMap maps[] = new IdlMap[length];
 		System.arraycopy(storableObjects, 0, maps, 0, length);
 		return maps;
 	}
 
-	public SiteNodeType_Transferable[] transmitSiteNodeTypes(
+	public IdlSiteNodeType[] transmitSiteNodeTypes(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SiteNodeType_Transferable siteNodeTypes[] = new SiteNodeType_Transferable[length];
+		final IdlSiteNodeType siteNodeTypes[] = new IdlSiteNodeType[length];
 		System.arraycopy(storableObjects, 0, siteNodeTypes, 0, length);
 		return siteNodeTypes;
 	}
 
-	public SiteNodeType_Transferable[] transmitSiteNodeTypesButIdsCondition(
+	public IdlSiteNodeType[] transmitSiteNodeTypesButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SiteNodeType_Transferable siteNodeTypes[] = new SiteNodeType_Transferable[length];
+		final IdlSiteNodeType siteNodeTypes[] = new IdlSiteNodeType[length];
 		System.arraycopy(storableObjects, 0, siteNodeTypes, 0, length);
 		return siteNodeTypes;
 	}
 
-	public PhysicalLinkType_Transferable[] transmitPhysicalLinkTypes(
+	public IdlPhysicalLinkType[] transmitPhysicalLinkTypes(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final PhysicalLinkType_Transferable physicalLinkTypes[] = new PhysicalLinkType_Transferable[length];
+		final IdlPhysicalLinkType physicalLinkTypes[] = new IdlPhysicalLinkType[length];
 		System.arraycopy(storableObjects, 0, physicalLinkTypes, 0, length);
 		return physicalLinkTypes;
 	}
 
-	public PhysicalLinkType_Transferable[] transmitPhysicalLinkTypesButIdsCondition(
+	public IdlPhysicalLinkType[] transmitPhysicalLinkTypesButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final PhysicalLinkType_Transferable physicalLinkTypes[] = new PhysicalLinkType_Transferable[length];
+		final IdlPhysicalLinkType physicalLinkTypes[] = new IdlPhysicalLinkType[length];
 		System.arraycopy(storableObjects, 0, physicalLinkTypes, 0, length);
 		return physicalLinkTypes;
 	}
 
-	public final MapView_Transferable[] transmitMapViews(
+	public final IdlMapView[] transmitMapViews(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final MapView_Transferable mapViews[] = new MapView_Transferable[length];
+		final IdlMapView mapViews[] = new IdlMapView[length];
 		System.arraycopy(storableObjects, 0, mapViews, 0, length);
 		return mapViews;
 	}
 
-	public final MapView_Transferable[] transmitMapViewsButIdsCondition(
+	public final IdlMapView[] transmitMapViewsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final MapView_Transferable mapViews[] = new MapView_Transferable[length];
+		final IdlMapView mapViews[] = new IdlMapView[length];
 		System.arraycopy(storableObjects, 0, mapViews, 0, length);
 		return mapViews;
 	}

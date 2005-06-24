@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapViewObjectLoader.java,v 1.8 2005/06/22 19:29:32 arseniy Exp $
+ * $Id: CORBAMapViewObjectLoader.java,v 1.9 2005/06/24 10:41:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,14 +23,14 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.map.corba.MapView_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlMapView;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/06/22 19:29:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/06/24 10:41:47 $
  * @module csbridge_v1
  */
 public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements MapViewObjectLoader {
@@ -83,7 +83,7 @@ public final class CORBAMapViewObjectLoader extends CORBAObjectLoader implements
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveMapViews((MapView_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveMapViews((IdlMapView[]) transferables, force, sessionKey);
 			}
 		});
 	}

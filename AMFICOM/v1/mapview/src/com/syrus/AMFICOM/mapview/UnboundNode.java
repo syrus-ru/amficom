@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.21 2005/06/21 12:44:31 bass Exp $
+ * $Id: UnboundNode.java,v 1.22 2005/06/24 10:41:47 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/06/21 12:44:31 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/24 10:41:47 $
  * @module mapviewclient_v1
  */
 public final class UnboundNode extends SiteNode
@@ -195,7 +195,7 @@ public final class UnboundNode extends SiteNode
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public SiteNode_Transferable getTransferable() {
+	public IdlSiteNode getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 

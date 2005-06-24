@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.20 2005/06/06 11:14:19 bob Exp $
+ * $Id: map.idl,v 1.21 2005/06/24 10:41:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,230 +17,219 @@ module com {
 		module AMFICOM {
 			module map {
 				module corba {
-					struct SiteNodeType_Transferable {
-							general::corba::StorableObject header;
+					typedef struct IdlSiteNodeType {
+						general::corba::StorableObject header;
 
-							wstring codename;
-							wstring name;
-							wstring description;
+						wstring codename;
+						wstring name;
+						wstring description;
 
-							general::corba::Identifier imageId;
-							boolean topological;
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::Identifier imageId;
+						boolean topological;
+						general::corba::IdentifierSeq characteristicIds;
+					} SiteNodeType;
 
-					typedef SiteNodeType_Transferable SiteNodeType;
 					typedef sequence<SiteNodeType> SiteNodeTypeSeq;
 
 					/**
 					 * Physical line type such as tunnel, subway, etc.
-						*/
-					struct PhysicalLinkType_Transferable {
-							general::corba::StorableObject header;
+					 */
+					typedef struct IdlPhysicalLinkType {
+						general::corba::StorableObject header;
 
-							wstring codename;
-							wstring name;
-							wstring description;
+						wstring codename;
+						wstring name;
+						wstring description;
 
-							long dimensionX;
-							long dimensionY;
+						long dimensionX;
+						long dimensionY;
 
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::IdentifierSeq characteristicIds;
+					} PhysicalLinkType;
 
-					typedef PhysicalLinkType_Transferable PhysicalLinkType;
 					typedef sequence<PhysicalLinkType> PhysicalLinkTypeSeq;
-
-					enum AbstractNodeSort {
-							NODE_SORT_SITE,
-							NODE_SORT_TOPOLOGICAL
-						};
 
 					/**
 					 * Node.
-						*/
-					struct SiteNode_Transferable {
-							general::corba::StorableObject header;
+					 */
+					typedef struct IdlSiteNode {
+						general::corba::StorableObject header;
 
-							wstring name;
-							wstring description;
+						wstring name;
+						wstring description;
 
-							double  longitude;		// anchor
-							double latitude;		// anchor
+						double  longitude;		// anchor
+						double latitude;		// anchor
 
-							general::corba::Identifier imageId;
-							general::corba::Identifier siteNodeTypeId;
+						general::corba::Identifier imageId;
+						general::corba::Identifier siteNodeTypeId;
 
-							wstring city;
-							wstring street;
-							wstring building;
+						wstring city;
+						wstring street;
+						wstring building;
 
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::IdentifierSeq characteristicIds;
+					} SiteNode;
 
-					typedef SiteNode_Transferable SiteNode;
 					typedef sequence<SiteNode> SiteNodeSeq;
 
-					struct TopologicalNode_Transferable {
-							general::corba::StorableObject header;
+					typedef struct IdlTopologicalNode {
+						general::corba::StorableObject header;
 
-							wstring name;
-							wstring description;
+						wstring name;
+						wstring description;
 
-							double  longitude;		// anchor
-							double latitude;		// anchor
+						double  longitude;		// anchor
+						double latitude;		// anchor
 
-							general::corba::Identifier physicalLinkId;
+						general::corba::Identifier physicalLinkId;
 
-							boolean active;
+						boolean active;
 
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::IdentifierSeq characteristicIds;
+					} TopologicalNode;
 
-					typedef TopologicalNode_Transferable TopologicalNode;
 					typedef sequence<TopologicalNode> TopologicalNodeSeq;
 
-					union AbstractNode_Transferable switch (AbstractNodeSort) {
+//					XXX
+//					XXX
+//					XXX
+					typedef union IdlAbstractNode switch (enum AbstractNodeSort{
+							NODE_SORT_SITE,
+							NODE_SORT_TOPOLOGICAL}) {
 						case NODE_SORT_SITE:
 							SiteNode siteNode;
 						case NODE_SORT_TOPOLOGICAL:
 							TopologicalNode topologicalNode;
-					};
+					} AbstractNode;
 
-					typedef AbstractNode_Transferable AbstractNode;
 					typedef sequence<AbstractNode> AbstractNodeSeq;
 
 					/**
 					 * Map item, line fragment.
-						*/
-					struct NodeLink_Transferable {
-							general::corba::StorableObject header;
+					 */
+					typedef struct IdlNodeLink {
+						general::corba::StorableObject header;
 
-							wstring name;
+						wstring name;
 
-							general::corba::Identifier physicalLinkId;
+						general::corba::Identifier physicalLinkId;
 
-							general::corba::Identifier startNodeId;
-							general::corba::Identifier endNodeId;
+						general::corba::Identifier startNodeId;
+						general::corba::Identifier endNodeId;
 
-							double length;
+						double length;
 
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::IdentifierSeq characteristicIds;
+					} NodeLink;
 
-					typedef NodeLink_Transferable NodeLink;
 					typedef sequence<NodeLink> NodeLinkSeq;
 
 					/**
 					 * Mark which has coordinates and is bound to a subway (MapLink) by distance.
-						*/
-					struct Mark_Transferable {
-							general::corba::StorableObject header;
+					 */
+					typedef struct IdlMark {
+						general::corba::StorableObject header;
 
-							wstring name;
-							wstring description;
-							double  longitude;		// anchor
-							double latitude;		// anchor
+						wstring name;
+						wstring description;
+						double  longitude;		// anchor
+						double latitude;		// anchor
 
-							general::corba::Identifier physicalLinkId;
+						general::corba::Identifier physicalLinkId;
 
-							double distance;
+						double distance;
 
-							wstring city;
-							wstring street;
-							wstring building;
+						wstring city;
+						wstring street;
+						wstring building;
 
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::IdentifierSeq characteristicIds;
+					} Mark;
 
-					typedef Mark_Transferable Mark;
 					typedef sequence<Mark> MarkSeq;
 
 					/**
 					 * Line item.
-						*/
-					struct PhysicalLink_Transferable {
-							general::corba::StorableObject header;
+					 */
+					typedef struct IdlPhysicalLink {
+						general::corba::StorableObject header;
 
-							wstring name;
-							wstring description;
+						wstring name;
+						wstring description;
 
-							general::corba::Identifier physicalLinkTypeId;
+						general::corba::Identifier physicalLinkTypeId;
 
-							general::corba::Identifier startNodeId;
-							general::corba::Identifier endNodeId;
+						general::corba::Identifier startNodeId;
+						general::corba::Identifier endNodeId;
 
-							wstring city;
-							wstring street;
-							wstring building;
+						wstring city;
+						wstring street;
+						wstring building;
 
-							long dimensionX;
-							long dimensionY;
+						long dimensionX;
+						long dimensionY;
 
-							boolean leftToRight;
-							boolean topToBottom;
+						boolean leftToRight;
+						boolean topToBottom;
 
-							general::corba::IdentifierSeq nodeLinkIds;
+						general::corba::IdentifierSeq nodeLinkIds;
 
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::IdentifierSeq characteristicIds;
+					} PhysicalLink;
 
-					typedef PhysicalLink_Transferable PhysicalLink;
 					typedef sequence<PhysicalLink> PhysicalLinkSeq;
 
-					struct Collector_Transferable {
-							general::corba::StorableObject header;
+					typedef struct IdlCollector {
+						general::corba::StorableObject header;
 
-							wstring name;
-							wstring description;
+						wstring name;
+						wstring description;
 
-							general::corba::IdentifierSeq physicalLinkIds;
+						general::corba::IdentifierSeq physicalLinkIds;
 
-							general::corba::IdentifierSeq characteristicIds;
-					};
+						general::corba::IdentifierSeq characteristicIds;
+					} Collector;
 
-					typedef Collector_Transferable Collector;
 					typedef sequence<Collector> CollectorSeq;
 
-					struct Map_Transferable {
-							general::corba::StorableObject header;
+					typedef struct IdlMap {
+						general::corba::StorableObject header;
 
-							general::corba::Identifier domain_id;
+						general::corba::Identifier domainId;
 
-							wstring name;
-							wstring description;
+						wstring name;
+						wstring description;
 
-							general::corba::IdentifierSeq siteNodeIds;
-							general::corba::IdentifierSeq topologicalNodeIds;
-							general::corba::IdentifierSeq nodeLinkIds;
-							general::corba::IdentifierSeq physicalLinkIds;
-							general::corba::IdentifierSeq markIds;
-							general::corba::IdentifierSeq collectorIds;
-					};
+						general::corba::IdentifierSeq siteNodeIds;
+						general::corba::IdentifierSeq topologicalNodeIds;
+						general::corba::IdentifierSeq nodeLinkIds;
+						general::corba::IdentifierSeq physicalLinkIds;
+						general::corba::IdentifierSeq markIds;
+						general::corba::IdentifierSeq collectorIds;
+					} Map;
 
-					typedef Map_Transferable Map;
 					typedef sequence<Map> MapSeq;
 
-					struct MapView_Transferable {
-							general::corba::StorableObject header;
+					typedef struct IdlMapView {
+						general::corba::StorableObject header;
 
-							general::corba::Identifier domain_id;
-							wstring name;
-							wstring description;
+						general::corba::Identifier domainId;
+						wstring name;
+						wstring description;
 
-							double longitude;
-							double latitude;
-							double scale;
-							double defaultScale;
+						double longitude;
+						double latitude;
+						double scale;
+						double defaultScale;
 
-							general::corba::Identifier mapId;
-							general::corba::IdentifierSeq schemeIds;
-					};
+						general::corba::Identifier mapId;
+						general::corba::IdentifierSeq schemeIds;
+					} MapView;
 
-					typedef MapView_Transferable MapView;
 					typedef sequence<MapView> MapViewSeq;
 					
-					struct TopologicalImageQuery_Transferable {
+					typedef struct IdlTopologicalImageQuery {
 						long mapImageWidth;
 						long mapImageHeight;
 
@@ -252,15 +241,11 @@ module com {
 						::CORBA::BooleanSeq labelVisibilities;
 
 						long long userId;		
-					};
+					} TopologicalImageQuery;
 
-					typedef TopologicalImageQuery_Transferable TopologicalImageQuery;
-
-					struct RenderedImage_Transferable {
+					typedef struct IdlRenderedImage {
 						::CORBA::OctetSeq image;
-					};
-
-					typedef RenderedImage_Transferable RenderedImage;
+					} RenderedImage;
 				};
 			};
 		};

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.48 2005/06/21 12:44:27 bass Exp $
+ * $Id: SiteNode.java,v 1.49 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/06/21 12:44:27 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/24 10:41:46 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -99,7 +99,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		}
 	}
 
-	SiteNode(final SiteNode_Transferable snt) throws CreateObjectException {
+	SiteNode(final IdlSiteNode snt) throws CreateObjectException {
 		super(snt.header);
 		super.name = snt.name;
 		super.description = snt.description;
@@ -218,11 +218,11 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		return dependencies;
 	}
 
-	public SiteNode_Transferable getTransferable() {
+	public IdlSiteNode getTransferable() {
 		int i = 0;
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new SiteNode_Transferable(super.getHeaderTransferable(),
+		return new IdlSiteNode(super.getHeaderTransferable(),
 				this.name,
 				this.description,
 				this.location.getX(),

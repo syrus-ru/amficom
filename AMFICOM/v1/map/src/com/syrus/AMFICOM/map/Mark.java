@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.44 2005/06/20 17:31:02 bass Exp $
+ * $Id: Mark.java,v 1.45 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.map.corba.Mark_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlMark;
 
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/06/20 17:31:02 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/24 10:41:46 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -91,7 +91,7 @@ public final class Mark extends AbstractNode {
 		}
 	}
 
-	Mark(final Mark_Transferable mt) throws CreateObjectException {
+	Mark(final IdlMark mt) throws CreateObjectException {
 		super(mt.header);
 		super.name = mt.name;
 		super.description = mt.description;
@@ -210,10 +210,10 @@ public final class Mark extends AbstractNode {
 		return Collections.singleton(this.physicalLink);
 	}
 
-	public Mark_Transferable getTransferable() {
+	public IdlMark getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new Mark_Transferable(super.getHeaderTransferable(),
+		return new IdlMark(super.getHeaderTransferable(),
 				this.name,
 				this.description,
 				this.location.getX(),

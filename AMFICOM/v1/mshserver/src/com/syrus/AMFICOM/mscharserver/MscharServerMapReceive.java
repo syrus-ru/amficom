@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerMapReceive.java,v 1.3 2005/06/21 12:44:26 bass Exp $
+ * $Id: MscharServerMapReceive.java,v 1.4 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,29 +11,29 @@ package com.syrus.AMFICOM.mscharserver;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.map.corba.Collector_Transferable;
-import com.syrus.AMFICOM.map.corba.MapView_Transferable;
-import com.syrus.AMFICOM.map.corba.Map_Transferable;
-import com.syrus.AMFICOM.map.corba.Mark_Transferable;
-import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
-import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
-import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
-import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
-import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
-import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlCollector;
+import com.syrus.AMFICOM.map.corba.IdlMapView;
+import com.syrus.AMFICOM.map.corba.IdlMap;
+import com.syrus.AMFICOM.map.corba.IdlMark;
+import com.syrus.AMFICOM.map.corba.IdlNodeLink;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNode;
+import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/21 12:44:26 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/24 10:41:46 $
  * @module mscharserver_v1
  */
 abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	private static final long serialVersionUID = -8091147854406929055L;
 
 	public final IdlStorableObject[] receiveSiteNodes(
-			final SiteNode_Transferable transferables[],
+			final IdlSiteNode transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -41,7 +41,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receiveTopologicalNodes(
-			final TopologicalNode_Transferable transferables[],
+			final IdlTopologicalNode transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -49,7 +49,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receiveNodeLinks(
-			final NodeLink_Transferable transferables[],
+			final IdlNodeLink transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -57,7 +57,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receiveMarks(
-			final Mark_Transferable transferables[],
+			final IdlMark transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -65,7 +65,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receivePhysicalLinks(
-			final PhysicalLink_Transferable transferables[],
+			final IdlPhysicalLink transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -73,7 +73,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receiveCollectors(
-			final Collector_Transferable transferables[],
+			final IdlCollector transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -81,7 +81,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receiveMaps(
-			final Map_Transferable transferables[],
+			final IdlMap transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -89,7 +89,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receiveSiteNodeTypes(
-			final SiteNodeType_Transferable transferables[],
+			final IdlSiteNodeType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -97,7 +97,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receivePhysicalLinkTypes(
-			final PhysicalLinkType_Transferable transferables[],
+			final IdlPhysicalLinkType transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
@@ -105,7 +105,7 @@ abstract class MscharServerMapReceive extends MscharServerResourceReceive {
 	}
 
 	public final IdlStorableObject[] receiveMapViews(
-			final MapView_Transferable transferables[],
+			final IdlMapView transferables[],
 			final boolean force,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {

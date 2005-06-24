@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.67 2005/06/21 12:44:27 bass Exp $
+ * $Id: PhysicalLink.java,v 1.68 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы,
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/06/21 12:44:27 $
+ * @version $Revision: 1.68 $, $Date: 2005/06/24 10:41:46 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -125,7 +125,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	PhysicalLink(final PhysicalLink_Transferable plt) throws CreateObjectException {
+	PhysicalLink(final IdlPhysicalLink plt) throws CreateObjectException {
 		try {
 			this.fromTransferable(plt);
 		} catch (ApplicationException ae) {
@@ -251,7 +251,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		PhysicalLink_Transferable plt = (PhysicalLink_Transferable) transferable;
+		IdlPhysicalLink plt = (IdlPhysicalLink) transferable;
 		super.fromTransferable(plt.header);
 
 		this.name = plt.name;
@@ -282,11 +282,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		return Collections.singleton(this.physicalLinkType);
 	}
 
-	public PhysicalLink_Transferable getTransferable() {
+	public IdlPhysicalLink getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
 
-		return new PhysicalLink_Transferable(super.getHeaderTransferable(),
+		return new IdlPhysicalLink(super.getHeaderTransferable(),
 				this.name,
 				this.description,
 				this.physicalLinkType.getId().getTransferable(),

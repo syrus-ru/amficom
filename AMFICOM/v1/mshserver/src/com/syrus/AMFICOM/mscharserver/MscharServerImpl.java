@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.6 2005/06/21 12:44:26 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.7 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,13 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
-import com.syrus.AMFICOM.map.corba.RenderedImage_Transferable;
-import com.syrus.AMFICOM.map.corba.TopologicalImageQuery_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
+import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/21 12:44:26 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/24 10:41:46 $
  * @author $Author: bass $
  * @module mscharserver_v1
  */
@@ -55,8 +55,8 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 		}
 	}
 
-	public RenderedImage_Transferable transmitTopologicalImage(
-			final TopologicalImageQuery_Transferable topologicalImageQuery_Transferable,
+	public IdlRenderedImage transmitTopologicalImage(
+			final IdlTopologicalImageQuery topologicalImageQuery_Transferable,
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		try {
@@ -69,7 +69,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 			} catch (IllegalDataException e) {
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
 			}
-			RenderedImage_Transferable renderedImageT = new RenderedImage_Transferable(image);
+			IdlRenderedImage renderedImageT = new IdlRenderedImage(image);
 			return renderedImageT;
 		} catch (final AMFICOMRemoteException are) {
 			throw are;

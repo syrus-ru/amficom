@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.37 2005/06/20 17:30:17 bass Exp $
+* $Id: MapView.java,v 1.38 2005/06/24 10:41:47 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.corba.MapView_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlMapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/20 17:30:17 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/24 10:41:47 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -102,7 +102,7 @@ public final class MapView extends DomainMember implements Namable {
 		}
 	}
 
-	MapView(MapView_Transferable mvt) throws CreateObjectException {
+	MapView(IdlMapView mvt) throws CreateObjectException {
 		try {
 			fromTransferable(mvt);
 		} catch (final ApplicationException ae) {
@@ -174,8 +174,8 @@ public final class MapView extends DomainMember implements Namable {
 	protected void fromTransferable(IDLEntity transferable)
 			throws ApplicationException {
 		
-		MapView_Transferable mvt = (MapView_Transferable) transferable;
-		super.fromTransferable(mvt.header, new Identifier(mvt.domain_id));
+		IdlMapView mvt = (IdlMapView) transferable;
+		super.fromTransferable(mvt.header, new Identifier(mvt.domainId));
 
 		this.name = mvt.name;
 		this.description = mvt.description;
@@ -211,13 +211,13 @@ public final class MapView extends DomainMember implements Namable {
 		return dependencies;
 	}
 
-	public MapView_Transferable getTransferable() {
+	public IdlMapView getTransferable() {
 		int i = 0;
 		IdlIdentifier[] schemeIdsTransferable = new IdlIdentifier[this.schemes.size()];
 		for (Iterator<Scheme> iterator = this.schemes.iterator(); iterator.hasNext();)
 			schemeIdsTransferable[i++] = iterator.next().getId().getTransferable();		
 
-		return new MapView_Transferable(super.getHeaderTransferable(),
+		return new IdlMapView(super.getHeaderTransferable(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

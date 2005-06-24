@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.47 2005/06/20 17:31:02 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.48 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/06/20 17:31:02 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/24 10:41:46 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -93,7 +93,7 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 		}
 	}
 
-	PhysicalLinkType(final PhysicalLinkType_Transferable pltt) throws CreateObjectException {
+	PhysicalLinkType(final IdlPhysicalLinkType pltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(pltt);
 		} catch (ApplicationException ae) {
@@ -158,7 +158,7 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		PhysicalLinkType_Transferable pltt = (PhysicalLinkType_Transferable) transferable;
+		IdlPhysicalLinkType pltt = (IdlPhysicalLinkType) transferable;
 		super.fromTransferable(pltt.header, pltt.codename, pltt.description);
 
 		this.name = pltt.name;
@@ -175,9 +175,9 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 		return Collections.EMPTY_SET;
 	}
 
-	public PhysicalLinkType_Transferable getTransferable() {
+	public IdlPhysicalLinkType getTransferable() {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new PhysicalLinkType_Transferable(super.getHeaderTransferable(),
+		return new IdlPhysicalLinkType(super.getHeaderTransferable(),
 				this.codename,
 				this.name,
 				this.description,

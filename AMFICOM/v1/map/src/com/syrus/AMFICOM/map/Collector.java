@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.50 2005/06/20 17:31:02 bass Exp $
+ * $Id: Collector.java,v 1.51 2005/06/24 10:41:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,14 +36,14 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.map.corba.Collector_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlCollector;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/06/20 17:31:02 $
+ * @version $Revision: 1.51 $, $Date: 2005/06/24 10:41:46 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -87,7 +87,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		}
 	}
 
-	Collector(final Collector_Transferable ct) throws CreateObjectException {
+	Collector(final IdlCollector ct) throws CreateObjectException {
 		try {
 			this.fromTransferable(ct);
 		} catch (ApplicationException ae) {
@@ -137,7 +137,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	}
 
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		Collector_Transferable ct = (Collector_Transferable) transferable;
+		IdlCollector ct = (IdlCollector) transferable;
 		super.fromTransferable(ct.header);
 
 		this.name = ct.name;
@@ -158,10 +158,10 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		return dependencies;
 	}
 
-	public Collector_Transferable getTransferable() {
+	public IdlCollector getTransferable() {
 		IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new Collector_Transferable(super.getHeaderTransferable(), this.name, this.description, physicalLinkIds, charIds);
+		return new IdlCollector(super.getHeaderTransferable(), this.name, this.description, physicalLinkIds, charIds);
 	}
 
 	public String getDescription() {

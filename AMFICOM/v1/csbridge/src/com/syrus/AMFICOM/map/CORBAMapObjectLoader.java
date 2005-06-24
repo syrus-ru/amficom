@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMapObjectLoader.java,v 1.15 2005/06/22 19:29:32 arseniy Exp $
+ * $Id: CORBAMapObjectLoader.java,v 1.16 2005/06/24 10:41:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,22 +23,22 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.map.corba.Collector_Transferable;
-import com.syrus.AMFICOM.map.corba.Map_Transferable;
-import com.syrus.AMFICOM.map.corba.Mark_Transferable;
-import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
-import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
-import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
-import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
-import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
-import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlCollector;
+import com.syrus.AMFICOM.map.corba.IdlMap;
+import com.syrus.AMFICOM.map.corba.IdlMark;
+import com.syrus.AMFICOM.map.corba.IdlNodeLink;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNode;
+import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/06/22 19:29:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/06/24 10:41:47 $
  * @module csbridge_v1
  */
 public final class CORBAMapObjectLoader extends CORBAObjectLoader implements MapObjectLoader {
@@ -291,7 +291,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveCollectors((Collector_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveCollectors((IdlCollector[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -303,7 +303,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveMaps((Map_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveMaps((IdlMap[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -315,7 +315,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveMarks((Mark_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveMarks((IdlMark[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -327,7 +327,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveNodeLinks((NodeLink_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveNodeLinks((IdlNodeLink[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -339,7 +339,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receivePhysicalLinks((PhysicalLink_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receivePhysicalLinks((IdlPhysicalLink[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -351,7 +351,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receivePhysicalLinkTypes((PhysicalLinkType_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receivePhysicalLinkTypes((IdlPhysicalLinkType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -363,7 +363,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveSiteNodes((SiteNode_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSiteNodes((IdlSiteNode[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -375,7 +375,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveSiteNodeTypes((SiteNodeType_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveSiteNodeTypes((IdlSiteNodeType[]) transferables, force, sessionKey);
 			}
 		});
 	}
@@ -387,7 +387,7 @@ public final class CORBAMapObjectLoader extends CORBAObjectLoader implements Map
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveTopologicalNodes((TopologicalNode_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveTopologicalNodes((IdlTopologicalNode[]) transferables, force, sessionKey);
 			}
 		});
 	}
