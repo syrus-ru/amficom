@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.18 2005/06/22 08:43:46 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.19 2005/06/24 12:50:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -38,7 +37,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:46 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/24 12:50:39 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -61,8 +60,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 	private NodeLink nodeLink;
 
-	private NetMapViewer netMapViewer;
-
 	/**
 	 * 
 	 * @param startNode
@@ -71,11 +68,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	{
 		super();
 		this.startNode = startNode;
-	}
-
-	public void setNetMapViewer(NetMapViewer netMapViewer)
-	{
-		this.netMapViewer = netMapViewer;
 	}
 
 	public void setParameter(String field, Object value)

@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.23 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.24 2005/06/24 12:50:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  *  Уже существующая привязка сохраняется. По непривязанным элементам 
  *  генерируются сетевые узла и схемные элементы привязываются к ним.
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/24 12:50:39 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -153,7 +153,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 					new BindUnboundNodeToSiteCommandBundle(
 						(UnboundNode)site, 
 						site2);
-			command2.setLogicalNetLayer(this.logicalNetLayer);
+			command2.setNetMapViewer(this.netMapViewer);
 			command2.execute();
 			super.add(command2);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.24 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.25 2005/06/24 12:50:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandBundle;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/24 12:50:39 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -49,30 +50,18 @@ public class MapActionCommandBundle extends CommandBundle
 
 	LogicalNetLayer logicalNetLayer = null;
 	ApplicationContext aContext = null;
+
+	protected NetMapViewer netMapViewer;
 	
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		this.aContext = this.logicalNetLayer.getContext();
 	}
-	
+
 	protected ApplicationContext getContext()
 	{
 		return this.aContext;
-	}
-	
-	protected LogicalNetLayer getLogicalNetLayer()
-	{
-		return this.logicalNetLayer;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationContext"))
-			this.aContext = (ApplicationContext )value;
-		super.setParameter(field, value);
 	}
 	
 	/**
@@ -460,4 +449,5 @@ public class MapActionCommandBundle extends CommandBundle
 	{
 		this.exception = exception;
 	}
+
 }

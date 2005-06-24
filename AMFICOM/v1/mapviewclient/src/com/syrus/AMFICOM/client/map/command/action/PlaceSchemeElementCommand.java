@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.20 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.21 2005/06/24 12:50:40 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -30,7 +29,7 @@ import com.syrus.util.Log;
  * или по координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/24 12:50:40 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -62,8 +61,6 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	 */
 	DoublePoint coordinatePoint = null;
 
-	protected NetMapViewer netMapViewer;
-
 	public PlaceSchemeElementCommand(
 			SchemeElement schemeElement,
 			DoublePoint dpoint)
@@ -85,7 +82,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
-		if ( !getLogicalNetLayer().getContext().getApplicationModel()
+		if ( !this.aContext.getApplicationModel()
 				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
 		
@@ -124,13 +121,5 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			e.printStackTrace();
 		}
 
-	}
-
-
-	/**
-	 * @param netMapViewer The netMapViewer to set.
-	 */
-	public void setNetMapViewer(NetMapViewer netMapViewer) {
-		this.netMapViewer = netMapViewer;
 	}
 }

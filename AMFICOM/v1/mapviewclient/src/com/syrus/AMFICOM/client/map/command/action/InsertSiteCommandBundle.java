@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.20 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.21 2005/06/24 12:50:39 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * вставить сетевой узел вместо топологического узла
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/24 12:50:39 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -70,7 +70,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 		Log.debugMessage(getClass()
 				.getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
 
-		if(!getLogicalNetLayer().getContext().getApplicationModel().isEnabled(
+		if(!this.aContext.getApplicationModel().isEnabled(
 				MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 
@@ -81,7 +81,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 			// создать новый узел
 			this.site = super.createSite(this.node.getLocation(), this.proto);
 			this.site.setName(this.node.getName());
-			SiteNodeController snc = (SiteNodeController )getLogicalNetLayer()
+			SiteNodeController snc = (SiteNodeController )this.logicalNetLayer
 					.getMapViewController().getController(this.site);
 			snc.updateScaleCoefficient(this.site);
 			// обновить концевые узлы фрагментов

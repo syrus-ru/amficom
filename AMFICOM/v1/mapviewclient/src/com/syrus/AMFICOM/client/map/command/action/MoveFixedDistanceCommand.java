@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.9 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.10 2005/06/24 12:50:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,9 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.awt.Point;
 
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/24 12:50:39 $
  * @module mapviewclient_v1
  */
 public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
@@ -55,13 +55,13 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 				+ (movedY - fixedY) * (movedY - fixedY));
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
+	public void setNetMapViewer(NetMapViewer netMapViewer)
 	{
-		super.setLogicalNetLayer(logicalNetLayer);
+		super.setNetMapViewer(netMapViewer);
 
 		try {
-			this.fixedScreenPoint = logicalNetLayer.getConverter().convertMapToScreen(this.fixedNode.getLocation());
-			Point movedScreenPoint = logicalNetLayer.getConverter().convertMapToScreen(this.movedNode.getLocation());
+			this.fixedScreenPoint = this.logicalNetLayer.getConverter().convertMapToScreen(this.fixedNode.getLocation());
+			Point movedScreenPoint = this.logicalNetLayer.getConverter().convertMapToScreen(this.movedNode.getLocation());
 			this.fixedScreenDistance = Math.sqrt(
 					(movedScreenPoint.x - this.fixedScreenPoint.x) 
 						* (movedScreenPoint.x - this.fixedScreenPoint.x) 
@@ -76,9 +76,9 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 		}
 	}
 
-	public MoveFixedDistanceCommand(LogicalNetLayer logicalNetLayer)
+	public MoveFixedDistanceCommand(NetMapViewer netMapViewer)
 	{
-		super(logicalNetLayer);
+		super(netMapViewer);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.19 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.20 2005/06/24 12:50:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapState;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * Удалить выбранные элементы карты. Команда является пучком команд 
  * (CommandBundle), удаляющих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/24 12:50:39 $
  * @module mapviewclient_v1
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle
@@ -39,9 +39,9 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 	 * выбранных объектов. выполнение удаления осуществляется только
 	 * при вызове execute()
 	 */
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
+	public void setNetMapViewer(NetMapViewer netMapViewer)
 	{
-		super.setLogicalNetLayer(logicalNetLayer);
+		super.setNetMapViewer(netMapViewer);
 		
 		//Удаляем все выбранные элементы взависимости от разрешения на их удаление
 		Iterator e;
@@ -52,9 +52,9 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		LinkedList cablePathsToDelete = new LinkedList();
 //		LinkedList pathsToDelete = new LinkedList();
 
-		int showMode = logicalNetLayer.getMapState().getShowMode();
+		int showMode = this.logicalNetLayer.getMapState().getShowMode();
 
-		for(Iterator it = logicalNetLayer.getSelectedElements().iterator(); it.hasNext();)
+		for(Iterator it = this.logicalNetLayer.getSelectedElements().iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement)it.next();
 			if(me instanceof AbstractNode)
@@ -163,7 +163,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		{
 			DeletePhysicalLinkCommandBundle command = new DeletePhysicalLinkCommandBundle(
 					(PhysicalLink)e.next());
-			command.setLogicalNetLayer(logicalNetLayer);
+			command.setNetMapViewer(this.netMapViewer);
 			add(command);
 		}
 
@@ -173,7 +173,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		{
 			DeleteNodeLinkCommandBundle command = new DeleteNodeLinkCommandBundle(
 					(NodeLink)e.next());
-			command.setLogicalNetLayer(logicalNetLayer);
+			command.setNetMapViewer(this.netMapViewer);
 			add(command);
 		}
 
@@ -183,7 +183,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		{
 			DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(
 					(AbstractNode)e.next());
-			command.setLogicalNetLayer(logicalNetLayer);
+			command.setNetMapViewer(this.netMapViewer);
 			add(command);
 		}
 
@@ -194,7 +194,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 //			removeCablePath((MapCablePathElement )e.next());
 			UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(
 					(CablePath)e.next());
-			command.setLogicalNetLayer(logicalNetLayer);
+			command.setNetMapViewer(this.netMapViewer);
 			command.execute();
 		}
 		

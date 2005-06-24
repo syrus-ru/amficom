@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.13 2005/06/16 10:57:19 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.14 2005/06/24 12:50:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,9 +15,9 @@ import java.awt.Point;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.Mark;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/06/16 10:57:19 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/24 12:50:40 $
  * @module mapviewclient_v1
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
@@ -67,10 +67,10 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 		this.startPoint = point;
 	}
 
-	public MoveSelectionCommandBundle(LogicalNetLayer logicalNetLayer)
+	public MoveSelectionCommandBundle(NetMapViewer netMapViewer)
 	{
 		super();
-		super.setLogicalNetLayer(logicalNetLayer);
+		setNetMapViewer(netMapViewer);
 	}
 	
 	/**
@@ -117,9 +117,9 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 * выбранных объектов. выполнение удаления осуществляется только
 	 * при вызове execute()
 	 */
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
+	public void setNetMapViewer(NetMapViewer netMapViewer)
 	{
-		super.setLogicalNetLayer(logicalNetLayer);
+		super.setNetMapViewer(netMapViewer);
 
 		this.setElements();
 	}
