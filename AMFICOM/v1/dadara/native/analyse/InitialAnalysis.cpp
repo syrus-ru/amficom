@@ -84,7 +84,7 @@ InitialAnalysis::InitialAnalysis(
 		// вычисляем уровень шума
 		{ const int sz = lastPoint + 1;
 		  //fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
-		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise, scaleB);
+		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise);
 		}
 	}
 	else
@@ -93,6 +93,9 @@ InitialAnalysis::InitialAnalysis(
 		{	noise[i] = externalNoise[i] * noiseFactor;
         }
 	}
+	// noise convolution to wavelet
+    WaveletDataConvolution(noise, lastPoint, scaleB);
+
 	prf_b("IA: analyse");
 	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
 	performAnalysis(f_wletTEMP, scaleB);
@@ -1192,23 +1195,27 @@ double InitialAnalysis::get_wlet_fabs(int s, int x)
 {	return fabs( wavelet.f(s,x) );
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double noiseFactor, double *outNoise, int wlet_width)
+void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double noiseFactor, double *outNoise)
 {	findNoiseArray(y, outNoise, data_length, N); // external function from findNoise.cpp
 	int i;
 	for (i = 0; i < N; i++)
-	{	// кто скажет, что sqrt(Neff) в цикле сильно влияет на
-		// быстродействие АМФИКОМа, того назову плохим словом.
+	{	// кто скажет, что sqrt(Neff) в цикле сильно влияет на быстродействие АМФИКОМа, того назову плохим словом.
 		outNoise[i] *= noiseFactor * 3 / sqrt(Neff);
 	}
-  	// noise convergence of  0.5*fabs(wavelet)/||wavelet|| function
-    double* noise_processed = new double[N+1];
+}
+//------------------------------------------------------------------------------------------------------------
+// свёртка входных данных с исользованием уже готового вейвлета
+// noise convergence of  0.5*fabs(wavelet)/||wavelet|| function
+// wlet_width - ширина вейвлета, с которым производится свёртка ( равна scaleB )
+void InitialAnalysis::WaveletDataConvolution(double *data, int dataLength, int wlet_width)
+{	double* data_processed = new double[dataLength];
 	UserWavelet fabs_wlet(wavelet.getMinScale(), get_wlet_fabs);
-	fabs_wlet.transform( wlet_width, outNoise, N, 0, N-1, noise_processed, 2*fabs_wlet.normStep(wlet_width));
-	for(i=0; i<N; i++){
-    outNoise[i] = noise_processed[i];
+	fabs_wlet.transform( wlet_width, data, dataLength, 0, dataLength-1, data_processed, 2*fabs_wlet.normStep(wlet_width));// dataLength-1 - так как нужен инекс, а не количество 
+	int i;
+    for(i=0; i<dataLength; i++){
+    data[i] = data_processed[i];
     }
-    delete noise_processed;
-    // noise already convergenced
+    delete data_processed;
 }
 //------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getLastPoint()
@@ -1304,3 +1311,4 @@ void InitialAnalysis::fillSplashRParameters(Splash &spl, double *f_wlet, int wle
       if(spl.r_weld<res) {spl.r_weld = res;}
     }
 }
+//------------------------------------------------------------------------------------------------------------
