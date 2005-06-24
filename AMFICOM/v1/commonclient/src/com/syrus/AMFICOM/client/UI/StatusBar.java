@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.4 2005/06/14 11:56:31 bob Exp $
+ * $Id: StatusBar.java,v 1.5 2005/06/24 08:50:11 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -22,7 +22,6 @@ import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
@@ -36,13 +35,12 @@ import javax.swing.table.TableColumn;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/14 11:56:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/24 08:50:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -64,7 +62,7 @@ public class StatusBar implements PropertyChangeListener {
 	private DefaultTableModel		tableModel;
 
 	private Timer					timeTimer;
-	private Timer					progressBarTimer;
+//	private Timer					progressBarTimer;
 
 	private JTable					table;
 
@@ -147,7 +145,7 @@ public class StatusBar implements PropertyChangeListener {
 		tableHeader.setDefaultRenderer(new TableHeaderCellRenderer());
 
 		this.panel = new JPanel(new GridBagLayout());
-		this.panel.setBorder(BorderFactory.createEtchedBorder());
+//		this.panel.setBorder(BorderFactory.createEtchedBorder());
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -201,8 +199,9 @@ public class StatusBar implements PropertyChangeListener {
 							final Object value) {
 		final JTableHeader tableHeader = this.table.getTableHeader();
 		TableColumn column = null;
-		for (int i = 0; i < this.model.getColumnCount(); i++) {
-			column = this.model.getColumn(i);
+		int index;
+		for (index = 0; index < this.model.getColumnCount(); index++) {
+			column = this.model.getColumn(index);
 			Object identifier = column.getIdentifier();
 			if (fieldId.equals(identifier)) {
 				break;
@@ -210,8 +209,15 @@ public class StatusBar implements PropertyChangeListener {
 		}
 		if (column != null) {
 			column.setHeaderValue(value);
-			if (this.progressBarTimer == null) {
-				tableHeader.repaint();
+			//tableHeader.repaint();
+			Rectangle headerRect = tableHeader.getHeaderRect(index);
+				if (headerRect != null) {
+					Component componentAt = tableHeader.getComponentAt(
+							headerRect.x, 
+							headerRect.y);
+					if (componentAt != null) {
+						componentAt.repaint();		
+					}
 			}
 		} else {
 			Log.debugMessage("StatusBar.addTimerField | fieldId '" + fieldId + "' not found.", Log.FINEST);
@@ -228,36 +234,36 @@ public class StatusBar implements PropertyChangeListener {
 		this.table.getColumn(fieldId).setPreferredWidth(width);
 	}
 
-	private void addStatusBarField(final String fieldId) {
-
-		JProgressBar progressBar = new JProgressBar();
-		progressBar.setString(LangModelGeneral.getString("StatusBar.PleaseWait"));
-		progressBar.setIndeterminate(true);
-		progressBar.setStringPainted(true);
-
-		final JTableHeader tableHeader = this.table.getTableHeader();
-		progressBar.setPreferredSize(new Dimension(progressBar.getPreferredSize().width, tableHeader.getHeight()));
-
-		this.progressBarTimer = new Timer(UIManager.getInt("ProgressBar.repaintInterval"), new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				tableHeader.repaint();
-
-			}
-		});
-		this.progressBarTimer.start();
-
-		this.setValue(fieldId, progressBar);
-	}
-
-	private void removeStatusBar(final String fieldId) {
-		if (this.progressBarTimer != null) {
-			this.progressBarTimer.stop();
-			this.progressBarTimer = null;
-		}
-
-		this.remove(fieldId);
-	}
+//	private void addStatusBarField(final String fieldId) {
+//
+//		JProgressBar progressBar = new JProgressBar();
+//		progressBar.setString(LangModelGeneral.getString("StatusBar.PleaseWait"));
+//		progressBar.setIndeterminate(true);
+//		progressBar.setStringPainted(true);
+//
+//		final JTableHeader tableHeader = this.table.getTableHeader();
+//		progressBar.setPreferredSize(new Dimension(progressBar.getPreferredSize().width, tableHeader.getHeight()));
+//
+//		this.progressBarTimer = new Timer(UIManager.getInt("ProgressBar.repaintInterval"), new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent e) {
+//				tableHeader.repaint();
+//
+//			}
+//		});
+//		this.progressBarTimer.start();
+//
+//		this.setValue(fieldId, progressBar);
+//	}
+//
+//	private void removeStatusBar(final String fieldId) {
+//		if (this.progressBarTimer != null) {
+//			this.progressBarTimer.stop();
+//			this.progressBarTimer = null;
+//		}
+//
+//		this.remove(fieldId);
+//	}
 
 	private void addTimerField(final String fieldId) {
 
@@ -273,22 +279,22 @@ public class StatusBar implements PropertyChangeListener {
 		}
 	}
 
-	private void setProgressBarEnable(boolean enable) {
-		final String field = FIELD_PROGRESS;
-		if (enable) {
-			/* is there status bar ? */
-			for (int i = 0; i < this.model.getColumnCount(); i++) {
-				Object identifier = this.model.getColumn(i).getIdentifier();
-				if (field.equals(identifier)) { return; }
-			}
-			/* there is no status bar, add it */
-			this.add(0, field);
-			this.addStatusBarField(field);
-		} else {
-			this.remove(field);
-			this.removeStatusBar(field);
-		}
-	}
+//	private void setProgressBarEnable(boolean enable) {
+//		final String field = FIELD_PROGRESS;
+//		if (enable) {
+//			/* is there status bar ? */
+//			for (int i = 0; i < this.model.getColumnCount(); i++) {
+//				Object identifier = this.model.getColumn(i).getIdentifier();
+//				if (field.equals(identifier)) { return; }
+//			}
+//			/* there is no status bar, add it */
+//			this.add(0, field);
+//			this.addStatusBarField(field);
+//		} else {
+//			this.remove(field);
+//			this.removeStatusBar(field);
+//		}
+//	}
 
 	public void removeDispatcher(Dispatcher dispatcher) {
 		if (dispatcher != null) {
@@ -327,7 +333,7 @@ public class StatusBar implements PropertyChangeListener {
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_DOMAIN)) {
 				this.setValue(FIELD_DOMAIN, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_BAR)) {
-				this.setProgressBarEnable(sme.isShowProgressBar());
+//				this.setProgressBarEnable(sme.isShowProgressBar());
 			}
 		}
 	}
