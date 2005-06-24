@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.69 2005/06/23 18:45:09 bass Exp $
+ * $Id: Analysis.java,v 1.70 2005/06/24 14:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -17,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -29,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/06/23 18:45:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/06/24 14:09:43 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -49,7 +51,7 @@ public final class Analysis extends Action {
 	public Analysis(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_CODE);
+		final AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -97,8 +99,9 @@ public final class Analysis extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlAnalysis at = (IdlAnalysis) transferable;
+		final IdlAnalysis at = (IdlAnalysis) transferable;
 		super.fromTransferable(at.header, null, new Identifier(at.monitoredElementId), null);
 
 		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at._typeId), true);
@@ -132,6 +135,7 @@ public final class Analysis extends Action {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.name != null && this.criteriaSet != null;
 	}
@@ -141,7 +145,7 @@ public final class Analysis extends Action {
 	}
 
 	public Measurement getMeasurement() {
-		return (Measurement)super.parentAction;
+		return (Measurement) super.parentAction;
 	}
 	
 	public void setMeasurement(final Measurement measurement) {
@@ -210,7 +214,7 @@ public final class Analysis extends Action {
 			final String name,
 			final ParameterSet criteriaSet) throws CreateObjectException {
 		try {
-			Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_CODE),
+			final Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_CODE),
 				creatorId,
 				0L,
 				type,
@@ -239,11 +243,11 @@ public final class Analysis extends Action {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public java.util.Set getDependencies() {
+	public Set<Identifiable> getDependencies() {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		//	Measurement, if exists
 		if (super.parentAction != null)
 			dependencies.add(super.parentAction);

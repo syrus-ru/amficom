@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.66 2005/06/23 18:45:09 bass Exp $
+ * $Id: Evaluation.java,v 1.67 2005/06/24 14:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -17,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -29,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/06/23 18:45:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/06/24 14:09:43 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -48,7 +50,7 @@ public final class Evaluation extends Action {
 	public Evaluation(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_CODE);
+		final EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -95,8 +97,9 @@ public final class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlEvaluation et = (IdlEvaluation) transferable;
+		final IdlEvaluation et = (IdlEvaluation) transferable;
 		super.fromTransferable(et.header, null, new Identifier(et.monitoredElementId), null);
 
 		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
@@ -131,6 +134,7 @@ public final class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.thresholdSet != null;
 	}
@@ -197,7 +201,7 @@ public final class Evaluation extends Action {
 			final Measurement measurement,
 			final ParameterSet thresholdSet) throws CreateObjectException {
 		try {
-			Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_CODE),
+			final Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_CODE),
 				creatorId,
 				0L,
 				type,
@@ -225,10 +229,10 @@ public final class Evaluation extends Action {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public java.util.Set getDependencies() {
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		//	Measurement if exists
 		if (super.parentAction != null)
 			dependencies.add(super.parentAction);

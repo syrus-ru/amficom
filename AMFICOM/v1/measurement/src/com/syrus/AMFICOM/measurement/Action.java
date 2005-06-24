@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.31 2005/06/17 11:00:59 bass Exp $
+ * $Id: Action.java,v 1.32 2005/06/24 14:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/17 11:00:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/06/24 14:09:43 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -89,6 +89,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		/* XXX : fix checking parentAction w/o check id for concrete impementation as measurement or modeling
 		 * which have null parent action */	

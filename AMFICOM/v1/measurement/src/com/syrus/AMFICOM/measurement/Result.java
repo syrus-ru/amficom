@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.65 2005/06/23 18:45:08 bass Exp $
+ * $Id: Result.java,v 1.66 2005/06/24 14:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -17,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2005/06/24 14:09:43 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -53,7 +55,7 @@ public final class Result extends StorableObject {
 	Result(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		ResultDatabase database = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_CODE);
+		final ResultDatabase database = (ResultDatabase) DatabaseContext.getDatabase(ObjectEntities.RESULT_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -97,8 +99,9 @@ public final class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlResult rt = (IdlResult) transferable;
+		final IdlResult rt = (IdlResult) transferable;
 		super.fromTransferable(rt.header);
 
 		this.sort = rt.sort.value();
@@ -134,7 +137,7 @@ public final class Result extends StorableObject {
 	public IdlResult getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		IdlParameter[] pts = new IdlParameter[this.parameters.length];
+		final IdlParameter[] pts = new IdlParameter[this.parameters.length];
 		for (int i = 0; i < pts.length; i++) {
 			pts[i] = this.parameters[i].getTransferable();
 		}
@@ -164,6 +167,7 @@ public final class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		boolean valid = super.isValid() && this.action != null && this.parameters != null;
 		if (!valid)
@@ -230,7 +234,7 @@ public final class Result extends StorableObject {
 			final ResultSort sort,
 			final Parameter[] parameters) throws CreateObjectException {
 		try {
-			Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_CODE),
+			final Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_CODE),
 				creatorId,
 				0L,
 				action,
@@ -262,11 +266,11 @@ public final class Result extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public java.util.Set getDependencies() {
+	public Set<Identifiable> getDependencies() {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
 		for (int i = 0; i < this.parameters.length; i++)
 			dependencies.add(this.parameters[i].getType());

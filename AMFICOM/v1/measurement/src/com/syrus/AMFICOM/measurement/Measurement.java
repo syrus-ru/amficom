@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.78 2005/06/23 18:45:09 bass Exp $
+ * $Id: Measurement.java,v 1.79 2005/06/24 14:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.portable.IDLEntity;
 
@@ -17,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/06/23 18:45:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.79 $, $Date: 2005/06/24 14:09:43 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -61,7 +63,7 @@ public final class Measurement extends Action {
 	public Measurement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE);
+		final MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -117,8 +119,9 @@ public final class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlMeasurement mt = (IdlMeasurement) transferable;
+		final IdlMeasurement mt = (IdlMeasurement) transferable;
 		super.fromTransferable(mt.header, null, new Identifier(mt.monitoredElementId), null);
 
 		super.type = (MeasurementType) StorableObjectPool.getStorableObject(new Identifier(mt._typeId),
@@ -159,6 +162,7 @@ public final class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.name != null
@@ -263,7 +267,7 @@ public final class Measurement extends Action {
 			final Identifier testId) throws CreateObjectException {
 
 		try {
-			Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_CODE),
+			final Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_CODE),
 					creatorId,
 					0L,
 					type,
@@ -298,9 +302,9 @@ public final class Measurement extends Action {
 		super.markAsChanged();
 	}
 
-	public java.util.Set getResults(final boolean breakOnLoadError) {
-		LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_CODE);
-		java.util.Set results = null;
+	public Set getResults(final boolean breakOnLoadError) {
+		final LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_CODE);
+		Set results = null;
 		try {
 			results = StorableObjectPool.getStorableObjectsByCondition(condition, true, breakOnLoadError);
 		} catch (ApplicationException ae) {
@@ -312,10 +316,10 @@ public final class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public java.util.Set getDependencies() {
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.testId);
 		dependencies.add(this.setup);
 		return dependencies;
