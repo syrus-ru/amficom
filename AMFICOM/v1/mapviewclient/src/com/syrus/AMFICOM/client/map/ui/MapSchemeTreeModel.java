@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.20 2005/06/06 12:57:03 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.21 2005/06/24 13:01:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -81,7 +81,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.20 $, $Date: 2005/06/06 12:57:03 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/24 13:01:30 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -407,9 +407,9 @@ public class MapSchemeTreeModel
 
 final class SchemeComparator implements Comparator {
 	public int compare(Object o1, Object o2) {
-		Map map1 = (Map )o1;
-		Map map2 = (Map )o2;
-		return map1.getName().compareTo(map2.getName());
+		Scheme scheme1 = (Scheme )o1;
+		Scheme scheme2 = (Scheme )o2;
+		return scheme1.getName().compareTo(scheme2.getName());
 	}
 
 	public boolean equals(Object obj) {
