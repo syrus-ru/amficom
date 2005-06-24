@@ -94,7 +94,7 @@ InitialAnalysis::InitialAnalysis(
         }
 	}
 	// noise convolution to wavelet
-    WaveletDataConvolution(noise, lastPoint, scaleB);
+    WaveletDataConvolution(noise, lastPoint+1, scaleB);
 
 	prf_b("IA: analyse");
 	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
@@ -137,7 +137,7 @@ int InitialAnalysis::splashesOverlap(Splash &spl1, Splash &spl2) {
 	return
 		spl1.begin_thr + 1 < spl2.end_thr + delta && spl2.begin_thr + 1 < spl1.end_thr + delta;
 }
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------
 int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
 	int j;
 	for (j = 0; j < arrList.getLength(); j++) {
@@ -146,7 +146,7 @@ int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList
 	}
 	return -1;
 }
-//------------------------------------------------------------------------------------------------------------
+//--------------------------------------------
 int InitialAnalysis::findMaxOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
 	int j;
 	int ret = -1;
