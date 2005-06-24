@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.6 2005/06/17 12:38:56 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.7 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.TreeMap;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -39,12 +40,12 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 12:38:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
-	
+
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
@@ -52,68 +53,78 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	private static final int	TEMPORAL_PATTERN_ID_ROW	= 0;
 
 	private static final int	DURATION_ROW	= 1;
-	
-	private IntervalsTemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+
+	private IntervalsTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof IntervalsTemporalPattern)
 			return (IntervalsTemporalPattern) storableObject;
 		throw new IllegalDataException("IntervalsTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-	
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
+
+	@Override
+	public void retrieve(final StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		super.retrieveEntity(intervalsTemporalPattern);
 	}
-	
+
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
 	}
-	
+
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = IntervalsTemporalPatternWrapper.COLUMN_NAME;
 		}
 		return columns;
 	}
-	
+
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
-	
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		String sql = APOSTOPHE + intervalsTemporalPattern.getName() + APOSTOPHE;
+
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
+		final String sql = APOSTOPHE + intervalsTemporalPattern.getName() + APOSTOPHE;
 		return sql;
 	}
-	
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {		
-		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
+
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {		
+		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		preparedStatement.setString(++startParameterNumber, intervalsTemporalPattern.getName());
 		return startParameterNumber;
 	}
-	
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		SortedMap absMap = new TreeMap();
-		SortedMap durMap = new TreeMap();
-		
+		final SortedMap<Long, Identifier> absMap = new TreeMap<Long, Identifier>();
+		final SortedMap<Long, Long> durMap = new TreeMap<Long, Long>();
+
 		IntervalsTemporalPattern intervalsTemporalPattern;
-		if (storableObject == null)
-			intervalsTemporalPattern = new IntervalsTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null, 0L, null, null);
-		else
+		if (storableObject == null) {
+			intervalsTemporalPattern = new IntervalsTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet,
+					StorableObjectWrapper.COLUMN_ID), null, 0L, null, null);
+		}
+		else {
 			intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		
-		Identifier intervalsTemporalPatternId = intervalsTemporalPattern.getId();
-		Map tableMap = getMapsFromDB(intervalsTemporalPatternId);
-		for (Iterator it = tableMap.keySet().iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
-			List row = (List)tableMap.get(offset);
-			absMap.put(offset, row.get(TEMPORAL_PATTERN_ID_ROW));
-			durMap.put(offset, row.get(DURATION_ROW));
+		}
+
+		final Identifier intervalsTemporalPatternId = intervalsTemporalPattern.getId();
+		final Map<Long, List<Object>> tableMap = this.getMapsFromDB(intervalsTemporalPatternId);
+		for (final Long offset : tableMap.keySet()) {
+			final List<Object> row = tableMap.get(offset);
+			absMap.put(offset, (Identifier) row.get(TEMPORAL_PATTERN_ID_ROW));
+			durMap.put(offset, (Long) row.get(DURATION_ROW));
 		}
 		intervalsTemporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -126,9 +137,9 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		return intervalsTemporalPattern;
 	}
 	
-	private Map getMapsFromDB(Identifier intervalsTemporalPatternId) throws RetrieveObjectException {
-		Map tableMap = new HashMap();
-		String sql = SQL_SELECT + IntervalsTemporalPatternWrapper.COLUMN_OFFSET + COMMA
+	private Map<Long, List<Object>> getMapsFromDB(final Identifier intervalsTemporalPatternId) throws RetrieveObjectException {
+		final Map<Long, List<Object>> tableMap = new HashMap<Long, List<Object>>();
+		final String sql = SQL_SELECT + IntervalsTemporalPatternWrapper.COLUMN_OFFSET + COMMA
 				+ IntervalsTemporalPatternWrapper.COLUMN_TEMPORAL_PATTREN_ID + COMMA
 				+ IntervalsTemporalPatternWrapper.COLUMN_DURATION
 				+ SQL_FROM  + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
@@ -136,7 +147,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				+ EQUALS + DatabaseIdentifier.toSQLString(intervalsTemporalPatternId);
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("IntervalsTemporalPatternDatabase.getMapsFromDB | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -145,15 +156,14 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				long offset = resultSet.getLong(IntervalsTemporalPatternWrapper.COLUMN_OFFSET);
 				long duration = resultSet.getLong(IntervalsTemporalPatternWrapper.COLUMN_DURATION);
 				Identifier temporalPatternId = DatabaseIdentifier.getIdentifier(resultSet, IntervalsTemporalPatternWrapper.COLUMN_TEMPORAL_PATTREN_ID);
-				List row = new ArrayList(2);
+				List<Object> row = new ArrayList<Object>(2);
 				row.add(TEMPORAL_PATTERN_ID_ROW, temporalPatternId);
 				row.add(DURATION_ROW, new Long(duration));
 				tableMap.put(new Long(offset), row);
-				
 			}
-		return tableMap;
+			return tableMap;
 		} catch (SQLException sqle) {
-			String mesg = "IntervalsTemporalPatternDatabase.getMapsFromDB | Cannot retrieve " + getEntityName()
+			final String mesg = "IntervalsTemporalPatternDatabase.getMapsFromDB | Cannot retrieve " + getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
@@ -173,9 +183,10 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				Log.errorException(sqle);
 			}
 		}
-		
+
 	}
-	
+
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -184,10 +195,10 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				return null;
 		}
 	}
-	
-	public void update(StorableObject storableObject, Identifier modifierId,
-			int updateKind) throws VersionCollisionException,
-			UpdateObjectException {
+
+	@Override
+	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
+			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
 			this.updateLinkedTable(storableObject);
@@ -195,8 +206,22 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			throw new UpdateObjectException(e.getMessage());
 		}
 	}
-	
-	public void delete(Identifier id) {
+
+	@Override
+	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			try {
+				updateLinkedTable((StorableObject)it.next());
+			} catch (IllegalDataException e) {
+				throw new UpdateObjectException(e.getMessage(),e);
+			}			
+		}
+	}
+
+	@Override
+	public void delete(final Identifier id) {
 		super.delete(id);
 		this.remove(id);
 	}
@@ -228,55 +253,58 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			}
 		}
 	}
-	
-	public void delete(Set identifiables) {
+
+	@Override
+	public void delete(final Set<? extends Identifiable> identifiables) {
 		super.delete(identifiables);
+		for (final Identifiable identifiable : identifiables) {
+			this.delete(identifiable.getId());
+		}
 		for (Iterator it = identifiables.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.delete(id);
 		}
 	}
 	
-	private void updateLinkedTable(StorableObject storableObject) throws UpdateObjectException, IllegalDataException {
-		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		Identifier intervalsTemporalPatternId = intervalsTemporalPattern.getId();
-		SortedMap abstractMap = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
-		SortedMap durationMap = intervalsTemporalPattern.getIntervalsDuration();
-		
-		Map dbTableMap;
-		
+	private void updateLinkedTable(final StorableObject storableObject) throws UpdateObjectException, IllegalDataException {
+		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
+		final Identifier intervalsTemporalPatternId = intervalsTemporalPattern.getId();
+		final SortedMap<Long, Identifier> abstractMap = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
+		final SortedMap<Long, Long> durationMap = intervalsTemporalPattern.getIntervalsDuration();
+
+		Map<Long, List<Object>> dbTableMap;
+
 		try {
-			dbTableMap = getMapsFromDB(intervalsTemporalPatternId);
+			dbTableMap = this.getMapsFromDB(intervalsTemporalPatternId);
 		} catch (RetrieveObjectException e) {
 			throw new UpdateObjectException(e);
 		}
 		// Remove
-		Set setToRemove = new HashSet();
-		for (Iterator it = dbTableMap.keySet().iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
+		final Set<Long> setToRemove = new HashSet<Long>();
+		for (final Long offset : dbTableMap.keySet()) {
 			if (abstractMap.get(offset) == null)
 				setToRemove.add(offset);
 		}
-		removeFromDB(intervalsTemporalPatternId, setToRemove);
+		this.removeFromDB(intervalsTemporalPatternId, setToRemove);
 		//Update
-		Map updateMap = new HashMap();
-		Map insertMap = new HashMap();
-		for (Iterator it = abstractMap.keySet().iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
-			List dbRow = (List) dbTableMap.get(offset);
-			Identifier temporalPatternId = (Identifier) abstractMap.get(offset);
-			Long duration = (Long) durationMap.get(offset);
-			if(dbRow != null) {
-				if(dbRow.get(TEMPORAL_PATTERN_ID_ROW) != temporalPatternId
-						|| dbRow.get(DURATION_ROW) != duration) {
-					List row = new ArrayList(2);
+		final Map<Long, List<Object>> updateMap = new HashMap<Long, List<Object>>();
+		final Map<Long, List<Object>> insertMap = new HashMap<Long, List<Object>>();
+		for (final Long offset : abstractMap.keySet()) {
+			final Identifier temporalPatternId = abstractMap.get(offset);
+			final Long duration = durationMap.get(offset);
+			final List<Object> dbRow = dbTableMap.get(offset);
+			if (dbRow != null) {
+				final Identifier dbTemporalPatternId = (Identifier) dbRow.get(TEMPORAL_PATTERN_ID_ROW);
+				final Long dbDuration = (Long) dbRow.get(DURATION_ROW);
+				if (!dbTemporalPatternId.equals(temporalPatternId) && !dbDuration.equals(duration)) {
+					final List<Object> row = new ArrayList<Object>(2);
 					row.add(TEMPORAL_PATTERN_ID_ROW, temporalPatternId);
 					row.add(DURATION_ROW, duration);
 					updateMap.put(offset, row);
 				}
-					
-			} else {
-				List row = new ArrayList(2);
+			}
+			else {
+				final List<Object> row = new ArrayList<Object>(2);
 				row.add(TEMPORAL_PATTERN_ID_ROW, temporalPatternId);
 				row.add(DURATION_ROW, duration);
 				insertMap.put(offset, row);
@@ -286,7 +314,8 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		updateDB(intervalsTemporalPatternId, insertMap, MODE_INSERT);
 	}
 
-	private void updateDB(Identifier intervalsTemporalPatternId, Map updateMap, int updateMode) throws UpdateObjectException {
+	private void updateDB(final Identifier intervalsTemporalPatternId, final Map<Long, List<Object>> updateMap, final int updateMode)
+			throws UpdateObjectException {
 		String sql;
 		if(updateMode == MODE_UPDATE)
 			sql = SQL_UPDATE + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
@@ -317,15 +346,14 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		else throw new UpdateObjectException("Unsupported updateMode " + updateMode);
 		
 		PreparedStatement preparedStatement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage("IntervalsTemporalPatternDatabase.updateDB | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (Iterator it = updateMap.keySet().iterator(); it.hasNext();) {
-				Long offset = (Long) it.next();
-				List row = (List)updateMap.get(offset);
-				Identifier temporalPatternId = (Identifier) row.get(TEMPORAL_PATTERN_ID_ROW);
-				Long duration = (Long) row.get(DURATION_ROW);
+			for (final Long offset : updateMap.keySet()) {
+				final List<Object> row = updateMap.get(offset);
+				final Identifier temporalPatternId = (Identifier) row.get(TEMPORAL_PATTERN_ID_ROW);
+				final Long duration = (Long) row.get(DURATION_ROW);
 				int i = 1;
 				if(updateMode == MODE_INSERT)
 					DatabaseIdentifier.setIdentifier(preparedStatement, i++, intervalsTemporalPatternId);
@@ -356,33 +384,19 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		}
 	}
 
-	public void update(Set storableObjects, Identifier modifierId,
-			int updateKind) throws VersionCollisionException,
-			UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			try {
-				updateLinkedTable((StorableObject)it.next());
-			} catch (IllegalDataException e) {
-				throw new UpdateObjectException(e.getMessage(),e);
-			}			
-		}
-	}
-
-	private void removeFromDB(Identifier intervalsTemporalPatternId, Set setToRemove) throws UpdateObjectException {
-		String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
+	private void removeFromDB(final Identifier intervalsTemporalPatternId, final Set<Long> setToRemove) throws UpdateObjectException {
+		final String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
 				+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID
 				+ EQUALS + DatabaseIdentifier.toSQLString(intervalsTemporalPatternId)
 				+ SQL_AND + IntervalsTemporalPatternWrapper.COLUMN_OFFSET
 				+ EQUALS + QUESTION;
 		
 		PreparedStatement preparedStatement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage("IntervalsTemporalPatternDatabase.removeFromDB | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (Iterator it = setToRemove.iterator(); it.hasNext();) {
-				Long offset = (Long) it.next();
+			for (final Long offset : setToRemove) {
 				preparedStatement.setLong(1, offset.longValue());
 				preparedStatement.executeUpdate();
 			}
@@ -404,39 +418,38 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			}
 		}
 	}
-	
-	public void insert(StorableObject storableObject)
+
+	@Override
+	public void insert(final StorableObject storableObject)
 			throws IllegalDataException, CreateObjectException {
-		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
+		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		super.insertEntity(intervalsTemporalPattern);
 		insertInLinkedTable(intervalsTemporalPattern);
-		
 	}
-	
-	private void insertInLinkedTable(IntervalsTemporalPattern intervalsTemporalPattern) throws CreateObjectException {
 
-		SortedMap abstractMap = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
-		SortedMap durationMap = intervalsTemporalPattern.getIntervalsDuration();
-		Map mapTable = new HashMap();
-		for (Iterator it = abstractMap.keySet().iterator(); it.hasNext();) {
-			Long offset = (Long) it.next();
-			List row = new ArrayList(2);
+	@Override
+	public void insert(final Set storableObjects) throws CreateObjectException {
+		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+			IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) it.next();
+			insertInLinkedTable(intervalsTemporalPattern);			
+		}
+	}
+
+	private void insertInLinkedTable(final IntervalsTemporalPattern intervalsTemporalPattern) throws CreateObjectException {
+		final SortedMap<Long, Identifier> abstractMap = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
+		final SortedMap<Long, Long> durationMap = intervalsTemporalPattern.getIntervalsDuration();
+		final Map<Long, List<Object>> mapTable = new HashMap<Long, List<Object>>();
+		for (final Long offset : abstractMap.keySet()) {
+			final List<Object> row = new ArrayList<Object>(2);
 			row.add(TEMPORAL_PATTERN_ID_ROW, abstractMap.get(offset));
 			row.add(DURATION_ROW, durationMap.get(offset));
 			mapTable.put(offset, row);
 		}
-		
+
 		try {
 			updateDB(intervalsTemporalPattern.getId(), mapTable, MODE_INSERT);
 		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-	
-	public void insert(Set storableObjects) throws CreateObjectException {
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) it.next();
-			insertInLinkedTable(intervalsTemporalPattern);			
 		}
 	}
 }	

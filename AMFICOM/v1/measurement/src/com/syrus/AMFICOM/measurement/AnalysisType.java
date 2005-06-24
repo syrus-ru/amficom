@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.78 2005/06/23 18:45:09 bass Exp $
+ * $Id: AnalysisType.java,v 1.79 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/06/23 18:45:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.79 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -58,14 +59,14 @@ public final class AnalysisType extends ActionType {
 	AnalysisType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypeIds = new HashSet();
-		this.criteriaParameterTypeIds = new HashSet();
-		this.etalonParameterTypeIds = new HashSet();
-		this.outParameterTypeIds = new HashSet();
+		this.inParameterTypeIds = new HashSet<Identifier>();
+		this.criteriaParameterTypeIds = new HashSet<Identifier>();
+		this.etalonParameterTypeIds = new HashSet<Identifier>();
+		this.outParameterTypeIds = new HashSet<Identifier>();
 
-		this.measurementTypeIds = new HashSet();
+		this.measurementTypeIds = new HashSet<Identifier>();
 
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_TYPE_CODE);
+		final AnalysisTypeDatabase database = (AnalysisTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -94,11 +95,11 @@ public final class AnalysisType extends ActionType {
 			final long version,
 			final String codename,
 			final String description,
-			final java.util.Set inParameterTypeIds,
-			final java.util.Set criteriaParameterTypeIds,
-			final java.util.Set etalonParameterTypeIds,
-			final java.util.Set outParameterTypeIds,
-			final java.util.Set measurementTypeIds) {
+			final Set<Identifier> inParameterTypeIds,
+			final Set<Identifier> criteriaParameterTypeIds,
+			final Set<Identifier> etalonParameterTypeIds,
+			final Set<Identifier> outParameterTypeIds,
+			final Set<Identifier> measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -108,20 +109,20 @@ public final class AnalysisType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypeIds = new HashSet();
+		this.inParameterTypeIds = new HashSet<Identifier>();
 		this.setInParameterTypeIds0(inParameterTypeIds);
 
-		this.criteriaParameterTypeIds = new HashSet();
+		this.criteriaParameterTypeIds = new HashSet<Identifier>();
 		this.setCriteriaParameterTypeIds0(criteriaParameterTypeIds);
 
-		this.etalonParameterTypeIds = new HashSet();
+		this.etalonParameterTypeIds = new HashSet<Identifier>();
 		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
 
-		this.outParameterTypeIds = new HashSet();
+		this.outParameterTypeIds = new HashSet<Identifier>();
 		this.setOutParameterTypeIds0(outParameterTypeIds);
 
 
-		this.measurementTypeIds = new HashSet();
+		this.measurementTypeIds = new HashSet<Identifier>();
 		this.setMeasurementTypeIds0(measurementTypeIds);
 	}
 	
@@ -140,14 +141,14 @@ public final class AnalysisType extends ActionType {
 	public static AnalysisType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final java.util.Set inParameterTypeIds,
-			final java.util.Set criteriaParameterTypeIds,
-			final java.util.Set etalonParameterTypeIds,
-			final java.util.Set outParameterTypeIds,
-			final java.util.Set measurementTypeIds) throws CreateObjectException {		
+			final Set<Identifier> inParameterTypeIds,
+			final Set<Identifier> criteriaParameterTypeIds,
+			final Set<Identifier> etalonParameterTypeIds,
+			final Set<Identifier> outParameterTypeIds,
+			final Set<Identifier> measurementTypeIds) throws CreateObjectException {		
 
 		try {
-			AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_TYPE_CODE),
+			final AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,
@@ -171,8 +172,9 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlAnalysisType att = (IdlAnalysisType) transferable;
+		final IdlAnalysisType att = (IdlAnalysisType) transferable;
 		super.fromTransferable(att.header, att.codename, att.description);
 
 		this.inParameterTypeIds = Identifier.fromTransferables(att.inParameterTypeIds);
@@ -191,11 +193,11 @@ public final class AnalysisType extends ActionType {
 	public IdlAnalysisType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		IdlIdentifier[] criteriaParTypeIds = Identifier.createTransferables(this.criteriaParameterTypeIds);
-		IdlIdentifier[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
-		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
-		IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
+		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		final IdlIdentifier[] criteriaParTypeIds = Identifier.createTransferables(this.criteriaParameterTypeIds);
+		final IdlIdentifier[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
+		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		final IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		return new IdlAnalysisType(super.getHeaderTransferable(),
 				super.codename,
@@ -207,6 +209,7 @@ public final class AnalysisType extends ActionType {
 				measTypIds);
 	}
 
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET &&
 			this.criteriaParameterTypeIds != null && this.criteriaParameterTypeIds != Collections.EMPTY_SET &&
@@ -215,29 +218,30 @@ public final class AnalysisType extends ActionType {
 			this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET;
 	}
 	
-	public java.util.Set getInParameterTypeIds() {
+	public Set<Identifier> getInParameterTypeIds() {
 		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}
 
-	public java.util.Set getCriteriaParameterTypeIds() {
+	public Set<Identifier> getCriteriaParameterTypeIds() {
 		return Collections.unmodifiableSet(this.criteriaParameterTypeIds);
 	}
 
-	public java.util.Set getEtalonParameterTypeIds() {
+	public Set<Identifier> getEtalonParameterTypeIds() {
 		return Collections.unmodifiableSet(this.etalonParameterTypeIds);
 	}
 
-	public java.util.Set getOutParameterTypeIds() {
+	public Set<Identifier> getOutParameterTypeIds() {
 		return Collections.unmodifiableSet(this.outParameterTypeIds);
 	}
 
-	public java.util.Set getMeasurementTypeIds() {
+	public Set<Identifier> getMeasurementTypeIds() {
 		return Collections.unmodifiableSet(this.measurementTypeIds);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -257,18 +261,20 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypeIds(final Map parameterTypeIdsModeMap) {
-		this.setInParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_IN));
-		this.setCriteriaParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_CRITERION));
-		this.setEtalonParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_ETALON));
-		this.setOutParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_OUT));
+	@Override
+	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
+		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_IN));
+		this.setCriteriaParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_CRITERION));
+		this.setEtalonParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_ETALON));
+		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_OUT));
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Map getParameterTypeIdsModeMap() {
-		Map parameterTypeIdsModeMap = new HashMap(4);
+	@Override
+	protected Map<String, Set<Identifier>> getParameterTypeIdsModeMap() {
+		final Map<String, Set<Identifier>> parameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>(4);
 		parameterTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_IN, this.inParameterTypeIds);
 		parameterTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_CRITERION, this.criteriaParameterTypeIds);
 		parameterTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_ETALON, this.etalonParameterTypeIds);
@@ -279,7 +285,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypeIds0(final java.util.Set inParameterTypeIds) {
+	protected void setInParameterTypeIds0(final Set<Identifier> inParameterTypeIds) {
 		this.inParameterTypeIds.clear();
 		if (inParameterTypeIds != null)
 			this.inParameterTypeIds.addAll(inParameterTypeIds);
@@ -291,7 +297,7 @@ public final class AnalysisType extends ActionType {
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypeIds(final java.util.Set inParameterTypeIds) {
+	public void setInParameterTypeIds(final Set<Identifier> inParameterTypeIds) {
 		this.setInParameterTypeIds0(inParameterTypeIds);
 		super.markAsChanged();		
 	}
@@ -299,7 +305,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setCriteriaParameterTypeIds0(final java.util.Set criteriaParameterTypeIds) {
+	protected void setCriteriaParameterTypeIds0(final Set<Identifier> criteriaParameterTypeIds) {
 		this.criteriaParameterTypeIds.clear();
 		if (criteriaParameterTypeIds != null)
 			this.criteriaParameterTypeIds.addAll(criteriaParameterTypeIds);
@@ -310,7 +316,7 @@ public final class AnalysisType extends ActionType {
 	 * @param thresholdParameterTypeIds
 	 *            The thresholdParameterTypeIds to set.
 	 */
-	public void setCriteriaParameterTypeIds(final java.util.Set thresholdParameterTypeIds) {
+	public void setCriteriaParameterTypeIds(final Set<Identifier> thresholdParameterTypeIds) {
 		this.setCriteriaParameterTypeIds0(thresholdParameterTypeIds);
 		super.markAsChanged();
 	}
@@ -318,7 +324,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setEtalonParameterTypeIds0(final java.util.Set etalonParameterTypeIds) {
+	protected void setEtalonParameterTypeIds0(final Set<Identifier> etalonParameterTypeIds) {
 		this.etalonParameterTypeIds.clear();
 		if (etalonParameterTypeIds != null)
 			this.etalonParameterTypeIds.addAll(etalonParameterTypeIds);
@@ -329,7 +335,7 @@ public final class AnalysisType extends ActionType {
 	 * @param etalonParameterTypeIds
 	 *            The etalonParameterTypeIds to set.
 	 */
-	public void setEtalonParameterTypeIds(final java.util.Set etalonParameterTypeIds) {
+	public void setEtalonParameterTypeIds(final Set<Identifier> etalonParameterTypeIds) {
 		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
 		super.markAsChanged();
 	}
@@ -337,7 +343,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypeIds0(final java.util.Set outParameterTypeIds) {
+	protected void setOutParameterTypeIds0(final Set<Identifier> outParameterTypeIds) {
 		this.outParameterTypeIds.clear();
 		if (outParameterTypeIds != null)
 			this.outParameterTypeIds.addAll(outParameterTypeIds);
@@ -349,7 +355,7 @@ public final class AnalysisType extends ActionType {
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypeIds(final java.util.Set outParameterTypeIds) {
+	public void setOutParameterTypeIds(final Set<Identifier> outParameterTypeIds) {
 		this.setOutParameterTypeIds0(outParameterTypeIds);
 		super.markAsChanged();
 	}	
@@ -357,7 +363,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setMeasurementTypeIds0(final java.util.Set measurementTypeIds) {
+	protected void setMeasurementTypeIds0(final Set<Identifier> measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
@@ -367,7 +373,7 @@ public final class AnalysisType extends ActionType {
 	 * client setter for outParameterTypeIds
 	 * @param measurementTypeIds
 	 */
-	public void setMeasurementTypeIds(final java.util.Set measurementTypeIds) {
+	public void setMeasurementTypeIds(final Set<Identifier> measurementTypeIds) {
 		this.setMeasurementTypeIds0(measurementTypeIds);
 		super.markAsChanged();
 	}
@@ -375,10 +381,11 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public java.util.Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		if (this.inParameterTypeIds != null)
 			dependencies.addAll(this.inParameterTypeIds);
 

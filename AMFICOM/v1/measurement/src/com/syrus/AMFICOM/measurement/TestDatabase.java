@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.101 2005/06/23 18:45:08 bass Exp $
+ * $Id: TestDatabase.java,v 1.102 2005/06/24 13:54:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.102 $, $Date: 2005/06/24 13:54:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -56,10 +56,12 @@ public final class TestDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;	
 
+	@Override
 	protected short getEntityCode() {
 		return ObjectEntities.TEST_CODE;
 	}	
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
@@ -79,6 +81,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues =  QUESTION + COMMA
@@ -98,14 +101,15 @@ public final class TestDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}	
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Test test = this.fromStorableObject(storableObject);
-		Date startTime = test.getStartTime();
-		Date endTime = test.getEndTime();
-		Identifier temporalPatternId = test.getTemporalPatternId();		
-		Identifier analysisTypeId = test.getAnalysisTypeId();
-		Identifier evaluationTypeId = test.getEvaluationTypeId();
-		Identifier groupTestId = test.getGroupTestId();
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final Test test = this.fromStorableObject(storableObject);
+		final Date startTime = test.getStartTime();
+		final Date endTime = test.getEndTime();
+		final Identifier temporalPatternId = test.getTemporalPatternId();		
+		final Identifier analysisTypeId = test.getAnalysisTypeId();
+		final Identifier evaluationTypeId = test.getEvaluationTypeId();
+		final Identifier groupTestId = test.getGroupTestId();
 
 		return test.getTemporalType().value() + COMMA
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
@@ -122,23 +126,26 @@ public final class TestDatabase extends StorableObjectDatabase {
 			+ test.getNumberOfMeasurements();
 	}
 
-	protected String retrieveQuery(String condition) {
+	@Override
+	protected String retrieveQuery(final String condition) {
 		String query = super.retrieveQuery(condition);
 		query = query.replaceFirst(TestWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_START_TIME));
 		query = query.replaceFirst(TestWrapper.COLUMN_END_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_END_TIME));
 		return query;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
 
-		Test test = this.fromStorableObject(storableObject);
-		Date startTime = test.getStartTime();
-		Date endTime = test.getEndTime();
-		Identifier temporalPatternId = test.getTemporalPatternId();		
-		Identifier analysisTypeId = test.getAnalysisTypeId();
-		Identifier evaluationTypeId = test.getEvaluationTypeId();
-		Identifier groupTestId = test.getGroupTestId();
+		final Test test = this.fromStorableObject(storableObject);
+		final Date startTime = test.getStartTime();
+		final Date endTime = test.getEndTime();
+		final Identifier temporalPatternId = test.getTemporalPatternId();		
+		final Identifier analysisTypeId = test.getAnalysisTypeId();
+		final Identifier evaluationTypeId = test.getEvaluationTypeId();
+		final Identifier groupTestId = test.getGroupTestId();
 		preparedStatement.setInt(++startParameterNumber, test.getTemporalType().value());
 		preparedStatement.setTimestamp(++startParameterNumber, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
 		preparedStatement.setTimestamp(++startParameterNumber, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
@@ -155,33 +162,34 @@ public final class TestDatabase extends StorableObjectDatabase {
 		return startParameterNumber;
 	}
 
-	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Test)
-			return (Test)storableObject;
-		throw new IllegalDataException("TestDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Test test = this.fromStorableObject(storableObject);
-		this.retrieveEntity(test);
-		this.retrieveMeasurementSetupTestLinks(test);
-	}
-
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Test test = (storableObject == null)?
-				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME,
-						 null, null, null, null, null, 0, null, null) :
-					this.fromStorableObject(storableObject);
+		final Test test = (storableObject == null) ? new Test(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID),
+				null,
+				0L,
+				null,
+				null,
+				null,
+				TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME,
+				null,
+				null,
+				null,
+				null,
+				null,
+				0,
+				null,
+				null) : this.fromStorableObject(storableObject);
 
 		MonitoredElement monitoredElement;
 		try {			
-			Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
+			final Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
 			monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(monitoredElementId, true);
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -204,70 +212,41 @@ public final class TestDatabase extends StorableObjectDatabase {
 		return test;
 	}
 
-	private void retrieveMeasurementSetupTestLinks(Test test) throws RetrieveObjectException {
-		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
-		String sql = SQL_SELECT
-			+ TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID
-			+ SQL_FROM + ObjectEntities.MSTESTLINK
-			+ SQL_WHERE + LINK_COLMN_TEST_ID + EQUALS + testIdStr;
-		Statement statement = null;
-		ResultSet resultSet = null;
-		java.util.Set msList = new HashSet();
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TestDatabase.retrieveMeasurementSetupTestLinks | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				msList.add(DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID));
-			}
-		} catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveMeasurementSetupTestLinks | Cannot retrieve measurement setup ids for test '" + testIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}  finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-		if (!msList.isEmpty())
-			test.setMeasurementSetupIds0(msList);
-		else
-			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
+	private Test fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
+		if (storableObject instanceof Test)
+			return (Test)storableObject;
+		throw new IllegalDataException("TestDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	private void retrieveMeasurementSetupTestLinksByOneQuery(java.util.Set tests) throws RetrieveObjectException {
+	@Override
+	public void retrieve(final StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final Test test = this.fromStorableObject(storableObject);
+		this.retrieveEntity(test);
+		this.retrieveMeasurementSetupTestLinksByOneQuery(Collections.singleton(test));
+	}
+
+	private void retrieveMeasurementSetupTestLinksByOneQuery(final Set<Test> tests) throws RetrieveObjectException {
 		if ((tests == null) || (tests.isEmpty()))
 			return;
 
-		Map msIdsMap = null;
-		msIdsMap = this.retrieveLinkedEntityIds(tests,
+		final Map<Identifier, Set<Identifier>> msIdsMap = this.retrieveLinkedEntityIds(tests,
 				ObjectEntities.MSTESTLINK,
 				LINK_COLMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 
-		Test test;
-		Identifier testId;
-		java.util.Set msIds;
-		for (Iterator it = tests.iterator(); it.hasNext();) {
-			test = (Test) it.next();
-			testId = test.getId();
-			msIds = (java.util.Set) msIdsMap.get(testId);
+		for (final Test test : tests) {
+			final Identifier testId = test.getId();
+			final Set<Identifier> msIds = msIdsMap.get(testId);
 
 			test.setMeasurementSetupIds0(msIds);
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Test test = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final Test test = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			case Test.RETRIEVE_MEASUREMENTS:
 				return this.retrieveMeasurementsOrderByStartTime(test, (MeasurementStatus)arg);
@@ -281,11 +260,13 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private java.util.Set retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurementStatus) throws RetrieveObjectException {
-		java.util.Set measurements = new HashSet();
+	private Set<Measurement> retrieveMeasurementsOrderByStartTime(final Test test, final MeasurementStatus measurementStatus)
+			throws RetrieveObjectException {
+		//@todo final Set<Measurement> measurements = new HashSet<Measurement>();
+		final Set measurements = new HashSet();
 
-		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
-		String sql = SQL_SELECT
+		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
+		final String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENT
 			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
@@ -294,12 +275,12 @@ public final class TestDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveMeasurementsOrderByStartTime | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
+			while (resultSet.next()) {
 				measurements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 						StorableObjectWrapper.COLUMN_ID), true));
 			}
@@ -325,9 +306,9 @@ public final class TestDatabase extends StorableObjectDatabase {
 		return measurements;
 	}
 
-	private Measurement retrieveLastMeasurement(Test test) throws RetrieveObjectException, ObjectNotFoundException {
-		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
-		String sql = SQL_SELECT
+	private Measurement retrieveLastMeasurement(final Test test) throws RetrieveObjectException, ObjectNotFoundException {
+		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
+		final String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM
 			+ ObjectEntities.MEASUREMENT
@@ -341,7 +322,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 					+ CLOSE_BRACKET;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveLastMeasurement | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -355,7 +336,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 				}
 			throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
 		} catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
+			final String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -373,9 +354,10 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private Integer retrieveNumberOfResults(Test test, ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
-		String sql = SQL_SELECT
+	private Integer retrieveNumberOfResults(final Test test, final ResultSort resultSort)
+			throws RetrieveObjectException, ObjectNotFoundException {
+		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
+		final String sql = SQL_SELECT
 			+ SQL_COUNT + " count "
 			+ SQL_FROM + ObjectEntities.RESULT
 			+ SQL_WHERE + ResultWrapper.COLUMN_SORT + EQUALS + Integer.toString(resultSort.value())
@@ -388,7 +370,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 					+ CLOSE_BRACKET;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveNumberOfResults | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -415,7 +397,8 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Test test = this.fromStorableObject(storableObject);
 		super.insertEntity(test);
 		try {
@@ -426,7 +409,8 @@ public final class TestDatabase extends StorableObjectDatabase {
 		
 	}
 
-	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
@@ -438,17 +422,19 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	@Override
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
-			this.updateMeasurementSetupIds(Collections.singleton(storableObject));
+			this.updateMeasurementSetupIds(Collections.singleton(this.fromStorableObject(storableObject)));
 		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
 
-	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+	@Override
+	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
@@ -458,15 +444,14 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateMeasurementSetupIds(java.util.Set tests) throws IllegalDataException, UpdateObjectException {
+	private void updateMeasurementSetupIds(final Set<Test> tests) throws IllegalDataException, UpdateObjectException {
 		if (tests == null || tests.isEmpty()) {
 			return;
 		}
 
-		Map measurementSetupIdsMap = new HashMap();
-		for (Iterator it = tests.iterator(); it.hasNext();) {
-			final Test test = this.fromStorableObject((StorableObject) it.next());
-			final java.util.Set measurementSetupIds = test.getMeasurementSetupIds();
+		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final Test test : tests) {
+			final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 			measurementSetupIdsMap.put(test.getId(), measurementSetupIds);
 		}
 
@@ -476,8 +461,9 @@ public final class TestDatabase extends StorableObjectDatabase {
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 	}
 
-	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		java.util.Set collection = super.retrieveByCondition(conditionQuery);
+	@Override
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupTestLinksByOneQuery(collection);
 		return collection;
 	}

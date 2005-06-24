@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.36 2005/06/23 18:45:08 bass Exp $
+ * $Id: ModelingType.java,v 1.37 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -54,10 +55,10 @@ public final class ModelingType extends ActionType {
 	ModelingType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypeIds = new HashSet();
-		this.outParameterTypeIds = new HashSet();
+		this.inParameterTypeIds = new HashSet<Identifier>();
+		this.outParameterTypeIds = new HashSet<Identifier>();
 
-		ModelingTypeDatabase database = (ModelingTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_TYPE_CODE);
+		final ModelingTypeDatabase database = (ModelingTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -86,8 +87,8 @@ public final class ModelingType extends ActionType {
 			final long version,
 			final String codename,
 			final String description,
-			final java.util.Set inParameterTypeIds,
-			final java.util.Set outParameterTypeIds) {
+			final Set<Identifier> inParameterTypeIds,
+			final Set<Identifier> outParameterTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -97,10 +98,10 @@ public final class ModelingType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypeIds = new HashSet();
+		this.inParameterTypeIds = new HashSet<Identifier>();
 		this.setInParameterTypeIds0(inParameterTypeIds);
 
-		this.outParameterTypeIds = new HashSet();
+		this.outParameterTypeIds = new HashSet<Identifier>();
 		this.setOutParameterTypeIds0(outParameterTypeIds);
 	}
 
@@ -116,13 +117,13 @@ public final class ModelingType extends ActionType {
 	public static ModelingType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final java.util.Set inParameterTypeIds,
-			final java.util.Set outParameterTypeIds) throws CreateObjectException {
+			final Set<Identifier> inParameterTypeIds,
+			final Set<Identifier> outParameterTypeIds) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_TYPE_CODE),
+			final ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_TYPE_CODE),
 					creatorId,
 					0L,
 					codename,
@@ -143,8 +144,9 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlModelingType mtt = (IdlModelingType) transferable;
+		final IdlModelingType mtt = (IdlModelingType) transferable;
 		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
 
 		this.inParameterTypeIds = Identifier.fromTransferables(mtt.inParameterTypeIds);
@@ -159,8 +161,8 @@ public final class ModelingType extends ActionType {
 	public IdlModelingType getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 
 		return new IdlModelingType(super.getHeaderTransferable(),
 				super.codename,
@@ -175,22 +177,24 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET
 			&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET;
 	}
 	
-	public java.util.Set getInParameterTypeIds() {
+	public Set<Identifier> getInParameterTypeIds() {
 		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}
 
-	public java.util.Set getOutParameterTypeIds() {
+	public Set<Identifier> getOutParameterTypeIds() {
 		return Collections.unmodifiableSet(this.outParameterTypeIds);
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -210,16 +214,18 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setParameterTypeIds(final Map parameterTypeIdsModeMap) {
-		this.setInParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_IN));
-		this.setOutParameterTypeIds0((java.util.Set) parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_OUT));
+	@Override
+	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
+		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_IN));
+		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_OUT));
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Map getParameterTypeIdsModeMap() {
-		Map parameterTypeIdsModeMap = new HashMap(2);
+	@Override
+	protected Map<String, Set<Identifier>> getParameterTypeIdsModeMap() {
+		final Map<String, Set<Identifier>> parameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>(2);
 		parameterTypeIdsModeMap.put(ModelingTypeWrapper.MODE_IN, this.inParameterTypeIds);
 		parameterTypeIdsModeMap.put(ModelingTypeWrapper.MODE_OUT, this.outParameterTypeIds);
 		return parameterTypeIdsModeMap;
@@ -228,7 +234,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypeIds0(final java.util.Set inParameterTypeIds) {
+	protected void setInParameterTypeIds0(final Set<Identifier> inParameterTypeIds) {
 		this.inParameterTypeIds.clear();
 		if (inParameterTypeIds != null)
 			this.inParameterTypeIds.addAll(inParameterTypeIds);
@@ -240,7 +246,7 @@ public final class ModelingType extends ActionType {
 	 * @param inParameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypeIds(final java.util.Set inParameterTypeIds) {
+	public void setInParameterTypeIds(final Set<Identifier> inParameterTypeIds) {
 		this.setInParameterTypeIds0(inParameterTypeIds);
 		super.markAsChanged();		
 	}
@@ -248,7 +254,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypeIds0(final java.util.Set outParameterTypeIds) {
+	protected void setOutParameterTypeIds0(final Set<Identifier> outParameterTypeIds) {
 		this.outParameterTypeIds.clear();
 		if (outParameterTypeIds != null)
 			this.outParameterTypeIds.addAll(outParameterTypeIds);
@@ -260,7 +266,7 @@ public final class ModelingType extends ActionType {
 	 * @param outParameterTypeIds
 	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypeIds(final java.util.Set outParameterTypeIds) {
+	public void setOutParameterTypeIds(final Set<Identifier> outParameterTypeIds) {
 		this.setOutParameterTypeIds0(outParameterTypeIds);
 		super.markAsChanged();
 	}
@@ -268,10 +274,11 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public java.util.Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		if (this.inParameterTypeIds != null)
 			dependencies.addAll(this.inParameterTypeIds);
 				

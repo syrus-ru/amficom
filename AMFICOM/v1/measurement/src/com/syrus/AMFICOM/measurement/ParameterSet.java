@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.6 2005/06/23 18:45:08 bass Exp $
+ * $Id: ParameterSet.java,v 1.7 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -62,9 +63,9 @@ public final class ParameterSet extends StorableObject {
 	ParameterSet(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.monitoredElementIds = new HashSet();
+		this.monitoredElementIds = new HashSet<Identifier>();
 		
-		ParameterSetDatabase database = (ParameterSetDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERSET_CODE);
+		final ParameterSetDatabase database = (ParameterSetDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETERSET_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -94,7 +95,7 @@ public final class ParameterSet extends StorableObject {
 			final int sort,
 			final String description,
 			final Parameter[] parameters,
-			final java.util.Set monitoredElementIds) {
+			final Set<Identifier> monitoredElementIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -105,7 +106,7 @@ public final class ParameterSet extends StorableObject {
 		this.description = description;
 		this.parameters = parameters;
 
-		this.monitoredElementIds = new HashSet();
+		this.monitoredElementIds = new HashSet<Identifier>();
 		this.setMonitoredElementIds0(monitoredElementIds);
 	}
 	
@@ -122,10 +123,10 @@ public final class ParameterSet extends StorableObject {
 			final ParameterSetSort sort,
 			final String description,
 			final Parameter[] parameters,
-			final java.util.Set monitoredElementIds) throws CreateObjectException {
+			final Set<Identifier> monitoredElementIds) throws CreateObjectException {
 
 		try {
-			ParameterSet set = new ParameterSet(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERSET_CODE),
+			final ParameterSet set = new ParameterSet(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERSET_CODE),
 					creatorId,
 					0L,
 					sort.value(),
@@ -148,8 +149,9 @@ public final class ParameterSet extends StorableObject {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlParameterSet st = (IdlParameterSet)transferable;
+		final IdlParameterSet st = (IdlParameterSet)transferable;
 		super.fromTransferable(st.header);
 		this.sort = st.sort.value();
 		this.description = st.description;
@@ -170,11 +172,11 @@ public final class ParameterSet extends StorableObject {
 	public IdlParameterSet getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		IdlParameter[] pts = new IdlParameter[this.parameters.length];
+		final IdlParameter[] pts = new IdlParameter[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
 			pts[i] = this.parameters[i].getTransferable();
 
-		IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
+		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		return new IdlParameterSet(super.getHeaderTransferable(),
 				ParameterSetSort.from_int(this.sort),
 				this.description,
@@ -188,6 +190,7 @@ public final class ParameterSet extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		boolean valid = super.isValid()
 				&& this.description != null
@@ -221,7 +224,7 @@ public final class ParameterSet extends StorableObject {
 		return this.parameters;
 	}
 
-	public java.util.Set getMonitoredElementIds() {
+	public Set<Identifier> getMonitoredElementIds() {
 		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
 
@@ -274,13 +277,13 @@ public final class ParameterSet extends StorableObject {
 		}
 	}
 
-	protected synchronized void setMonitoredElementIds0(final java.util.Set monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(final Set<Identifier> monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 	     	this.monitoredElementIds.addAll(monitoredElementIds);
 	}
 
-	protected synchronized void setMonitoredElementIds(final java.util.Set monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds(final Set<Identifier> monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
 	}
 
@@ -300,6 +303,7 @@ public final class ParameterSet extends StorableObject {
 		super.markAsChanged();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		boolean equals = (obj==this);
 		if ((!equals)&&(obj instanceof ParameterSet)){
@@ -318,6 +322,7 @@ public final class ParameterSet extends StorableObject {
 		return equals;
 	}
 
+	@Override
 	public int hashCode() {
 		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 		hashCodeGenerator.addObject(this.id);
@@ -334,6 +339,7 @@ public final class ParameterSet extends StorableObject {
 		return result;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buffer = new StringBuffer(getClass().getName());
 		buffer.append(EOSL);
@@ -377,10 +383,11 @@ public final class ParameterSet extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public java.util.Set getDependencies() {		
+	@Override
+	public Set<Identifiable> getDependencies() {		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
 		if (this.monitoredElementIds != null)
 			dependencies.addAll(this.monitoredElementIds);

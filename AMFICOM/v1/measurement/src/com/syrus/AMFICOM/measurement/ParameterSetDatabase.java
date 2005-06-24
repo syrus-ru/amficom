@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.3 2005/06/17 12:38:55 bass Exp $
+ * $Id: ParameterSetDatabase.java,v 1.4 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -41,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -53,10 +54,12 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {
 		return ObjectEntities.PARAMETERSET_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = ParameterSetWrapper.COLUMN_SORT  + COMMA
@@ -65,41 +68,46 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
-	}	
+	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		ParameterSet set = this.fromStorableObject(storableObject);
 		String values = Integer.toString(set.getSort().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
-	}	
+	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		ParameterSet set = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final ParameterSet set = this.fromStorableObject(storableObject);
 		preparedStatement.setInt(++startParameterNumber, set.getSort().value());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
-	private ParameterSet fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private ParameterSet fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof ParameterSet)
 			return (ParameterSet)storableObject;
 		throw new IllegalDataException("ParameterSetDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		ParameterSet set = (storableObject == null) ?
-				new ParameterSet(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, 0, null, null, null) :			
-				this.fromStorableObject(storableObject);
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final ParameterSet set = (storableObject == null) ? new ParameterSet(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID), null, 0L, 0, null, null, null) : this.fromStorableObject(storableObject);
+
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -110,59 +118,59 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		return set;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ParameterSet set = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(final StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final ParameterSet set = this.fromStorableObject(storableObject);
 		this.retrieveEntity(set);
 		this.retrieveSetParametersByOneQuery(Collections.singleton(set));
 		this.retrieveSetMELinksByOneQuery(Collections.singleton(set));
 	}
 
-	private void retrieveSetParametersByOneQuery(java.util.Set sets) throws RetrieveObjectException {
-        if ((sets == null) || (sets.isEmpty()))
+	private void retrieveSetParametersByOneQuery(final Set<ParameterSet> sets) throws RetrieveObjectException {
+		if ((sets == null) || (sets.isEmpty()))
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT
+		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ ParameterSetWrapper.LINK_COLUMN_SET_ID
-				+ SQL_FROM + ObjectEntities.PARAMETER
-				+ SQL_WHERE);
+				+ SQL_FROM + ObjectEntities.PARAMETER + SQL_WHERE);
 		sql.append(idsEnumerationString(sets, ParameterSetWrapper.LINK_COLUMN_SET_ID, true));
 
-		Map setParametersMap = new HashMap();
-		Identifier setId;
-		java.util.Set setParameters;
+		final Map<Identifier, Set<Parameter>> setParametersMap = new HashMap<Identifier, Set<Parameter>>();
+		//Identifier setId;
+//		Set setParameters;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ParameterSetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
-			ParameterType parameterType;
-			Parameter parameter;
 			while (resultSet.next()) {
+				ParameterType parameterType;
 				try {
 					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 														parameterType,
 														ByteArrayDatabase.toByteArray(resultSet.getBlob(ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
-				setId = DatabaseIdentifier.getIdentifier(resultSet, ParameterSetWrapper.LINK_COLUMN_SET_ID);
-				setParameters = (java.util.Set) setParametersMap.get(setId);
+				final Identifier setId = DatabaseIdentifier.getIdentifier(resultSet, ParameterSetWrapper.LINK_COLUMN_SET_ID);
+				Set<Parameter> setParameters = setParametersMap.get(setId);
 				if (setParameters == null) {
-					setParameters = new HashSet();
+					setParameters = new HashSet<Parameter>();
 					setParametersMap.put(setId, setParameters);
 				}
 				setParameters.add(parameter);
 			}
 		} catch (SQLException sqle) {
-			String mesg = "ParameterSetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for set -- "
+			final String mesg = "ParameterSetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for set -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
@@ -180,44 +188,39 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		ParameterSet set;
-		for (Iterator it = sets.iterator(); it.hasNext();) {
-			set = (ParameterSet) it.next();
-			setId = set.getId();
-			setParameters = (java.util.Set) setParametersMap.get(setId);
+		for (final ParameterSet set : sets) {
+			final Identifier setId = set.getId();
+			final Set<Parameter> setParameters = setParametersMap.get(setId);
 
 			if (setParameters != null)
-				set.setParameters0((Parameter[]) setParameters.toArray(new Parameter[setParameters.size()]));
+				set.setParameters0(setParameters.toArray(new Parameter[setParameters.size()]));
 			else
 				set.setParameters0(new Parameter[0]);
 		}
 
 	}
 
-	private void retrieveSetMELinksByOneQuery(java.util.Set sets) throws RetrieveObjectException {
+	private void retrieveSetMELinksByOneQuery(final Set<ParameterSet> sets) throws RetrieveObjectException {
 		if ((sets == null) || (sets.isEmpty()))
 			return;
 
-		Map meIdsMap = null;
-		meIdsMap = this.retrieveLinkedEntityIds(sets,
+		final Map<Identifier, Set<Identifier>> meIdsMap = this.retrieveLinkedEntityIds(sets,
 				ObjectEntities.SETMELINK,
 				ParameterSetWrapper.LINK_COLUMN_SET_ID,
 				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
-		ParameterSet set;
-		Identifier setId;
-		java.util.Set meIds;
-		for (Iterator it = sets.iterator(); it.hasNext();) {
-			set = (ParameterSet) it.next();
-			setId = set.getId();
-			meIds = (java.util.Set) meIdsMap.get(setId);
+		for (final ParameterSet set : sets) {
+			final Identifier setId = set.getId();
+			final Set<Identifier> meIds = meIdsMap.get(setId);
 
 			set.setMonitoredElementIds0(meIds);
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		ParameterSet set = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException {
+		final ParameterSet set = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  set.getId() + "'; argument: " + arg);
@@ -225,9 +228,10 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Log.debugMessage("ParameterSetDatabase.insert | 1 ", Log.DEBUGLEVEL01);
-		ParameterSet set = this.fromStorableObject(storableObject);
+		final ParameterSet set = this.fromStorableObject(storableObject);
 		try {
 			Log.debugMessage("ParameterSetDatabase.insert | before insertEntity ", Log.DEBUGLEVEL01);
 			super.insertEntity(set);
@@ -244,7 +248,8 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		Log.debugMessage("ParameterSetDatabase.insert | many ", Log.DEBUGLEVEL01);
 		super.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
@@ -258,10 +263,10 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertSetParameters(ParameterSet set) throws CreateObjectException {
+	private void insertSetParameters(final ParameterSet set) throws CreateObjectException {
 		Log.debugMessage("ParameterSetDatabase.insertSetParameters | ", Log.DEBUGLEVEL01);
-		Identifier setId = set.getId();		
-		Parameter[] setParameters = set.getParameters();
+		final Identifier setId = set.getId();		
+		final Parameter[] setParameters = set.getParameters();
 		Log.debugMessage("ParameterSetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.PARAMETER
@@ -280,7 +285,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (int i = 0; i < setParameters.length; i++) {
@@ -317,17 +322,19 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	@Override
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
-			this.updateSetMELinks(Collections.singleton(storableObject));
+			this.updateSetMELinks(Collections.singleton(this.fromStorableObject(storableObject)));
 		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
 
-	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+	@Override
+	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
@@ -337,16 +344,13 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateSetMELinks(java.util.Set sets) throws IllegalDataException, UpdateObjectException {
+	private void updateSetMELinks(final Set<ParameterSet> sets) throws IllegalDataException, UpdateObjectException {
 		if (sets == null || sets.isEmpty())
 			return;
 
-		Map meIdsMap = new HashMap();
-		ParameterSet set;
-		java.util.Set meIds;
-		for (Iterator it = sets.iterator(); it.hasNext();) {
-			set = this.fromStorableObject((StorableObject) it.next());
-			meIds = set.getMonitoredElementIds();
+		final Map<Identifier, Set<Identifier>> meIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final ParameterSet set : sets) {
+			final Set<Identifier> meIds = set.getMonitoredElementIds();
 			meIdsMap.put(set.getId(), meIds);
 		}
 
@@ -356,13 +360,14 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
-	public void delete(Identifier id) {
+	@Override
+	public void delete(final Identifier id) {
 		assert (id.getMajor() == ObjectEntities.PARAMETERSET_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
-		String setIdStr = DatabaseIdentifier.toSQLString(id);
+		final String setIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
@@ -390,8 +395,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		java.util.Set collection = super.retrieveByCondition(conditionQuery);
+	@Override
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveSetParametersByOneQuery(collection);
 		this.retrieveSetMELinksByOneQuery(collection);
 		return collection;

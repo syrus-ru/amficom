@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.41 2005/06/17 12:38:55 bass Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.42 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -32,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/17 12:38:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -42,24 +43,28 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	@Override
 	String getParameterTypeLinkTableName() {
 		return ObjectEntities.MODTYPPARTYPLINK;
 	}
 
+	@Override
 	String getActionTypeColumnName() {
 		return ModelingTypeWrapper.LINK_COLUMN_MODELING_TYPE_ID;
 	}
 
-	private ModelingType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private ModelingType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof ModelingType)
 			return (ModelingType) storableObject;
 		throw new IllegalDataException("ModelingTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {
 		return ObjectEntities.MODELING_TYPE_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
@@ -69,6 +74,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -77,24 +83,28 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final ModelingType modelingType = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, modelingType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, modelingType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final ModelingType modelingType = this.fromStorableObject(storableObject);
 		String values = APOSTOPHE + DatabaseString.toQuerySubString(modelingType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(modelingType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;		
 		return values;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 		throws IllegalDataException, SQLException {
-		ModelingType modelingType = (storableObject == null) ?
+		final ModelingType modelingType = (storableObject == null) ?
 				new ModelingType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 												 null,
 												 0L,
@@ -113,14 +123,18 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		return modelingType;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(final StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final ModelingType modelingType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(modelingType);
 		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(modelingType));
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException {
+		final ModelingType modelingType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  modelingType.getId() + "'; argument: " + arg);
@@ -128,8 +142,9 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+		final ModelingType modelingType = this.fromStorableObject(storableObject);
 		super.insertEntity(modelingType);
 		try {
 			super.updateParameterTypeIds(Collections.singleton(storableObject));
@@ -138,7 +153,8 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		}
 	}
 
-	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypeIds(storableObjects);
@@ -147,19 +163,22 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+	@Override
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		super.updateParameterTypeIds(Collections.singleton(storableObject));
 	}
 
-	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+	@Override
+	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		super.updateParameterTypeIds(storableObjects);
 	}
 
-	public void delete(Identifier id) {
+	@Override
+	public void delete(final Identifier id) {
 		assert (id.getMajor() != ObjectEntities.MODELING_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
@@ -190,8 +209,9 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		}
 	}
 
-	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		java.util.Set objects = super.retrieveByCondition(conditionQuery);
+	@Override
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set objects = super.retrieveByCondition(conditionQuery);
 		super.retrieveParameterTypeIdsByOneQuery(objects);
 		return objects;
 	}

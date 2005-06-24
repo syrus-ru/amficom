@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.6 2005/06/17 12:38:56 bass Exp $
+ * $Id: ActionTypeDatabase.java,v 1.7 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -29,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 12:38:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public abstract class ActionTypeDatabase extends StorableObjectDatabase {
@@ -39,7 +40,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 
 	abstract String getActionTypeColumnName();
 
-	final void retrieveParameterTypeIdsByOneQuery(final java.util.Set actionTypes) throws RetrieveObjectException {
+	final void retrieveParameterTypeIdsByOneQuery(final Set actionTypes) throws RetrieveObjectException {
 		if (actionTypes == null || actionTypes.isEmpty())
 			return;
 
@@ -54,7 +55,8 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private Map retrieveDBParameterTypeIdsMap(final java.util.Set actionTypes) throws RetrieveObjectException {
+	private Map<Identifier, Map<String, Set<Identifier>>> retrieveDBParameterTypeIdsMap(final Set<? extends ActionType> actionTypes)
+			throws RetrieveObjectException {
 		final String tableName = this.getParameterTypeLinkTableName();
 		final String actionTypeColumnName = this.getActionTypeColumnName();
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
@@ -65,14 +67,11 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(actionTypes, actionTypeColumnName, true));
 
-		final Map dbParTypeIdsMap = new HashMap();	//Map <Identifier actionTypeId, Map dbParIdsModeMap>
-
-		Map parTypeIdsModeMap;	//Map <String parameterMode, java.util.Set parameterTypeIds>
-		java.util.Set parameterTypeIds;
+		final Map<Identifier, Map<String, Set<Identifier>>> dbParTypeIdsMap = new HashMap<Identifier, Map<String, Set<Identifier>>>();
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveDBParameterTypeIdsMap | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -83,15 +82,15 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 				final Identifier parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet,
 						StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 
-				parTypeIdsModeMap = (Map) dbParTypeIdsMap.get(actionTypeId);
+				Map<String, Set<Identifier>> parTypeIdsModeMap = dbParTypeIdsMap.get(actionTypeId);
 				if (parTypeIdsModeMap == null) {
-					parTypeIdsModeMap = new HashMap();
+					parTypeIdsModeMap = new HashMap<String, Set<Identifier>>();
 					dbParTypeIdsMap.put(actionTypeId, parTypeIdsModeMap);
 				}
 
-				parameterTypeIds = (java.util.Set) parTypeIdsModeMap.get(parameterMode);
+				Set<Identifier> parameterTypeIds = parTypeIdsModeMap.get(parameterMode);
 				if (parameterTypeIds == null) {
-					parameterTypeIds = new HashSet();
+					parameterTypeIds = new HashSet<Identifier>();
 					parTypeIdsModeMap.put(parameterMode, parameterTypeIds);
 				}
 
@@ -118,18 +117,18 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	final void updateParameterTypeIds(final java.util.Set actionTypes) throws UpdateObjectException {
+	final void updateParameterTypeIds(final Set actionTypes) throws UpdateObjectException {
 		if (actionTypes == null || actionTypes.isEmpty())
 			return;
 
-		Map dbParameterTypeIdsMap = null;
+		Map<Identifier, Map<String, Set<Identifier>>> dbParameterTypeIdsMap = null;
 		try {
 			dbParameterTypeIdsMap = this.retrieveDBParameterTypeIdsMap(actionTypes);
 		} catch (RetrieveObjectException roe) {
 			throw new UpdateObjectException(roe);
 		}
 
-		final Map parameterTypeIdsMap = new HashMap(actionTypes.size());
+		final Map<Identifier, Map<String, Set<Identifier>>> parameterTypeIdsMap = new HashMap<Identifier, Map<String, Set<Identifier>>>(actionTypes.size());
 		for (Iterator it = actionTypes.iterator(); it.hasNext();) {
 			final ActionType actionType = (ActionType) it.next();
 			parameterTypeIdsMap.put(actionType.getId(), actionType.getParameterTypeIdsModeMap());
@@ -138,75 +137,71 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		this.updateParameterTypeIds(parameterTypeIdsMap, dbParameterTypeIdsMap);
 	}
 
-	private void updateParameterTypeIds(final Map parameterTypeIdsMap, final Map dbParameterTypeIdsMap) throws UpdateObjectException {
-		final Map insertParameterTypeIdsMap = new HashMap();
-		final Map deleteParameterTypeIdsMap = new HashMap();
-		Map altParameterTypeIdsModeMap;
-		java.util.Set altParameterTypeIds;
-		for (final Iterator it1 = parameterTypeIdsMap.keySet().iterator(); it1.hasNext();) {
-			final Identifier actionTypeId = (Identifier) it1.next();
-			final Map parameterTypeIdsModeMap = (Map) parameterTypeIdsMap.get(actionTypeId);
-			final Map dbParameterTypeIdsModeMap = (Map) dbParameterTypeIdsMap.get(actionTypeId);
+	private void updateParameterTypeIds(final Map<Identifier, Map<String, Set<Identifier>>> parameterTypeIdsMap,
+			final Map<Identifier, Map<String, Set<Identifier>>> dbParameterTypeIdsMap) throws UpdateObjectException {
+		final Map<Identifier, Map<String, Set<Identifier>>> insertParameterTypeIdsMap = new HashMap<Identifier, Map<String, Set<Identifier>>>();
+		final Map<Identifier, Set<Identifier>> deleteParameterTypeIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final Identifier actionTypeId : parameterTypeIdsMap.keySet()) {
+			final Map<String, Set<Identifier>> parameterTypeIdsModeMap = parameterTypeIdsMap.get(actionTypeId);
+			final Map<String, Set<Identifier>> dbParameterTypeIdsModeMap = dbParameterTypeIdsMap.get(actionTypeId);
 			if (dbParameterTypeIdsModeMap != null) {
-				for (final Iterator it2 = parameterTypeIdsModeMap.keySet().iterator(); it2.hasNext();) {
-					final String parameterMode = (String) it2.next();
-					final java.util.Set parameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(parameterMode);
-					final java.util.Set dbParameterTypeIds = (java.util.Set) dbParameterTypeIdsModeMap.get(parameterMode);
+				for (final String parameterMode : parameterTypeIdsModeMap.keySet()) {
+					final Set<Identifier> parameterTypeIds = parameterTypeIdsModeMap.get(parameterMode);
+					final Set<Identifier> dbParameterTypeIds = dbParameterTypeIdsModeMap.get(parameterMode);
 					if (dbParameterTypeIds != null) {
-						for (final Iterator it3 = parameterTypeIds.iterator(); it3.hasNext();) {
-							final Identifier parameterTypeId = (Identifier) it3.next();
+						for (final Identifier parameterTypeId : parameterTypeIds) {
 							if (!dbParameterTypeIds.contains(parameterTypeId)) {
 								//Insert parameter type id
-								altParameterTypeIdsModeMap = (Map) insertParameterTypeIdsMap.get(actionTypeId);
+								Map<String, Set<Identifier>> altParameterTypeIdsModeMap = insertParameterTypeIdsMap.get(actionTypeId);
 								if (altParameterTypeIdsModeMap == null) {
-									altParameterTypeIdsModeMap = new HashMap();
+									altParameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>();
 									insertParameterTypeIdsMap.put(actionTypeId, altParameterTypeIdsModeMap);
 								}
-								altParameterTypeIds = (java.util.Set) altParameterTypeIdsModeMap.get(parameterMode);
+								Set<Identifier> altParameterTypeIds = altParameterTypeIdsModeMap.get(parameterMode);
 								if (altParameterTypeIds == null) {
-									altParameterTypeIds = new HashSet();
+									altParameterTypeIds = new HashSet<Identifier>();
 									altParameterTypeIdsModeMap.put(parameterMode, altParameterTypeIds);
 								}
 								altParameterTypeIds.add(parameterTypeId);
 							}
-						}
-						for (final Iterator it3 = dbParameterTypeIds.iterator(); it3.hasNext();) {
-							final Identifier parameterTypeId = (Identifier) it3.next();
+						}	//for (final Identifier parameterTypeId : parameterTypeIds)
+						for (final Identifier parameterTypeId : dbParameterTypeIds) {
 							if (!parameterTypeIds.contains(parameterTypeId)) {
-								//Delete parameter type id
-								altParameterTypeIds = (java.util.Set) deleteParameterTypeIdsMap.get(actionTypeId);
+								//Delete if (!parameterTypeIds.contains(parameterTypeId)) {
+								Set<Identifier> altParameterTypeIds = deleteParameterTypeIdsMap.get(actionTypeId);
 								if (altParameterTypeIds == null) {
-									altParameterTypeIds = new HashSet();
+									altParameterTypeIds = new HashSet<Identifier>();
 									deleteParameterTypeIdsMap.put(actionTypeId, altParameterTypeIds);
 								}
 								altParameterTypeIds.add(parameterTypeId);
 							}
-						}
-					} else {
+						}	//for (final Identifier parameterTypeId : dbParameterTypeIds)
+					}	//if (dbParameterTypeIds != null)
+					else {
 						//Insert all par typ ids for this mode and this action type id
-						altParameterTypeIdsModeMap = (Map) insertParameterTypeIdsMap.get(actionTypeId);
+						Map<String, Set<Identifier>> altParameterTypeIdsModeMap = insertParameterTypeIdsMap.get(actionTypeId);
 						if (altParameterTypeIdsModeMap == null) {
-							altParameterTypeIdsModeMap = new HashMap();
+							altParameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>();
 							insertParameterTypeIdsMap.put(actionTypeId, altParameterTypeIdsModeMap);
 						}
 						altParameterTypeIdsModeMap.put(parameterMode, parameterTypeIds);
-					}
+					}	//else if (dbParameterTypeIds != null)
 				}
-				for (final Iterator it2 = dbParameterTypeIdsModeMap.keySet().iterator(); it2.hasNext();) {
-					final String parameterMode = (String) it2.next();
+				for (final String parameterMode : dbParameterTypeIdsModeMap.keySet()) {
 					if (!parameterTypeIdsModeMap.containsKey(parameterMode)) {
 						//Delete all par typ ids for this mode and this action type id
-						altParameterTypeIds = (java.util.Set) deleteParameterTypeIdsMap.get(actionTypeId);
+						Set<Identifier> altParameterTypeIds = deleteParameterTypeIdsMap.get(actionTypeId);
 						if (altParameterTypeIds == null) {
-							altParameterTypeIds = new HashSet();
+							altParameterTypeIds = new HashSet<Identifier>();
 							deleteParameterTypeIdsMap.put(actionTypeId, altParameterTypeIds);
 						}
-						altParameterTypeIds.addAll((java.util.Set) dbParameterTypeIdsModeMap.get(parameterMode));
+						altParameterTypeIds.addAll(dbParameterTypeIdsModeMap.get(parameterMode));
 					}
-				}
-			} else {
+				}	//for (final String parameterMode : dbParameterTypeIdsModeMap.keySet())
+			}	//if (dbParameterTypeIdsModeMap != null)
+			else {
 				//Insert all par type ids for this action type id
-				altParameterTypeIdsModeMap = new HashMap();
+				final Map<String, Set<Identifier>> altParameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>();
 				altParameterTypeIdsModeMap.putAll(parameterTypeIdsModeMap);
 				insertParameterTypeIdsMap.put(actionTypeId, altParameterTypeIdsModeMap);
 			}
@@ -224,14 +219,14 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertParameterTypes(final Map parameterTypeIdsMap)
+	private void insertParameterTypes(final Map<Identifier, Map<String, Set<Identifier>>> parameterTypeIdsMap)
 			throws CreateObjectException {
 		if (parameterTypeIdsMap == null || parameterTypeIdsMap.isEmpty())
 			return;
 
-		String tableName = this.getParameterTypeLinkTableName();
-		String actionTypeColumnName = this.getActionTypeColumnName();
-		String sql = SQL_INSERT_INTO + tableName
+		final String tableName = this.getParameterTypeLinkTableName();
+		final String actionTypeColumnName = this.getActionTypeColumnName();
+		final String sql = SQL_INSERT_INTO + tableName
 				+ OPEN_BRACKET
 				+ actionTypeColumnName + COMMA
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
@@ -242,19 +237,16 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 				+ QUESTION
 				+ CLOSE_BRACKET;
 
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 
-			for (final Iterator it1 = parameterTypeIdsMap.keySet().iterator(); it1.hasNext();) {
-				final Identifier actionTypeId = (Identifier) it1.next();
-				final Map parameterTypeIdsModeMap = (Map) parameterTypeIdsMap.get(actionTypeId);
-				for (final Iterator it2 = parameterTypeIdsModeMap.keySet().iterator(); it2.hasNext();) {
-					final String parameterMode = (String) it2.next();
-					final java.util.Set insertParameterTypeIds = (java.util.Set) parameterTypeIdsModeMap.get(parameterMode);
-					for (final Iterator it3 = insertParameterTypeIds.iterator(); it3.hasNext();) {
-						final Identifier parameterTypeId = (Identifier) it3.next();
+			for (final Identifier actionTypeId : parameterTypeIdsMap.keySet()) {
+				final Map<String, Set<Identifier>> parameterTypeIdsModeMap = parameterTypeIdsMap.get(actionTypeId);
+				for (final String parameterMode : parameterTypeIdsModeMap.keySet()) {
+					final Set<Identifier> insertParameterTypeIds = parameterTypeIdsModeMap.get(parameterMode);
+					for (final Identifier parameterTypeId : insertParameterTypeIds) {
 						DatabaseIdentifier.setIdentifier(preparedStatement, 1, actionTypeId);
 						DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 						DatabaseString.setString(preparedStatement, 3, parameterMode, 3);

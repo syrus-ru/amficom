@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.80 2005/06/23 18:45:08 bass Exp $
+ * $Id: MeasurementSetup.java,v 1.81 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.81 $, $Date: 2005/06/24 13:54:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -60,10 +61,10 @@ public final class MeasurementSetup extends StorableObject {
 	MeasurementSetup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.monitoredElementIds = new HashSet();
-		this.measurementTypeIds = new HashSet();
+		this.monitoredElementIds = new HashSet<Identifier>();
+		this.measurementTypeIds = new HashSet<Identifier>();
 
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE);
+		final MeasurementSetupDatabase database = (MeasurementSetupDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -96,8 +97,8 @@ public final class MeasurementSetup extends StorableObject {
 			final ParameterSet etalon,
 			final String description,
 			final long measurementDuration,
-			final java.util.Set monitoredElementIds,
-			final java.util.Set measurementTypeIds) {
+			final Set<Identifier> monitoredElementIds,
+			final Set<Identifier> measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -111,10 +112,10 @@ public final class MeasurementSetup extends StorableObject {
 		this.description = description;
 		this.measurementDuration = measurementDuration;
 
-		this.monitoredElementIds = new HashSet();
+		this.monitoredElementIds = new HashSet<Identifier>();
 		this.setMonitoredElementIds0(monitoredElementIds);
 
-		this.measurementTypeIds = new HashSet();
+		this.measurementTypeIds = new HashSet<Identifier>();
 		this.setMeasurementTypeIds0(measurementTypeIds);
 	}
 	
@@ -137,11 +138,11 @@ public final class MeasurementSetup extends StorableObject {
 			final ParameterSet etalon,
 			final String description,
 			final long measurementDuration,
-			final java.util.Set monitoredElementIds,
-			final java.util.Set measurementTypeIds) throws CreateObjectException {
+			final Set<Identifier> monitoredElementIds,
+			final Set<Identifier> measurementTypeIds) throws CreateObjectException {
 
 		try {
-			MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTSETUP_CODE),
+			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTSETUP_CODE),
 				creatorId,
 				0L,
 				parameterSet,
@@ -166,8 +167,9 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
+		final IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
 		super.fromTransferable(mst.header);
 
 		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameterSetId), true);
@@ -213,12 +215,13 @@ public final class MeasurementSetup extends StorableObject {
 				meIds,
 				mtIds);
 	}
-	
+
 	/**
 	 * <p>
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.parameterSet != null
@@ -227,11 +230,11 @@ public final class MeasurementSetup extends StorableObject {
 				&& this.measurementTypeIds != null && !this.measurementTypeIds.isEmpty();
 	}
 
-    public short getEntityCode() {
-        return ObjectEntities.MEASUREMENTSETUP_CODE;
-    }
+	public short getEntityCode() {
+		return ObjectEntities.MEASUREMENTSETUP_CODE;
+	}
 
-    public ParameterSet getParameterSet() {
+	public ParameterSet getParameterSet() {
 		return this.parameterSet;
 	}
 
@@ -255,11 +258,11 @@ public final class MeasurementSetup extends StorableObject {
 		return this.measurementDuration;
 	}
 
-	public java.util.Set getMonitoredElementIds() {
+	public Set<Identifier> getMonitoredElementIds() {
 		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
 
-	public java.util.Set getMeasurementTypeIds() {
+	public Set<Identifier> getMeasurementTypeIds() {
 		return Collections.unmodifiableSet(this.measurementTypeIds);
 	}
 
@@ -328,7 +331,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * Clent setter for monitored element ids
 	 * @param monitoredElementIds
 	 */
-	public void setMonitoredElementIds(final java.util.Set monitoredElementIds) {
+	public void setMonitoredElementIds(final Set<Identifier> monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
 		super.markAsChanged();
 	}
@@ -336,7 +339,7 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setMonitoredElementIds0(final java.util.Set monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(final Set<Identifier> monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 			this.monitoredElementIds.addAll(monitoredElementIds);
@@ -346,7 +349,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * Client setter for measurement type ids
 	 * @param measurementTypeIds
 	 */
-	public void setMeasurementTypeIds(final java.util.Set measurementTypeIds) {
+	public void setMeasurementTypeIds(final Set<Identifier> measurementTypeIds) {
 		this.setMeasurementTypeIds0(measurementTypeIds);
 		super.markAsChanged();
 	}
@@ -354,7 +357,7 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setMeasurementTypeIds0(final java.util.Set measurementTypeIds) {
+	protected synchronized void setMeasurementTypeIds0(final Set<Identifier> measurementTypeIds) {
 		this.measurementTypeIds.clear();
 		if (measurementTypeIds != null)
 			this.measurementTypeIds.addAll(measurementTypeIds);
@@ -429,11 +432,12 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public java.util.Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		if (this.parameterSet != null)
 			dependencies.add(this.parameterSet);
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.132 2005/06/23 18:45:08 bass Exp $
+ * $Id: Test.java,v 1.133 2005/06/24 13:54:36 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -47,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.132 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.133 $, $Date: 2005/06/24 13:54:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -82,9 +83,9 @@ public final class Test extends StorableObject {
 	 */
 	Test(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.measurementSetupIds = new HashSet();
+		this.measurementSetupIds = new HashSet<Identifier>();
 
-		TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
+		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -143,7 +144,7 @@ public final class Test extends StorableObject {
 			final MonitoredElement monitoredElement,
 			final int returnType,
 			final String description,
-			final java.util.Set measurementSetupIds) {
+			final Set<Identifier> measurementSetupIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -161,7 +162,7 @@ public final class Test extends StorableObject {
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;
 		this.description = description;
-		this.measurementSetupIds = new HashSet();
+		this.measurementSetupIds = new HashSet<Identifier>();
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		this.numberOfMeasurements = 0;
@@ -195,7 +196,7 @@ public final class Test extends StorableObject {
 			final MonitoredElement monitoredElement,
 			final TestReturnType returnType,
 			final String description,
-			final java.util.Set measurementSetupIds) throws CreateObjectException {
+			final Set<Identifier> measurementSetupIds) throws CreateObjectException {
 		try {
 			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
@@ -238,6 +239,7 @@ public final class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	public void fromTransferable(final IDLEntity transferable) throws ApplicationException {
 		final IdlTest tt = (IdlTest)transferable;
 		super.fromTransferable(tt.header);
@@ -257,7 +259,7 @@ public final class Test extends StorableObject {
 
 		this.measurementSetupIds = Identifier.fromTransferables(tt.measurementSetupIds);
 		if (!this.measurementSetupIds.isEmpty()) {
-			Identifier msId = (Identifier) this.measurementSetupIds.iterator().next();
+			final Identifier msId = this.measurementSetupIds.iterator().next();
 			this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
 		} else
 			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
@@ -271,9 +273,15 @@ public final class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.timeStamps != null && this.timeStamps.isValid() && this.measurementTypeId != null && this.monitoredElement != null
-			&& this.description != null && this.measurementSetupIds != null
+		return super.isValid()
+				&& this.timeStamps != null
+				&& this.timeStamps.isValid()
+				&& this.measurementTypeId != null
+				&& this.monitoredElement != null
+				&& this.description != null
+				&& this.measurementSetupIds != null
 			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
 			;
 	}
@@ -303,7 +311,7 @@ public final class Test extends StorableObject {
 		return this.evaluationTypeId;
 	}
 
-	public java.util.Set getMeasurementSetupIds() {
+	public Set<Identifier> getMeasurementSetupIds() {
 		return Collections.unmodifiableSet(this.measurementSetupIds);
 	}
 
@@ -347,7 +355,7 @@ public final class Test extends StorableObject {
 	public IdlTest getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
+		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
 		return new IdlTest(super.getHeaderTransferable(),
 				this.timeStamps.getTransferable(),
@@ -366,7 +374,7 @@ public final class Test extends StorableObject {
 	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
 		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
-			Measurement measurement = (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
+			final Measurement measurement = (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
 			try {
 				StorableObjectPool.putStorableObject(measurement);
 			} catch (IllegalObjectEntityException ioee) {
@@ -515,21 +523,21 @@ public final class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setMeasurementSetupIds0(java.util.Set measurementSetupIds) {
+	protected synchronized void setMeasurementSetupIds0(final Set<Identifier> measurementSetupIds) {
 		this.measurementSetupIds.clear();
 		if (measurementSetupIds != null)
 			this.measurementSetupIds.addAll(measurementSetupIds);
 
 		if (!this.measurementSetupIds.isEmpty())
 			try {
-				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject((Identifier) this.measurementSetupIds.iterator().next(),
+				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupIds.iterator().next(),
 						true);
 			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
 	}
 
-	public void setMeasurementSetupIds(java.util.Set measurementSetupIds) {
+	public void setMeasurementSetupIds(final Set<Identifier> measurementSetupIds) {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		super.markAsChanged();
 	}
@@ -537,7 +545,7 @@ public final class Test extends StorableObject {
 	public Identifier getKISId() {
 		if (this.kisId == null) {
 			try {
-				MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(this.getMonitoredElement().getMeasurementPortId(),
+				final MeasurementPort measurementPort = (MeasurementPort) StorableObjectPool.getStorableObject(this.getMonitoredElement().getMeasurementPortId(),
 						true);
 				this.kisId = measurementPort.getKISId();
 			} catch (ApplicationException ae) {
@@ -550,7 +558,7 @@ public final class Test extends StorableObject {
 	public Identifier getMCMId() {
 		if (this.mcmId == null) {
 			try {
-				KIS kis = (KIS) StorableObjectPool.getStorableObject(this.getKISId(), true);
+				final KIS kis = (KIS) StorableObjectPool.getStorableObject(this.getKISId(), true);
 				this.mcmId = kis.getMCMId();
 			} catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -562,10 +570,11 @@ public final class Test extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public java.util.Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		java.util.Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		if (this.timeStamps.temporalPatternId != null)
 			dependencies.add(this.timeStamps.temporalPatternId);
 
@@ -582,17 +591,17 @@ public final class Test extends StorableObject {
 		return dependencies;
 	}
 
-	public class TestTimeStamps {
+	public final class TestTimeStamps {
 		Date endTime;
 		Date startTime;
 		Identifier temporalPatternId;
 
 		private int	discriminator;		
 
-		TestTimeStamps(int temporalType,
-									 Date startTime,
-									 Date endTime,
-									 Identifier temporalPatternId) {
+		TestTimeStamps(final int temporalType,
+				final Date startTime,
+				final Date endTime,
+				final Identifier temporalPatternId) {
 			this.discriminator = temporalType;
 			switch (temporalType) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -626,7 +635,7 @@ public final class Test extends StorableObject {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		TestTimeStamps(IdlTestTimeStamps ttst) {
+		TestTimeStamps(final IdlTestTimeStamps ttst) {
 			this.discriminator = ttst.discriminator().value();
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -649,13 +658,13 @@ public final class Test extends StorableObject {
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 			}
-			
+
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
 		IdlTestTimeStamps getTransferable() {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			IdlTestTimeStamps ttst = new IdlTestTimeStamps();
+			final IdlTestTimeStamps ttst = new IdlTestTimeStamps();
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					ttst.startTime(this.startTime.getTime());
@@ -674,7 +683,7 @@ public final class Test extends StorableObject {
 			}
 			return ttst;
 		}
-		
+
 		protected boolean isValid() {
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -687,7 +696,8 @@ public final class Test extends StorableObject {
 					return false;
 			}
 		}
-		
+
+		@Override
 		public int hashCode() {
 			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 			hashCodeGenerator.addInt(this.discriminator);
@@ -697,7 +707,8 @@ public final class Test extends StorableObject {
 			int result = hashCodeGenerator.getResult();
 			return result;
 		}
-		
+
+		@Override
 		public boolean equals(Object obj) {
 			boolean equals = (this==obj);
 			if ((!equals)&&(obj instanceof TestTimeStamps)) {
@@ -734,6 +745,6 @@ public final class Test extends StorableObject {
 		public void setTestTemporalType(TestTemporalType temporalType) {
 			this.discriminator = temporalType.value();
 		}
-	}	
-	
+	}
+
 }

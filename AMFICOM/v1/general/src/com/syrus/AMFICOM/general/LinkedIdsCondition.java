@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.38 2005/06/21 12:43:48 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.39 2005/06/24 13:54:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/21 12:43:48 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/06/24 13:54:41 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -364,10 +364,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.setLinkedIds(Collections.singleton(linkedId));
 	}
 
-	protected final Map sort(Set<Identifier> linkIds) {
+	protected final Map<Short, Set<Identifier>> sort(Set<Identifier> linkIds) {
 		final Map<Short, Set<Identifier>> codeIdsMap = new HashMap<Short, Set<Identifier>>();
-		for (Iterator<Identifier> it = linkIds.iterator(); it.hasNext();) {
-			final Identifier id = it.next();
+		for (final Identifier id : linkIds) {
 			final short code = id.getMajor();
 			Set<Identifier> ids = codeIdsMap.get(new Short(code));
 			if (ids == null) {
@@ -379,16 +378,13 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return codeIdsMap;
 	}
 
-	protected final boolean conditionTest(Set<Identifiable> identifiables) {
+	protected final boolean conditionTest(Set<? extends Identifiable> identifiables) {
 		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
-		for (final Iterator<Identifiable> it = identifiables.iterator(); it.hasNext();) {
-			final Identifiable identifiable = it.next();
+		for (final Identifiable identifiable : identifiables) {
 			final Identifier id = identifiable.getId();
-			for (final Iterator<Identifier> linkedIdsIt = this.linkedIds.iterator(); linkedIdsIt.hasNext();) {
-				final Identifier linkedId = linkedIdsIt.next();
-				if (id.equals(linkedId)) {
+			for (final Identifier linkedId : this.linkedIds) {
+				if (id.equals(linkedId))
 					return true;
-				}
 			}
 		}
 		return false;
@@ -396,8 +392,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	protected final boolean conditionTest(final Identifier id) {
 		if (id != null && !id.isVoid()) {
-			for (final Iterator<Identifier> linkedIdsIt = this.linkedIds.iterator(); linkedIdsIt.hasNext();) {
-				final Identifier linkedId = linkedIdsIt.next();
+			for (final Identifier linkedId : this.linkedIds) {
 				if (id.equals(linkedId)) {
 					return true;
 				}

@@ -1,5 +1,5 @@
 /*
- * $Id: ActionType.java,v 1.12 2005/06/03 20:38:04 arseniy Exp $
+ * $Id: ActionType.java,v 1.13 2005/06/24 13:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,12 +10,13 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/03 20:38:04 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/24 13:54:35 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -49,6 +50,7 @@ public abstract class ActionType extends StorableObjectType {
 			  description);
 	}
 
+	@Override
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -59,7 +61,7 @@ public abstract class ActionType extends StorableObjectType {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
-	protected abstract void setParameterTypeIds(Map parameterTypeIdsModeMap);
+	protected abstract void setParameterTypeIds(Map<String, Set<Identifier>> parameterTypeIdsModeMap);
 
-	protected abstract Map getParameterTypeIdsModeMap();
+	protected abstract Map<String, Set<Identifier>> getParameterTypeIdsModeMap();
 }
