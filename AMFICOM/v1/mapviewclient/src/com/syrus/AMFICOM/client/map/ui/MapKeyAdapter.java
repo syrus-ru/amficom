@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.8 2005/06/22 07:27:32 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.9 2005/06/24 12:44:17 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * @version $Revision: 1.8 $, $Date: 2005/06/22 07:27:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/24 12:44:17 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -64,7 +64,7 @@ public final class MapKeyAdapter extends KeyAdapter
 		try {
 			if (code == KeyEvent.VK_DELETE)
 			{
-				this.viewer.getLogicalNetLayer().delete();
+				this.viewer.delete();
 				this.viewer.repaint(false);
 			}
 			if(ke.isControlDown() && code == KeyEvent.VK_Z)
