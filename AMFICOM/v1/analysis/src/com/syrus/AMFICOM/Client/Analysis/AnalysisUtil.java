@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -9,7 +8,6 @@ import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
@@ -33,7 +31,6 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
-import com.syrus.util.ByteArray;
 
 /**
  Class with methods used to save/load measuring parameters onto server
@@ -135,7 +132,7 @@ public class AnalysisUtil
 		for (int i = 0; i < params.length; i++)
 		{
 			ParameterType type = (ParameterType)params[i].getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_MTM)) // FIXME: use DADARA_ETALON instead
+			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON))
 			{
 				Etalon etalonObj = (Etalon) DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
@@ -151,7 +148,6 @@ public class AnalysisUtil
                 Heap.setBSEtalonTrace(bsEt);
                 bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // XXX: externalized string
             }
-            // else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL)) // FIXME: remove ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL
 		}
 	}
 
@@ -188,7 +184,7 @@ public class AnalysisUtil
 	{
 		Parameter[] params = new Parameter[2];
 
-		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW); // FIXME: use DADARA_ETALON instead
+		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON, DataType.DATA_TYPE_RAW);
 		params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(new Etalon(
 						Heap.getMTMEtalon(),

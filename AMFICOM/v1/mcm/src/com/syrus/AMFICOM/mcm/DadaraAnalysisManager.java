@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.50 2005/06/24 15:43:17 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.51 2005/06/24 16:10:48 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,12 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/06/24 15:43:17 $
+ * @version $Revision: 1.51 $, $Date: 2005/06/24 16:10:48 $
  * @author $Author: saa $
  * @module mcm_v1
  */
 
 //*
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,20 +49,15 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 public class DadaraAnalysisManager implements AnalysisManager {
 	// input SetParameters codenames
 	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodenames.REFLECTOGRAMMA;
-	public static final String CODENAME_DADARA_ETALON = ParameterTypeCodenames.DADARA_ETALON_MTM; // FIXME: need ParameterTypeCodenames.DADARA_ETALON
-	//public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL; // FIXME: remove
+	public static final String CODENAME_DADARA_ETALON = ParameterTypeCodenames.DADARA_ETALON;
 	public static final String CODENAME_DADARA_CRITERIA = ParameterTypeCodenames.DADARA_CRITERIA;
 
 	// output SetParameters codenames
-//	public static final String CODENAME_DADARA_TRACELENGTH = "tracelength";
-//	public static final String CODENAME_DARARA_MODELFUNCTION = "modelfunction";
-//	public static final String CODENAME_DARARA_SIMPLEEVENTS = "simpleevents";
 	public static final String CODENAME_ALARMS = ParameterTypeCodenames.DADARA_ALARMS;
 	public static final String CODENAME_ANALYSIS_RESULT = ParameterTypeCodenames.DADARA_ANALYSIS_RESULT;
 
