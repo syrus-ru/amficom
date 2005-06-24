@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.4 2005/06/23 12:56:16 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.5 2005/06/24 12:37:05 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/06/23 12:56:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/24 12:37:05 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -189,27 +189,7 @@ public class TopologicalImageCache implements MapImageRenderer
 		
 		this.imageSize = newSize;
 		
-		//Разница между центрами соседних по горизонтали сегментов в пикселах 
-		int xDifferenceScr = (int)Math.round(this.imageSize.width * (1.D - TopologicalImageCache.ACTIVE_AREA_SIZE));
-		//Разница между центрами соседних по вертикали сегментов в пикселах		
-		int yDifferenceScr = (int)Math.round(this.imageSize.height * (1.D - TopologicalImageCache.ACTIVE_AREA_SIZE));		
-		
-		//Координаты текущего центра
-		Point curCenterScr = new Point(this.imageSize.width / 2,this.imageSize.height / 2);
-		DoublePoint curCenterSph = this.coordsConverter.convertScreenToMap(curCenterScr);
-		
-		//Считаем координаты центра следующего по горизонтали сегмента 
-		Point nextHorizCenterScr = new Point(this.imageSize.width / 2 + xDifferenceScr,this.imageSize.height / 2);		
-		DoublePoint nextHorizCenterSph = this.coordsConverter.convertScreenToMap(nextHorizCenterScr);
-		//Считаем расстояние между центрами
-		this.xDifferenceSph = nextHorizCenterSph.getX() - curCenterSph.getX();
-
-		//Считаем координаты центра следующего по горизонтали сегмента 
-		Point nextVertCenterScr = new Point(this.imageSize.width / 2,this.imageSize.height / 2 + yDifferenceScr);		
-		DoublePoint nextVertCenterSph = this.coordsConverter.convertScreenToMap(nextVertCenterScr);
-		//Считаем расстояние между центрами
-		this.yDifferenceSph = nextVertCenterSph.getY() - curCenterSph.getY();
-		
+		this.renewSphDifferenceValues();		
 		
 		//Устанавливаем углы для граничных точек - с северо-востока
 		this.edgePointsAngles[0] = this.getAngleForPoint(this.imageSize.width,
@@ -253,6 +233,36 @@ public class TopologicalImageCache implements MapImageRenderer
 	}
 
 	/**
+	 * Вызывается при изменении размера изображения или массштаба отображения.
+	 * Обновляет значения географических расстояний между центрами соседних сегментов по горизонтали и вертикали.
+	 * @throws MapDataException
+	 * @throws MapConnectionException
+	 */
+	private void renewSphDifferenceValues() throws MapDataException,MapConnectionException
+	{
+		//Разница между центрами соседних по горизонтали сегментов в пикселах 
+		int xDifferenceScr = (int)Math.round(this.imageSize.width * (1.D - TopologicalImageCache.ACTIVE_AREA_SIZE));
+		//Разница между центрами соседних по вертикали сегментов в пикселах		
+		int yDifferenceScr = (int)Math.round(this.imageSize.height * (1.D - TopologicalImageCache.ACTIVE_AREA_SIZE));		
+		
+		//Координаты текущего центра
+		Point curCenterScr = new Point(this.imageSize.width / 2,this.imageSize.height / 2);
+		DoublePoint curCenterSph = this.coordsConverter.convertScreenToMap(curCenterScr);
+		
+		//Считаем координаты центра следующего по горизонтали сегмента 
+		Point nextHorizCenterScr = new Point(this.imageSize.width / 2 + xDifferenceScr,this.imageSize.height / 2);		
+		DoublePoint nextHorizCenterSph = this.coordsConverter.convertScreenToMap(nextHorizCenterScr);
+		//Считаем расстояние между центрами
+		this.xDifferenceSph = nextHorizCenterSph.getX() - curCenterSph.getX();
+
+		//Считаем координаты центра следующего по горизонтали сегмента 
+		Point nextVertCenterScr = new Point(this.imageSize.width / 2,this.imageSize.height / 2 + yDifferenceScr);		
+		DoublePoint nextVertCenterSph = this.coordsConverter.convertScreenToMap(nextVertCenterScr);
+		//Считаем расстояние между центрами
+		this.yDifferenceSph = nextVertCenterSph.getY() - curCenterSph.getY();
+	}
+	
+	/**
 	 * Центр в сферических координатах
 	 */
 	public void setCenter(DoublePoint newCenter) throws MapConnectionException, MapDataException
@@ -274,6 +284,7 @@ public class TopologicalImageCache implements MapImageRenderer
 				this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
 				nulifyCache();
 				
+				this.renewSphDifferenceValues();				
 //				//Устанавливаем значения сектора неактивной области и послденей активной области на нули
 //				this.lastActiveArea.setSize(0,0);
 //				this.nonActiveZoneLastSector.setSize(0,0);				
@@ -683,7 +694,6 @@ public class TopologicalImageCache implements MapImageRenderer
 		Log.debugMessage(" TIC - getImage - returning image",Log.DEBUGLEVEL10);
 
         Image imageToReturn = this.requestToPaint.getImage();
-        this.requestToPaint = null;
         
 		return imageToReturn;
 	}
