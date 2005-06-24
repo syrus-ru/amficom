@@ -1,5 +1,5 @@
 /*
- * $Id: streams.idl,v 1.1 2004/09/07 13:00:20 bass Exp $
+ * $Id: streams.idl,v 1.2 2005/06/24 17:57:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,11 @@
 #ifndef STREAMS_IDL
 #define STREAMS_IDL
 
+#pragma prefix "omg.org"
+
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/09/07 13:00:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/24 17:57:46 $
  * @module idl_v1
  */
 module CORBA {
@@ -32,4 +34,4 @@ module CORBA {
 	typedef sequence<wstring> WStringSeq;
 };
 
-#endif
+#endif // STREAMS_IDL
