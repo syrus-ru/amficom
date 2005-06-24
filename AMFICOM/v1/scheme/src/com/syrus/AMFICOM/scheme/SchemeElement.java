@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.40 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemeElement.java,v 1.41 2005/06/24 15:16:46 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/24 14:13:38 $
+ * @author $Author: max $
+ * @version $Revision: 1.41 $, $Date: 2005/06/24 15:16:46 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -57,7 +57,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	private String label;
 
-	private Identifier parentSchemeElementId;
+	Identifier parentSchemeElementId;
 
 	/**
 	 * Takes non-null value at pack time.
