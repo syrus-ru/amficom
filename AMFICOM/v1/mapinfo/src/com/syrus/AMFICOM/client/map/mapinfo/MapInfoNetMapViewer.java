@@ -22,19 +22,23 @@ import com.syrus.util.Log;
 public class MapInfoNetMapViewer extends NetMapViewer
 {
 	protected MapImagePanel visualComponent = null;
-	
+
 	protected MapInfoConnection mapConnection = null;
-	
-	protected DropTarget dropTarget = null;	
-	
-	public MapInfoNetMapViewer(LogicalNetLayer logicalNetLayer, MapContext mapContext, MapImageRenderer renderer) throws MapDataException, MapConnectionException {
+
+	protected DropTarget dropTarget = null;
+
+	public MapInfoNetMapViewer(
+			LogicalNetLayer logicalNetLayer,
+			MapContext mapContext,
+			MapImageRenderer renderer) throws MapDataException,
+			MapConnectionException
+	{
 		super(logicalNetLayer, mapContext, renderer);
 
-		this.mapConnection =
-      (MapInfoConnection)this.mapContext.getMapConnection();
+		this.mapConnection = (MapInfoConnection) this.mapContext.getMapConnection();
 		this.visualComponent = new MapImagePanel(this);
 	}
-	
+
 	public void init() throws MapDataException
 	{
 		super.init();
@@ -44,15 +48,15 @@ public class MapInfoNetMapViewer extends NetMapViewer
 			this.dropTarget.setActive(true);
 
 			this.visualComponent.addMouseListener(this.mttp.toolTippedPanelListener);
-			this.visualComponent.addMouseMotionListener(this.mttp.toolTippedPanelListener);
+			this.visualComponent
+					.addMouseMotionListener(this.mttp.toolTippedPanelListener);
 
 			this.visualComponent.addKeyListener(this.mka);
 			this.visualComponent.grabFocus();
 
 			this.visualComponent.addMouseListener(this.ml);
 			this.visualComponent.addMouseMotionListener(this.mml);
-		}
-		catch(Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			throw new MapDataException("abracadabra");
@@ -72,55 +76,64 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		return this.visualComponent;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#getVisibleBounds()
 	 */
-	public Double getVisibleBounds() throws MapConnectionException, MapDataException
+	public Double getVisibleBounds() throws MapConnectionException,
+			MapDataException
 	{
 		try
 		{
 			DoubleRect rect = this.mapConnection.getLocalMapJ().getBounds();
-			Rectangle2D.Double vb = new Rectangle2D.Double(
-					rect.xmin,
-					rect.ymin,
-					rect.width(),
-					rect.height());
+			Rectangle2D.Double vb = new Rectangle2D.Double(rect.xmin, rect.ymin, rect
+					.width(), rect.height());
 
 			return vb;
-		}
-		catch(Exception ex)
+		} catch (Exception ex)
 		{
 			throw new MapConnectionException("cannot get visible bounds", ex);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#centerSpatialObject(com.syrus.AMFICOM.client.map.SpatialObject)
 	 */
-	public void centerSpatialObject(SpatialObject so) throws MapConnectionException, MapDataException
+	public void centerSpatialObject(SpatialObject so)
+			throws MapConnectionException, MapDataException
 	{
-		MapInfoSpatialObject miso = (MapInfoSpatialObject )so;
+		MapInfoSpatialObject miso = (MapInfoSpatialObject) so;
 		this.mapContext.setCenter(miso.getCenter());
 		this.renderer.setCenter(miso.getCenter());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#repaint(boolean)
 	 */
-	public void repaint(boolean fullRepaint) throws MapConnectionException, MapDataException
+	public void repaint(boolean fullRepaint) throws MapConnectionException,
+			MapDataException
 	{
-		if(fullRepaint)
+		if (fullRepaint)
 		{
-			Log.debugMessage(" MIFLNL - repaint - Entered full repaint",Log.DEBUGLEVEL10);
-			
+			Log.debugMessage(" MIFLNL - repaint - Entered full repaint",
+					Log.DEBUGLEVEL10);
+
 			this.visualComponent.setImage(this.renderer.getImage());
-			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint",Log.DEBUGLEVEL10);
-			
+			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint",
+					Log.DEBUGLEVEL10);
+
 		}
-		this.visualComponent.repaint();		
+		this.visualComponent.repaint();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#setCursor(java.awt.Cursor)
 	 */
 	public void setCursor(Cursor cursor)
@@ -128,7 +141,9 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		this.visualComponent.setCursor(cursor);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#getCursor()
 	 */
 	public Cursor getCursor()
@@ -136,41 +151,50 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		return this.visualComponent.getCursor();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handDragged(java.awt.event.MouseEvent)
 	 */
-	public void handDragged(MouseEvent me) throws MapConnectionException, MapDataException
+	public void handDragged(MouseEvent me) throws MapConnectionException,
+			MapDataException
 	{
 		// empty
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handMoved(java.awt.event.MouseEvent)
 	 */
-	public void handMoved(MouseEvent me) throws MapConnectionException, MapDataException
+	public void handMoved(MouseEvent me) throws MapConnectionException,
+			MapDataException
 	{
 		// empty
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#mouseMoved(java.awt.event.MouseEvent)
 	 */
-	public void mouseMoved(MouseEvent me) throws MapConnectionException, MapDataException
+	public void mouseMoved(MouseEvent me) throws MapConnectionException,
+			MapDataException
 	{
 		this.renderer.analyzeMouseLocation(me);
 	}
 
-	public void setMapImageSize(Dimension newSize) throws MapConnectionException, MapDataException
+	public void setMapImageSize(Dimension newSize) throws MapConnectionException,
+			MapDataException
 	{
-		if((newSize.width > 0) && (newSize.height > 0))
+		if ((newSize.width > 0) && (newSize.height > 0))
 		{
-			this.mapConnection.getLocalMapJ().setDeviceBounds(new DoubleRect(
-					0,
-					0,
-					newSize.width,
-					newSize.height));
+			this.mapConnection.getLocalMapJ().setDeviceBounds(
+					new DoubleRect(0, 0, newSize.width, newSize.height));
 
 			this.renderer.setSize(newSize);
+
+			this.repaint(true);
 		}
 	}
 }
