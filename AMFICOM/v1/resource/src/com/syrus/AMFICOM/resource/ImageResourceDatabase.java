@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.25 2005/06/24 09:40:48 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.26 2005/06/24 14:13:09 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/06/24 09:40:48 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/06/24 14:13:09 $
  * @module resource_v1
  */
 
@@ -201,7 +201,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
+		super.insertEntities(storableObjects);
 		for(Iterator it = storableObjects.iterator();it.hasNext();){
 			AbstractImageResource abstractImageResource = this.fromStorableObject((StorableObject)it.next());
 			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
@@ -228,17 +228,26 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(Set storableObjects, Identifier modifierId, int updateKind)
-			throws VersionCollisionException,
-			UpdateObjectException {
+	@Override
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
+//		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);				
-		}
+				super.checkAndUpdateEntity(storableObject, modifierId, true);						
+		}		
+	}
+
+	@Override
+	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
+			throws VersionCollisionException,
+			UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			AbstractImageResource abstractImageResource;
 			try {
@@ -251,21 +260,6 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 		
 	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws VersionCollisionException,
-			UpdateObjectException {
-//		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);						
-		}		
-	}
-	
 
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
