@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.81 2005/06/23 08:23:06 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.82 2005/06/24 12:43:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
-import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveNodeCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.AbstractNodeController;
@@ -70,7 +69,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.81 $, $Date: 2005/06/23 08:23:06 $
+ * @version $Revision: 1.82 $, $Date: 2005/06/24 12:43:28 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1063,18 +1062,6 @@ public class LogicalNetLayer
 		getCommandList().execute();
 
 		getMapState().setOperationMode(MapState.NO_OPERATION);
-	}
-
-	/**
-	 * Выполнить удаление выбранных элементов.
-	 */
-	public void delete()
-		throws MapConnectionException, MapDataException
-	{
-		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setLogicalNetLayer(this);
-		this.commandList.add(command);
-		this.commandList.execute();
 	}
 
 	/**
