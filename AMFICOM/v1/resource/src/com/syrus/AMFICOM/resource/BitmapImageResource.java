@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.20 2005/06/20 17:29:56 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.21 2005/06/24 09:40:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,14 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.BitmapImageResourceData;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResource;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.BitmapImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/06/20 17:29:56 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/24 09:40:48 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -44,7 +44,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
 	 * @throws CreateObjectException
 	 */
-	BitmapImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
+	BitmapImageResource(final IdlImageResource imageResource) throws CreateObjectException {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._BITMAP;
@@ -101,13 +101,13 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 		return this.image;
 	}
 
-	public ImageResource_Transferable getTransferable() {
+	public IdlImageResource getTransferable() {
 		final BitmapImageResourceData bitmapImageResourceData = new BitmapImageResourceData();
 		bitmapImageResourceData.codename = this.codename;
 		bitmapImageResourceData.image = this.image;
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.bitmapImageResourceData(bitmapImageResourceData);
-		return new ImageResource_Transferable(getHeaderTransferable(), imageResourceData);
+		return new IdlImageResource(getHeaderTransferable(), imageResourceData);
 	}
 
 	public void setCodename(final String codename) {

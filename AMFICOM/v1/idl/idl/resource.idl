@@ -1,15 +1,13 @@
-/*
- * $Id: resource.idl,v 1.15 2005/05/18 10:54:55 bass Exp $
+/*-
+ * $Id: resource.idl,v 1.16 2005/06/24 09:40:48 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 #ifndef RESOURCE_IDL
 #define RESOURCE_IDL
-
-#include <streams.idl>
 
 #include "general.idl"
 
@@ -18,7 +16,7 @@ module com {
 		module AMFICOM {
 			module resource {
 				module corba {
-					struct ImageResource_Transferable {
+					typedef struct IdlImageResource {
 						general::corba::StorableObject header;
 						union ImageResourceData switch (enum ImageResourceSort {
 								BITMAP,
@@ -34,9 +32,8 @@ module com {
 							case SCHEME:
 								::CORBA::OctetSeq image;
 						} data;
-					};
+					} ImageResource;
 
-					typedef ImageResource_Transferable ImageResource;
 					typedef sequence<ImageResource> ImageResourceSeq;
 				};
 			};

@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.4 2005/06/22 13:20:07 krupenn Exp $
+ * $Id: ImagesPanel.java,v 1.5 2005/06/24 09:40:49 bass Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,11 +41,11 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel

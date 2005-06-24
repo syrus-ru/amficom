@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.22 2005/06/20 17:29:56 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.23 2005/06/24 09:40:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,14 +28,14 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceData;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResource;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/20 17:29:56 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/24 09:40:48 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -52,7 +52,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
 	 * @throws CreateObjectException
 	 */
-	SchemeImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
+	SchemeImageResource(final IdlImageResource imageResource) throws CreateObjectException {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
@@ -112,10 +112,10 @@ public final class SchemeImageResource extends AbstractImageResource {
 		return this.safePack(this.data);
 	}
 
-	public ImageResource_Transferable getTransferable() {
+	public IdlImageResource getTransferable() {
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, safePack(this.data));
-		return new ImageResource_Transferable(getHeaderTransferable(), imageResourceData);
+		return new IdlImageResource(getHeaderTransferable(), imageResourceData);
 	}
 
 	/**

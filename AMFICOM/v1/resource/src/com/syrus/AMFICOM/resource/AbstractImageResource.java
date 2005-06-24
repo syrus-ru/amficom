@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.13 2005/06/17 12:38:54 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.14 2005/06/24 09:40:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,12 +23,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResource;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/06/17 12:38:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/24 09:40:48 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -65,7 +65,7 @@ public abstract class AbstractImageResource extends StorableObject {
 	 * Middle-tier constructor. Shouldn't be invoked by clients.
 	 * @throws CreateObjectException
 	 */
-	protected AbstractImageResource(final ImageResource_Transferable irt) throws CreateObjectException {
+	protected AbstractImageResource(final IdlImageResource irt) throws CreateObjectException {
 		try {
 			this.fromTransferable(irt);
 		} catch (ApplicationException ae) {
@@ -74,7 +74,7 @@ public abstract class AbstractImageResource extends StorableObject {
 	}
 
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
-		ImageResource_Transferable irt = (ImageResource_Transferable) transferable;
+		IdlImageResource irt = (IdlImageResource) transferable;
 		super.fromTransferable(irt.header);
 	}
 

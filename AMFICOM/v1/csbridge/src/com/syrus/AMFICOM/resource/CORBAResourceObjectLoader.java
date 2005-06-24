@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAResourceObjectLoader.java,v 1.15 2005/06/22 19:29:32 arseniy Exp $
+ * $Id: CORBAResourceObjectLoader.java,v 1.16 2005/06/24 09:40:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,13 +24,13 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
-import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
+import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/06/22 19:29:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/06/24 09:40:49 $
  * @module csbridge_v1
  */
 public final class CORBAResourceObjectLoader extends CORBAObjectLoader implements ResourceObjectLoader {
@@ -83,7 +83,7 @@ public final class CORBAResourceObjectLoader extends CORBAObjectLoader implement
 					final IDLEntity transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
-				return ((MscharServer) server).receiveImageResources((ImageResource_Transferable[]) transferables, force, sessionKey);
+				return ((MscharServer) server).receiveImageResources((IdlImageResource[]) transferables, force, sessionKey);
 			}
 		});
 	}
