@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.24 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.25 2005/06/24 13:01:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/24 13:01:03 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 
@@ -126,7 +126,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 			if (this.command == null)
 			{
 				this.command = new MoveFixedDistanceCommand(point, super.logicalNetLayer.getFixedNode(), this.node);
-				((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+				((MoveSelectionCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 			}
 			this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 		}//MapState.MOVE_FIXDIST
@@ -137,7 +137,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 				if (this.command == null)
 				{
 					this.command = new MoveSelectionCommandBundle(super.logicalNetLayer.getStartPoint());
-					((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+					((MoveSelectionCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 				}
 				this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 			}
@@ -196,7 +196,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 							if (snc.isMouseOnElement(site, point))
 							{
 								this.command = new BindPhysicalNodeToSiteCommandBundle(this.node, site);
-								((BindPhysicalNodeToSiteCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+								((BindPhysicalNodeToSiteCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 								super.logicalNetLayer.getCommandList().add(this.command);
 								super.logicalNetLayer.getCommandList().execute();
 								this.command = null;
@@ -213,7 +213,6 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 			{
 				this.command = new CreateNodeLinkCommandBundle(this.node);
 				((CreateNodeLinkCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
-				((CreateNodeLinkCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
 			}
 			this.command.setParameter(CreateNodeLinkCommandBundle.END_POINT, point);
 			super.logicalNetLayer.getCommandList().add(this.command);

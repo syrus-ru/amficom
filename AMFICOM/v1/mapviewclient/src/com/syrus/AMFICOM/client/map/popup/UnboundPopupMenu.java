@@ -66,7 +66,7 @@ public class UnboundPopupMenu extends MapPopupMenu {
 
 	void removeUnbound() {
 		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(this.unbound);
-		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
@@ -86,7 +86,7 @@ public class UnboundPopupMenu extends MapPopupMenu {
 		if(site != null) {
 			BindUnboundNodeToSiteCommandBundle command = 
 				new BindUnboundNodeToSiteCommandBundle(this.unbound, site);
-			command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+			command.setNetMapViewer(this.netMapViewer);
 			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 

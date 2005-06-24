@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.18 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.19 2005/06/24 13:01:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * Стратегия управления фрагментом линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/24 13:01:03 $
  * @module mapviewclient_v1
  */
 public final class MapNodeLinkElementStrategy extends AbstractMapStrategy 
@@ -95,7 +95,7 @@ public final class MapNodeLinkElementStrategy extends AbstractMapStrategy
 		else if (actionMode == MapState.ALT_LINK_ACTION_MODE)
 		{
 			this.command = new CreatePhysicalNodeCommandBundle(this.nodeLink, point);
-			this.command.setLogicalNetLayer(super.logicalNetLayer);
+			this.command.setNetMapViewer(super.netMapViewer);
 			super.logicalNetLayer.getCommandList().add(this.command);
 			super.logicalNetLayer.getCommandList().execute();
 		}//MapState.ALT_LINK_ACTION_MODE

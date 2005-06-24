@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.20 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.21 2005/06/24 13:01:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * Стратегия управления узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:49 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/24 13:01:03 $
  * @module mapviewclient_v1
  */
 public final class MapSiteNodeElementStrategy extends AbstractMapStrategy 
@@ -115,7 +115,7 @@ public final class MapSiteNodeElementStrategy extends AbstractMapStrategy
 			if (this.command == null)
 			{
 				this.command = new MoveFixedDistanceCommand(point, super.logicalNetLayer.getFixedNode(), this.site);
-				((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+				((MoveSelectionCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 			}
 			this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 		}//MapState.MOVE_FIXDIST
@@ -126,7 +126,7 @@ public final class MapSiteNodeElementStrategy extends AbstractMapStrategy
 				if (this.command == null)
 				{
 					this.command = new MoveSelectionCommandBundle(super.logicalNetLayer.getStartPoint());
-					((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+					((MoveSelectionCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 				}
 				this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 			}
@@ -164,7 +164,7 @@ public final class MapSiteNodeElementStrategy extends AbstractMapStrategy
 			if (this.command == null)
 			{
 				this.command = new CreateNodeLinkCommandBundle(this.site);
-				((CreateNodeLinkCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+				((CreateNodeLinkCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 			}
 			this.command.setParameter(CreateNodeLinkCommandBundle.END_POINT, point);
 			super.logicalNetLayer.getCommandList().add(this.command);

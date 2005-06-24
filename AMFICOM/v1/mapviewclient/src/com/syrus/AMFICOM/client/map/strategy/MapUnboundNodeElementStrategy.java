@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.22 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.23 2005/06/24 13:01:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/22 08:43:49 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/24 13:01:03 $
  * @module mapviewclient_v1
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 
@@ -118,7 +118,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 				if (this.command == null)
 				{
 					this.command = new MoveSelectionCommandBundle(point);
-					((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+					((MoveSelectionCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 				}
 				this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 			}
@@ -164,7 +164,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 						&& snc.isMouseOnElement(site, point))
 					{
 						this.command = new BindUnboundNodeToSiteCommandBundle(this.unbound, site);
-						((BindUnboundNodeToSiteCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+						((BindUnboundNodeToSiteCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 						super.logicalNetLayer.getCommandList().add(this.command);
 						super.logicalNetLayer.getCommandList().execute();
 						this.command = null;

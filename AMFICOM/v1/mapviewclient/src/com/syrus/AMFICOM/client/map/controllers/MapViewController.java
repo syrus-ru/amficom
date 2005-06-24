@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.31 2005/06/23 08:26:05 krupenn Exp $
+ * $Id: MapViewController.java,v 1.32 2005/06/24 13:04:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/06/23 08:26:05 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/24 13:04:41 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -498,7 +498,6 @@ public final class MapViewController {
 	 */
 	public void placeElement(SchemeElement se, DoublePoint point) {
 		PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(se, point);
-		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.setNetMapViewer(this.netMapViewer);
 		cmd.execute();
 	}
@@ -511,7 +510,7 @@ public final class MapViewController {
 	 */
 	public void unplaceElement(SiteNode node, SchemeElement se) {
 		UnPlaceSchemeElementCommand cmd = new UnPlaceSchemeElementCommand(node, se);
-		cmd.setLogicalNetLayer(this.logicalNetLayer);
+		cmd.setNetMapViewer(this.netMapViewer);
 		cmd.execute();
 	}
 
@@ -521,7 +520,7 @@ public final class MapViewController {
 	 */
 	public void placeElement(SchemeCableLink scl) {
 		PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(scl);
-		cmd.setLogicalNetLayer(this.logicalNetLayer);
+		cmd.setNetMapViewer(this.netMapViewer);
 		cmd.execute();
 	}
 	
@@ -532,7 +531,7 @@ public final class MapViewController {
 	 */
 	public void unplaceElement(CablePath cablePath) {
 		UnPlaceSchemeCableLinkCommand cmd = new UnPlaceSchemeCableLinkCommand(cablePath);
-		cmd.setLogicalNetLayer(this.logicalNetLayer);
+		cmd.setNetMapViewer(this.netMapViewer);
 		cmd.execute();
 	}
 
@@ -543,7 +542,7 @@ public final class MapViewController {
 	 */
 	public void placeElement(SchemePath sp) {
 		PlaceSchemePathCommand cmd = new PlaceSchemePathCommand(sp);
-		cmd.setLogicalNetLayer(this.logicalNetLayer);
+		cmd.setNetMapViewer(this.netMapViewer);
 		cmd.execute();
 	}
 
@@ -553,7 +552,7 @@ public final class MapViewController {
 	 */
 	public void unplaceElement(MeasurementPath mp) {
 		UnPlaceSchemePathCommand cmd = new UnPlaceSchemePathCommand(mp);
-		cmd.setLogicalNetLayer(this.logicalNetLayer);
+		cmd.setNetMapViewer(this.netMapViewer);
 		cmd.execute();
 	}
 

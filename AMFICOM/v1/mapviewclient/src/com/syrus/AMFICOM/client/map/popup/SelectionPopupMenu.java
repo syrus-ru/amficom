@@ -117,7 +117,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 
 	void removeSelection() {
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
+		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 
