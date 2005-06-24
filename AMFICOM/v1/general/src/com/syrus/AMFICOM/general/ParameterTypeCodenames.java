@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.19 2005/06/23 11:01:46 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.20 2005/06/24 16:00:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/23 11:01:46 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/24 16:00:04 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -37,15 +37,9 @@ public final class ParameterTypeCodenames {
 
 	// dadara etalon and thresholds
 	public static final String DADARA_ANALYSIS_RESULT = ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue(); // Raw com.syrus.AMFICOM.analysis.dadara.AnalysisResult
-	public static final String DADARA_ETALON_MTM = ParameterTypeCodename.DADARA_ETALON_MTM.stringValue(); // raw,
-																																			// ModeltraceMananger
-																																			// for
-																																			// etalon+thresholds
-	public static final String DADARA_MIN_TRACE_LEVEL = ParameterTypeCodename.DADARA_MIN_TRACE_LEVEL.stringValue(); // double
+	public static final String DADARA_ETALON = ParameterTypeCodename.DADARA_ETALON.stringValue(); // Raw, com.syrus.AMFICOM.analysis.Etalon
 
 	// dadara analysis params
-	@Deprecated
-	public static final String DADARA = "dadara";
 	public static final String DADARA_ALARMS = ParameterTypeCodename.DADARA_ALARMS.stringValue();
 
 	// outdated, should be delete:
