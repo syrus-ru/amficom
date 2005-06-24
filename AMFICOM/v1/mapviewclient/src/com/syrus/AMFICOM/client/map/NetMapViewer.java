@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.21 2005/06/22 13:21:53 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.22 2005/06/24 12:46:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/22 13:21:53 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/24 12:46:17 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -149,6 +150,18 @@ public abstract class NetMapViewer {
 	 */
 	public LogicalNetLayer getLogicalNetLayer() {
 		return this.logicalNetLayer;
+	}
+
+	/**
+	 * Выполнить удаление выбранных элементов.
+	 */
+	public void delete()
+		throws MapConnectionException, MapDataException
+	{
+		DeleteSelectionCommand command = new DeleteSelectionCommand();
+		command.setNetMapViewer(this);
+		this.getLogicalNetLayer().commandList.add(command);
+		this.getLogicalNetLayer().commandList.execute();
 	}
 
 	/**
