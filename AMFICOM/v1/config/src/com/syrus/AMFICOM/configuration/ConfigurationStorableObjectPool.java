@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.94 2005/06/17 12:32:20 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.95 2005/06/24 14:21:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.95 $, $Date: 2005/06/24 14:21:39 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -73,6 +73,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		registerFactory(ObjectEntities.MONITOREDELEMENT_CODE, new MonitoredElementFactory());
 		registerFactory(ObjectEntities.LINK_CODE, new LinkFactory());
 		registerFactory(ObjectEntities.CABLETHREAD_CODE, new CableThreadFactory());
+		registerFactory(ObjectEntities.CABLELINK_CODE, new CableLinkFactory());
 	}
 
 
