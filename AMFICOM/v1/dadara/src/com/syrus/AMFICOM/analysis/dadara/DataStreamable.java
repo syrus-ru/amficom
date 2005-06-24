@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamable.java,v 1.4 2005/05/04 09:54:01 saa Exp $
+ * $Id: DataStreamable.java,v 1.5 2005/06/24 12:50:20 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.io.IOException;
  * <p>
  * Although you are not obliged to implement anything else,
  * you are expected to create getReader() that will return a factory object
- * <code>
+ * <pre><code>
  * private static DataStreamable.Reader DS_READER = null;
  * public static DataStreamable.Reader getReader() {
  *     if (DS_READER == null)
@@ -29,15 +29,14 @@ import java.io.IOException;
  *         };
  *     return DS_READER;
  * }
- * </code>
+ * </code></pre>
  * This will make use of
  * {@link DataStreamableUtil#readDataStreamableFromBA}.
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/05/04 09:54:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/24 12:50:20 $
  * @module
  */
-public interface DataStreamable
-{
+public interface DataStreamable {
     /**
      * Saves the object state to {@link DataOutputStream}
      * @param dos stream to save to
@@ -45,8 +44,7 @@ public interface DataStreamable
      */
 	void writeToDOS(DataOutputStream dos) throws IOException;
 
-	interface Reader
-	{
+	interface Reader {
 		DataStreamable readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException;
 	}
 }
