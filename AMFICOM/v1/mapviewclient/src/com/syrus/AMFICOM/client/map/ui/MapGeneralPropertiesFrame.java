@@ -1,5 +1,5 @@
 /**
- * $Id: MapGeneralPropertiesFrame.java,v 1.3 2005/06/06 12:20:35 krupenn Exp $
+ * $Id: MapGeneralPropertiesFrame.java,v 1.4 2005/06/24 14:24:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,13 +11,19 @@
 
 package com.syrus.AMFICOM.client.map.ui;
 
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.props.PhysicalLinkAddEditor;
+import com.syrus.AMFICOM.client.map.props.PhysicalLinkEditor;
+import com.syrus.AMFICOM.client.map.props.SiteNodeAddEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.3 $, $Date: 2005/06/06 12:20:35 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/24 14:24:25 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -27,6 +33,16 @@ public final class MapGeneralPropertiesFrame extends MapAbstractPropertiesFrame 
 	}
 
 	protected StorableObjectEditor getEditor(VisualManager manager) {
-		return manager.getGeneralPropertiesPanel();
+		StorableObjectEditor generalEditor = 
+			manager.getGeneralPropertiesPanel();
+		
+		if(generalEditor != null ) {
+			if(generalEditor instanceof PhysicalLinkEditor) {
+				PhysicalLinkEditor linkEditor = (PhysicalLinkEditor )generalEditor;
+				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
+				linkEditor.setNetMapViewer(mapFrame.getMapViewer());
+			}
+		}
+		return generalEditor;
 	}
 }
