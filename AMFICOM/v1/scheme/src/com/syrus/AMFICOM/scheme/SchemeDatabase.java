@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.9 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeDatabase.java,v 1.10 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {

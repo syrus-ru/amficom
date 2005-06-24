@@ -8,8 +8,8 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 import com.syrus.util.Log;
 
 public class PathBuilder
@@ -251,14 +251,14 @@ public class PathBuilder
 				List ports;
 				List cports;
 				SchemeDevice dev = startPort.getParentSchemeDevice();
-				if (startPort.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
+				if (startPort.getDirectionType().equals(DirectionType._IN))
 				{
-					cports = findCablePorts(dev, AbstractSchemePortDirectionType._OUT);
-					ports = findPorts(dev, AbstractSchemePortDirectionType._OUT);
+					cports = findCablePorts(dev, DirectionType._OUT);
+					ports = findPorts(dev, DirectionType._OUT);
 				} else
 				{
-					cports = findCablePorts(dev, AbstractSchemePortDirectionType._IN);
-					ports = findPorts(dev, AbstractSchemePortDirectionType._IN);
+					cports = findCablePorts(dev, DirectionType._IN);
+					ports = findPorts(dev, DirectionType._IN);
 				}
 				if (ports.size() == 0)
 				{
@@ -291,14 +291,14 @@ public class PathBuilder
 				List ports;
 				List cports;
 				SchemeDevice dev = startPort.getParentSchemeDevice();
-				if (startPort.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
+				if (startPort.getDirectionType().equals(DirectionType._IN))
 				{
-					cports = findCablePorts(dev, AbstractSchemePortDirectionType._OUT);
-					ports = findPorts(dev, AbstractSchemePortDirectionType._OUT);
+					cports = findCablePorts(dev, DirectionType._OUT);
+					ports = findPorts(dev, DirectionType._OUT);
 				} else
 				{
-					cports = findCablePorts(dev, AbstractSchemePortDirectionType._IN);
-					ports = findPorts(dev, AbstractSchemePortDirectionType._IN);
+					cports = findCablePorts(dev, DirectionType._IN);
+					ports = findPorts(dev, DirectionType._IN);
 				}
 				// must be the only cable port with opposite direction
 				if (ports.size() == 0 && cports.size() == 1)
@@ -510,7 +510,7 @@ public class PathBuilder
 	}
 
 
-	private List findPorts(SchemeDevice dev, AbstractSchemePortDirectionType direction)
+	private List findPorts(SchemeDevice dev, DirectionType direction)
 	{
 		List ports = new ArrayList();
 		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();)
@@ -522,7 +522,7 @@ public class PathBuilder
 		return ports;
 	}
 
-	private List findCablePorts(SchemeDevice dev, AbstractSchemePortDirectionType direction)
+	private List findCablePorts(SchemeDevice dev, DirectionType direction)
 	{
 		List ports = new ArrayList();
 		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();)

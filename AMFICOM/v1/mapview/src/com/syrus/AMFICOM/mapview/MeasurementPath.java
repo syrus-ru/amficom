@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.28 2005/06/22 15:05:19 bass Exp $
+ * $Id: MeasurementPath.java,v 1.29 2005/06/24 14:13:39 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,13 +33,13 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 
 /**
  * Элемент пути.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/06/22 15:05:19 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/24 14:13:39 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement

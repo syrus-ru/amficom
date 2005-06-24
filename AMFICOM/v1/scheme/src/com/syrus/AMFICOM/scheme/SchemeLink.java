@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.37 2005/06/22 15:05:19 bass Exp $
+ * $Id: SchemeLink.java,v 1.38 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,14 +33,14 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
 import com.syrus.util.Log;
 
 /**
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/22 15:05:19 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -117,7 +117,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemeLink(final SchemeLink_Transferable transferable) throws CreateObjectException {
+	SchemeLink(final IdlSchemeLink transferable) throws CreateObjectException {
 		fromTransferable(transferable);
 	}
 
@@ -516,8 +516,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemeLink_Transferable getTransferable() {
-		return new SchemeLink_Transferable(
+	public IdlSchemeLink getTransferable() {
+		return new IdlSchemeLink(
 				super.getHeaderTransferable(), super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
@@ -778,7 +778,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		final SchemeLink_Transferable schemeLink = (SchemeLink_Transferable) transferable;
+		final IdlSchemeLink schemeLink = (IdlSchemeLink) transferable;
 		super.fromTransferable(schemeLink.header, schemeLink.name,
 				schemeLink.description,
 				schemeLink.physicalLength,

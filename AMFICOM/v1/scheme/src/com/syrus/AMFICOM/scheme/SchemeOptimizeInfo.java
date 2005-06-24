@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.32 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.33 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,14 +31,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
 import com.syrus.util.Log;
 
 /**
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -149,7 +149,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 */
-	SchemeOptimizeInfo(final SchemeOptimizeInfo_Transferable transferable) {
+	SchemeOptimizeInfo(final IdlSchemeOptimizeInfo transferable) {
 		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE);
 		fromTransferable(transferable);
 	}
@@ -373,8 +373,8 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemeOptimizeInfo_Transferable getTransferable() {
-		return new SchemeOptimizeInfo_Transferable(
+	public IdlSchemeOptimizeInfo getTransferable() {
+		return new IdlSchemeOptimizeInfo(
 				super.getHeaderTransferable(), this.name,
 				this.description, this.optimizationMode,
 				this.iterations, this.price, this.waveLength,
@@ -640,7 +640,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		final SchemeOptimizeInfo_Transferable schemeOptimizeInfo = (SchemeOptimizeInfo_Transferable) transferable;
+		final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
 		try {
 			super.fromTransferable(schemeOptimizeInfo.header);
 		} catch (final ApplicationException ae) {

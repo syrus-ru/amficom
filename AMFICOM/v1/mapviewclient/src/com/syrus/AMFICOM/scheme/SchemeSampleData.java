@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.18 2005/06/22 15:05:20 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.19 2005/06/24 14:13:39 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: bass $
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -99,43 +99,43 @@ public final class SchemeSampleData {
 		SchemeDevice dev40 = SchemeDevice.createInstance(userId, "Девайс5", el4);
 		dev4.add(dev40);
 		
-		SchemePort port00 = SchemePort.createInstance(userId, "Порт раз", AbstractSchemePortDirectionType._OUT, dev00);
+		SchemePort port00 = SchemePort.createInstance(userId, "Порт раз", DirectionType._OUT, dev00);
 
-		SchemePort port01 = SchemePort.createInstance(userId, "Порт два", AbstractSchemePortDirectionType._IN, dev00);
+		SchemePort port01 = SchemePort.createInstance(userId, "Порт два", DirectionType._IN, dev00);
 
 		port0.add(port00);
 		port0.add(port01);
 
-		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", AbstractSchemePortDirectionType._IN, dev00);
+		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", DirectionType._IN, dev00);
 		cport0.add(cport00);
 
-		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId, "Каборт два", AbstractSchemePortDirectionType._OUT, dev10);
+		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId, "Каборт два", DirectionType._OUT, dev10);
 
-		SchemeCablePort cport11 = SchemeCablePort.createInstance(userId, "Каборт три", AbstractSchemePortDirectionType._OUT, dev10);
+		SchemeCablePort cport11 = SchemeCablePort.createInstance(userId, "Каборт три", DirectionType._OUT, dev10);
 
 		cport1.add(cport10);
 		cport1.add(cport11);
 
-		SchemeCablePort cport20 = SchemeCablePort.createInstance(userId, "Каборт четыре", AbstractSchemePortDirectionType._OUT, dev20);
+		SchemeCablePort cport20 = SchemeCablePort.createInstance(userId, "Каборт четыре", DirectionType._OUT, dev20);
 
-		SchemeCablePort cport21 = SchemeCablePort.createInstance(userId, "Каборт пять", AbstractSchemePortDirectionType._OUT, dev20);
+		SchemeCablePort cport21 = SchemeCablePort.createInstance(userId, "Каборт пять", DirectionType._OUT, dev20);
 
-		SchemeCablePort cport22 = SchemeCablePort.createInstance(userId, "Каборт шесть", AbstractSchemePortDirectionType._OUT, dev20);
+		SchemeCablePort cport22 = SchemeCablePort.createInstance(userId, "Каборт шесть", DirectionType._OUT, dev20);
 
 		cport2.add(cport20);
 		cport2.add(cport21);
 		cport2.add(cport22);
 
-		SchemeCablePort cport30 = SchemeCablePort.createInstance(userId, "Каборт сем", AbstractSchemePortDirectionType._OUT, dev30);
+		SchemeCablePort cport30 = SchemeCablePort.createInstance(userId, "Каборт сем", DirectionType._OUT, dev30);
 
-		SchemeCablePort cport31 = SchemeCablePort.createInstance(userId, "Каборт восем", AbstractSchemePortDirectionType._OUT, dev30);
+		SchemeCablePort cport31 = SchemeCablePort.createInstance(userId, "Каборт восем", DirectionType._OUT, dev30);
 
 		cport3.add(cport30);
 		cport3.add(cport31);
 
-		SchemeCablePort cport40 = SchemeCablePort.createInstance(userId, "Каборт дэвят", AbstractSchemePortDirectionType._OUT, dev40);
+		SchemeCablePort cport40 = SchemeCablePort.createInstance(userId, "Каборт дэвят", DirectionType._OUT, dev40);
 
-		SchemeCablePort cport41 = SchemeCablePort.createInstance(userId, "Каборт дэсят", AbstractSchemePortDirectionType._OUT, dev40);
+		SchemeCablePort cport41 = SchemeCablePort.createInstance(userId, "Каборт дэсят", DirectionType._OUT, dev40);
 
 		cport4.add(cport40);
 		cport4.add(cport41);
@@ -266,18 +266,18 @@ public final class SchemeSampleData {
 		SchemeDevice dev10 = SchemeDevice.createInstance(userId, "Девайс2", el1);
 		dev1.add(dev10);
 
-		SchemePort port00 = SchemePort.createInstance(userId, "Порт раз", AbstractSchemePortDirectionType._OUT, dev00);
+		SchemePort port00 = SchemePort.createInstance(userId, "Порт раз", DirectionType._OUT, dev00);
 
 		port0.add(port00);
 
-		SchemePort port10 = SchemePort.createInstance(userId, "Порт два", AbstractSchemePortDirectionType._IN, dev10);
+		SchemePort port10 = SchemePort.createInstance(userId, "Порт два", DirectionType._IN, dev10);
 
 		port1.add(port10);
 
-		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", AbstractSchemePortDirectionType._IN, dev00);
+		SchemeCablePort cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", DirectionType._IN, dev00);
 		cport0.add(cport00);
 
-		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId, "Каборт два", AbstractSchemePortDirectionType._OUT, dev10);
+		SchemeCablePort cport10 = SchemeCablePort.createInstance(userId, "Каборт два", DirectionType._OUT, dev10);
 		cport1.add(cport10);
 
 		el.add(el0);

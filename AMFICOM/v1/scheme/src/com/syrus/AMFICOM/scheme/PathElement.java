@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.34 2005/06/22 10:05:18 bass Exp $
+ * $Id: PathElement.java,v 1.35 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,10 +32,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.Data;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.SchemeElementData;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.Data;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.SchemeElementData;
 import com.syrus.util.Log;
 
 /**
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/22 10:05:18 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -269,7 +269,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * @param transferable
 	 */
-	PathElement(final PathElement_Transferable transferable) {
+	PathElement(final IdlPathElement transferable) {
 		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(ObjectEntities.PATHELEMENT_CODE);
 		fromTransferable(transferable);
 	}
@@ -588,7 +588,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public PathElement_Transferable getTransferable() {
+	public IdlPathElement getTransferable() {
 		final Data data = new Data();
 		switch (this.kind.value()) {
 			case Kind._SCHEME_ELEMENT:
@@ -605,7 +605,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			default:
 				assert false;
 		}
-		return new PathElement_Transferable(getHeaderTransferable(),
+		return new IdlPathElement(getHeaderTransferable(),
 				this.parentSchemePathId.getTransferable(),
 				this.sequentialNumber, data);
 	}
@@ -814,7 +814,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 */
 	@Override
 	protected void fromTransferable(final IDLEntity transferable) {
-		final PathElement_Transferable pathElement = (PathElement_Transferable) transferable;
+		final IdlPathElement pathElement = (IdlPathElement) transferable;
 		try {
 			super.fromTransferable(pathElement.header);
 		} catch (final ApplicationException ae) {

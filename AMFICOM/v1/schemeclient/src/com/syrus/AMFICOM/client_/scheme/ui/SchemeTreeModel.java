@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.23 2005/06/22 10:16:06 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.24 2005/06/24 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/06/22 10:16:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/06/24 14:13:36 $
  * @module schemeclient_v1
  */
 
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
-import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	ApplicationContext aContext;

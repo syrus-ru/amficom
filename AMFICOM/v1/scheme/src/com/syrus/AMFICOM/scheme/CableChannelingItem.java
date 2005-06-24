@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.30 2005/06/21 15:10:05 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.31 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,14 +30,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItem;
 import com.syrus.util.Log;
 
 /**
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -122,7 +122,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	/**
 	 * @param transferable
 	 */
-	CableChannelingItem(final CableChannelingItem_Transferable transferable) {
+	CableChannelingItem(final IdlCableChannelingItem transferable) {
 		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLECHANNELINGITEM_CODE);
 		fromTransferable(transferable);
 	}
@@ -296,8 +296,8 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public CableChannelingItem_Transferable getTransferable() {
-		return new CableChannelingItem_Transferable(
+	public IdlCableChannelingItem getTransferable() {
+		return new IdlCableChannelingItem(
 				super.getHeaderTransferable(), this.startSpare,
 				this.endSpare, this.rowX, this.placeY,
 				this.sequentialNumber,
@@ -454,7 +454,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		final CableChannelingItem_Transferable cableChannelingItem = (CableChannelingItem_Transferable) transferable;
+		final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
 		try {
 			super.fromTransferable(cableChannelingItem.header);
 		} catch (final ApplicationException ae) {

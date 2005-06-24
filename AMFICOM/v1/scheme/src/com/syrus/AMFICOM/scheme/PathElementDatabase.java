@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.6 2005/06/17 11:01:18 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.7 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class PathElementDatabase extends StorableObjectDatabase {

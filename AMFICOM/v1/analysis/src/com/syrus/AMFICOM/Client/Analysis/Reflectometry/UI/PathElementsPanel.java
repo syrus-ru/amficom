@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 
 public final class PathElementsPanel extends AnalysisPanel
 {

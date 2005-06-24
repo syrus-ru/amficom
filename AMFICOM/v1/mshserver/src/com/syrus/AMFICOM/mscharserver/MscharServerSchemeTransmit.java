@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSchemeTransmit.java,v 1.3 2005/06/21 12:44:26 bass Exp $
+ * $Id: MscharServerSchemeTransmit.java,v 1.4 2005/06/24 14:13:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,421 +13,421 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem_Transferable;
-import com.syrus.AMFICOM.scheme.corba.PathElement_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeCablePort_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableThread_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeDevice_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoRtu_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoSwitch_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement_Transferable;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup_Transferable;
-import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeCablePort;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeDevice;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitch;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.corba.IdlScheme;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/21 12:44:26 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/24 14:13:39 $
  * @module mscharserver_v1
  */
 abstract class MscharServerSchemeTransmit extends MscharServerMapTransmit {
 	private static final long serialVersionUID = 6830363270405840293L;
 
-	public SchemeProtoGroup_Transferable[] transmitSchemeProtoGroups(
+	public IdlSchemeProtoGroup[] transmitSchemeProtoGroups(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeProtoGroup_Transferable schemeProtoGroups[] = new SchemeProtoGroup_Transferable[length];
+		final IdlSchemeProtoGroup schemeProtoGroups[] = new IdlSchemeProtoGroup[length];
 		System.arraycopy(storableObjects, 0, schemeProtoGroups, 0, length);
 		return schemeProtoGroups;
 	}
 
-	public SchemeProtoGroup_Transferable[] transmitSchemeProtoGroupsButIdsCondition(
+	public IdlSchemeProtoGroup[] transmitSchemeProtoGroupsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeProtoGroup_Transferable schemeProtoGroups[] = new SchemeProtoGroup_Transferable[length];
+		final IdlSchemeProtoGroup schemeProtoGroups[] = new IdlSchemeProtoGroup[length];
 		System.arraycopy(storableObjects, 0, schemeProtoGroups, 0, length);
 		return schemeProtoGroups;
 	}
 
-	public SchemeProtoElement_Transferable[] transmitSchemeProtoElements(
+	public IdlSchemeProtoElement[] transmitSchemeProtoElements(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeProtoElement_Transferable schemeProtoElements[] = new SchemeProtoElement_Transferable[length];
+		final IdlSchemeProtoElement schemeProtoElements[] = new IdlSchemeProtoElement[length];
 		System.arraycopy(storableObjects, 0, schemeProtoElements, 0, length);
 		return schemeProtoElements;
 	}
 
-	public SchemeProtoElement_Transferable[] transmitSchemeProtoElementsButIdsCondition(
+	public IdlSchemeProtoElement[] transmitSchemeProtoElementsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeProtoElement_Transferable schemeProtoElements[] = new SchemeProtoElement_Transferable[length];
+		final IdlSchemeProtoElement schemeProtoElements[] = new IdlSchemeProtoElement[length];
 		System.arraycopy(storableObjects, 0, schemeProtoElements, 0, length);
 		return schemeProtoElements;
 	}
 
-	public Scheme_Transferable[] transmitSchemes(
+	public IdlScheme[] transmitSchemes(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final Scheme_Transferable schemes[] = new Scheme_Transferable[length];
+		final IdlScheme schemes[] = new IdlScheme[length];
 		System.arraycopy(storableObjects, 0, schemes, 0, length);
 		return schemes;
 	}
 
-	public Scheme_Transferable[] transmitSchemesButIdsCondition(
+	public IdlScheme[] transmitSchemesButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final Scheme_Transferable schemes[] = new Scheme_Transferable[length];
+		final IdlScheme schemes[] = new IdlScheme[length];
 		System.arraycopy(storableObjects, 0, schemes, 0, length);
 		return schemes;
 	}
 
-	public SchemeElement_Transferable[] transmitSchemeElements(
+	public IdlSchemeElement[] transmitSchemeElements(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeElement_Transferable schemeElements[] = new SchemeElement_Transferable[length];
+		final IdlSchemeElement schemeElements[] = new IdlSchemeElement[length];
 		System.arraycopy(storableObjects, 0, schemeElements, 0, length);
 		return schemeElements;
 	}
 
-	public SchemeElement_Transferable[] transmitSchemeElementsButIdsCondition(
+	public IdlSchemeElement[] transmitSchemeElementsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeElement_Transferable schemeElements[] = new SchemeElement_Transferable[length];
+		final IdlSchemeElement schemeElements[] = new IdlSchemeElement[length];
 		System.arraycopy(storableObjects, 0, schemeElements, 0, length);
 		return schemeElements;
 	}
 
-	public SchemeOptimizeInfo_Transferable[] transmitSchemeOptimizeInfos(
+	public IdlSchemeOptimizeInfo[] transmitSchemeOptimizeInfos(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeOptimizeInfo_Transferable schemeOptimizeInfos[] = new SchemeOptimizeInfo_Transferable[length];
+		final IdlSchemeOptimizeInfo schemeOptimizeInfos[] = new IdlSchemeOptimizeInfo[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfos, 0, length);
 		return schemeOptimizeInfos;
 	}
 
-	public SchemeOptimizeInfo_Transferable[] transmitSchemeOptimizeInfosButIdsCondition(
+	public IdlSchemeOptimizeInfo[] transmitSchemeOptimizeInfosButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeOptimizeInfo_Transferable schemeOptimizeInfos[] = new SchemeOptimizeInfo_Transferable[length];
+		final IdlSchemeOptimizeInfo schemeOptimizeInfos[] = new IdlSchemeOptimizeInfo[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfos, 0, length);
 		return schemeOptimizeInfos;
 	}
 
-	public SchemeOptimizeInfoSwitch_Transferable[] transmitSchemeOptimizeInfoSwitches(
+	public IdlSchemeOptimizeInfoSwitch[] transmitSchemeOptimizeInfoSwitches(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeOptimizeInfoSwitch_Transferable schemeOptimizeInfoSwitches[] = new SchemeOptimizeInfoSwitch_Transferable[length];
+		final IdlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitches[] = new IdlSchemeOptimizeInfoSwitch[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfoSwitches, 0, length);
 		return schemeOptimizeInfoSwitches;
 	}
 
-	public SchemeOptimizeInfoSwitch_Transferable[] transmitSchemeOptimizeInfoSwitchesButIdsCondition(
+	public IdlSchemeOptimizeInfoSwitch[] transmitSchemeOptimizeInfoSwitchesButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeOptimizeInfoSwitch_Transferable schemeOptimizeInfoSwitches[] = new SchemeOptimizeInfoSwitch_Transferable[length];
+		final IdlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitches[] = new IdlSchemeOptimizeInfoSwitch[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfoSwitches, 0, length);
 		return schemeOptimizeInfoSwitches;
 	}
 
-	public SchemeOptimizeInfoRtu_Transferable[] transmitSchemeOptimizeInfoRtus(
+	public IdlSchemeOptimizeInfoRtu[] transmitSchemeOptimizeInfoRtus(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeOptimizeInfoRtu_Transferable schemeOptimizeInfoRtus[] = new SchemeOptimizeInfoRtu_Transferable[length];
+		final IdlSchemeOptimizeInfoRtu schemeOptimizeInfoRtus[] = new IdlSchemeOptimizeInfoRtu[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfoRtus, 0, length);
 		return schemeOptimizeInfoRtus;
 	}
 
-	public SchemeOptimizeInfoRtu_Transferable[] transmitSchemeOptimizeInfoRtusButIdsCondition(
+	public IdlSchemeOptimizeInfoRtu[] transmitSchemeOptimizeInfoRtusButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeOptimizeInfoRtu_Transferable schemeOptimizeInfoRtus[] = new SchemeOptimizeInfoRtu_Transferable[length];
+		final IdlSchemeOptimizeInfoRtu schemeOptimizeInfoRtus[] = new IdlSchemeOptimizeInfoRtu[length];
 		System.arraycopy(storableObjects, 0, schemeOptimizeInfoRtus, 0, length);
 		return schemeOptimizeInfoRtus;
 	}
 
-	public SchemeMonitoringSolution_Transferable[] transmitSchemeMonitoringSolutions(
+	public IdlSchemeMonitoringSolution[] transmitSchemeMonitoringSolutions(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeMonitoringSolution_Transferable schemeMonitoringSolutions[] = new SchemeMonitoringSolution_Transferable[length];
+		final IdlSchemeMonitoringSolution schemeMonitoringSolutions[] = new IdlSchemeMonitoringSolution[length];
 		System.arraycopy(storableObjects, 0, schemeMonitoringSolutions, 0, length);
 		return schemeMonitoringSolutions;
 	}
 
-	public SchemeMonitoringSolution_Transferable[] transmitSchemeMonitoringSolutionsButIdsCondition(
+	public IdlSchemeMonitoringSolution[] transmitSchemeMonitoringSolutionsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeMonitoringSolution_Transferable schemeMonitoringSolutions[] = new SchemeMonitoringSolution_Transferable[length];
+		final IdlSchemeMonitoringSolution schemeMonitoringSolutions[] = new IdlSchemeMonitoringSolution[length];
 		System.arraycopy(storableObjects, 0, schemeMonitoringSolutions, 0, length);
 		return schemeMonitoringSolutions;
 	}
 
-	public SchemeDevice_Transferable[] transmitSchemeDevices(
+	public IdlSchemeDevice[] transmitSchemeDevices(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeDevice_Transferable schemeDevices[] = new SchemeDevice_Transferable[length];
+		final IdlSchemeDevice schemeDevices[] = new IdlSchemeDevice[length];
 		System.arraycopy(storableObjects, 0, schemeDevices, 0, length);
 		return schemeDevices;
 	}
 
-	public SchemeDevice_Transferable[] transmitSchemeDevicesButIdsCondition(
+	public IdlSchemeDevice[] transmitSchemeDevicesButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeDevice_Transferable schemeDevices[] = new SchemeDevice_Transferable[length];
+		final IdlSchemeDevice schemeDevices[] = new IdlSchemeDevice[length];
 		System.arraycopy(storableObjects, 0, schemeDevices, 0, length);
 		return schemeDevices;
 	}
 
-	public SchemePort_Transferable[] transmitSchemePorts(
+	public IdlSchemePort[] transmitSchemePorts(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemePort_Transferable schemePorts[] = new SchemePort_Transferable[length];
+		final IdlSchemePort schemePorts[] = new IdlSchemePort[length];
 		System.arraycopy(storableObjects, 0, schemePorts, 0, length);
 		return schemePorts;
 	}
 
-	public SchemePort_Transferable[] transmitSchemePortsButIdsCondition(
+	public IdlSchemePort[] transmitSchemePortsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemePort_Transferable schemePorts[] = new SchemePort_Transferable[length];
+		final IdlSchemePort schemePorts[] = new IdlSchemePort[length];
 		System.arraycopy(storableObjects, 0, schemePorts, 0, length);
 		return schemePorts;
 	}
 
-	public SchemeCablePort_Transferable[] transmitSchemeCablePorts(
+	public IdlSchemeCablePort[] transmitSchemeCablePorts(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeCablePort_Transferable schemeCablePorts[] = new SchemeCablePort_Transferable[length];
+		final IdlSchemeCablePort schemeCablePorts[] = new IdlSchemeCablePort[length];
 		System.arraycopy(storableObjects, 0, schemeCablePorts, 0, length);
 		return schemeCablePorts;
 	}
 
-	public SchemeCablePort_Transferable[] transmitSchemeCablePortsButIdsCondition(
+	public IdlSchemeCablePort[] transmitSchemeCablePortsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeCablePort_Transferable schemeCablePorts[] = new SchemeCablePort_Transferable[length];
+		final IdlSchemeCablePort schemeCablePorts[] = new IdlSchemeCablePort[length];
 		System.arraycopy(storableObjects, 0, schemeCablePorts, 0, length);
 		return schemeCablePorts;
 	}
 
-	public SchemeLink_Transferable[] transmitSchemeLinks(
+	public IdlSchemeLink[] transmitSchemeLinks(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeLink_Transferable schemeLinks[] = new SchemeLink_Transferable[length];
+		final IdlSchemeLink schemeLinks[] = new IdlSchemeLink[length];
 		System.arraycopy(storableObjects, 0, schemeLinks, 0, length);
 		return schemeLinks;
 	}
 
-	public SchemeLink_Transferable[] transmitSchemeLinksButIdsCondition(
+	public IdlSchemeLink[] transmitSchemeLinksButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeLink_Transferable schemeLinks[] = new SchemeLink_Transferable[length];
+		final IdlSchemeLink schemeLinks[] = new IdlSchemeLink[length];
 		System.arraycopy(storableObjects, 0, schemeLinks, 0, length);
 		return schemeLinks;
 	}
 
-	public SchemeCableLink_Transferable[] transmitSchemeCableLinks(
+	public IdlSchemeCableLink[] transmitSchemeCableLinks(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeCableLink_Transferable schemeCableLinks[] = new SchemeCableLink_Transferable[length];
+		final IdlSchemeCableLink schemeCableLinks[] = new IdlSchemeCableLink[length];
 		System.arraycopy(storableObjects, 0, schemeCableLinks, 0, length);
 		return schemeCableLinks;
 	}
 
-	public SchemeCableLink_Transferable[] transmitSchemeCableLinksButIdsCondition(
+	public IdlSchemeCableLink[] transmitSchemeCableLinksButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeCableLink_Transferable schemeCableLinks[] = new SchemeCableLink_Transferable[length];
+		final IdlSchemeCableLink schemeCableLinks[] = new IdlSchemeCableLink[length];
 		System.arraycopy(storableObjects, 0, schemeCableLinks, 0, length);
 		return schemeCableLinks;
 	}
 
-	public SchemeCableThread_Transferable[] transmitSchemeCableThreads(
+	public IdlSchemeCableThread[] transmitSchemeCableThreads(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemeCableThread_Transferable schemeCableThreads[] = new SchemeCableThread_Transferable[length];
+		final IdlSchemeCableThread schemeCableThreads[] = new IdlSchemeCableThread[length];
 		System.arraycopy(storableObjects, 0, schemeCableThreads, 0, length);
 		return schemeCableThreads;
 	}
 
-	public SchemeCableThread_Transferable[] transmitSchemeCableThreadsButIdsCondition(
+	public IdlSchemeCableThread[] transmitSchemeCableThreadsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemeCableThread_Transferable schemeCableThreads[] = new SchemeCableThread_Transferable[length];
+		final IdlSchemeCableThread schemeCableThreads[] = new IdlSchemeCableThread[length];
 		System.arraycopy(storableObjects, 0, schemeCableThreads, 0, length);
 		return schemeCableThreads;
 	}
 
-	public CableChannelingItem_Transferable[] transmitCableChannelingItems(
+	public IdlCableChannelingItem[] transmitCableChannelingItems(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final CableChannelingItem_Transferable cableChannelingItems[] = new CableChannelingItem_Transferable[length];
+		final IdlCableChannelingItem cableChannelingItems[] = new IdlCableChannelingItem[length];
 		System.arraycopy(storableObjects, 0, cableChannelingItems, 0, length);
 		return cableChannelingItems;
 	}
 
-	public CableChannelingItem_Transferable[] transmitCableChannelingItemsButIdsCondition(
+	public IdlCableChannelingItem[] transmitCableChannelingItemsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final CableChannelingItem_Transferable cableChannelingItems[] = new CableChannelingItem_Transferable[length];
+		final IdlCableChannelingItem cableChannelingItems[] = new IdlCableChannelingItem[length];
 		System.arraycopy(storableObjects, 0, cableChannelingItems, 0, length);
 		return cableChannelingItems;
 	}
 
-	public SchemePath_Transferable[] transmitSchemePaths(
+	public IdlSchemePath[] transmitSchemePaths(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final SchemePath_Transferable schemePaths[] = new SchemePath_Transferable[length];
+		final IdlSchemePath schemePaths[] = new IdlSchemePath[length];
 		System.arraycopy(storableObjects, 0, schemePaths, 0, length);
 		return schemePaths;
 	}
 
-	public SchemePath_Transferable[] transmitSchemePathsButIdsCondition(
+	public IdlSchemePath[] transmitSchemePathsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final SchemePath_Transferable schemePaths[] = new SchemePath_Transferable[length];
+		final IdlSchemePath schemePaths[] = new IdlSchemePath[length];
 		System.arraycopy(storableObjects, 0, schemePaths, 0, length);
 		return schemePaths;
 	}
 
-	public PathElement_Transferable[] transmitPathElements(
+	public IdlPathElement[] transmitPathElements(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjects(ids, sessionKey);
 		final int length = storableObjects.length;
-		final PathElement_Transferable pathElements[] = new PathElement_Transferable[length];
+		final IdlPathElement pathElements[] = new IdlPathElement[length];
 		System.arraycopy(storableObjects, 0, pathElements, 0, length);
 		return pathElements;
 	}
 
-	public PathElement_Transferable[] transmitPathElementsButIdsCondition(
+	public IdlPathElement[] transmitPathElementsButIdsCondition(
 			final IdlIdentifier ids[],
 			final IdlSessionKey sessionKey,
 			final IdlStorableObjectCondition storableObjectCondition)
 			throws AMFICOMRemoteException {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(ids, sessionKey, storableObjectCondition);
 		final int length = storableObjects.length;
-		final PathElement_Transferable pathElements[] = new PathElement_Transferable[length];
+		final IdlPathElement pathElements[] = new IdlPathElement[length];
 		System.arraycopy(storableObjects, 0, pathElements, 0, length);
 		return pathElements;
 	}

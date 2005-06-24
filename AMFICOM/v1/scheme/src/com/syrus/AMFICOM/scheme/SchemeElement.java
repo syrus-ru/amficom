@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.39 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeElement.java,v 1.40 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,14 +35,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
 import com.syrus.util.Log;
 
 /**
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -148,7 +148,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemeElement(final SchemeElement_Transferable transferable) throws CreateObjectException {
+	SchemeElement(final IdlSchemeElement transferable) throws CreateObjectException {
 		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEELEMENT_CODE);
 		fromTransferable(transferable);
 	}
@@ -535,8 +535,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemeElement_Transferable getTransferable() {
-		return new SchemeElement_Transferable(getHeaderTransferable(),
+	public IdlSchemeElement getTransferable() {
+		return new IdlSchemeElement(getHeaderTransferable(),
 				super.getName(),
 				super.getDescription(),
 				this.label,
@@ -919,7 +919,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		final SchemeElement_Transferable schemeElement = (SchemeElement_Transferable) transferable;
+		final IdlSchemeElement schemeElement = (IdlSchemeElement) transferable;
 		super.fromTransferable(schemeElement.header, schemeElement.name,
 				schemeElement.description,
 				schemeElement.parentSchemeId,

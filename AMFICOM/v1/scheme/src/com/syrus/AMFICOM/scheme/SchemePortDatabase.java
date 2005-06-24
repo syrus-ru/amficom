@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.7 2005/06/17 11:01:18 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.8 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
@@ -20,7 +20,7 @@ import java.util.Date;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class SchemePortDatabase extends CharacterizableDatabase {
@@ -147,7 +147,7 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				AbstractSchemePortDirectionType.from_int(resultSet.getInt(SchemePortWrapper.COLUMN_DIRECTION_TYPE)),
+				DirectionType.from_int(resultSet.getInt(SchemePortWrapper.COLUMN_DIRECTION_TYPE)),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PORT_TYPE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PORT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID),

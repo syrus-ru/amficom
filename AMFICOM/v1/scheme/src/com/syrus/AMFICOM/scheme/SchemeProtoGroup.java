@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.36 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.37 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.util.Log;
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -112,7 +112,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 */
-	SchemeProtoGroup(final SchemeProtoGroup_Transferable transferable) {
+	SchemeProtoGroup(final IdlSchemeProtoGroup transferable) {
 		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		fromTransferable(transferable);
 	}
@@ -390,8 +390,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemeProtoGroup_Transferable getTransferable() {
-		return new SchemeProtoGroup_Transferable(
+	public IdlSchemeProtoGroup getTransferable() {
+		return new IdlSchemeProtoGroup(
 				super.getHeaderTransferable(),
 				this.name,
 				this.description,
@@ -596,7 +596,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		final SchemeProtoGroup_Transferable schemeProtoGroup = (SchemeProtoGroup_Transferable) transferable;
+		final IdlSchemeProtoGroup schemeProtoGroup = (IdlSchemeProtoGroup) transferable;
 		try {
 			super.fromTransferable(schemeProtoGroup.header);
 		} catch (final ApplicationException ae) {

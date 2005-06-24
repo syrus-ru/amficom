@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.42 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.43 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.util.Log;
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -149,7 +149,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemeProtoElement(final SchemeProtoElement_Transferable transferable) throws CreateObjectException {
+	SchemeProtoElement(final IdlSchemeProtoElement transferable) throws CreateObjectException {
 		this.schemeProtoElementDatabase = (SchemeProtoElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 		fromTransferable(transferable);
 	}
@@ -635,8 +635,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemeProtoElement_Transferable getTransferable() {
-		return new SchemeProtoElement_Transferable(
+	public IdlSchemeProtoElement getTransferable() {
+		return new IdlSchemeProtoElement(
 				super.getHeaderTransferable(),
 				this.name,
 				this.description,
@@ -1059,7 +1059,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		final SchemeProtoElement_Transferable schemeProtoElement = (SchemeProtoElement_Transferable) transferable;
+		final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
 		try {
 			super.fromTransferable(schemeProtoElement.header);
 			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeProtoElement.characteristicIds), true));

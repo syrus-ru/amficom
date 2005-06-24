@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.40 2005/06/21 15:10:05 bass Exp $
+ * $Id: Scheme.java,v 1.41 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,15 +34,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.corba.Scheme_Transferable;
-import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlScheme;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 import com.syrus.util.Log;
 
 /**
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -144,7 +144,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @param transferable
 	 */
-	Scheme(final Scheme_Transferable transferable) {
+	Scheme(final IdlScheme transferable) {
 		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CODE);
 		fromTransferable(transferable);
 	}
@@ -421,11 +421,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public Scheme_Transferable getTransferable() {
+	public IdlScheme getTransferable() {
 		/*
 		 * domainId is assumed to be non-null.
 		 */
-		return new Scheme_Transferable(super.getHeaderTransferable(),
+		return new IdlScheme(super.getHeaderTransferable(),
 				this.name, this.description, this.label,
 				this.width, this.height, this.kind,
 				super.getDomainId().getTransferable(),
@@ -740,7 +740,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		final Scheme_Transferable scheme = (Scheme_Transferable) transferable;
+		final IdlScheme scheme = (IdlScheme) transferable;
 		super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
 		this.name = scheme.name;
 		this.description = scheme.description;

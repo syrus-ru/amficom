@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuFactory.java,v 1.3 2005/06/01 18:49:46 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuFactory.java,v 1.4 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,12 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
-import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoRtu_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/01 18:49:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 final class SchemeOptimizeInfoRtuFactory extends StorableObjectFactory {
@@ -29,7 +29,7 @@ final class SchemeOptimizeInfoRtuFactory extends StorableObjectFactory {
 	 * @see StorableObjectFactory#newInstance(IDLEntity)
 	 */
 	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
-		return new SchemeOptimizeInfoRtu((SchemeOptimizeInfoRtu_Transferable) transferable);
+		return new SchemeOptimizeInfoRtu((IdlSchemeOptimizeInfoRtu) transferable);
 	}
 
 	/**
@@ -37,7 +37,7 @@ final class SchemeOptimizeInfoRtuFactory extends StorableObjectFactory {
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
 	 */
 	protected Identifier getId(final IDLEntity transferable) {
-		return new Identifier(((SchemeOptimizeInfoRtu_Transferable) transferable).header.id);
+		return new Identifier(((IdlSchemeOptimizeInfoRtu) transferable).header.id);
 	}
 
 	/**
@@ -45,6 +45,6 @@ final class SchemeOptimizeInfoRtuFactory extends StorableObjectFactory {
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
 	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
-		return new SchemeOptimizeInfoRtu_Transferable[length];
+		return new IdlSchemeOptimizeInfoRtu[length];
 	}
 }

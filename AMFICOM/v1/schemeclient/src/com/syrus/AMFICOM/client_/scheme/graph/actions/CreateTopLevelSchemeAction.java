@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.6 2005/06/22 10:16:06 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.7 2005/06/24 14:13:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,12 +34,12 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/24 14:13:36 $
  * @module schemeclient_v1
  */
 
@@ -76,7 +76,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 
 		for (int i = 0; i < bpcs.length; i++) {
 			AbstractSchemePort port = bpcs[i].getAbstractSchemePort();
-			if (port.getDirectionType().equals(AbstractSchemePortDirectionType._IN))
+			if (port.getDirectionType().equals(DirectionType._IN))
 				blockports_in.add(bpcs[i]);
 			else
 				blockports_out.add(bpcs[i]);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.4 2005/06/23 12:58:23 stas Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.5 2005/06/24 14:13:36 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.*;
-import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -23,20 +22,17 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/06/23 12:58:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/06/24 14:13:36 $
  * @module schemeclient_v1
  */
 

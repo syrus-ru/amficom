@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.39 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemePath.java,v 1.40 2005/06/24 14:13:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,15 +36,15 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePath_Transferable;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 import com.syrus.util.Log;
 
 /**
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/24 14:13:37 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -114,7 +114,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemePath(final SchemePath_Transferable transferable) throws CreateObjectException {
+	SchemePath(final IdlSchemePath transferable) throws CreateObjectException {
 		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPATH_CODE);
 		fromTransferable(transferable);
 	}
@@ -285,8 +285,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemePath_Transferable getTransferable() {
-		return new SchemePath_Transferable(
+	public IdlSchemePath getTransferable() {
+		return new IdlSchemePath(
 				super.getHeaderTransferable(), this.name,
 				this.description,
 				this.transmissionPathId.getTransferable(),
@@ -469,7 +469,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		final SchemePath_Transferable schemePath = (SchemePath_Transferable) transferable;
+		final IdlSchemePath schemePath = (IdlSchemePath) transferable;
 		try {
 			super.fromTransferable(schemePath.header);
 			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemePath.characteristicIds), true));

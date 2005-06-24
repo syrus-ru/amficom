@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.28 2005/06/22 15:05:20 bass Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.29 2005/06/24 14:13:40 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 import com.syrus.util.Log;
 
 /**
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/06/22 15:05:20 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/24 14:13:40 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.37 2005/06/21 15:10:05 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.38 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,14 +31,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
 import com.syrus.util.Log;
 
 /**
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -107,7 +107,7 @@ public final class SchemeMonitoringSolution extends
 	/**
 	 * @param transferable
 	 */
-	SchemeMonitoringSolution(final SchemeMonitoringSolution_Transferable transferable) {
+	SchemeMonitoringSolution(final IdlSchemeMonitoringSolution transferable) {
 		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
 		fromTransferable(transferable);
 	}
@@ -246,8 +246,8 @@ public final class SchemeMonitoringSolution extends
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemeMonitoringSolution_Transferable getTransferable() {
-		return new SchemeMonitoringSolution_Transferable(
+	public IdlSchemeMonitoringSolution getTransferable() {
+		return new IdlSchemeMonitoringSolution(
 				super.getHeaderTransferable(), this.name,
 				this.description, this.price, this.active,
 				this.parentSchemeOptimizeInfoId.getTransferable());
@@ -359,7 +359,7 @@ public final class SchemeMonitoringSolution extends
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) {
-		final SchemeMonitoringSolution_Transferable schemeMonitoringSolution = (SchemeMonitoringSolution_Transferable) transferable;
+		final IdlSchemeMonitoringSolution schemeMonitoringSolution = (IdlSchemeMonitoringSolution) transferable;
 		try {
 			super.fromTransferable(schemeMonitoringSolution.header);
 		} catch (final ApplicationException ae) {

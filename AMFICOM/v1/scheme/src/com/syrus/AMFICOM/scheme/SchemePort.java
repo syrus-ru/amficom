@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.35 2005/06/22 10:05:18 bass Exp $
+ * $Id: SchemePort.java,v 1.36 2005/06/24 14:13:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,15 +30,15 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.corba.SchemePort_Transferable;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 
 /**
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/22 10:05:18 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/24 14:13:38 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -81,7 +81,7 @@ public final class SchemePort extends AbstractSchemePort {
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
-			final AbstractSchemePortDirectionType directionType,
+			final DirectionType directionType,
 			final PortType portType, final Port port,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice) {
@@ -99,14 +99,14 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemePort(final SchemePort_Transferable transferable) throws CreateObjectException {
+	SchemePort(final IdlSchemePort transferable) throws CreateObjectException {
 		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPORT_CODE);
 		fromTransferable(transferable);
 	}
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, AbstractSchemePortDirectionType, PortType, Port, MeasurementPort, SchemeDevice)}.
+	 * {@link #createInstance(Identifier, String, String, DirectionType, PortType, Port, MeasurementPort, SchemeDevice)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -116,7 +116,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public static SchemePort createInstance(final Identifier creatorId,
 			final String name,
-			final AbstractSchemePortDirectionType directionType,
+			final DirectionType directionType,
 			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", directionType, null,
@@ -136,7 +136,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public static SchemePort createInstance(final Identifier creatorId,
 			final String name, final String description,
-			final AbstractSchemePortDirectionType directionType,
+			final DirectionType directionType,
 			final PortType portType, final Port port,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice)
@@ -226,8 +226,8 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
 	 */
-	public SchemePort_Transferable getTransferable() {
-		return new SchemePort_Transferable(
+	public IdlSchemePort getTransferable() {
+		return new IdlSchemePort(
 				super.getHeaderTransferable(), super.getName(),
 				super.getDescription(),
 				super.getDirectionType(),
@@ -253,7 +253,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
 	 */
 	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
-		final SchemePort_Transferable schemePort = (SchemePort_Transferable) transferable;
+		final IdlSchemePort schemePort = (IdlSchemePort) transferable;
 		super.fromTransferable(schemePort.header, schemePort.name,
 				schemePort.description,
 				schemePort.directionType, schemePort.portTypeId,

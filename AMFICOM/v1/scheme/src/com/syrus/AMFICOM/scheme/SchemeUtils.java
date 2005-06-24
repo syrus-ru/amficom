@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.24 2005/04/19 08:58:26 bass Exp $
+ * $Id: SchemeUtils.java,v 1.25 2005/06/24 14:13:37 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.corba.PathElement_TransferablePackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 
 /**
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/04/19 08:58:26 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/24 14:13:37 $
  * @module scheme_v1
  */
 public class SchemeUtils {
@@ -85,7 +85,7 @@ public class SchemeUtils {
 				schemeElements.add(schemeElement);
 			else {
 				final Scheme scheme1 = schemeElement.getScheme();
-				if (scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind._CABLE_SUBNETWORK)
+				if (scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind._CABLE_SUBNETWORK)
 					for (final Iterator schemeElementIterator1 = getTopologicalElements(scheme1).iterator(); schemeElementIterator1.hasNext(); )
 						schemeElements.add(schemeElementIterator1.next());
 				else
@@ -102,7 +102,7 @@ public class SchemeUtils {
 			final SchemeElement schemeElement = (SchemeElement) schemeElementIterator.next();
 			if (schemeElement.getScheme() != null) {
 				final Scheme scheme1 = schemeElement.getScheme();
-				if (scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind._CABLE_SUBNETWORK)
+				if (scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind._CABLE_SUBNETWORK)
 					for (Iterator inner = getTopologicalCableLinks(scheme1).iterator(); inner.hasNext(); )
 						schemeCableLinks.add(inner.next());
 			}
@@ -130,7 +130,7 @@ public class SchemeUtils {
 		final Set schemePaths = new HashSet(scheme.getCurrentSchemeMonitoringSolution().getSchemePaths());
 		for (final Iterator schemeElementIterator = scheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();) {
 			final Scheme scheme1 = ((SchemeElement) schemeElementIterator.next()).getScheme();
-			if (scheme1 != null && scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind._CABLE_SUBNETWORK)
+			if (scheme1 != null && scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind._CABLE_SUBNETWORK)
 				for (final Iterator schemePathIterator = getTopologicalPaths(scheme1).iterator(); schemePathIterator.hasNext(); )
 					schemePaths.add(schemePathIterator.next());
 		}
@@ -147,7 +147,7 @@ public class SchemeUtils {
 				return schemeElement1;
 			final SchemeElement schemeElement2 = getTopologicalElement(scheme1, schemeElement);
 			if (schemeElement2 != null) {
-				if (scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.Scheme_TransferablePackage.Kind._CABLE_SUBNETWORK)
+				if (scheme1.getKind().value() == com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind._CABLE_SUBNETWORK)
 					return schemeElement2;
 				return schemeElement;
 			}
