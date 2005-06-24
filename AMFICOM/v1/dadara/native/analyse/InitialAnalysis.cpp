@@ -1215,7 +1215,7 @@ void InitialAnalysis::WaveletDataConvolution(double *data, int dataLength, int w
     for(i=0; i<dataLength; i++){
     data[i] = data_processed[i];
     }
-    delete data_processed;
+    delete[] data_processed;
 }
 //------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getLastPoint()
