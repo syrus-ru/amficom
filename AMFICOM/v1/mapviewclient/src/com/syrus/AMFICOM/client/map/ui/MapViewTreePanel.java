@@ -48,8 +48,6 @@ public final class MapViewTreePanel extends JPanel
 
 	private MapView mapView = null;
 	
-	TreeCellRenderer treeRenderer;
-
 	public MapViewTreePanel() {
 		try {
 			jbInit();
@@ -72,7 +70,6 @@ public final class MapViewTreePanel extends JPanel
 		this.add(this.scroll, BorderLayout.CENTER);
 
 		this.model = MapViewTreeModel.getInstance();
-		this.treeRenderer = new MapViewTreeCellRenderer(this.model);
 
 		this.root = new IconedNode("root", LangModelGeneral.getString("root"));
 		this.treeUI = new LogicalTreeUI(this.root, false);
@@ -83,7 +80,6 @@ public final class MapViewTreePanel extends JPanel
 		this.scroll.getViewport().add(this.tree);
 		this.tree.addTreeSelectionListener(this);
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-		this.tree.setCellRenderer(this.treeRenderer);
 	}
 
 	public void setContext(ApplicationContext aContext) {
