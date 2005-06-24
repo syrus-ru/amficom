@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.10 2005/06/22 13:02:40 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.11 2005/06/24 14:09:05 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/06/22 13:02:40 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/24 14:09:05 $
  * @module scheme_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -95,10 +95,12 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case ObjectEntities.SCHEMEDEVICE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.SCHEMEELEMENT_CODE:
-						return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-					default:
-						throw newIllegalObjectEntityException();
+				case ObjectEntities.SCHEMEELEMENT_CODE:
+					return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+				case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
+					return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case ObjectEntities.PATHELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
@@ -107,8 +109,13 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				default:
 					throw newIllegalObjectEntityException();
 			}
-			default:
-				throw newIllegalObjectEntityException();
-		}
+			case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+				case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
+					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+				default:
+					throw newIllegalObjectEntityException();
+				}
+			}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.12 2005/06/22 13:02:40 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.13 2005/06/24 14:09:05 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.12 $, $Date: 2005/06/22 13:02:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/24 14:09:05 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -128,10 +128,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.SCHEMEDEVICE_CODE:
 				final SchemeDevice schemeDevice = (SchemeDevice) storableObject;
 				switch (super.linkedEntityCode) {
-					case ObjectEntities.SCHEMEELEMENT_CODE:
-						return super.conditionTest(schemeDevice.getParentSchemeElement().getId());
-					default:
-						throw newIllegalObjectEntityException();
+				case ObjectEntities.SCHEMEELEMENT_CODE:
+					return super.conditionTest(schemeDevice.getParentSchemeElement().getId());
+				case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
+					return super.conditionTest(schemeDevice.getParentSchemeProtoElement().getId());
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case ObjectEntities.PATHELEMENT_CODE:
 				final PathElement pathElement = (PathElement) storableObject;
@@ -140,6 +142,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						return super.conditionTest(pathElement.getParentSchemePath().getId());
 					default:
 						throw newIllegalObjectEntityException();
+				}
+			case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
+				final SchemeProtoElement protoElement = (SchemeProtoElement) storableObject;
+				switch (super.linkedEntityCode) {
+				case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
+					return super.conditionTest(protoElement.getParentSchemeProtoElement().getId());
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			default:
 				throw newIllegalObjectEntityException();
