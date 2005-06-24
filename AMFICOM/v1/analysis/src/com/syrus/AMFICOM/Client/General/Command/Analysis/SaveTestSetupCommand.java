@@ -80,14 +80,13 @@ public class SaveTestSetupCommand extends AbstractCommand
 		{
 			if ((type & ETALON) != 0)
 			{
-				ModelTraceManager mtm = Heap.getMTMEtalon();
-				if (mtm == null)
+				if (Heap.getMTMEtalon() == null)
 				{
 					// @todo: в этом случае (а тж в сл. ApplicationException) надо бы удалить созданный бесхозный criteriaSet)
 					GUIUtil.showErrorMessage("noEtalonError");
 					return false;
 				}
-				etalonSet = AnalysisUtil.createEtalon(LoginManager.getUserId(), msTest.getMonitoredElementIds(), mtm);
+				etalonSet = AnalysisUtil.createEtalon(LoginManager.getUserId(), msTest.getMonitoredElementIds());
 			} else
 				etalonSet = msTest.getEtalon();
 		} catch (ApplicationException e1)

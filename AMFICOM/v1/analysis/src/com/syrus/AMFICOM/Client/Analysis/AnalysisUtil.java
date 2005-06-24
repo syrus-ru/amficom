@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
@@ -125,36 +126,32 @@ public class AnalysisUtil
 	 */
 	public static void load_Etalon(MeasurementSetup ms) throws DataFormatException
 	{
-		ParameterSet etalon = ms.getEtalon();
+		ParameterSet etalonSet = ms.getEtalon();
 		ParameterSet metas = ms.getParameterSet();
 
 		BellcoreStructure bsEt = null;
 
-		Parameter[] params = etalon.getParameters();
+		Parameter[] params = etalonSet.getParameters();
 		for (int i = 0; i < params.length; i++)
 		{
 			ParameterType type = (ParameterType)params[i].getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_MTM))
+			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_MTM)) // FIXME: use DADARA_ETALON instead
 			{
-				ModelTraceManager mtm = (ModelTraceManager)DataStreamableUtil.
+				Etalon etalonObj = (Etalon) DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
-						ModelTraceManager.getReader());
-				Heap.setMTMEtalon(mtm);
+							Etalon.getDSReader());
+				Heap.setMTMEtalon(etalonObj.getMTM());
+				Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
 				Heap.setEtalonEtalonMetas(metas);
+				// @todo: load EventAnchorer as well
 			}
             else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON))
             {
                 bsEt = new BellcoreReader().getData(params[i].getValue());
                 Heap.setBSEtalonTrace(bsEt);
                 bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // XXX: externalized string
-            } else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL))
-            {
-                try {
-                    Heap.setMinTraceLevel(new ByteArray(params[i].getValue()).toDouble());
-                } catch (IOException e) {
-                    throw new DataFormatException("cannot read double value minTraceLevel");
-                }
             }
+            // else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL)) // FIXME: remove ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL
 		}
 	}
 
@@ -186,24 +183,22 @@ public class AnalysisUtil
 		}
 	}
 
-	public static ParameterSet createEtalon(Identifier userId, java.util.Set meIds,
-            ModelTraceManager mtm) throws ApplicationException
+	public static ParameterSet createEtalon(Identifier userId, java.util.Set meIds)
+	throws ApplicationException
 	{
-		Parameter[] params = new Parameter[3];
+		Parameter[] params = new Parameter[2];
 
-		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW);
+		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON_MTM, DataType.DATA_TYPE_RAW); // FIXME: use DADARA_ETALON instead
 		params[0] = Parameter.createInstance(ptype,
-				DataStreamableUtil.writeDataStreamableToBA(mtm));
+				DataStreamableUtil.writeDataStreamableToBA(new Etalon(
+						Heap.getMTMEtalon(),
+						Heap.getMinTraceLevel()))); // @todo: store EventAnchorer as well
 
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 
 		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
 		params[1] = Parameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
-
-        ptype = getParameterType(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL, DataType.DATA_TYPE_DOUBLE);
-        params[2] = Parameter.createInstance(ptype,
-                ByteArray.toByteArray(Heap.getMinTraceLevel()));
 
 		ParameterSet etalon = ParameterSet.createInstance(
 				userId,

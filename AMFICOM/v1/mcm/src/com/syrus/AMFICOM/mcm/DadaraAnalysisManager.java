@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.49 2005/06/21 12:44:30 bass Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.50 2005/06/24 15:43:17 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/06/21 12:44:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.50 $, $Date: 2005/06/24 15:43:17 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
@@ -55,8 +56,8 @@ import com.syrus.util.Log;
 public class DadaraAnalysisManager implements AnalysisManager {
 	// input SetParameters codenames
 	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodenames.REFLECTOGRAMMA;
-	public static final String CODENAME_DADARA_ETALON_MTM = ParameterTypeCodenames.DADARA_ETALON_MTM;
-	public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL;
+	public static final String CODENAME_DADARA_ETALON = ParameterTypeCodenames.DADARA_ETALON_MTM; // FIXME: need ParameterTypeCodenames.DADARA_ETALON
+	//public static final String CODENAME_DADARA_ETALON_BREAK_THRESH = ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL; // FIXME: remove
 	public static final String CODENAME_DADARA_CRITERIA = ParameterTypeCodenames.DADARA_CRITERIA;
 
 	// output SetParameters codenames
@@ -152,16 +153,12 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		return rawData;
 	}
 
-	private ByteArray getParBA(final Map parsMap, final String codename) throws AnalysisException {
-		byte[] rawData = this.getParameter(parsMap, codename);
-		return new ByteArray(rawData);
-	}
-
-	private ModelTraceManager obtainEtalonMTM() throws AnalysisException {
-		// read etalon r/g and its thresholds
-		byte[] etalonData = this.getParameter(this.etalonPars, CODENAME_DADARA_ETALON_MTM);
+	private Etalon obtainEtalon() throws AnalysisException {
+		byte[] etalonData = this.getParameter(this.etalonPars, CODENAME_DADARA_ETALON);
 		try {
-			return (ModelTraceManager) DataStreamableUtil.readDataStreamableFromBA(etalonData, ModelTraceManager.getReader());
+			Etalon et = (Etalon) DataStreamableUtil.
+			readDataStreamableFromBA(etalonData, Etalon.getDSReader());
+			return et;
 		}
 		catch (DataFormatException e) {
 			throw new AnalysisException("DataFormatException: " + e.toString());
@@ -184,24 +181,24 @@ public class DadaraAnalysisManager implements AnalysisManager {
 	public Parameter[] analyse() throws AnalysisException {
 		// output parameters (not Parameter[] yet)
 		Map outParameters = new HashMap(); // Map <String codename, byte[] rawData>
+		
+		// === Получаем входные данные ===
 
 		// Получаем рефлектограмму
 		BellcoreStructure bs = (new BellcoreReader()).getData(this.getParameter(this.tracePars, CODENAME_REFLECTOGRAMMA));
 
-		// Получаем из эталона уровень обнаружения обрыва
-		double breakThresh = 0;
-		try {
-			breakThresh = this.getParBA(this.etalonPars, CODENAME_DADARA_ETALON_BREAK_THRESH).toDouble();
-		}
-		catch (IOException ioe) {
-			throw new AnalysisException("Couldn't get " + CODENAME_DADARA_ETALON_BREAK_THRESH + ": " + ioe + ", " + ioe.getMessage());
-		}
-
-		// Получаем эталонный MTM (пороговые кривые и события)
-		ModelTraceManager etMTM = this.obtainEtalonMTM();
-
 		// Получаем параметры анализа (могут быть null, тогда анализ не проводим)
 		AnalysisParameters ap = this.obtainAnalysisParameters();
+
+		// Получаем эталон
+		Etalon etalon = obtainEtalon();
+
+		// === Обрабатываем входные данные, анализируем, сравниваем ===
+
+		// Достаем из эталона уровень обнаружения обрыва
+		double breakThresh = etalon.getMinTraceLevel();
+		// Достаем  эталонный MTM (пороговые кривые и события)
+		ModelTraceManager etMTM = etalon.getMTM();
 
 		// проводим анализ
 		AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
@@ -211,6 +208,8 @@ public class DadaraAnalysisManager implements AnalysisManager {
 
 		// добавляем AnalysisResult в результаты анализа
 		outParameters.put(CODENAME_ANALYSIS_RESULT, ar.toByteArray());
+
+		// === Формируем результаты ===
 
 		// добавляем алармы в результаты анализа
 		ReflectogramAlarm[] alarms = (ReflectogramAlarm[]) alarmList.toArray(new ReflectogramAlarm[alarmList.size()]);
