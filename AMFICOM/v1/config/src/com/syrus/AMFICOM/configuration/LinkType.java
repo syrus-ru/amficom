@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.57 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: LinkType.java,v 1.58 2005/06/24 09:59:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/06/22 20:11:26 $
+ * @version $Revision: 1.58 $, $Date: 2005/06/24 09:59:32 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -119,7 +119,8 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 				|| name == null
 				|| sort == null
 				|| manufacturer == null
-				|| manufacturerCode == null)
+				|| manufacturerCode == null
+				|| imageId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -174,7 +175,11 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 
 	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.name != null && this.manufacturer != null && this.manufacturerCode != null;
+		return super.isValid()
+				&& this.name != null
+				&& this.manufacturer != null
+				&& this.manufacturerCode != null
+				&& this.imageId != null;
 	}
 
 	protected synchronized void setAttributes(final Date created,
