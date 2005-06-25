@@ -5,30 +5,11 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 NATIVE_DIR := ./native/common
 
+JAVAC = javac
+
 include ../tools/Makefile.inc
 
 APPCLASSPATH = $(LIBDIR)/util.jar
-
-#JAVAC=javac
-#JAVACFLAGS=-O \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-d $(CLASSDIR) \
-	-deprecation \
-	-encoding $(ENCODING) \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	-g
-
-JAVAC=jikes
-JAVACFLAGS := -O \
-	+E \
-	+P \
-	+Pno-switchcheck \
-	+T=2 \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-d $(CLASSDIR) \
-	-deprecation \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	-g
 
 JAVAH := javah
 JAVAH_FLAGS := \
