@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.8 2005/06/25 17:07:51 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.9 2005/06/25 18:05:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:51 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/25 18:05:56 $
  * @author $Author: bass $
  * @module mscharserver_v1
  */
@@ -39,7 +39,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 	 * @param userId
 	 * @param domainId
 	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
+	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(IdlSessionKey, IdlIdentifierHolder, IdlIdentifierHolder)
 	 */
 	protected void validateAccess(final IdlSessionKey sessionKey,
 			final IdlIdentifierHolder userId,

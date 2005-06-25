@@ -119,7 +119,6 @@ public class AnalysisUtil
 	 * Etalon attached to TestSetup method returns.
 	 * @param ms MeasurementSetup
 	 * @throws DataFormatException 
-	 * @see com.syrus.AMFICOM.Client.Resource.Result.Etalon
 	 */
 	public static void load_Etalon(MeasurementSetup ms) throws DataFormatException
 	{

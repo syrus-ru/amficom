@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementUgoPanel.java,v 1.2 2005/05/26 08:42:42 stas Exp $
+ * $Id: SchemeProtoElementUgoPanel.java,v 1.3 2005/06/25 18:05:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 08:42:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/06/25 18:05:56 $
  * @module schemeclient_v1
  */
 
@@ -52,7 +52,7 @@ public class SchemeProtoElementUgoPanel extends DefaultStorableObjectEditor {
 	
 	/**
 	 * @return UgoTabbedPane
-	 * @see com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor#getGUI()
+	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#getGUI()
 	 */
 	public JComponent getGUI() {
 		return pane;
@@ -60,7 +60,7 @@ public class SchemeProtoElementUgoPanel extends DefaultStorableObjectEditor {
 
 	/**
 	 * @param or SchemeProtoElement
-	 * @see com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor#setObject(java.lang.Object)
+	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#setObject(Object)
 	 */
 	public void setObject(Object or) {
 		this.schemeProtoElement = (SchemeProtoElement)or;
@@ -72,14 +72,14 @@ public class SchemeProtoElementUgoPanel extends DefaultStorableObjectEditor {
 
 	/**
 	 * @return SchemeProtoElement
-	 * @see com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor#getObject()
+	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#getObject()
 	 */
 	public Object getObject() {
 		return schemeProtoElement;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor#commitChanges()
+	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#commitChanges()
 	 */
 	public void commitChanges() {
 		SchemeImageResource image = schemeProtoElement.getUgoCell();

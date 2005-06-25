@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.25 2005/06/25 17:07:42 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.26 2005/06/25 18:05:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/25 17:07:42 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/25 18:05:56 $
  * @author $Author: bass $
  * @module leserver_v1
  */
@@ -168,7 +168,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * @param userIdTH an "out" parameter representing a user id.
 	 * @param domainIdTH an "out" parameter representing a domain id.
 	 * @throws AMFICOMRemoteException if user not logged in.
-	 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateAccess(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder, com.syrus.AMFICOM.general.corba.Identifier_TransferableHolder)
+	 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#validateAccess(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.IdlIdentifierHolder, com.syrus.AMFICOM.general.corba.IdlIdentifierHolder)
 	 */
 	public void validateAccess(final IdlSessionKey sessionKeyT,
 			final IdlIdentifierHolder userIdTH,
@@ -213,7 +213,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	}
 
 	/**
-	 * @see Verifiable#verify(byte)
+	 * @see com.syrus.AMFICOM.general.corba.Verifiable#verify(byte)
 	 */
 	public void verify(byte i) {
 		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
