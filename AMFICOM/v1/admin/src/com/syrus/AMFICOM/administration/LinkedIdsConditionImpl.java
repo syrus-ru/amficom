@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/06/17 11:01:06 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.20 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/25 17:50:50 $
  * @author $Author: bass $
  * @module admin_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
+	@SuppressWarnings("unusedPrivate")
 	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
@@ -51,6 +52,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		return condition;
 	}
 
+	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
@@ -86,6 +88,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		return condition;
 	}
 
+	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.MCM_CODE:
@@ -100,6 +103,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		}
 	}
 
+	@Override
 	public boolean isNeedMore(final Set storableObjects) {
 		return true;
 	}

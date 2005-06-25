@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.23 2005/06/25 17:07:45 bass Exp $
+ * $Id: UnboundNode.java,v 1.24 2005/06/25 17:50:49 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/06/25 17:07:45 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/25 17:50:49 $
  * @module mapviewclient_v1
  */
 public final class UnboundNode extends SiteNode
@@ -176,8 +177,8 @@ public final class UnboundNode extends SiteNode
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public Set getDependencies()
-	{
+	@Override
+	public Set<Identifiable> getDependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -186,8 +187,8 @@ public final class UnboundNode extends SiteNode
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public IdlStorableObject getHeaderTransferable()
-	{
+	@Override
+	public IdlStorableObject getHeaderTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 

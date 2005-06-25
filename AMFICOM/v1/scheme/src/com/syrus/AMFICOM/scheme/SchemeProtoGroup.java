@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.38 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.39 2005/06/25 17:50:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/25 17:50:46 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -283,10 +284,11 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.symbolId != null
 				&& this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.symbolId);
 		dependencies.add(this.parentSchemeProtoGroupId);
 		dependencies.remove(null);

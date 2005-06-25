@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.18 2005/06/21 12:44:26 bass Exp $
+ * $Id: DomainMember.java,v 1.19 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/21 12:44:26 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/25 17:50:50 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -79,6 +79,7 @@ public abstract class DomainMember extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		/* XXX : fix checking domainId w/o check id for concrete impementation as domain
 		 * Domain entity can have null domain id what's why its doesnt must check domainId for null */

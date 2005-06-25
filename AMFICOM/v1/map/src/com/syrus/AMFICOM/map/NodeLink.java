@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.52 2005/06/25 17:07:48 bass Exp $
+ * $Id: NodeLink.java,v 1.53 2005/06/25 17:50:45 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -44,7 +45,7 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLink;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/25 17:50:45 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -474,8 +475,9 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 			this.characteristics.addAll(characteristics);
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.physicalLink);
 		dependencies.add(this.startNode);
 		dependencies.add(this.endNode);

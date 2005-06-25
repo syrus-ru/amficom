@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.26 2005/06/17 11:01:06 bass Exp $
+ * $Id: ServerDatabase.java,v 1.27 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/25 17:50:50 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -41,10 +41,12 @@ public final class ServerDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("ServerDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.SERVER_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {		
 		if (columns == null){
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
@@ -55,6 +57,7 @@ public final class ServerDatabase extends CharacterizableDatabase {
 		return columns;
 	}	
 	
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -65,6 +68,7 @@ public final class ServerDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}	
 
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Server server = this.fromStorableObject(storableObject);
 		return DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
@@ -73,6 +77,7 @@ public final class ServerDatabase extends CharacterizableDatabase {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE;
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		Server server = (storableObject==null)?
@@ -96,6 +101,7 @@ public final class ServerDatabase extends CharacterizableDatabase {
 		return server;
 	}
 
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 		throws IllegalDataException, SQLException {
 		Server server = this.fromStorableObject(storableObject);
@@ -106,6 +112,7 @@ public final class ServerDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException {
 		Server server = this.fromStorableObject(storableObject);

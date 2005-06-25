@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.46 2005/06/25 17:07:48 bass Exp $
+ * $Id: Mark.java,v 1.47 2005/06/25 17:50:44 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.map.corba.IdlMark;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.47 $, $Date: 2005/06/25 17:50:44 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -208,8 +209,9 @@ public final class Mark extends AbstractNode {
 		}
 	}
 
-	public Set getDependencies() {
-		return Collections.singleton(this.physicalLink);
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.singleton((Identifiable) this.physicalLink);
 	}
 
 	/**

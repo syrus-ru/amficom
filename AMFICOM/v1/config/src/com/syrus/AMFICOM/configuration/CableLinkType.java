@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.50 2005/06/25 17:07:55 bass Exp $
+ * $Id: CableLinkType.java,v 1.51 2005/06/25 17:50:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/06/25 17:07:55 $
+ * @version $Revision: 1.51 $, $Date: 2005/06/25 17:50:49 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -261,6 +261,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		return cableThreadTypes;
 	}
 
+	@Override
 	public Set<Identifiable> getDependencies() {
 		return Collections.emptySet();
 	}

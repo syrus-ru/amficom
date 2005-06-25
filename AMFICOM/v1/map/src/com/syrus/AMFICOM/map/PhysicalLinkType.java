@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.49 2005/06/25 17:07:48 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.50 2005/06/25 17:50:44 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.50 $, $Date: 2005/06/25 17:50:44 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -172,8 +173,9 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 		this.bindingDimension = new IntDimension(pltt.dimensionX, pltt.dimensionY);
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	/**

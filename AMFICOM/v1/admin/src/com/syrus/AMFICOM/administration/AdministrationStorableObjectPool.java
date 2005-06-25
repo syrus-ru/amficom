@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.39 2005/06/17 13:22:13 bass Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.40 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/17 13:22:13 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/25 17:50:50 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -122,10 +122,12 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	}
 
 
+	@Override
 	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException{
 		return aObjectLoader.refresh(storableObjects);
 	}
 
+	@Override
 	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
@@ -148,6 +150,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
@@ -170,6 +173,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
@@ -197,6 +201,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected void deleteStorableObjects(final Set identifiables) {
 		aObjectLoader.delete(identifiables);
 	}

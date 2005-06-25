@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.50 2005/06/25 17:07:48 bass Exp $
+ * $Id: SiteNode.java,v 1.51 2005/06/25 17:50:44 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -56,7 +57,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.51 $, $Date: 2005/06/25 17:50:44 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -213,8 +214,9 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				"");
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.imageId);
 		return dependencies;

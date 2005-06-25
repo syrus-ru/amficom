@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.6 2005/06/23 12:19:08 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.7 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -27,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/23 12:19:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/25 17:50:50 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -44,10 +43,12 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 				+ storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {
 		return ObjectEntities.SYSTEMUSER_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = SystemUserWrapper.COLUMN_LOGIN + COMMA
@@ -58,6 +59,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 		return columns;
 	}	
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -68,6 +70,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}	
 
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		SystemUser user = this.fromStorableObject(storableObject);
 		return APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
@@ -76,6 +79,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		SystemUser user = (storableObject == null)?
@@ -108,6 +112,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 		}
 	}
 
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException {
 		SystemUser user = this.fromStorableObject(storableObject);
@@ -118,6 +123,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 		}
 	}
 
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		SystemUser user = this.fromStorableObject(storableObject);

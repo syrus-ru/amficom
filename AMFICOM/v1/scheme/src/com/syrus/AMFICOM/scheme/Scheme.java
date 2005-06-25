@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.42 2005/06/25 17:07:43 bass Exp $
+ * $Id: Scheme.java,v 1.43 2005/06/25 17:50:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/25 17:50:46 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -267,22 +268,19 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.mapId != null
 				&& this.symbolId != null
 				&& this.ugoCellId != null
 				&& this.schemeCellId != null
 				&& this.currentSchemeMonitoringSolutionId != null
 				&& this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.mapId);
 		dependencies.add(this.symbolId);
 		dependencies.add(this.ugoCellId);
 		dependencies.add(this.schemeCellId);
-		/*
-		 * Prevent stack overflows.
-		 */
-//		dependencies.add(this.currentSchemeMonitoringSolutionId);
 		dependencies.add(this.parentSchemeElementId);
 		dependencies.remove(null);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.7 2005/06/22 10:22:27 bob Exp $
+ * $Id: ServerProcessWrapper.java,v 1.8 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/22 10:22:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/06/25 17:50:50 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public class ServerProcessWrapper extends StorableObjectWrapper {
@@ -61,6 +61,7 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof ServerProcess) {
@@ -98,6 +99,7 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

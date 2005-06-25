@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.69 2005/06/25 17:07:48 bass Exp $
+ * $Id: PhysicalLink.java,v 1.70 2005/06/25 17:50:44 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -59,7 +60,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.70 $, $Date: 2005/06/25 17:50:44 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -280,8 +281,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.binding = new PhysicalLinkBinding(new IntDimension(this.dimensionX, this.dimensionY));
 	}
 
-	public Set getDependencies() {
-		return Collections.singleton(this.physicalLinkType);
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.singleton((Identifiable) this.physicalLinkType);
 	}
 
 	/**

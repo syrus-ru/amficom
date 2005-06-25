@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.42 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeElement.java,v 1.43 2005/06/25 17:50:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/25 17:50:46 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -331,14 +332,15 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.equipmentId != null && this.equipmentTypeId != null
 				&& this.kisId != null
 				&& this.parentSchemeElementId != null
 				&& this.schemeCellId != null
 				&& this.siteNodeId != null && this.symbolId != null
 				&& this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(super.getDependencies());
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.equipmentTypeId);

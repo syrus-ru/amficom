@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.52 2005/06/25 17:07:48 bass Exp $
+ * $Id: Collector.java,v 1.53 2005/06/25 17:50:44 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.map.corba.IdlCollector;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/25 17:50:44 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -154,8 +155,9 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.physicalLinks);
 		return dependencies;
 	}

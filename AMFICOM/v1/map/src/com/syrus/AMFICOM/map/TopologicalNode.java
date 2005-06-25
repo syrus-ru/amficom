@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.47 2005/06/25 17:07:48 bass Exp $
+ * $Id: TopologicalNode.java,v 1.48 2005/06/25 17:50:45 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -44,7 +45,7 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/25 17:50:45 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -211,8 +212,9 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 		return TopologicalNode.createInstance0(creatorId, "", "", physicalLink, location);
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	/**

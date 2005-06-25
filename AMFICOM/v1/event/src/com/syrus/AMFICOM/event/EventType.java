@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.33 2005/06/25 17:07:53 bass Exp $
+ * $Id: EventType.java,v 1.34 2005/06/25 17:50:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/25 17:50:49 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -284,8 +285,9 @@ public final class EventType extends StorableObjectType {
 			super.markAsChanged();
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.parameterTypeIds);
 		dependencies.addAll(this.userAlertKindsMap.keySet());
 		return dependencies;

@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.13 2005/06/21 12:44:26 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.14 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/21 12:44:26 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/25 17:50:50 $
  * @author $Author: bass $
  * @module admin_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
+	@SuppressWarnings("unusedPrivate")
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
 			final OperationSort operation,
@@ -37,6 +38,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unusedPrivate")
 	private TypicalConditionImpl(final long firstLong,
 			final long secondLong,
 			final OperationSort operation,
@@ -50,6 +52,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unusedPrivate")
 	private TypicalConditionImpl(final double firstDouble,
 			final double secondDouble,
 			final OperationSort operation,
@@ -63,6 +66,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unusedPrivate")
 	private TypicalConditionImpl(final String value,
 			final OperationSort operation,
 			final Short entityCode,
@@ -74,6 +78,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unusedPrivate")
 	private TypicalConditionImpl(final Date firstDate,
 			final Date secondDate,
 			final OperationSort operation,
@@ -87,6 +92,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@Override
 	public boolean isNeedMore(final Set storableObjects) {
 		return this.type != TypicalSort._TYPE_STRING
 				|| this.operation != OperationSort._OPERATION_EQUALS
@@ -94,6 +100,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 				|| storableObjects.isEmpty();
 	}
 
+	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
 		if (storableObject instanceof SystemUser)

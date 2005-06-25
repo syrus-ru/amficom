@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.32 2005/06/25 17:07:43 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.33 2005/06/25 17:50:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/25 17:50:46 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -207,12 +208,13 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.physicalLinkId != null
 				&& this.startSiteNodeId != null
 				&& this.endSiteNodeId != null
 				&& this.parentSchemeCableLinkId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.physicalLinkId);
 		dependencies.add(this.startSiteNodeId);
 		dependencies.add(this.endSiteNodeId);

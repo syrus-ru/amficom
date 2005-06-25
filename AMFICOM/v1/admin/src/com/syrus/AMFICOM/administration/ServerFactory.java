@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerFactory.java,v 1.3 2005/06/21 14:13:36 bass Exp $
+ * $Id: ServerFactory.java,v 1.4 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectFactory;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/21 14:13:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/25 17:50:50 $
  * @module admin_v1
  */
 final class ServerFactory extends StorableObjectFactory {
@@ -28,6 +28,7 @@ final class ServerFactory extends StorableObjectFactory {
 	 * @throws CreateObjectException
 	 * @see StorableObjectFactory#newInstance(IDLEntity)
 	 */
+	@Override
 	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
 		return new Server((IdlServer) transferable);
 	}
@@ -36,6 +37,7 @@ final class ServerFactory extends StorableObjectFactory {
 	 * @param transferable
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
 	 */
+	@Override
 	protected Identifier getId(final IDLEntity transferable) {
 		return new Identifier(((IdlServer) transferable).header.id);
 	}
@@ -44,6 +46,7 @@ final class ServerFactory extends StorableObjectFactory {
 	 * @param length
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
+	@Override
 	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
 		return new IdlServer[length];
 	}

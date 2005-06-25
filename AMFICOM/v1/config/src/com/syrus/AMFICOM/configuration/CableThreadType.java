@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.45 2005/06/25 17:07:54 bass Exp $
+ * $Id: CableThreadType.java,v 1.46 2005/06/25 17:50:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.45 $, $Date: 2005/06/25 17:07:54 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/25 17:50:49 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -226,6 +226,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		super.markAsChanged();
 	}
 
+	@Override
 	public Set<Identifiable> getDependencies() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.linkType);

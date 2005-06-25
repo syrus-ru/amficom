@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.42 2005/06/25 17:07:48 bass Exp $
+ * $Id: SiteNodeType.java,v 1.43 2005/06/25 17:50:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/25 17:50:45 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -160,8 +161,9 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
-	public Set getDependencies() {
-		return Collections.singleton(this.imageId);
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.singleton((Identifiable) this.imageId);
 	}
 
 	public String getDescription() {

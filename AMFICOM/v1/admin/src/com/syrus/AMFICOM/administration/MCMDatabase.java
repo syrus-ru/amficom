@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.28 2005/06/17 11:01:06 bass Exp $
+ * $Id: MCMDatabase.java,v 1.29 2005/06/25 17:50:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/17 11:01:06 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/25 17:50:50 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -44,10 +44,12 @@ public final class MCMDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("MCMDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.MCM_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
     		columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
@@ -60,6 +62,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
     	if (updateMultipleSQLValues == null) {
     		updateMultipleSQLValues = QUESTION + COMMA
@@ -72,6 +75,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		String sql = DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
@@ -83,6 +87,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		MCM mcm = this.fromStorableObject(storableObject);
@@ -95,6 +100,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		MCM mcm = storableObject == null ? null : this.fromStorableObject(storableObject);
@@ -171,7 +177,8 @@ public final class MCMDatabase extends CharacterizableDatabase {
 //		return kisIds;
 //	}
 
-  public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+  @Override
+public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {

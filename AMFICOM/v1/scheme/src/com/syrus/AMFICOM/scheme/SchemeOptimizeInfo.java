@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.34 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.35 2005/06/25 17:50:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -39,7 +40,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.35 $, $Date: 2005/06/25 17:50:46 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -254,9 +255,10 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeId);
 		dependencies.remove(null);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.30 2005/06/24 14:13:38 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.31 2005/06/25 17:50:46 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/25 17:50:46 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -140,13 +141,14 @@ public abstract class AbstractSchemePort extends
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public final Set getDependencies() {
+	@Override
+	public final Set<Identifiable> getDependencies() {
 		assert this.portTypeId != null && this.portId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert this.portTypeId.isVoid() ^ this.portId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		assert this.measurementPortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert this.parentSchemeDeviceId != null && !this.parentSchemeDeviceId.isVoid(): ErrorMessages.OBJECT_NOT_INITIALIZED;
 
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.portTypeId);
 		dependencies.add(this.portId);
 		dependencies.add(this.measurementPortId);

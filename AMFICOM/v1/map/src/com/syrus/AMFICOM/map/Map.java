@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.53 2005/06/25 17:07:48 bass Exp $
+ * $Id: Map.java,v 1.54 2005/06/25 17:50:44 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.map.corba.IdlMap;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/06/25 17:07:48 $
+ * @version $Revision: 1.54 $, $Date: 2005/06/25 17:50:44 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -198,8 +199,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.collectors = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
+	@Override
+	public Set<Identifiable> getDependencies() {
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.siteNodes);
 		dependencies.addAll(this.topologicalNodes);
 		dependencies.addAll(this.nodeLinks);

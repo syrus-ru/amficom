@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.68 2005/06/25 17:07:41 bass Exp $
+ * $Id: Evaluation.java,v 1.69 2005/06/25 17:50:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/25 17:07:41 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/25 17:50:45 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -231,6 +231,7 @@ public final class Evaluation extends Action {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
+	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		

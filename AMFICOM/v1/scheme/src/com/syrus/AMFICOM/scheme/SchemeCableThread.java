@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.40 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.41 2005/06/25 17:50:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/25 17:50:46 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -223,12 +224,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Set getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.cableThreadTypeId != null && this.linkId != null
 				&& this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null
 				&& this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		final Set dependencies = new HashSet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.cableThreadTypeId);
 		dependencies.add(this.linkId);
 		dependencies.add(this.sourceSchemePortId);
