@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.7 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.8 2005/06/25 10:57:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/24 13:54:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/06/25 10:57:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
@@ -114,8 +114,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		if (storableObject == null) {
 			intervalsTemporalPattern = new IntervalsTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet,
 					StorableObjectWrapper.COLUMN_ID), null, 0L, null, null);
-		}
-		else {
+		} else {
 			intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		}
 
@@ -302,8 +301,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 					row.add(DURATION_ROW, duration);
 					updateMap.put(offset, row);
 				}
-			}
-			else {
+			} else {
 				final List<Object> row = new ArrayList<Object>(2);
 				row.add(TEMPORAL_PATTERN_ID_ROW, temporalPatternId);
 				row.add(DURATION_ROW, duration);

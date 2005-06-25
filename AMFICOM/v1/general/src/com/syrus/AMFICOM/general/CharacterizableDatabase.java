@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.24 2005/06/24 09:52:33 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.25 2005/06/25 10:57:48 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/24 09:52:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/25 10:57:48 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -135,8 +135,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		try {
 			final Set soCharacteristics = database.retrieveByCondition(sql);
 			dbCharacteristicIds.addAll(Identifier.createIdentifiers(soCharacteristics));
-		}
-		catch (ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			throw new UpdateObjectException("Cannot retrieve from database characteristics for " + this.getEntityName()
 					+ " '" + cdIdStr + "' -- " + ae.getMessage(), ae);
 		}
@@ -164,8 +163,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		try {
 			database.insert(insertCharacteristics);
-		}
-		catch (ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			throw new UpdateObjectException("Cannot insert characteristics for " + this.getEntityName()
 					+ " " + cdIdStr + " -- " + ae.getMessage(), ae);
 		}
@@ -183,8 +181,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		try {
 			final Set soCharacteristics = database.retrieveByCondition(sql);
 			dbCharacteristicIds.addAll(Identifier.createIdentifiers(soCharacteristics));
-		}
-		catch (ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			throw new UpdateObjectException(ae);
 		}
 
@@ -194,8 +191,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			try {
 				final Characterizable characterizable = this.fromStorableObject(storableObject);
 				characteristics.addAll(characterizable.getCharacteristics());
-			}
-			catch (IllegalDataException ide) {
+			} catch (final IllegalDataException ide) {
 				throw new UpdateObjectException(ide);
 			}
 		}
@@ -222,8 +218,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 		try {
 			database.insert(insertCharacteristics);
-		}
-		catch (ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			String mesg = "Cannot insert characteristics for multiple " + this.getEntityName() + " -- " + ae.getMessage();
 			throw new UpdateObjectException(mesg, ae);
 		}
