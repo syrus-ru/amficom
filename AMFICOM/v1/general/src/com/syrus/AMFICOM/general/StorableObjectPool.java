@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.112 2005/06/23 14:16:34 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.113 2005/06/25 16:39:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/06/23 14:16:34 $
+ * @version $Revision: 1.113 $, $Date: 2005/06/25 16:39:54 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -46,10 +46,10 @@ public abstract class StorableObjectPool {
 
 	protected Class cacheMapClass;
 
-	private Map savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Set <StorableObject> levelEntitySavingObjects > >
-	private Set savingObjectIds; // HashSet <Identifier>
+	private Map<Integer, Map<Short, Set<StorableObject>>> savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Set <StorableObject> levelEntitySavingObjects > >
+	private Set<Identifier> savingObjectIds; // HashSet <Identifier>
 
-	private Set deletedIds; // Set <Identifier>
+	private Set<Identifier> deletedIds; // Set <Identifier>
 
 	/**
 	 * A "group code" -- "pool" map to store initialized pools.
@@ -92,10 +92,10 @@ public abstract class StorableObjectPool {
 			this.cacheMapClass = LRUMap.class;
 		}
 
-		this.savingObjectsMap = Collections.synchronizedMap(new HashMap());
-		this.savingObjectIds = Collections.synchronizedSet(new HashSet());
+		this.savingObjectsMap = Collections.synchronizedMap(new HashMap<Integer, Map<Short, Set<StorableObject>>>());
+		this.savingObjectIds = Collections.synchronizedSet(new HashSet<Identifier>());
 
-		this.deletedIds = Collections.synchronizedSet(new HashSet());
+		this.deletedIds = Collections.synchronizedSet(new HashSet<Identifier>());
 	}
 
 	private static final void registerPool(final short groupCode, final StorableObjectPool pool) {
@@ -822,10 +822,10 @@ public abstract class StorableObjectPool {
 	 * @param entityCode
 	 */
 	private final void flushDeleted(final short entityCode) {
-		Set entityDeletedIds = new HashSet();
+		final Set<Identifier> entityDeletedIds = new HashSet<Identifier>();
 		synchronized (this.deletedIds) {
-			for (Iterator it = this.deletedIds.iterator(); it.hasNext();) {
-				final Identifier id = (Identifier) it.next();
+			for (final Iterator<Identifier> it = this.deletedIds.iterator(); it.hasNext();) {
+				final Identifier id = it.next();
 				if (id.getMajor() == entityCode) {
 					entityDeletedIds.add(id);
 					it.remove();
@@ -846,7 +846,7 @@ public abstract class StorableObjectPool {
 	 * Actually delete objects, scheduled for deletion
 	 */
 	private final void flushDeleted() {
-		for (Iterator it = this.deletedIds.iterator(); it.hasNext();)
+		for (Iterator<Identifier> it = this.deletedIds.iterator(); it.hasNext();)
 			Log.debugMessage("StorableObjectPool.flushDeleted | " + it.next(), Log.DEBUGLEVEL09);
 
 		final int size = this.deletedIds.size();
@@ -920,7 +920,7 @@ public abstract class StorableObjectPool {
 	 * @throws ApplicationException
 	 */
 	private void checkChangedWithDependenciesEntity(final short entityCode) throws ApplicationException {
-		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
+		final LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (objectPool != null) {
 			for (Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();)
 				this.checkChangedWithDependencies((StorableObject) poolIterator.next(), 0);
@@ -938,15 +938,15 @@ public abstract class StorableObjectPool {
 	 * @throws ApplicationException
 	 */
 	private void checkChangedWithDependencies(StorableObject storableObject, int dependencyLevel) throws ApplicationException {
-		Identifier id = storableObject.getId();
+		final Identifier id = storableObject.getId();
 		if (this.savingObjectIds.contains(id))
 			return;
 
 		this.savingObjectIds.add(id);
 
-		Set<? extends Identifiable> dependencies = storableObject.getDependencies();
+		final Set<Identifiable> dependencies = storableObject.getDependencies();
 		StorableObject dependencyObject = null;
-		for (Identifiable identifiable: dependencies) {
+		for (final Identifiable identifiable: dependencies) {
 			// if (object == null)
 			// continue;
 			if (identifiable instanceof Identifier)
@@ -965,16 +965,16 @@ public abstract class StorableObjectPool {
 			Log.debugMessage(this.selfGroupName
 					+ "StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",
 					Log.DEBUGLEVEL10);
-			Integer dependencyKey = new Integer(-dependencyLevel);
-			Map levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
+			final Integer dependencyKey = new Integer(-dependencyLevel);
+			Map<Short, Set<StorableObject>> levelSavingObjectsMap = this.savingObjectsMap.get(dependencyKey);
 			if (levelSavingObjectsMap == null) {
-				levelSavingObjectsMap = new HashMap();
+				levelSavingObjectsMap = new HashMap<Short, Set<StorableObject>>();
 				this.savingObjectsMap.put(dependencyKey, levelSavingObjectsMap);
 			}
-			Short entityKey = new Short(storableObject.getId().getMajor());
-			Set levelEntitySavingObjects = (Set) levelSavingObjectsMap.get(entityKey);
+			final Short entityKey = new Short(storableObject.getId().getMajor());
+			Set<StorableObject> levelEntitySavingObjects = levelSavingObjectsMap.get(entityKey);
 			if (levelEntitySavingObjects == null) {
-				levelEntitySavingObjects = new HashSet();
+				levelEntitySavingObjects = new HashSet<StorableObject>();
 				levelSavingObjectsMap.put(entityKey, levelEntitySavingObjects);
 			}
 			levelEntitySavingObjects.add(storableObject);
@@ -988,29 +988,21 @@ public abstract class StorableObjectPool {
 	 */
 	private void saveWithDependencies(final boolean force) throws ApplicationException {
 		/* Save objects in order from savingObjectsMap */
-		Integer dependencyKey;
-		Map levelSavingObjectsMap;
-		Set levelEntitySavingObjects;
-		for (Iterator levelIt = this.savingObjectsMap.keySet().iterator(); levelIt.hasNext();) {
-			dependencyKey = (Integer) levelIt.next();
-			levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
-
+		for (final Integer dependencyKey : this.savingObjectsMap.keySet()) {
+			final Map<Short, Set<StorableObject>> levelSavingObjectsMap = this.savingObjectsMap.get(dependencyKey);
 			if (levelSavingObjectsMap != null) {
-				for (Iterator entityIt = levelSavingObjectsMap.keySet().iterator(); entityIt.hasNext();) {
-					final Short entityCode = (Short) entityIt.next();
-					levelEntitySavingObjects = (Set) levelSavingObjectsMap.get(entityCode);
-
+				for (final Short entityCode : levelSavingObjectsMap.keySet()) {
+					final Set<StorableObject> levelEntitySavingObjects = levelSavingObjectsMap.get(entityCode);
 					if (levelEntitySavingObjects != null)
 						this.saveStorableObjects(levelEntitySavingObjects, force);
 					else
 						Log.errorMessage(this.selfGroupName
 								+ "StorableObjectPool.saveWithDependencies | Cannot find levelEntitySavingObjects for entity code " + entityCode
 								+ ", dependency level " + (-dependencyKey.intValue()));
-
 				}
-			} else
+			}
+			else
 				Log.errorMessage("Cannot find levelSavingMap for dependency level " + (-dependencyKey.intValue()));
-
 		}
 	}
 
@@ -1034,7 +1026,7 @@ public abstract class StorableObjectPool {
 		assert ObjectEntities.isEntityCodeValid(entityCode);
 
 		final int length = transferables.length;
-		final Set storableObjects = new HashSet(length);
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>(length);
 
 		for (int i = 0; i < length; i++) {
 			try {
@@ -1131,7 +1123,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.112 $, $Date: 2005/06/23 14:16:34 $
+	 * @version $Revision: 1.113 $, $Date: 2005/06/25 16:39:54 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
@@ -1156,7 +1148,7 @@ public abstract class StorableObjectPool {
 	 */
 	final void refreshImpl() throws ApplicationException {
 		Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | trying to refresh Pool...", Log.DEBUGLEVEL03);
-		final Set storableObjects = new HashSet();
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
 
 		for (final TShortObjectIterator entityCodeIterator = this.objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
@@ -1182,7 +1174,7 @@ public abstract class StorableObjectPool {
 					+ "StorableObjectPool.refreshImpl | try refresh LRUMap for '"
 					+ ObjectEntities.codeToString(entityCode) + "' entity", Log.DEBUGLEVEL08);
 
-			final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
+			final Set<Identifier> returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
 			if (returnedStorableObjectsIds.isEmpty())
 				continue;
 
@@ -1196,7 +1188,7 @@ public abstract class StorableObjectPool {
 	}
 
 	/*	Group specific method */
-	protected abstract Set refreshStorableObjects(final Set storableObjects) throws ApplicationException;
+	protected abstract Set<Identifier> refreshStorableObjects(final Set storableObjects) throws ApplicationException;
 
 
 	/*	Serialization */

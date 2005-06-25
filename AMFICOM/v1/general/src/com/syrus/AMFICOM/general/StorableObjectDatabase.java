@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.155 2005/06/24 09:52:33 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.156 2005/06/25 16:39:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.155 $, $Date: 2005/06/24 09:52:33 $
+ * @version $Revision: 1.156 $, $Date: 2005/06/25 16:39:54 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -70,7 +70,7 @@ public abstract class StorableObjectDatabase {
 	public static final String SQL_WHERE = " WHERE ";
 	public static final String SQL_FUNCTION_EMPTY_BLOB = " EMPTY_BLOB() ";
 
-	protected enum UpdateKind {UPDATE_TOTAL, UPDATE_FORCE, UPDATE_CHECK};
+	protected enum UpdateKind {UPDATE_TOTAL, UPDATE_FORCE, UPDATE_CHECK}
 
 	@Deprecated
 	public static final int MODE_INSERT = -10;
