@@ -46,6 +46,14 @@ module corba {
 
 		/* Transmit multiple objects*/
 
+		administration::corba::SystemUserSeq transmitSystemUsers(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
+		administration::corba::DomainSeq transmitDomains(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
 		administration::corba::ServerSeq transmitServers(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
