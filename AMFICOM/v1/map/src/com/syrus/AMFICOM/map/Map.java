@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.52 2005/06/24 10:41:46 bass Exp $
+ * $Id: Map.java,v 1.53 2005/06/25 17:07:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
+
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -47,7 +49,7 @@ import com.syrus.AMFICOM.map.corba.IdlMap;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.53 $, $Date: 2005/06/25 17:07:48 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -207,14 +209,19 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		return dependencies;
 	}
 
-	public IdlMap getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlMap getTransferable(final ORB orb) {
 		IdlIdentifier[] siteNodeIds = Identifier.createTransferables(this.siteNodes);
 		IdlIdentifier[] topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
 		IdlIdentifier[] nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
 		IdlIdentifier[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
 		IdlIdentifier[] markIds = Identifier.createTransferables(this.marks);
 		IdlIdentifier[] collectorIds = Identifier.createTransferables(this.collectors);
-		return new IdlMap(super.getHeaderTransferable(),
+		return new IdlMap(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

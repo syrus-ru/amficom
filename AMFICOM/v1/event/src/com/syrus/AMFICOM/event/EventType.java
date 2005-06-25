@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.32 2005/06/24 09:28:55 bass Exp $
+ * $Id: EventType.java,v 1.33 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.event.corba.AlertKind;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/24 09:28:55 $
+ * @version $Revision: 1.33 $, $Date: 2005/06/25 17:07:53 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -159,7 +160,12 @@ public final class EventType extends StorableObjectType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public IdlEventType getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlEventType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
@@ -179,7 +185,7 @@ public final class EventType extends StorableObjectType {
 		}
 
 		return new IdlEventType(
-				super.getHeaderTransferable(),
+				super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				parTypeIdsT,

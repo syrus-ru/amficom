@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.61 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.62 2005/06/25 17:07:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/22 20:11:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/06/25 17:07:55 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -143,10 +144,15 @@ public final class MonitoredElement extends DomainMember {
 		this.monitoredDomainMemberIds = Identifier.fromTransferables(met.monitoredDomainMemberIds);
 	}
 
-	public IdlMonitoredElement getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlMonitoredElement getTransferable(final ORB orb) {
 		final IdlIdentifier[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
 
-		return new IdlMonitoredElement(super.getHeaderTransferable(),
+		return new IdlMonitoredElement(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.measurementPortId.getTransferable(),

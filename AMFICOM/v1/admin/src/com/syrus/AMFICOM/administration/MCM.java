@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.36 2005/06/22 20:17:06 arseniy Exp $
+ * $Id: MCM.java,v 1.37 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/22 20:17:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -132,12 +133,13 @@ public final class MCM extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlMCM getTransferable() {
+	@Override
+	public IdlMCM getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlMCM(super.getHeaderTransferable(),
+		return new IdlMCM(super.getHeaderTransferable(orb),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

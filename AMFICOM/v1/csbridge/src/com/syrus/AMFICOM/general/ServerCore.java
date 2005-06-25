@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.21 2005/06/24 13:56:38 arseniy Exp $
+ * $Id: ServerCore.java,v 1.22 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.StorableObjectDatabase.UpdateKind;
@@ -30,14 +31,20 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/06/24 13:56:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/06/25 17:07:53 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
 public abstract class ServerCore implements CommonServer {
 	private static final long serialVersionUID = 2873567194611284256L;
+
+	private ORB orb;
+
+	protected ServerCore(final ORB orb) {
+		this.orb = orb;
+	}
 
 	/**
 	 * @param sessionKeyT an "in" parameter.
@@ -144,7 +151,7 @@ public abstract class ServerCore implements CommonServer {
 			final IDLEntity[] transferables = new IDLEntity[storableObjects.size()];
 			int i = 0;
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++)
-				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable();
+				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable(this.orb);
 			return transferables;
 		}
 		catch (final ApplicationException ae) {
@@ -187,7 +194,7 @@ public abstract class ServerCore implements CommonServer {
 			final IDLEntity[] transferables = new IDLEntity[storableObjects.size()];
 			int i = 0;
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++)
-				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable();
+				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable(this.orb);
 			return transferables;
 		}
 		catch (final ApplicationException ae) {
@@ -224,7 +231,7 @@ public abstract class ServerCore implements CommonServer {
 			database.update(storableObjects,
 					new Identifier(userIdH.value),
 					force ? UpdateKind.UPDATE_FORCE : UpdateKind.UPDATE_CHECK);
-			return StorableObject.createHeadersTransferable(storableObjects);
+			return StorableObject.createHeadersTransferable(this.orb, storableObjects);
 		}
 		catch (final VersionCollisionException vce) {
 			throw this.processDefaultApplicationException(vce, ErrorCode.ERROR_VERSION_COLLISION);

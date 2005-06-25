@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.45 2005/06/24 10:41:46 bass Exp $
+ * $Id: Mark.java,v 1.46 2005/06/25 17:07:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -40,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.IdlMark;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.46 $, $Date: 2005/06/25 17:07:48 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -210,10 +212,15 @@ public final class Mark extends AbstractNode {
 		return Collections.singleton(this.physicalLink);
 	}
 
-	public IdlMark getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlMark getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlMark(super.getHeaderTransferable(),
+		return new IdlMark(super.getHeaderTransferable(orb),
 				this.name,
 				this.description,
 				this.location.getX(),

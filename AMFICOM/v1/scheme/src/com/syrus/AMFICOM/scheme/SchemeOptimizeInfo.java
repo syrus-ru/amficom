@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.33 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.34 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -371,11 +372,13 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemeOptimizeInfo getTransferable() {
+	@Override
+	public IdlSchemeOptimizeInfo getTransferable(final ORB orb) {
 		return new IdlSchemeOptimizeInfo(
-				super.getHeaderTransferable(), this.name,
+				super.getHeaderTransferable(orb), this.name,
 				this.description, this.optimizationMode,
 				this.iterations, this.price, this.waveLength,
 				this.lenMargin, this.mutationRate,

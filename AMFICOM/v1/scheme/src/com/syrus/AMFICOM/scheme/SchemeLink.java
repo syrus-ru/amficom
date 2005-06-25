@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.38 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemeLink.java,v 1.39 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.AbstractLink;
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -514,11 +515,13 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemeLink getTransferable() {
+	@Override
+	public IdlSchemeLink getTransferable(final ORB orb) {
 		return new IdlSchemeLink(
-				super.getHeaderTransferable(), super.getName(),
+				super.getHeaderTransferable(orb), super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),

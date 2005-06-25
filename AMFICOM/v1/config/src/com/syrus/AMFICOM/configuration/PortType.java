@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.63 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: PortType.java,v 1.64 2005/06/25 17:07:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlPortType;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/22 20:11:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/06/25 17:07:54 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -139,10 +140,15 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IdlPortType getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlPortType getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlPortType(super.getHeaderTransferable(),
+		return new IdlPortType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

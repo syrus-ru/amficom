@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSchemeReceive.java,v 1.4 2005/06/24 14:13:39 bass Exp $
+ * $Id: MscharServerSchemeReceive.java,v 1.5 2005/06/25 17:07:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.mscharserver;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -33,11 +35,15 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/24 14:13:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/25 17:07:50 $
  * @module mscharserver_v1
  */
 abstract class MscharServerSchemeReceive extends MscharServerMapReceive {
 	private static final long serialVersionUID = 1127393868558975178L;
+
+	MscharServerSchemeReceive(final ORB orb) {
+		super(orb);
+	}
 
 	public final IdlStorableObject[] receiveSchemeProtoGroups(
 			final IdlSchemeProtoGroup transferables[],

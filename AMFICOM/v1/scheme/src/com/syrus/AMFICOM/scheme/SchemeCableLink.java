@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.40 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.41 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.AbstractLink;
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -255,11 +256,13 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemeCableLink getTransferable() {
+	@Override
+	public IdlSchemeCableLink getTransferable(final ORB orb) {
 		return new IdlSchemeCableLink(
-				super.getHeaderTransferable(), super.getName(),
+				super.getHeaderTransferable(orb), super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.39 2005/06/22 20:17:06 arseniy Exp $
+ * $Id: Server.java,v 1.40 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlServer;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/22 20:17:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/06/25 17:07:53 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -123,12 +124,13 @@ public final class Server extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlServer getTransferable() {
+	@Override
+	public IdlServer getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlServer(super.getHeaderTransferable(),
+		return new IdlServer(super.getHeaderTransferable(orb),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

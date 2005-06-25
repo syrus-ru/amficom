@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.11 2005/06/22 10:24:25 bob Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.12 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/22 10:24:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/06/25 17:07:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper {
@@ -56,6 +56,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

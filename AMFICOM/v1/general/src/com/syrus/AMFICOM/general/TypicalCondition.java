@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.24 2005/06/21 12:43:48 bass Exp $
+ * $Id: TypicalCondition.java,v 1.25 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalCondition;
@@ -120,7 +122,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.24 $, $Date: 2005/06/21 12:43:48 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/25 17:07:46 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -906,6 +908,14 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	public final void setKey(final String key) {
 		this.delegate.key = key;
+	}
+
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	public final IdlStorableObjectCondition getTransferable(final ORB orb) {
+		return this.getTransferable();
 	}
 
 	public final IdlStorableObjectCondition getTransferable() {

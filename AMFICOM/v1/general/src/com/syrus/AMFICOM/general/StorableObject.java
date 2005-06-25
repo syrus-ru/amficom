@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.72 2005/06/21 15:10:05 bass Exp $
+ * $Id: StorableObject.java,v 1.73 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
@@ -29,7 +30,7 @@ import org.omg.CORBA.portable.IDLEntity;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/06/21 15:10:05 $
+ * @version $Revision: 1.73 $, $Date: 2005/06/25 17:07:46 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -151,7 +152,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlStorableObject getHeaderTransferable() {
+	public IdlStorableObject getHeaderTransferable(@SuppressWarnings("unusedArgument") final ORB orb) {
 		return new IdlStorableObject(this.id.getTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
@@ -159,6 +160,12 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 				this.modifierId.getTransferable(),
 				this.version);
 	}
+
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	public abstract IDLEntity getTransferable(final ORB orb);
 
 	/**
 	 * @see Identifiable#getId()
@@ -328,14 +335,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return clone;
 	}
 
-	public static final IdlStorableObject[] createHeadersTransferable(final Collection<? extends StorableObject> storableObjects) {
+	public static final IdlStorableObject[] createHeadersTransferable(final ORB orb, final Collection<? extends StorableObject> storableObjects) {
 		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		IdlStorableObject[] headersT = new IdlStorableObject[storableObjects.size()];
 		int i = 0;
 		for (Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();i ++) {
 			final StorableObject storableObject = it.next();
-			headersT[i] = storableObject.getHeaderTransferable();
+			headersT[i] = storableObject.getHeaderTransferable(orb);
 		}
 
 		return headersT;

@@ -1,5 +1,5 @@
 /*-
- * $Id: CMAdministrationReceive.java,v 1.18 2005/06/21 14:13:37 bass Exp $
+ * $Id: CMAdministrationReceive.java,v 1.19 2005/06/25 17:07:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.cmserver;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
@@ -19,12 +21,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/21 14:13:37 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/25 17:07:50 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	private static final long serialVersionUID = 1181253000011968750L;
+
+	CMAdministrationReceive(final ORB orb) {
+		super(orb);
+	}
 
 	public final IdlStorableObject[] receiveSystemUsers(
 			final IdlSystemUser transferables[],

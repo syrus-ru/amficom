@@ -1,5 +1,5 @@
 /*-
- * $Id: TransferableObject.java,v 1.7 2005/04/04 13:07:03 bass Exp $
+ * $Id: TransferableObject.java,v 1.8 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.general;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/04 13:07:03 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:46 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -33,5 +34,5 @@ public interface TransferableObject {
 	String OPEN_BLOCK			= " { \n";
 	String CLOSE_BLOCK		= "\n}" + EOSL;
 
-	IDLEntity getTransferable();
+	IDLEntity getTransferable(final ORB orb);
 }

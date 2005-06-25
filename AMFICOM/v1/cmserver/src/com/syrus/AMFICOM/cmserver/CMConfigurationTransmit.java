@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.33 2005/06/22 10:05:18 bass Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.34 2005/06/25 17:07:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.cmserver;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/22 10:05:18 $
+ * @version $Revision: 1.34 $, $Date: 2005/06/25 17:07:49 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -39,6 +40,9 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 
 	private static final long serialVersionUID = 3378072469571119667L;
 
+	CMConfigurationTransmit(final ORB orb) {
+		super(orb);
+	}
 
 	/* Transmit multiple objects*/
 

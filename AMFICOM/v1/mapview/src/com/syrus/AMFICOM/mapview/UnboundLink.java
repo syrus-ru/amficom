@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.20 2005/06/24 10:41:47 bass Exp $
+ * $Id: UnboundLink.java,v 1.21 2005/06/25 17:07:45 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,8 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,7 +31,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/06/24 10:41:47 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/25 17:07:45 $
  * @module mapviewclient_v1
  */
 public final class UnboundLink extends PhysicalLink {
@@ -145,7 +147,7 @@ public final class UnboundLink extends PhysicalLink {
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public IdlPhysicalLink getTransferable() {
+	public IdlPhysicalLink getTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 }

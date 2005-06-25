@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.68 2005/06/24 10:41:46 bass Exp $
+ * $Id: PhysicalLink.java,v 1.69 2005/06/25 17:07:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
+
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -57,7 +59,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.69 $, $Date: 2005/06/25 17:07:48 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -282,11 +284,16 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		return Collections.singleton(this.physicalLinkType);
 	}
 
-	public IdlPhysicalLink getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlPhysicalLink getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
 
-		return new IdlPhysicalLink(super.getHeaderTransferable(),
+		return new IdlPhysicalLink(super.getHeaderTransferable(orb),
 				this.name,
 				this.description,
 				this.physicalLinkType.getId().getTransferable(),

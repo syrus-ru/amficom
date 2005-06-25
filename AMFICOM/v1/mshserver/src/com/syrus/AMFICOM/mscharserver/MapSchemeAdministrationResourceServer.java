@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.6 2005/06/17 21:02:44 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.7 2005/06/25 17:07:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 21:02:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/06/25 17:07:50 $
+ * @author $Author: bass $
  * @module mscharserver_v1
  */
 public class MapSchemeAdministrationResourceServer {
@@ -160,7 +160,7 @@ public class MapSchemeAdministrationResourceServer {
 			 */
 			final CORBAServer corbaServer = sessionEnvironment.getMscharServerServantManager().getCORBAServer();
 			corbaServer.activateServant(
-					new MscharServerPOATie(new MscharServerImpl(), corbaServer.getPoa()),
+					new MscharServerPOATie(new MscharServerImpl(corbaServer.getOrb()), corbaServer.getPoa()),
 					processCodename);
 			corbaServer.printNamingContext();
 		} catch (final Exception e) {

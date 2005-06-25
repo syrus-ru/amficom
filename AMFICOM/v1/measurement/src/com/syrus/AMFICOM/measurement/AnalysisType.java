@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.79 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.80 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/06/24 13:54:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -190,7 +191,8 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlAnalysisType getTransferable() {
+	@Override
+	public IdlAnalysisType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
@@ -199,7 +201,7 @@ public final class AnalysisType extends ActionType {
 		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 		final IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
-		return new IdlAnalysisType(super.getHeaderTransferable(),
+		return new IdlAnalysisType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

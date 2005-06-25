@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.39 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.40 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -326,11 +327,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemeCableThread getTransferable() {
+	@Override
+	public IdlSchemeCableThread getTransferable(final ORB orb) {
 		return new IdlSchemeCableThread(
-				super.getHeaderTransferable(), this.name,
+				super.getHeaderTransferable(orb), this.name,
 				this.description,
 				this.cableThreadTypeId.getTransferable(),
 				this.linkId.getTransferable(),

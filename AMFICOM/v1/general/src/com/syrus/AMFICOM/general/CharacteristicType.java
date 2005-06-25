@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.38 2005/06/22 20:17:10 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.39 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
@@ -20,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/22 20:17:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/06/25 17:07:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -135,9 +136,10 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlCharacteristicType getTransferable() {
+	@Override
+	public IdlCharacteristicType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL + ", id: '" + this.id + "'";
-		return new IdlCharacteristicType(super.getHeaderTransferable(),
+		return new IdlCharacteristicType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,

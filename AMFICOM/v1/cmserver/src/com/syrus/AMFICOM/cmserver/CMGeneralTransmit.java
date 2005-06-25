@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.31 2005/06/21 12:44:32 bass Exp $
+ * $Id: CMGeneralTransmit.java,v 1.32 2005/06/25 17:07:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.cmserver;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -19,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/21 12:44:32 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/25 17:07:49 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -27,6 +28,9 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 
 	private static final long serialVersionUID = 3185564489691408823L;
 
+	CMGeneralTransmit(final ORB orb) {
+		super(orb);
+	}
 
 	/* Transmit multiple objects*/
 

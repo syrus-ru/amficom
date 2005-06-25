@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.14 2005/06/24 09:40:48 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.15 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/06/24 09:40:48 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:52 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -73,22 +75,25 @@ public abstract class AbstractImageResource extends StorableObject {
 		}
 	}
 
+	@Override
 	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
 		IdlImageResource irt = (IdlImageResource) transferable;
 		super.fromTransferable(irt.header);
 	}
 
-	public Set getDependencies() {
-		return Collections.EMPTY_SET;
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 
 	public abstract byte[] getImage();	
 
-	ImageResourceSort getSort() {
-		if (this instanceof BitmapImageResource)
-			return ImageResourceSort.BITMAP;
-		else if (this instanceof FileImageResource)
-			return ImageResourceSort.FILE;
-		return ImageResourceSort.SCHEME;
-	}
+	abstract ImageResourceSort getSort();
+
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public abstract IdlImageResource getTransferable(final ORB orb);
 }

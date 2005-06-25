@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.59 2005/06/23 18:45:10 bass Exp $
+ * $Id: MeasurementServer.java,v 1.60 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.Server;
@@ -50,7 +52,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/23 18:45:10 $
+ * @version $Revision: 1.60 $, $Date: 2005/06/25 17:07:52 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -115,30 +117,34 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static Set<Identifier> mcmIdsToAbortTests;	
 
 
-	public MeasurementServer() {
+	private ORB orb;
+
+	public MeasurementServer(final ORB orb) {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		this.running = true;
+		this.orb = orb;
 	}
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
 
 		/*	All preparations on startup*/
-		startup();
+		final ORB orb = startup();
 
 		/*	Start main loop	*/
-		final MeasurementServer measurementServer = new MeasurementServer();
+		final MeasurementServer measurementServer = new MeasurementServer(orb);
 		measurementServer.start();
 
 		/*	Add shutdown hook	*/
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				measurementServer.shutdown();
 			}
 		});
 	}
 
-	private static void startup() {
+	private static ORB startup() {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -186,12 +192,15 @@ public class MeasurementServer extends SleepButWorkThread {
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new MServerPOATie(new MServerImplementation(), corbaServer.getPoa()), processCodename);
+			final ORB orb = corbaServer.getOrb();
+			corbaServer.activateServant(new MServerPOATie(new MServerImplementation(orb), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
+			return orb;
 		}
 		catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(0);
+			return null;
 		}
 	}
 
@@ -209,6 +218,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 	}
 
+	@Override
 	public void run() {
 		MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
 		Identifier mcmId;
@@ -239,7 +249,7 @@ public class MeasurementServer extends SleepButWorkThread {
 							continue;
 						}
 
-						testsT = createTransferables(testQueue);
+						testsT = createTransferables(this.orb, testQueue);
 						try {
 							Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 							mcmRef.receiveTests(testsT);
@@ -320,7 +330,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 	}
 
-	private static IdlTest[] createTransferables(Set testQueue) {
+	private static IdlTest[] createTransferables(final ORB orb, final Set testQueue) {
 		assert !testQueue.isEmpty() : "Test queue is NULL";
 
 		IdlTest[] testsT = new IdlTest[testQueue.size()];
@@ -329,7 +339,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		synchronized (testQueue) {
 			for (Iterator it = testQueue.iterator(); it.hasNext(); i++) {
 				test = (Test) it.next();
-				testsT[i] = test.getTransferable();
+				testsT[i] = test.getTransferable(orb);
 			}
 		}
 
@@ -355,6 +365,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		
 	}
 
+	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:

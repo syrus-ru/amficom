@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.14 2005/06/22 10:24:25 bob Exp $
+ * $Id: CharacteristicWrapper.java,v 1.15 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/22 10:24:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class CharacteristicWrapper extends StorableObjectWrapper {
@@ -57,6 +57,7 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

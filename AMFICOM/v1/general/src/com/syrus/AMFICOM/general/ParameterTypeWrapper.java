@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.9 2005/06/22 10:24:26 bob Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.10 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:24:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/06/25 17:07:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class ParameterTypeWrapper extends StorableObjectWrapper {
@@ -59,6 +59,7 @@ public class ParameterTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		return String.class;
 	}

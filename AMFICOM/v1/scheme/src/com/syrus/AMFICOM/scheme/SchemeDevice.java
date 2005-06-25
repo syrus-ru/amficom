@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.37 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemeDevice.java,v 1.38 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -404,11 +405,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemeDevice getTransferable() {
+	@Override
+	public IdlSchemeDevice getTransferable(final ORB orb) {
 		return new IdlSchemeDevice(
-				super.getHeaderTransferable(), this.name,
+				super.getHeaderTransferable(orb), this.name,
 				this.description,
 				this.parentSchemeProtoElementId.getTransferable(),
 				this.parentSchemeElementId.getTransferable(),

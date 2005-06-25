@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.106 2005/06/23 18:45:06 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.107 2005/06/25 17:07:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
@@ -40,7 +42,6 @@ import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -57,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/06/23 18:45:06 $
+ * @version $Revision: 1.107 $, $Date: 2005/06/25 17:07:51 $
  * @author $Author: bass $
  * @module mcm_v1
  */
@@ -151,10 +152,13 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	/*	Variables for method processFall()	(remove results, ...)*/
 	private List resultsToRemove;
 
-	MeasurementControlModule() {
+	private ORB orb;
+
+	MeasurementControlModule(final ORB orb) {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING)*1000;
 		this.running = true;
+		this.orb = orb;
 	}
 
 	public static void main(String[] args) {
@@ -173,21 +177,22 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		/*	All preparations on startup*/
-		startup();
+		final ORB orb = startup();
 
 		/*	Start main loop	*/
-		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
+		final MeasurementControlModule measurementControlModule = new MeasurementControlModule(orb);
 		measurementControlModule.start();
 
 		/*	Add shutdown hook	*/
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				measurementControlModule.shutdown();
 			}
 		});
 	}
 
-	private static void startup() {
+	private static ORB startup() {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -233,12 +238,15 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
-			corbaServer.activateServant(new MCMImplementation(), mcmId.toString());
+			final ORB orb = corbaServer.getOrb();
+			corbaServer.activateServant(new MCMImplementation(orb), mcmId.toString());
 			corbaServer.printNamingContext();
+			return orb;
 		}
 		catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(0);
+			return null;
 		}
 	}
 
@@ -343,6 +351,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		resultList = Collections.synchronizedList(new ArrayList<Result>());
 	}
 
+	@Override
 	public void run() {
 		Test test;
 		Identifier testId;
@@ -364,7 +373,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			
 			if (!resultList.isEmpty()) {
 				try {
-					resultsT = createTransferables();
+					resultsT = createTransferables(this.orb);
 					mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 					mServerRef.receiveResults(resultsT,
 							mcmId.getTransferable(),
@@ -408,12 +417,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}//while
 	}
 
-	private static IdlResult[] createTransferables() {
+	private static IdlResult[] createTransferables(final ORB orb) {
 		IdlResult[] resultsT = new IdlResult[resultList.size()];
 		int i = 0;
 		synchronized (resultList) {
 			for (Iterator<Result> it = resultList.iterator(); it.hasNext();)
-				resultsT[i++] = it.next().getTransferable();
+				resultsT[i++] = it.next().getTransferable(orb);
 		}
 	
 		return resultsT;

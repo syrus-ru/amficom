@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.24 2005/06/23 11:58:03 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.25 2005/06/25 17:07:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@ package com.syrus.AMFICOM.leserver;
 
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
@@ -40,8 +42,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/23 11:58:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/06/25 17:07:42 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -51,10 +53,13 @@ final class LoginServerImplementation extends LoginServerPOA {
 	private UserLoginDatabase userLoginDatabase;
 	private ShadowDatabase shadowDatabase;
 
-	protected LoginServerImplementation() {
+	private ORB orb;
+
+	protected LoginServerImplementation(final ORB orb) {
 		this.tc = new TypicalCondition("", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
 		this.userLoginDatabase = new UserLoginDatabase();
 		this.shadowDatabase = new ShadowDatabase();
+		this.orb = orb;
 	}
 
 	public IdlSessionKey login(String login, String password, IdlIdentifierHolder userIdTH)
@@ -134,7 +139,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			IdlDomain[] domainsT = new IdlDomain[domains.size()];
 			int i = 0;
 			for (Iterator it = domains.iterator(); it.hasNext(); i++)
-				domainsT[i] = ((Domain) it.next()).getTransferable();
+				domainsT[i] = ((Domain) it.next()).getTransferable(this.orb);
 			return domainsT;
 		}
 		catch (ApplicationException ae) {

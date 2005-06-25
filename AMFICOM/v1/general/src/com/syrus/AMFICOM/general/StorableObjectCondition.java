@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.14 2005/06/20 14:33:55 arseniy Exp $
+ * $Id: StorableObjectCondition.java,v 1.15 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,14 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
+
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
+
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/20 14:33:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public interface StorableObjectCondition extends TransferableObject {
@@ -32,4 +36,12 @@ public interface StorableObjectCondition extends TransferableObject {
 	Short getEntityCode();
 	
 	void setEntityCode(final Short entityCode) throws IllegalObjectEntityException;
+
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	IdlStorableObjectCondition getTransferable(final ORB orb);
+
+	IdlStorableObjectCondition getTransferable();
 }

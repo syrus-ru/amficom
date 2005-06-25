@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.89 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: KIS.java,v 1.90 2005/06/25 17:07:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/06/22 20:11:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.90 $, $Date: 2005/06/25 17:07:55 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -167,10 +168,15 @@ public final class KIS extends DomainMember implements Characterizable {
 
 	}
 
-	public IdlKIS getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlKIS getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlKIS(super.getHeaderTransferable(),
+		return new IdlKIS(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.7 2005/06/24 09:40:48 bass Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.8 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,17 @@
 
 package com.syrus.AMFICOM.resource;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import java.util.Date;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/24 09:40:48 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:52 $
  * @module resource_v1
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
@@ -38,6 +42,6 @@ public abstract class AbstractBitmapImageResource extends AbstractImageResource 
 	}
 
 	public abstract String getCodename();
-	
-	public abstract void setCodename(String codename);
+
+	public abstract void setCodename(final String codename);
 }

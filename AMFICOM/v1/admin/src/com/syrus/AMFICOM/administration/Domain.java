@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.41 2005/06/22 20:17:06 arseniy Exp $
+ * $Id: Domain.java,v 1.42 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/06/22 20:17:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:53 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
@@ -119,9 +120,10 @@ public final class Domain extends DomainMember implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlDomain getTransferable() {
+	@Override
+	public IdlDomain getTransferable(final ORB orb) {
 		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return new IdlDomain(super.getHeaderTransferable(),
+		return new IdlDomain(super.getHeaderTransferable(orb),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

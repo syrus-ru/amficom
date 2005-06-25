@@ -1,5 +1,5 @@
 /*-
- * $Id: CMGeneralReceive.java,v 1.25 2005/06/21 12:44:31 bass Exp $
+ * $Id: CMGeneralReceive.java,v 1.26 2005/06/25 17:07:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.cmserver;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -19,12 +21,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/21 12:44:31 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/25 17:07:49 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMGeneralReceive extends ServerCore implements CMServerOperations {
-	private static final long serialVersionUID = 4217287655251415892L;	
+	private static final long serialVersionUID = 4217287655251415892L;
+
+	CMGeneralReceive(final ORB orb) {
+		super(orb);
+	}
 
 	public final IdlStorableObject[] receiveParameterTypes(
 			final IdlParameterType transferables[],

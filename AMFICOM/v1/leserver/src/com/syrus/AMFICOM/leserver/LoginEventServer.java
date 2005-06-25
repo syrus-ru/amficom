@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.19 2005/06/17 11:01:15 bass Exp $
+ * $Id: LoginEventServer.java,v 1.20 2005/06/25 17:07:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/17 11:01:15 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/25 17:07:42 $
  * @author $Author: bass $
  * @module leserver_v1
  */
@@ -113,7 +113,7 @@ public final class LoginEventServer {
 	
 			/*	Activate servants*/
 			final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new LoginServerImplementation(), loginProcessCodename);
+			corbaServer.activateServant(new LoginServerImplementation(corbaServer.getOrb()), loginProcessCodename);
 			corbaServer.activateServant(new EventServerImplementation(), eventProcessCodename);
 			corbaServer.printNamingContext();
 		}

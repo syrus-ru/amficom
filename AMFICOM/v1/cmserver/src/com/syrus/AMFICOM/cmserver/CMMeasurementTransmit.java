@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.39 2005/06/23 18:45:06 bass Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.40 2005/06/25 17:07:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.cmserver;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/23 18:45:06 $
+ * @version $Revision: 1.40 $, $Date: 2005/06/25 17:07:49 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
@@ -39,6 +40,9 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
 	private static final long serialVersionUID = 7239422140270778290L;
 
+	CMMeasurementTransmit(final ORB orb) {
+		super(orb);
+	}
 
 	/* Transmit multiple objects*/
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.79 2005/06/24 14:09:43 arseniy Exp $
+ * $Id: Measurement.java,v 1.80 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/06/24 14:09:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -143,11 +144,12 @@ public final class Measurement extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlMeasurement getTransferable() {
+	@Override
+	public IdlMeasurement getTransferable(final ORB orb) {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new IdlMeasurement(super.getHeaderTransferable(),
+		return new IdlMeasurement(super.getHeaderTransferable(orb),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				this.name,

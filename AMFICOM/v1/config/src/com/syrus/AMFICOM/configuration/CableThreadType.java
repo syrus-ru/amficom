@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.44 2005/06/22 20:11:25 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.45 2005/06/25 17:07:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.44 $, $Date: 2005/06/22 20:11:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/06/25 17:07:54 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -147,8 +148,13 @@ public final class CableThreadType extends StorableObjectType implements Namable
 				true);
 	}
 
-	public IdlCableThreadType getTransferable() {
-		return new IdlCableThreadType(super.getHeaderTransferable(),
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlCableThreadType getTransferable(final ORB orb) {
+		return new IdlCableThreadType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

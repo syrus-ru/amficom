@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.58 2005/06/24 09:59:32 arseniy Exp $
+ * $Id: LinkType.java,v 1.59 2005/06/25 17:07:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/24 09:59:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/06/25 17:07:54 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -161,10 +162,15 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IdlLinkType getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlLinkType getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlLinkType(super.getHeaderTransferable(),
+		return new IdlLinkType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

@@ -1,5 +1,5 @@
 /*-
- * $Id: CMConfigurationReceive.java,v 1.28 2005/06/22 10:05:18 bass Exp $
+ * $Id: CMConfigurationReceive.java,v 1.29 2005/06/25 17:07:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.cmserver;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
@@ -29,12 +31,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/22 10:05:18 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/25 17:07:50 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	private static final long serialVersionUID = 5462858483804681509L;
+
+	CMConfigurationReceive(final ORB orb) {
+		super(orb);
+	}
 
 	public final IdlStorableObject[] receiveEquipmentTypes(
 			final IdlEquipmentType transferables[],

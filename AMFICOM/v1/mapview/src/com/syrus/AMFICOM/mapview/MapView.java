@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.38 2005/06/24 10:41:47 bass Exp $
+* $Id: MapView.java,v 1.39 2005/06/25 17:07:44 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -55,7 +56,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/06/24 10:41:47 $
+ * @version $Revision: 1.39 $, $Date: 2005/06/25 17:07:44 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -211,13 +212,18 @@ public final class MapView extends DomainMember implements Namable {
 		return dependencies;
 	}
 
-	public IdlMapView getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlMapView getTransferable(final ORB orb) {
 		int i = 0;
 		IdlIdentifier[] schemeIdsTransferable = new IdlIdentifier[this.schemes.size()];
 		for (Iterator<Scheme> iterator = this.schemes.iterator(); iterator.hasNext();)
 			schemeIdsTransferable[i++] = iterator.next().getId().getTransferable();		
 
-		return new IdlMapView(super.getHeaderTransferable(),
+		return new IdlMapView(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

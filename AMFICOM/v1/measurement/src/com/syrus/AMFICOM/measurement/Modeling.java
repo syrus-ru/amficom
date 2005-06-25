@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.50 2005/06/24 14:09:43 arseniy Exp $
+ * $Id: Modeling.java,v 1.51 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/06/24 14:09:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
  */
@@ -117,10 +118,11 @@ public final class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlModeling getTransferable() {
+	@Override
+	public IdlModeling getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new IdlModeling(super.getHeaderTransferable(),
+		return new IdlModeling(super.getHeaderTransferable(orb),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				this.name,

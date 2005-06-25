@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.14 2005/06/23 18:45:08 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.15 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:08 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:41 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -926,8 +927,13 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	}
 	
-	public IdlCronTemporalPattern getTransferable() {
-		return new IdlCronTemporalPattern(super.getHeaderTransferable(), this.description, getCronStrings());
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlCronTemporalPattern getTransferable(final ORB orb) {
+		return new IdlCronTemporalPattern(super.getHeaderTransferable(orb), this.description, getCronStrings());
 	}
 
 	protected synchronized void setAttributes(	final Date created,

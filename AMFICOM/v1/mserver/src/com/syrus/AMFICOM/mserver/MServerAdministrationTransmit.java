@@ -1,5 +1,5 @@
 /*
- * $Id: MServerAdministrationTransmit.java,v 1.9 2005/06/25 15:12:18 arseniy Exp $
+ * $Id: MServerAdministrationTransmit.java,v 1.10 2005/06/25 17:07:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.mserver;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
@@ -18,13 +19,17 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/25 15:12:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/06/25 17:07:51 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerAdministrationTransmit extends MServerGeneralTransmit {
 
 	private static final long serialVersionUID = 76258492809647849L;
+
+	MServerAdministrationTransmit(final ORB orb) {
+		super(orb);
+	}
 
 	/* Transmit multiple objects*/
 

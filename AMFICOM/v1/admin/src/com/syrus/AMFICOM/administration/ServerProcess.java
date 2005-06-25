@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.16 2005/06/22 20:17:06 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.17 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/22 20:17:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/06/25 17:07:53 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public final class ServerProcess extends StorableObject {
@@ -121,10 +122,11 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlServerProcess getTransferable() {
+	@Override
+	public IdlServerProcess getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new IdlServerProcess(super.getHeaderTransferable(),
+		return new IdlServerProcess(super.getHeaderTransferable(orb),
 				this.codename,
 				this.serverId.getTransferable(),
 				this.userId.getTransferable(),

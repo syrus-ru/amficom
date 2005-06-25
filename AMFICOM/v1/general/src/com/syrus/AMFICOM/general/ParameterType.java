@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.38 2005/06/22 20:17:10 arseniy Exp $
+ * $Id: ParameterType.java,v 1.39 2005/06/25 17:07:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.DataType;
@@ -21,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/22 20:17:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/06/25 17:07:47 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -156,12 +157,13 @@ public final class ParameterType extends StorableObjectType implements Character
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlParameterType getTransferable() {
+	@Override
+	public IdlParameterType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlParameterType(super.getHeaderTransferable(),
+		return new IdlParameterType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,

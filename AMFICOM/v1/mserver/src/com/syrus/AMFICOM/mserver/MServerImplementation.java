@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.63 2005/06/21 12:44:29 bass Exp $
+ * $Id: MServerImplementation.java,v 1.64 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.mserver;
 
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -24,13 +26,17 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/21 12:44:29 $
+ * @version $Revision: 1.64 $, $Date: 2005/06/25 17:07:52 $
  * @author $Author: bass $
  * @module mserver_v1
  */
 public class MServerImplementation extends MServerMeasurementTransmit {
 
 	private static final long serialVersionUID = 395371850379497709L;
+
+	MServerImplementation(final ORB orb) {
+		super(orb);
+	}
 
 	protected void validateAccess(final IdlSessionKey sessionKeyT,
 			final IdlIdentifierHolder userId,

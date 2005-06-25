@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.23 2005/06/24 09:40:48 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.24 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -35,13 +37,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/06/24 09:40:48 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/25 17:07:52 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
 	private static final long serialVersionUID = -5633433107083921318L;
 
-	private List data;
+	private List<Object> data;
 
 	SchemeImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -73,7 +75,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 			creatorId,
 			creatorId,
 			version);
-		this.data = new ArrayList(3);
+		this.data = new ArrayList<Object>(3);
 	}
 
 	/**
@@ -108,21 +110,27 @@ public final class SchemeImageResource extends AbstractImageResource {
 	/**
 	 * @see AbstractImageResource#getImage()
 	 */
+	@Override
 	public byte[] getImage() {
 		return this.safePack(this.data);
 	}
 
-	public IdlImageResource getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlImageResource getTransferable(final ORB orb) {
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, safePack(this.data));
-		return new IdlImageResource(getHeaderTransferable(), imageResourceData);
+		return new IdlImageResource(getHeaderTransferable(orb), imageResourceData);
 	}
 
 	/**
 	 * Client-side modifier for {@link #data} property, which increments
 	 * entity version on every modification.
 	 */
-	public void setData(final List data) {
+	public void setData(final List<Object> data) {
 		setData0(data);
 		super.markAsChanged();
 	}
@@ -146,7 +154,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * Server-side modifier for {@link #data} property, which doesn't honor
 	 * version information.
 	 */
-	protected void setData0(final List data) {
+	protected void setData0(final List<Object> data) {
 		this.data.clear();
 		if (data != null)
 			this.data.addAll(data);
@@ -192,7 +200,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	/**
 	 * @todo Add error-handling mechanism.
 	 */
-	private List safeUnpack(final byte packedData[]) {
+	private List<Object> safeUnpack(final byte packedData[]) {
 		try {
 			return unpack(packedData);
 		} catch (IOException ioe) {
@@ -200,17 +208,23 @@ public final class SchemeImageResource extends AbstractImageResource {
 		} catch (ClassNotFoundException cnfe) {
 			Log.errorException(cnfe);
 		}
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 
-	private List unpack(final byte packedData[]) throws IOException, ClassNotFoundException {
+	@SuppressWarnings("unchecked")
+	private List<Object> unpack(final byte packedData[]) throws IOException, ClassNotFoundException {
 		ObjectInputStream in = null;
 		try {
 			in = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(packedData)));
-			return (List) in.readObject();
+			return (List<Object>) in.readObject();
 		} finally {
 			if (in != null)
 				in.close();
 		}
+	}
+
+	@Override
+	ImageResourceSort getSort() {
+		return ImageResourceSort.SCHEME;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.41 2005/06/24 15:16:46 max Exp $
+ * $Id: SchemeElement.java,v 1.42 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.Equipment;
@@ -41,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.41 $, $Date: 2005/06/24 15:16:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -533,10 +534,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemeElement getTransferable() {
-		return new IdlSchemeElement(getHeaderTransferable(),
+	@Override
+	public IdlSchemeElement getTransferable(final ORB orb) {
+		return new IdlSchemeElement(getHeaderTransferable(orb),
 				super.getName(),
 				super.getDescription(),
 				this.label,

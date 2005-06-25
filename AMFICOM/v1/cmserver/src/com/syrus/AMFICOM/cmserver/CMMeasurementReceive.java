@@ -1,5 +1,5 @@
 /*-
- * $Id: CMMeasurementReceive.java,v 1.24 2005/06/23 18:45:06 bass Exp $
+ * $Id: CMMeasurementReceive.java,v 1.25 2005/06/25 17:07:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.cmserver;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -29,12 +31,16 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/23 18:45:06 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/25 17:07:49 $
  * @author $Author: bass $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	private static final long serialVersionUID = 2044666930827736818L;
+
+	CMMeasurementReceive(final ORB orb) {
+		super(orb);
+	}
 
 	public final IdlStorableObject[] receiveMeasurementTypes(
 			final IdlMeasurementType transferables[],

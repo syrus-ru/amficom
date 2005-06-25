@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.15 2005/06/23 18:45:10 bass Exp $
+ * $Id: MServerMeasurementTransmit.java,v 1.16 2005/06/25 17:07:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.mserver;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -27,14 +28,16 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/23 18:45:10 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/25 17:07:51 $
  * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
-
 	private static final long serialVersionUID = -3608597706693444950L;
 
+	MServerMeasurementTransmit(final ORB orb) {
+		super(orb);
+	}
 
   /* Transmit multiple objects*/
 

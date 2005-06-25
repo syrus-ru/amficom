@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.25 2005/06/23 18:45:08 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.26 2005/06/25 17:07:41 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/23 18:45:08 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/25 17:07:41 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -454,7 +455,8 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public IdlIntervalsTemporalPattern getTransferable() {
+	@Override
+	public IdlIntervalsTemporalPattern getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		IntervalTemporalPatternId[] intervalTemporalPatternsIdT;
@@ -487,7 +489,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			}
 		}
 
-		return new IdlIntervalsTemporalPattern(super.getHeaderTransferable(), intervalTemporalPatternsIdT, durationsT);
+		return new IdlIntervalsTemporalPattern(super.getHeaderTransferable(orb), intervalTemporalPatternsIdT, durationsT);
 	}
 
 	public SortedMap<Long, Identifier> getIntervalsAbstractTemporalPatternMap() {

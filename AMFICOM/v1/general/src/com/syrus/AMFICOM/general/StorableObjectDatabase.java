@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.156 2005/06/25 16:39:54 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.157 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.156 $, $Date: 2005/06/25 16:39:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.157 $, $Date: 2005/06/25 17:07:46 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -77,7 +77,8 @@ public abstract class StorableObjectDatabase {
 	@Deprecated
 	public static final int MODE_UPDATE = -11;
 
-	enum ExecuteMode {MODE_INSERT, MODE_UPDATE};
+	@SuppressWarnings("fieldHiding") 
+	enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
 
 	public static final int SIZE_CODENAME_COLUMN = 32;
 	public static final int SIZE_NAME_COLUMN = 64;

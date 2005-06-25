@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.7 2005/06/24 10:41:46 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.8 2005/06/25 17:07:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.mscharserver;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -21,12 +23,16 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:51 $
  * @author $Author: bass $
  * @module mscharserver_v1
  */
 public final class MscharServerImpl extends MscharServerSchemeTransmit {
 	private static final long serialVersionUID = 3762810480783274295L;
+
+	MscharServerImpl(final ORB orb) {
+		super(orb);
+	}
 
 	/**
 	 * @param sessionKey

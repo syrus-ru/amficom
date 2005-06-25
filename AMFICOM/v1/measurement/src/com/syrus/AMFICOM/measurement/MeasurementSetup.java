@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.81 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.82 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/06/24 13:54:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.82 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -198,14 +199,15 @@ public final class MeasurementSetup extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlMeasurementSetup getTransferable() {
+	@Override
+	public IdlMeasurementSetup getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
 		final IdlIdentifier[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
-		return new IdlMeasurementSetup(super.getHeaderTransferable(),
+		return new IdlMeasurementSetup(super.getHeaderTransferable(orb),
 				this.parameterSet.getId().getTransferable(),
 				(this.criteriaSet != null) ? this.criteriaSet.getId().getTransferable() : voidIdlIdentifier,
 				(this.thresholdSet != null) ? this.thresholdSet.getId().getTransferable() : voidIdlIdentifier,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.41 2005/06/24 10:41:46 bass Exp $
+ * $Id: SiteNodeType.java,v 1.42 2005/06/25 17:07:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:48 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -175,9 +176,14 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 		return this.name;
 	}
 
-	public IdlSiteNodeType getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlSiteNodeType getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlSiteNodeType(super.getHeaderTransferable(),
+		return new IdlSiteNodeType(super.getHeaderTransferable(orb),
 				this.codename,
 				this.name,
 				this.description,

@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.21 2005/06/24 09:40:48 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.22 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.resource;
 
 import java.util.Date;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -25,7 +27,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/06/24 09:40:48 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/25 17:07:52 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -90,6 +92,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	/**
 	 * @see AbstractBitmapImageResource#getCodename()
 	 */
+	@Override
 	public String getCodename() {
 		return this.codename;
 	}
@@ -97,19 +100,26 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	/**
 	 * @see AbstractImageResource#getImage()
 	 */
+	@Override
 	public byte[] getImage() {
 		return this.image;
 	}
 
-	public IdlImageResource getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlImageResource getTransferable(final ORB orb) {
 		final BitmapImageResourceData bitmapImageResourceData = new BitmapImageResourceData();
 		bitmapImageResourceData.codename = this.codename;
 		bitmapImageResourceData.image = this.image;
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.bitmapImageResourceData(bitmapImageResourceData);
-		return new IdlImageResource(getHeaderTransferable(), imageResourceData);
+		return new IdlImageResource(getHeaderTransferable(orb), imageResourceData);
 	}
 
+	@Override
 	public void setCodename(final String codename) {
 		setCodename0(codename);
 		this.markAsChanged();
@@ -138,5 +148,10 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 
 	protected void setImage0(final byte image[]) {
 		this.image = image;
+	}
+
+	@Override
+	ImageResourceSort getSort() {
+		return ImageResourceSort.BITMAP;
 	}
 }

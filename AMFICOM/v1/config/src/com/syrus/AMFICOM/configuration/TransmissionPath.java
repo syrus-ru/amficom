@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.73 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.74 2005/06/25 17:07:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
- * @version $Revision: 1.73 $, $Date: 2005/06/22 20:11:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/06/25 17:07:55 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -151,10 +152,15 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IdlTransmissionPath getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlTransmissionPath getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlTransmissionPath(super.getHeaderTransferable(),
+		return new IdlTransmissionPath(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

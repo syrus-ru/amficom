@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.41 2005/06/24 14:13:38 bass Exp $
+ * $Id: Scheme.java,v 1.42 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -419,13 +420,15 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlScheme getTransferable() {
+	@Override
+	public IdlScheme getTransferable(final ORB orb) {
 		/*
 		 * domainId is assumed to be non-null.
 		 */
-		return new IdlScheme(super.getHeaderTransferable(),
+		return new IdlScheme(super.getHeaderTransferable(orb),
 				this.name, this.description, this.label,
 				this.width, this.height, this.kind,
 				super.getDomainId().getTransferable(),

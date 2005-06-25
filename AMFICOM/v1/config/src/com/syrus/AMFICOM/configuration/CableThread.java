@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.32 2005/06/22 20:11:25 arseniy Exp $
+ * $Id: CableThread.java,v 1.33 2005/06/25 17:07:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/22 20:11:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/06/25 17:07:55 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableThread extends DomainMember implements TypedObject {
@@ -119,8 +120,13 @@ public final class CableThread extends DomainMember implements TypedObject {
 		this.type = (CableThreadType) StorableObjectPool.getStorableObject(new Identifier(ctt._typeId), true);
 	}
 
-	public IdlCableThread getTransferable() {
-		return new IdlCableThread(super.getHeaderTransferable(),
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlCableThread getTransferable(final ORB orb) {
+		return new IdlCableThread(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.39 2005/06/24 13:54:41 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.40 2005/06/25 17:07:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
@@ -65,8 +67,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.39 $, $Date: 2005/06/24 13:54:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/06/25 17:07:47 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -297,8 +299,12 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	/**
 	 * Creates a new object on every invocation.
 	 *
-	 * @see StorableObjectCondition#getTransferable()
+	 * @see StorableObjectCondition#getTransferable(ORB)
 	 */
+	public final IdlStorableObjectCondition getTransferable(final ORB orb) {
+		return this.getTransferable();
+	}
+
 	public final IdlStorableObjectCondition getTransferable() {
 		IdlIdentifier[] linkedIdTransferable = new IdlIdentifier[this.delegate.linkedIds.size()];
 		int i = 0;

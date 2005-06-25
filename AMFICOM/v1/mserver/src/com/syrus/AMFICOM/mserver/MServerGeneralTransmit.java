@@ -1,5 +1,5 @@
 /*
- * $Id: MServerGeneralTransmit.java,v 1.8 2005/06/21 12:44:29 bass Exp $
+ * $Id: MServerGeneralTransmit.java,v 1.9 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.mserver;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -18,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/21 12:44:29 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/25 17:07:52 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -26,6 +27,9 @@ abstract class MServerGeneralTransmit extends MServerMeasurementReceive {
 
 	private static final long serialVersionUID = 1312455830273815032L;
 
+	MServerGeneralTransmit(final ORB orb) {
+		super(orb);
+	}
 
 	/* Transmit multiple objects*/
 

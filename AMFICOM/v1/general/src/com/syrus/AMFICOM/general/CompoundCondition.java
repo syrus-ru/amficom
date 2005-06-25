@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.28 2005/06/21 12:43:47 bass Exp $
+ * $Id: CompoundCondition.java,v 1.29 2005/06/25 17:07:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.28 $, $Date: 2005/06/21 12:43:47 $
+ * @version $Revision: 1.29 $, $Date: 2005/06/25 17:07:46 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -156,6 +158,14 @@ public final class CompoundCondition implements StorableObjectCondition {
 		throw new UnsupportedOperationException("Cannot set entity code " + entityCode + " for this condition");
 	}
 
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	public IdlStorableObjectCondition getTransferable(final ORB orb) {
+		return this.getTransferable();
+	}
+
 	public IdlStorableObjectCondition getTransferable() {
 		final IdlCompoundCondition transferable = new IdlCompoundCondition();
 		transferable.sort = CompoundConditionSort.from_int(this.operation);
@@ -163,13 +173,13 @@ public final class CompoundCondition implements StorableObjectCondition {
 		int i = 0;
 		for (final Iterator<StorableObjectCondition> storableObjectConditionIterator = this.conditions.iterator(); storableObjectConditionIterator.hasNext(); i++) {
 			final StorableObjectCondition storableObjectCondition = storableObjectConditionIterator.next();
-			transferable.innerConditions[i] = (IdlStorableObjectCondition) storableObjectCondition.getTransferable();
+			transferable.innerConditions[i] = storableObjectCondition.getTransferable();
 		}
 		
 		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
 		condition.compoundCondition(transferable);
 		return condition;
-	}
+	}	
 
 	/**
 	 * @return Returns the operation.

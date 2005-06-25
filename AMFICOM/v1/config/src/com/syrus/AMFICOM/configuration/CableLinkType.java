@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.49 2005/06/22 20:11:25 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.50 2005/06/25 17:07:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/06/22 20:11:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/06/25 17:07:55 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -158,10 +159,15 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 	
-	public IdlCableLinkType getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlCableLinkType getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlCableLinkType(super.getHeaderTransferable(),
+		return new IdlCableLinkType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

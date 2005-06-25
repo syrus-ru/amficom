@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.19 2005/06/23 18:45:10 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.20 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 package com.syrus.AMFICOM.mserver;
 
 import java.util.HashSet;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -30,13 +32,17 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/23 18:45:10 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/25 17:07:52 $
  * @author $Author: bass $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends ServerCore implements MServerOperations {
 
 	private static final long serialVersionUID = 8337247295980850931L;
+
+	MServerMeasurementReceive(final ORB orb) {
+		super(orb);
+	}
 
 	public void receiveResults(IdlResult[] resultsT, IdlIdentifier mcmIdT, IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {

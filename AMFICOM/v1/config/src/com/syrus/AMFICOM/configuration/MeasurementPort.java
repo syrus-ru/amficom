@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.63 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.64 2005/06/25 17:07:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPort;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/22 20:11:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/06/25 17:07:54 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -155,10 +156,15 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IdlMeasurementPort getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlMeasurementPort getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlMeasurementPort(super.getHeaderTransferable(),
+		return new IdlMeasurementPort(super.getHeaderTransferable(orb),
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,

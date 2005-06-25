@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.51 2005/06/24 10:41:46 bass Exp $
+ * $Id: NodeLink.java,v 1.52 2005/06/25 17:07:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
+
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -42,7 +44,7 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLink;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.52 $, $Date: 2005/06/25 17:07:48 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -178,9 +180,14 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IdlNodeLink getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlNodeLink getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlNodeLink(super.getHeaderTransferable(),
+		return new IdlNodeLink(super.getHeaderTransferable(orb),
 				this.name,
 				this.physicalLink.getId().getTransferable(),
 				this.startNode.getId().getTransferable(),

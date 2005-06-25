@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.36 2005/06/22 19:29:31 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.37 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader {
@@ -59,7 +59,7 @@ public abstract class CORBAObjectLoader {
 	public Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		try {
 			final CommonServer commonServer = this.serverConnectionManager.getServerReference();
-			final IdlStorableObject[] headers = StorableObject.createHeadersTransferable(storableObjects);
+			final IdlStorableObject[] headers = StorableObject.createHeadersTransferable(this.serverConnectionManager.getCORBAServer().getOrb(), storableObjects);
 			return Identifier.fromTransferables(commonServer.transmitRefreshedStorableObjects(headers,
 					LoginManager.getSessionKeyTransferable()));
 		}
@@ -71,8 +71,8 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -82,8 +82,8 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -98,8 +98,8 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.36 $, $Date: 2005/06/22 19:29:31 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -239,7 +239,7 @@ public abstract class CORBAObjectLoader {
 		final IDLEntity[] transferables = StorableObject.allocateArrayOfTransferables(entityCode, storableObjects.size());
 		int i = 0;
 		for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++) {
-			transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable();
+			transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable(this.serverConnectionManager.getCORBAServer().getOrb());
 		}
 
 		try {

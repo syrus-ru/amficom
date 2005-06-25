@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.49 2005/06/24 10:41:46 bass Exp $
+ * $Id: SiteNode.java,v 1.50 2005/06/25 17:07:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
@@ -54,7 +56,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.50 $, $Date: 2005/06/25 17:07:48 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -218,11 +220,16 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		return dependencies;
 	}
 
-	public IdlSiteNode getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlSiteNode getTransferable(final ORB orb) {
 		int i = 0;
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlSiteNode(super.getHeaderTransferable(),
+		return new IdlSiteNode(super.getHeaderTransferable(orb),
 				this.name,
 				this.description,
 				this.location.getX(),

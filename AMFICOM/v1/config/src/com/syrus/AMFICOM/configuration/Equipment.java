@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.99 2005/06/22 20:11:25 arseniy Exp $
+ * $Id: Equipment.java,v 1.100 2005/06/25 17:07:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -39,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/06/22 20:11:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.100 $, $Date: 2005/06/25 17:07:55 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -222,10 +223,15 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
 	}
 
-	public IdlEquipment getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlEquipment getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlEquipment(super.getHeaderTransferable(),
+		return new IdlEquipment(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.type.getId().getTransferable(),
 				this.name != null ? this.name : "",

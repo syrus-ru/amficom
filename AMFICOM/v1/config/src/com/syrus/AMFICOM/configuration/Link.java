@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.62 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: Link.java,v 1.63 2005/06/25 17:07:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlLink;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/06/22 20:11:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/06/25 17:07:54 $
  * @module config_v1
  */
 public final class Link extends AbstractLink {
@@ -158,12 +159,13 @@ public final class Link extends AbstractLink {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(ORB)
 	 */
-	public IdlLink getTransferable() {
+	@Override
+	public IdlLink getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlLink(super.getHeaderTransferable(),
+		return new IdlLink(super.getHeaderTransferable(orb),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

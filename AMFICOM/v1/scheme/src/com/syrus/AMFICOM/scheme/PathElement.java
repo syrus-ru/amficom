@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.35 2005/06/24 14:13:38 bass Exp $
+ * $Id: PathElement.java,v 1.36 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.36 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -586,9 +587,11 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlPathElement getTransferable() {
+	@Override
+	public IdlPathElement getTransferable(final ORB orb) {
 		final Data data = new Data();
 		switch (this.kind.value()) {
 			case Kind._SCHEME_ELEMENT:
@@ -605,7 +608,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			default:
 				assert false;
 		}
-		return new IdlPathElement(getHeaderTransferable(),
+		return new IdlPathElement(getHeaderTransferable(orb),
 				this.parentSchemePathId.getTransferable(),
 				this.sequentialNumber, data);
 	}

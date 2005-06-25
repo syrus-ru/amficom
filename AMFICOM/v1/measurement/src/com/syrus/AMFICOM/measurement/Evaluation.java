@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.67 2005/06/24 14:09:43 arseniy Exp $
+ * $Id: Evaluation.java,v 1.68 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/06/24 14:09:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -115,10 +116,11 @@ public final class Evaluation extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlEvaluation getTransferable() {
+	@Override
+	public IdlEvaluation getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new IdlEvaluation(super.getHeaderTransferable(),
+		return new IdlEvaluation(super.getHeaderTransferable(orb),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? super.parentAction.getId().getTransferable()

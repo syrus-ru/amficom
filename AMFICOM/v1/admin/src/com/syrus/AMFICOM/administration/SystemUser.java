@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.10 2005/06/23 12:19:55 arseniy Exp $
+ * $Id: SystemUser.java,v 1.11 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/23 12:19:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/06/25 17:07:53 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -173,12 +174,13 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlSystemUser getTransferable() {
+	@Override
+	public IdlSystemUser getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		
-		return new IdlSystemUser(super.getHeaderTransferable(),
+		return new IdlSystemUser(super.getHeaderTransferable(orb),
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,

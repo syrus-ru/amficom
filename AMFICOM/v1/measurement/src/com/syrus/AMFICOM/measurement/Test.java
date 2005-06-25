@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.133 2005/06/24 13:54:36 arseniy Exp $
+ * $Id: Test.java,v 1.134 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.KIS;
@@ -33,6 +34,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
@@ -48,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.133 $, $Date: 2005/06/24 13:54:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.134 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -352,13 +354,18 @@ public final class Test extends StorableObject {
 		return TestTemporalType.from_int(this.temporalType);
 	}
 
-	public IdlTest getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlTest getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
-		return new IdlTest(super.getHeaderTransferable(),
-				this.timeStamps.getTransferable(),
+		return new IdlTest(super.getHeaderTransferable(orb),
+				this.timeStamps.getTransferable(orb),
 				this.measurementTypeId.getTransferable(),
 				this.analysisTypeId.getTransferable(),
 				this.evaluationTypeId.getTransferable(),
@@ -591,7 +598,7 @@ public final class Test extends StorableObject {
 		return dependencies;
 	}
 
-	public final class TestTimeStamps {
+	public final class TestTimeStamps implements TransferableObject {
 		Date endTime;
 		Date startTime;
 		Identifier temporalPatternId;
@@ -662,7 +669,11 @@ public final class Test extends StorableObject {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
 
-		IdlTestTimeStamps getTransferable() {
+		/**
+		 * @param orb
+		 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+		 */
+		public IdlTestTimeStamps getTransferable(final ORB orb) {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			final IdlTestTimeStamps ttst = new IdlTestTimeStamps();
 			switch (this.discriminator) {

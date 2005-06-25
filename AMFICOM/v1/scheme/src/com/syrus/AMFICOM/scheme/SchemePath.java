@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.40 2005/06/24 14:13:37 bass Exp $
+ * $Id: SchemePath.java,v 1.41 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -44,7 +45,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/24 14:13:37 $
+ * @version $Revision: 1.41 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -283,11 +284,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemePath getTransferable() {
+	@Override
+	public IdlSchemePath getTransferable(final ORB orb) {
 		return new IdlSchemePath(
-				super.getHeaderTransferable(), this.name,
+				super.getHeaderTransferable(orb), this.name,
 				this.description,
 				this.transmissionPathId.getTransferable(),
 				this.parentSchemeMonitoringSolutionId.getTransferable(),

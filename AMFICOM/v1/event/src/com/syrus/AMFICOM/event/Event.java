@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.31 2005/06/24 09:28:55 bass Exp $
+ * $Id: Event.java,v 1.32 2005/06/25 17:07:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.event.corba.IdlEventParameter;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/06/24 09:28:55 $
+ * @version $Revision: 1.32 $, $Date: 2005/06/25 17:07:53 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -157,17 +158,22 @@ public final class Event extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public IdlEvent getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlEvent getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		int i = 0;
 		IdlEventParameter[] ept = new IdlEventParameter[this.eventParameters.size()];
 		for (Iterator<EventParameter> it = this.eventParameters.iterator(); it.hasNext(); i++)
-			ept[i] = it.next().getTransferable();
+			ept[i] = it.next().getTransferable(orb);
 
 		IdlIdentifier[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
 
-		return new IdlEvent(super.getHeaderTransferable(),
+		return new IdlEvent(super.getHeaderTransferable(orb),
 				this.type.getId().getTransferable(),
 				this.description,
 				ept,

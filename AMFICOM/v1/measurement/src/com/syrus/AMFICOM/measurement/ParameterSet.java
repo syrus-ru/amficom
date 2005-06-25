@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.7 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: ParameterSet.java,v 1.8 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/24 13:54:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -169,15 +170,16 @@ public final class ParameterSet extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlParameterSet getTransferable() {
+	@Override
+	public IdlParameterSet getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final IdlParameter[] pts = new IdlParameter[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
-			pts[i] = this.parameters[i].getTransferable();
+			pts[i] = this.parameters[i].getTransferable(orb);
 
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
-		return new IdlParameterSet(super.getHeaderTransferable(),
+		return new IdlParameterSet(super.getHeaderTransferable(orb),
 				ParameterSetSort.from_int(this.sort),
 				this.description,
 				pts,

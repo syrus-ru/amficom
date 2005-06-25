@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.48 2005/06/24 10:41:46 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.49 2005/06/25 17:07:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/06/24 10:41:46 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/25 17:07:48 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -175,9 +176,14 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 		return Collections.EMPTY_SET;
 	}
 
-	public IdlPhysicalLinkType getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlPhysicalLinkType getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlPhysicalLinkType(super.getHeaderTransferable(),
+		return new IdlPhysicalLinkType(super.getHeaderTransferable(orb),
 				this.codename,
 				this.name,
 				this.description,

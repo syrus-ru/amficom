@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.70 2005/06/22 20:11:26 arseniy Exp $
+ * $Id: Port.java,v 1.71 2005/06/25 17:07:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlPort;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/06/22 20:11:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/06/25 17:07:54 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class Port extends StorableObject implements Characterizable, TypedObject {
@@ -149,10 +150,15 @@ public final class Port extends StorableObject implements Characterizable, Typed
 	}
 	
 
-	public IdlPort getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlPort getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlPort(super.getHeaderTransferable(),
+		return new IdlPort(super.getHeaderTransferable(orb),
 				 this.type.getId().getTransferable(),
 				 this.description,
 				 this.equipmentId.getTransferable(),

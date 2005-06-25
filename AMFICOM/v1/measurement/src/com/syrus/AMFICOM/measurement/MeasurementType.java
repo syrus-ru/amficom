@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.82 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.83 2005/06/25 17:07:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/06/24 13:54:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -166,14 +167,15 @@ public final class MeasurementType extends ActionType implements Namable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlMeasurementType getTransferable() {
+	@Override
+	public IdlMeasurementType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
 		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 		final IdlIdentifier[] measPortTypeIds = Identifier.createTransferables(this.measurementPortTypeIds);
 
-		return new IdlMeasurementType(super.getHeaderTransferable(),
+		return new IdlMeasurementType(super.getHeaderTransferable(orb),
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

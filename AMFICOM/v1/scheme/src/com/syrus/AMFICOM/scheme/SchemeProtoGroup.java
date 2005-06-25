@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.37 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.38 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.38 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -388,11 +389,13 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemeProtoGroup getTransferable() {
+	@Override
+	public IdlSchemeProtoGroup getTransferable(final ORB orb) {
 		return new IdlSchemeProtoGroup(
-				super.getHeaderTransferable(),
+				super.getHeaderTransferable(orb),
 				this.name,
 				this.description,
 				this.symbolId.getTransferable(),

@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.22 2005/06/24 09:40:48 bass Exp $
+ * $Id: FileImageResource.java,v 1.23 2005/06/25 17:07:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.resource;
 
 import java.util.Date;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/24 09:40:48 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/25 17:07:52 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -81,11 +83,13 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	/**
 	 * @see AbstractBitmapImageResource#getCodename()
 	 */
+	@Override
 	public String getCodename() {
 		return getFileName();
 	}
 	
 	
+	@Override
 	public void setCodename(final String codename) {
 		this.setFileName(codename);
 	}
@@ -97,14 +101,20 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	/**
 	 * @see AbstractImageResource#getImage()
 	 */
+	@Override
 	public byte[] getImage() {
 		throw new UnsupportedOperationException();
 	}
 
-	public IdlImageResource getTransferable() {
+	/**
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlImageResource getTransferable(final ORB orb) {
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.fileName(this.fileName);
-		return new IdlImageResource(getHeaderTransferable(), imageResourceData);
+		return new IdlImageResource(getHeaderTransferable(orb), imageResourceData);
 	}
 
 	public void setFileName(final String fileName) {
@@ -124,5 +134,10 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 	protected void setFileName0(final String fileName) {
 		this.fileName = fileName;
+	}
+
+	@Override
+	ImageResourceSort getSort() {
+		return ImageResourceSort.FILE;
 	}
 }

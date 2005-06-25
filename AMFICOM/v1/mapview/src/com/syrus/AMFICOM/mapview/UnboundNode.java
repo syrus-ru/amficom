@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.22 2005/06/24 10:41:47 bass Exp $
+ * $Id: UnboundNode.java,v 1.23 2005/06/25 17:07:45 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,8 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/24 10:41:47 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/25 17:07:45 $
  * @module mapviewclient_v1
  */
 public final class UnboundNode extends SiteNode
@@ -195,7 +197,7 @@ public final class UnboundNode extends SiteNode
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public IdlSiteNode getTransferable() {
+	public IdlSiteNode getTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 

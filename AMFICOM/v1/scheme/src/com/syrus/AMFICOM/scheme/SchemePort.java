@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.36 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemePort.java,v 1.37 2005/06/25 17:07:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.scheme;
 import java.util.Date;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:43 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -224,11 +225,13 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlSchemePort getTransferable() {
+	@Override
+	public IdlSchemePort getTransferable(final ORB orb) {
 		return new IdlSchemePort(
-				super.getHeaderTransferable(), super.getName(),
+				super.getHeaderTransferable(orb), super.getName(),
 				super.getDescription(),
 				super.getDirectionType(),
 				super.portTypeId.getTransferable(),
