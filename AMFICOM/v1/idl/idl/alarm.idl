@@ -1,9 +1,9 @@
-/*
- * $Id: alarm.idl,v 1.9 2005/05/03 13:13:53 bass Exp $
+/*-
+ * $Id: alarm.idl,v 1.10 2005/06/26 13:31:12 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 #ifndef ALARM_IDL
@@ -36,4 +36,4 @@ module corba {
 };
 };
 
-#endif
+#endif // ALARM_IDL
