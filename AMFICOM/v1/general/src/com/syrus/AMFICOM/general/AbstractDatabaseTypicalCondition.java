@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.6 2005/06/21 12:43:47 bass Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.7 2005/06/27 10:17:14 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,15 +18,15 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/21 12:43:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/06/27 10:17:14 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {
 
 	protected TypicalCondition condition;
 	
-	public AbstractDatabaseTypicalCondition(TypicalCondition delegate) {
+	public AbstractDatabaseTypicalCondition(final TypicalCondition delegate) {
 		this.condition = delegate;
 	}
 

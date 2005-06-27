@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.18 2005/06/10 18:39:53 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.19 2005/06/27 10:17:14 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/10 18:39:53 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/27 10:17:14 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -18,7 +18,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 
 	protected LinkedIdsCondition	condition;
 
-	public AbstractDatabaseLinkedIdsCondition(LinkedIdsCondition delegate) {
+	public AbstractDatabaseLinkedIdsCondition(final LinkedIdsCondition delegate) {
 		this.condition = delegate;
 	}
 

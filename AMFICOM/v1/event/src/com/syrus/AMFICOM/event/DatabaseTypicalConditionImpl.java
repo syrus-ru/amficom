@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.6 2005/06/27 10:03:07 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.7 2005/06/27 10:17:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,13 +14,14 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/27 10:03:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/27 10:17:21 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 
-	DatabaseTypicalConditionImpl(final TypicalCondition typicalCondition) {
+	@SuppressWarnings("unused")
+	private DatabaseTypicalConditionImpl(final TypicalCondition typicalCondition) {
 		super(typicalCondition);
 	}
 

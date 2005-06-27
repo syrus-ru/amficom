@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.10 2005/06/27 10:07:17 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.11 2005/06/27 10:17:14 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/27 10:07:17 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/27 10:17:14 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
 
-	public DatabaseLinkedIdsConditionImpl(final LinkedIdsCondition condition) {
+	@SuppressWarnings("unused")
+	private DatabaseLinkedIdsConditionImpl(final LinkedIdsCondition condition) {
 		super(condition);
 	}
 
