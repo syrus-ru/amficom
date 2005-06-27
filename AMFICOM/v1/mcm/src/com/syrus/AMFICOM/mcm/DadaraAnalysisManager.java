@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.51 2005/06/24 16:10:48 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.52 2005/06/27 09:24:39 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/24 16:10:48 $
+ * @version $Revision: 1.52 $, $Date: 2005/06/27 09:24:39 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -189,16 +188,11 @@ public class DadaraAnalysisManager implements AnalysisManager {
 
 		// === Обрабатываем входные данные, анализируем, сравниваем ===
 
-		// Достаем из эталона уровень обнаружения обрыва
-		double breakThresh = etalon.getMinTraceLevel();
-		// Достаем  эталонный MTM (пороговые кривые и события)
-		ModelTraceManager etMTM = etalon.getMTM();
-
 		// проводим анализ
 		AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
 
-		// сравниваем
-		List alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, breakThresh, etMTM);
+		// сравниваем: дополняем ar результатами сравнения и получаем алармы
+		List alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, etalon);
 
 		// добавляем AnalysisResult в результаты анализа
 		outParameters.put(CODENAME_ANALYSIS_RESULT, ar.toByteArray());
