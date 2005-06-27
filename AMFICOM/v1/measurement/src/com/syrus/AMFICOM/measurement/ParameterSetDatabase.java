@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.4 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.5 2005/06/27 10:57:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/27 10:57:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -337,14 +337,10 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		try {
-			this.updateSetMELinks(storableObjects);
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+		this.updateSetMELinks(storableObjects);
 	}
 
-	private void updateSetMELinks(final Set<ParameterSet> sets) throws IllegalDataException, UpdateObjectException {
+	private void updateSetMELinks(final Set<ParameterSet> sets) throws UpdateObjectException {
 		if (sets == null || sets.isEmpty())
 			return;
 
@@ -397,7 +393,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set collection = super.retrieveByCondition(conditionQuery);
+		final Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveSetParametersByOneQuery(collection);
 		this.retrieveSetMELinksByOneQuery(collection);
 		return collection;

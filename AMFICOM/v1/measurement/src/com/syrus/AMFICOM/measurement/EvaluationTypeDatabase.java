@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.88 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.89 2005/06/27 10:57:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.89 $, $Date: 2005/06/27 10:57:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -161,11 +161,11 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 
 	@Override
 	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		EvaluationType evaluationType = this.fromStorableObject(storableObject);
+		final EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		super.insertEntity(evaluationType);
 		try {
-			super.updateParameterTypeIds(Collections.singleton(storableObject));
-			this.updateMeasurementTypeIds(Collections.singleton(this.fromStorableObject(storableObject)));
+			super.updateParameterTypeIds(Collections.singleton(evaluationType));
+			this.updateMeasurementTypeIds(Collections.singleton(evaluationType));
 		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
@@ -186,9 +186,10 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		super.updateParameterTypeIds(Collections.singleton(storableObject));
 		try {
-			this.updateMeasurementTypeIds(Collections.singleton(this.fromStorableObject(storableObject)));
+			final EvaluationType evaluationType = this.fromStorableObject(storableObject);
+			super.updateParameterTypeIds(Collections.singleton(evaluationType));
+			this.updateMeasurementTypeIds(Collections.singleton(evaluationType));
 		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
@@ -199,15 +200,11 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		super.updateParameterTypeIds(storableObjects);
-		try {
-			this.updateMeasurementTypeIds(storableObjects);
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+		this.updateMeasurementTypeIds(storableObjects);
 	}
 
 	private void updateMeasurementTypeIds(final Set<EvaluationType> evaluationTypes)
-			throws IllegalDataException, UpdateObjectException {
+			throws UpdateObjectException {
 		if (evaluationTypes == null || evaluationTypes.isEmpty())
 			return;
 

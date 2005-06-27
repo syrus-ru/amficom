@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.42 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.43 2005/06/27 10:57:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/27 10:57:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -147,7 +147,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 		final ModelingType modelingType = this.fromStorableObject(storableObject);
 		super.insertEntity(modelingType);
 		try {
-			super.updateParameterTypeIds(Collections.singleton(storableObject));
+			super.updateParameterTypeIds(Collections.singleton(modelingType));
 		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
@@ -167,7 +167,13 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		super.updateParameterTypeIds(Collections.singleton(storableObject));
+		try {
+			final ModelingType modelingType = this.fromStorableObject(storableObject);
+			super.updateParameterTypeIds(Collections.singleton(modelingType));
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
 	}
 
 	@Override
@@ -211,7 +217,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set objects = super.retrieveByCondition(conditionQuery);
+		final Set objects = super.retrieveByCondition(conditionQuery);
 		super.retrieveParameterTypeIdsByOneQuery(objects);
 		return objects;
 	}

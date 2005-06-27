@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.94 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.95 2005/06/27 10:57:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.95 $, $Date: 2005/06/27 10:57:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -260,16 +260,12 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		try {
-			this.updateMeasurementSetupMELinks(storableObjects);
-			this.updateMeasurementTypeIds(storableObjects);
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+		this.updateMeasurementSetupMELinks(storableObjects);
+		this.updateMeasurementTypeIds(storableObjects);
 	}
 
 	private void updateMeasurementSetupMELinks(final Set<MeasurementSetup> measurementSetups)
-			throws IllegalDataException, UpdateObjectException {
+			throws UpdateObjectException {
 		if (measurementSetups == null || measurementSetups.isEmpty())
 			return;
 
@@ -286,7 +282,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private void updateMeasurementTypeIds(final Set<MeasurementSetup> measurementSetups)
-			throws IllegalDataException, UpdateObjectException {
+			throws UpdateObjectException {
 		if (measurementSetups == null || measurementSetups.isEmpty())
 			return;
 

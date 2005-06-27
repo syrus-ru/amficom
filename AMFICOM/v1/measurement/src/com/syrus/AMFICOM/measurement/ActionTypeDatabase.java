@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.7 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.8 2005/06/27 10:57:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.8 $, $Date: 2005/06/27 10:57:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -40,16 +40,15 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 
 	abstract String getActionTypeColumnName();
 
-	final void retrieveParameterTypeIdsByOneQuery(final Set actionTypes) throws RetrieveObjectException {
+	final void retrieveParameterTypeIdsByOneQuery(final Set<? extends ActionType> actionTypes) throws RetrieveObjectException {
 		if (actionTypes == null || actionTypes.isEmpty())
 			return;
 
-		Map dbParameterTypeIdsMap = this.retrieveDBParameterTypeIdsMap(actionTypes);
+		final Map<Identifier, Map<String, Set<Identifier>>> dbParameterTypeIdsMap = this.retrieveDBParameterTypeIdsMap(actionTypes);
 
-		for (final Iterator it = actionTypes.iterator(); it.hasNext();) {
-			final ActionType actionType = (ActionType) it.next();
+		for (final ActionType actionType : actionTypes) {
 			final Identifier actionTypeId = actionType.getId();
-			final Map parameterTypeIdsModeMap = (Map) dbParameterTypeIdsMap.get(actionTypeId);
+			final Map<String, Set<Identifier>> parameterTypeIdsModeMap = dbParameterTypeIdsMap.get(actionTypeId);
 
 			actionType.setParameterTypeIds(parameterTypeIdsModeMap);
 		}
@@ -117,7 +116,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	final void updateParameterTypeIds(final Set actionTypes) throws UpdateObjectException {
+	final void updateParameterTypeIds(final Set<? extends ActionType> actionTypes) throws UpdateObjectException {
 		if (actionTypes == null || actionTypes.isEmpty())
 			return;
 

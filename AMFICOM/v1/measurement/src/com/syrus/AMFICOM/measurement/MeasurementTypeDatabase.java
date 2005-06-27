@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.100 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.101 2005/06/27 10:57:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.101 $, $Date: 2005/06/27 10:57:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -170,8 +170,8 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 		final MeasurementType measurementType = this.fromStorableObject(storableObject);
 		super.insertEntity(measurementType);
 		try {
-			super.updateParameterTypeIds(Collections.singleton(storableObject));
-			this.updateMeasurementPortTypeIds(Collections.singleton(this.fromStorableObject(storableObject)));
+			super.updateParameterTypeIds(Collections.singleton(measurementType));
+			this.updateMeasurementPortTypeIds(Collections.singleton(measurementType));
 		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
@@ -192,9 +192,10 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		super.updateParameterTypeIds(Collections.singleton(storableObject));
 		try {
-			this.updateMeasurementPortTypeIds(Collections.singleton(this.fromStorableObject(storableObject)));
+			final MeasurementType measurementType = this.fromStorableObject(storableObject);
+			super.updateParameterTypeIds(Collections.singleton(measurementType));
+			this.updateMeasurementPortTypeIds(Collections.singleton(measurementType));
 		} catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
@@ -205,15 +206,11 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		super.updateParameterTypeIds(storableObjects);
-		try {
-			this.updateMeasurementPortTypeIds(storableObjects);
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+		this.updateMeasurementPortTypeIds(storableObjects);
 	}
 
 	private void updateMeasurementPortTypeIds(final Set<MeasurementType> measurementTypes)
-			throws UpdateObjectException, IllegalDataException {
+			throws UpdateObjectException {
 		if (measurementTypes == null || measurementTypes.isEmpty())
 			return;
 
@@ -267,7 +264,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set objects = super.retrieveByCondition(conditionQuery);
+		final Set objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveMeasurementPortTypeIdsByOneQuery(objects);
 		return objects;

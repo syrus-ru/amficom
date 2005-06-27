@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.102 2005/06/24 13:54:36 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.103 2005/06/27 10:57:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/06/24 13:54:36 $
+ * @version $Revision: 1.103 $, $Date: 2005/06/27 10:57:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -437,14 +437,10 @@ public final class TestDatabase extends StorableObjectDatabase {
 	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
-		try {
-			this.updateMeasurementSetupIds(storableObjects);
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+		this.updateMeasurementSetupIds(storableObjects);
 	}
 
-	private void updateMeasurementSetupIds(final Set<Test> tests) throws IllegalDataException, UpdateObjectException {
+	private void updateMeasurementSetupIds(final Set<Test> tests) throws UpdateObjectException {
 		if (tests == null || tests.isEmpty()) {
 			return;
 		}
@@ -463,7 +459,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set collection = super.retrieveByCondition(conditionQuery);
+		final Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupTestLinksByOneQuery(collection);
 		return collection;
 	}
