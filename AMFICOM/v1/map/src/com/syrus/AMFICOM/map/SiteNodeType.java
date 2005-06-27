@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.44 2005/06/27 07:09:11 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.45 2005/06/27 07:13:31 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -44,10 +42,6 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.general.logic.Library;
-import com.syrus.AMFICOM.general.logic.LibraryEntry;
-import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
@@ -62,12 +56,12 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/06/27 07:09:11 $
+ * @version $Revision: 1.45 $, $Date: 2005/06/27 07:13:31 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
 public final class SiteNodeType extends StorableObjectType 
-implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
+implements Characterizable, Namable, XMLBeansTransferable {
 
 	public static final String DEFAULT_WELL = "well";
 	public static final String DEFAULT_PIQUET = "piquet";
@@ -410,14 +404,4 @@ implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
 	}
 
 	
-	private transient MapLibrary parent;
-	
-	public void setParent(Library library) {
-		this.parent = (MapLibrary )library;
-	}
-
-	public Library getParent() {
-		return this.parent;
-	}
-
 }

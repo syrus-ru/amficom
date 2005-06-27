@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.51 2005/06/27 07:09:10 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.52 2005/06/27 07:13:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,9 @@
 package com.syrus.AMFICOM.map;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -40,10 +38,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.logic.Library;
-import com.syrus.AMFICOM.general.logic.LibraryEntry;
-import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 
 /**
@@ -52,14 +46,14 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: krupenn $
- * @version $Revision: 1.51 $, $Date: 2005/06/27 07:09:10 $
+ * @version $Revision: 1.52 $, $Date: 2005/06/27 07:13:31 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
  * @todo make 'sort' transient (update database scheme as well)
  */
 public final class PhysicalLinkType extends StorableObjectType 
-		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
+		implements Characterizable, Namable, XMLBeansTransferable {
 
 	/** тоннель */
 	public static final String DEFAULT_TUNNEL = "tunnel";
@@ -403,15 +397,5 @@ public final class PhysicalLinkType extends StorableObjectType
 			System.out.println(xmlPhysicalLinkType);
 			throw new CreateObjectException("PhysicalLinkType.createInstance |  ", e);
 		}
-	}
-
-	private transient MapLibrary parent;
-	
-	public void setParent(Library library) {
-		this.parent = (MapLibrary )library;
-	}
-
-	public Library getParent() {
-		return this.parent;
 	}
 }
