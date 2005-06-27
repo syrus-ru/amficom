@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.14 2005/06/27 09:41:46 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.15 2005/06/27 09:49:24 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/06/27 09:41:46 $
+ * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2005/06/27 09:49:24 $
  * @module scheme_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -33,10 +33,12 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.SCHEME_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.DOMAIN_CODE:
-						return super.getQuery(SchemeWrapper.COLUMN_DOMAIN_ID);
-					default:
-						throw newIllegalObjectEntityException();	
+				case ObjectEntities.DOMAIN_CODE:
+					return super.getQuery(SchemeWrapper.COLUMN_DOMAIN_ID);
+				case ObjectEntities.SCHEMEELEMENT_CODE:
+					return super.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+				default:
+					throw newIllegalObjectEntityException();	
 				}
 			case ObjectEntities.SCHEMEPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {

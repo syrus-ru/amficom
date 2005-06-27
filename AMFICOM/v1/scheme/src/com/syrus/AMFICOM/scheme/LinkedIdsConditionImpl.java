@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/06/27 09:41:46 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.16 2005/06/27 09:49:24 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/06/27 09:41:46 $
+ * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2005/06/27 09:49:24 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -63,10 +63,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.SCHEME_CODE:
 				final Scheme scheme = (Scheme) storableObject;
 				switch (super.linkedEntityCode) {
-					case ObjectEntities.DOMAIN_CODE:
-						return super.conditionTest(scheme.getDomainId());
-					default:
-						throw newIllegalObjectEntityException();	
+				case ObjectEntities.DOMAIN_CODE:
+					return super.conditionTest(scheme.getDomainId());
+				case ObjectEntities.SCHEMEELEMENT_CODE:
+					return super.conditionTest(scheme.parentSchemeElementId);
+				default:
+					throw newIllegalObjectEntityException();	
 				}
 			case ObjectEntities.SCHEMEPORT_CODE:
 				final SchemePort schemePort = (SchemePort) storableObject;

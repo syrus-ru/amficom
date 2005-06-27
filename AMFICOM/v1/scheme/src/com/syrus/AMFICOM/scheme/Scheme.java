@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.43 2005/06/25 17:50:46 bass Exp $
+ * $Id: Scheme.java,v 1.44 2005/06/27 09:49:24 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/06/25 17:50:46 $
+ * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2005/06/27 09:49:24 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -77,7 +77,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	private Identifier currentSchemeMonitoringSolutionId;
 
-	private Identifier parentSchemeElementId;
+	Identifier parentSchemeElementId;
 
 	private SchemeDatabase schemeDatabase;
 
