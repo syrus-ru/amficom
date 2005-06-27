@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/06/24 15:18:56 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/06/27 09:41:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,13 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.14 $, $Date: 2005/06/24 15:18:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/06/27 09:41:46 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
-	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
+	@SuppressWarnings("unused")
+	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -56,6 +57,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 * @throws IllegalObjectEntityException
 	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
+	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		switch (super.entityCode.shortValue()) {
 			case ObjectEntities.SCHEME_CODE:
@@ -163,6 +165,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 * @throws IllegalObjectEntityException
 	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#setEntityCode(Short)
 	 */
+	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.SCHEMEPORT_CODE:
@@ -181,7 +184,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 * @param storableObjects
 	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(final Set storableObjects) {
+	@Override
+	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 		return true;
 	}
 
