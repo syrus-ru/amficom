@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.73 2005/06/25 17:07:46 bass Exp $
+ * $Id: StorableObject.java,v 1.74 2005/06/27 09:13:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/06/25 17:07:46 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/06/27 09:13:59 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -105,9 +105,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unusedThrown")
+	@SuppressWarnings("unused")
 	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlStorableObject sot = (IdlStorableObject) transferable;
+		final IdlStorableObject sot = (IdlStorableObject) transferable;
 		this.id = new Identifier(sot.id);
 		this.created = new Date(sot.created);
 		this.modified = new Date(sot.modified);
@@ -121,7 +121,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedModifierId = null;
 		this.savedVersion = 0;		
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @return <code>true</code> if storable object is valid, <code>false</code> otherwise
@@ -152,7 +152,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public IdlStorableObject getHeaderTransferable(@SuppressWarnings("unusedArgument") final ORB orb) {
+	public IdlStorableObject getHeaderTransferable(@SuppressWarnings("unused") final ORB orb) {
 		return new IdlStorableObject(this.id.getTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
@@ -335,12 +335,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return clone;
 	}
 
-	public static final IdlStorableObject[] createHeadersTransferable(final ORB orb, final Collection<? extends StorableObject> storableObjects) {
+	public static final IdlStorableObject[] createHeadersTransferable(final ORB orb,
+			final Collection< ? extends StorableObject> storableObjects) {
 		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		IdlStorableObject[] headersT = new IdlStorableObject[storableObjects.size()];
+		final IdlStorableObject[] headersT = new IdlStorableObject[storableObjects.size()];
 		int i = 0;
-		for (Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();i ++) {
+		for (final Iterator< ? extends StorableObject> it = storableObjects.iterator(); it.hasNext(); i++) {
 			final StorableObject storableObject = it.next();
 			headersT[i] = storableObject.getHeaderTransferable(orb);
 		}
