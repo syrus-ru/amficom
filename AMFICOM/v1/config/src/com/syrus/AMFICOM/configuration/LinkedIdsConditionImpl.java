@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/06/17 12:32:20 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.26 2005/06/27 10:00:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/17 12:32:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/06/27 10:00:19 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
+	@SuppressWarnings("unused")
+	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -53,6 +54,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		return condition;
 	}
 
+	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
@@ -181,6 +183,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		return condition;
 	}
 
+	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.CABLETHREAD_TYPE_CODE:
@@ -199,7 +202,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		}
 	}
 
-	public boolean isNeedMore(final Set storableObjects) {
+	@Override
+	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 		return true;
 	}
 }

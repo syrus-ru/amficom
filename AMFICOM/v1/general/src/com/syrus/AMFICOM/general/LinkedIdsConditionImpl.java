@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.13 2005/06/21 12:43:47 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/06/27 10:01:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,16 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/21 12:43:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/06/27 10:01:37 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	protected static final Short CHARACTERISTIC_SHORT = new Short(ObjectEntities.CHARACTERISTIC_CODE);
 
-	@SuppressWarnings("unusedPrivate")
-	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
+	@SuppressWarnings("unused")
+	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -71,7 +71,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	}
 
 	@Override
-	public boolean isNeedMore(final Set storableObjects) {
+	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 		return true;
 	}
 }
