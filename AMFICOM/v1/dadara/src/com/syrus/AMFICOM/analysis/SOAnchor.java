@@ -1,5 +1,5 @@
 /*-
- * $Id: SOAnchor.java,v 1.1 2005/06/24 15:42:32 saa Exp $
+ * $Id: SOAnchor.java,v 1.2 2005/06/27 09:17:49 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,13 @@ import com.syrus.AMFICOM.analysis.dadara.DataStreamable;
 import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
 
 /**
- * Идентификатор для привязки к StorableObject,
+ * Константный идентификатор для привязки к StorableObject,
  * не зависящий от StorableObject Framework,
  * пригодный для сохранения в объектах dadara.
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/06/24 15:42:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/06/27 09:17:49 $
  * @module
  */
 public class SOAnchor implements DataStreamable {
