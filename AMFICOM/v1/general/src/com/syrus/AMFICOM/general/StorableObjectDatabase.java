@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.157 2005/06/25 17:07:46 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.158 2005/06/27 09:35:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.157 $, $Date: 2005/06/25 17:07:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.158 $, $Date: 2005/06/27 09:35:40 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -72,12 +72,6 @@ public abstract class StorableObjectDatabase {
 
 	protected enum UpdateKind {UPDATE_TOTAL, UPDATE_FORCE, UPDATE_CHECK}
 
-	@Deprecated
-	public static final int MODE_INSERT = -10;
-	@Deprecated
-	public static final int MODE_UPDATE = -11;
-
-	@SuppressWarnings("fieldHiding") 
 	enum ExecuteMode {MODE_INSERT, MODE_UPDATE}
 
 	public static final int SIZE_CODENAME_COLUMN = 32;
@@ -112,7 +106,7 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getColumnsTmpl();
 
-	protected final String getColumns(final int mode) {
+	protected final String getColumns(final ExecuteMode mode) {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CREATED + COMMA
 					+ StorableObjectWrapper.COLUMN_MODIFIED + COMMA
@@ -150,7 +144,7 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException;
 
-	protected final String getUpdateSingleSQLValues(final StorableObject storableObject, final int mode)
+	protected final String getUpdateSingleSQLValues(final StorableObject storableObject, final ExecuteMode mode)
 			throws IllegalDataException {
 		String modeString;
 		switch (mode) {
@@ -177,7 +171,7 @@ public abstract class StorableObjectDatabase {
 		StringBuffer buffer;
 		if (this.retrieveQuery == null) {
 			buffer = new StringBuffer(SQL_SELECT);
-			String cols = this.getColumns(MODE_INSERT);
+			String cols = this.getColumns(ExecuteMode.MODE_INSERT);
 			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_CREATED,
 					DatabaseDate.toQuerySubString(StorableObjectWrapper.COLUMN_CREATED));
 			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_MODIFIED,
@@ -203,7 +197,7 @@ public abstract class StorableObjectDatabase {
 
 	protected final int setEntityForPreparedStatement(final StorableObject storableObject,
 			final PreparedStatement preparedStatement,
-			final int mode) throws IllegalDataException, SQLException {
+			final ExecuteMode mode) throws IllegalDataException, SQLException {
 		int i = 0;
 		switch (mode) {
 			case MODE_INSERT:
@@ -535,9 +529,9 @@ public abstract class StorableObjectDatabase {
 		final Identifier id = storableObject.getId();
 
 		final String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
-				+ this.getColumns(MODE_INSERT)
+				+ this.getColumns(ExecuteMode.MODE_INSERT)
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-				+ this.getUpdateSingleSQLValues(storableObject, MODE_INSERT)
+				+ this.getUpdateSingleSQLValues(storableObject, ExecuteMode.MODE_INSERT)
 				+ CLOSE_BRACKET;
 		Statement statement = null;
 		final Connection connection = DatabaseConnection.getConnection();
@@ -582,7 +576,7 @@ public abstract class StorableObjectDatabase {
 		}
 
 		final String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
-				+ this.getColumns(MODE_INSERT)
+				+ this.getColumns(ExecuteMode.MODE_INSERT)
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ this.getInsertMultipleSQLValues()
 				+ CLOSE_BRACKET;
@@ -601,7 +595,7 @@ public abstract class StorableObjectDatabase {
 				storableObject.setUpdated(storableObject.getCreatorId());
 				setUpdatedStorableObjects.add(storableObject);
 
-				this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_INSERT);
+				this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_INSERT);
 				Log.debugMessage(this.getEntityName() + "Database.insertEntities | Inserting  " + this.getEntityName()
 						+ " '" + id + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
@@ -907,10 +901,10 @@ public abstract class StorableObjectDatabase {
 			throws UpdateObjectException {
 		storableObject.setUpdated(modifierId);
 
-		final String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
+		final String[] cols = this.getColumns(ExecuteMode.MODE_UPDATE).split(COMMA);
 		String[] values = null;
 		try {
-			values = this.parseStringValues(this.getUpdateSingleSQLValues(storableObject, MODE_UPDATE), cols.length);
+			values = this.parseStringValues(this.getUpdateSingleSQLValues(storableObject, ExecuteMode.MODE_UPDATE), cols.length);
 		} catch (IllegalDataException ide) {
 			storableObject.rollbackUpdate();
 			throw new UpdateObjectException("Cannot parce insert string values for storable object '" + storableObject.getId() + "'",
@@ -979,7 +973,7 @@ public abstract class StorableObjectDatabase {
 			return;
 		}
 
-		final String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
+		final String[] cols = this.getColumns(ExecuteMode.MODE_UPDATE).split(COMMA);
 		// String[] values =
 		// this.parseStringValues(this.getUpdateMultipleSQLValues(), cols.length);
 		// here we can split multyply sql values by COMMA because of it is only
@@ -1019,7 +1013,7 @@ public abstract class StorableObjectDatabase {
 				setUpdatedStorableObjects.add(storableObject);
 
 				try {
-					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
+					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_UPDATE);
 					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
 				} catch (IllegalDataException ide) {
 					for (final Iterator<StorableObject> it1 = setUpdatedStorableObjects.iterator(); it1.hasNext();) {
