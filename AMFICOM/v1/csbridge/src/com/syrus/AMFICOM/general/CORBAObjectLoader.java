@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.37 2005/06/25 17:07:53 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.38 2005/06/27 13:22:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader {
@@ -71,8 +71,8 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -82,8 +82,8 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -98,8 +98,8 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -198,7 +198,7 @@ public abstract class CORBAObjectLoader {
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
-		final IdlStorableObjectCondition conditionT = (IdlStorableObjectCondition) condition.getTransferable();
+		final IdlStorableObjectCondition conditionT = condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
