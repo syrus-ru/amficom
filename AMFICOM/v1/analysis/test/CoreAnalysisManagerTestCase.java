@@ -1,5 +1,5 @@
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.3 2005/06/27 06:45:36 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.4 2005/06/27 06:47:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,12 +73,12 @@ public class CoreAnalysisManagerTestCase extends TestCase {
     	// save to byte[]
     	byte[] mtmBytes = DataStreamableUtil.writeDataStreamableToBA(mtm);
         System.out.println("MTM bytes = " + mtmBytes.length);
-        
+
         // restore
         ByteArrayInputStream bais = new ByteArrayInputStream(mtmBytes);
         DataInputStream dis = new DataInputStream(bais);
         ModelTraceManager.getReader().readFromDIS(dis);
-        
+
         // ensure there are no bytes left
         try {
         	dis.readByte();
