@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.18 2005/06/27 09:15:50 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.19 2005/06/27 09:28:53 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/06/27 09:15:50 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/27 09:28:53 $
  * @module
  */
 public class ModelTraceComparer
@@ -303,6 +303,7 @@ public class ModelTraceComparer
 		EventAnchorer etAnc = etalon.getAnc();
 		if (etAnc == null) { // если ее нет - отвязываем ar
 			ar.setAnchorer(null);
+			return;
 		}
 
 		// берем события ar, проводим сопоставление
