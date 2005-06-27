@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.50 2005/06/25 17:50:44 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.51 2005/06/27 07:09:10 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,22 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -33,7 +38,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.logic.Library;
+import com.syrus.AMFICOM.general.logic.LibraryEntry;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 
 /**
@@ -41,14 +51,15 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/06/25 17:50:44 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.51 $, $Date: 2005/06/27 07:09:10 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
  * @todo make 'sort' transient (update database scheme as well)
  */
-public final class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable {
+public final class PhysicalLinkType extends StorableObjectType 
+		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
 
 	/** тоннель */
 	public static final String DEFAULT_TUNNEL = "tunnel";
@@ -317,5 +328,90 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 
 	public void setSort(final PhysicalLinkTypeSort sort) {
 		this.sort = sort;
+	}
+
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = com.syrus.amficom.map.xml.PhysicalLinkType.Factory.newInstance();
+		fillXMLTransferable(xmlPhysicalLinkType);
+		return xmlPhysicalLinkType;
+	}
+
+	public void fillXMLTransferable(XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType )xmlObject; 
+
+		com.syrus.amficom.general.xml.UID uid = xmlPhysicalLinkType.addNewUid();
+		uid.setStringValue(this.id.toString());
+		xmlPhysicalLinkType.setName(this.name);
+		xmlPhysicalLinkType.setDescription(this.description);
+		xmlPhysicalLinkType.setSort(com.syrus.amficom.map.xml.PhysicalLinkTypeSort.Enum.forString(this.sort.value()));
+
+		xmlPhysicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
+		xmlPhysicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
+	}
+
+	PhysicalLinkType(
+			Identifier creatorId,
+			String codename,
+			String description,
+			com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType, 
+			ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.PHYSICALLINK_CODE, 
+						xmlPhysicalLinkType.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0,
+				codename,
+				description);
+		this.characteristics = new HashSet();
+		this.fromXMLTransferable(xmlPhysicalLinkType, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType )xmlObject; 
+
+		this.name = xmlPhysicalLinkType.getName();
+		this.description = xmlPhysicalLinkType.getDescription();
+		this.bindingDimension = new IntDimension(
+				xmlPhysicalLinkType.getDimensionX().intValue(), 
+				xmlPhysicalLinkType.getDimensionY().intValue());
+	}
+
+	public static PhysicalLinkType createInstance(
+			final Identifier creatorId,
+			final XmlObject xmlObject,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType )xmlObject;
+
+		try {
+			PhysicalLinkType physicalLinkType = new PhysicalLinkType(
+					creatorId, 
+					xmlPhysicalLinkType.getSort().toString(),
+					xmlPhysicalLinkType.getDescription(),
+					xmlPhysicalLinkType, 
+					clonedIdsPool);
+			assert physicalLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			physicalLinkType.markAsChanged();
+			return physicalLinkType;
+		} catch (Exception e) {
+			System.out.println(xmlPhysicalLinkType);
+			throw new CreateObjectException("PhysicalLinkType.createInstance |  ", e);
+		}
+	}
+
+	private transient MapLibrary parent;
+	
+	public void setParent(Library library) {
+		this.parent = (MapLibrary )library;
+	}
+
+	public Library getParent() {
+		return this.parent;
 	}
 }

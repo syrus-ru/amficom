@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.6 2005/06/25 17:07:48 bass Exp $
+ * $Id: TopologicalImageQuery.java,v 1.7 2005/06/27 07:09:11 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/25 17:07:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/06/27 07:09:11 $
  * @module mapinfo_v1
  */
-public final class TopologicalImageQuery {
+public final class TopologicalImageQuery implements Comparable {
 
 	/**
 	 * Для участков изображения, добавляемых в кэш "на всякий случай", до

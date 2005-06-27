@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.43 2005/06/25 17:50:45 bass Exp $
+ * $Id: SiteNodeType.java,v 1.44 2005/06/27 07:09:11 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,23 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -31,9 +37,22 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.logic.Library;
+import com.syrus.AMFICOM.general.logic.LibraryEntry;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemListener;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.AMFICOM.resource.ImageResourceWrapper;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 
 /**
@@ -42,12 +61,13 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/06/25 17:50:45 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.44 $, $Date: 2005/06/27 07:09:11 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
-public final class SiteNodeType extends StorableObjectType implements Characterizable, Namable {
+public final class SiteNodeType extends StorableObjectType 
+implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
 
 	public static final String DEFAULT_WELL = "well";
 	public static final String DEFAULT_PIQUET = "piquet";
@@ -283,4 +303,121 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 	public void setSort(final SiteNodeTypeSort sort) {
 		this.sort = sort;
 	}
+
+	public XmlObject getXMLTransferable() {
+		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = com.syrus.amficom.map.xml.SiteNodeType.Factory.newInstance();
+		fillXMLTransferable(xmlSiteNodeType);
+		return xmlSiteNodeType;
+	}
+
+	public void fillXMLTransferable(final XmlObject xmlObject) {
+		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject; 
+
+		com.syrus.amficom.general.xml.UID uid = xmlSiteNodeType.addNewUid();
+		uid.setStringValue(this.id.toString());
+		xmlSiteNodeType.setName(this.name);
+		xmlSiteNodeType.setDescription(this.description);
+		xmlSiteNodeType.setSort(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forString(this.sort.value()));
+		xmlSiteNodeType.setTopological(this.isTopological());
+
+		String imageCodeName = "";
+		try {
+			AbstractImageResource ir = (AbstractImageResource )
+				StorableObjectPool.getStorableObject(this.getImageId(), false);
+			if(ir instanceof FileImageResource)
+				imageCodeName = ((FileImageResource)ir).getCodename();
+			else if(ir instanceof BitmapImageResource)
+				imageCodeName = ((BitmapImageResource)ir).getCodename();
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
+		xmlSiteNodeType.setImage(imageCodeName);
+	}
+
+	SiteNodeType(
+			final Identifier creatorId, 
+			String codename,
+			String description,
+			final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType, 
+			final ClonedIdsPool clonedIdsPool) 
+		throws CreateObjectException, ApplicationException {
+
+		super(
+				clonedIdsPool.getClonedId(
+						ObjectEntities.SITENODE_CODE, 
+						xmlSiteNodeType.getUid().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				0,
+				codename,
+				description);
+		this.characteristics = new HashSet();
+		this.fromXMLTransferable(xmlSiteNodeType, clonedIdsPool);
+	}
+
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject;
+
+		this.name = xmlSiteNodeType.getName();
+		this.description = xmlSiteNodeType.getDescription();
+		this.sort = SiteNodeTypeSort.fromString(xmlSiteNodeType.getSort().toString());
+		this.topological = xmlSiteNodeType.getTopological();
+
+		String imageCodeName = xmlSiteNodeType.getImage();
+		Identifier loadedImageId = null;
+		StorableObjectCondition condition = new TypicalCondition(
+				String.valueOf(ImageResourceSort._FILE),
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.IMAGERESOURCE_CODE,
+				ImageResourceWrapper.COLUMN_SORT);
+		Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+		for(Iterator it = bitMaps.iterator(); it.hasNext();) {
+			FileImageResource ir = (FileImageResource )it.next();
+			if(ir.getCodename().equals(imageCodeName)) {
+				loadedImageId = ir.getId();
+				break;
+			}
+		}
+
+		if (loadedImageId == null) {
+			throw new CreateObjectException("ImageResource \'" + loadedImageId + "\' not found");
+		}
+		
+		this.imageId = loadedImageId;
+	}
+
+	public static SiteNodeType createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException {
+
+		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject;
+
+		try {
+			SiteNodeType siteNode = new SiteNodeType(
+					creatorId, 
+					xmlSiteNodeType.getSort().toString(),
+					xmlSiteNodeType.getDescription(),
+					xmlSiteNodeType, 
+					clonedIdsPool);
+			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			siteNode.markAsChanged();
+			return siteNode;
+		} catch (Exception e) {
+			throw new CreateObjectException("SiteNode.createInstance |  ", e);
+		}
+	}
+
+	
+	private transient MapLibrary parent;
+	
+	public void setParent(Library library) {
+		this.parent = (MapLibrary )library;
+	}
+
+	public Library getParent() {
+		return this.parent;
+	}
+
 }
