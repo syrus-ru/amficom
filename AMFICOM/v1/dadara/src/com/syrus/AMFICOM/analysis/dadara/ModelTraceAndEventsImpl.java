@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.12 2005/06/27 06:44:08 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.13 2005/06/27 07:35:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/06/27 06:44:08 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/27 07:35:15 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -135,6 +135,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
             {
                 edz[i] = 0;
                 adz[i] = 0;
+                rmsDev[i] = 0;
                 maxDev[i] = 0;
                 if (eventNeedsEdzAdzPo(i)) {
                     double po = ReflectogramMath.getPo(rse, i, mt);
@@ -152,26 +153,34 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
         protected ComplexInfo(DataInputStream dis) throws IOException {
             yTop = dis.readDouble();
             allocateArrays();
-            for (int i = 0; i < edz.length; i++)
-                edz[i] = dis.readInt();
-            for (int i = 0; i < adz.length; i++)
-                adz[i] = dis.readInt();
-            for (int i = 0; i < maxDev.length; i++)
-                maxDev[i] = dis.readDouble();
-            for (int i = 0; i < rmsDev.length; i++)
-                rmsDev[i] = dis.readDouble();
+            for (int i = 0; i < rse.length; i++) {
+                edz[i] = 0;
+                adz[i] = 0;
+                rmsDev[i] = 0;
+                maxDev[i] = 0;
+                if (eventNeedsEdzAdzPo(i)) {
+                    edz[i] = dis.readInt();
+                    adz[i] = dis.readInt();
+                }
+                if (eventNeedsMaxDev(i)) {
+                    maxDev[i] = dis.readDouble();
+                    rmsDev[i] = dis.readDouble();
+                }
+            }
         }
 
         public void writeToDOS(DataOutputStream dos) throws IOException {
             dos.writeDouble(yTop);
-            for (int i = 0; i < edz.length; i++)
-                dos.writeInt(edz[i]);
-            for (int i = 0; i < adz.length; i++)
-                dos.writeInt(adz[i]);
-            for (int i = 0; i < maxDev.length; i++)
-                dos.writeDouble(maxDev[i]);
-            for (int i = 0; i < rmsDev.length; i++)
-                dos.writeDouble(rmsDev[i]);
+            for (int i = 0; i < rse.length; i++) {
+                if (eventNeedsEdzAdzPo(i)) {
+                	dos.writeInt(edz[i]);
+                	dos.writeInt(adz[i]);
+                }
+                if (eventNeedsMaxDev(i)) {
+                	dos.writeDouble(maxDev[i]);
+                	dos.writeDouble(rmsDev[i]);
+                }
+            }
         }
     }
 
@@ -345,13 +354,22 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 
 	public void writeToDOS(DataOutputStream dos) throws IOException
 	{
+//		int pos1 = dos.size();
 		dos.writeLong(SIGNATURE_EVENTS);
 		getMF().writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
 		dos.writeInt(rse.length);
+//		int pos2 = dos.size();
 		for (int i = 0; i < rse.length; i++)
 			rse[i].writeToDOS(dos);
+//		int pos3 = dos.size();
         cinfo.writeToDOS(dos);
+//		int pos4 = dos.size();
+//		System.out.println("MTAEI: writeToDOS:"
+//				+ " MT " + (pos2-pos1)
+//				+ ", rse " + (pos3-pos2)
+//				+ ", cinfo " + (pos4-pos3)
+//				+ ", total " + (pos4-pos1));
 	}
 
 	public static DataStreamable.Reader getReader()
