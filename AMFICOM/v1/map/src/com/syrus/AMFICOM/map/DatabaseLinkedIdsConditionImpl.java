@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/06/17 11:01:12 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/06/27 10:07:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,13 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:12 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/06/27 10:07:11 $
  * @module map_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
 
+	@SuppressWarnings("unused")
 	private DatabaseLinkedIdsConditionImpl(final LinkedIdsCondition linkedIdsCondition) {
 		super(linkedIdsCondition);
 	}
