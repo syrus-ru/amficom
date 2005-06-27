@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.10 2005/06/25 17:50:50 bass Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.11 2005/06/27 09:36:28 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,16 +16,16 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/27 09:36:28 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 
-	DatabaseTypicalConditionImpl(TypicalCondition typicalCondition){
+	DatabaseTypicalConditionImpl(TypicalCondition typicalCondition) {
 		super(typicalCondition);
 	}
-	
+
 	@Override
 	protected String getColumnName() throws IllegalObjectEntityException {
 		/* check key support */
