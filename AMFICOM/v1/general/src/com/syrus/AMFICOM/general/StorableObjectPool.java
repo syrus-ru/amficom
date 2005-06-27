@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.113 2005/06/25 16:39:54 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.114 2005/06/27 08:57:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/06/25 16:39:54 $
+ * @version $Revision: 1.114 $, $Date: 2005/06/27 08:57:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -606,7 +606,7 @@ public abstract class StorableObjectPool {
 
 	/*	Delete */
 
-	public static void delete(Identifier id) {
+	public static void delete(final Identifier id) {
 		final short entityCode = id.getMajor();
 		final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
 
@@ -624,19 +624,18 @@ public abstract class StorableObjectPool {
 	/**
 	 * @param identifiables
 	 */
-	public static void delete(final Set identifiables) {
+	public static void delete(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 		/*
 		 * Map<short, Set<Identifiable>>
 		 */
 		final TShortObjectHashMap groupCodeIdentifiablesMap = new TShortObjectHashMap();
-		for (final Iterator identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();) {
-			final Identifiable identifiable = (Identifiable) identifiableIterator.next();
+		for (final Identifiable identifiable : identifiables) {
 			final short entityCode = identifiable.getId().getMajor();
 			final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
-			Set singleGroupIdentifiables = (Set) groupCodeIdentifiablesMap.get(groupCode);
+			Set<Identifiable> singleGroupIdentifiables = (Set<Identifiable>) groupCodeIdentifiablesMap.get(groupCode);
 			if (singleGroupIdentifiables == null) {
-				singleGroupIdentifiables = new HashSet();
+				singleGroupIdentifiables = new HashSet<Identifiable>();
 				groupCodeIdentifiablesMap.put(groupCode, singleGroupIdentifiables);
 			}
 			singleGroupIdentifiables.add(identifiable);
@@ -645,7 +644,7 @@ public abstract class StorableObjectPool {
 			groupCodeIdentifiablesIterator.advance();
 
 			final short groupCode = groupCodeIdentifiablesIterator.key();
-			final Set singleGroupIdentifiables = (Set) groupCodeIdentifiablesIterator.value();
+			final Set<Identifiable> singleGroupIdentifiables = (Set<Identifiable>) groupCodeIdentifiablesIterator.value();
 
 			assert StorableObject.hasSingleGroupEntities(singleGroupIdentifiables);
 			assert groupCode == StorableObject.getGroupCodeOfIdentifiables(singleGroupIdentifiables);
@@ -671,7 +670,7 @@ public abstract class StorableObjectPool {
 
 	private final void deleteImpl(final Identifier id) {
 		short entityCode = id.getMajor();
-		LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
+		final LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (lruMap != null)
 			lruMap.remove(id);
 		else
@@ -872,7 +871,7 @@ public abstract class StorableObjectPool {
 		/* Specially oredered objects to save with dependencies*/
 		this.savingObjectsMap.clear();
 
-		StorableObject storableObject = this.getStorableObjectImpl(id, false);
+		final StorableObject storableObject = this.getStorableObjectImpl(id, false);
 		if (storableObject != null)
 			this.checkChangedWithDependencies(storableObject, 0);
 	}
@@ -922,7 +921,7 @@ public abstract class StorableObjectPool {
 	private void checkChangedWithDependenciesEntity(final short entityCode) throws ApplicationException {
 		final LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (objectPool != null) {
-			for (Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();)
+			for (final Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();)
 				this.checkChangedWithDependencies((StorableObject) poolIterator.next(), 0);
 		} else
 			Log.errorMessage(this.selfGroupName
@@ -1123,7 +1122,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.113 $, $Date: 2005/06/25 16:39:54 $
+	 * @version $Revision: 1.114 $, $Date: 2005/06/27 08:57:37 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
