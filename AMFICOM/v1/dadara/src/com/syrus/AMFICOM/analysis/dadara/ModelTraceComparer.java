@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.17 2005/06/17 16:19:26 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.18 2005/06/27 09:15:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 package com.syrus.AMFICOM.analysis.dadara;
 
+import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.util.Log;
 
 /**
@@ -20,8 +22,13 @@ import com.syrus.util.Log;
  * <ul>
  * <li> ReliabilityModelTraceAndEvents to MTM
  * </ul>
+ * <p>
+ * Performs EventAnchorer processing:
+ * <ul>
+ * <li> createEventAnchor
+ * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/06/17 16:19:26 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/27 09:15:50 $
  * @module
  */
 public class ModelTraceComparer
@@ -283,5 +290,40 @@ public class ModelTraceComparer
 				return i; // нашли
 		}
 		return -1; // не нашли
+	}
+
+	/**
+	 * Устанавливает привязку EventAnchorer результатов анализа на основе
+	 * эталонной привязки и сравнения событий результатов анализа и эталона.
+	 * @param ar результаты анализа (modify)
+	 * @param etalon эталон (read only)
+	 */
+	public static void createEventAnchor(AnalysisResult ar, Etalon etalon) {
+		// берем привязку эталона
+		EventAnchorer etAnc = etalon.getAnc();
+		if (etAnc == null) { // если ее нет - отвязываем ar
+			ar.setAnchorer(null);
+		}
+
+		// берем события ar, проводим сопоставление
+		SimpleReflectogramEvent[] events = ar.getMTAE().getSimpleEvents();
+		SimpleReflectogramEvent[] etEv = etalon.getMTM().getMTAE().getSimpleEvents();
+		SimpleReflectogramEventComparer rc =
+				new SimpleReflectogramEventComparer(
+						events,
+						etEv);
+
+		// устанавливаем "пустую" привязку для ar
+		EventAnchorer anc = new EventAnchorer(events.length);
+		ar.setAnchorer(anc);
+
+		// привязываем каждое событие ar, имеющее пару в эталоне
+		// XXX: надо ли здесь сверять тип?
+		for (int i = 0; i < events.length; i++) {
+			int etId = rc.getEtalonIdByProbeId(i);
+			if (etId >= 0) {
+				anc.setEventAnchor(i, etAnc.getEventAnchor(etId));
+			}
+		}
 	}
 }
