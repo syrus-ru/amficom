@@ -1,5 +1,5 @@
 /*-
- * $Id: EventAnchorer.java,v 1.1 2005/06/24 15:42:32 saa Exp $
+ * $Id: EventAnchorer.java,v 1.2 2005/06/27 08:30:18 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ public class EventAnchorer implements DataStreamable {
 
 	private SOAnchor[] anchorArray;
 
-	EventAnchorer(int len) {
+	public EventAnchorer(int len) {
         this.anchorArray = new SOAnchor[len];
         for (int i = 0; i < this.anchorArray.length; i++) {
         	anchorArray[i] = SOAnchor.VOID_ANCHOR;
