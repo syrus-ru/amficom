@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.15 2005/06/25 17:07:46 bass Exp $
+ * $Id: StorableObjectCondition.java,v 1.16 2005/06/27 09:36:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/06/27 09:36:11 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public interface StorableObjectCondition extends TransferableObject {
@@ -31,7 +31,7 @@ public interface StorableObjectCondition extends TransferableObject {
 	 * @return true if certain objects need to be loaded, false otherwise.
 	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Set, StorableObjectCondition, boolean, boolean)
 	 */
-	boolean isNeedMore(final Set<StorableObject> storableObjects);
+	boolean isNeedMore(final Set<? extends StorableObject> storableObjects);
 
 	Short getEntityCode();
 	

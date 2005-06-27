@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.40 2005/06/25 17:07:47 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.41 2005/06/27 09:36:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/25 17:07:47 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/06/27 09:36:11 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -336,7 +336,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * @param storableObjects
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(final Set<StorableObject> storableObjects) {
+	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 		return this.delegate.isNeedMore(storableObjects);
 	}
 
@@ -352,7 +352,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.delegate.setEntityCode(entityCode);
 	}
 
-	public final void setLinkedIds(Set<Identifier> linkedIds) {
+	public final void setLinkedIds(final Set<Identifier> linkedIds) {
 		try {
 			this.delegate.linkedEntityCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		} catch (final AssertionError ae) {
