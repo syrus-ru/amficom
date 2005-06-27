@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.11 2005/06/02 07:16:15 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.12 2005/06/27 06:44:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/06/02 07:16:15 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/27 06:44:08 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -165,9 +165,11 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
         public void writeToDOS(DataOutputStream dos) throws IOException {
             dos.writeDouble(yTop);
             for (int i = 0; i < edz.length; i++)
-                dos.writeDouble(edz[i]);
+                dos.writeInt(edz[i]);
             for (int i = 0; i < adz.length; i++)
-                dos.writeDouble(adz[i]);
+                dos.writeInt(adz[i]);
+            for (int i = 0; i < maxDev.length; i++)
+                dos.writeDouble(maxDev[i]);
             for (int i = 0; i < rmsDev.length; i++)
                 dos.writeDouble(rmsDev[i]);
         }
