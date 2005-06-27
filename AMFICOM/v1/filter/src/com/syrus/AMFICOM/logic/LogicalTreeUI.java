@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.18 2005/06/27 10:43:58 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.19 2005/06/27 11:12:02 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/27 10:43:58 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/27 11:12:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -74,6 +74,8 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 	protected static Map	renderers;
 
 	protected static Map	editors;
+	
+	public static final String TRANSFERABLE_OBJECTS = "IconedTreeUI.object";
 	
 	public class ItemTreeCellRenderer implements TreeCellRenderer {		
 		
@@ -239,7 +241,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 		DataFlavor flavor;
 
 		public ItemTransferHandler() {
-			this.flavor = new DataFlavor(ArrayList.class, "IconedTreeUI.object");
+			this.flavor = new DataFlavor(ArrayList.class, TRANSFERABLE_OBJECTS);
 		}
 
 		protected Transferable createTransferable(JComponent c) {
@@ -266,9 +268,9 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 		}
 
 		public class ItemTransferable implements Transferable {
-			ArrayList data;
+			private List data;
 
-			public ItemTransferable(ArrayList alist) {
+			public ItemTransferable(final List alist) {
 				this.data = alist;
 			}
 
