@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.47 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.48 2005/06/27 09:53:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.48 $, $Date: 2005/06/27 09:53:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
+	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
@@ -61,6 +62,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         </li>
 	 *         </ul>
 	 */
+	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
@@ -246,28 +248,27 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	}
 
-	public boolean isNeedMore(final Set storableObjects) {
-		Identifier id;
+	@Override
+	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+		//Identifier id;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MEASUREMENT_CODE:
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.TEST_CODE:
-						Set measurements = new HashSet(storableObjects);
-						Test test;
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							id = (Identifier) it.next();
+						final Set<? extends StorableObject> measurements = new HashSet<StorableObject>(storableObjects);
+						for (final Identifier id : this.linkedIds) {
+							Test test;
 							try {
 								test = (Test) StorableObjectPool.getStorableObject(id, false);
 							} catch (ApplicationException ae) {
 								Log.errorException(ae);
 								continue;
 							}
-							Measurement measurement;
 							int testNumberOfMeasurements = 0;
-							for (Iterator it1 = measurements.iterator(); it1.hasNext();) {
-								measurement = (Measurement) it1.next();
+							for (final Iterator<? extends StorableObject> it = measurements.iterator(); it.hasNext();) {
+								final Measurement measurement = (Measurement) it.next();
 								if (measurement.getTestId().equals(id)) {
-									it1.remove();
+									it.remove();
 									testNumberOfMeasurements++;
 								}
 							}
@@ -276,7 +277,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						}
 						return false;
 				}
-					
 				break;
 		}
 
