@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.17 2005/05/18 12:42:49 bass Exp $
+ * $Id: LogicalTreeUI.java,v 1.18 2005/06/27 10:43:58 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,9 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -36,6 +39,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -43,6 +47,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.event.CellEditorListener;
@@ -57,8 +62,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/18 12:42:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/06/27 10:43:58 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -230,6 +235,63 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 		}
 	}
 
+	public class ItemTransferHandler extends TransferHandler {
+		DataFlavor flavor;
+
+		public ItemTransferHandler() {
+			this.flavor = new DataFlavor(ArrayList.class, "IconedTreeUI.object");
+		}
+
+		protected Transferable createTransferable(JComponent c) {
+			if (c instanceof JTree) {
+				JTree tree = (JTree) c;
+
+				TreePath[] values = tree.getSelectionPaths();
+				if (values == null || values.length == 0) {
+					return null;
+				}
+
+				ArrayList alist = new ArrayList(values.length);
+				for (int i = 0; i < values.length; i++) {
+					Item o = (Item) values[i].getLastPathComponent();
+					alist.add(o.getObject());
+				}
+				return new ItemTransferable(alist);
+			}
+			return null;
+		}
+
+		public int getSourceActions(JComponent c) {
+			return MOVE;
+		}
+
+		public class ItemTransferable implements Transferable {
+			ArrayList data;
+
+			public ItemTransferable(ArrayList alist) {
+				this.data = alist;
+			}
+
+			public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+				if (!isDataFlavorSupported(flavor)) {
+					throw new UnsupportedFlavorException(flavor);
+				}
+				return this.data;
+			}
+
+			public DataFlavor[] getTransferDataFlavors() {
+				return new DataFlavor[] { ItemTransferHandler.this.flavor };
+			}
+
+			public boolean isDataFlavorSupported(DataFlavor flavor1) {
+				if (ItemTransferHandler.this.flavor.equals(flavor1)) {
+					return true;
+				}
+				return false;
+			}
+		}
+	}
+	
 	
 	private static final Insets	NULL_INSETS	= new Insets(0, 0, 0, 0);
 
@@ -283,7 +345,6 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 		if (editors == null) {
 			editors = new UIDefaults();
 		}
-
 	}
 	
 	public LogicalTreeUI(final Item rootItem) {
@@ -500,6 +561,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 
 			this.tree.setCellRenderer(new ItemTreeCellRenderer());
 			this.tree.setCellEditor(new ItemTreeCellEditor(this.tree));
+			this.tree.setTransferHandler(new ItemTransferHandler());
 		}
 		return this.tree;
 	}
