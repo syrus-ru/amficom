@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.44 2005/06/17 12:38:55 bass Exp $
+ * $Id: ModelingDatabase.java,v 1.45 2005/06/27 10:37:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/06/17 12:38:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/06/27 10:37:36 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -39,21 +40,24 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 
 	private static String updateMultipleSQLValues;
 
-	private Modeling fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Modeling fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Modeling)
 			return (Modeling) storableObject;
 		throw new IllegalDataException("ModelingDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Modeling modeling = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final Modeling modeling = this.fromStorableObject(storableObject);
 		this.retrieveEntity(modeling);
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.MODELING_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -64,6 +68,7 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -74,9 +79,11 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		Modeling modeling = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Modeling modeling = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getArgumentSet().getId());
@@ -84,18 +91,20 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 		return startParameterNumber;
 	}
 
-  protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-    Modeling modeling = this.fromStorableObject(storableObject);
-		String values = DatabaseIdentifier.toSQLString(modeling.getType().getId()) + COMMA
+	@Override
+  protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+  	final Modeling modeling = this.fromStorableObject(storableObject);
+  	final String values = DatabaseIdentifier.toSQLString(modeling.getType().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(modeling.getMonitoredElementId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(modeling.getArgumentSet().getId()) + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(modeling.getName(), SIZE_NAME_COLUMN) + APOSTOPHE;
 		return values;
 	}
 
-  protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+  protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Modeling modeling = (storableObject == null) ?
+  	final Modeling modeling = (storableObject == null) ?
                 new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) :
                     this.fromStorableObject(storableObject);
 		ModelingType modelingType;
@@ -110,32 +119,37 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 		}
 
     modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-													DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-													DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-													DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-													resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-													modelingType,
-													DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
-													DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-													argumentSet);
-    return modeling;
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				modelingType,
+				DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				argumentSet);
+		return modeling;
 	}
 
-  public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-  	Modeling modeling = this.fromStorableObject(storableObject);
+	@Override
+  public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException {
+  	final Modeling modeling = this.fromStorableObject(storableObject);
     switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  modeling.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
+						+ " '" + modeling.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
 
-  public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+	@Override
+  public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Modeling modeling = this.fromStorableObject(storableObject);
 		super.insertEntity(modeling);
 	}
 
-  public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+  public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
   	super.insertEntities(storableObjects);
 	}
 

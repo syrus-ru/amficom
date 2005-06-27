@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.56 2005/06/17 12:38:56 bass Exp $
+ * $Id: EvaluationDatabase.java,v 1.57 2005/06/27 10:37:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/06/17 12:38:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/06/27 10:37:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -38,21 +39,24 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 	private static String columns;	
 	private static String updateMultipleSQLValues;
 
-	private Evaluation fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Evaluation fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Evaluation)
 			return (Evaluation) storableObject;
 		throw new IllegalDataException("EvaluationDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	@Override
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		this.retrieveEntity(evaluation);
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.EVALUATION_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -63,6 +67,7 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -73,7 +78,8 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		Measurement measurement = evaluation.getMeasurement();
 		String values = DatabaseIdentifier.toSQLString(evaluation.getType().getId()) + COMMA
@@ -81,10 +87,12 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 			+ ((measurement != null) ? (DatabaseIdentifier.toSQLString(measurement.getId())) : "") + COMMA
 			+ DatabaseIdentifier.toSQLString(evaluation.getThresholdSet().getId());
 		return values;
-	}	
+	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		Measurement measurement = evaluation.getMeasurement();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getType().getId());
@@ -94,9 +102,10 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Evaluation evaluation = (storableObject == null) ?
+		final Evaluation evaluation = (storableObject == null) ?
 				new Evaluation(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
@@ -110,27 +119,29 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		ParameterSet thresholdSet;
 		try {
 			evaluationType = (EvaluationType)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
-			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MEASUREMENT_ID);
+			final Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != null)
 				measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
 			thresholdSet = (ParameterSet)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_THRESHOLD_SET_ID), true);
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		evaluation.setAttributes(DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_CREATED),
-								 DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_MODIFIED),
-								 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-								 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-								 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-								 evaluationType,
-								 DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID),
-								 measurement,
-								 thresholdSet);
+		evaluation.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				evaluationType,
+				DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID),
+				measurement,
+				thresholdSet);
 		return evaluation;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		Evaluation evaluation = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException {
+		final Evaluation evaluation = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  evaluation.getId() + "'; argument: " + arg);
@@ -138,13 +149,14 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		Evaluation evaluation = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+		final Evaluation evaluation = this.fromStorableObject(storableObject);
 		super.insertEntity(evaluation);
 	}
-	
-	
-	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+
+	@Override
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 

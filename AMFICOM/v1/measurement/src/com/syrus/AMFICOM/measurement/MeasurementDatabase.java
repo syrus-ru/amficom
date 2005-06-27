@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.81 2005/06/23 18:45:08 bass Exp $
+ * $Id: MeasurementDatabase.java,v 1.82 2005/06/27 10:37:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -33,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.82 $, $Date: 2005/06/27 10:37:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -47,16 +48,18 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 
 	private static final int SIZE_LOCAL_ADDRESS_COLUMN = 64;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.MEASUREMENT_CODE;
 	}	
 
-	private Measurement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Measurement fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Measurement)
 			return (Measurement)storableObject;
 		throw new IllegalDataException("MeasurementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}	
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -70,8 +73,9 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 				+ MeasurementWrapper.COLUMN_TEST_ID;
 		}
 		return columns;
-	}	
+	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -87,9 +91,10 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Measurement measurement = this.fromStorableObject(storableObject);
-		String sql = DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final Measurement measurement = this.fromStorableObject(storableObject);
+		final String sql = DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getMonitoredElementId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getSetup().getId()) + COMMA
@@ -101,9 +106,10 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		Measurement measurement = this.fromStorableObject(storableObject);
+		final Measurement measurement = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurement.getType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurement.getMonitoredElementId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurement.getName(), SIZE_NAME_COLUMN);
@@ -116,14 +122,16 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		return startParameterNumber;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Measurement measurement = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final Measurement measurement = this.fromStorableObject(storableObject);
 		this.retrieveEntity(measurement);
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
-		Measurement measurement = (storableObject == null) ?
+		final Measurement measurement = (storableObject == null) ?
 				new Measurement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
@@ -147,30 +155,33 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-											DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-											resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-											measurementType,
-											DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID),
-											name,
-											measurementSetup,
-											DatabaseDate.fromQuerySubString(resultSet, MeasurementWrapper.COLUMN_START_TIME),
-											resultSet.getLong(MeasurementWrapper.COLUMN_DURATION),
-											resultSet.getInt(MeasurementWrapper.COLUMN_STATUS),
-											DatabaseString.fromQuerySubString(resultSet.getString(MeasurementWrapper.COLUMN_LOCAL_ADDRESS)),
-											DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_TEST_ID));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				measurementType,
+				DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID),
+				name,
+				measurementSetup,
+				DatabaseDate.fromQuerySubString(resultSet, MeasurementWrapper.COLUMN_START_TIME),
+				resultSet.getLong(MeasurementWrapper.COLUMN_DURATION),
+				resultSet.getInt(MeasurementWrapper.COLUMN_STATUS),
+				DatabaseString.fromQuerySubString(resultSet.getString(MeasurementWrapper.COLUMN_LOCAL_ADDRESS)),
+				DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_TEST_ID));
 		return measurement;
 	}
-	
-	protected String retrieveQuery(String condition) {
+
+	@Override
+	protected String retrieveQuery(final String condition) {
 		String query = super.retrieveQuery(condition);
 		query = query.replaceFirst(MeasurementWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(MeasurementWrapper.COLUMN_START_TIME));
 		return query;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Measurement measurement = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final Measurement measurement = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			case Measurement.RETRIEVE_RESULT:
 				return this.retrieveResult(measurement, (ResultSort)arg);
@@ -180,10 +191,11 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private Result retrieveResult(Measurement measurement, ResultSort resultSort) throws ObjectNotFoundException, RetrieveObjectException {
-		String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
-		int resultSortNum = resultSort.value();
-		String sql = SQL_SELECT
+	private Result retrieveResult(final Measurement measurement, final ResultSort resultSort)
+			throws ObjectNotFoundException, RetrieveObjectException {
+		final String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
+		final int resultSortNum = resultSort.value();
+		final String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.RESULT
 			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_ID + EQUALS + measurementIdStr
@@ -204,7 +216,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 			}
 			throw new ObjectNotFoundException("No result of sort: " + resultSortNum + " for measurement " + measurementIdStr);
 		} catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.retrieveResult | Cannot retrieve result of sort " + resultSortNum + " for measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
+			final String mesg = "MeasurementDatabase.retrieveResult | Cannot retrieve result of sort " + resultSortNum + " for measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -222,12 +234,14 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		Measurement measurement = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+		final Measurement measurement = this.fromStorableObject(storableObject);
 		super.insertEntity(measurement);
 	}
 
-	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 
