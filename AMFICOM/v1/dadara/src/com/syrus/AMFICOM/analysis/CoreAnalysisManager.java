@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.83 2005/06/23 07:57:37 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.84 2005/06/27 09:24:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.83 $, $Date: 2005/06/23 07:57:37 $
+ * @version $Revision: 1.84 $, $Date: 2005/06/27 09:24:01 $
  * @module
  */
 
@@ -687,7 +687,7 @@ public class CoreAnalysisManager
 
 	/**
      * ѕроводит анализ рефлектограммы вызовом {@link #performAnalysis(BellcoreStructure, AnalysisParameters)},
-     * затем сравнивает ее с помощью {@link #compareAndMakeAlarms(AnalysisResult, double, ModelTraceManager)}
+     * затем сравнивает ее с помощью {@link #compareAndMakeAlarms(AnalysisResult, Etalon)}
 	 * @param bs рефлектограмма
 	 * @param ap параметры анализа
 	 * @param breakThresh
@@ -699,22 +699,29 @@ public class CoreAnalysisManager
             double breakThresh,
             ModelTraceManager etMTM) {
     	AnalysisResult ar = performAnalysis(bs, ap);
-    	return compareAndMakeAlarms(ar, breakThresh, etMTM);
+    	Etalon etalon = new Etalon(etMTM, breakThresh);
+    	return compareAndMakeAlarms(ar, etalon);
     }
 
     /**
      * —равнивает результаты анализа с порогом обнаружени€
      * обрыва и эталонным MTM, формирует список алармов.
      * “екуща€ верси€ возвращает 0 или 1 алармов.
+     * <p>
+     *  роме того, если в эталоне определен EventAnchorer,
+     * а при сравнении не обнаружено обрыва,
+     * результаты анализа дополн€ютс€ прив€зкой EventAnchorer на основе эталона.
      * @param ar –езультаты анализа
-     * @param breakThresh ”ровень обнаружени€ обрыва р/г
-     * @param etMTM Ёталонна€ р/г и событи€
+     * @param etalon параметры эталона
      */
     public static List compareAndMakeAlarms(AnalysisResult ar,
-            double breakThresh,
-            ModelTraceManager etMTM) {
+            Etalon etalon) {
         // формируем выходной список
         List alarmList = new ArrayList();
+
+        // получаем параметры эталона
+        ModelTraceManager etMTM = etalon.getMTM();
+        double breakThresh = etalon.getMinTraceLevel();
 
         ModelTrace mt = ar.getMTAE().getModelTrace();
 
@@ -734,7 +741,7 @@ public class CoreAnalysisManager
         if (breakPos < 0 && ar.getTraceLength() < etMinLength)
             breakPos = ar.getTraceLength();
 
-        // @todo: проблема - breakPos случитс€ при первом же уходе ниже minTraceLevel, что очень веро€тно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
+        // проблема - breakPos случитс€ при первом же уходе ниже minTraceLevel, что очень веро€тно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
         if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
         {
             ReflectogramAlarm alarm = new ReflectogramAlarm();
@@ -759,6 +766,9 @@ public class CoreAnalysisManager
             } else {
                 alarm = ModelTraceComparer.compareTraceToMTM(mt, etMTM);
             }
+
+            // обеспечиваем EventAnchorer-прив€зку
+            ModelTraceComparer.createEventAnchor(ar, etalon);
 
             if (alarm != null) {
                 alarmList.add(alarm);
