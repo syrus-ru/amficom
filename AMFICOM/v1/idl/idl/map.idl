@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.21 2005/06/24 10:41:45 bass Exp $
+ * $Id: map.idl,v 1.22 2005/06/28 08:08:24 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -239,13 +239,20 @@ module com {
 
 						::CORBA::BooleanSeq layerVisibilities;
 						::CORBA::BooleanSeq labelVisibilities;
-
-						long long userId;		
 					} TopologicalImageQuery;
 
 					typedef struct IdlRenderedImage {
 						::CORBA::OctetSeq image;
 					} RenderedImage;
+
+					typedef struct IdlMapFeature {
+						double centerX;
+						double centerY;
+
+						wstring name;
+					} MapFeature;
+
+					typedef sequence<MapFeature> MapFeatureSeq;
 				};
 			};
 		};
