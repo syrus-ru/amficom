@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.72 2005/06/25 17:50:49 bass Exp $
+ * $Id: Port.java,v 1.73 2005/06/28 08:27:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlPort;
-import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -39,8 +38,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/06/25 17:50:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/06/28 08:27:00 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class Port extends StorableObject implements Characterizable, TypedObject {
@@ -49,7 +48,6 @@ public final class Port extends StorableObject implements Characterizable, Typed
 	private PortType type;
 	private String description;
 	private Identifier equipmentId;
-	private int sort;
 
 	private Set<Characteristic> characteristics;
 
@@ -79,8 +77,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 			final long version,
 			final PortType type,
 			final String description,
-			final Identifier equipmentId,
-			final int sort) {
+			final Identifier equipmentId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -90,7 +87,6 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		this.type = type;
 		this.description = description;
 		this.equipmentId = equipmentId;
-		this.sort = sort;
 
 		this.characteristics = new HashSet<Characteristic>();
 	}
@@ -107,10 +103,9 @@ public final class Port extends StorableObject implements Characterizable, Typed
 	public static Port createInstance(final Identifier creatorId,
 			final PortType type,
 			final String description,
-			final Identifier equipmentId,
-			final PortSort sort) throws CreateObjectException {
+			final Identifier equipmentId) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null ||
-				type == null || equipmentId == null || sort == null )
+				type == null || equipmentId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -119,8 +114,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 						0L,
 						type,
 						description,
-						equipmentId,
-						sort.value());
+						equipmentId);
 
 			assert port.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -142,8 +136,6 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		this.description = pt.description;
 		this.equipmentId = new Identifier(pt.equipmentId);
 
-		this.sort = pt.sort.value();
-
 		final Set characteristicIds = Identifier.fromTransferables(pt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(pt.characteristicIds.length);
 		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
@@ -162,7 +154,6 @@ public final class Port extends StorableObject implements Characterizable, Typed
 				 this.type.getId().getTransferable(),
 				 this.description,
 				 this.equipmentId.getTransferable(),
-				 PortSort.from_int(this.sort),
 				 charIds);
 	}
 
@@ -181,15 +172,6 @@ public final class Port extends StorableObject implements Characterizable, Typed
 
 	public Identifier getEquipmentId() {
 		return this.equipmentId;
-	}
-
-	public PortSort getSort() {
-		return PortSort.from_int(this.sort);
-	}
-	
-	public void setSort(final PortSort sort) {
-		this.sort = sort.value();
-		super.markAsChanged();
 	}
 
 
@@ -229,8 +211,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 			final long version,
 			final PortType type,
 			final String description,
-			final Identifier equipmentId,
-			final int sort) {
+			final Identifier equipmentId) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -239,7 +220,6 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		this.type = type;
 		this.description = description;
 		this.equipmentId = equipmentId;
-		this.sort = sort;
 	}
 
 	@Override

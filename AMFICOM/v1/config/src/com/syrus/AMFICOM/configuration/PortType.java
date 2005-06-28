@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.64 2005/06/25 17:07:54 bass Exp $
+ * $Id: PortType.java,v 1.65 2005/06/28 08:27:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlPortType;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/06/25 17:07:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/06/28 08:27:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -48,6 +49,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 
 	private String name;
 	private int sort;
+	private int kind;
 
 	private Set<Characteristic> characteristics;
 
@@ -78,7 +80,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final String codename,
 			final String description,
 			final String name,
-			final int sort) {
+			final int sort,
+			final int kind) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -89,6 +92,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 				description);
 		this.name = name;
 		this.sort = sort;
+		this.kind = kind;
 		this.characteristics = new HashSet<Characteristic>();
 	}
 
@@ -104,7 +108,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final String codename,
 			final String description,
 			final String name,
-			final PortTypeSort sort) throws CreateObjectException{
+			final PortTypeSort sort,
+			final PortTypeKind kind) throws CreateObjectException{
 		if (creatorId == null || codename == null || name == null || description == null ||
 				sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -116,7 +121,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 					codename,
 					description,
 					name,
-					sort.value());
+					sort.value(),
+					kind.value());
 
 			assert portType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -134,6 +140,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		super.fromTransferable(ptt.header, ptt.codename, ptt.description);
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
+		this.kind = ptt.kind.value();
 
 		final Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
@@ -153,6 +160,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				PortTypeSort.from_int(this.sort),
+				PortTypeKind.from_int(this.kind),
 				charIds);
 	}
 
@@ -164,7 +172,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final String codename,
 			final String description,
 			final String name,
-			final int sort) {
+			final int sort,
+			final int kind) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -174,6 +183,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 				description);
 		this.name = name;
 		this.sort = sort;
+		this.kind = kind;
 	}
 
 	public String getName() {
@@ -186,6 +196,10 @@ public final class PortType extends StorableObjectType implements Characterizabl
 
 	public void setSort(final PortTypeSort sort) {
 		this.sort = sort.value();
+	}
+
+	public PortTypeKind getKind() {
+			return PortTypeKind.from_int(this.kind);
 	}
 
 	public void setName(String name) {
