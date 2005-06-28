@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.9 2005/06/20 08:57:21 bass Exp $
+ * $Id: MCMObjectLoader.java,v 1.10 2005/06/28 11:49:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,14 +13,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/20 08:57:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/28 11:49:39 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 abstract class MCMObjectLoader extends CORBAObjectLoader {
@@ -29,10 +31,12 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		super(mcmServantManager);
 	}
 
-	protected final Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
-			throws ApplicationException {
+	@Override
+	protected final Set loadStorableObjects(final short entityCode,
+			final Set<Identifier> ids,
+			final TransmitProcedure transmitProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
-		final Set loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
+		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 
@@ -51,12 +55,13 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		return objects;
 	}
 
+	@Override
 	protected final Set loadStorableObjectsButIdsByCondition(final short entityCode,
-			final Set ids,
+			final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
-		final Set loadButIds = Identifier.createSumIdentifiers(ids, objects);
+		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
 
 		final Set loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
 				loadButIds,
@@ -83,7 +88,7 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 	 * unnecessary in super implementation.
 	 */
 	protected final void saveStorableObjects(final short entityCode,
-			final Set storableObjects,
+			final Set<? extends StorableObject> storableObjects,
 			final boolean force,
 			final ReceiveProcedure receiveProcedure) throws ApplicationException {
 		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
@@ -95,7 +100,8 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 	 * Currently not need to implement this method
 	 * @todo Using this method load objects, changed on server relatively to MCM
 	 */
-	public Set refresh(final Set storableObjects) throws ApplicationException {
+	@Override
+	public Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		assert false : storableObjects;
 		return null;
 	}
@@ -103,7 +109,8 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 	/**
 	 * Currently not need to implement this method
 	 */
-	public void delete(Set identifiables) {
+	@Override
+	public void delete(final Set<? extends Identifiable> identifiables) {
 		assert false : identifiables;
 	}
 }
