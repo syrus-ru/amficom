@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.14 2005/06/28 14:38:23 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.15 2005/06/28 15:06:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/06/28 14:38:23 $
+ * @version $Revision: 1.15 $, $Date: 2005/06/28 15:06:10 $
  * @module
  */
 public class ModelTraceAndEventsImpl
-implements ReliabilityModelTraceAndEvents, DataStreamable
-{
+implements ReliabilityModelTraceAndEvents, DataStreamable {
 	protected static final long SIGNATURE_EVENTS = 3353520050119193102L;
+	protected static final double CINFO_DEVIATION_PREC = 1e-4;
 
 	protected ReliabilitySimpleReflectogramEventImpl[] rse; // not null
     //private ComplexReflectogramEvent[] ce; // auto-generated, not null
@@ -91,8 +91,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
         private double yTop;
         private int[] edz;
         private int[] adz;
-        private double[] rmsDev;
-        private double[] maxDev;
+        private int[] rmsDevI;
+        private int[] maxDevI;
 
         protected boolean eventNeedsEdzAdzPo(int nEvent) {
             return rse[nEvent].getEventType() ==
@@ -102,7 +102,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
             return
                rse[nEvent].getEventType() == SimpleReflectogramEvent.LINEAR
             || rse[nEvent].getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED
-            || rse[nEvent].getEventType() == SimpleReflectogramEvent.GAIN
+            || rse[nEvent].getEventType() == SimpleReflectogramEvent.GAIN // FIXME: gain/loss do not need these pars
             || rse[nEvent].getEventType() == SimpleReflectogramEvent.LOSS;
         }
         protected int getEdz(int i) {
@@ -112,10 +112,10 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
             return adz[i];
         }
         protected double getMaxDev(int i) {
-            return maxDev[i];
+            return maxDevI[i] * CINFO_DEVIATION_PREC;
         }
         protected double getRmsDev(int i) {
-            return rmsDev[i];
+            return rmsDevI[i] * CINFO_DEVIATION_PREC;
         }
 
         public double getYTop() {
@@ -124,8 +124,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
         private void allocateArrays() {
             edz = new int[rse.length];
             adz = new int[rse.length];
-            maxDev = new double[rse.length];
-            rmsDev = new double[rse.length];
+            maxDevI = new int[rse.length];
+            rmsDevI = new int[rse.length];
         }
 
         public ComplexInfo(double[] y) {
@@ -135,8 +135,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
             {
                 edz[i] = 0;
                 adz[i] = 0;
-                rmsDev[i] = 0;
-                maxDev[i] = 0;
+                rmsDevI[i] = 0;
+                maxDevI[i] = 0;
                 if (eventNeedsEdzAdzPo(i)) {
                     double po = ReflectogramMath.getPo(rse, i, mt);
                     int[] res = ReflectogramMath.getEdzAdz(po, rse[i], mt);
@@ -144,8 +144,13 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
                     adz[i] = res[1];
                 }
                 if (eventNeedsMaxDev(i)) {
-                    maxDev[i] = ReflectogramMath.getMaxDev(y, rse[i], mt);
-                    rmsDev[i] = ReflectogramMath.getRmsDev(y, rse[i], mt);
+                	// округляем вверх
+                    maxDevI[i] = (int)Math.ceil(
+                    		ReflectogramMath.getMaxDev(y, rse[i], mt)
+                    			/ CINFO_DEVIATION_PREC);
+                    rmsDevI[i] = (int)Math.ceil(
+                    		ReflectogramMath.getRmsDev(y, rse[i], mt)
+                    			/ CINFO_DEVIATION_PREC);
                 }
             }
         }
@@ -156,15 +161,15 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
             for (int i = 0; i < rse.length; i++) {
                 edz[i] = 0;
                 adz[i] = 0;
-                rmsDev[i] = 0;
-                maxDev[i] = 0;
+                rmsDevI[i] = 0;
+                maxDevI[i] = 0;
                 if (eventNeedsEdzAdzPo(i)) {
                     edz[i] = dis.readInt();
                     adz[i] = dis.readInt();
                 }
                 if (eventNeedsMaxDev(i)) {
-                    maxDev[i] = dis.readDouble();
-                    rmsDev[i] = dis.readDouble();
+                    maxDevI[i] = dis.readInt();
+                    rmsDevI[i] = dis.readInt();
                 }
             }
         }
@@ -177,8 +182,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
                 	dos.writeInt(adz[i]);
                 }
                 if (eventNeedsMaxDev(i)) {
-                	dos.writeDouble(maxDev[i]);
-                	dos.writeDouble(rmsDev[i]);
+                	dos.writeInt(maxDevI[i]);
+                	dos.writeInt(rmsDevI[i]);
                 }
             }
         }
@@ -354,20 +359,20 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 
 	public void writeToDOS(DataOutputStream dos) throws IOException
 	{
-//		int pos1 = dos.size();
+		int pos1 = dos.size();
 		dos.writeLong(SIGNATURE_EVENTS);
 		getMF().writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
-//		int pos2 = dos.size();
+		int pos2 = dos.size();
 		ReliabilitySimpleReflectogramEventImpl.writeArrayToDOS(rse, dos);
-//		int pos3 = dos.size();
+		int pos3 = dos.size();
         cinfo.writeToDOS(dos);
-//		int pos4 = dos.size();
-//		System.out.println("MTAEI: writeToDOS:"
-//				+ " MT " + (pos2-pos1)
-//				+ ", rse " + (pos3-pos2)
-//				+ ", cinfo " + (pos4-pos3)
-//				+ ", total " + (pos4-pos1));
+		int pos4 = dos.size();
+		System.out.println("MTAEI: writeToDOS:"
+				+ " MT " + (pos2-pos1)     // 62-68% of total
+				+ ", rse " + (pos3-pos2)   // 14-16% of total
+				+ ", cinfo " + (pos4-pos3) // 18-22% of total
+				+ ", total " + (pos4-pos1));
 	}
 
 	public static DataStreamable.Reader getReader()
