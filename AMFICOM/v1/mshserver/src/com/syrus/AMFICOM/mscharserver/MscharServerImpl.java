@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.9 2005/06/25 18:05:56 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.10 2005/06/28 08:11:40 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.mscharserver;
+
+import java.util.Iterator;
+import java.util.List;
 
 import org.omg.CORBA.ORB;
 
@@ -16,15 +19,18 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.map.MapFeature;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
+import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/25 18:05:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/06/28 08:11:40 $
+ * @author $Author: max $
  * @module mscharserver_v1
  */
 public final class MscharServerImpl extends MscharServerSchemeTransmit {
@@ -63,15 +69,18 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 
 	public IdlRenderedImage transmitTopologicalImage(
 			final IdlTopologicalImageQuery topologicalImageQuery_Transferable,
-			final IdlSessionKey sessionKey)
+			final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			//validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.transmitTopologicalImage() | Trying to transmit "
 					+ '\'', Log.INFO);
 			TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQuery_Transferable);
 			byte[] image;
 			try {
-				image = MapInfoPool.getImage(topologicalImageQuery);
+				image = MapInfoPool.getImage(topologicalImageQuery, new SessionKey(idlSessionKey));
 			} catch (IllegalDataException e) {
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
 			}
@@ -85,17 +94,38 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 	}
 	
 	public void stopRenderTopologicalImage(
-			final long userId,
-			final IdlSessionKey sessionKey)
+			final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			//validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.stopRenderTopologicalImage() | Trying to stop rendering image"
 					+ '\'', Log.INFO);
-			MapInfoPool.cancelRendering(userId);
+			MapInfoPool.cancelRendering(new SessionKey(idlSessionKey));
 		} catch (IllegalDataException e) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
 		} catch (final Throwable t) {
 			throw super.processDefaultThrowable(t);
 		}
+	}
+	
+	public IdlMapFeature[] findFeature(String featureName, IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		try {
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			//validateAccess(idlSessionKey, userId, domainId);
+			Log.debugMessage("MscharServerImpl.findFeature() | Trying to find feature " + featureName, Log.INFO);
+			List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
+			IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
+			int i = 0;
+			for (MapFeature mapFeature: mapFeatures) {
+				i++;
+				idlMapFeatures[i] = mapFeature.getTransferable();				
+			}
+			return idlMapFeatures;
+		} catch (final Throwable t) {
+			throw super.processDefaultThrowable(t);
+		}	
 	}
 }
