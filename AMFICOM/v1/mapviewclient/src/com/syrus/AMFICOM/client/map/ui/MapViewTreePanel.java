@@ -17,6 +17,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
+import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 public final class MapViewTreePanel extends JPanel 
 		implements PropertyChangeListener, TreeSelectionListener {
 
-	LogicalTreeUI treeUI;
+	IconedTreeUI treeUI;
 	JTree tree;
 	ItemTreeModel treeModel;
 	MapViewTreeModel model;
@@ -72,7 +73,7 @@ public final class MapViewTreePanel extends JPanel
 		this.model = MapViewTreeModel.getInstance();
 
 		this.root = new IconedNode("root", LangModelGeneral.getString("root"));
-		this.treeUI = new LogicalTreeUI(this.root, false);
+		this.treeUI = new IconedTreeUI(this.root);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();
 		this.treeModel.setAllwaysSort(false);
