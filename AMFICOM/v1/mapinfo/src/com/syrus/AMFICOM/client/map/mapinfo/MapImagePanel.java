@@ -8,20 +8,18 @@ import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
+import com.syrus.util.Log;
 
 public class MapImagePanel extends JPanel
 {
 	private Image mapImage = null;
 
 	private final MapInfoNetMapViewer viewer;
-
-	private final ImageIcon imageIcon = new ImageIcon();
 
 	public MapImagePanel(MapInfoNetMapViewer viewer)
 	{
@@ -75,22 +73,20 @@ public class MapImagePanel extends JPanel
 	public void setImage(Image newImage)
 	{
 		if (newImage != null)
-		{
-			// Так сделано из-за того, что ImageIcon выставляет размеры изображению
-			// и перерисовка почему-то происходит быстрее.
-			this.imageIcon.setImage(newImage);
-			this.mapImage = this.imageIcon.getImage();
-		}
+			this.mapImage = newImage;
 	}
 
 	public void paintComponent(Graphics g)
 	{
-		// Log.debugMessage("MapImagePanel.paintComponent | " + , Log.FINEST);
-		// super.paintComponent(g);
+		long t1 = System.currentTimeMillis();		
+		super.paintComponent(g);
+		long t2 = System.currentTimeMillis();
 
 		if (this.mapImage != null && g != null)
-			g.drawImage(this.mapImage, 0, 0, this);
+			g.drawImage(this.mapImage, 0, 0,this.getWidth(),this.getHeight(), this);
 
+		long t3 = System.currentTimeMillis();
+		
 		try
 		{
 			this.viewer.getLogicalNetLayer().paint(g, this.viewer.getVisibleBounds());
@@ -103,5 +99,10 @@ public class MapImagePanel extends JPanel
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		long t4 = System.currentTimeMillis();
+		
+		Log.debugMessage("MapImagePanel.paintComponent | " + "repainted for " +
+				(t2 - t1) + " " + (t3 - t2) + " " + (t4 - t3) + " ms.", Log.FINEST);		
 	}
 }
