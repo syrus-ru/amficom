@@ -417,7 +417,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			if(schemeElements != null) {
 				for(Iterator it = schemeElements.iterator(); it.hasNext();) {
 					SchemeElement se = (SchemeElement )it.next();
-					if(se.getSiteNode().equals(siteNode.getId())) {
+					SiteNode elementSiteNode = se.getSiteNode();
+					if(elementSiteNode != null && elementSiteNode.equals(siteNode.getId())) {
 						elementNode = new DefaultMutableTreeNode(se);
 						this.elementsBranch.add(elementNode);
 						for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();) {
