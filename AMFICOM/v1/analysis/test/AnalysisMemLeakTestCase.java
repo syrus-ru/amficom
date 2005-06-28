@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisMemLeakTestCase.java,v 1.1 2005/06/23 06:41:55 saa Exp $
+ * $Id: AnalysisMemLeakTestCase.java,v 1.2 2005/06/28 11:01:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -15,6 +16,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
 import com.syrus.io.BellcoreStructure;
 
 import junit.framework.TestCase;
@@ -24,7 +26,7 @@ public class AnalysisMemLeakTestCase extends TestCase {
         junit.swingui.TestRunner.run(AnalysisMemLeakTestCase.class);
     }
     public final void testAnalysisNotCrush()
-    throws IncompatibleTracesException {
+    throws IncompatibleTracesException, SignatureMismatchException, IOException {
         File file = new File("/traces/fail.sor"); // XXX
         BellcoreStructure bs = FileOpenCommand.readTraceFromFile(file);
         AnalysisParameters ap = new AnalysisParameters(
@@ -66,6 +68,7 @@ public class AnalysisMemLeakTestCase extends TestCase {
 
         	boolean testAnalysis = true;
         	boolean testEtalonAndComparison = false;
+        	boolean testReadabilityLeakage = true;
 
         	if (testAnalysis) {
 	        	CoreAnalysisManager.performAnalysis(bs, ap).getMTAE().
@@ -76,6 +79,9 @@ public class AnalysisMemLeakTestCase extends TestCase {
 	        	col.add(bs);
 	        	ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(col, ap);
 	        	CoreAnalysisManager.analyseCompareAndMakeAlarms(bs, ap, -99, mtm);
+        	}
+        	if (testReadabilityLeakage) {
+        		CoreAnalysisManagerTestCase.checkMTMReadability(bs, false);
         	}
         }
 
