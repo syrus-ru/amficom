@@ -1,5 +1,5 @@
 /*-
- * $Id: MapFeature.java,v 1.1 2005/06/28 08:09:46 max Exp $
+ * $Id: MapFeature.java,v 1.2 2005/06/28 10:06:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ public class MapFeature {
 	private String name;
 	
 	public MapFeature (double centerX, double centerY, String name) {
-		assert name == null : ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.centerX = centerX;
 		this.centerY = centerY;
 		this.name = name;
