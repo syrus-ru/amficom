@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.19 2005/06/27 09:28:53 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.20 2005/06/28 10:03:41 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/06/27 09:28:53 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/28 10:03:41 $
  * @module
  */
 public class ModelTraceComparer
@@ -44,18 +44,18 @@ public class ModelTraceComparer
             ReliabilityModelTraceAndEvents mtae,
             ModelTraceManager mtm)
     {
-        System.out.println(
-                "ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
+//        System.out.println(
+//                "ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
         ReflectogramAlarm alarmTrace =
             compareTraceToMTM(mtae.getModelTrace(), mtm);
         ReflectogramAlarm alarmEvents =
             compareEventsToMTM(
                 (ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
                 mtm);
-        System.out.println(
-                "ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
-        System.out.println(
-                "ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
+//        System.out.println(
+//                "ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
+//        System.out.println(
+//                "ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
         if (alarmTrace != null)
             return alarmTrace;
         else
