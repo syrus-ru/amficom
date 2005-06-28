@@ -118,6 +118,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	public void repaint(boolean fullRepaint) throws MapConnectionException,
 			MapDataException
 	{
+		long t1 = System.currentTimeMillis();		
 		if (fullRepaint)
 		{
 			Log.debugMessage(" MIFLNL - repaint - Entered full repaint",
@@ -128,7 +129,13 @@ public class MapInfoNetMapViewer extends NetMapViewer
 					Log.DEBUGLEVEL10);
 
 		}
+		
+		long t2 = System.currentTimeMillis();		
 		this.visualComponent.repaint();
+		long t3 = System.currentTimeMillis();
+		
+		Log.debugMessage("MapInfoNetMapViewer.repaint | " + "visual component was repainted for " +
+				(t2 - t1) + " " + (t3 - t2) + " ms.", Log.FINEST);		
 	}
 
 	/*
