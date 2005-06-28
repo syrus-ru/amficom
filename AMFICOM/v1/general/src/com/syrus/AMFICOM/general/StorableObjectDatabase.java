@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.159 2005/06/27 10:27:19 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.160 2005/06/28 07:18:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.159 $, $Date: 2005/06/27 10:27:19 $
+ * @version $Revision: 1.160 $, $Date: 2005/06/28 07:18:01 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -482,7 +482,7 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEntityName() + "Database.retrieveLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
-			Map<Identifier, Set<Identifier>> linkedEntityIdsMap = new HashMap<Identifier, Set<Identifier>>();
+			final Map<Identifier, Set<Identifier>> linkedEntityIdsMap = new HashMap<Identifier, Set<Identifier>>();
 			Identifier storabeObjectId;
 			Set<Identifier> linkedEntityIds;
 			while (resultSet.next()) {
@@ -497,7 +497,7 @@ public abstract class StorableObjectDatabase {
 
 			return linkedEntityIdsMap;
 		} catch (SQLException sqle) {
-			String mesg = this.getEntityName()
+			final String mesg = this.getEntityName()
 					+ "Database.retrieveLinkedEntityIds | Cannot retrieve linked entity identifiers for entity -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
@@ -512,6 +512,44 @@ public abstract class StorableObjectDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
+	}
+
+	protected static boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {
+		final String aliasCount = "count";
+		final String tableName = ObjectEntities.codeToString(id.getMajor());
+		final String sql = SQL_SELECT + SQL_COUNT + aliasCount
+				+ SQL_FROM + tableName
+				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
+		Statement statement = null;
+		ResultSet resultSet = null;
+		final Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("StorableObjectDatabase.isPresentInDatabase | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+			final int count = resultSet.getInt(aliasCount);
+			return count > 0;
+		}
+		catch (SQLException sqle) {
+			final String mesg = "StorableObjectDatabase.isPresentInDatabase | Cannot check presence -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1083,7 +1121,7 @@ public abstract class StorableObjectDatabase {
 		if (idLinkedIdMap == null || idLinkedIdMap.isEmpty())
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT + idColumnName + COMMA + linkedIdColumnName + SQL_FROM + tableName + SQL_WHERE);
+		final StringBuffer sql = new StringBuffer(SQL_SELECT + idColumnName + COMMA + linkedIdColumnName + SQL_FROM + tableName + SQL_WHERE);
 		sql.append(idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
 
 		final Map<Identifier, Set<Identifier>> dbLinkedObjIdsMap = new HashMap<Identifier, Set<Identifier>>();
