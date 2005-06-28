@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.3 2005/06/22 08:55:01 peskovsky Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.4 2005/06/28 11:23:09 peskovsky Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,14 @@ import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
-import com.syrus.AMFICOM.map.corba.RenderedImage_Transferable;
-import com.syrus.AMFICOM.map.corba.TopologicalImageQuery_Transferable;
+import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
+import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2005/06/22 08:55:01 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2005/06/28 11:23:09 $
  * @author $Author: peskovsky $
  * @module map_v1
  */
@@ -44,9 +45,8 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 	 */
 	public void stopRendering()
 	{
-		IdlSessionKey keyt = LoginManager.getSessionKeyTransferable();
 		try {
-			this.connection.getMscharServer().stopRenderTopologicalImage(LoginManager.getSessionKey().hashCode(), keyt);
+			this.connection.getMscharServer().stopRenderTopologicalImage(LoginManager.getSessionKey().getTransferable());
 		} catch (AMFICOMRemoteException e) {
 			Log.errorMessage("TopologicalImageLoader.loadTopologicalImage | loading has been cancelled" + e.getMessage());
 		}
@@ -57,13 +57,18 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 	 */
 	public Image renderMapImage(TopologicalImageQuery query) throws MapConnectionException, MapDataException
 	{
-		query.setUserID(LoginManager.getSessionKey().hashCode());
-		
-		TopologicalImageQuery_Transferable transf = query.getTransferable();
+		long t0=0,t1=0,t2=0,t3=0,t4=0;
+		t0 = System.currentTimeMillis();
+		IdlTopologicalImageQuery transf = query.getTransferable();
 		IdlSessionKey keyt = LoginManager.getSessionKeyTransferable();
-		RenderedImage_Transferable rit;
+		IdlRenderedImage rit;
+		
 		try {
-			rit = this.connection.getMscharServer().transmitTopologicalImage(transf,keyt);
+			t1 = System.currentTimeMillis();
+			MscharServer mscharServer= this.connection.getMscharServer();
+			t2 = System.currentTimeMillis();
+			rit = mscharServer.transmitTopologicalImage(transf,keyt);
+			t3 = System.currentTimeMillis();
 		} catch (AMFICOMRemoteException e) {
 			Log.errorMessage("TopologicalImageLoader.loadTopologicalImage |" + e.getMessage());
 			return null;
@@ -75,6 +80,13 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 		}
 
 		Image imageReceived = Toolkit.getDefaultToolkit().createImage(image);
+		t4 = System.currentTimeMillis();
+		Log.debugMessage("MapInfoCorbaImageLoader.renderMapImage | "
+				+ (t1 - t0) + " (creating transf and session key)"
+				+ (t2 - t1) + " (getting session ref)"
+				+ (t3 - t2) + "rendering"
+				+ (t4 - t3) + "creating image",
+				Log.FINEST);
 
 		return imageReceived;
 	}
