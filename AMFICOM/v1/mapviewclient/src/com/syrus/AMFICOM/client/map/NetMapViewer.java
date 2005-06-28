@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.22 2005/06/24 12:46:17 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.23 2005/06/28 07:27:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,8 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -27,6 +29,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JComponent;
+import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
@@ -42,6 +45,7 @@ import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
 import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
 import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
 import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -72,10 +76,12 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/06/24 12:46:17 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/28 07:27:23 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
+	public static final int DEFAULT_TIME_INTERVAL = 1000;
+
 	protected LogicalNetLayer logicalNetLayer;
 	protected MapContext mapContext;
 	protected MapImageRenderer renderer;
@@ -92,6 +98,14 @@ public abstract class NetMapViewer {
 	protected MouseListener ml;
 	protected MouseMotionListener mml;
 	protected MapKeyAdapter mka;
+
+	/**
+	 * Timer который отвечает за изменение реЖима отображения графических 
+	 * элементов в состоянии alarmed с периодом DEFAULT_TIME_INTERVAL.
+	 * Timer меняет флаг отрисовки и выдает команду
+	 * логическому слою перерисовать свое содержимое.
+	 */
+	private Timer animateTimer;
 	
 	public NetMapViewer(
 			LogicalNetLayer logicalNetLayer,
@@ -119,10 +133,32 @@ public abstract class NetMapViewer {
 		this.ml = new MapMouseListener(this);
 		this.mml = new MapMouseMotionListener(this);
 		this.mka = new MapKeyAdapter(this);
+
+		if(this.logicalNetLayer.aContext != null)
+			if(this.logicalNetLayer.aContext.getApplicationModel() != null)
+				if (this.logicalNetLayer.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
+		{
+			this.animateTimer = new Timer(NetMapViewer.DEFAULT_TIME_INTERVAL, new ActionListener() {
+			
+				public void actionPerformed(ActionEvent e) {
+					MapPropertiesManager.setShowAlarmState(!MapPropertiesManager.isShowAlarmState());
+					try {
+						NetMapViewer.this.repaint(false);
+					} catch(MapConnectionException e1) {
+						e1.printStackTrace();
+					} catch(MapDataException e1) {
+						e1.printStackTrace();
+					}
+				}
+			
+			});
+			this.animateTimer.start();
+		}
 	}
 
 	public void dispose() {
 		this.ttm.unregisterComponent(this.mttp);
+		this.animateTimer.stop();
 	}
 	
 	/**
