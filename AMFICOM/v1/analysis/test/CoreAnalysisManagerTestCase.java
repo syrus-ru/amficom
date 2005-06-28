@@ -1,5 +1,5 @@
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.5 2005/06/28 11:01:28 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.6 2005/06/28 15:08:53 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -106,7 +106,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 	        ReflectogramAlarm res2 = ModelTraceComparer.compareMTAEToMTM(mtm2.getMTAE(), mtm);
 	        System.out.println("compare alarm: " + res2);
 	       	assertTrue(res == null); // mtm should cover itself
-	       	assertTrue(res2 == null); // restored mtae is not like initial mtm
+	       	assertTrue(res2 == null); // restored mtae should be the same
         }
 
        	return mtmBytes.length;
