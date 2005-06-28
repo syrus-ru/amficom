@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.1 2005/06/23 12:39:30 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.2 2005/06/28 14:03:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,17 +10,16 @@ package com.syrus.AMFICOM.mcm;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_MCM_ID;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.MCM_ID;
 
+import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -54,9 +53,9 @@ public final class MCMSetup {
 			/*-Setup all base information about this MCM*/
 			bootstrap();
 
-			final MCM mcm = (MCM) StorableObjectPool.getStorableObject(ID, true);
-			final LinkedIdsCondition lic = new LinkedIdsCondition(ID, ObjectEntities.KIS_CODE);
-			final Set kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+//			final MCM mcm = (MCM) StorableObjectPool.getStorableObject(ID, true);
+//			final LinkedIdsCondition lic = new LinkedIdsCondition(ID, ObjectEntities.KIS_CODE);
+//			final Set kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true);
 			
 		}
 		catch (ApplicationException ae) {
@@ -86,11 +85,33 @@ public final class MCMSetup {
 		final String mcmUserPassword = ApplicationProperties.getString(KEY_MCM_USER_PASSWORD, MCM_USER_PASSWORD);
 		MCMSessionEnvironment.getInstance().login(mcmUserLogin, mcmUserPassword);
 
+		/*-Retrieve data for this MCM*/
+		final IdlMCM idlMCM = retrieveIdlMCM();
+
 		/*Init database loader with retrieved from server identifier of the user, corresponding to this MCM.*/
-		DatabaseObjectLoader.init(retrieveUserId());
+		Identifier id = new Identifier(idlMCM.userId);
+		DatabaseObjectLoader.init(id);
+
+		id = new Identifier(idlMCM.header.creatorId);
+		StorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(idlMCM.header.modifierId);
+		StorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(idlMCM.domainId);
+		StorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(idlMCM.serverId);
+		StorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(idlMCM.userId);
+		StorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(idlMCM.header.id);
+		StorableObjectPool.getStorableObject(id, true);
 	}
 
-	private static Identifier retrieveUserId() throws ApplicationException {
+	private static IdlMCM retrieveIdlMCM() throws ApplicationException {
 		final MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 		final IdlMCM[] idlmcms;
 		try {
@@ -101,8 +122,6 @@ public final class MCMSetup {
 		}
 		if (idlmcms.length < 1)
 			throw new IllegalDataException("Cannot find MCM '" + ID + "'");
-
-		final Identifier mcmUserId = new Identifier(idlmcms[0].userId);
-		return mcmUserId;
+		return idlmcms[0];
 	}
 }
