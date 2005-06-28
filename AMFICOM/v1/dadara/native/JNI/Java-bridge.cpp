@@ -3,7 +3,7 @@
 
 #include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
 #include "../common/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
-#include "../common/com_syrus_AMFICOM_analysis_dadara_ReliabilitySimpleReflectogramEventimpl.h"
+#include "../common/com_syrus_AMFICOM_analysis_dadara_ReliabilitySimpleReflectogramEventImpl.h"
 #include "../common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
 #include "../common/com_syrus_AMFICOM_analysis_dadara_Wavelet.h"
 
