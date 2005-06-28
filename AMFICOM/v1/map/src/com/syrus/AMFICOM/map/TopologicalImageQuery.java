@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.8 2005/06/28 07:59:52 max Exp $
+ * $Id: TopologicalImageQuery.java,v 1.9 2005/06/28 08:35:46 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
  * @author $Author: max $
- * @version $Revision: 1.8 $, $Date: 2005/06/28 07:59:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/28 08:35:46 $
  * @module mapinfo_v1
  */
 public final class TopologicalImageQuery implements Comparable {
@@ -110,14 +110,6 @@ public final class TopologicalImageQuery implements Comparable {
 	private boolean[] labelVisibilities;
 
 	/**
-	 * 
-	 * Идентификатор пользователя
-	 * 
-	 */
-
-	private long userID;
-
-	/**
 	 * Время последнего использования
 	 */
 	private transient long lastUsed = 0;
@@ -143,17 +135,13 @@ public final class TopologicalImageQuery implements Comparable {
 	 * 
 	 * @param labelVisibilities
 	 * 
-	 * @param userID
-	 * 
 	 */
 
 	public TopologicalImageQuery(int mapImageWidth, int mapImageHeight,
 
 	double topoCenterX, double topoCenterY, double topoScale,
 
-	boolean[] layerVisibilities, boolean[] labelVisibilities,
-
-	long userID) {
+	boolean[] layerVisibilities, boolean[] labelVisibilities) {
 
 		this.mapImageWidth = mapImageWidth;
 
@@ -168,8 +156,6 @@ public final class TopologicalImageQuery implements Comparable {
 		this.layerVisibilities = layerVisibilities;
 
 		this.labelVisibilities = labelVisibilities;
-
-		this.userID = userID;
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -222,8 +208,7 @@ public final class TopologicalImageQuery implements Comparable {
 	 * </p>
 	 */
 	protected boolean isValid() {
-		return this.mapImageWidth != 0 && this.mapImageHeight != 0
-				&& this.userID != 0;
+		return this.mapImageWidth != 0 && this.mapImageHeight != 0;
 	}
 
 	public boolean[] getLabelVisibilities() {
@@ -316,18 +301,6 @@ public final class TopologicalImageQuery implements Comparable {
 
 	}
 
-	public long getUserID() {
-
-		return this.userID;
-
-	}
-
-	public void setUserID(long userID) {
-
-		this.userID = userID;
-
-	}
-
 	public int getPriority() {
 		return this.priority;
 	}
@@ -378,7 +351,6 @@ public final class TopologicalImageQuery implements Comparable {
 
 	public void setTopoCenter(DoublePoint topoCenter) {
 		this.topoCenter = topoCenter;
-
 		this.topoCenterX = topoCenter.getX();
 		this.topoCenterY = topoCenter.getY();
 	}
