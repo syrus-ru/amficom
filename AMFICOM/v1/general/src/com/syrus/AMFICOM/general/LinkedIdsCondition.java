@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.41 2005/06/27 09:36:11 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.42 2005/06/28 15:32:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.41 $, $Date: 2005/06/27 09:36:11 $
+ * @version $Revision: 1.42 $, $Date: 2005/06/28 15:32:43 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -77,6 +77,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
 	private static final String LINKED_IDS_CONDITION_INIT = "LinkedIdsCondition.<init>() | ";
 	private static final String LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "LinkedIdsCondition$1.isConditionTrue() | ";
+	private static final String LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE = "LinkedIdsCondition$1.isNeedMore() | ";
 	protected static final String ENTITY_CODE_NOT_REGISTERED = "Entity not registered for this condition -- ";
 	protected static final String LINKED_ENTITY_CODE_NOT_REGISTERED = "Linked entity not registered for this condition -- ";
 
@@ -185,6 +186,15 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 								Log.WARNING);
 						return false;
 					}
+
+					@Override
+					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
+								+ "Objects: " + storableObjects + "; "
+								+ "This is a dummy condition; evaluation result is always false...",
+								Log.WARNING);
+						return false;
+					}
 				};
 				this.delegate.entityCode = code;
 				this.delegate.linkedEntityCode = linkedCode;
@@ -273,6 +283,15 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "Object: " + storableObject.toString() + "; "
+								+ "This is a dummy condition; evaluation result is always false...",
+								Log.WARNING);
+						return false;
+					}
+
+					@Override
+					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
+								+ "Objects: " + storableObjects + "; "
 								+ "This is a dummy condition; evaluation result is always false...",
 								Log.WARNING);
 						return false;
