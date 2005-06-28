@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.22 2005/06/24 14:13:40 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.23 2005/06/28 07:31:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -81,8 +81,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.22 $, $Date: 2005/06/24 14:13:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/06/28 07:31:58 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapSchemeTreeModel 
@@ -304,9 +304,10 @@ public class MapSchemeTreeModel
 				allowsChildren);
 		treeNode.setTopological(isTopological);
 
-		treeNode.addChild(buildElementsTree(element, isTopological));//new MapSchemeTreeNode(null,ELEMENT_BRANCH, "Вложенные элементы", true));
-		treeNode.addChild(buildLinksTree(element, isTopological));//new MapSchemeTreeNode(null,LINK_BRANCH, "Линии", true));
-
+		if(allowsChildren) {
+			treeNode.addChild(buildElementsTree(element, isTopological));
+			treeNode.addChild(buildLinksTree(element, isTopological));
+		}
 		return treeNode;
 	}
 
