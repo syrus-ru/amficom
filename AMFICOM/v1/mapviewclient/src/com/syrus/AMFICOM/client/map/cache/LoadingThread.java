@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.3 2005/06/22 12:18:26 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.4 2005/06/28 11:14:07 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -110,15 +110,23 @@ public class LoadingThread extends Thread {
 
             // ѕосылаем запрос на рендеринг
             Image imageForRequest = null;
+            long t1 = 0;
+            long t2 = 0;
+            long t3 = 0;
+            long t4 = 0;
+            long t5 = 0;
+            t1 = System.currentTimeMillis();
             try {
             	Log.debugMessage(" TIC - loadingThread - run - processing request ("
                         + this.requestCurrentlyProcessed + ")",Log.DEBUGLEVEL10);
 
                 this.setQueryLayerVisibilities(this.requestCurrentlyProcessed);
 
+                t2 = System.currentTimeMillis();                
                 imageForRequest = this.mapImageLoader
                         .renderMapImage(this.requestCurrentlyProcessed);
 
+                t3 = System.currentTimeMillis();                
                 if (imageForRequest == null) {
                     synchronized (this.state) {
                         // ≈сли рендеринг был остановлен
@@ -143,12 +151,18 @@ public class LoadingThread extends Thread {
                 // чтобы
                 // нельз€ было дл€ подгруженного запроса приоритет изменить на
                 // более низкий
+                t4 = System.currentTimeMillis();            	
                 this.requestCurrentlyProcessed.setImage(imageForRequest);
                 this.requestCurrentlyProcessed
                         .setPriority(TopologicalImageQuery.PRIORITY_ALREADY_LOADED);
 
+                t5 = System.currentTimeMillis();                
                 Log.debugMessage(" TIC - loadingThread - run - image loaded for request ("
-                                + this.requestCurrentlyProcessed + ")",Log.DEBUGLEVEL10);
+                                + this.requestCurrentlyProcessed + ") for "
+                                + (t2 - t1) + "(layer visibilities) "
+                                + (t3 - t2) + "(requesting for rendering) "
+                                + (t4 - t3) + "(after synchronized) "
+                                + (t5 - t4) + "(setting image) ms.",Log.DEBUGLEVEL10);
 
                 this.state.setValue(State.STATE_IDLE);
                 this.requestCurrentlyProcessed = null;
