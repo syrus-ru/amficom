@@ -139,6 +139,9 @@ jobject ModelF_C2J(JNIEnv *env, ModelF &mf)
 // в случае ошибки дает assertion fail
 void ModelF_C2J_update(JNIEnv *env, ModelF &mf, jobject mf_obj)
 {
+	// перед выходом в Java, округлить данные для согласованности из состояния до/после сохранения в поток
+	mf.quantize();
+
 	jclass mf_clazz = env->FindClass(CL_mf);
 	assert (mf_clazz);
 
@@ -586,6 +589,90 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFit
 	  ERROR_MODE_VARNOISE, 0.0, 0.0, 0, noiseArray, xStops);
 }
 
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nIsNativeStreamingPossible
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nIsNativeStreamingPossible
+  (JNIEnv *env, jclass cls, jint shapeID)
+{
+	return ModelF::isByteStreamingPossible(shapeID);
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nParsToByteArray
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nParsToByteArray
+(JNIEnv *env, jobject obj)
+{
+	prf_b("nParsToByteArray");
+
+	ModelF mf;
+	if (ModelF_J2C(env, obj, mf) > 0)
+		assert(0);
+
+	byteOut bos;
+	mf.saveToByteOut(bos); // write npars & pars, will fail assert() if not supported
+
+	int size = bos.getSize();
+	jbyteArray out = env->NewByteArray((jsize)size);
+	assert(out);
+	if (size)
+	{
+		char *data = bos.getData();
+		jbyte *pp = env->GetByteArrayElements(out, 0);
+		assert(pp);
+		int i;
+		for (i = 0; i < size; i++)
+			pp[i] = data[i];
+		env->ReleaseByteArrayElements(out, pp, 0);
+	}
+	prf_e();
+	return out;
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nParsFromByteArray
+ * Signature: ([B)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nParsFromByteArray
+  (JNIEnv *env, jobject obj, jbyteArray jbar)
+{
+	prf_b("nParsFromByteArray");
+
+	ModelF mf;
+	if (ModelF_J2C(env, obj, mf) > 0)
+		assert(0);
+
+	int barSize = env->GetArrayLength(jbar);
+	char *barData = 0;
+	if (barSize)
+	{
+		barData = new char[barSize];
+		assert(barData);
+		jbyte *pp = env->GetByteArrayElements(jbar, 0);
+		assert(pp);
+		int i;
+		for (i = 0; i < barSize; i++)
+			barData[i] = pp[i];
+		env->ReleaseByteArrayElements(jbar, pp, 0);
+	}
+	byteIn bis(barData, barSize, 1); // bis will free barData
+
+	int rc = mf.loadFromByteIn(bis); // read pars
+	if (rc == 0)
+		rc = bis.left() > 0;
+	prf_e();
+
+	if (rc == 0)
+		ModelF_C2J_update(env, mf, obj);
+
+	return rc;
+}
 
 /*
  *

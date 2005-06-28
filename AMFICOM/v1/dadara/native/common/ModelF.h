@@ -30,6 +30,8 @@
 #ifndef _MODELF_H
 #define _MODELF_H
 
+#include "byteStream.h"
+
 // инициализация статических данных модуля ModelF (один раз при загрузке)
 // в настоящей версии его вызывать не обязательно
 //void MF_init();
@@ -242,6 +244,19 @@ public:
 	{
 		return RMS2LinP(parsPtr, y, i0, x0, length, rough);
 	}
+
+	// округлить параметры
+	void quantize();
+
+	// проверить, доступно ли сохранение в поток
+	static int isByteStreamingPossible(int shapeID);
+
+	// запись параметров в поток байт
+	void saveToByteOut(byteOut &bos);
+
+	// восстановление параметров из потока байт
+	// возвращает 1 в случае ошибки или нехватки входных данных
+	int loadFromByteIn(byteIn &bis);
 };
 
 struct ACXL_data

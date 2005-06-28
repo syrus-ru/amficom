@@ -10,4 +10,8 @@ double a_noiseSuppressionLength_BREAKL(double *pars, int npars);
 int f_BREAKL_GETPOS(int nEv, double *pars, double x, int k0); // k0 == -1: bsearch
 double f_BREAKL_GETY(int k, int nEv, double *pars, double x);
 
+void fioQ_BREAKL(ModelF &mf);
+void fioW_BREAKL(ModelF &mf, byteOut &bout);
+int fioR_BREAKL(ModelF &mf, byteIn &bin);
+
 #endif

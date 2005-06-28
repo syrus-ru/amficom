@@ -1,7 +1,9 @@
+#include <math.h>
 #include <assert.h>
 #include "BreakL-mf.h"
 #include "BreakL-enh.h"
 #include "../JNI/ThreshArray.h"
+#include "../common/pack.h"
 
 static int bsearchmh(double *pars, int npairs, double key)
 {
@@ -275,4 +277,93 @@ double a_noiseSuppressionLength_BREAKL(double *pars, int npars)
 			ret = nef;
 	}
 	return ret;
+}
+
+// I/O options
+
+const double BL_Y_PREC = 1e-4;
+inline long d2ly(double y) {
+	return (long)floor(y / BL_Y_PREC + 0.5);
+}
+inline double l2dy(int y) {
+	return y * BL_Y_PREC;
+}
+
+void fioQ_BREAKL(ModelF &mf)
+{
+	int nPars = mf.getNPars();
+	double *pars = mf.getP();
+	int i;
+	for (i = 0; i < nPars / 2; i++)
+	{
+		pars[i * 2] = (int)pars[i * 2];
+		pars[i * 2 + 1] = l2dy(d2ly(pars[i * 2 + 1]));
+	}
+}
+
+void fioW_BREAKL(ModelF &mf, byteOut &bout)
+{
+	int nPars = mf.getNPars();
+	double *pars = mf.getP();
+	int i;
+
+	bout.writeLong(nPars); // write number of pars
+
+	// write all X
+	int xPrev = 0;
+	for (i = 0; i < nPars / 2; i++)
+	{
+		int xCur = (int)pars[i * 2];
+		//bout.writeLong(xCur);
+		//bout.writeLong(xCur - xPrev);
+		pk_writeLongPlusInc(xCur - xPrev, bout);
+		xPrev = xCur;
+	}
+	// write all Y
+	long yPrev = 0;
+	for (i = 0; i < nPars / 2; i++)
+	{
+		long yCur = d2ly(pars[i * 2 + 1]);
+		long yDelta = yCur - yPrev;
+		//bout.writeLong(yCur);
+		//bout.writeLong(yDelta);
+		//writeLong2b(yDelta, bout);
+		//writeLongBC(yDelta, bout);
+		pk_writeLongM3(yDelta, bout);
+		yPrev = yCur;
+	}
+}
+
+int fioR_BREAKL(ModelF &mf, byteIn &bin)
+{
+	int nPars = (int)bin.readLong(); // read number of pars
+	double *pars = new double[nPars ? nPars : 1];
+	assert(pars);
+	mf.init(mf.getID(), nPars, pars); // set nPars, allocate pars by initialization
+	int i;
+
+	// XXX: will fail assertion if end of data will be found
+
+	int xPrev = 0;
+	for (i = 0; i < nPars / 2; i++)
+	{
+		//int xCur = bin.readLong();
+		//int xCur = xPrev + bin.readLong();
+		int xCur = xPrev + pk_readLongPlusInc(bin);
+		pars[i * 2] = xCur;
+		xPrev = xCur;
+	}
+	long yPrev = 0;
+	for (i = 0; i < nPars / 2; i++)
+	{
+		//long yCur = bin.readLong();
+		//long yCur = yPrev + bin.readLong();
+		//long yCur = yPrev + readLong2b(bin);
+		//long yCur = yPrev + readLongBC(bin);
+		long yCur = yPrev + pk_readLongM3(bin);
+		pars[i * 2 + 1] = l2dy(yCur);
+		yPrev = yCur;
+	}
+
+	return 0;
 }

@@ -1,6 +1,9 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
@@ -22,7 +25,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.23 $, $Date: 2005/06/23 07:57:37 $
+ * @version $Revision: 1.24 $, $Date: 2005/06/28 10:05:28 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -39,7 +42,7 @@ public class ModelFunction {
 	private native double[] nFArray(double x0, double step, int length);
 	private native void nChangeByACXL(double dA, double dC, double dX, double dL); // преобразование к своему ACXL-порогу
 	private native void nChangeByThresh(ThreshDX[] threshDX, ThreshDY[] threshDY, int key); // изменение порогом Thresh
-	
+
 	// определение, какой threshDX-порог отвечает за указанную позицию x
 	// Применяется к исходной м.ф., устроен аналогично nChangeByThresh,
 	// но:
@@ -51,6 +54,17 @@ public class ModelFunction {
 	private native int nFindResponsibleThreshDXDYID(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int x, int xThType);
 	private native int[] nFindResponsibleThreshDXArray(ThreshDX[] threshDX, ThreshDY[] threshDY, int key, int xMin, int xMax);
 	private native double nRMS(double y[], int begin, int end); // end is included
+
+	// Механизм native-преобразования в поток.
+	// Поток будет состоять из:
+	// (1) int shapeID
+	// (2) boolean usingNativeEncoding
+	// (3) int len - длина массива байт
+	// (4) byte[len] - массив данных, передаваемый из/в native-код
+	// Для его использования надо сначала проверить, допустим он или нет.
+	private static native boolean nIsNativeStreamingPossible(int shapeID); // проверить допустимость native-преобразования
+	private native byte[] nParsToByteArray(); // сохраняет pars в byteArray (если операция недопустима, вернет null)
+	private native boolean nParsFromByteArray(byte[] bar); // восстанавливает pars из byteArray. В случае нехватки/избытка данных или ошибки, возвращает true.
 
 	private static final int FITMODE_VARY_ALL = 1; // фитируем кривую, варьируем все параметры
 	private static final int FITMODE_VARY_LIN = 2; // фитируем кривую, варьируя только линейные параметры
@@ -441,9 +455,19 @@ public class ModelFunction {
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {
 		dos.writeInt(shapeID);
-		dos.writeInt(pars.length);
-		for (int i = 0; i < pars.length; i++)
-			dos.writeDouble(pars[i]);
+		boolean useNativeStreaming = nIsNativeStreamingPossible(shapeID);
+		dos.writeBoolean(useNativeStreaming);
+		if (useNativeStreaming) {
+			// native-преобразование
+			byte[] bar = nParsToByteArray();
+			dos.writeInt(bar.length);
+			dos.write(bar);
+		} else {
+			// Java-преобразование
+			dos.writeInt(pars.length);
+			for (int i = 0; i < pars.length; i++)
+				dos.writeDouble(pars[i]);
+		}
 	}
 
 	public byte[] toByteArray()
@@ -461,18 +485,32 @@ public class ModelFunction {
 		}
 	}
 
-	public static ModelFunction createFromDIS(DataInputStream dis) throws IOException {
+	public static ModelFunction createFromDIS(DataInputStream dis)
+	throws IOException, SignatureMismatchException {
 	    ModelFunction mf = new ModelFunction();
 	    mf.readFromDIS(dis);
 		return mf;
 	}
 
-	private void readFromDIS(DataInputStream dis) throws IOException {
+	private void readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException {
 		shapeID = dis.readInt();
-		int npars = dis.readInt();
-		pars = new double[npars];
-		for (int i = 0; i < npars; i++)
-			pars[i] = dis.readDouble();
+		boolean useNativeStreaming = dis.readBoolean();
+		if (useNativeStreaming) {
+			if (! nIsNativeStreamingPossible(shapeID))
+				throw new InternalError("native streaming not supported"); // XXX: maybe a SignatureMismatchException would be better
+			// native-преобразование
+			int len = dis.readInt();
+			byte[] bar = new byte[len];
+			if (dis.read(bar) != bar.length)
+				throw new SignatureMismatchException("Unexpected EOF");
+			nParsFromByteArray(bar);
+		} else {
+			// Java-преобразование
+			int npars = dis.readInt();
+			pars = new double[npars];
+			for (int i = 0; i < npars; i++)
+				pars[i] = dis.readDouble();
+		}
 	}
 }
 

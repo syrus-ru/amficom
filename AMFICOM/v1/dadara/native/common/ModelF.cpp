@@ -15,6 +15,9 @@ const double PI = 3.14159265358979323846;
 
 const int MF_MAX_ID = 100;
 
+// включение/отключение компрессии данных
+const int ENABLE_COMPRESSION = 1;
+
 // отображение ID -> entry
 // должно быть проинициализировано функцией MF_init()
 static int ID_to_entry[MF_MAX_ID];
@@ -43,6 +46,15 @@ struct MF_Attr
 	MF_Tattrp fun;
 };
 
+// тип "описание методов сохранения/восстановления в/из потока byteIn/byteOut"
+struct MF_IOProc
+{
+	int supported; // флаг поддержки процедуры сохранения
+	void (*quantizeFP)(ModelF &mf); // функция округления параметров
+	void (*writeFP)(ModelF &mf, byteOut &bout); // функция записи
+	int (*readFP)(ModelF &mf, byteIn &bin); // функция чтения. Возвращает 1 при ошибке или нехватке данных
+};
+
 // Описание конкретных модельных функций
 
 const int MF_MAX_ATTRS = 10; // макс. число аттрибутов у модельной функции
@@ -56,6 +68,7 @@ struct MF_MD
 	MF_Tfarrptr farrptr;		// shape quick array computation function
 	MF_Tcmdp cmd;				// command function list
 	MF_Attr attr[MF_MAX_ATTRS];	// attributes function list
+	MF_IOProc ioProc;			// i/o procedures
 };
 
 extern struct MF_MD funcs[]; // будет ниже
@@ -445,6 +458,36 @@ double ModelF::RMS2LinP(double *pars, double *y, int i0, int x0, int length, int
 	delete[] ft;
 
 	return ret;
+}
+// округлить данные (как будто они были записаны и восстановлены)
+void ModelF::quantize()
+{
+	assert(entry >= 0);
+	if (funcs[entry].ioProc.supported)
+		funcs[entry].ioProc.quantizeFP(*this);
+}
+// проверить, доступно ли сохранение в поток
+int ModelF::isByteStreamingPossible(int shapeID)
+{
+	int entry = i_ID2entry(shapeID);
+	assert(entry >= 0);
+	return funcs[entry].ioProc.supported;
+}
+
+// запись параметров в поток байт
+void ModelF::saveToByteOut(byteOut &bos)
+{
+	assert(entry >= 0);
+	assert(funcs[entry].ioProc.supported);
+	funcs[entry].ioProc.writeFP(*this, bos);
+}
+
+// восстановление параметров из потока байт
+int ModelF::loadFromByteIn(byteIn &bis)
+{
+	assert(entry >= 0);
+	assert(funcs[entry].ioProc.supported);
+	return funcs[entry].ioProc.readFP(*this, bis);
 }
 
 // экспортируются для отладки - счетчики числа обращений к f() из RMS2()
@@ -1100,6 +1143,12 @@ MF_MD funcs[] =
 		{
 			{ an_noiseSuppressionLength, a_noiseSuppressionLength_BREAKL },
 			{ an_canLeftLink, a_canLeftLink_true }
+		},
+		{ // преобразование в/из потока байт
+			ENABLE_COMPRESSION,
+			fioQ_BREAKL,
+			fioW_BREAKL,
+			fioR_BREAKL
 		}
 	},
 
