@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.19 2005/06/24 14:13:39 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.20 2005/06/28 07:29:28 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.TreeSet;
 
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: bass $
- * @version $Revision: 1.19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -69,20 +70,27 @@ public final class SchemeSampleData {
 
 		Scheme scheme = Scheme.createInstance(userId, "Схемка", Kind.NETWORK, domainId);
 
+		EquipmentType equipmentType = EquipmentType.createInstance(userId, "samle", "desc", "name", "manu", "code"); 
+		
 		SchemeElement el0 = SchemeElement.createInstance(userId, "Один элемент", scheme);
 		el0.setDescription("Описалово");
+		el0.setEquipmentType(equipmentType);
 
 		SchemeElement el1 = SchemeElement.createInstance(userId, "Другой элемент", scheme);
 		el1.setDescription("Описалово");
+		el1.setEquipmentType(equipmentType);
 
 		SchemeElement el2 = SchemeElement.createInstance(userId, "Третий элемент", scheme);
 		el2.setDescription("Описалово");
+		el2.setEquipmentType(equipmentType);
 
 		SchemeElement el3 = SchemeElement.createInstance(userId, "Опять элемент", scheme);
 		el3.setDescription("Описалово");
+		el3.setEquipmentType(equipmentType);
 
 		SchemeElement el4 = SchemeElement.createInstance(userId, "Совсем элемент", scheme);
 		el4.setDescription("Описалово");
+		el4.setEquipmentType(equipmentType);
 
 		SchemeDevice dev00 = SchemeDevice.createInstance(userId, "Девайс1", el0);
 		dev0.add(dev00);
@@ -254,11 +262,15 @@ public final class SchemeSampleData {
 
 		Scheme scheme = Scheme.createInstance(userId, "Схемочка", Kind.NETWORK, domainId);
 
+		EquipmentType equipmentType = EquipmentType.createInstance(userId, "samle2", "desc2", "name2", "manu2", "code2"); 
+		
 		SchemeElement el0 = SchemeElement.createInstance(userId, "Один элемент", scheme);
 		el0.setDescription("Описалово");
+		el0.setEquipmentType(equipmentType);
 
 		SchemeElement el1 = SchemeElement.createInstance(userId, "Другой элемент", scheme);
 		el1.setDescription("Описалово");
+		el1.setEquipmentType(equipmentType);
 
 		SchemeDevice dev00 = SchemeDevice.createInstance(userId, "Девайс1", el0);
 		dev0.add(dev00);
