@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.15 2005/06/22 19:39:20 arseniy Exp $
+ * $Id: LoginManager.java,v 1.16 2005/06/28 15:27:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/22 19:39:20 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/28 15:27:55 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -36,6 +36,11 @@ public final class LoginManager {
 	public LoginManager() {
 		// singleton
 		assert false;
+	}
+
+	static {
+		sessionKeyT = new IdlSessionKey("");
+		sessionKey = new SessionKey(sessionKeyT);
 	}
 
 	public static void init(final LoginServerConnectionManager loginServerConnectionManager1, LoginRestorer loginRestorer1) {
