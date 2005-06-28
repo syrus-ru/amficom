@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.7 2005/06/27 07:09:11 krupenn Exp $
+ * $Id: TopologicalImageQuery.java,v 1.8 2005/06/28 07:59:52 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,16 +10,14 @@ package com.syrus.AMFICOM.map;
 
 import java.awt.Image;
 
-import org.omg.CORBA.ORB;
-
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/27 07:09:11 $
+ * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/06/28 07:59:52 $
  * @module mapinfo_v1
  */
 public final class TopologicalImageQuery implements Comparable {
@@ -193,8 +191,6 @@ public final class TopologicalImageQuery implements Comparable {
 
 		this.labelVisibilities = tit.labelVisibilities;
 
-		this.userID = tit.userId;
-
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 	}
@@ -211,13 +207,13 @@ public final class TopologicalImageQuery implements Comparable {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	public IdlTopologicalImageQuery getTransferable(final ORB orb) {
+	public IdlTopologicalImageQuery getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return new IdlTopologicalImageQuery(
 				this.mapImageWidth, this.mapImageHeight,
 				this.topoCenterX, this.topoCenterY,
 				this.topoScale, this.layerVisibilities,
-				this.labelVisibilities, this.userID);
+				this.labelVisibilities);
 	}
 
 	/**
