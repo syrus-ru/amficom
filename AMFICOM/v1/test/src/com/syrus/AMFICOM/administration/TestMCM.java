@@ -1,5 +1,5 @@
 /*
- * $Id: TestMCM.java,v 1.3 2005/06/20 15:13:53 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestMCM.java,v 1.4 2005/06/28 15:28:24 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
@@ -13,10 +13,10 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/20 15:13:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/28 15:28:24 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -32,7 +32,7 @@ public final class TestMCM extends TestCase {
 		return databaseCommonTest.createTestSetup();
 	}
 
-public void testCreateInstance() throws ApplicationException {
+	public void _testCreateInstance() throws ApplicationException {
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SERVER_CODE);
 		final Server server = (Server) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Server '" + server.getId() + "'");
@@ -53,4 +53,11 @@ public void testCreateInstance() throws ApplicationException {
 				mcmUser.getId(),
 				server.getId());
 		StorableObjectPool.flush(mcm, true);
-	}}
+	}
+
+	public void testRetrieve() throws ApplicationException {
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MCM_CODE);
+		final MCM mcm = (MCM) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		System.out.println("MCM: " + mcm.getId() + ", hostname: " + mcm.getHostName());
+	}
+}

@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateSysUser.java,v 1.3 2005/06/20 17:38:10 arseniy Exp $
+ * $Id: TestCreateSysUser.java,v 1.4 2005/06/28 15:31:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import static com.syrus.AMFICOM.administration.SystemUserDatabase.SIZE_LOGIN_COL
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_LOGIN;
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_SORT;
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.SYS_LOGIN;
-import static com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort._USER_SORT_SYSADMIN;
+import static com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort._USER_SORT_SYSADMIN;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTOPHE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
@@ -50,7 +50,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/20 17:38:10 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/28 15:31:46 $
  * @author $Author: arseniy $
  * @module test
  */

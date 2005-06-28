@@ -1,5 +1,5 @@
 /*
- * $Id: TestSystemUser.java,v 1.4 2005/06/20 15:13:54 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.5 2005/06/28 15:28:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.administration.corba.SystemUser_TransferablePackage.SystemUserSort;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.CORBAServer;
@@ -27,14 +27,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
-import com.syrus.AMFICOM.security.corba.SessionKey_Transferable;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/20 15:13:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/28 15:28:24 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -114,7 +114,7 @@ public final class TestSystemUser extends TestCase {
 		final LoginServer loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 
 		final IdlIdentifierHolder userIdTH = new IdlIdentifierHolder();
-		final SessionKey_Transferable sessionKeyT = loginServerRef.login(SystemUserWrapper.SYS_LOGIN, "sys", userIdTH);
+		final IdlSessionKey sessionKeyT = loginServerRef.login(SystemUserWrapper.SYS_LOGIN, "sys", userIdTH);
 
 //	login user
 		TypicalCondition tc = new TypicalCondition(SystemUserWrapper.LOGINPROCESSOR_LOGIN,

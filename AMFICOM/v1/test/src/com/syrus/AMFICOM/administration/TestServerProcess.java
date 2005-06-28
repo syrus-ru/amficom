@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.9 2005/06/20 15:13:53 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.10 2005/06/28 15:31:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,11 +23,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/20 15:13:53 $
+ * @version $Revision: 1.10 $, $Date: 2005/06/28 15:31:46 $
  * @author $Author: arseniy $
  * @module test
  */
