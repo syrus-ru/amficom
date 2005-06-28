@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.37 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.37.2.1 2005/06/28 11:28:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import org.omg.CORBA.portable.IDLEntity;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:43 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37.2.1 $, $Date: 2005/06/28 11:28:32 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -90,7 +90,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 				name, description, directionType, portType, port,
 				measurementPort, parentSchemeDevice);
 
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT;
+		assert port == null || ((PortType) port.getType()).getKind().value() == PortTypeKind._PORT_KIND_CABLE;
 
 		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLEPORT_CODE);
 	}
@@ -188,7 +188,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 */
 	public Port getPort() {
 		final Port port = super.getPort();
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert port == null || ((PortType) port.getType()).getKind().value() == PortTypeKind._PORT_KIND_CABLE: ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		return port;
 	}
 
@@ -230,7 +230,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @see AbstractSchemePort#setPort(Port)
 	 */
 	public void setPort(final Port port) {
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.NATURE_INVALID;
+		assert port == null || ((PortType) port.getType()).getKind().value() == PortTypeKind._PORT_KIND_CABLE: ErrorMessages.NATURE_INVALID;
 		super.setPort(port);
 	}
 
