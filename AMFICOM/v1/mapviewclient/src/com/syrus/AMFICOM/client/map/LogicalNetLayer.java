@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.82 2005/06/24 12:43:28 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.83 2005/06/28 07:26:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -69,34 +69,18 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.82 $, $Date: 2005/06/24 12:43:28 $
+ * @version $Revision: 1.83 $, $Date: 2005/06/28 07:26:45 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
 {
 	protected CommandList commandList = new CommandList(20);
 	
-	/** Нить, управляющая анимацией на слое. */
-//	protected AnimateThread animateThread = null;
-
 	/** Перменная показывающая что сейчас отображать. */
 	protected MapState mapState = new MapState();
 	
 	/** Содержимое карты. */
 	protected MapView mapView = null;
-	
-	/**
-	 * Флаг обработки событий, необходимый для избежания зацикливания.
-	 * При отправке сообщения Диспетчеру флаг выставляется в false с тем, 
-	 * чтобы исключить обработку своих событий (посылку самому себе).
-	 * После посылки флаг выставляется обратно в true. При обработке
-	 * событий следует проверять этот флаг, и если он равен false, то обработку
-	 * этого события не производить.
-	 */
-//	protected boolean performProcessing = true;
-	
-	/** Флаг отправки сообщений. */
-//	protected boolean doNotify = true;
 	
 	/** Текущий элемент. */
 	protected MapElement currentMapElement = null;
@@ -127,9 +111,6 @@ public class LogicalNetLayer
 
 	/** Контекст приложения. */
 	protected ApplicationContext aContext = null;
-
-	/** Идентификатор пользователя. Используется для создания новых объектов. */
-//	protected Identifier userId = null;
 
 	/**
 	 * Начальная точка для операций пользователя на карте с помощью мыши.
@@ -236,9 +217,6 @@ public class LogicalNetLayer
 	{
 		Log.debugMessage(getClass().getName() + "::" + "setMapView(" + mapView + ")" + " | " + "method call", Log.FINER);
 
-//		if(this.animateThread != null)
-//			this.animateThread.stopRunning();
-
 		if(	getContext() != null
 			&& getContext().getDispatcher() != null)
 		{
@@ -264,16 +242,6 @@ public class LogicalNetLayer
 		if(mapView == null)
 		{
 			System.out.println("mapView null!");
-		}
-		else
-		{
-			if(this.aContext != null)
-				if(this.aContext.getApplicationModel() != null)
-					if (this.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
-				{
-//					this.animateThread = new AnimateThread(this);
-//					this.animateThread.start();
-				}
 		}
 
 		getMapViewController().setMapView(this.mapView);
@@ -333,17 +301,6 @@ public class LogicalNetLayer
 	{
 		return this.currentScale;
 	}
-	
-	/**
-	 * Установить текущий масштаб точечных элементов.
-	 * @param currentScale текущий масштаб точечных элементов
-	 */
-//	public void setCurrentScale(double currentScale)
-//	{
-//		Log.debugMessage(getClass().getName() + "::" + "setCurrentScale(" + currentScale + ")" + " | " + "method call", Log.FINER);
-//		this.currentScale = currentScale;
-//		updateZoom();
-//	}
 	
 	/**
 	 * Получить текущее состояние слоя карты.
