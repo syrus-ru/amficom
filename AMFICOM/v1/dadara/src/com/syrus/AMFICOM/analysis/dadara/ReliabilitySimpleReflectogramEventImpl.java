@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.6 2005/06/28 13:00:42 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.7 2005/06/28 14:38:23 saa Exp $
  * 
  * Copyright c 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/06/28 13:00:42 $
+ * @version $Revision: 1.7 $, $Date: 2005/06/28 14:38:23 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
@@ -46,22 +46,45 @@ implements ReliabilitySimpleReflectogramEvent {
         this.nSigma = -1;
     }
 
-    public ReliabilitySimpleReflectogramEventImpl(DataInputStream dis)
+	protected void readSpecificFromDIS(DataInputStream dis)
     throws IOException{
-        super(dis);
         this.nSigma = (int)dis.readByte(); // sign-extendive conversion
     }
 
-    public void writeToDOS(DataOutputStream dos)
+	protected void writeSpecificToDOS(DataOutputStream dos)
     throws IOException {
-    	super.writeToDOS(dos);
     	dos.writeByte(this.nSigma);
     }
+
+	public static void writeArrayToDOS(
+			ReliabilitySimpleReflectogramEventImpl[] se,
+			DataOutputStream dos) throws IOException {
+		dos.writeInt(se.length);
+		writeArrayBaseToDOS(se, dos);
+		for (int i = 0; i < se.length; i++) {
+			se[i].writeSpecificToDOS(dos);
+		}
+	}
+
+	public static ReliabilitySimpleReflectogramEventImpl[]readArrayFromDIS(
+			DataInputStream dis) throws IOException {
+      int len = dis.readInt();
+      ReliabilitySimpleReflectogramEventImpl[] se =
+          new ReliabilitySimpleReflectogramEventImpl[len];
+      for (int i = 0; i < se.length; i++) {
+    	  se[i] = new ReliabilitySimpleReflectogramEventImpl();
+      }
+      readArrayBaseFromDIS(se, dis);
+      for (int i = 0; i < se.length; i++) {
+          se[i].readSpecificFromDIS(dis);
+      }
+      return se;
+	}
 
     public double getReliability() {
     	if (hasReliability()) {
     		double tau = this.nSigma * SIGMA_PREC;
-    		// use 2*erf(tau) approx.
+    		// use approximation for 1.0 - 2.0 * erf(tau)
     		double prob = 1.0 -
     				Math.exp(-tau*tau/2) /
     						(0.82*tau+Math.sqrt(0.19*tau*tau+1.0));

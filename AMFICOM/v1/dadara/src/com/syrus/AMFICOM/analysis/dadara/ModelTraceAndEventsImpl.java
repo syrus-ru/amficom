@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.13 2005/06/27 07:35:15 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.14 2005/06/28 14:38:23 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/06/27 07:35:15 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/28 14:38:23 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -358,10 +358,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
 		dos.writeLong(SIGNATURE_EVENTS);
 		getMF().writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
-		dos.writeInt(rse.length);
 //		int pos2 = dos.size();
-		for (int i = 0; i < rse.length; i++)
-			rse[i].writeToDOS(dos);
+		ReliabilitySimpleReflectogramEventImpl.writeArrayToDOS(rse, dos);
 //		int pos3 = dos.size();
         cinfo.writeToDOS(dos);
 //		int pos4 = dos.size();
@@ -384,11 +382,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable
                     throw new SignatureMismatchException();
                 ModelFunction mf = ModelFunction.createFromDIS(dis);
                 double deltaX = dis.readDouble();
-                int len = dis.readInt();
                 ReliabilitySimpleReflectogramEventImpl[] se =
-                    new ReliabilitySimpleReflectogramEventImpl[len];
-                for (int i = 0; i < len; i++)
-                    se[i] = new ReliabilitySimpleReflectogramEventImpl(dis);
+                	ReliabilitySimpleReflectogramEventImpl.readArrayFromDIS(dis);
                 ModelTraceAndEventsImpl mtae =
                     new ModelTraceAndEventsImpl(se, mf, deltaX);
                 mtae.cinfo = mtae.new ComplexInfo(dis);
