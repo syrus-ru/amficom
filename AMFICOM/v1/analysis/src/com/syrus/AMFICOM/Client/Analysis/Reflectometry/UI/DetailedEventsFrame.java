@@ -48,9 +48,7 @@ implements EtalonMTMListener,
 
 	private static final String[] spliceKeys = new String[] {
 			DetailedEventWrapper.KEY_EXTENSION,
-			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
-			DetailedEventWrapper.KEY_MAXDEVIATION,
-			DetailedEventWrapper.KEY_MEAN_DEVIATION };
+			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL};
 
 	private static final String[] notidKeys = new String[] {
 			DetailedEventWrapper.KEY_EXTENSION,
