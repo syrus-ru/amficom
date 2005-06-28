@@ -1,4 +1,4 @@
--- $Id: porttype.sql,v 1.12 2005/06/23 14:41:08 arseniy Exp $
+-- $Id: porttype.sql,v 1.13 2005/06/28 08:30:21 arseniy Exp $
 
 CREATE TABLE PortType (
  id NUMBER(19),
@@ -13,6 +13,7 @@ CREATE TABLE PortType (
 --
  name VARCHAR2(128 CHAR),
  sort NUMBER(2,0) NOT NULL,
+ kind NUMBER(2,0) NOT NULL,
 --
  CONSTRAINT porttype_pk PRIMARY KEY (id),
  CONSTRAINT porttype_uniq UNIQUE (codename),

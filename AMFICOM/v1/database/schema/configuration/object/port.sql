@@ -1,4 +1,4 @@
--- $Id: port.sql,v 1.11 2005/06/15 17:03:09 bass Exp $
+-- $Id: port.sql,v 1.12 2005/06/28 08:30:21 arseniy Exp $
 
 CREATE TABLE Port (
  id NUMBER(19),
@@ -13,7 +13,6 @@ CREATE TABLE Port (
  description VARCHAR2(256 CHAR),
 --
  equipment_id,
- sort NUMBER(2) NOT NULL,
 --
  CONSTRAINT port_pk PRIMARY KEY (id),
  CONSTRAINT port_creator_fk FOREIGN KEY (creator_id)
