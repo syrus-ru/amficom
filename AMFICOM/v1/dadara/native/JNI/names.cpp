@@ -44,8 +44,8 @@ const char *S_SE_end			= "I";
 const char *N_SE_type			= "eventType";
 const char *S_SE_type			= "I";
 
-const char *N_RE_reliability	= "reliability";
-const char *S_RE_reliability	= "D";
+const char *N_RE_nSigma			= "nSigma";
+const char *S_RE_nSigma			= "I";
 
 const char *N_Thresh_SOFT_UP	= "SOFT_UP";
 const char *S_Thresh_SOFT_UP	= "I";

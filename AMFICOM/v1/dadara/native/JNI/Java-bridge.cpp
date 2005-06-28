@@ -3,6 +3,7 @@
 
 #include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
 #include "../common/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
+#include "../common/com_syrus_AMFICOM_analysis_dadara_ReliabilitySimpleReflectogramEventimpl.h"
 #include "../common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
 #include "../common/com_syrus_AMFICOM_analysis_dadara_Wavelet.h"
 
@@ -839,7 +840,12 @@ jobject ReliabilityEvent_C2J(JNIEnv *env, ReliabilityEvent &re, jclass clazz)
 	jobject obj = SimpleEvent_C2J(env, re, clazz);
 
 	// fill ReliabilitySimpleReflectogramEventImpl fields
-	env->SetDoubleField(obj, env->GetFieldID(clazz, N_RE_reliability, S_RE_reliability), re.reliability);
+	const double SIGMA_PREC = com_syrus_AMFICOM_analysis_dadara_ReliabilitySimpleReflectogramEventImpl_SIGMA_PREC;
+	const int NSIGMA_MAX = com_syrus_AMFICOM_analysis_dadara_ReliabilitySimpleReflectogramEventImpl_NSIGMA_MAX;
+	int rel = re.nSigma < 0 ? -1 : (int)floor(re.nSigma / SIGMA_PREC + 0.5);
+	if (rel > NSIGMA_MAX)
+		rel = NSIGMA_MAX;
+	env->SetIntField(obj, env->GetFieldID(clazz, N_RE_nSigma, S_RE_nSigma), rel);
 
 	return obj;
 }

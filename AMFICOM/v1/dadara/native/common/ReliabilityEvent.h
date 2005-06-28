@@ -5,7 +5,7 @@
 
 struct ReliabilityEvent : SimpleEvent
 {
-	double reliability;
+	double nSigma;
 };
 
 #endif

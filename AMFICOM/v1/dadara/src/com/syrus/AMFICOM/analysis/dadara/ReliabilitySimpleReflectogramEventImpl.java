@@ -1,7 +1,7 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.5 2005/06/28 11:18:36 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.6 2005/06/28 13:00:42 saa Exp $
  * 
- * Copyright © 2005 Syrus Systems.
+ * Copyright c 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -14,14 +14,21 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/06/28 11:18:36 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/28 13:00:42 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
 extends SimpleReflectogramEventImpl
 implements ReliabilitySimpleReflectogramEvent {
+	// точность представления nSigma
+	protected static final double SIGMA_PREC = 0.1;
+	protected static final int NSIGMA_MAX = 100; // must be <= 127
 
-    double reliability;
+	// параметр достоверности
+	// -1 - не определена
+	// 0..NSIGMA_MAX - определена, достоверность (в станд. отклонениях) ~ nSigma * SIGMA_PREC
+	// изменяется из native-кода
+	protected int nSigma;
 
     protected ReliabilitySimpleReflectogramEventImpl()
     { // for native use
@@ -36,32 +43,37 @@ implements ReliabilitySimpleReflectogramEvent {
     public ReliabilitySimpleReflectogramEventImpl(int begin, int end,
             int eventType) {
         super(begin, end, eventType);
-        this.reliability = -1;
+        this.nSigma = -1;
     }
 
     public ReliabilitySimpleReflectogramEventImpl(DataInputStream dis)
     throws IOException{
         super(dis);
-        this.reliability = dis.readBoolean() ? dis.readDouble() : -1;
+        this.nSigma = (int)dis.readByte(); // sign-extendive conversion
     }
 
     public void writeToDOS(DataOutputStream dos)
     throws IOException {
-        super.writeToDOS(dos);
-        dos.writeBoolean(hasReliability());
-        if (hasReliability())
-            dos.writeDouble(getReliability());
+    	super.writeToDOS(dos);
+    	dos.writeByte(this.nSigma);
     }
 
     public double getReliability() {
-        if (hasReliability())
-            return reliability;
-        else
-            throw new IllegalArgumentException("getReliability() requested on event that has no probability");
+    	if (hasReliability()) {
+    		double tau = this.nSigma * SIGMA_PREC;
+    		// use 2*erf(tau) approx.
+    		double prob = 1.0 -
+    				Math.exp(-tau*tau/2) /
+    						(0.82*tau+Math.sqrt(0.19*tau*tau+1.0));
+    		return prob;
+    	}
+    	else {
+    		throw new IllegalArgumentException("getReliability() requested on event that has no probability");
+    	}
     }
 
     public boolean hasReliability() {
-        return reliability >= 0;
+        return nSigma >= 0;
     }
 
     public String toString() {

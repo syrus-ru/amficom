@@ -88,7 +88,7 @@ void EPold2RE(EventParams* epo, ReliabilityEvent &epn)
 	// convert R sigma presentation ( R = 0 .. + inf )
 	// to probability-like presentation ( rel = 0 .. 1 )
 	if (R < 0)
-		epn.reliability = -1;
+		epn.nSigma = -1;
 	else
-		epn.reliability = 1.0 - exp(-R * R / 2);
+		epn.nSigma = R;
 }
