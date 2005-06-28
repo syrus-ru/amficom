@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.13 2005/06/28 08:27:01 arseniy Exp $
+ * $Id: PortTypeWrapper.java,v 1.14 2005/06/28 11:15:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,13 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/28 08:27:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/06/28 11:15:24 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class PortTypeWrapper extends StorableObjectWrapper {
 
-	public static final String COLUMN_SORT = "sort";
-	public static final String COLUMN_KIND = "kind";
+	public static final String		COLUMN_SORT				= "sort";
 
 	private static PortTypeWrapper	instance;
 
@@ -32,12 +31,7 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 
 	private PortTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] {COLUMN_CODENAME,
-				COLUMN_DESCRIPTION,
-				COLUMN_NAME,
-				COLUMN_SORT,
-				COLUMN_KIND,
-				COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -69,8 +63,6 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 				return type.getName();
 			if (key.equals(COLUMN_SORT))
 				return new Integer(type.getSort().value());
-			if (key.equals(COLUMN_KIND))
-				return new Integer(type.getKind().value());
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
@@ -116,7 +108,7 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 				|| key.equals(COLUMN_NAME)) {
 			return String.class;
 		}
-		if (key.equals(COLUMN_SORT) || key.equals(COLUMN_KIND)) {
+		if (key.equals(COLUMN_SORT)) {
 			return Integer.class;
 		}
 		if (key.equals(COLUMN_CHARACTERISTICS)) {

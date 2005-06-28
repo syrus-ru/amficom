@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.12 2005/06/28 08:27:01 arseniy Exp $
+ * $Id: PortWrapper.java,v 1.13 2005/06/28 11:15:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/28 08:27:01 $
+ * @version $Revision: 1.13 $, $Date: 2005/06/28 11:15:24 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -28,13 +29,16 @@ public final class PortWrapper extends StorableObjectWrapper {
 	// equipment_id VARCHAR2(32),
 	public static final String	COLUMN_EQUIPMENT_ID		= "equipment_id";
 
+	// sort NUMBER(2) NOT NULL,
+	public static final String	COLUMN_SORT				= "sort";
+
 	private static PortWrapper	instance;
 
 	private List				keys;
 
 	private PortWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_TYPE_ID, COLUMN_EQUIPMENT_ID,
+		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_TYPE_ID, COLUMN_SORT, COLUMN_EQUIPMENT_ID,
 				COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -63,6 +67,8 @@ public final class PortWrapper extends StorableObjectWrapper {
 				return port.getDescription();
 			if (key.equals(COLUMN_TYPE_ID))
 				return port.getType();
+			if (key.equals(COLUMN_SORT))
+				return new Integer(port.getSort().value());
 			if (key.equals(COLUMN_EQUIPMENT_ID))
 				return port.getEquipmentId();
 			if (key.equals(COLUMN_CHARACTERISTICS))
@@ -82,6 +88,8 @@ public final class PortWrapper extends StorableObjectWrapper {
 				port.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID))
 				port.setType((PortType) value);
+			else if (key.equals(COLUMN_SORT))
+				port.setSort(PortSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
 				port.setEquipmentId((Identifier) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
@@ -111,6 +119,8 @@ public final class PortWrapper extends StorableObjectWrapper {
 			return String.class;
 		else if (key.equals(COLUMN_TYPE_ID))
 			return PortType.class;
+		else if (key.equals(COLUMN_SORT))
+			return Integer.class;
 		else if (key.equals(COLUMN_EQUIPMENT_ID))
 			return Identifier.class;
 		if (key.equals(COLUMN_CHARACTERISTICS))
