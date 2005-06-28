@@ -1,7 +1,0 @@
-#!/bin/bash
-
-LIB=../lib
-DEVLIB=../devlib
-CLASSES=./classes
-
-java -classpath $CLASSES:$DEVLIB/ServerInterface_Util.jar:$LIB/util.jar:$JDEV_HOME/jdbc/lib/classes12.jar:$CLASSES hlam.Setup
