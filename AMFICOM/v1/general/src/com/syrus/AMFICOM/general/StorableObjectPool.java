@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.114 2005/06/27 08:57:37 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.115 2005/06/28 07:18:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.114 $, $Date: 2005/06/27 08:57:37 $
+ * @version $Revision: 1.115 $, $Date: 2005/06/28 07:18:20 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -944,10 +944,8 @@ public abstract class StorableObjectPool {
 		this.savingObjectIds.add(id);
 
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
-		StorableObject dependencyObject = null;
 		for (final Identifiable identifiable: dependencies) {
-			// if (object == null)
-			// continue;
+			StorableObject dependencyObject = null;
 			if (identifiable instanceof Identifier)
 				dependencyObject = getStorableObject((Identifier) identifiable, false);
 			else if (identifiable instanceof StorableObject)
@@ -1122,7 +1120,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.114 $, $Date: 2005/06/27 08:57:37 $
+	 * @version $Revision: 1.115 $, $Date: 2005/06/28 07:18:20 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
