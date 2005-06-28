@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.42 2005/06/28 15:32:43 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.43 2005/06/28 15:43:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.42 $, $Date: 2005/06/28 15:32:43 $
+ * @version $Revision: 1.43 $, $Date: 2005/06/28 15:43:56 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -176,26 +176,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new LinkedIdsCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "Object: " + storableObject.toString() + "; "
-								+ "This is a dummy condition; evaluation result is always false...",
-								Log.WARNING);
-						return false;
-					}
-
-					@Override
-					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
-								+ "Objects: " + storableObjects + "; "
-								+ "This is a dummy condition; evaluation result is always false...",
-								Log.WARNING);
-						return false;
-					}
-				};
+				this.delegate = createDummyCondition();
 				this.delegate.entityCode = code;
 				this.delegate.linkedEntityCode = linkedCode;
 				this.delegate.linkedIds = linkIds;
@@ -277,26 +258,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new LinkedIdsCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "Object: " + storableObject.toString() + "; "
-								+ "This is a dummy condition; evaluation result is always false...",
-								Log.WARNING);
-						return false;
-					}
-
-					@Override
-					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
-								+ "Objects: " + storableObjects + "; "
-								+ "This is a dummy condition; evaluation result is always false...",
-								Log.WARNING);
-						return false;
-					}
-				};
+				this.delegate = createDummyCondition();
 				this.delegate.entityCode = entityCode;
 				this.delegate.linkedEntityCode = linkedCode;
 				this.delegate.linkedIds = linkedIds;
@@ -337,6 +299,29 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
 		condition.linkedIdsCondition(transferable);
 		return condition;
+	}
+
+	private static LinkedIdsCondition createDummyCondition() {
+		return new LinkedIdsCondition() {
+
+			@Override
+			public boolean isConditionTrue(final StorableObject storableObject) {
+				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
+						+ "Object: " + storableObject.toString() + "; "
+						+ "This is a dummy condition; evaluation result is always false...",
+						Log.WARNING);
+				return false;
+			}
+
+			@Override
+			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
+						+ "Objects: " + storableObjects + "; "
+						+ "This is a dummy condition; evaluation result is always false...",
+						Log.WARNING);
+				return false;
+			}
+		};
 	}
 
 	/**

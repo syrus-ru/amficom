@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.26 2005/06/27 09:36:11 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.27 2005/06/28 15:43:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -122,7 +122,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.26 $, $Date: 2005/06/27 09:36:11 $
+ * @version $Revision: 1.27 $, $Date: 2005/06/28 15:43:56 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -188,12 +188,11 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	private TypicalCondition	delegate;
 
-	private static final String	TYPICAL_CONDITION_INIT							= "TypicalCondition.<init>() | ";					
-	private static final String	CREATING_A_DUMMY_CONDITION						= "; creating a dummy condition...";				
-
-	private static final String	INVALID_UNDERLYING_IMPLEMENTATION				= "Invalid underlying implementation: ";			
-
-	private static final String	TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE	= "StringFieldCondition$1.isConditionTrue() | ";	
+	private static final String TYPICAL_CONDITION_INIT = "TypicalCondition.<init>() | ";
+	private static final String CREATING_A_DUMMY_CONDITION = "; creating a dummy condition...";
+	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
+	private static final String TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "StringFieldCondition$1.isConditionTrue() | ";	
+	private static final String TYPICAL_CONDITION_INNER_ONE_IS_NEED_MORE = "StringFieldCondition$1.isNeedMore() | ";
 
 	/**
 	 * Empty constructor used by descendants only.
@@ -290,16 +289,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new TypicalCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "This is a dummy condition; evaluation result is always false...",
-							Log.WARNING);
-						return false;
-					}
-				};
+				this.delegate = createDummyCondition();
 				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_NUMBER_INT;
@@ -398,16 +388,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new TypicalCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "This is a dummy condition; evaluation result is always false...",
-							Log.WARNING);
-						return false;
-					}
-				};
+				this.delegate = createDummyCondition();
 				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_NUMBER_LONG;
@@ -506,16 +487,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new TypicalCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "This is a dummy condition; evaluation result is always false...",
-							Log.WARNING);
-						return false;
-					}
-				};
+				this.delegate = createDummyCondition();
 				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_NUMBER_DOUBLE;
@@ -600,16 +572,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new TypicalCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "This is a dummy condition; evaluation result is always false...",
-							Log.WARNING);
-						return false;
-					}
-				};
+				this.delegate = createDummyCondition();
 				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_STRING;
@@ -711,16 +674,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new TypicalCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "This is a dummy condition; evaluation result is always false...",
-							Log.WARNING);
-						return false;
-					}
-				};
+				this.delegate = createDummyCondition();
 				this.delegate.key = key;
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_DATE;
@@ -788,16 +742,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					break;
 				default: {
 					if (this.delegate == null) {
-						this.delegate = new TypicalCondition() {
-
-							@Override
-							public boolean isConditionTrue(final StorableObject storableObject) {
-								Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-										+ "This is a dummy condition; evaluation result is always false...",
-									Log.WARNING);
-								return false;
-							}
-						};
+						this.delegate = createDummyCondition();
 					}
 				}
 			}
@@ -854,19 +799,32 @@ public class TypicalCondition implements StorableObjectCondition {
 					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
 		} finally {
 			if (this.delegate == null) {
-				this.delegate = new TypicalCondition() {
-
-					@Override
-					public boolean isConditionTrue(final StorableObject storableObject) {
-						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "This is a dummy condition; evaluation result is always false...",
-							Log.WARNING);
-						return false;
-					}
-				};
-
+				this.delegate = createDummyCondition();
 			}
 		}
+	}
+
+	private static TypicalCondition createDummyCondition() {
+		return new TypicalCondition() {
+
+			@Override
+			public boolean isConditionTrue(final StorableObject storableObject) {
+				Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
+						+ "Object: " + storableObject.toString() + "; "
+						+ "This is a dummy condition; evaluation result is always false...",
+					Log.WARNING);
+				return false;
+			}
+
+			@Override
+			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+				Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_NEED_MORE
+						+ "Object: " + storableObjects + "; "
+						+ "This is a dummy condition; evaluation result is always false...",
+					Log.WARNING);
+				return false;
+			}
+		};
 	}
 
 	/**
