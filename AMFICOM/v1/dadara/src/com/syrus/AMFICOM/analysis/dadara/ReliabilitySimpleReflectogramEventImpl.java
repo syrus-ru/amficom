@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.4 2005/05/20 12:12:03 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.5 2005/06/28 11:18:36 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/05/20 12:12:03 $
+ * @version $Revision: 1.5 $, $Date: 2005/06/28 11:18:36 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
@@ -28,15 +28,15 @@ implements ReliabilitySimpleReflectogramEvent {
     }
 
     /**
+     * reliability устанавливается в состояние "не определено"
      * @param begin начало события
      * @param end конец события
      * @param eventType тип события {@link SimpleReflectogramEvent}
-     * @param reliability достоверность превышения событием порога (0-1) либо -1, если достоверность не определена
      */
     public ReliabilitySimpleReflectogramEventImpl(int begin, int end,
-            int eventType, double reliability) {
+            int eventType) {
         super(begin, end, eventType);
-        this.reliability = reliability;
+        this.reliability = -1;
     }
 
     public ReliabilitySimpleReflectogramEventImpl(DataInputStream dis)

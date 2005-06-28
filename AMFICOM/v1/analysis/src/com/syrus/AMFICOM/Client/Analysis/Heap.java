@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.69 2005/06/21 11:40:28 saa Exp $
+ * $Id: Heap.java,v 1.70 2005/06/28 11:18:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.69 $, $Date: 2005/06/21 11:40:28 $
+ * @version $Revision: 1.70 $, $Date: 2005/06/28 11:18:52 $
  * @module
  */
 public class Heap
@@ -691,8 +691,7 @@ public class Heap
                 : new ReliabilitySimpleReflectogramEventImpl(
                         in[i].getBegin(),
                         in[i + 1].getEnd(),
-                        in[i].getEventType(),
-                        -1.0)
+                        in[i].getEventType())
                 : in[i + 1];
         }
         BellcoreStructure bs = getBSPrimaryTrace();
@@ -722,8 +721,7 @@ public class Heap
             out[nEvent + i] = new ReliabilitySimpleReflectogramEventImpl(
                     in[nEvent].getBegin() + evLen * i / n,
                     in[nEvent].getBegin() + evLen * (i + 1) / n,
-                    in[nEvent].getEventType(),
-                    -1.0);
+                    in[nEvent].getEventType());
         }
         for (int i = nEvent + 1; i < in.length; i++) {
                 out[i + n - 1] = in[i];
@@ -743,8 +741,7 @@ public class Heap
         changeOneEventAndFixNeighbours(nEvent, new ReliabilitySimpleReflectogramEventImpl(
                         mtae.getSimpleEvent(nEvent).getBegin(),
                         mtae.getSimpleEvent(nEvent).getEnd(),
-                        newType,
-                        -1.0));
+                        newType));
     }
 
     // rather slow: replaces the whole analysis
@@ -763,8 +760,7 @@ public class Heap
         changeOneEventAndFixNeighbours(nEvent, new ReliabilitySimpleReflectogramEventImpl(
                         begin,
                         mtae.getSimpleEvent(nEvent).getEnd(),
-                        mtae.getSimpleEvent(nEvent).getEventType(),
-                        -1.0));
+                        mtae.getSimpleEvent(nEvent).getEventType()));
     }
 
     // rather slow: replaces the whole analysis
@@ -784,8 +780,7 @@ public class Heap
                 new ReliabilitySimpleReflectogramEventImpl(
                         mtae.getSimpleEvent(nEvent).getBegin(),
                         end,
-                        mtae.getSimpleEvent(nEvent).getEventType(),
-                        -1.0));
+                        mtae.getSimpleEvent(nEvent).getEventType()));
     }
 
     // rather slow: replaces the whole analysis
@@ -804,14 +799,12 @@ public class Heap
                 out[i] = new ReliabilitySimpleReflectogramEventImpl(
                         in[i].getBegin(),
                         ev.getBegin(),
-                        in[i].getEventType(),
-                        -1.0);
+                        in[i].getEventType());
             } else if (i == nEvent + 1 && in[i].getBegin() != ev.getEnd()) {
                 out[i] = new ReliabilitySimpleReflectogramEventImpl(
                         ev.getEnd(),
                         in[i].getEnd(),
-                        in[i].getEventType(),
-                        -1.0);
+                        in[i].getEventType());
             } else {
                 out[i] = in[i];
             }
