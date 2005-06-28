@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.15 2005/06/28 15:06:10 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.16 2005/06/28 15:13:27 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/06/28 15:06:10 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/28 15:13:27 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -101,9 +101,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
         protected boolean eventNeedsMaxDev(int nEvent) {
             return
                rse[nEvent].getEventType() == SimpleReflectogramEvent.LINEAR
-            || rse[nEvent].getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED
-            || rse[nEvent].getEventType() == SimpleReflectogramEvent.GAIN // FIXME: gain/loss do not need these pars
-            || rse[nEvent].getEventType() == SimpleReflectogramEvent.LOSS;
+            || rse[nEvent].getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED;
         }
         protected int getEdz(int i) {
             return edz[i];
@@ -369,9 +367,9 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
         cinfo.writeToDOS(dos);
 		int pos4 = dos.size();
 		System.out.println("MTAEI: writeToDOS:"
-				+ " MT " + (pos2-pos1)     // 62-68% of total
-				+ ", rse " + (pos3-pos2)   // 14-16% of total
-				+ ", cinfo " + (pos4-pos3) // 18-22% of total
+				+ " MT " + (pos2-pos1)     // 66-72% of total
+				+ ", rse " + (pos3-pos2)   // 15-17% of total
+				+ ", cinfo " + (pos4-pos3) // 13-17% of total
 				+ ", total " + (pos4-pos1));
 	}
 
