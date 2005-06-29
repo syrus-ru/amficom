@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.8 2005/06/27 10:57:49 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.9 2005/06/29 12:48:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/27 10:57:49 $
+ * @version $Revision: 1.9 $, $Date: 2005/06/29 12:48:48 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,7 +49,10 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 
 		for (final ActionType actionType : actionTypes) {
 			final Identifier actionTypeId = actionType.getId();
-			final Map<String, Set<Identifier>> parameterTypeIdsModeMap = dbParameterTypeIdsMap.get(actionTypeId);
+			Map<String, Set<Identifier>> parameterTypeIdsModeMap = dbParameterTypeIdsMap.get(actionTypeId);
+			if (parameterTypeIdsModeMap == null) {
+				parameterTypeIdsModeMap = Collections.emptyMap();
+			}
 
 			actionType.setParameterTypeIds(parameterTypeIdsModeMap);
 		}
