@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.5 2005/06/24 12:37:05 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.6 2005/06/29 11:01:17 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/06/24 12:37:05 $
+ * @version $Revision: 1.6 $, $Date: 2005/06/29 11:01:17 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -856,7 +856,8 @@ public class TopologicalImageCache implements MapImageRenderer
 			// Если новый масштаб не является кратным предыдущему (zoom_to_box)
 			// или мы только что вышли из режима изменения центра
 			// грузим все изображения заново.
-			renewScaleImages();
+			int direction = (this.scale < this.mapContext.getScale()) ? 1 : -1;
+			renewScaleImages(direction);
 			Log.debugMessage(" TIC - createScaleRequests - exiting.",Log.DEBUGLEVEL10);			
 			return;
 		}
@@ -902,27 +903,35 @@ public class TopologicalImageCache implements MapImageRenderer
 
 	/**
 	 * Заново подгружает ВСЕ изображения с большим и меньшим масштабами
+	 * @param direction Направление изменения массшаба.
+	 * 1 - увеличение; -1 - уменьшение
+	 * @throws MapConnectionException
+	 * @throws MapDataException
 	 */
-	private void renewScaleImages() throws MapConnectionException,
+	private void renewScaleImages(int direction) throws MapConnectionException,
 			MapDataException
 	{
 		//Устанавливаем отображаемое изображение. Грузим его с самым высоким приоритетом
 		this.requestToPaint = this.setPriorityForRequest(this.center,this.mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
 
-		// Делаем изображения большего и меньшего изображения
+		// Делаем изображения в направлении изменения масштаба
 		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
 		{
-			// Маленькое
 			this.setPriorityForRequest(
-					this.center,
-					this.mapContext.getScale() / Math.pow(MapContext.ZOOM_FACTOR, i + 1),
-					TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
-
-			// Большое
+				this.center,
+				this.mapContext.getScale() *
+					Math.pow(MapContext.ZOOM_FACTOR, direction * (i + 1)),
+				TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
+		}
+		
+		// Делаем изображения в направлении обратном изменению масштаба
+		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
+		{
 			this.setPriorityForRequest(
-					this.center,
-					this.mapContext.getScale() * Math.pow(MapContext.ZOOM_FACTOR, i + 1),
-					TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
+				this.center,
+				this.mapContext.getScale() *
+					Math.pow(MapContext.ZOOM_FACTOR, (-1) * direction * (i + 1)),
+				TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
 		}
 	}
 
@@ -951,5 +960,11 @@ public class TopologicalImageCache implements MapImageRenderer
 
 	public MapImageLoader getLoader() {
 		return this.loader;
+	}
+	
+	public void test() throws MapDataException,MapConnectionException
+	{
+		this.nulifyCache();
+		
 	}
 }
