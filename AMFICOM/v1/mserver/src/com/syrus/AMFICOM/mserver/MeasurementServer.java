@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.60 2005/06/25 17:07:52 bass Exp $
+ * $Id: MeasurementServer.java,v 1.61 2005/06/29 14:25:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/06/25 17:07:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/06/29 14:25:31 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -117,22 +117,19 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static Set<Identifier> mcmIdsToAbortTests;	
 
 
-	private ORB orb;
-
-	public MeasurementServer(final ORB orb) {
+	private MeasurementServer() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
 		this.running = true;
-		this.orb = orb;
 	}
 
 	public static void main(String[] args) {
 		Application.init(APPLICATION_NAME);
 
 		/*	All preparations on startup*/
-		final ORB orb = startup();
+		startup();
 
 		/*	Start main loop	*/
-		final MeasurementServer measurementServer = new MeasurementServer(orb);
+		final MeasurementServer measurementServer = new MeasurementServer();
 		measurementServer.start();
 
 		/*	Add shutdown hook	*/
@@ -144,7 +141,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		});
 	}
 
-	private static ORB startup() {
+	private static void startup() {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -192,15 +189,12 @@ public class MeasurementServer extends SleepButWorkThread {
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
-			final ORB orb = corbaServer.getOrb();
-			corbaServer.activateServant(new MServerPOATie(new MServerImplementation(orb), corbaServer.getPoa()), processCodename);
+			corbaServer.activateServant(new MServerPOATie(new MServerImplementation(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
-			return orb;
 		}
 		catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(0);
-			return null;
 		}
 	}
 
@@ -249,7 +243,7 @@ public class MeasurementServer extends SleepButWorkThread {
 							continue;
 						}
 
-						testsT = createTransferables(this.orb, testQueue);
+						testsT = createTransferables(servantManager.getCORBAServer().getOrb(), testQueue);
 						try {
 							Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 							mcmRef.receiveTests(testsT);

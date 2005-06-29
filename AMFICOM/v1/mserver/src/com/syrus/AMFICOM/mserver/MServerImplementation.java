@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.64 2005/06/25 17:07:52 bass Exp $
+ * $Id: MServerImplementation.java,v 1.65 2005/06/29 14:25:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.mserver;
 
 import java.util.Set;
-
-import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -26,16 +24,16 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/06/25 17:07:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/06/29 14:25:31 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 public class MServerImplementation extends MServerMeasurementTransmit {
 
 	private static final long serialVersionUID = 395371850379497709L;
 
-	MServerImplementation(final ORB orb) {
-		super(orb);
+	MServerImplementation() {
+		super(MServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
 	}
 
 	protected void validateAccess(final IdlSessionKey sessionKeyT,
@@ -66,7 +64,7 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 		this.validateAccess(sessionKeyT, userId, domainId);
 
-		Set testIds = Identifier.fromTransferables(ids);
+		final Set<Identifier> testIds = Identifier.fromTransferables(ids);
 		StorableObjectPool.delete(testIds);
 		try {
 			StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
