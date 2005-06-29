@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.25 2005/06/24 12:50:39 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.26 2005/06/29 15:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/24 12:50:39 $
+ * @version $Revision: 1.26 $, $Date: 2005/06/29 15:51:17 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -236,8 +236,6 @@ public class MapActionCommandBundle extends CommandBundle
 		UnboundLink unbound = this.createUnboundLink(startNode, endNode);
 
 		NodeLink nodeLink = this.createNodeLink(unbound, startNode, endNode);
-		unbound.addNodeLink(nodeLink);
-		nodeLink.setPhysicalLink(unbound);
 		
 		return unbound;
 	}
@@ -400,10 +398,6 @@ public class MapActionCommandBundle extends CommandBundle
 		// наткнемся на фрагмент, соседний с удаленным
 		for(;;)
 		{
-			// перекинуть фрагмент в новую линию
-			link.removeNodeLink(startNodeLink);
-			newLink.addNodeLink(startNodeLink);
-			
 			if(registerStateChange)
 				state = startNodeLink.getState();
 			

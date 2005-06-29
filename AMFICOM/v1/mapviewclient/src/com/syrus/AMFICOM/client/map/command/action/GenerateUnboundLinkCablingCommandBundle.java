@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.18 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.19 2005/06/29 15:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 /**
  * Команда генерации тоннеля по непривязанной линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.19 $, $Date: 2005/06/29 15:51:17 $
  * @module mapviewclient_v1
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
@@ -73,14 +73,13 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 			this.link = super.createPhysicalLink(
 					this.unbound.getStartNode(), 
 					this.unbound.getEndNode());
-			super.removePhysicalLink(this.unbound);
 			// перенести фрагменты линии в сгенерированный тоннель
 			for(Iterator it2 = this.unbound.getNodeLinks().iterator(); it2.hasNext();)
 			{
 				NodeLink mnle = (NodeLink)it2.next();
 				mnle.setPhysicalLink(this.link);
-				this.link.addNodeLink(mnle);
 			}
+			super.removePhysicalLink(this.unbound);
 			this.path.addLink(this.link, CableController.generateCCI(this.path, this.link, LoginManager.getUserId()));
 			this.link.getBinding().add(this.path);
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);

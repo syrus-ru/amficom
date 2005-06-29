@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.24 2005/06/24 12:50:39 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.25 2005/06/29 15:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  *  Уже существующая привязка сохраняется. По непривязанным элементам 
  *  генерируются сетевые узла и схемные элементы привязываются к ним.
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/24 12:50:39 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/29 15:51:17 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -105,7 +105,6 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				{
 					this.path.removeLink(link);
 					UnboundLink un = (UnboundLink)link;
-					super.removePhysicalLink(un);
 
 					link = super.createPhysicalLink(startsite, endsite);
 					// фрагменты переносятся в новый сгенерированный тоннель
@@ -113,8 +112,8 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 					{
 						NodeLink mnle = (NodeLink)it2.next();
 						mnle.setPhysicalLink(link);
-						link.addNodeLink(mnle);
 					}
+					super.removePhysicalLink(un);
 					this.path.addLink(link, CableController.generateCCI(this.path, link, LoginManager.getUserId()));
 					link.getBinding().add(this.path);
 				}

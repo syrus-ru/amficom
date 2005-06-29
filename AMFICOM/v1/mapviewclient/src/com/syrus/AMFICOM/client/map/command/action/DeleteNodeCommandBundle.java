@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.30 2005/06/24 12:50:39 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.31 2005/06/29 15:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/06/24 12:50:39 $
+ * @version $Revision: 1.31 $, $Date: 2005/06/29 15:51:17 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -354,9 +354,6 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			{
 				// создать новый фрагмент линии и добавить на карту и в линию
 				NodeLink newNodeLink = super.createNodeLink(physicalLink, nodeLeft, nodeRight);
-				newNodeLink.setPhysicalLink(physicalLink);
-
-				physicalLink.addNodeLink(newNodeLink);
 			}
 
 			super.registerStateChange(physicalLink, pls, physicalLink.getState());

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.19 2005/06/24 12:50:39 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.20 2005/06/29 15:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/24 12:50:39 $
+ * @version $Revision: 1.20 $, $Date: 2005/06/29 15:51:17 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -86,9 +86,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		this.physicalLink = super.createPhysicalLink(this.startNode, endNode);
 
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
-		this.nodeLink.setPhysicalLink(this.physicalLink);
-
-		this.physicalLink.addNodeLink(this.nodeLink);
 	}
 
 	void createSiteToNewNode(DoublePoint mapEndPoint)
@@ -101,9 +98,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		this.physicalLink.setEndNode(endNode);
 
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
-		this.nodeLink.setPhysicalLink(this.physicalLink);
-
-		this.physicalLink.addNodeLink(this.nodeLink);
 	}
 
 	void createSiteToNode(TopologicalNode endNode)
@@ -114,9 +108,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		MapElementState pls = this.physicalLink.getState();
 
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
-		this.nodeLink.setPhysicalLink(this.physicalLink);
-
-		this.physicalLink.addNodeLink(this.nodeLink);
 
 		super.changePhysicalNodeActivity(endNode, true);
 
@@ -140,9 +131,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		MapElementState pls = this.physicalLink.getState();
 
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
-		this.nodeLink.setPhysicalLink(this.physicalLink);
-
-		this.physicalLink.addNodeLink(this.nodeLink);
 
 		super.changePhysicalNodeActivity(mpne, true);
 
@@ -166,9 +154,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		TopologicalNode endNode = super.createPhysicalNode(this.physicalLink, mapEndPoint);
 
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
-		this.nodeLink.setPhysicalLink(this.physicalLink);
-
-		this.physicalLink.addNodeLink(this.nodeLink);
 
 		super.changePhysicalNodeActivity(smpne, true);
 
@@ -183,54 +168,49 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	void createNodeToNode(TopologicalNode endNode)
 		throws Throwable
 	{
-		TopologicalNode smpne = (TopologicalNode )this.startNode;
-		TopologicalNode empne = endNode;
+		TopologicalNode startTopologicalNode = (TopologicalNode )this.startNode;
+		TopologicalNode endTopologicalNode = endNode;
 
-		this.physicalLink = smpne.getPhysicalLink();
-		PhysicalLink emple = empne.getPhysicalLink();
+		this.physicalLink = startTopologicalNode.getPhysicalLink();
+		PhysicalLink physicalLinkToRemove = endTopologicalNode.getPhysicalLink();
 
 		MapElementState pls = this.physicalLink.getState();
 
-		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
-		this.nodeLink.setPhysicalLink(this.physicalLink);
+		this.nodeLink = super.createNodeLink(this.physicalLink, startTopologicalNode, endTopologicalNode);
 
-		this.physicalLink.addNodeLink(this.nodeLink);
-
-		super.changePhysicalNodeActivity(smpne, true);
-		super.changePhysicalNodeActivity(empne, true);
+		super.changePhysicalNodeActivity(startTopologicalNode, true);
+		super.changePhysicalNodeActivity(endTopologicalNode, true);
 
 		// Коррекция начального и конечного узлов линии
 		if(this.physicalLink.getStartNode().equals(this.startNode))
 			this.physicalLink.setStartNode(this.physicalLink.getEndNode());
 		this.physicalLink.setEndNode(endNode);
 
-		if(emple != null)
-			if(!emple.equals(this.physicalLink))
+		if(physicalLinkToRemove != null)
+			if(!physicalLinkToRemove.equals(this.physicalLink))
 		{
-			MapElementState pls2 = emple.getState();
+			MapElementState pls2 = physicalLinkToRemove.getState();
 	
 			// отдельный список, поскольку используется операция удаления
 			LinkedList nodeLinksToMove = new LinkedList();
-			nodeLinksToMove.addAll(emple.getNodeLinks());
+			nodeLinksToMove.addAll(physicalLinkToRemove.getNodeLinks());
 	
 			// Перенос фрагментов линии из одной линии в другую
 			for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();)
 			{
 				NodeLink mnle = (NodeLink)it.next();
-				emple.removeNodeLink(mnle);
-				this.physicalLink.addNodeLink(mnle);
 				mnle.setPhysicalLink(this.physicalLink);
 			}			
 		
 			// Коррекция начального и конечного узлов линии
-			if(emple.getStartNode().equals(endNode))
-				this.physicalLink.setEndNode(emple.getEndNode());
+			if(physicalLinkToRemove.getStartNode().equals(endNode))
+				this.physicalLink.setEndNode(physicalLinkToRemove.getEndNode());
 			else
-				this.physicalLink.setEndNode(emple.getStartNode());
+				this.physicalLink.setEndNode(physicalLinkToRemove.getStartNode());
 	
-			super.registerStateChange(emple, pls2, emple.getState());
+			super.registerStateChange(physicalLinkToRemove, pls2, physicalLinkToRemove.getState());
 	
-			super.removePhysicalLink(emple);
+			super.removePhysicalLink(physicalLinkToRemove);
 		}
 
 		super.registerStateChange(this.physicalLink, pls, this.physicalLink.getState());

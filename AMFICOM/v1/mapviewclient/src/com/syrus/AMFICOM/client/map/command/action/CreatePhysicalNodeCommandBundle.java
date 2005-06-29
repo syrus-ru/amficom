@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.15 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.16 2005/06/29 15:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.15 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/29 15:51:17 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -71,20 +71,17 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 			// взять начальный и конечный узлы фрагмента
 			AbstractNode startNode = this.nodeLink.getStartNode();
 			AbstractNode endNode = this.nodeLink.getEndNode();
+
+			MapElementState pls = physicalLink.getState();
 			// разбить фрагмент на две части - т.е. создать два новых фрагмента
 			NodeLink link1 = super.createNodeLink(physicalLink, startNode, node);
-			link1.setPhysicalLink(physicalLink);
 			NodeLink link2 = super.createNodeLink(physicalLink, node, endNode);
-			link2.setPhysicalLink(physicalLink);
 			// удаляется старый фрагмент с карты
 			super.removeNodeLink(this.nodeLink);
-			MapElementState pls = physicalLink.getState();
 			// удаляется старый фрагмент из линии
 			physicalLink.removeNodeLink(this.nodeLink);
-			// добавляются два новых фрагмента
-			physicalLink.addNodeLink(link1);
-			physicalLink.addNodeLink(link2);
 			super.registerStateChange(physicalLink, pls, physicalLink.getState());
+
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(node);
