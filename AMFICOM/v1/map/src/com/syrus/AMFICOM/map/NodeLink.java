@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.53 2005/06/25 17:50:45 bass Exp $
+ * $Id: NodeLink.java,v 1.54 2005/06/29 15:42:28 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLink;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/06/25 17:50:45 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.54 $, $Date: 2005/06/29 15:42:28 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -154,6 +154,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 					starNode,
 					endNode,
 					length);
+			physicalLink.addNodeLink(nodeLink);
 
 			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -249,7 +250,15 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	}
 
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
+		if(this.physicalLink != null) {
+			this.physicalLink.removeNodeLink(this);
+		}
+
 		this.setPhysicalLink0(physicalLink);
+
+		if(physicalLink != null) {
+			physicalLink.addNodeLink(this);
+		}
 		super.markAsChanged();
 	}
 
