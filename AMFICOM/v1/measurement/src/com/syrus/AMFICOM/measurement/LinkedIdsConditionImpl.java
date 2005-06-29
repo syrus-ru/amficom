@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.48 2005/06/27 09:53:01 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.49 2005/06/29 08:33:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/06/27 09:53:01 $
+ * @version $Revision: 1.49 $, $Date: 2005/06/29 08:33:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -126,7 +126,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final Action action = (Action) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.MEASUREMENT_CODE:
-						Identifier parentActionId = action.getParentAction().getId();
+						final Identifier parentActionId = action.getParentAction().getId();
 						condition = super.conditionTest(parentActionId);
 						break;
 					default:
