@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.70 2005/06/25 17:50:44 bass Exp $
+ * $Id: PhysicalLink.java,v 1.71 2005/06/29 15:43:58 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/06/25 17:50:44 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.71 $, $Date: 2005/06/29 15:43:58 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -581,9 +581,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *          фрагмент линии
 	 */
 	public void addNodeLink(final NodeLink addNodeLink) {
-		this.nodeLinks.add(addNodeLink);
-		this.nodeLinksSorted = false;
-		super.markAsChanged();
+		if(!this.nodeLinks.contains(addNodeLink)) {
+			this.nodeLinks.add(addNodeLink);
+			this.nodeLinksSorted = false;
+			super.markAsChanged();
+		}
 	}
 
 	/**
@@ -851,7 +853,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		for (Iterator it = mples.nodeLinks.iterator(); it.hasNext();) {
 			NodeLink mnle = (NodeLink) it.next();
 			mnle.setPhysicalLink(this);
-			this.nodeLinks.add(mnle);
+//			this.nodeLinks.add(mnle);
 		}
 		try {
 			setType((PhysicalLinkType) (StorableObjectPool.getStorableObject(mples.mapProtoId, true)));
