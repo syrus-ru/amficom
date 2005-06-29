@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.20 2005/06/24 16:00:04 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.21 2005/06/29 13:26:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,10 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/24 16:00:04 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/29 13:26:43 $
  * @author $Author: arseniy $
  * @module general_v1
+ * @deprecated Use enum ParameterTypeCodename instead
  */
 public final class ParameterTypeCodenames {
 
