@@ -131,7 +131,7 @@ InitialAnalysis::~InitialAnalysis()
 // проверяем перекрыте с учетом разномасштабности
 int InitialAnalysis::splashesOverlap(Splash &spl1, Splash &spl2) {
 	// если всплески одного знака - учитываем разность масштабов
-	int delta = spl1.sign == spl2.sign
+	int delta = spl1.sign == spl2.sign 
 		? abs(spl1.scale - spl2.scale) // integer abs
 		: 0;
 	return
@@ -159,18 +159,15 @@ int InitialAnalysis::findMaxOverlappingSplashIndex(Splash &spl, ArrList &arrList
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 {	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
-	{
-		// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
+	{	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
 		// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
 		double wn = getWLetNorma(scaleB);
 		performTransformationOnly(data, 0, lastPoint + 1, TEMP, scaleB, wn);
 		calcAverageFactor(TEMP, scaleB, wn);
 		centerWletImageOnly(TEMP, scaleB, 0, lastPoint + 1, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
 	}
-
 #ifdef debug_VCL
-	{
-		int i;
+	{	int i;
 		for (i = 0; i <= lastPoint; i++)
 			debug_f_wlet[i] = TEMP[i];
 	}
@@ -190,11 +187,8 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 		}
 	}
 #endif
-
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
-
 	ArrList accSpl; // текущий список найденных сварок (пустой)
-
 	int scaleIndex;
 	for (scaleIndex = 4; scaleIndex <= 4; scaleIndex += 2) {
 		int scale = scaleB * scaleIndex / 4;
@@ -203,7 +197,6 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 		// проводим поиск всплесков на данном масштабе
 		ArrList newSpl;
 		performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scale, getWLetNorma(scale));
-
 #ifdef DEBUG_INITIAL_ANALYSIS
 	{	// FIXME: debug dump
 		FILE *f;
@@ -222,26 +215,21 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 		}
 	}
 #endif
-
 		findAllWletSplashes(TEMP, scale, newSpl);
 		//fprintf(stderr, "scale %d: %d splashes\n", scale, newSpl.getLength()); fflush(stderr);
 		// анализируем, что делать  с каждым найденным всплеском
 		int i;
 		for (i = 0; i < newSpl.getLength(); i++) {
 			Splash *cnSplash = (Splash*)newSpl[i];
-
 			// ищем, с какими всплесками accSpl пересекается текущий cnSplash
 			int minAccIndex = findMinOverlappingSplashIndex(*cnSplash, accSpl);
 			int maxAccIndex = findMaxOverlappingSplashIndex(*cnSplash, accSpl);
-
 			enum {
-				ACTION_IGNORE = 1,
-				ACTION_INSERT = 2,
+				ACTION_IGNORE  = 1,
+				ACTION_INSERT  = 2,
 				ACTION_REPLACE = 3
 			} action = ACTION_IGNORE;
-
 			int replaceIndex = -1;
-
 			if (minAccIndex < 0) { // новый всплеск
 				action = ACTION_INSERT;
 			} else if (minAccIndex < maxAccIndex) { // пересекает несколько всплесков acc
@@ -253,7 +241,7 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 				if (maxBackIndex > minBackIndex) { // соответствующий всплеск пересекает еще какие-то, кроме нашего
 					action = ACTION_IGNORE;
 				} else { // связь взаимно-однозначна
-					assert(minBackIndex >= 0);
+					assert(minBackIndex >= 0); // Vit: -1 если в обратную сторону ни с кем не пересеклись  
 					if (fabs(cnSplash->f_extr) / sqrt(cnSplash->scale)
 						> fabs(caSplash->f_extr) / sqrt(caSplash->scale)) {
 						action = ACTION_REPLACE;
@@ -288,7 +276,8 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 				accSpl.set(replaceIndex, cnSplash);
 				// 'убираем' splash из newSpl списка, чтобы не удалять его дважды
 				newSpl.set(i, 0);
-			} else if (action == ACTION_INSERT) {
+			}
+            else if (action == ACTION_INSERT) {
 				// надо найти точку вставки
 				int j;
 				for (j = 0; j < accSpl.getLength(); j++) {
