@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.51 2005/06/25 17:07:49 bass Exp $
+ * $Id: ClientMeasurementServer.java,v 1.52 2005/06/29 14:23:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/25 17:07:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2005/06/29 14:23:54 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer {
@@ -130,7 +130,7 @@ public class ClientMeasurementServer {
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getCMServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new CMServerPOATie(new CMServerImpl(corbaServer.getOrb()), corbaServer.getPoa()), processCodename);
+			corbaServer.activateServant(new CMServerPOATie(new CMServerImpl(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
 		}
 		catch (final Exception e) {

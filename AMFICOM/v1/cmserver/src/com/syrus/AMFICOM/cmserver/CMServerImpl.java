@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.112 2005/06/25 18:05:56 bass Exp $
+ * $Id: CMServerImpl.java,v 1.113 2005/06/29 14:23:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-
-import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -20,16 +18,16 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/06/25 18:05:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.113 $, $Date: 2005/06/29 14:23:54 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 public final class CMServerImpl extends CMMeasurementTransmit {
 	private static final long serialVersionUID = 3760563104903672628L;
 
-	CMServerImpl(final ORB orb) {
-		super(orb);
+	CMServerImpl() {
+		super(CMServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
 	}
 
 	/**
