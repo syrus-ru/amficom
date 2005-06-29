@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.43 2005/06/25 17:07:51 bass Exp $
+ * $Id: MCMImplementation.java,v 1.44 2005/06/29 14:33:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,27 +39,26 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/25 17:07:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/06/29 14:33:17 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class MCMImplementation extends MCMPOA {
-	private ORB orb;
 
-	MCMImplementation(final ORB orb) {
-		this.orb = orb;
+	MCMImplementation() {
+		//Nothing
 	}
 
 	private static final long serialVersionUID = -3362347139575001444L;
 
 
-	public void receiveTests(IdlTest[] testsT) throws AMFICOMRemoteException {
+	public void receiveTests(final IdlTest[] testsT) throws AMFICOMRemoteException {
 		Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
-		List<Test> tests = new LinkedList<Test>();
+		final List<Test> tests = new LinkedList<Test>();
 		for (int i = 0; i < testsT.length; i++) {
 			try {
-				Test test = new Test(testsT[i]);
+				final Test test = new Test(testsT[i]);
 				tests.add(test);
 			}
 			catch (CreateObjectException coe) {
@@ -71,8 +70,8 @@ public class MCMImplementation extends MCMPOA {
 		MeasurementControlModule.addTests(tests);
 	}
 
-	public void abortTests(IdlIdentifier[] testIdsT) throws AMFICOMRemoteException {
-		Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
+	public void abortTests(final IdlIdentifier[] testIdsT) throws AMFICOMRemoteException {
+		final Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
 		MeasurementControlModule.abortTests(ids);
 	}
 
@@ -80,9 +79,9 @@ public class MCMImplementation extends MCMPOA {
 
 
 
-	public IdlMeasurement[] transmitMeasurements(IdlIdentifier[] identifier_Transferables)
+	public IdlMeasurement[] transmitMeasurements(final IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
+		final Set ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Set objects = null;
 		try {
@@ -92,19 +91,19 @@ public class MCMImplementation extends MCMPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
-		IdlMeasurement[] transferables = new IdlMeasurement[objects.size()];
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlMeasurement[] transferables = new IdlMeasurement[objects.size()];
 		int i = 0;
-		Measurement measurement;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurement = (Measurement) it.next();
-			transferables[i] = measurement.getTransferable(this.orb);
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Measurement measurement = (Measurement) it.next();
+			transferables[i] = measurement.getTransferable(orb);
 		}
 		return transferables;
 	}
 
-	public IdlAnalysis[] transmitAnalyses(IdlIdentifier[] identifier_Transferables)
+	public IdlAnalysis[] transmitAnalyses(final IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
+		final Set ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Set objects = null;
 		try {
@@ -114,19 +113,19 @@ public class MCMImplementation extends MCMPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
-		IdlAnalysis[] transferables = new IdlAnalysis[objects.size()];
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlAnalysis[] transferables = new IdlAnalysis[objects.size()];
 		int i = 0;
-		Analysis analysis;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysis = (Analysis) it.next();
-			transferables[i] = analysis.getTransferable(this.orb);
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Analysis analysis = (Analysis) it.next();
+			transferables[i] = analysis.getTransferable(orb);
 		}
 		return transferables;
 	}
 
-  public IdlEvaluation[] transmitEvaluations(IdlIdentifier[] identifier_Transferables)
+  public IdlEvaluation[] transmitEvaluations(final IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		Set ids = Identifier.fromTransferables(identifier_Transferables);
+		final Set ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Set objects = null;
 		try {
@@ -136,60 +135,60 @@ public class MCMImplementation extends MCMPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
-		IdlEvaluation[] transferables = new IdlEvaluation[objects.size()];
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlEvaluation[] transferables = new IdlEvaluation[objects.size()];
 		int i = 0;
-		Evaluation evaluation;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluation = (Evaluation) it.next();
-			transferables[i] = evaluation.getTransferable(this.orb);
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Evaluation evaluation = (Evaluation) it.next();
+			transferables[i] = evaluation.getTransferable(orb);
 		}
 		return transferables;
 	}
 
-	public IdlMeasurement[] transmitMeasurementsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
-			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
+	public IdlMeasurement[] transmitMeasurementsButIdsByCondition(final IdlIdentifier[] identifier_Transferables,
+			final IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+		final Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
-		IdlMeasurement[] transferables = new IdlMeasurement[objects.size()];
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlMeasurement[] transferables = new IdlMeasurement[objects.size()];
 		int i = 0;
-		Measurement measurement;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			measurement = (Measurement) it.next();
-			transferables[i] = measurement.getTransferable(this.orb);
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Measurement measurement = (Measurement) it.next();
+			transferables[i] = measurement.getTransferable(orb);
 		}
 		return transferables;
 	}
 
 	public IdlAnalysis[] transmitAnalysesButIdsByCondition(IdlIdentifier[] identifier_Transferables,
 			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
+		final Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
-		IdlAnalysis[] transferables = new IdlAnalysis[objects.size()];
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlAnalysis[] transferables = new IdlAnalysis[objects.size()];
 		int i = 0;
-		Analysis analysis;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			analysis = (Analysis) it.next();
-			transferables[i] = analysis.getTransferable(this.orb);
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Analysis analysis = (Analysis) it.next();
+			transferables[i] = analysis.getTransferable(orb);
 		}
 		return transferables;
 	}
 
-	public IdlEvaluation[] transmitEvaluationsButIdsByCondition(IdlIdentifier[] identifier_Transferables,
-			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
+	public IdlEvaluation[] transmitEvaluationsButIdsByCondition(final IdlIdentifier[] identifier_Transferables,
+			final IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+		final Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
-		IdlEvaluation[] transferables = new IdlEvaluation[objects.size()];
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlEvaluation[] transferables = new IdlEvaluation[objects.size()];
 		int i = 0;
-		Evaluation evaluation;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			evaluation = (Evaluation) it.next();
-			transferables[i] = evaluation.getTransferable(this.orb);
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Evaluation evaluation = (Evaluation) it.next();
+			transferables[i] = evaluation.getTransferable(orb);
 		}
 		return transferables;
 	}
 
-  private Set getObjectsButIdsCondition(IdlIdentifier[] identifier_Transferables,
-			IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+  private Set getObjectsButIdsCondition(final IdlIdentifier[] identifier_Transferables,
+  		final IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		try {
 
 			StorableObjectCondition condition = null;
@@ -204,7 +203,7 @@ public class MCMImplementation extends MCMPOA {
 
 			Set objects = null;
 			try {
-				Set ids = Identifier.fromTransferables(identifier_Transferables);
+				final Set ids = Identifier.fromTransferables(identifier_Transferables);
 
 				/**
 				 * NOTE: If it is impossible to load objects by Loader - return only those from Pool
@@ -227,7 +226,7 @@ public class MCMImplementation extends MCMPOA {
 
 
 
-	public void verify(byte i) {
+	public void verify(final byte i) {
 		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
 	
