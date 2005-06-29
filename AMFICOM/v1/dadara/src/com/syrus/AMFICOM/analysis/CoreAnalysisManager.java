@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.85 2005/06/29 09:53:29 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.86 2005/06/29 14:47:44 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.85 $, $Date: 2005/06/29 09:53:29 $
+ * @version $Revision: 1.86 $, $Date: 2005/06/29 14:47:44 $
  * @module
  */
 
@@ -744,6 +744,7 @@ public class CoreAnalysisManager
         // проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
         if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
         {
+        	// @todo: нужна привязка breakPos к нач. событию эталона, если оно попадает на отраж. или св. (с учетом DX-порогов HARD-алармов)
             ReflectogramAlarm alarm = new ReflectogramAlarm();
             alarm.level = ReflectogramAlarm.LEVEL_HARD;
             alarm.alarmType = ReflectogramAlarm.TYPE_LINEBREAK;

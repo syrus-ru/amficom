@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.20 2005/06/28 10:03:41 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.21 2005/06/29 14:47:44 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/06/28 10:03:41 $
+ * @version $Revision: 1.21 $, $Date: 2005/06/29 14:47:44 $
  * @module
  */
 public class ModelTraceComparer
@@ -226,6 +226,7 @@ public class ModelTraceComparer
 			int alarmEnd = i;
 			if (alarmBegin < len)
 			{
+				// @todo: нужна привязка alarmBegin к нач. нел. соб.
 				int level = Thresh.IS_KEY_HARD[key]
 					? ReflectogramAlarm.LEVEL_HARD
 					: ReflectogramAlarm.LEVEL_SOFT;
