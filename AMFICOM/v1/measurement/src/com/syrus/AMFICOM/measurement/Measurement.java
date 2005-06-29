@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.81 2005/06/25 17:50:45 bass Exp $
+ * $Id: Measurement.java,v 1.82 2005/06/29 14:17:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/06/25 17:50:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.82 $, $Date: 2005/06/29 14:17:41 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -323,6 +323,7 @@ public final class Measurement extends Action {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.type);
 		dependencies.add(this.testId);
 		dependencies.add(this.setup);
 		return dependencies;

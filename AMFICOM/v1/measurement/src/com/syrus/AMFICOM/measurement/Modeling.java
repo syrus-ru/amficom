@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.51 2005/06/25 17:07:41 bass Exp $
+ * $Id: Modeling.java,v 1.52 2005/06/29 14:17:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/25 17:07:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2005/06/29 14:17:41 $
+ * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
  */
@@ -213,6 +212,7 @@ public final class Modeling extends Action {
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
+		dependencies.add(this.type);
 		dependencies.add(this.argumentSet);
 		return dependencies;
 	}

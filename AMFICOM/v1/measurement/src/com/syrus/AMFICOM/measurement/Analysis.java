@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.72 2005/06/25 17:50:45 bass Exp $
+ * $Id: Analysis.java,v 1.73 2005/06/29 14:17:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/06/25 17:50:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/06/29 14:17:40 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -250,6 +250,7 @@ public final class Analysis extends Action {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.type);
 		//	Measurement, if exists
 		if (super.parentAction != null)
 			dependencies.add(super.parentAction);

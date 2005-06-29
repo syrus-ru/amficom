@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.69 2005/06/25 17:50:45 bass Exp $
+ * $Id: Evaluation.java,v 1.70 2005/06/29 14:17:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/06/25 17:50:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/06/29 14:17:40 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -236,6 +236,7 @@ public final class Evaluation extends Action {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.type);
 		//	Measurement if exists
 		if (super.parentAction != null)
 			dependencies.add(super.parentAction);
