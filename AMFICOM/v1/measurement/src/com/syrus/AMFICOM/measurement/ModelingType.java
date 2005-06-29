@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.38 2005/06/25 17:07:41 bass Exp $
+ * $Id: ModelingType.java,v 1.39 2005/06/29 12:15:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/25 17:07:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/06/29 12:15:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -218,6 +218,7 @@ public final class ModelingType extends ActionType {
 	 */
 	@Override
 	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
+		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_IN));
 		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(ModelingTypeWrapper.MODE_OUT));
 	}

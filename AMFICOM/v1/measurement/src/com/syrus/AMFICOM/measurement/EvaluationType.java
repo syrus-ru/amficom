@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.76 2005/06/25 17:07:41 bass Exp $
+ * $Id: EvaluationType.java,v 1.77 2005/06/29 12:15:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/06/25 17:07:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.77 $, $Date: 2005/06/29 12:15:20 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -272,6 +272,7 @@ public final class EvaluationType extends ActionType {
 	 */
 	@Override
 	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
+		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_IN));
 		this.setThresholdParameterTypeIds0(parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_THRESHOLD));
 		this.setEtalonParameterTypeIds0(parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_ETALON));

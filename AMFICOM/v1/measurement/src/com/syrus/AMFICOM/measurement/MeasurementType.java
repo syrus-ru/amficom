@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.83 2005/06/25 17:07:41 bass Exp $
+ * $Id: MeasurementType.java,v 1.84 2005/06/29 12:15:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/06/25 17:07:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.84 $, $Date: 2005/06/29 12:15:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -227,6 +227,7 @@ public final class MeasurementType extends ActionType implements Namable {
 	 */
 	@Override
 	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
+		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_IN));
 		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_OUT));
 	}

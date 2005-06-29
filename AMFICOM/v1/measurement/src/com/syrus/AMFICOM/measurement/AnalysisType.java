@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.80 2005/06/25 17:07:41 bass Exp $
+ * $Id: AnalysisType.java,v 1.81 2005/06/29 12:15:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/06/25 17:07:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.81 $, $Date: 2005/06/29 12:15:20 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -265,6 +265,7 @@ public final class AnalysisType extends ActionType {
 	 */
 	@Override
 	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
+		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_IN));
 		this.setCriteriaParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_CRITERION));
 		this.setEtalonParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_ETALON));
