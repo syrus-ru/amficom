@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.10 2005/06/22 13:21:53 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.11 2005/06/29 15:48:02 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/22 13:21:53 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/29 15:48:02 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel {
@@ -144,7 +144,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weightx = 0;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(1, 0, 1, 0);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
@@ -157,7 +157,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weightx = 1;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.BOTH;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(1, 5, 1, 0);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
@@ -170,7 +170,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weightx = 0;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(1, 10, 1, 0);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
@@ -183,7 +183,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weightx = 1;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.BOTH;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(1, 5, 1, 0);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
@@ -196,7 +196,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weightx = 0;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(1, 40, 1, 0);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
@@ -209,7 +209,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weightx = 1;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.BOTH;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = new Insets(1, 5, 1, 300);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
