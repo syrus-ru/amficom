@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.66 2005/06/23 18:45:06 bass Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.67 2005/06/29 14:34:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/06/23 18:45:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/06/29 14:34:07 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends MCMObjectLoader implements MeasurementObjectLoader {
@@ -308,7 +308,13 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	/*	Save multiple objects*/
 
 	public void saveMeasurements(final Set<Measurement> storableObjects, final boolean force) throws ApplicationException {
-		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
+		super.saveStorableObjects(ObjectEntities.MEASUREMENT_CODE, storableObjects, force, new ReceiveProcedure() {
+			public IdlStorableObject[] receiveStorableObjects(final CommonServer server,
+					final IDLEntity[] transferables,
+					final IdlSessionKey sessionKey) throws AMFICOMRemoteException {
+				return ((MServer) server).receiveTests((IdlTest[]) transferables, force, sessionKey);
+			}
+		});
 	}
 
 	public void saveAnalyses(final Set<Analysis> storableObjects, final boolean force) throws ApplicationException {
