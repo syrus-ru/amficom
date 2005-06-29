@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.83 2005/06/28 07:26:45 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.84 2005/06/29 15:45:47 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.83 $, $Date: 2005/06/28 07:26:45 $
+ * @version $Revision: 1.84 $, $Date: 2005/06/29 15:45:47 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -259,17 +259,6 @@ public class LogicalNetLayer
 	public MapView getMapView()
 	{
 		return this.mapView;
-	}
-
-	/**
-	 * ”становить топологическую карту.
-	 * @param map топологическа€ карта
-	 */
-	public void setMap( Map map)
-	{
-		Log.debugMessage(getClass().getName() + "::" + "setMap(" + map + ")" + " | " + "method call", Log.FINER);
-		
-		getMapView().setMap(map);
 	}
 
 	/**
