@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.84 2005/06/27 09:24:01 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.85 2005/06/29 09:53:29 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.84 $, $Date: 2005/06/27 09:24:01 $
+ * @version $Revision: 1.85 $, $Date: 2005/06/29 09:53:29 $
  * @module
  */
 
@@ -759,13 +759,8 @@ public class CoreAnalysisManager
         }
         else // обрыв не обнаружен
         {
-            ReflectogramAlarm alarm = null;
-            if (true) { // @todo: проверять, запрошен такой тип сравнения
-                // XXX: в этом случае шум вычисляется дважды
-                alarm = ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
-            } else {
-                alarm = ModelTraceComparer.compareTraceToMTM(mt, etMTM);
-            }
+            ReflectogramAlarm alarm =
+            		ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
 
             // обеспечиваем EventAnchorer-привязку
             ModelTraceComparer.createEventAnchor(ar, etalon);
