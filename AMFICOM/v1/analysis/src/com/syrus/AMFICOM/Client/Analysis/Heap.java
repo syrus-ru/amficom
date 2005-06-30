@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.72 2005/06/30 16:20:01 saa Exp $
+ * $Id: Heap.java,v 1.73 2005/06/30 16:35:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * 
  * Свойства с полным отслеживанием и уведомлениями:
  * refAnalysisPrimary;
- * etalonMTM;
+ * etalonMTM (но не его свойства);
  * currentTrace;
  * currentEvent, currentEtalonEvent;
  *
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.72 $, $Date: 2005/06/30 16:20:01 $
+ * @version $Revision: 1.73 $, $Date: 2005/06/30 16:35:51 $
  * @module
  */
 public class Heap
