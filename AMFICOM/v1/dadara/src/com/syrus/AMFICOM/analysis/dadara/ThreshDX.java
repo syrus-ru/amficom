@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.17 2005/06/15 15:00:00 saa Exp $
+ * $Id: ThreshDX.java,v 1.18 2005/06/30 06:30:06 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/06/15 15:00:00 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/30 06:30:06 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -90,7 +90,7 @@ public class ThreshDX extends Thresh
 	{
 		return this.rise;
 	}
-	protected double getDX(int key)
+	protected int getDX(int key)
 	{
 		return this.dX[key];
 	}
@@ -105,7 +105,7 @@ public class ThreshDX extends Thresh
 		if (this.dX[key] * compareSign < this.dX[LIMIT_KEY[key]] * compareSign)
 			this.dX[key] = this.dX[LIMIT_KEY[key]];
 	}
-	protected void setDX(int key, double val)
+	protected void setDX(int key, double val) // XXX: getter returnes int, setter gets double 
 	{
 		this.dX[key] = (int )val;
 		correctDX(key);
