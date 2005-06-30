@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.24 2005/06/30 15:08:40 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.25 2005/06/30 15:44:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.24 $, $Date: 2005/06/30 15:08:40 $
+ * @version $Revision: 1.25 $, $Date: 2005/06/30 15:44:34 $
  * @module
  */
 public class ModelTraceComparer
@@ -349,71 +349,74 @@ public class ModelTraceComparer
 	 * Устанавливает ref1/ref2 параметры привязки для аларма
 	 * на основании ближайших "точечных"
 	 * (сварки, отражения) объектов эталона, имеющих данные о привязке.
-	 * Если привязанных "точечных" объектов нет, устанавливает параметры
-	 * в состояние "не определено".
+	 * Если привязанных "точечных" объектов нет, либо в эталоне нет объекта
+	 * EventAnchorer, устанавливает параметры в состояние "не определено".
+	 * Если 
 	 * @param ra Аларм
 	 * @param et Эталон
 	 */
 	public static void setAlarmAnchors(ReflectogramAlarm ra, Etalon et) {
 		int distance = ra.pointCoord;
 		ra.ref1Id = null; // это делать надо - устанавливаем в "пока не найдено"
-		ra.ref2Id = null; // надо
+		ra.ref2Id = null; // (надо)
 		ra.ref1Coord = 0; // это делать не обязательно
-		ra.ref2Coord = 0; // не обязательно
+		ra.ref2Coord = 0; // (не обязательно)
 		ModelTraceAndEvents mtae = et.getMTM().getMTAE();
 		EventAnchorer anc = et.getAnc();
 		int len = mtae.getNEvents();
-		for (int i = 0; i < len; i++) {
-			SOAnchor ea = anc.getEventAnchor(i);
-			SimpleReflectogramEvent se = mtae.getSimpleEvent(i);
-
-			// пропускаем события, по которым не может быть привязки
-
-			// XXX: вынести проверку типа события во внешний код
-			switch (se.getEventType()) {
-			case SimpleReflectogramEvent.DEADZONE:   // fall through
-			case SimpleReflectogramEvent.ENDOFTRACE: // fall through
-			case SimpleReflectogramEvent.CONNECTOR:  // fall through
-			case SimpleReflectogramEvent.GAIN: // fall through
-			case SimpleReflectogramEvent.LOSS:
-				break; // break switch
-			default:
-				continue; // continue for
-			}
-
-			// пропускаем события, для которых привязка не определена
-
-			if (ea == SOAnchor.VOID_ANCHOR)
-				continue;
-
-			// итак, это событие может быть использовано для привязки
-
-			int pos = se.getBegin();
-
-			// выбираем самое близкое pos слева
-			if (pos <= distance) {
-				if (ra.ref1Id == null || pos > ra.ref1Coord) {
-					ra.ref1Id = ea;
-					ra.ref1Coord = pos;
+		if (anc != null) {
+			for (int i = 0; i < len; i++) {
+				SOAnchor ea = anc.getEventAnchor(i);
+				SimpleReflectogramEvent se = mtae.getSimpleEvent(i);
+	
+				// пропускаем события, по которым не может быть привязки
+	
+				// XXX: вынести проверку типа события во внешний код
+				switch (se.getEventType()) {
+				case SimpleReflectogramEvent.DEADZONE:   // fall through
+				case SimpleReflectogramEvent.ENDOFTRACE: // fall through
+				case SimpleReflectogramEvent.CONNECTOR:  // fall through
+				case SimpleReflectogramEvent.GAIN: // fall through
+				case SimpleReflectogramEvent.LOSS:
+					break; // break switch
+				default:
+					continue; // continue for
+				}
+	
+				// пропускаем события, для которых привязка не определена
+	
+				if (ea == SOAnchor.VOID_ANCHOR)
+					continue;
+	
+				// итак, это событие может быть использовано для привязки
+	
+				int pos = se.getBegin();
+	
+				// выбираем самое близкое pos слева
+				if (pos <= distance) {
+					if (ra.ref1Id == null || pos > ra.ref1Coord) {
+						ra.ref1Id = ea;
+						ra.ref1Coord = pos;
+					}
+				}
+				// выбираем самое близкое pos справа
+				if (pos >= distance) {
+					if (ra.ref2Id == null || pos < ra.ref2Coord) {
+						ra.ref2Id = ea;
+						ra.ref2Coord = pos;
+					}
 				}
 			}
-			// выбираем самое близкое pos справа
-			if (pos >= distance) {
-				if (ra.ref2Id == null || pos < ra.ref2Coord) {
-					ra.ref2Id = ea;
-					ra.ref2Coord = pos;
-				}
+			// если объекты привязки найдены только с одной стороны от аларма,
+			// удалаяем привязку (хотя, строго говоря, это делать не обязательно:
+			// такие алармы, во-первых, в принципе имеют право на существование,
+			// а, во-вторых, все равно должны считаться не имеющими привязки).
+			if (ra.ref1Id == null || ra.ref2Id == null) {
+				ra.ref1Id = null;
+				ra.ref2Id = null;
+				ra.ref1Coord = 0;
+				ra.ref2Coord = 0;
 			}
-		}
-		// если объекты привязки найдены только с одной стороны от аларма,
-		// удалаяем привязку (хотя, строго говоря, это делать не обязательно:
-		// такие алармы, во-первых, в принципе имеют право на существование,
-		// а, во-вторых, все равно должны считаться не имеющими привязки).
-		if (ra.ref1Id == null || ra.ref2Id == null) {
-			ra.ref1Id = null;
-			ra.ref2Id = null;
-			ra.ref1Coord = 0;
-			ra.ref2Coord = 0;
 		}
 	}
 }
