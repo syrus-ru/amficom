@@ -298,10 +298,11 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 					continue; // if no region, then do not draw at all
                 // When we draw thresholds for one event only, avoid drawing thresholds at the end point.
                 // This is because sometimes (n/id event type) threshold curve can break.
-
                 ModelTraceRange subrange = new ModelTraceRangeImplMTRSubrange(
                         thresholdMT, sre.getBegin(), sre.getEnd(), false);
-                    drawModelCurve(g, r, subrange, true);
+            	// последнее событие рисуем вместе с конечной точкой
+                drawModelCurve(g, r, subrange,
+                		nEvent != etalon.getMTAE().getNEvents() - 1);
 			} else {
                 drawModelCurve(g, r, thresholdMT, false);
             }
@@ -330,14 +331,18 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
                 g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
                         ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
                         : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
-                drawModelCurve(g, r, curves[key], true);
+            	// последнее событие рисуем вместе с конечной точкой
+                drawModelCurve(g, r, curves[key],
+                		nEvent != etalon.getMTAE().getNEvents() - 1);
             }
             if (dashStroke)
                 ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
             //this.fps.inc();
         } else { // update range only
             for (int key = 0; key < 4; key++) {
-                drawModelCurve(g, r, curves[key], true);
+            	// последнее событие рисуем вместе с конечной точкой
+                drawModelCurve(g, r, curves[key],
+                		nEvent != etalon.getMTAE().getNEvents() - 1);
             }
         }
     }
