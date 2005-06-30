@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.10 2005/06/28 11:49:39 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.11 2005/06/30 16:13:37 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/28 11:49:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/06/30 16:13:37 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -31,25 +32,41 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		super(mcmServantManager);
 	}
 
+	private final void insertWithDependencies(final short entityCode, final Set< ? extends StorableObject> storableObjects) {
+		for (final StorableObject storableObject : storableObjects) {
+			for (final Identifiable dependency : storableObject.getDependencies()) {
+				if (dependency instanceof Identifier) {
+					try {
+						StorableObjectPool.getStorableObject((Identifier) dependency, true);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+				}
+			}
+		}
+		try {
+			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+			database.insert(storableObjects);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
+
 	@Override
 	protected final Set loadStorableObjects(final short entityCode,
 			final Set<Identifier> ids,
 			final TransmitProcedure transmitProcedure) throws ApplicationException {
-		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
+		final Set<StorableObject> objects = DatabaseObjectLoader.loadStorableObjects(ids);
 		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 
-		final Set loadedObjects = super.loadStorableObjects(entityCode, loadIds, transmitProcedure);
+		final Set<StorableObject> loadedObjects = super.loadStorableObjects(entityCode, loadIds, transmitProcedure);
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
-			try {
-				final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
+			this.insertWithDependencies(entityCode, loadedObjects);
 		}
 
 		return objects;
@@ -60,22 +77,16 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 			final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
-		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
+		final Set<StorableObject> objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
 
-		final Set loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
+		final Set<StorableObject> loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
 				loadButIds,
 				condition,
 				transmitButIdsConditionProcedure);
 		if (!loadedObjects.isEmpty()) {
 			objects.addAll(loadedObjects);
-			try {
-				final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
-				database.insert(loadedObjects);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
+			this.insertWithDependencies(entityCode, loadedObjects);
 		}
 
 		return objects;
