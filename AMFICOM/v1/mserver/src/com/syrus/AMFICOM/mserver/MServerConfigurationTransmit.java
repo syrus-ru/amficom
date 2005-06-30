@@ -1,5 +1,5 @@
 /*
- * $Id: MServerConfigurationTransmit.java,v 1.10 2005/06/25 17:07:52 bass Exp $
+ * $Id: MServerConfigurationTransmit.java,v 1.11 2005/06/30 16:11:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,20 +10,24 @@ package com.syrus.AMFICOM.mserver;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
+import com.syrus.AMFICOM.configuration.corba.IdlEquipment;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.configuration.corba.IdlKIS;
 import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.IdlPort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortType;
 import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPath;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathType;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/25 17:07:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/06/30 16:11:25 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 abstract class MServerConfigurationTransmit extends MServerAdministrationTransmit {
@@ -36,6 +40,24 @@ abstract class MServerConfigurationTransmit extends MServerAdministrationTransmi
 
 	/* Transmit multiple objects*/
 
+	public IdlEquipmentType[] transmitEquipmentTypes(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final IdlEquipmentType[] ret = new IdlEquipmentType[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
+	public IdlPortType[] transmitPortTypes(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final IdlPortType[] ret = new IdlPortType[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
 	public IdlMeasurementPortType[] transmitMeasurementPortTypes(final IdlIdentifier[] idsT,
 			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
@@ -45,11 +67,31 @@ abstract class MServerConfigurationTransmit extends MServerAdministrationTransmi
 		return ret;
 	}
 
-	public IdlKIS[] transmitKISs(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
-			throws AMFICOMRemoteException {
+	public IdlTransmissionPathType[] transmitTransmissionPathTypes(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
-		IdlKIS[] ret = new IdlKIS[length];
+		final IdlTransmissionPathType[] ret = new IdlTransmissionPathType[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
+
+
+	public IdlEquipment[] transmitEquipments(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final IdlEquipment[] ret = new IdlEquipment[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
+	public IdlPort[] transmitPorts(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final IdlPort[] ret = new IdlPort[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}
@@ -59,6 +101,24 @@ abstract class MServerConfigurationTransmit extends MServerAdministrationTransmi
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final IdlMeasurementPort[] ret = new IdlMeasurementPort[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
+	public IdlTransmissionPath[] transmitTransmissionPaths(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final IdlTransmissionPath[] ret = new IdlTransmissionPath[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
+	public IdlKIS[] transmitKISs(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
+			throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		IdlKIS[] ret = new IdlKIS[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}

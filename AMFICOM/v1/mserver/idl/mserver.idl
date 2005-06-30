@@ -66,15 +66,41 @@ module corba {
 
 		/* Transmit multiple objects*/
 
+		configuration::corba::EquipmentTypeSeq transmitEquipmentTypes(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::PortTypeSeq transmitPortTypes(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
 		configuration::corba::MeasurementPortTypeSeq transmitMeasurementPortTypes(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		configuration::corba::KISSeq transmitKISs(in general::corba::IdentifierSeq idsT,
+		configuration::corba::TransmissionPathTypeSeq transmitTransmissionPathTypes(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
+
+
+		configuration::corba::EquipmentSeq transmitEquipments(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::PortSeq transmitPorts(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
 		configuration::corba::MeasurementPortSeq transmitMeasurementPorts(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::TransmissionPathSeq transmitTransmissionPaths(in general::corba::IdentifierSeq idsT,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::KISSeq transmitKISs(in general::corba::IdentifierSeq idsT,
 			in security::corba::SessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
