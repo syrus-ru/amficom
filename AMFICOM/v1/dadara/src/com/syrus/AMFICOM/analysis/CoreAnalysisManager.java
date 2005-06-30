@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.87 2005/06/30 06:45:45 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.88 2005/06/30 15:08:40 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.87 $, $Date: 2005/06/30 06:45:45 $
+ * @version $Revision: 1.88 $, $Date: 2005/06/30 15:08:40 $
  * @module
  */
 
@@ -708,7 +708,7 @@ public class CoreAnalysisManager
      * обрыва и эталонным MTM, формирует список алармов.
      * Текущая версия возвращает 0 или 1 алармов.
      * <p>
-     * Кроме того, если в эталоне определен EventAnchorer,
+     * @todo Кроме того, если в эталоне определен EventAnchorer,
      * а при сравнении не обнаружено обрыва,
      * результаты анализа дополняются привязкой EventAnchorer на основе эталона.
      * @param ar Результаты анализа
@@ -752,6 +752,9 @@ public class CoreAnalysisManager
             // конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
             alarm.endPointCoord = Math.min(ar.getDataLength(), etMinLength);
 
+            // устанавливаем привязку аларма к событиям
+            ModelTraceComparer.setAlarmAnchors(alarm, etalon);
+
             // XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
             // мб, в таком случае не надо игнорировать HARD алармы?
 
@@ -762,8 +765,11 @@ public class CoreAnalysisManager
             ReflectogramAlarm alarm =
             		ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
 
-            // обеспечиваем EventAnchorer-привязку
+            // обеспечиваем EventAnchorer-привязку результатов анализа
             ModelTraceComparer.createEventAnchor(ar, etalon);
+
+            // устанавливаем привязку аларма к событиям
+            ModelTraceComparer.setAlarmAnchors(alarm, etalon);
 
             if (alarm != null) {
                 alarmList.add(alarm);
