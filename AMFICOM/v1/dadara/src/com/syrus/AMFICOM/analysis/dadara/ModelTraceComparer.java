@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.22 2005/06/30 06:45:45 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.23 2005/06/30 09:58:03 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2005/06/30 06:45:45 $
+ * @version $Revision: 1.23 $, $Date: 2005/06/30 09:58:03 $
  * @module
  */
 public class ModelTraceComparer
@@ -84,7 +84,9 @@ public class ModelTraceComparer
         int i;
         for (i = 0; i < etEvents.length; i++)
         {
-            if (rc.isEtalonEventReliablyLost(i))
+        	// в принципе, проверка "событие не лин." не нужна, т.к. потеря лин. события все равно достоверным не считается
+            if (rc.isEtalonEventReliablyLost(i)
+            	&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR)
             {
                 cur.pointCoord = etEvents[i].getBegin();
                 cur.endPointCoord = etEvents[i].getEnd();
@@ -96,7 +98,9 @@ public class ModelTraceComparer
         }
         for (i = 0; i < events.length; i++)
         {
-            if (rc.isProbeEventReliablyNew(i))
+        	// в принципе, проверка "событие не лин." не нужна, т.к. появление лин. события все равно достоверным не считается
+            if (rc.isProbeEventReliablyNew(i)
+            	&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR)
             {
                 cur.pointCoord = events[i].getBegin();
                 cur.endPointCoord = events[i].getEnd();
