@@ -1,5 +1,5 @@
 /*
- * $Id: TestPortType.java,v 1.1 2005/06/24 16:09:15 arseniy Exp $
+ * $Id: TestPortType.java,v 1.2 2005/06/30 07:54:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 public final class TestPortType extends TestCase {
-	
+
 	public TestPortType(final String name) {
 		super(name);
 	}
@@ -38,7 +39,8 @@ public final class TestPortType extends TestCase {
 				PortTypeCodename.FC_PC.stringValue(),
 				"FC/PC",
 				"FC/PC",
-				PortTypeSort.PORTTYPESORT_OPTICAL);
+				PortTypeSort.PORTTYPESORT_OPTICAL,
+				PortTypeKind.PORT_KIND_SIMPLE);
 		StorableObjectPool.flush(ObjectEntities.PORT_TYPE_CODE, false);
 	}
 

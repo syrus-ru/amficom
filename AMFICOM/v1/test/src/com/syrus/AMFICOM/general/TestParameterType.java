@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.11 2005/06/19 18:43:56 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.12 2005/06/30 07:54:03 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -8,26 +8,27 @@ import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.TypicalCondition_TransferablePackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.12 $, $Date: 2005/06/30 07:54:03 $
  * @author $Author: arseniy $
  * @module test
  */
-public class TestParameterType extends DatabaseCommonTest {
+public class TestParameterType extends TestCase {
 
 	public TestParameterType(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		addTestSuite(TestParameterType.class);
-		return createTestSetup();
+		DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		commonTest.addTestSuite(TestParameterType.class);
+		return commonTest.createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -35,41 +36,13 @@ public class TestParameterType extends DatabaseCommonTest {
 		final String name = "Reflectogramma-etalon";
 		String description = "Raflectogramma, marked as etalon";
 		DataType dataType = DataType.DATA_TYPE_RAW;
-		ParameterType parameterType = ParameterType.createInstance(creatorUser.getId(), codename, description, name, dataType);
-
-		ParameterType_Transferable ptt = (ParameterType_Transferable) parameterType.getTransferable();
-		ParameterType parameterType1 = new ParameterType(ptt);
-		assertEquals(parameterType.getId(), parameterType1.getId());
-		assertEquals(parameterType.getCreated(), parameterType1.getCreated());
-		assertEquals(parameterType.getModified(), parameterType1.getModified());
-		assertEquals(parameterType.getCreatorId(), parameterType1.getCreatorId());
-		assertEquals(parameterType.getModifierId(), parameterType1.getModifierId());
-		assertEquals(parameterType.getCodename(), parameterType1.getCodename());
-		assertEquals(parameterType.getName(), parameterType1.getName());
-		assertEquals(parameterType.getDescription(), parameterType1.getDescription());
-		assertEquals(parameterType.getDataType(), parameterType1.getDataType());
+		ParameterType parameterType = ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				codename,
+				description,
+				name,
+				dataType);
 
 		StorableObjectPool.flush(ObjectEntities.PARAMETER_TYPE_CODE, true);
-	}
-
-	public void _testUpdate() throws ApplicationException {
-		TypicalCondition tc = new TypicalCondition("ref_pulswd",
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETER_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-		Set objects = StorableObjectPool.getStorableObjectsByCondition(tc, true);
-		ParameterType parameterType = (ParameterType) objects.iterator().next();
-		System.out.println("Parameter type: '" + parameterType.getId() + "'");
-		parameterType.setCodename(ParameterTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES);
-		parameterType.setName("Ширина импульса");
-		parameterType.setDescription("Ширина импульса в режиме высокого разрешения");
-
-		parameterType = ParameterType.createInstance(creatorUser.getId(),
-				ParameterTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES,
-				"Ширина импульса в режиме низкого разрешения",
-				"Ширина импульса",
-				parameterType.getDataType());
-		StorableObjectPool.flush(ObjectEntities.PARAMETER_TYPE_CODE, false);
 	}
 
 	public void _testRetrieveByCondition() throws ApplicationException {

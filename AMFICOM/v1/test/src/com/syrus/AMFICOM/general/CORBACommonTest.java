@@ -1,5 +1,5 @@
 /*
- * $Id: CORBACommonTest.java,v 1.3 2005/06/28 15:28:24 arseniy Exp $
+ * $Id: CORBACommonTest.java,v 1.4 2005/06/30 07:54:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,19 @@
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
+import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.mserver.corba.MServer;
+import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/28 15:28:24 $
+ * @version $Revision: 1.4 $, $Date: 2005/06/30 07:54:03 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -33,6 +36,7 @@ public class CORBACommonTest extends CommonTest {
 	private static LoginServer loginServerRef;
 	private static IdlSessionKey idlSessionKey;
 	private static MServer mServerRef;
+	private static CMServer cmServerRef;
 
 	public static IdlSessionKey getIdlSessionKey() {
 		return idlSessionKey;
@@ -40,6 +44,10 @@ public class CORBACommonTest extends CommonTest {
 
 	public static MServer getMServerRef() {
 		return mServerRef;
+	}
+
+	public static CMServer getCMServerRef() {
+		return cmServerRef;
 	}
 
 	void oneTimeSetUp() {
@@ -57,7 +65,9 @@ public class CORBACommonTest extends CommonTest {
 			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
 			idlSessionKey = loginServerRef.login(login, password, userIdH);
 
-			mServerRef = (MServer) corbaServer.resolveReference(ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
+			mServerRef = MServerHelper.narrow(corbaServer.resolveReference(ServerProcessWrapper.MSERVER_PROCESS_CODENAME));
+
+			cmServerRef = CMServerHelper.narrow(corbaServer.resolveReference(ServerProcessWrapper.CMSERVER_PROCESS_CODENAME));
 		}
 		catch (Exception e) {
 			Log.errorException(e);

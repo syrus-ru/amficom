@@ -2,8 +2,8 @@
 
 #TEST_CLASS = TestInitialSetup
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
-TEST_CLASS=TestMServer
-TEST_PACKAGE=com.syrus.AMFICOM.mserver
+TEST_CLASS=TestMeasurementPortType
+TEST_PACKAGE=com.syrus.AMFICOM.configuration
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
