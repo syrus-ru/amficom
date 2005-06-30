@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.15 2005/06/20 15:57:55 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.16 2005/06/30 10:58:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/06/20 15:57:55 $
+ * @version $Revision: 1.16 $, $Date: 2005/06/30 10:58:00 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -29,11 +29,11 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 	private static final String PROPERTIES_FILE_NAME = "analysis.ini";
 
 	private static AnalysisParameters defaultAP = new AnalysisParameters (
-			0.05, //минимальный уровень события
-			0.07, //минимальный уровень сварки
-			0.21, //минимальный уровень коннектора
+			0.005, //минимальный уровень события
+			0.02, //минимальный уровень сварки
+			0.5, //минимальный уровень коннектора
 			3,  //мин. уровень отражения конца волокна
-			3 //коэфф. запаса для шума
+			1.3 //коэфф. запаса для шума
 	);
 
     public static AnalysisParameters getDefaultAPClone() {
