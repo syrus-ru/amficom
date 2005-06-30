@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/06/30 14:19:57 $
+ * @version $Revision: 1.18 $, $Date: 2005/06/30 15:45:36 $
  * @module
  */
 public class ReflectogramAlarm {
@@ -319,6 +319,8 @@ public class ReflectogramAlarm {
         + ",end=" + endPointCoord
         + ",distance=" + getDistance()
         + (hasMismatch() ? ",mismatch=" + getMinMismatch() + "-" + getMaxMismatch() : "")
+        + (ref1Id != null ?  ",anc1=" + ref1Id + "@" + ref1Coord : "")
+        + (ref2Id != null ?  ",anc2=" + ref2Id + "@" + ref2Coord : "")
         + ")";
     }
 }
