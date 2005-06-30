@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.160 2005/06/28 07:18:01 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.161 2005/06/30 16:10:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.160 $, $Date: 2005/06/28 07:18:01 $
+ * @version $Revision: 1.161 $, $Date: 2005/06/30 16:10:26 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -530,6 +530,7 @@ public abstract class StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("StorableObjectDatabase.isPresentInDatabase | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
+			resultSet.next();
 			final int count = resultSet.getInt(aliasCount);
 			return count > 0;
 		}
@@ -562,9 +563,16 @@ public abstract class StorableObjectDatabase {
 	public abstract void insert(Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException;
 
 	protected final void insertEntity(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		storableObject.setUpdated(storableObject.getCreatorId());
-
 		final Identifier id = storableObject.getId();
+		try {
+			if (isPresentInDatabase(id))
+				return;
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+		}
+
+		storableObject.setUpdated(storableObject.getCreatorId());
 
 		final String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
 				+ this.getColumns(ExecuteMode.MODE_INSERT)
@@ -629,6 +637,14 @@ public abstract class StorableObjectDatabase {
 			for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
 				final StorableObject storableObject = it.next();
 				id = storableObject.getId();
+				try {
+					if (isPresentInDatabase(id)) {
+						continue;
+					}
+				}
+				catch (RetrieveObjectException roe) {
+					Log.errorException(roe);
+				}
 
 				storableObject.setUpdated(storableObject.getCreatorId());
 				setUpdatedStorableObjects.add(storableObject);
