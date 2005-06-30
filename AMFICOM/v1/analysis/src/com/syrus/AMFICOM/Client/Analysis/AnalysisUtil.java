@@ -136,10 +136,8 @@ public class AnalysisUtil
 				Etalon etalonObj = (Etalon) DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
 							Etalon.getDSReader());
-				Heap.setMTMEtalon(etalonObj.getMTM());
-				Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
+				Heap.setEtalon(etalonObj);
 				Heap.setEtalonEtalonMetas(metas);
-				// @todo: load EventAnchorer as well
 			}
             else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON))
             {
@@ -187,7 +185,8 @@ public class AnalysisUtil
 		params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(new Etalon(
 						Heap.getMTMEtalon(),
-						Heap.getMinTraceLevel()))); // @todo: store EventAnchorer as well
+						Heap.getMinTraceLevel(),
+						Heap.getAnchorer())));
 
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 

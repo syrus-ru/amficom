@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisMemLeakTestCase.java,v 1.2 2005/06/28 11:01:28 saa Exp $
+ * $Id: AnalysisMemLeakTestCase.java,v 1.3 2005/06/30 16:20:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,8 @@ public class AnalysisMemLeakTestCase extends TestCase {
 	        	Collection<BellcoreStructure> col = new ArrayList<BellcoreStructure>();
 	        	col.add(bs);
 	        	ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(col, ap);
-	        	CoreAnalysisManager.analyseCompareAndMakeAlarms(bs, ap, -99, mtm);
+	        	CoreAnalysisManager.analyseCompareAndMakeAlarms(
+	        			bs, ap, -99, mtm, null);
         	}
         	if (testReadabilityLeakage) {
         		CoreAnalysisManagerTestCase.checkMTMReadability(bs, false);

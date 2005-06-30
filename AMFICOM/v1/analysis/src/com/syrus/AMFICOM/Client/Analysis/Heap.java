@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.71 2005/06/30 10:43:18 saa Exp $
+ * $Id: Heap.java,v 1.72 2005/06/30 16:20:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,8 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
+import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -47,6 +49,7 @@ import com.syrus.util.Log;
  * minuitDefaultParams, minuitInitialParams;
  * contextMeasurementSetup;
  * minTraceLevelt;
+ * eventAnchorer;
  * rLDialog{};
  * backupEtalonMTM;
  * newMSName
@@ -72,7 +75,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.71 $, $Date: 2005/06/30 10:43:18 $
+ * @version $Revision: 1.72 $, $Date: 2005/06/30 16:20:01 $
  * @module
  */
 public class Heap
@@ -92,10 +95,14 @@ public class Heap
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
 	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
-	private static double minTraceLevel;			// (negative value)
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
+
+	// etalon
+	private static double minTraceLevel;			// (negative value)
     private static ModelTraceManager etalonMTM = null;
-    private static ModelTraceManager backupEtalonMTM = null; // 'initial' state of etalon MTM
+    private static EventAnchorer anchorer = null;
+
+    private static ModelTraceManager backupEtalonMTM = null; // saved 'initial' state of etalon MTM for 'restore' command
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 	//private static int currentEv = -1;
@@ -318,6 +325,13 @@ public class Heap
     	minTraceLevel = Math.round(minTraceLevel);
         Heap.minTraceLevel = minTraceLevel;
     }
+
+    public static EventAnchorer getAnchorer() {
+		return anchorer;
+	}
+	public static void setAnchorer(EventAnchorer anchorer) {
+		Heap.anchorer = anchorer;
+	}
 
     private static void removeAllBS() {
         bsHash = new HashMap();
@@ -843,5 +857,13 @@ public class Heap
 	        RefAnalysis a = new RefAnalysis(bs);
 			setRefAnalysisPrimary(a);
 		}
+	}
+
+	// обеспечивает все *предусмотренные* уведомления
+	// (фактически, это только уведомление по MTM)
+	public static void setEtalon(Etalon etalonObj) {
+		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
+		Heap.setAnchorer(etalonObj.getAnc());
+		Heap.setMTMEtalon(etalonObj.getMTM());
 	}
 }

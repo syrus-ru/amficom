@@ -14,7 +14,8 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
-public class AnalysisFrame extends ScalableFrame implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
+public class AnalysisFrame extends ScalableFrame
+implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 {
 	protected Dispatcher dispatcher;
 	public HashMap traces = new HashMap();

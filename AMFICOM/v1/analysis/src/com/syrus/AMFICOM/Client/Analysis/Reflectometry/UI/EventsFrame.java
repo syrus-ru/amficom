@@ -486,22 +486,15 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	}
 
     private void updateCompDebug() {
-//      System.err.println("MTAE = " + Heap.getMTAEPrimary());
-//      System.err.println("MTM = "  + Heap.getMTMEtalon());
-        //ModelTraceComparer.compareMTAEToMTM(Heap.getMTAEPrimary(), Heap.getMTMEtalon());
         // FIXME: debug: development-time console code for comparison
         if (Heap.getBSPrimaryTrace() != null
         		&& Heap.getMinuitAnalysisParams() != null
         		&& Heap.getMTMEtalon() != null) {
-//        	List alarms = CoreAnalysisManager.analyseCompareAndMakeAlarms(
-//        			Heap.getBSPrimaryTrace(),
-//        			Heap.getMinuitAnalysisParams(),
-//        			Heap.getMinTraceLevel(),
-//        			Heap.getMTMEtalon());
         	List alarms = CoreAnalysisManager.compareAndMakeAlarms(
         			Heap.getRefAnalysisPrimary().getAR(),
         			new Etalon(Heap.getMTMEtalon(),
-        					Heap.getMinTraceLevel()));
+        					Heap.getMinTraceLevel(),
+        					Heap.getAnchorer()));
         	if (alarms.size() == 0)
         		System.out.println("No alarms");
         	else
