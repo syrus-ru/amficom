@@ -6,6 +6,56 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.AMFICOM.analysis.SOAnchor;
+
+/**
+ * Структура для описания рефлектограммного аларма.
+ * Несет информацию о типе, уровне и дистанции события.
+ * <p>
+ * Дистанция требует особого пояснения.
+ * Поле {@link #pointCoord} содержит локальную оптическую дистанцию (в точках)
+ * объекта или события, с которым ассоциировано отклонение. Для перевода
+ * локальной оптической дистанции в схемную оптическую дистанцию есть два способа:
+ * <ol>
+ * <li> Непосредственная подстановка локальной оптической дистанции в качестве
+ * схемной оптической дистанции. При этом возникает погрешность, определяемая
+ * отличием схемных оптических дистанций от истинных оптических дистанций
+ * (из-за ограничений возможности точной схемной привязки), а
+ * также отличием локальных оптических дистанций от истинных.
+ * Хотя для определения точки повреждения кабеля эти отличия могут быть
+ * непринципиальны, это сильно усложняет задачу определения, относится ли
+ * событие к данному точечному объекту (муфте и пр.) или к смежному с ним
+ * кабелю.
+ * <li> Использование привязки
+ *   {@link #ref1Id}/{@link #ref1Coord},
+ *   {@link #ref2Id}/{@link #ref2Coord}.
+ * Эта информация указывает локальную оптическую дистанцию (тоже в точках)
+ * для 0, 1 или 2 объектов, находящихся по разную сторону от аларма.
+ * Это позволяет точнее определять место аларма. В случае, если
+ * при задании эталона была предоставлена привязка для каждого объекта,
+ * точность указания объекта, соответствующего аларму, становится абсолютной,
+ * а соотношение дистанций аларма и объектов, передает всю возможную
+ * информацию о пропорциях положения.
+ * <p> Для восстановления схемной оптической или физической дистанции,
+ * надо использовать пропорции
+ * 
+ * <pre> pointCoord-ref1Coord : ref2Coord-pointCoord = L1 : L2 </pre>
+ * 
+ * Где L1 и L2 - схемные (оптические или физические) расстояния до аларма
+ * от соответвующих объектов схемы.
+ * <p> Если объекты привязки определены, то они лежат по разные стороны
+ * от аларма (по оси дистанции).
+ * <p> Если аларм приходится на точечное событие (сварка, коннектор),
+ * уже имеющее привязку к схеме, то ref1Id и ref2Id совпадают,
+ * а соотв. дистанции нулевые.
+ * <p> Если хотя бы одно их ref1Id, ref2Id - null, то считается, что привязки
+ * нет и нужно использовать первый способ трансляции в схемные дистанции.
+ * </ol>
+ * 
+ * @author $Author: saa $
+ * @version $Revision: 1.17 $, $Date: 2005/06/30 14:19:57 $
+ * @module
+ */
 public class ReflectogramAlarm {
 	// Alarm levels. Must be comparable with >; >=
 	public static final int LEVEL_NONE = 0; // just a convenience level, not a real alarm
@@ -13,9 +63,9 @@ public class ReflectogramAlarm {
 	public static final int LEVEL_HARD = 2; // hard alarm ('alarm')
 
 	public static final int TYPE_UNDEFINED = 0;
-	public static final int TYPE_LINEBREAK = 1;
-	public static final int TYPE_OUTOFMASK = 2;
-	public static final int TYPE_EVENTLISTCHANGED = 3;
+	public static final int TYPE_LINEBREAK = 1; // обрыв линии
+	public static final int TYPE_OUTOFMASK = 2; // выход за маски
+	public static final int TYPE_EVENTLISTCHANGED = 3; // новое/потерянное событие в пределах масок
 
 	public int level = LEVEL_NONE;
 	// оптическая дистанция (в точках) события эталона или точки на
@@ -25,6 +75,12 @@ public class ReflectogramAlarm {
 	public int endPointCoord = 0; // ?
 	public int alarmType = TYPE_UNDEFINED;
     public double deltaX = 0.0;
+
+    // информация о (максимум двух) ближайших привязанных объектах
+    public SOAnchor ref1Id = null; // null, если привязка #1 не определена
+    public int ref1Coord = 0; // оптическая дистанция обьъекта #1, не определено, если ref1Id == null
+    public SOAnchor ref2Id = null; // null, если привязка #2 не определена
+    public int ref2Coord = 0; // оптическая дистанция обьъекта #2, не определено, если ref2Id == null
 
     // оценка степени превышения предупр. порога по сравнению с тревожным
     // состояние "не определено" - если min > max
@@ -110,7 +166,7 @@ public class ReflectogramAlarm {
 	}
 
 	public static ReflectogramAlarm createFromDIS(DataInputStream dis)
-	throws IOException
+	throws IOException, SignatureMismatchException
 	{
 		ReflectogramAlarm ret = new ReflectogramAlarm();
 		ret.level = dis.readInt();
@@ -119,11 +175,22 @@ public class ReflectogramAlarm {
 		ret.alarmType = dis.readInt();
         ret.deltaX = dis.readDouble();
         if (dis.readBoolean()) {
-        	ret.minMismatch = dis.readDouble();
+        	ret.minMismatch = dis.readDouble(); // XXX: неплохо бы покомпактнее
         	ret.maxMismatch = dis.readDouble();
         } else {
         	ret.minMismatch = 1.0;
         	ret.maxMismatch = 0.0;
+        }
+        if(dis.readBoolean()) {
+        	ret.ref1Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
+        	ret.ref2Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
+        	ret.ref1Coord = dis.readInt();
+        	ret.ref2Coord = dis.readInt();
+        } else {
+        	ret.ref1Id = null;
+        	ret.ref1Id = null;
+        	ret.ref1Coord = 0;
+        	ret.ref2Coord = 0;
         }
 		return ret;
 	}
@@ -131,6 +198,7 @@ public class ReflectogramAlarm {
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException
 	{
+		// ориентировочно, занимает суммарно от 26 до 66 байт
 		dos.writeInt(this.level);
 		dos.writeInt(this.pointCoord);
 		dos.writeInt(this.endPointCoord);
@@ -140,6 +208,15 @@ public class ReflectogramAlarm {
         	dos.writeBoolean(true);
         	dos.writeDouble(this.minMismatch);
         	dos.writeDouble(this.maxMismatch);
+        } else {
+        	dos.writeBoolean(false);
+        }
+        if (ref1Id != null && ref2Id != null) {
+        	dos.writeBoolean(true);
+        	ref1Id.writeToDOS(dos);
+        	ref2Id.writeToDOS(dos);
+        	dos.writeInt(ref1Coord);
+        	dos.writeInt(ref2Coord);
         } else {
         	dos.writeBoolean(false);
         }
