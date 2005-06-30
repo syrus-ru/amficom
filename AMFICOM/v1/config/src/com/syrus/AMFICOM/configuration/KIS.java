@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.90 2005/06/25 17:07:55 bass Exp $
+ * $Id: KIS.java,v 1.91 2005/06/30 10:25:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/06/25 17:07:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.91 $, $Date: 2005/06/30 10:25:11 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -249,7 +249,7 @@ public final class KIS extends DomainMember implements Characterizable {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		return dependencies;

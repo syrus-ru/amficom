@@ -10,21 +10,20 @@ public class KISConnectionLRUMap extends LRUMap {
 		super();
 	}
 
-	public KISConnectionLRUMap(int capacity) {
+	public KISConnectionLRUMap(final int capacity) {
 		super(capacity);
 	}
 
-	public synchronized KISConnection put(Identifier kisId, KISConnection kisConnection) {
-		KISConnection removedKISConnection = (KISConnection)super.put(kisId, kisConnection);
-		if (removedKISConnection == null || ! removedKISConnection.isEstablished())
+	public synchronized KISConnection put(final Identifier kisId, final KISConnection kisConnection) {
+		final KISConnection removedKISConnection = (KISConnection) super.put(kisId, kisConnection);
+		if (removedKISConnection == null || !removedKISConnection.isEstablished())
 			return removedKISConnection;
 
 		// Find the nearest to the right side of array non-established connection.
 		//Return it if exists.
-		KISConnection aKISConnection;
 		for (int i = super.array.length - 1; i >= 0; i--) {
-			aKISConnection = (KISConnection)super.array[i];
-			if (! aKISConnection.isEstablished()) {
+			final KISConnection aKISConnection = (KISConnection) super.array[i];
+			if (!aKISConnection.isEstablished()) {
 				for (int j = i; j < super.array.length - 1; j++)
 					super.array[j] = super.array[j + 1];
 				super.array[super.array.length - 1] = new Entry(removedKISConnection.getKISId(), removedKISConnection);
@@ -34,7 +33,7 @@ public class KISConnectionLRUMap extends LRUMap {
 
 		// If non-established connection not found,
 		// enlarge array and put removed connection to it's end.
-		Entry[] array1 = new Entry[super.array.length + SIZE];
+		final Entry[] array1 = new Entry[super.array.length + SIZE];
 		System.arraycopy(super.array, 0, array1, 0, super.array.length);
 		array1[super.array.length] = new Entry(removedKISConnection.getKISId(), removedKISConnection);
 		super.array = array1;

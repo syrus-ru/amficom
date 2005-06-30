@@ -18,26 +18,29 @@ public class KISConnectionManager/* extends SleepButWorkThread*/ {
 //		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
 //				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
 
-		this.kisConnections = new KISConnectionLRUMap(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_OPENED_CONNECTIONS, MeasurementControlModule.KIS_MAX_OPENED_CONNECTIONS));
+		this.kisConnections = new KISConnectionLRUMap(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_OPENED_CONNECTIONS,
+				MeasurementControlModule.KIS_MAX_OPENED_CONNECTIONS));
 	}
 
-	public KISConnection getConnection(KIS kis) throws CommunicationException {
-		Identifier kisId = kis.getId();
+	public KISConnection getConnection(final KIS kis) throws CommunicationException {
+		final Identifier kisId = kis.getId();
 		KISConnection kisConnection;
 
-		kisConnection = (KISConnection)this.kisConnections.get(kisId);
+		kisConnection = (KISConnection) this.kisConnections.get(kisId);
 		if (kisConnection != null)
 			return kisConnection;
 
-		Log.debugMessage("KISConnectionManager.getConnection | Connection for KIS '" + kisId + "' not found in map; establishing new one", Log.DEBUGLEVEL07);
+		Log.debugMessage("KISConnectionManager.getConnection | Connection for KIS '" + kisId
+				+ "' not found in map; establishing new one", Log.DEBUGLEVEL07);
 		kisConnection = this.establishNewConnection(kis);
 		this.kisConnections.put(kisId, kisConnection);
 		return kisConnection;
 	}
 
-	private KISConnection establishNewConnection(KIS kis) throws CommunicationException {
-		KISConnection kisConnection = new TCPKISConnection(kis);
-		long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT, MeasurementControlModule.KIS_CONNECTION_TIMEOUT)*1000;
+	private KISConnection establishNewConnection(final KIS kis) throws CommunicationException {
+		final KISConnection kisConnection = new TCPKISConnection(kis);
+		long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT,
+				MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
 		kisConnection.establish(kisConnectionTimeout, false);
 		return kisConnection;
 	}
