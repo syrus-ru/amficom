@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.16 2005/06/15 14:59:21 saa Exp $
+ * $Id: Thresh.java,v 1.17 2005/06/30 06:29:10 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/06/15 14:59:21 $
+ * @version $Revision: 1.17 $, $Date: 2005/06/30 06:29:10 $
  * @module
  */
 
@@ -35,7 +35,7 @@ implements Cloneable
 	public static final int HARD_DOWN = 3;
 
 	protected int eventId0;
-	protected int eventId1;
+	protected int eventId1; // XXX: дл€ ThreshDX-порогов они равны? ≈сли да, то это надо бы как-то учесть - дл€ экономии места и дл€ избежаний недоразумений
 	protected int xMin; // границы доминировани€ данного порога. ѕри DY - внутри xMin..xMax р/г смещаетс€ равномерно, а вне - согласно dA/dL 
 	protected int xMax;
 
