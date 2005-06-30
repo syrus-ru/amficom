@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.88 2005/06/30 15:08:40 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.89 2005/06/30 15:17:16 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.88 $, $Date: 2005/06/30 15:08:40 $
+ * @version $Revision: 1.89 $, $Date: 2005/06/30 15:17:16 $
  * @module
  */
 
@@ -769,7 +769,9 @@ public class CoreAnalysisManager
             ModelTraceComparer.createEventAnchor(ar, etalon);
 
             // устанавливаем привязку аларма к событиям
-            ModelTraceComparer.setAlarmAnchors(alarm, etalon);
+            if (alarm != null) {
+            	ModelTraceComparer.setAlarmAnchors(alarm, etalon);
+            }
 
             if (alarm != null) {
                 alarmList.add(alarm);
