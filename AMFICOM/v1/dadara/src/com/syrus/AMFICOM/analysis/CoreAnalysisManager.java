@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.89 2005/06/30 15:17:16 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.90 2005/06/30 16:19:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.89 $, $Date: 2005/06/30 15:17:16 $
+ * @version $Revision: 1.90 $, $Date: 2005/06/30 16:19:20 $
  * @module
  */
 
@@ -692,14 +692,16 @@ public class CoreAnalysisManager
 	 * @param ap параметры анализа
 	 * @param breakThresh
 	 * @param etMTM
+	 * @param anchorer
 	 * @return список алармов
 	 */
     public static List analyseCompareAndMakeAlarms(BellcoreStructure bs,
     		AnalysisParameters ap,
             double breakThresh,
-            ModelTraceManager etMTM) {
+            ModelTraceManager etMTM,
+            EventAnchorer anchorer) {
     	AnalysisResult ar = performAnalysis(bs, ap);
-    	Etalon etalon = new Etalon(etMTM, breakThresh);
+    	Etalon etalon = new Etalon(etMTM, breakThresh, anchorer);
     	return compareAndMakeAlarms(ar, etalon);
     }
 
