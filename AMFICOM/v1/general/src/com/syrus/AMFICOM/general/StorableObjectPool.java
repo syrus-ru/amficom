@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.115 2005/06/28 07:18:20 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.116 2005/06/30 13:48:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/06/28 07:18:20 $
+ * @version $Revision: 1.116 $, $Date: 2005/06/30 13:48:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -182,7 +182,7 @@ public abstract class StorableObjectPool {
 				+ ObjectGroupEntities.codeToString(groupCode) + " is not initialized");
 	}
 
-	public static Set getStorableObjects(final Set ids, boolean useLoader) throws ApplicationException {
+	public static Set getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty())
 			return Collections.EMPTY_SET;
@@ -240,7 +240,7 @@ public abstract class StorableObjectPool {
 	 * @return Set of StorableObject with identifiers not in set, matching condition
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsByConditionButIds(final Set ids,
+	public static Set getStorableObjectsByConditionButIds(final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
 		return getStorableObjectsByConditionButIds(ids, condition, useLoader, true);
@@ -255,7 +255,7 @@ public abstract class StorableObjectPool {
 	 * @return Set of StorableObject with identifiers not in set, matching condition
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsByConditionButIds(final Set ids,
+	public static Set getStorableObjectsByConditionButIds(final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
@@ -324,14 +324,14 @@ public abstract class StorableObjectPool {
 	 * @throws DatabaseException
 	 * @throws CommunicationException
 	 */
-	private final Set getStorableObjectsImpl(final Set ids, final boolean useLoader) throws ApplicationException {
+	private final Set getStorableObjectsImpl(final Set<Identifier> ids, final boolean useLoader) throws ApplicationException {
 		assert ids != null;
 
-		final Set storableObjects = new HashSet();
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
 		TShortObjectHashMap objectQueueMap = null;
 
-		for (final Iterator idIterator = ids.iterator(); idIterator.hasNext();) {
-			final Identifier id = (Identifier) idIterator.next();
+		for (final Iterator<Identifier> idIterator = ids.iterator(); idIterator.hasNext();) {
+			final Identifier id = idIterator.next();
 
 			/* do not operate with deleted objects */
 			if (this.deletedIds.contains(id))
@@ -350,9 +350,9 @@ public abstract class StorableObjectPool {
 						 */
 						if (objectQueueMap == null)
 							objectQueueMap = new TShortObjectHashMap();
-						Set objectQueue = (Set) objectQueueMap.get(entityCode);
+						Set<Identifier> objectQueue = (Set<Identifier>) objectQueueMap.get(entityCode);
 						if (objectQueue == null) {
-							objectQueue = new HashSet();
+							objectQueue = new HashSet<Identifier>();
 							objectQueueMap.put(entityCode, objectQueue);
 						}
 						objectQueue.add(id);
@@ -398,7 +398,8 @@ public abstract class StorableObjectPool {
 	private final Set getStorableObjectsByConditionImpl(final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
-		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_SET, condition, useLoader, breakOnLoadError);
+		final Set<Identifier> emptySet = Collections.emptySet();
+		return this.getStorableObjectsByConditionButIdsImpl(emptySet, condition, useLoader, breakOnLoadError);
 	}
 
 	/**
@@ -410,7 +411,7 @@ public abstract class StorableObjectPool {
 	 * @param breakOnLoadError
 	 * @throws ApplicationException
 	 */
-	private final Set getStorableObjectsByConditionButIdsImpl(final Set ids,
+	private final Set getStorableObjectsByConditionButIdsImpl(final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
@@ -423,7 +424,7 @@ public abstract class StorableObjectPool {
 		assert objectPool != null: "Cannot find object pool for entity code " + entityCode
 				+ ", entity: '" + ObjectEntities.codeToString(entityCode) + " , condition class:" + condition.getClass().getName();
 
-		final Set storableObjects = new HashSet();
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
 		for (final Iterator storableObjectIterator = objectPool.iterator(); storableObjectIterator.hasNext();) {
 			final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
 			final Identifier id = storableObject.getId();
@@ -451,7 +452,7 @@ public abstract class StorableObjectPool {
 		Set loadedObjects = null;
 
 		if (useLoader && condition.isNeedMore(storableObjects)) {
-			final Set loadButIds = Identifier.createSumIdentifiers(ids, storableObjects);
+			final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, storableObjects);
 
 			/* do not load deleted object with entityCode */
 			for (final Iterator idIterator = this.deletedIds.iterator(); idIterator.hasNext();) {
@@ -1120,7 +1121,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.115 $, $Date: 2005/06/28 07:18:20 $
+	 * @version $Revision: 1.116 $, $Date: 2005/06/30 13:48:57 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
@@ -1210,7 +1211,7 @@ public abstract class StorableObjectPool {
 		for (final TShortObjectIterator entityCodeIterator = this.objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			Set keys = LRUMapSaver.load(ObjectEntities.codeToString(entityCode));
+			final Set keys = LRUMapSaver.load(ObjectEntities.codeToString(entityCode));
 			if (keys != null) {
 				try {
 					this.getStorableObjectsImpl(keys, true);
