@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.70 2005/06/28 11:18:52 saa Exp $
+ * $Id: Heap.java,v 1.71 2005/06/30 10:43:18 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.70 $, $Date: 2005/06/28 11:18:52 $
+ * @version $Revision: 1.71 $, $Date: 2005/06/30 10:43:18 $
  * @module
  */
 public class Heap
@@ -697,7 +697,7 @@ public class Heap
         BellcoreStructure bs = getBSPrimaryTrace();
         ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
                 mtae, out, bs.getTraceData());
-        setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
+        replacePrimaryAnalysisMTAE(newMtae);
     }
 
     // rather slow: replaces the whole analysis
@@ -729,7 +729,7 @@ public class Heap
         BellcoreStructure bs = getBSPrimaryTrace();
         ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
                 mtae, out, bs.getTraceData());
-        setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
+        replacePrimaryAnalysisMTAE(newMtae);
     }
 
     // rather slow: replaces the whole analysis
@@ -812,7 +812,12 @@ public class Heap
         BellcoreStructure bs = getBSPrimaryTrace();
         ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
                 mtae, out, bs.getTraceData());
-        setRefAnalysisPrimary(new RefAnalysis(getBSPrimaryTrace(), newMtae));
+        replacePrimaryAnalysisMTAE(newMtae);
+    }
+    
+    private static void replacePrimaryAnalysisMTAE(
+    		ModelTraceAndEventsImpl mtae) {
+        setRefAnalysisPrimary(new RefAnalysis(getRefAnalysisPrimary(), mtae));
     }
 
     /*

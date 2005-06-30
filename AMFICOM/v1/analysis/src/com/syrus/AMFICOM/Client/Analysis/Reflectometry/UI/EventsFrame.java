@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.DetailedEventResource;
 import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
+import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
@@ -492,11 +493,15 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         if (Heap.getBSPrimaryTrace() != null
         		&& Heap.getMinuitAnalysisParams() != null
         		&& Heap.getMTMEtalon() != null) {
-        	List alarms = CoreAnalysisManager.analyseCompareAndMakeAlarms(
-        			Heap.getBSPrimaryTrace(),
-        			Heap.getMinuitAnalysisParams(),
-        			Heap.getMinTraceLevel(),
-        			Heap.getMTMEtalon());
+//        	List alarms = CoreAnalysisManager.analyseCompareAndMakeAlarms(
+//        			Heap.getBSPrimaryTrace(),
+//        			Heap.getMinuitAnalysisParams(),
+//        			Heap.getMinTraceLevel(),
+//        			Heap.getMTMEtalon());
+        	List alarms = CoreAnalysisManager.compareAndMakeAlarms(
+        			Heap.getRefAnalysisPrimary().getAR(),
+        			new Etalon(Heap.getMTMEtalon(),
+        					Heap.getMinTraceLevel()));
         	if (alarms.size() == 0)
         		System.out.println("No alarms");
         	else

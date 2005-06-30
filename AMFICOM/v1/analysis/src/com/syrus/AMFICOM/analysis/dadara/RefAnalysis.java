@@ -14,12 +14,19 @@ public class RefAnalysis
 	public TraceEvent overallStats; // hope nobody will change it
 
     private BellcoreStructure bs;
-    private ModelTraceAndEventsImpl mtae;
+    private AnalysisResult ar;
 
-    public RefAnalysis(BellcoreStructure bs, ModelTraceAndEventsImpl mtae)
+    /**
+     * use this ctor to replace mtae of the existing RefAnalysis
+     * @param that
+     * @param mtae
+     */
+    public RefAnalysis(RefAnalysis that, ModelTraceAndEventsImpl mtae)
     {
-        this.bs = bs;
-        this.mtae = mtae;
+        this.bs = that.bs;
+        this.ar = new AnalysisResult(that.ar.getDataLength(),
+        		that.ar.getTraceLength(),
+        		mtae);
         decode();
     }
 	public RefAnalysis(BellcoreStructure bs)
@@ -30,14 +37,14 @@ public class RefAnalysis
             new ClientAnalysisManager();
             ap = Heap.getMinuitAnalysisParams();
         }
-        mtae = CoreAnalysisManager.performAnalysis(bs, ap).getMTAE();
+        ar = CoreAnalysisManager.performAnalysis(bs, ap);
         decode();
 	}
 
     private void decode ()
 	{
         if (false){ // FIXME: just a debug code
-            SimpleReflectogramEvent []se = mtae.getSimpleEvents();
+            SimpleReflectogramEvent []se = getMTAE().getSimpleEvents();
             System.out.println("NEvents=" + se.length);
             System.out.println("EVENTS");
             for (int i = 0; i < se.length; i++) {
@@ -53,15 +60,15 @@ public class RefAnalysis
                             ReliabilitySimpleReflectogramEvent.RELIABLE)
                     tloss = 1;
                 line += " N=0 L=" + tloss;
-                line += " # begin=" + re.getBegin() * mtae.getDeltaX();
+                line += " # begin=" + re.getBegin() * getMTAE().getDeltaX();
                 System.out.println(line);
             }
         }
 
         double[] y = bs.getTraceData();
 		// ComplexReflectogramEvent[] re = mtae.getComplexEvents();
-        DetailedEvent[] de = mtae.getDetailedEvents();
-		ModelTrace mt = mtae.getModelTrace();
+        DetailedEvent[] de = getMTAE().getDetailedEvents();
+		ModelTrace mt = getMTAE().getModelTrace();
 
 		double maxY = y.length > 0 ? y[0] : 0;
 		double minY = maxY;
@@ -150,9 +157,12 @@ public class RefAnalysis
 	}
 
     public ModelTraceAndEventsImpl getMTAE() {
-        return mtae;
+        return ar.getMTAE();
     }
     public BellcoreStructure getBS() {
         return bs;
     }
+	public AnalysisResult getAR() {
+		return ar;
+	}
 }
