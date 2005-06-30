@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.21 2005/06/29 14:47:44 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.22 2005/06/30 06:45:45 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/06/29 14:47:44 $
+ * @version $Revision: 1.22 $, $Date: 2005/06/30 06:45:45 $
  * @module
  */
 public class ModelTraceComparer
@@ -44,18 +44,18 @@ public class ModelTraceComparer
             ReliabilityModelTraceAndEvents mtae,
             ModelTraceManager mtm)
     {
-//        System.out.println(
-//                "ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
         ReflectogramAlarm alarmTrace =
             compareTraceToMTM(mtae.getModelTrace(), mtm);
         ReflectogramAlarm alarmEvents =
             compareEventsToMTM(
                 (ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
                 mtm);
-//        System.out.println(
-//                "ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
-//        System.out.println(
-//                "ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
+        System.out.println(
+        		"ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
+        System.out.println(
+        		"ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
+        System.out.println(
+        		"ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
         if (alarmTrace != null)
             return alarmTrace;
         else
@@ -173,7 +173,7 @@ public class ModelTraceComparer
     	// apply results
     	if (alarmBegin < 0)
     		return false;
-    	alarm.pointCoord = alarmBegin;
+    	alarm.pointCoord = mtm.fixAlarmPos(alarmBegin, true); // XXX: кажется, эта дистанция не используется
     	alarm.endPointCoord = alarmEnd;
     	return true;
     }
@@ -217,24 +217,25 @@ public class ModelTraceComparer
 				if (y[i] * sign > thY[i] * sign)
 					break;
 			}
-			int alarmBegin = i;
+			int alarmStart = i;
 			for (; i < len; i++)
 			{
 				if (y[i] * sign <= thY[i] * sign)
 					break;
 			}
 			int alarmEnd = i;
-			if (alarmBegin < len)
+			if (alarmStart < len)
 			{
-				// @todo: нужна привязка alarmBegin к нач. нел. соб.
+				// привязываем к началу события
+				int alarmCoord = mtm.fixAlarmPos(alarmStart, true);
 				int level = Thresh.IS_KEY_HARD[key]
 					? ReflectogramAlarm.LEVEL_HARD
 					: ReflectogramAlarm.LEVEL_SOFT;
-				if (level == alarm.level && alarmBegin < alarm.pointCoord
+				if (level == alarm.level && alarmCoord < alarm.pointCoord
 						|| level > alarm.level)
 				{
 					alarm.level = level;
-					alarm.pointCoord = alarmBegin;
+					alarm.pointCoord = alarmCoord;
 					alarm.endPointCoord = alarmEnd;
 					alarm.alarmType = ReflectogramAlarm.TYPE_OUTOFMASK;
                     alarm.deltaX = mtm.getMTAE().getDeltaX();

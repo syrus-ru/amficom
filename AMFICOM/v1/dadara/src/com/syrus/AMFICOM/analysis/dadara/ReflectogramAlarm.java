@@ -18,6 +18,9 @@ public class ReflectogramAlarm {
 	public static final int TYPE_EVENTLISTCHANGED = 3;
 
 	public int level = LEVEL_NONE;
+	// оптическая дистанция (в точках) события эталона или точки на
+	// событии эталона, в котором/которой произошел аларм.
+	// Может отличаться от фактической точки выхода за пределы порогов.
 	public int pointCoord = 0;
 	public int endPointCoord = 0; // ?
 	public int alarmType = TYPE_UNDEFINED;

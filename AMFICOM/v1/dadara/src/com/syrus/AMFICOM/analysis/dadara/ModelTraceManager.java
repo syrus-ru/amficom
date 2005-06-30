@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.82 2005/06/23 08:00:33 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.83 2005/06/30 06:45:45 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.82 $, $Date: 2005/06/23 08:00:33 $
+ * @version $Revision: 1.83 $, $Date: 2005/06/30 06:45:45 $
  * @module
  */
 public class ModelTraceManager
@@ -959,10 +959,107 @@ implements DataStreamable, Cloneable
         return sre;
     }
 
+    private int getEventAlarmPref(int eventType) {
+		switch (eventType) {
+		case SimpleReflectogramEvent.DEADZONE:   // fall through
+		case SimpleReflectogramEvent.ENDOFTRACE: // fall through
+		case SimpleReflectogramEvent.CONNECTOR:
+			return 3;
+		case SimpleReflectogramEvent.GAIN: // fall through
+		case SimpleReflectogramEvent.LOSS:
+			return 2;
+		case SimpleReflectogramEvent.NOTIDENTIFIED:
+			return 1;
+		default:
+			return 0;
+		}
+    }
+
+    /**
+     * Определяет, какому событию скорее всего соответствует данная
+     * точка возникновения аларма.
+     * Не использует анализа пороговых кривых, а опирается только на
+     * границы события и значения его HARD DX-порогов.
+     * Обдает предпочтение отражательным событиям и сваркам, затем
+     * неид., и только потом уже линейным.
+     * @param x координата точки аларма
+     * @param oneMorePoint увеличить диапазон захвата еще на 1 точку.
+     * Полезен, когда событие только-только вышло за пределы DX-маски, чтобы
+     * привязать точку выхода к этому эталона.
+     * @return номер события, либо -1, если не удалось.
+     */
+    private int findSupposedAlarmEventByPos(int x, boolean oneMorePoint) {
+    	int pref = -1; // предпочтительность (высший - для конн. и сварок, низший - для лин.)
+    	int found = -1; // номер найденного события
+
+    	// сначала проверяем все DX-пороги с учетом ширин этих порогов,
+    	// а затем - просто все события (на случай отсутствия DX-порогов).
+    	for (int i = 0; i < tDX.length; i++) {
+    		int keyU = Thresh.HARD_UP;
+    		int keyD = Thresh.HARD_DOWN;
+    		int dxMin = Math.min(tDX[i].getDX(keyU), tDX[i].getDX(keyD));
+    		int dxMax = Math.max(tDX[i].getDX(keyU), tDX[i].getDX(keyD));
+    		if (tDX[i].xMin - dxMin <= x && tDX[i].xMax + dxMax >= x) {
+    			// eventId0 и eventId1 для DX-порогов равны, берем eventId0 (?)
+    			int nEv = tDX[i].eventId0;
+    			System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIXME: debug sysout
+    			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
+    			int curPref = getEventAlarmPref(eventType);
+    			if (curPref > pref) {
+    				pref = curPref;
+    				found = nEv;
+    			}
+    		}
+    	}
+
+    	int nEvents = this.mtae.getNEvents();
+    	for (int nEv = 0; nEv < nEvents; nEv++) {
+    		SimpleReflectogramEvent ev = getMTAE().getSimpleEvent(nEv);
+    		if (ev.getBegin() <= x && ev.getEnd() >= x) {
+    			System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIXME: debug sysout
+    			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
+    			int curPref = getEventAlarmPref(eventType);
+    			if (curPref > pref) {
+    				pref = curPref;
+    				found = nEv;
+    			}
+    		}
+    	}
+
+    	return found;
+    }
+
+    /**
+     * корректирует дистанцию аларма, привязывая его к началу события,
+     * если это событие - отражательное или сварка.
+     * Для лин. и неид. событий привязка не производится.
+     * @param x дистанция;
+     * @param oneMorePoint расширение диапазона захвата на 1 точку сверх порогов
+     *  (see {@link #findSupposedAlarmEventByPos}).
+     * @return скорректированная дистанция
+     */
+    public int fixAlarmPos(int x, boolean oneMorePoint) {
+    	int nEv = findSupposedAlarmEventByPos(x, oneMorePoint);
+    	if (nEv < 0)
+    		return x;
+    	SimpleReflectogramEvent ev = this.mtae.getSimpleEvent(nEv);
+    	int eventType = ev.getEventType();
+		switch (eventType) {
+		case SimpleReflectogramEvent.DEADZONE:   // fall through
+		case SimpleReflectogramEvent.ENDOFTRACE: // fall through
+		case SimpleReflectogramEvent.CONNECTOR:  // fall through
+		case SimpleReflectogramEvent.GAIN: // fall through
+		case SimpleReflectogramEvent.LOSS:
+			return ev.getBegin();
+		default:
+			return x;
+		}
+    }
+
 	/**
 	 * Создает MTM по эталонной паре события+м.ф., считанной из ByteArray
 	 * @param bar
-	 * @return MTM с неопределенными порогами 
+	 * @return MTM с неопределенными порогами
 	 * @throws DataFormatException 
 	 */
 	public static ModelTraceManager eventsAndTraceFromByteArray(byte[] bar)
