@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.3 2005/07/01 08:00:05 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.4 2005/07/01 08:30:46 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.3 $, $Date: 2005/07/01 08:00:05 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.4 $, $Date: 2005/07/01 08:30:46 $
  * @module mapinfo_v1
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader {
@@ -33,7 +33,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader {
         this.connection = connection;
 
         //Setting logger to log nothing.
-        System.setProperty("org.apache.commons.logging.Log","com.syrus.AMFICOM.Client.Map.EmptyLog");
+        System.setProperty("org.apache.commons.logging.Log","com.syrus.AMFICOM.client.map.EmptyLog");
 
        	try {
        		this.renderer = new MapJLocalRenderer(this.connection.getPath() + this.connection.getView());
