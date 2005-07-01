@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.1.2.4 2005/06/29 10:56:22 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.1.2.5 2005/07/01 08:00:05 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.4 $, $Date: 2005/06/29 10:56:22 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2005/07/01 08:00:05 $
  * @module mapinfo_v1
  */
 public class MapJLocalRenderer
@@ -153,7 +153,8 @@ public class MapJLocalRenderer
 		Log.debugMessage(
 				"MapJRenderer - cancelRendering - Stopping the rendering of map.",
 				Log.DEBUGLEVEL10);
-		this.renderer.interrupt();
+		if (this.renderer != null)
+			this.renderer.interrupt();
 		Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.",
 				Log.DEBUGLEVEL10);
 	}

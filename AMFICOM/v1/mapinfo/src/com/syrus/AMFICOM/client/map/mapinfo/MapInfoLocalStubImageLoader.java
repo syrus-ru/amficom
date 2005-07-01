@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.2 2005/06/29 10:57:58 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.3 2005/07/01 08:00:05 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,7 +19,7 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.2 $, $Date: 2005/06/29 10:57:58 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2005/07/01 08:00:05 $
  * @module mapinfo_v1
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader {
