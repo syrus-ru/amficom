@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.25 2005/06/28 07:30:35 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.26 2005/07/01 16:20:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -51,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.25 $, $Date: 2005/06/28 07:30:35 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/01 16:20:39 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
