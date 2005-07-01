@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.2 2005/07/01 11:39:13 peskovsky Exp $
+ * $Id: METS.java,v 1.3 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,18 +29,25 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/01 11:39:13 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.3 $, $Date: 2005/07/01 16:07:19 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class METS {
@@ -61,7 +68,25 @@ public class METS {
 		netMapViewer.getRenderer().cancel();		
 		mainFrame.dispose();
 	}
+
+	public static void clearSchemeBinding() {
+		for(Iterator iter = mapView.getSchemes().iterator(); iter.hasNext();) {
+			Scheme scheme = (Scheme )iter.next();
+			clearSchemeBinding(scheme);
+		}
+	}
 	
+	private static void clearSchemeBinding(Scheme scheme) {
+		for(Iterator iter = scheme.getSchemeElements().iterator(); iter.hasNext();) {
+			SchemeElement element = (SchemeElement )iter.next();
+			element.setSiteNode(null);
+		}
+		for(Iterator iter = scheme.getSchemeCableLinks().iterator(); iter.hasNext();) {
+			SchemeCableLink element = (SchemeCableLink )iter.next();
+			element.setCableChannelingItems((Set<CableChannelingItem> )Collections.emptySet());
+		}
+	}
+
 	public static void clearMap() {
 		ArrayList nodes = new ArrayList(map.getNodes());
 		for(Iterator iter = nodes.iterator(); iter.hasNext();) {
@@ -85,69 +110,75 @@ public class METS {
 		}
 	}
 	
-	public static void setUp() {
+	public static void setUp() throws Exception {
 		if(initPerformed)
 			return;
 
-		try {
-			TestMapEditor application = new TestMapEditor();
-			Dispatcher dispatcher = new Dispatcher();
-			new OpenSessionCommand(dispatcher).execute();
-			System.out.println(LoginManager.getUserId());
-			System.out.println(LoginManager.getDomainId());
-			aContext = new ApplicationContext();
-			aContext.setApplicationModel(new MapMapEditorApplicationModelFactory().create());
-			aContext.setDispatcher(new Dispatcher());
-			mapFrame = new MapFrame(aContext);
-			MapNewCommand mnc = new MapNewCommand(aContext);
-			mnc.execute();
-			if(mnc.getResult() == Command.RESULT_OK) {
-				map = mnc.getMap();
-			}
-			else
-				return;
-			MapViewNewCommand mvnc = new MapViewNewCommand(map, aContext);
-			mvnc.execute();
-			if(mvnc.getResult() == Command.RESULT_OK) {
-				mapView = mvnc.getMapView();
-				mapView.setCenter(mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getCenter());
-				mapView.setScale(mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getScale());
-			}
-			else
-				return;
-			mapView.setMap(map);
-			mapFrame.setMapView(mapView);
-			
-			mainFrame = new JFrame();
-			mainFrame.getContentPane().setLayout(new BorderLayout());
-//			JInternalFrame iframe = new JInternalFrame("Bueee", true, true, true, true);
-			mapFrame.setVisible(true);
-			mainFrame.getContentPane().add(mapFrame, BorderLayout.CENTER);
-
-			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			mainFrame.setSize(dim.width, dim.height - 150);
-			mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			mainFrame.setVisible(true);
-
-			Dimension cpdim = mainFrame.getContentPane().getSize();
-			mapFrame.setLocation(0, 0);
-			mapFrame.setSize(cpdim.width * 4 / 5, cpdim.height);
-
-			netMapViewer = mapFrame.getMapViewer();
-			logicalNetLayer = netMapViewer.getLogicalNetLayer(); 
-
-			while(!(METS.mainFrame.isVisible() && METS.mapFrame.isVisible())) {
-				try {
-					Thread.sleep(100);
-				} catch(InterruptedException e) {
-					//empty
-				}
-			}
-
-			initPerformed = true;
-		} catch(Exception e) {
-			e.printStackTrace();
+		new TestMapEditor();
+		Dispatcher dispatcher = new Dispatcher();
+		new OpenSessionCommand(dispatcher).execute();
+		System.out.println(LoginManager.getUserId());
+		System.out.println(LoginManager.getDomainId());
+		aContext = new ApplicationContext();
+		aContext.setApplicationModel(new MapMapEditorApplicationModelFactory().create());
+		aContext.setDispatcher(new Dispatcher());
+		mapFrame = new MapFrame(aContext);
+		MapNewCommand mnc = new MapNewCommand(aContext);
+		mnc.execute();
+		if(mnc.getResult() == Command.RESULT_OK) {
+			map = mnc.getMap();
 		}
+		else
+			return;
+		MapViewNewCommand mvnc = new MapViewNewCommand(map, aContext);
+		mvnc.execute();
+		if(mvnc.getResult() == Command.RESULT_OK) {
+			mapView = mvnc.getMapView();
+			mapView.setCenter(mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getCenter());
+			mapView.setScale(mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getScale());
+		}
+		else
+			return;
+		mapView.setMap(map);
+		mapFrame.setMapView(mapView);
+
+		SchemeSampleData.populate(LoginManager.getUserId(), LoginManager.getDomainId());
+
+		Set schemes = StorableObjectPool.getStorableObjectsByCondition(
+				new LinkedIdsCondition(LoginManager.getDomainId(), ObjectEntities.SCHEME_CODE), false);
+		Iterator iterator = schemes.iterator();
+		Scheme scheme1 = (Scheme )iterator.next();
+		Scheme scheme2 = (Scheme )iterator.next();
+		mapView.addScheme(scheme1);
+		mapView.addScheme(scheme2);
+		
+		mapFrame.setVisible(true);
+
+		mainFrame = new JFrame();
+		mainFrame.getContentPane().setLayout(new BorderLayout());
+		mainFrame.getContentPane().add(mapFrame, BorderLayout.CENTER);
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		mainFrame.setSize(dim.width, dim.height - 200);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFrame.setVisible(true);
+
+//		Dimension cpdim = mainFrame.getContentPane().getSize();
+//		mapFrame.setLocation(0, 0);
+//		mapFrame.setSize(cpdim.width * 4 / 5, cpdim.height);
+
+		netMapViewer = mapFrame.getMapViewer();
+		logicalNetLayer = netMapViewer.getLogicalNetLayer(); 
+
+		while(!(METS.mainFrame.isVisible() && METS.mapFrame.isVisible())) {
+			try {
+				Thread.sleep(100);
+			} catch(InterruptedException e) {
+				//empty
+			}
+		}
+
+		initPerformed = true;
 	}
 }
 

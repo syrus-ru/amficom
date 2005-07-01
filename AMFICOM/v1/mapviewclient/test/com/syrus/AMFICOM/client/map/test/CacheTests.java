@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.client.map.test;
 /**
- * $Id: CacheTests.java,v 1.1 2005/07/01 11:33:01 peskovsky Exp $
+ * $Id: CacheTests.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,12 @@ public class CacheTests {
 		
 		TestSetup wrapper = new TestSetup(suite) {
 			protected void setUp() {
-				METS.setUp();
+				try {
+					METS.setUp();
+				} catch(Exception e) {
+					e.printStackTrace();
+					fail(e.getMessage());
+				}
 			}
 			protected void tearDown() {
 				METS.tearDown();

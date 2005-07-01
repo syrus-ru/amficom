@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundleTestCase.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundleTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandBundle;
@@ -23,8 +25,6 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
-
-import junit.framework.TestCase;
 
 public class CreatePhysicalNodeCommandBundleTestCase extends TestCase {
 
@@ -42,7 +42,7 @@ public class CreatePhysicalNodeCommandBundleTestCase extends TestCase {
 	 * site ---[node]--- site
 	 *
 	 */
-	public void testExecute() {
+	public void testExecute() throws Exception {
 		//pre-test tasks
 		SiteNodeType type = NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_BUILDING);
 		Point location = new Point(20, 20);

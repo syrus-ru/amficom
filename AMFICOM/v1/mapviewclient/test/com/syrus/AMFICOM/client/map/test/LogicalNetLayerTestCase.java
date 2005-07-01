@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayerTestCase.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: LogicalNetLayerTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,6 +9,8 @@ package com.syrus.AMFICOM.client.map.test;
 
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalLinkCommandAtomic;
@@ -20,8 +22,6 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNodeType;
-
-import junit.framework.TestCase;
 
 public class LogicalNetLayerTestCase extends TestCase {
 

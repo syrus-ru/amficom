@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomicTestCase.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomicTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,9 +14,7 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
-import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.RemoveNodeLinkCommandAtomic;
-import com.syrus.AMFICOM.client.map.command.action.RemovePhysicalLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;

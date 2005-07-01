@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundleTestCase.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundleTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ public class DeleteNodeLinkCommandBundleTestCase extends TestCase {
 	 * site (-----) site
 	 *
 	 */
-	public void testRemoveNodeLinkBetweenTwoSites() {
+	public void testRemoveNodeLinkBetweenTwoSites() throws Exception {
 		//pre-test tasks
 		SiteNodeType type = NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_BUILDING);
 		Point location = new Point(20, 20);

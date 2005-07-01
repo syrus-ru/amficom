@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundleTestCase.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: DeleteNodeCommandBundleTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.client.map.test;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalLinkCommandAtomic;
@@ -23,8 +25,6 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
-
-import junit.framework.TestCase;
 
 public class DeleteNodeCommandBundleTestCase extends TestCase {
 

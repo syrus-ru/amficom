@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomicTestCase.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: CreatePhysicalLinkCommandAtomicTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,17 +12,12 @@ import java.awt.Point;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalLinkCommandAtomic;
-import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
-import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.RemovePhysicalLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.TopologicalNode;
 
 public class CreatePhysicalLinkCommandAtomicTestCase extends TestCase {
 
