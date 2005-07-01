@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: METS.java,v 1.2 2005/07/01 11:39:13 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
  
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/01 07:52:53 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/07/01 11:39:13 $
+ * @author $Author: peskovsky $
  * @module mapviewclient
  */
 public class METS {
@@ -58,6 +58,7 @@ public class METS {
 	public static boolean initPerformed = false;
 
 	public static void tearDown() {
+		netMapViewer.getRenderer().cancel();		
 		mainFrame.dispose();
 	}
 	
