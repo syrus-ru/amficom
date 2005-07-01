@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.24 2005/06/23 08:19:51 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.25 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/06/23 08:19:51 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/01 16:22:36 $
  * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends AbstractCommand {
@@ -94,12 +94,14 @@ public class ViewMapWindowCommand extends AbstractCommand {
 							LangModelGeneral.getString("Finished")));
 			setResult(Command.RESULT_OK);
 		} catch(MapConnectionException e) {
+			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					"Нет соединения с сервером картографической информации",
 					"",
 					JOptionPane.ERROR_MESSAGE);
 		} catch(MapDataException e) {
+			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					"Ошибка доступа к картографическим данным",

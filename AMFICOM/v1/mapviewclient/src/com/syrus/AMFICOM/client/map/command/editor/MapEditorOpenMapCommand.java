@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.20 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.21 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapOpenCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открываетс€ окно карты и сопутствующие окна
  * и MapContext передаетс€ в окно карты
  * 
- * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.21 $, $Date: 2005/07/01 16:22:36 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -118,11 +118,8 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 						this.aContext);
 				elementsCommand.execute();
 				this.treeFrame = elementsCommand.treeFrame;
-			} catch(MapConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch(MapDataException e) {
-				// TODO Auto-generated catch block
+			} catch(MapException e) {
+				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "ќшибка соединени€ с картографическими данными"));
 				e.printStackTrace();
 			}
 		}

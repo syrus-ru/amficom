@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.30 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.31 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,8 +26,8 @@ import org.apache.xmlbeans.XmlOptions;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.ImportCommand;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
@@ -65,7 +65,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/01 16:22:36 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand {
@@ -153,10 +153,8 @@ public class MapImportCommand extends ImportCommand {
 			}
 
 			setResult(Command.RESULT_OK);
-		} catch(MapConnectionException e) {
-			e.printStackTrace();
-			setResult(Command.RESULT_NO);
-		} catch(MapDataException e) {
+		} catch(MapException e) {
+			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 			e.printStackTrace();
 			setResult(Command.RESULT_NO);
 		} catch(DatabaseException e) {

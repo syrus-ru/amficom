@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.14 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.15 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.dialogs.NamedObjectWrapper;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * @version $Revision: 1.14 $, $Date: 2005/06/22 08:43:49 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/01 16:22:36 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -42,18 +43,13 @@ public final class MapPenBarPanel extends JPanel
 		try
 		{
 			jbInit();
+			this.logicalNetLayer = logicalNetLayer;
+			setProtoElements();
 		}
 		catch (Exception e)
 		{
 		  e.printStackTrace();
 		}
-		setLogicalNetLayer(logicalNetLayer);
-	}
-	
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		setProtoElements();
 	}
 
 	private void jbInit()
@@ -79,7 +75,7 @@ public final class MapPenBarPanel extends JPanel
 		this.add(this.penComboBox, BorderLayout.CENTER);
 	}
 
-	public void setProtoElements()
+	public void setProtoElements() throws ApplicationException
 	{
 		if(this.logicalNetLayer == null)
 			return;

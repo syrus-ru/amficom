@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewViewCommand.java,v 1.17 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: MapEditorNewViewCommand.java,v 1.18 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewCloseCommand;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.17 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/01 16:22:36 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand
@@ -80,11 +80,8 @@ public class MapEditorNewViewCommand extends AbstractCommand {
 			mapView.setScale(mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getScale());
 			mapFrame.setMapView(mapView);
 			setResult(Command.RESULT_OK);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
+		} catch(MapException e) {
+			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 			e.printStackTrace();
 		}
 	}

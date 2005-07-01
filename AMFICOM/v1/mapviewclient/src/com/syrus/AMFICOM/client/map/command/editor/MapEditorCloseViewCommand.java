@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseViewCommand.java,v 1.18 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: MapEditorCloseViewCommand.java,v 1.19 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,8 +14,8 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewCloseCommand;
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand дл€ закрыти€ карты, после чего
  * генерирует событие закрыти€
  * 
- * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/01 16:22:36 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.client.map.command.map.MapCloseCommand
@@ -78,11 +78,8 @@ public class MapEditorCloseViewCommand extends AbstractCommand {
 					this,
 					MapEvent.MAP_VIEW_CLOSED));
 			setResult(Command.RESULT_OK);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
+		} catch(MapException e) {
+			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "ќшибка соединени€ с картографическими данными"));
 			e.printStackTrace();
 		}
 	}

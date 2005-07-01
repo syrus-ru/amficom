@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.46 2005/06/24 13:02:44 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.47 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
@@ -56,7 +57,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.46 $, $Date: 2005/06/24 13:02:44 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/01 16:22:36 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -166,7 +167,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		return null;
 	}
 	
-	protected void addLinksToCollector(Collector collector, Set links) {
+	protected void addLinksToCollector(Collector collector, Set links) throws ApplicationException {
 		for(Iterator it = links.iterator(); it.hasNext();) {
 			PhysicalLink mple = (PhysicalLink )it.next();
 
@@ -174,7 +175,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		}
 	}
 
-	protected void addLinkToCollector(Collector collector, PhysicalLink mple) {
+	protected void addLinkToCollector(Collector collector, PhysicalLink mple) throws ApplicationException {
 		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_COLLECTOR);
 
 		Collector prevCollector = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(mple);
@@ -192,7 +193,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 	}
 
-	protected void removeLinksFromCollector(Collector collector, Set links) {
+	protected void removeLinksFromCollector(Collector collector, Set links) throws ApplicationException {
 		for(Iterator it = links.iterator(); it.hasNext();) {
 			PhysicalLink mple = (PhysicalLink )it.next();
 
@@ -202,7 +203,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 
 	protected void removeLinkFromCollector(
 			Collector collector,
-			PhysicalLink mple) {
+			PhysicalLink mple) throws ApplicationException {
 		collector.removePhysicalLink(mple);
 
 		MapElementState state = mple.getState();

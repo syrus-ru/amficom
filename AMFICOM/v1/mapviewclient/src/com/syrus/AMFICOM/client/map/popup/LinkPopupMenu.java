@@ -8,11 +8,14 @@ import java.util.Set;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.action.CreateMarkCommandAtomic;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 
@@ -106,7 +109,18 @@ public final class LinkPopupMenu extends MapPopupMenu
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					newCollector();
+					try {
+						newCollector();
+					} catch(MapException e1) {
+						e1.printStackTrace();
+						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
+								new StatusMessageEvent(
+										this, 
+										StatusMessageEvent.STATUS_MESSAGE, 
+										MapException.DEFAULT_STRING));
+					} catch(ApplicationException e1) {
+						e1.printStackTrace();
+					}
 				}
 			});
 		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
@@ -114,7 +128,18 @@ public final class LinkPopupMenu extends MapPopupMenu
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					removeCollector();
+					try {
+						removeCollector();
+					} catch(MapException e1) {
+						e1.printStackTrace();
+						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
+								new StatusMessageEvent(
+										this, 
+										StatusMessageEvent.STATUS_MESSAGE, 
+										MapException.DEFAULT_STRING));
+					} catch(ApplicationException e1) {
+						e1.printStackTrace();
+					}
 				}
 			});
 
@@ -123,7 +148,18 @@ public final class LinkPopupMenu extends MapPopupMenu
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					addToCollector();
+					try {
+						addToCollector();
+					} catch(MapException e1) {
+						e1.printStackTrace();
+						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
+								new StatusMessageEvent(
+										this, 
+										StatusMessageEvent.STATUS_MESSAGE, 
+										MapException.DEFAULT_STRING));
+					} catch(ApplicationException e1) {
+						e1.printStackTrace();
+					}
 				}
 			});
 		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
@@ -131,7 +167,18 @@ public final class LinkPopupMenu extends MapPopupMenu
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					removeFromCollector();
+					try {
+						removeFromCollector();
+					} catch(MapException e1) {
+						e1.printStackTrace();
+						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
+								new StatusMessageEvent(
+										this, 
+										StatusMessageEvent.STATUS_MESSAGE, 
+										MapException.DEFAULT_STRING));
+					} catch(ApplicationException e1) {
+						e1.printStackTrace();
+					}
 				}
 			});
 
@@ -195,85 +242,44 @@ public final class LinkPopupMenu extends MapPopupMenu
 		}
 	}
 
-	void newCollector()
+	void newCollector() throws ApplicationException, MapConnectionException, MapDataException
 	{
 		Collector collector = super.createCollector();
 		if(collector != null)
 		{
 			super.addLinkToCollector(collector, this.link);
 
-			try
-			{
-				this.netMapViewer.repaint(false);
-			}
-			catch(MapConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch(MapDataException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.netMapViewer.repaint(false);
 
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
-	void addToCollector()
+	void addToCollector() throws ApplicationException, MapConnectionException, MapDataException
 	{
 		Collector collector = super.selectCollector();
 		if(collector != null)
 		{
 			super.addLinkToCollector(collector, this.link);
 			
-			try
-			{
-				this.netMapViewer.repaint(false);
-			}
-			catch(MapConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch(MapDataException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.netMapViewer.repaint(false);
 
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
-	void removeFromCollector()
+	void removeFromCollector() throws ApplicationException, MapConnectionException, MapDataException
 	{
 		Collector collector = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(this.link);
 		if(collector != null)
 		{
 			super.removeLinkFromCollector(collector, this.link);
-			
-			try
-			{
-				this.netMapViewer.repaint(false);
-			}
-			catch(MapConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch(MapDataException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			this.netMapViewer.repaint(false);
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
-	void removeCollector()
+	void removeCollector() throws ApplicationException, MapDataException, MapConnectionException
 	{
 		this.netMapViewer.getLogicalNetLayer().deselectAll();
 
@@ -284,22 +290,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 			set.addAll(collector.getPhysicalLinks());
 			super.removeLinksFromCollector(collector, set);
 			super.removeCollector(collector);
-
-			try
-			{
-				this.netMapViewer.repaint(false);
-			}
-			catch(MapConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch(MapDataException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			this.netMapViewer.repaint(false);
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}

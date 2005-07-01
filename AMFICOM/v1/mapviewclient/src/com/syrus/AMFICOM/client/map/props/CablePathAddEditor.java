@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -46,7 +47,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -574,7 +575,13 @@ GridBagConstraints constraints = new GridBagConstraints();
 	
 	private void setBindingPanels()
 	{
-		PhysicalLinkType unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
+		PhysicalLinkType unboundType;
+		try {
+			unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+			return;
+		}
 
 		this.startNode = this.cablePath.getStartUnboundNode();
 		

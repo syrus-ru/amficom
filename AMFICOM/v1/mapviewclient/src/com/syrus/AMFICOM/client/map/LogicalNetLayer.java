@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.84 2005/06/29 15:45:47 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.85 2005/07/01 16:22:35 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.84 $, $Date: 2005/06/29 15:45:47 $
+ * @version $Revision: 1.85 $, $Date: 2005/07/01 16:22:35 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1033,8 +1033,9 @@ public class LogicalNetLayer
 	/**
 	 * ѕолучить выбранный тип дл€ создани€ новых линий.
 	 * @return тип линии
+	 * @throws ApplicationException 
 	 */
-	public PhysicalLinkType getCurrentPhysicalLinkType()
+	public PhysicalLinkType getCurrentPhysicalLinkType() throws ApplicationException
 	{
 		if(this.currentPhysicalLinkType == null) {
 			this.currentPhysicalLinkType = LinkTypeController.getDefaultPhysicalLinkType();
@@ -1045,8 +1046,9 @@ public class LogicalNetLayer
 	/**
 	 * ѕолучить тип неприв€занного узла.
 	 * @return тип узла
+	 * @throws ApplicationException 
 	 */
-	public SiteNodeType getUnboundNodeType()
+	public SiteNodeType getUnboundNodeType() throws ApplicationException
 	{
 		if(this.unboundNodeType == null) {
 			this.unboundNodeType = NodeTypeController.getUnboundNodeType();
@@ -1057,8 +1059,9 @@ public class LogicalNetLayer
 	/**
 	 * ѕолучить тип неприв€занного кабел€.
 	 * @return тип неприв€занного кабел€
+	 * @throws ApplicationException 
 	 */
-	public PhysicalLinkType getUnboundLinkType()
+	public PhysicalLinkType getUnboundLinkType() throws ApplicationException
 	{
 		if(this.unboundLinkType == null) {
 			this.unboundLinkType = LinkTypeController.getUnboundPhysicalLinkType();

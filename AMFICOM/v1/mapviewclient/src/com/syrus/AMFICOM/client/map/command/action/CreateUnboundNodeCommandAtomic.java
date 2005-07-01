@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.18 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.19 2005/07/01 16:22:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 import com.syrus.AMFICOM.client.map.controllers.UnboundNodeController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -26,7 +27,7 @@ import com.syrus.util.Log;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/01 16:22:36 $
  * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand
@@ -88,6 +89,10 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 		}
 		catch (CreateObjectException e)
 		{
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		} catch(ApplicationException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
