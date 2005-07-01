@@ -12,25 +12,41 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
+import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class AnalysisLayeredPanel
 extends TraceEventsLayeredPanel
 implements CurrentEventChangeListener,
-    PrimaryRefAnalysisListener
+    	PrimaryRefAnalysisListener, RefMismatchListener
 {
 	public static final long LOSS_ANALYSIS = 0x00000001;
 	public static final long REFLECTION_ANALYSIS = 0x00000010;
 	public static final long NO_ANALYSIS = 0x00000100;
+
+	private static Identifier refMismatchMarkerId;
+	{
+		try {
+			refMismatchMarkerId = LocalIdentifierGenerator.generateIdentifier(ObjectEntities.MARK_CODE);
+		} catch (IllegalObjectEntityException e) {
+			throw new InternalError("generateIdentifier - IllegalObjectEntityException: " + e);
+		}
+	}
 
 	public AnalysisLayeredPanel(Dispatcher dispatcher)
 	{
 		super(dispatcher);
 		Heap.addCurrentEventChangeListener(this);
         Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addRefMismatchListener(this);
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -140,6 +156,36 @@ implements CurrentEventChangeListener,
     public void primaryRefAnalysisRemoved() {
         // @todo Auto-generated method stub
     }
+
+	private void updRefMismatch() {
+		ReflectogramAlarm alarm = Heap.getRefMismatch();
+		for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof MapMarkersPanel)
+			{
+				// удаляем маркер (если он есть) и запоминаем, был ли он удален
+				boolean updated =
+						((MapMarkersPanel)panel).
+								deleteMarker(refMismatchMarkerId) != null;
+				// создаем новый маркер (если надо)
+				if (alarm != null) {
+					updated = true;
+					double dist = alarm.getDistance();
+					((MapMarkersPanel)panel).createAlarmMarker("<test>", refMismatchMarkerId, dist);
+				}
+				if (updated)
+					jLayeredPane.repaint();
+			}
+		}
+	}
+	public void refMismatchCUpdated() {
+		updRefMismatch();
+	}
+
+	public void refMismatchRemoved() {
+		updRefMismatch();
+	}
 }
 
 class AnalysisToolBar extends TraceEventsToolBar
