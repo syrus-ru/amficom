@@ -58,7 +58,7 @@ private:
 	static int get_wave_index(const int wvlen, const WORD otdr_card);
 	static int get_range_index(const double trclen, const WORD otdr_card, const float wave);
 	static int get_point_spacing_index(const double res, const WORD otdr_card);
-	static int get_pulse_width_index(const int pulswd, const WORD otdr_card, const float wave);
+	static int get_pulse_width_index(const short pulswd, const int flag_pulswd_low_res, const WORD otdr_card, const float wave);
 	static int ior_is_valid(const double ior, const WORD otdr_card, const float wave);
 	static int get_averages_index(const double scans, const WORD otdr_card, const float wave);
 	static int get_index_in_array(float val, float* array, int array_size);
@@ -68,7 +68,8 @@ private:
 	static const char* PARAMETER_NAME_WAVELENGTH;
 	static const char* PARAMETER_NAME_TRACE_LENGTH;
 	static const char* PARAMETER_NAME_RESOLUTION;
-	static const char* PARAMETER_NAME_PULSE_WIDTH;
+	static const char* PARAMETER_NAME_PULSE_WIDTH_LOW_RES;
+	static const char* PARAMETER_NAME_PULSE_WIDTH_HIGH_RES;
 	static const char* PARAMETER_NAME_IOR;
 	static const char* PARAMETER_NAME_SCANS;
 	static const char* PARAMETER_NAME_FLAG_GAIN_SPLICE_ON;

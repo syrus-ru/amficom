@@ -9,7 +9,8 @@
 const char* RTUTransceiver::PARAMETER_NAME_WAVELENGTH = "ref_wvlen";
 const char* RTUTransceiver::PARAMETER_NAME_TRACE_LENGTH = "ref_trclen";
 const char* RTUTransceiver::PARAMETER_NAME_RESOLUTION = "ref_res";
-const char* RTUTransceiver::PARAMETER_NAME_PULSE_WIDTH = "ref_pulswd";
+const char* RTUTransceiver::PARAMETER_NAME_PULSE_WIDTH_LOW_RES = "ref_pulswd_low_res";
+const char* RTUTransceiver::PARAMETER_NAME_PULSE_WIDTH_HIGH_RES = "ref_pulswd_high_res";
 const char* RTUTransceiver::PARAMETER_NAME_IOR = "ref_ior";
 const char* RTUTransceiver::PARAMETER_NAME_SCANS = "ref_scans";
 const char* RTUTransceiver::PARAMETER_NAME_FLAG_GAIN_SPLICE_ON = "ref_flag_gain_splice_on";
@@ -603,9 +604,10 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	int wvlen = -1;
 	double trclen = -1;
 	double res = -1;
-	int pulswd = -1;
+	short pulswd = -1;
 	double ior = -1;
 	double scans = -1;
+	int flag_pulswd_low_res = 1;
 	int flag_gain_splice_on = 0;
 	int flag_live_fiber_detect = 0;
 
@@ -620,50 +622,50 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 			wvlen = *(int*)(bvalue->getData());
 			delete bvalue;
 		}
+		else if (strcmp(par_name, PARAMETER_NAME_TRACE_LENGTH) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			trclen = *(double*)(bvalue->getData());
+			delete bvalue;
+		}
+		else if (strcmp(par_name, PARAMETER_NAME_RESOLUTION) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			res = *(double*)(bvalue->getData());
+			delete bvalue;
+		}
+		else if (strcmp(par_name, PARAMETER_NAME_PULSE_WIDTH_HIGH_RES) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			pulswd = *(short*)(bvalue->getData());
+			flag_pulswd_low_res = 0;
+			delete bvalue;
+		}
+		else if (strcmp(par_name, PARAMETER_NAME_PULSE_WIDTH_LOW_RES) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			pulswd = *(short*)(bvalue->getData());
+			flag_pulswd_low_res = 1;
+			delete bvalue;
+		}
+		else if (strcmp(par_name, PARAMETER_NAME_IOR) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			ior = *(double*)(bvalue->getData());
+			delete bvalue;
+		}
+		else if (strcmp(par_name, PARAMETER_NAME_SCANS) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			scans = *(double*)(bvalue->getData());
+			delete bvalue;
+		}
+		else if (strcmp(par_name, PARAMETER_NAME_FLAG_GAIN_SPLICE_ON) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			flag_gain_splice_on = *(int*)(bvalue->getData());
+			delete bvalue;
+		}
+		else if (strcmp(par_name, PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT) == 0) {
+			bvalue = parameters[i]->getValue()->getReversed();
+			flag_live_fiber_detect = *(int*)(bvalue->getData());
+			delete bvalue;
+		}
 		else
-			if (strcmp(par_name, PARAMETER_NAME_TRACE_LENGTH) == 0) {
-				bvalue = parameters[i]->getValue()->getReversed();
-				trclen = *(double*)(bvalue->getData());
-				delete bvalue;
-			}
-			else
-				if (strcmp(par_name, PARAMETER_NAME_RESOLUTION) == 0) {
-					bvalue = parameters[i]->getValue()->getReversed();
-					res = *(double*)(bvalue->getData());
-					delete bvalue;
-				}
-				else
-					if (strcmp(par_name, PARAMETER_NAME_PULSE_WIDTH) == 0) {
-						bvalue = parameters[i]->getValue()->getReversed();
-						pulswd = *(int*)(bvalue->getData());
-						delete bvalue;
-					}
-					else
-						if (strcmp(par_name, PARAMETER_NAME_IOR) == 0) {
-							bvalue = parameters[i]->getValue()->getReversed();
-							ior = *(double*)(bvalue->getData());
-							delete bvalue;
-						}
-						else
-							if (strcmp(par_name, PARAMETER_NAME_SCANS) == 0) {
-								bvalue = parameters[i]->getValue()->getReversed();
-								scans = *(double*)(bvalue->getData());
-								delete bvalue;
-							}
-							else
-								if (strcmp(par_name, PARAMETER_NAME_FLAG_GAIN_SPLICE_ON) == 0) {
-									bvalue = parameters[i]->getValue()->getReversed();
-									flag_gain_splice_on = *(int*)(bvalue->getData());
-									delete bvalue;
-								}
-								else
-									if (strcmp(par_name, PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT) == 0) {
-										bvalue = parameters[i]->getValue()->getReversed();
-										flag_live_fiber_detect = *(int*)(bvalue->getData());
-										delete bvalue;
-									}
-									else
-										printf("RTUTransceiver | Unknown name of parameter: %s\n", par_name);
+			printf("RTUTransceiver | Unknown name of parameter: %s\n", par_name);
 	}
 
 	int wave_index = get_wave_index(wvlen, this->otdr_cards[otdr_card_index]);
@@ -687,7 +689,7 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	}
 	this->resolution = (float)res;
 
-	int pulse_width_index = get_pulse_width_index(pulswd, this->otdr_cards[otdr_card_index], this->wave_length);
+	int pulse_width_index = get_pulse_width_index(pulswd, flag_pulswd_low_res, this->otdr_cards[otdr_card_index], this->wave_length);
 	if (pulse_width_index < 0) {
 		printf("RTUTransceiver | ERROR: Pulse width %d not found in array of valid values\n", pulswd);
 		return 0;
@@ -799,22 +801,25 @@ int RTUTransceiver::get_point_spacing_index(const double res, const WORD otdr_ca
 	return ret;
 }
 
-int RTUTransceiver::get_pulse_width_index(const int pulswd, const WORD otdr_card, const float wave) {
-	int ret;
+int RTUTransceiver::get_pulse_width_index(const short pulswd,
+										  const int flag_pulswd_low_res,
+										  const WORD otdr_card,
+										  const float wave) {
 	int max_pulse_widths = QPOTDRGetMaxPulses(otdr_card, wave);
+
 	if (max_pulse_widths > 0) {
-		DWORD* pulse_widths = new DWORD[MAX_PULSES];
+		DWORD pulse_widths[MAX_PULSES];
 		QPOTDRGetAvailPulses(otdr_card, wave, pulse_widths);
-		for (unsigned int i = 0; i < max_pulse_widths; i++)
-			pulse_widths[i] = pulse_widths[i] >> 16;
-		ret = get_index_in_array((DWORD)pulswd, pulse_widths, max_pulse_widths);
-		delete[] pulse_widths;
+		for (unsigned int i = 0; i < max_pulse_widths; i++) {
+			if ((pulse_widths[i] >> 16 == pulswd)
+				&& ((pulse_widths[i] & 0x00000001) == flag_pulswd_low_res))
+				return i;
+		}
+		return -1;
 	}
-	else {
-		printf("RTUTransceiver | ERROR: QPOTDRGetMaxPulses returned error\n");
-		ret = -1;
-	}
-	return ret;
+
+	printf("RTUTransceiver | ERROR: QPOTDRGetMaxPulses returned error\n");
+	return -1;
 }
 
 int RTUTransceiver::ior_is_valid(const double ior, const WORD otdr_card, const float wave) {
