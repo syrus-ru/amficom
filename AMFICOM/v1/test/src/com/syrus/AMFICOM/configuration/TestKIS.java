@@ -1,5 +1,5 @@
 /*
- * $Id: TestKIS.java,v 1.1 2005/06/30 16:14:17 arseniy Exp $
+ * $Id: TestKIS.java,v 1.2 2005/07/01 13:27:29 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
@@ -32,7 +33,7 @@ public final class TestKIS extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void _testCreateInstance() throws ApplicationException {
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final Equipment equipment = (Equipment) it.next();
@@ -53,6 +54,20 @@ public final class TestKIS extends TestCase {
 				(short) 7501,
 				equipment.getId(),
 				mcm.getId());
+		StorableObjectPool.flush(kis, false);
+	}
+
+	public void testUpdate() throws ApplicationException {
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MCM_CODE);
+		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		final MCM mcm = (MCM) it.next();
+
+		final LinkedIdsCondition lic = new LinkedIdsCondition(mcm.getId(), ObjectEntities.KIS_CODE);
+		it = StorableObjectPool.getStorableObjectsByCondition(lic, true).iterator();
+		final KIS kis = (KIS) it.next();
+		System.out.println("Loaded: " + kis.getName() + ", host: " + kis.getHostName());
+
+		kis.setHostName("rtu-2");
 		StorableObjectPool.flush(kis, false);
 	}
 }

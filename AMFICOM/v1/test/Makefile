@@ -2,7 +2,7 @@
 
 #TEST_CLASS = TestInitialSetup
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
-TEST_CLASS=TestKIS
+TEST_CLASS=TestMonitoredElement
 TEST_PACKAGE=com.syrus.AMFICOM.configuration
 
 JAVA_SUFFIX = .java
