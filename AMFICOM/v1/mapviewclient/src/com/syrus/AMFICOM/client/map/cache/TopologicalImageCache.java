@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.6 2005/06/29 11:01:17 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.7 2005/07/01 07:58:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.6 $, $Date: 2005/06/29 11:01:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/01 07:58:04 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -966,5 +966,8 @@ public class TopologicalImageCache implements MapImageRenderer
 	{
 		this.nulifyCache();
 		
+	}
+	public LoadingThread getLoadingThread() {
+		return this.loadingThread;
 	}
 }
