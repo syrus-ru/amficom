@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.9 2005/06/28 08:35:46 max Exp $
+ * $Id: TopologicalImageQuery.java,v 1.10 2005/07/01 08:05:47 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: max $
- * @version $Revision: 1.9 $, $Date: 2005/06/28 08:35:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/07/01 08:05:47 $
  * @module mapinfo_v1
  */
 public final class TopologicalImageQuery implements Comparable {
@@ -113,6 +113,11 @@ public final class TopologicalImageQuery implements Comparable {
 	 * Время последнего использования
 	 */
 	private transient long lastUsed = 0;
+
+	/**
+	 * Время создания изображения
+	 */
+	private transient long timeCreated = 0;
 
 	/**
 	 * Отображаемое изображение
@@ -353,5 +358,11 @@ public final class TopologicalImageQuery implements Comparable {
 		this.topoCenter = topoCenter;
 		this.topoCenterX = topoCenter.getX();
 		this.topoCenterY = topoCenter.getY();
+	}
+	public long getTimeCreated() {
+		return this.timeCreated;
+	}
+	public void setTimeCreated(long timeCreated) {
+		this.timeCreated = timeCreated;
 	}
 }
