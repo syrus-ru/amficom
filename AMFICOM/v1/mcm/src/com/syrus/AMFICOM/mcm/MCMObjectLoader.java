@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.11 2005/06/30 16:13:37 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.12 2005/07/01 09:08:12 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/30 16:13:37 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/01 09:08:12 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -32,6 +32,11 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		super(mcmServantManager);
 	}
 
+	/**
+	 * @todo После перехода на типы-значения написать более экономичный алгоритм.
+	 * @param entityCode
+	 * @param storableObjects
+	 */
 	private final void insertWithDependencies(final short entityCode, final Set< ? extends StorableObject> storableObjects) {
 		for (final StorableObject storableObject : storableObjects) {
 			for (final Identifiable dependency : storableObject.getDependencies()) {
