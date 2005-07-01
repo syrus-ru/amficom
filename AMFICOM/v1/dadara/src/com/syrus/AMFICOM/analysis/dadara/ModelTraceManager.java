@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.83 2005/06/30 06:45:45 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.84 2005/07/01 09:32:14 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.83 $, $Date: 2005/06/30 06:45:45 $
+ * @version $Revision: 1.84 $, $Date: 2005/07/01 09:32:14 $
  * @module
  */
 public class ModelTraceManager
@@ -117,6 +117,28 @@ implements DataStreamable, Cloneable
 			if (last == null)
 				thresholds.add(last = new ThreshDY(i, false, evBegin, evEnd)); // "C" coding style
 
+			// Дополнительно расширяем область действия DX-порогов
+			// на DELTA=1 точку.
+			// Природа этой добавки в том, что само ограничения области
+			// действия DX-порога неестественно (нарушает принцип
+			// "толстой кисти"), и этой поправкой
+			// мы избегаем наиболее фатального проявления этого ограничения.
+			//
+			// Наиболее фатальное проявление (при DELTA=0) - на фронте
+			// некоторых коннекторов (напр., rg0065 @23.9km),
+			// у которых начальная точка уже находится выше уровня
+			// предшествующего лин. участка и порогов этого лин. участка.
+			// В таких случаях сдвиг физического коннектора вправо(!) уже на
+			// долю точки(!) приведет к тому, что нач. точка коннектора
+			// (не смещаясь по иксу) сместится вниз до уровня лин. участка
+			// и выйдет за пределы DY-порогов для этой (одной) точки.
+			// То есть, маски становятся чувствительны к ничтожному смещению
+			// фронта, и пользователю ничего больше не останется, кроме
+			// сильного расширения DY-порогов всего лин. участка.
+			//
+			// считаем, что DELTA=1 достаточно.
+			final int DELTA = 1;
+
 			switch(getSE()[i].getEventType())
 			{
 			case SimpleReflectogramEvent.LINEAR:
@@ -126,13 +148,13 @@ implements DataStreamable, Cloneable
 			case SimpleReflectogramEvent.GAIN:
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin, evEnd, true));
+				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, true));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.LOSS:
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin, evEnd, false));
+				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.NOTIDENTIFIED:
@@ -154,9 +176,9 @@ implements DataStreamable, Cloneable
 				evEnd = pos[2];
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin, evCenter, true));
+				thresholds.add(new ThreshDX(i, evBegin - DELTA, evCenter, true));
 				thresholds.add(new ThreshDY(i, true, evCenter, evCenter));
-				thresholds.add(new ThreshDX(i, evCenter, evEnd, false));
+				thresholds.add(new ThreshDX(i, evCenter, evEnd + DELTA, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				//System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
 				break;
