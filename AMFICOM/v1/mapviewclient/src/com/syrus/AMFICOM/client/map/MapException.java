@@ -1,5 +1,5 @@
 /**
- * $Id: MapException.java,v 1.1 2005/06/08 09:49:24 krupenn Exp $
+ * $Id: MapException.java,v 1.2 2005/07/01 16:09:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.client.map;
 
 /**
  * 
- * @version $Revision: 1.1 $, $Date: 2005/06/08 09:49:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/01 16:09:37 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapException extends Exception {
+	public static final String DEFAULT_STRING = "Ошибка соединения с сервером картографической информации";
     public MapException() {
 		super();
 	    }
