@@ -239,7 +239,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		while(it.hasNext())
 		{
 			Marker m = (Marker)it.next();
-			if ( (m.pos > start) && (m.pos < end))
+			if ( (m.pos >= start) && (m.pos <= end))
 				paint_marker(g, m);
 		}
 	}
@@ -314,6 +314,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 	public Marker createAlarmMarker (String name, Identifier id, double position)
 	{
 		Marker m = new AlarmMarker(name, (int)(position / deltaX));
+		m.setId(id);
 		markers.add(m);
 		active_marker = m;
 		return m;
