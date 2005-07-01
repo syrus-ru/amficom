@@ -268,7 +268,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
         current_th = ModelTraceManager.getDefaultThreshEditorIndex(teds);
         if (current_th >= 0) {
             // и делаем его текущим
-            this.jTable.changeSelection(current_th, 0, false, true);
+            this.jTable.changeSelection(current_th, 0, false, false);
             return teds[current_th];
         }
 
