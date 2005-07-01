@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.73 2005/06/30 16:35:51 saa Exp $
+ * $Id: Heap.java,v 1.74 2005/07/01 17:53:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,12 +25,14 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
+import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -65,6 +67,7 @@ import com.syrus.util.Log;
  * etalonMTM (но не его свойства);
  * currentTrace;
  * currentEvent, currentEtalonEvent;
+ * refMismatch.
  *
  * Кроме того, есть свойство primaryMTAE, которое изменяется вместе и только
  * вместе с refAnalysisPrimary; по его изменению тоже рассылаются уведомления.
@@ -75,7 +78,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.73 $, $Date: 2005/06/30 16:35:51 $
+ * @version $Revision: 1.74 $, $Date: 2005/07/01 17:53:02 $
  * @module
  */
 public class Heap
@@ -116,6 +119,8 @@ public class Heap
 
     private static Marker markerObject = null;
 
+    private static ReflectogramAlarm refMismatch = null; // это еще не аларм, это - "несоответствие".
+
     // listeners
 
     private static LinkedList bsHashChangedListeners = new LinkedList();
@@ -126,6 +131,7 @@ public class Heap
     private static LinkedList currentTraceChangeListeners = new LinkedList();
     private static LinkedList currentEventChangeListeners = new LinkedList();
     private static LinkedList analysisParametersListeners = new LinkedList();
+    private static LinkedList refMismatchListeners = new LinkedList();
 
     // constructor is not available
     private Heap() {
@@ -443,6 +449,17 @@ public class Heap
             ((AnalysisParametersListener) it.next()).analysisParametersUpdated();
     }
 
+    private static void notifyRefMismatchCUpdated() {
+        Log.debugMessage("Heap.notifyRefMismatchCUpdated | ", Log.FINEST);
+        for (Iterator it = refMismatchListeners.iterator(); it.hasNext(); )
+            ((RefMismatchListener) it.next()).refMismatchCUpdated();
+    }
+    private static void notifyRefMismatchRemoved() {
+        Log.debugMessage("Heap.notifyRefMismatchRemoved | ", Log.FINEST);
+        for (Iterator it = refMismatchListeners.iterator(); it.hasNext(); )
+            ((RefMismatchListener) it.next()).refMismatchRemoved();
+    }
+
     private static void notifyPrimaryMTAECUpdated() {
         Log.debugMessage("Heap.notifyPrimaryMTAECUpdated | ", Log.FINEST);
         for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
@@ -572,6 +589,16 @@ public class Heap
     public static void removeAnalysisParametersListener(
             AnalysisParametersListener listener) {
         removeListener(analysisParametersListeners, listener);
+    }
+
+    public static void addRefMismatchListener(
+    		RefMismatchListener listener) {
+        addListener(refMismatchListeners, listener);
+    }
+
+    public static void removeRefMismatchListener(
+    		RefMismatchListener listener) {
+        removeListener(refMismatchListeners, listener);
     }
 
     public static void primaryTraceOpened(BellcoreStructure bs) { // FIXME: remove arg
@@ -834,7 +861,20 @@ public class Heap
         setRefAnalysisPrimary(new RefAnalysis(getRefAnalysisPrimary(), mtae));
     }
 
-    /*
+
+	public static ReflectogramAlarm getRefMismatch() {
+		return refMismatch;
+	}
+
+	public static void setRefMismatch(ReflectogramAlarm refMismatch) {
+		Heap.refMismatch = refMismatch;
+		if (refMismatch == null)
+			notifyRefMismatchRemoved();
+		else
+			notifyRefMismatchCUpdated();
+	}
+
+	/*
      * ===============================================================
      * Other methods
      * ===============================================================
