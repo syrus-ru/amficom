@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +20,6 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements PropertyChangeListener
 {
-	Dispatcher dispatcher;
-
 	public MapMarkersLayeredPanel(Dispatcher dispatcher)
 	{
 		super(dispatcher);
