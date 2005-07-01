@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.29 2005/06/24 09:40:49 bass Exp $
+ * $Id: NodeTypeController.java,v 1.30 2005/07/01 16:16:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/06/24 09:40:49 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/07/01 16:16:05 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -158,7 +158,7 @@ public class NodeTypeController extends AbstractNodeController {
 			if(ir.getCodename().equals(codename))
 				return ir.getId();
 		}
-
+/*
 		FileImageResource ir = FileImageResource.createInstance(
 				userId,
 				filename);
@@ -166,6 +166,8 @@ public class NodeTypeController extends AbstractNodeController {
 //		ir.setCodename(codename);
 		//
 		StorableObjectPool.flush(ir.getId(), true);
+*/
+		FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
 		return ir.getId();
 	}
 
@@ -174,24 +176,21 @@ public class NodeTypeController extends AbstractNodeController {
 	 * 
 	 * @param codename кодовое имя
 	 * @return тип сетевого узла
+	 * @throws ApplicationException 
 	 */
-	public static SiteNodeType getSiteNodeType(String codename) {
+	public static SiteNodeType getSiteNodeType(String codename) throws ApplicationException {
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		try {
-			Collection pTypes = 
-				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for(Iterator it = pTypes.iterator(); it.hasNext();) {
-				SiteNodeType type = (SiteNodeType )it.next();
-				if(type.getCodename().equals(codename))
-					return type;
-			}
-		} catch(ApplicationException ex) {
-			ex.printStackTrace();
+		Collection pTypes = 
+			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+		for(Iterator it = pTypes.iterator(); it.hasNext();) {
+			SiteNodeType type = (SiteNodeType )it.next();
+			if(type.getCodename().equals(codename))
+				return type;
 		}
 		return null;
 	}
@@ -275,8 +274,9 @@ public class NodeTypeController extends AbstractNodeController {
 	/**
 	 * Получить тип непривязанного сетевого узла ({@link SiteNodeType#DEFAULT_UNBOUND}).
 	 * @return тип сетевого узла
+	 * @throws ApplicationException 
 	 */
-	public static SiteNodeType getUnboundNodeType() {
+	public static SiteNodeType getUnboundNodeType() throws ApplicationException {
 		return NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_UNBOUND);
 	}
 

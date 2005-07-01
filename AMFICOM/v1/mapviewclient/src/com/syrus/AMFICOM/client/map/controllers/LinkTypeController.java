@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.32 2005/06/23 08:28:21 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.33 2005/07/01 16:16:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/06/23 08:28:21 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/01 16:16:05 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -582,9 +582,10 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Получить тип линии по кодовому имени.
 	 * @param codename кодовое имя
 	 * @return тип линии
+	 * @throws ApplicationException 
 	 */
 	public static PhysicalLinkType getPhysicalLinkType(
-			String codename)
+			String codename) throws ApplicationException
 	{
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename, 
@@ -592,21 +593,13 @@ public final class LinkTypeController extends AbstractLinkController {
 				ObjectEntities.PHYSICALLINK_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		try
+		Collection pTypes =
+			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+		for (Iterator it = pTypes.iterator(); it.hasNext();)
 		{
-			Collection pTypes =
-				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();)
-			{
-				PhysicalLinkType type = (PhysicalLinkType )it.next();
-				if (type.getCodename().equals(codename))
-					return type;
-			}
-		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception searching PhysicalLinkType. Creating new one.");
-			ex.printStackTrace();
+			PhysicalLinkType type = (PhysicalLinkType )it.next();
+			if (type.getCodename().equals(codename))
+				return type;
 		}
 
 		return null;
@@ -687,8 +680,9 @@ public final class LinkTypeController extends AbstractLinkController {
 	/**
 	 * Получить тип линии по умолчанию ({@link PhysicalLinkType#DEFAULT_TUNNEL}).
 	 * @return тип линии
+	 * @throws ApplicationException 
 	 */
-	public static PhysicalLinkType getDefaultPhysicalLinkType()
+	public static PhysicalLinkType getDefaultPhysicalLinkType() throws ApplicationException
 	{
 		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL);
 	}
@@ -696,8 +690,9 @@ public final class LinkTypeController extends AbstractLinkController {
 	/**
 	 * Получить тип непривязанной линии ({@link PhysicalLinkType#DEFAULT_UNBOUND}).
 	 * @return тип линии
+	 * @throws ApplicationException 
 	 */
-	public static PhysicalLinkType getUnboundPhysicalLinkType()
+	public static PhysicalLinkType getUnboundPhysicalLinkType() throws ApplicationException
 	{
 		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
 	}
