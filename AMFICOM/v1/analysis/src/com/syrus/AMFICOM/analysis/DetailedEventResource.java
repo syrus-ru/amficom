@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.8 2005/06/20 15:28:47 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.9 2005/07/01 18:02:38 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/06/20 15:28:47 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/01 18:02:38 $
  * @module analysis_v1
  */
 
@@ -173,8 +173,7 @@ public class DetailedEventResource {
 		
 		DetailedEvent ev = dataEvent != null ? dataEvent : etalonEvent;
 
-		// FIXME: null pointed exception possible (currentEventChanged) when RMB clicked beyond the end of EOT
-		if (ev.getBegin() < Heap.getMTAEPrimary().getModelTrace().getLength() 
+		if (ev != null && ev.getBegin() < Heap.getMTAEPrimary().getModelTrace().getLength() 
 				&& ev.getBegin() < etalonMT.getLength()) {
 			double difference = ReflectogramComparer.getMaxDeviation(Heap.getMTAEPrimary(), etalonMT, ev);
 			double meanDeviation1 = ReflectogramComparer.getMeanDeviation(Heap.getMTAEPrimary(), etalonMT, ev);
