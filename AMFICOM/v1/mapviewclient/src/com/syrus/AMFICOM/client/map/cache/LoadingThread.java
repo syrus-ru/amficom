@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.4 2005/06/28 11:14:07 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.5 2005/07/01 07:58:35 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -99,13 +99,15 @@ public class LoadingThread extends Thread {
 
             synchronized (this.state) {
                 Iterator rqIt = this.requestQueue.iterator();
-                if (rqIt.hasNext()) {
+                if (rqIt.hasNext())
+                {
                     this.requestCurrentlyProcessed = (TopologicalImageQuery) rqIt
                             .next();
                     rqIt.remove();
                     this.state.setValue(State.STATE_RENDERING);
-                } else
-                    continue;
+                }
+                else
+                	continue;
             }
 
             // Посылаем запрос на рендеринг
@@ -125,37 +127,26 @@ public class LoadingThread extends Thread {
                 t2 = System.currentTimeMillis();                
                 imageForRequest = this.mapImageLoader
                         .renderMapImage(this.requestCurrentlyProcessed);
-
                 t3 = System.currentTimeMillis();                
-                if (imageForRequest == null) {
-                    synchronized (this.state) {
-                        // Если рендеринг был остановлен
-                        this.add(this.requestCurrentlyProcessed);
-                        this.state.setValue(State.STATE_IDLE);
-                        this.requestCurrentlyProcessed = null;
-
-                        continue;
-                    }
-                }
             } catch (MapConnectionException e1) {
-                e1.printStackTrace();
-                this.add(this.requestCurrentlyProcessed);
+            	//Если был Exception - запрос ставится обратно в очередь
+                this.setRequestInItsPlace(this.requestCurrentlyProcessed);
             } catch (MapDataException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                this.add(this.requestCurrentlyProcessed);
+                this.setRequestInItsPlace(this.requestCurrentlyProcessed);
             }
 
             synchronized (this.state) {
-                // Рендеринг успешно завершён. Ставим синхронизированный блок,
-                // чтобы
-                // нельзя было для подгруженного запроса приоритет изменить на
+                // Рендеринг завершён (не обязательно успешно - он мог быть и
+            	// прерван вручную и из-за Excpetion'а). Ставим синхронизированный блок,
+                // чтобы нельзя было для подгруженного запроса приоритет изменить на
                 // более низкий
-                t4 = System.currentTimeMillis();            	
-                this.requestCurrentlyProcessed.setImage(imageForRequest);
-                this.requestCurrentlyProcessed
-                        .setPriority(TopologicalImageQuery.PRIORITY_ALREADY_LOADED);
-
+                t4 = System.currentTimeMillis();
+                if (imageForRequest != null) {
+	                this.requestCurrentlyProcessed.setImage(imageForRequest);
+	                this.requestCurrentlyProcessed
+	                        .setPriority(TopologicalImageQuery.PRIORITY_ALREADY_LOADED);
+	                this.requestCurrentlyProcessed.setTimeCreated(t4);
+                }
                 t5 = System.currentTimeMillis();                
                 Log.debugMessage(" TIC - loadingThread - run - image loaded for request ("
                                 + this.requestCurrentlyProcessed + ") for "
@@ -201,7 +192,8 @@ public class LoadingThread extends Thread {
 		Log.debugMessage(" TIC - loadingThread - run - visibilities are set.",Log.DEBUGLEVEL10);
 	}
     
-    private void add(TopologicalImageQuery requestToAdd) {
+    
+    private void setRequestInItsPlace(TopologicalImageQuery requestToAdd) {
         // Ищем первый запрос с приоритетом ниже, чем у нового запроса
         ListIterator lIt = this.requestQueue.listIterator();
         for (; lIt.hasNext();) {
@@ -225,7 +217,10 @@ public class LoadingThread extends Thread {
     }
 
     /**
-     * Добавляет запрос в очередь, сортируя при этом запросы по приоритету
+     * Добавляет запрос в очередь, сортируя при этом запросы по приоритету.
+     * Если приоритет добавляемого запроса выше приоритета рассматриваемого -
+     * рендеринг останавливается (соответсвенно берётся следующий запрос из очереди - 
+     * только что добавленный)
      * 
      * @param requestToAdd
      *            Запрос
@@ -237,13 +232,17 @@ public class LoadingThread extends Thread {
         Log.debugMessage(" TIC - loadingThread - addRequest - adding request ("
                 + requestToAdd + ")",Log.DEBUGLEVEL10);
 
-        add(requestToAdd);
-
         synchronized (this.state) {
+            setRequestInItsPlace(requestToAdd);
+            
             if ((this.state.getValue() == State.STATE_RENDERING)
                     && (this.requestCurrentlyProcessed.getPriority() > requestToAdd
                             .getPriority()))
-                stopRendering();
+            {
+                this.stopRendering();
+                // И рассматриваемый запрос ставим обратно в очередь
+                this.setRequestInItsPlace(this.requestCurrentlyProcessed);
+            }
         }
     }
 
@@ -312,15 +311,15 @@ public class LoadingThread extends Thread {
                     // останавливаем рендеринг.
                     this.stopRendering();
                     // И рассматриваемый запрос ставим обратно в очередь
-                    this.add(this.requestCurrentlyProcessed);
+                    this.setRequestInItsPlace(this.requestCurrentlyProcessed);
                 }
             } else if (this.requestQueue.remove(request)) {
                 // Если запрос содержался в очереди
                 // Задаём ему новый приоритет
                 request.setPriority(newPriority);
 
-                // Снова ставим запрос в очередь
-                this.add(request);
+                // Снова ставим запрос в очередь (С ВОЗМОЖНОСТЬЮ остановки рендеринга!!!)
+                this.addRequest(request);
             }
         }
     }
@@ -332,16 +331,16 @@ public class LoadingThread extends Thread {
     public void setTheLowestPriorityForAll() {
     	Log.debugMessage(" TIC - loadingThread - setTheLowestPriorityForAll - entering",Log.DEBUGLEVEL10);
 
-        Iterator it = this.requestQueue.iterator();
-        for (; it.hasNext();) {
-            TopologicalImageQuery curRequest = (TopologicalImageQuery) it
-                    .next();
-            if (curRequest.getPriority() > TopologicalImageQuery.PRIORITY_EXPRESS)
-                curRequest
-                        .setPriority(TopologicalImageQuery.PRIORITY_BACKGROUND_LOW);
-        }
+        synchronized (this.state) {    	
+	        Iterator it = this.requestQueue.iterator();
+	        for (; it.hasNext();) {
+	            TopologicalImageQuery curRequest = (TopologicalImageQuery) it
+	                    .next();
+	            if (curRequest.getPriority() > TopologicalImageQuery.PRIORITY_EXPRESS)
+	                curRequest
+	                        .setPriority(TopologicalImageQuery.PRIORITY_BACKGROUND_LOW);
+	        }
 
-        synchronized (this.state) {
             if (this.state.getValue() == State.STATE_RENDERING) {
                 if (this.requestCurrentlyProcessed.getPriority() > TopologicalImageQuery.PRIORITY_EXPRESS)
                     this.requestCurrentlyProcessed
@@ -352,8 +351,8 @@ public class LoadingThread extends Thread {
     }
 
     public void clearQueue() throws MapConnectionException, MapDataException {
-        this.requestQueue.clear();
         synchronized (this.state) {
+            this.requestQueue.clear();        	
             if (this.state.getValue() == State.STATE_RENDERING)
                 this.stopRendering();
         }
