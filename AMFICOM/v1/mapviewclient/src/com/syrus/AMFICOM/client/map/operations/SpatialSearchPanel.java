@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.9 2005/06/22 13:21:53 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.10 2005/07/01 16:17:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,15 +28,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.9 $, $Date: 2005/06/22 13:21:53 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/01 16:17:23 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -238,11 +240,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 			SpatialObject so = (SpatialObject )this.foundList.getSelectedValue();
 			this.mapFrame.getMapViewer().centerSpatialObject(so);
 			this.mapFrame.getMapViewer().repaint(true);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
+		} catch(MapException e) {
+			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 			e.printStackTrace();
 		}
 	}

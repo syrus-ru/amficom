@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.12 2005/06/22 13:21:53 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.13 2005/07/01 16:17:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -39,7 +41,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.12 $, $Date: 2005/06/22 13:21:53 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/01 16:17:23 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -83,11 +85,8 @@ public class LayersPanel extends JPanel {
 						.isVisibleAtScale(netMapViewer.getMapContext()
 								.getScale()))
 					netMapViewer.repaint(true);
-			} catch (MapConnectionException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (MapDataException e1) {
-				// TODO Auto-generated catch block
+			} catch (MapException e1) {
+				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 				e1.printStackTrace();
 			}
 		}
