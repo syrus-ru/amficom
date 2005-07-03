@@ -26,12 +26,14 @@
 # spread out over the entire source repository.
 
 #M	AMFICOM_v2	Composite module of AMFICOM version 2
-AMFICOM_v2	&idl\
-		&general\
-		&administration\
-		&configuration\
-		&measurement\
-		&scheduler
+AMFICOM_v2	&idl_v2\
+		&general_v2\
+		&admin_v2\
+		&config_v2\
+		&measurement_v2\
+		&scheduler_v2\
+		&mcm_v2\
+		&database_v2
 
 idl_v2		AMFICOM/v2/idl
 general_v2	AMFICOM/v2/general
@@ -44,144 +46,235 @@ database_v2	AMFICOM/v2/database
 
 
 #M	AMFICOM_v1	Composite module of AMFICOM version 1
-AMFICOM_v1	&idl_v1\
-		&kisserver_v1\
-		&general_v1\
-		&generalclient_v1\
-		&admin_v1\
-		&config_v1\
-		&configclient_v1\
-		&main_v1\
-		&map_v1\
-		&survey_v1\
-		&analysis_v1\
-		&modeling_v1\
-		&prediction_v1\
-		&scheme_v1\
-		&schemecommon_v1\
-		&filter_v1\
-		&reportbuilder_v1\
-		&resource_v1\
-		&server_v1\
-		&servermisc_v1\
-		&load_v1\
-		&connjdbc_v1\
-		&corbaportable_v1\
-		&importmif_v1\
-		&tools\
-		&mapview_v1\
-		&dbscheme_v1 \
-		&mapinfo_v1 \
-		&spatialfx_v1 \
-		&arserver_v1 \
-		&scripts_v1 \
-		&importUCM_v1
+AMFICOM_v1	&tools\
+		&idl \
+		&kisserver \
+		&general \
+		&csbridge \
+		&commonclient \
+		&generalclient \
+		&admin \
+		&adminclient \
+		&config \
+		&configclient \
+		&optimize \
+		&main \
+		&map \
+		&mapclient \
+		&survey \
+		&surveyresource \
+		&analysis \
+		&modeling \
+		&event \
+		&measurement \
+		&prediction \
+		&scheme \
+		&schemeclient \
+		&filter \
+		&filterclient \
+		&reportbuilder \
+		&resource \
+		&server \
+		&servermisc \
+		&serverprocess \
+		&load \
+		&connjdbc \
+		&corbaportable \
+		&importmif \
+		&scheduler \
+		&agent \
+		&mcm_interface \
+		&mcm \
+		&mserver_interface \
+		&mserver \
+		&cmserver_interface \
+		&cmserver \
+		&mscharserver_interface \
+		&mscharserver \
+		&leserver_interface \
+		&leserver \
+		&mapview \
+		&mapviewclient \
+		&database \
+		&dbscheme \
+		&mapinfo \
+		&spatialfx \
+		&dadara \
+		&arserver \
+		&scripts \
+		&importUCM \
+		&test \
+		&mapper-servlet
 
-#M	idl_v1		Client-side AMFICOM CORBA object & interface
-idl_v1		AMFICOM/v1/idl
-#M	kisserver_v1	Agent-side AMFICOM CORBA object & interface
-kisserver_v1	AMFICOM/v1/kisserver
-#M	general_v1	Common classes
-general_v1	AMFICOM/v1/general
-#M	csbridge_v1	Client-server bridge
-csbridge_v1	AMFICOM/v1/csbridge
-#M	commonclient_v1	Common classes for all client applications. Replacement for generalclient_v1
-commonclient_v1	AMFICOM/v1/commonclient
-#M	generalclient_v1	Client common classes. Deprecated, use commonclient_v1
+#M	idl		Client-side AMFICOM CORBA object & interface
+idl			AMFICOM/v1/idl
+idl_v1			AMFICOM/v1/idl
+#M	kisserver	Agent-side AMFICOM CORBA object & interface
+kisserver		AMFICOM/v1/kisserver
+kisserver_v1		AMFICOM/v1/kisserver
+#M	general		Common classes
+general			AMFICOM/v1/general
+general_v1		AMFICOM/v1/general
+#M	csbridge	Client-server bridge
+csbridge		AMFICOM/v1/csbridge
+csbridge_v1		AMFICOM/v1/csbridge
+#M	commonclient	Common classes for all client applications. Replacement for generalclient
+commonclient		AMFICOM/v1/commonclient
+commonclient_v1		AMFICOM/v1/commonclient
+#M	generalclient	Client common classes. Deprecated, use commonclient
+generalclient		AMFICOM/v1/generalclient
 generalclient_v1	AMFICOM/v1/generalclient
-#M	admin_v1	Administrative module
-admin_v1	AMFICOM/v1/admin
-#M	adminclient_v1	Client administrative module
-adminclient_v1	AMFICOM/v1/adminclient
-#M	config_v1	Common configuring module
-config_v1	AMFICOM/v1/config
-#M	configclient_v1	Client configuring module
-configclient_v1	AMFICOM/v1/configclient
-#M	optimize_v1	Client module for optimization
-optimize_v1	AMFICOM/v1/optimize
-#M	main_v1		Main module
-main_v1		AMFICOM/v1/main
-#M	map_v1		Mapping module
-map_v1		AMFICOM/v1/map
-#M	mapclient_v1		Client mapping module
+#M	admin		Administrative module
+admin			AMFICOM/v1/admin
+admin_v1		AMFICOM/v1/admin
+#M	adminclient	Client administrative module
+adminclient		AMFICOM/v1/adminclient
+adminclient_v1		AMFICOM/v1/adminclient
+#M	config		Common configuring module
+config			AMFICOM/v1/config
+config_v1		AMFICOM/v1/config
+#M	configclient	Client configuring module
+configclient		AMFICOM/v1/configclient
+configclient_v1		AMFICOM/v1/configclient
+#M	optimize	Client module for optimization
+optimize		AMFICOM/v1/optimize
+optimize_v1		AMFICOM/v1/optimize
+#M	main		Main module
+main			AMFICOM/v1/main
+main_v1			AMFICOM/v1/main
+#M	map		Mapping module
+map			AMFICOM/v1/map
+map_v1			AMFICOM/v1/map
+#M	mapclient	Client mapping module
+mapclient		AMFICOM/v1/mapclient
 mapclient_v1		AMFICOM/v1/mapclient
-#M	survey_v1	Survey module
-survey_v1	AMFICOM/v1/survey
-#M	surveyresource_v1	Survey and cheduler common files
+#M	survey		Survey module
+survey			AMFICOM/v1/survey
+survey_v1		AMFICOM/v1/survey
+#M	surveyresource	Survey and cheduler common files
+surveyresource		AMFICOM/v1/surveyresource
 surveyresource_v1	AMFICOM/v1/surveyresource
-#M	analysis_v1	Analysis module
-analysis_v1	AMFICOM/v1/analysis
-#M	modeling_v1	Modeling module
-modeling_v1	AMFICOM/v1/modeling
-#M	event_v1	Events and alarms module
-event_v1	AMFICOM/v1/event
-#M	measurement_v1	Measurement module
-measurement_v1	AMFICOM/v1/measurement
-#M	prediction_v1	Prediction module
-prediction_v1	AMFICOM/v1/prediction
-#M	scheme_v1	Scheme module
-scheme_v1	AMFICOM/v1/scheme
-#M	schemeclient_v1 Clent scheme module
-schemeclient_v1	AMFICOM/v1/schemeclient
-#M	filter_v1	Common for client-side and server-side filtering
-filter_v1	AMFICOM/v1/filter
-#M	filterclient_v1	Client-side filtering
-filterclient_v1	AMFICOM/v1/filterclient
-#M	reportbuilder_v1	Report builder module
+#M	analysis	Analysis module
+analysis		AMFICOM/v1/analysis
+analysis_v1		AMFICOM/v1/analysis
+#M	modeling	Modeling module
+modeling		AMFICOM/v1/modeling
+modeling_v1		AMFICOM/v1/modeling
+#M	event		Events and alarms module
+event			AMFICOM/v1/event
+event_v1		AMFICOM/v1/event
+#M	measurement	Measurement module
+measurement		AMFICOM/v1/measurement
+measurement_v1		AMFICOM/v1/measurement
+#M	prediction	Prediction module
+prediction		AMFICOM/v1/prediction
+prediction_v1		AMFICOM/v1/prediction
+#M	scheme		Scheme module
+scheme			AMFICOM/v1/scheme
+scheme_v1		AMFICOM/v1/scheme
+#M	schemeclient	Clent scheme module
+schemeclient		AMFICOM/v1/schemeclient
+schemeclient_v1		AMFICOM/v1/schemeclient
+#M	filter		Common for client-side and server-side filtering
+filter			AMFICOM/v1/filter
+filter_v1		AMFICOM/v1/filter
+#M	filterclient	Client-side filtering
+filterclient		AMFICOM/v1/filterclient
+filterclient_v1		AMFICOM/v1/filterclient
+#M	reportbuilder	Report builder module
+reportbuilder		AMFICOM/v1/reportbuilder
 reportbuilder_v1	AMFICOM/v1/reportbuilder
-#M	resource_v1	Images'n'stuff
+#M	resource	Images'n'stuff
+resource		AMFICOM/v1/resource
 resource_v1		AMFICOM/v1/resource
-#M	server_v1	AMFICOM Server instance (server-client interface)
-server_v1	AMFICOM/v1/server
-#M	servermisc_v1	Miscellaneous files for server-side modules
-servermisc_v1	AMFICOM/v1/servermisc
-#M	serverprocess_v1	Server process
+#M	server		AMFICOM Server instance (server-client interface)
+server			AMFICOM/v1/server
+server_v1		AMFICOM/v1/server
+#M	servermisc	Miscellaneous files for server-side modules
+servermisc		AMFICOM/v1/servermisc
+servermisc_v1		AMFICOM/v1/servermisc
+#M	serverprocess	Server process
+serverprocess		AMFICOM/v1/serverprocess
 serverprocess_v1	AMFICOM/v1/serverprocess
-#M	load_v1		Initial data server load
-load_v1		AMFICOM/v1/load
-#M	connjdbc_v1	Client-side JDBC connection stub
-connjdbc_v1	AMFICOM/v1/connjdbc
-#M	corbaportable_v1	Corba portable
+#M	load		Initial data server load
+load			AMFICOM/v1/load
+load_v1			AMFICOM/v1/load
+#M	connjdbc	Client-side JDBC connection stub
+connjdbc		AMFICOM/v1/connjdbc
+connjdbc_v1		AMFICOM/v1/connjdbc
+#M	corbaportable	Corba portable
+corbaportable		AMFICOM/v1/corbaportable
 corbaportable_v1	AMFICOM/v1/corbaportable
-#M	importmif_v1	Patch for SpatialFX libraries which allows for TEXT spatial objects
-importmif_v1	AMFICOM/v1/importmif
-#M	scheduler_v1	Scheduler
-scheduler_v1	AMFICOM/v1/scheduler
-#M	agent_v1	Agent
-agent_v1	AMFICOM/v1/agent
-#M	mcm_v1		Measurement Control Module
-mcm_v1		AMFICOM/v1/mcm
-#M	mserver_v1	Measurement Server
-mserver_v1	AMFICOM/v1/mserver
-#M	cmserver_v1	Client Measurement Server
-cmserver_v1	AMFICOM/v1/cmserver
-#M	mshserver_v1	Map und Scheme Server
-mshserver_v1	AMFICOM/v1/mshserver
-#M	leserver_v1	Login/event server
-leserver_v1	AMFICOM/v1/leserver
-#M	mapview_v1	Map View Module
-mapview_v1	AMFICOM/v1/mapview
-#M	mapviewclient_v1	Client Map View Module
+#M	importmif	Patch for SpatialFX libraries which allows for TEXT spatial objects
+importmif		AMFICOM/v1/importmif
+importmif_v1		AMFICOM/v1/importmif
+#M	scheduler	Scheduler
+scheduler		AMFICOM/v1/scheduler
+scheduler_v1		AMFICOM/v1/scheduler
+#M	agent		Agent
+agent			AMFICOM/v1/agent
+agent_v1		AMFICOM/v1/agent
+#M	mcm_interface
+mcm_interface		AMFICOM/v1/mcm_interface
+#M	mcm		Measurement Control Module
+mcm			AMFICOM/v1/mcm
+mcm_v1			AMFICOM/v1/mcm
+#M	mserver_interface
+mserver_interface	AMFICOM/v1/mserver_interface
+#M	mserver		Measurement Server
+mserver			AMFICOM/v1/mserver
+mserver_v1		AMFICOM/v1/mserver
+#M	cmserver_interface
+cmserver_interface	AMFICOM/v1/cmserver_interface
+#M	cmserver	Client Measurement Server
+cmserver		AMFICOM/v1/cmserver
+cmserver_v1		AMFICOM/v1/cmserver
+#M	mscharserver_interface
+mscharserver_interface	AMFICOM/v1/mscharserver_interface
+#M	mscharserver	Map, Scheme and Resource Server
+mscharserver		AMFICOM/v1/mscharserver
+mshserver_v1		AMFICOM/v1/mscharserver
+#M	leserver_interface
+leserver_interface	AMFICOM/v1/leserver_interface
+#M	leserver	Login/event server
+leserver		AMFICOM/v1/leserver
+leserver_v1		AMFICOM/v1/leserver
+#M	mapview		Map View Module
+mapview			AMFICOM/v1/mapview
+mapview_v1		AMFICOM/v1/mapview
+#M	mapviewclient	Client Map View Module
+mapviewclient		AMFICOM/v1/mapviewclient
 mapviewclient_v1	AMFICOM/v1/mapviewclient
-#M	database_v1	Database Scheme (new)
-database_v1	AMFICOM/v1/database
-#M	dbscheme_v1	Database Scheme (old)
-dbscheme_v1	AMFICOM/v1/dbscheme
-#M	mapinfo_v1	MapInfo-dependent Implementation
-mapinfo_v1	AMFICOM/v1/mapinfo
-#M	spatialfx_v1	SpatialFX-dependent Implementation
-spatialfx_v1	AMFICOM/v1/spatialfx
-#M	dadara_v1	DADARA module for modeling functions, analysis, etc
-dadara		AMFICOM/v1/dadara
-#M	arserver_v1	Administration and Resource Server
-arserver_v1	AMFICOM/v1/arserver
-#M	scripts_v1	Installation and Configuration Scripts for Solaris and Oracle
-scripts_v1	AMFICOM/v1/scripts
-#M	importUCM_v1
-importUCM_v1	AMFICOM/v1/importUCM
-
-#M	test	Tests for all AMFICOM modules
-test		AMFICOM/v1/test
+#M	database	Database Scheme (new)
+database		AMFICOM/v1/database
+database_v1		AMFICOM/v1/database
+#M	dbscheme	Database Scheme (old)
+dbscheme		AMFICOM/v1/dbscheme
+dbscheme_v1		AMFICOM/v1/dbscheme
+#M	mapinfo		MapInfo-dependent Implementation
+mapinfo			AMFICOM/v1/mapinfo
+mapinfo_v1		AMFICOM/v1/mapinfo
+#M	spatialfx	SpatialFX-dependent Implementation
+spatialfx		AMFICOM/v1/spatialfx
+spatialfx_v1		AMFICOM/v1/spatialfx
+#M	dadara		DADARA module for modeling functions, analysis, etc
+dadara			AMFICOM/v1/dadara
+dadara_v1		AMFICOM/v1/dadara
+#M	arserver	Administration and Resource Server
+arserver		AMFICOM/v1/arserver
+arserver_v1		AMFICOM/v1/arserver
+#M	scripts		Installation and Configuration Scripts for Solaris and Oracle
+scripts			AMFICOM/v1/scripts
+scripts_v1		AMFICOM/v1/scripts
+#M	importUCM
+importUCM		AMFICOM/v1/importUCM
+importUCM_v1		AMFICOM/v1/importUCM
+#M	test		Tests for all AMFICOM modules
+test			AMFICOM/v1/test
+test_v1			AMFICOM/v1/test
+#M	mapper-servlet
+mapper-servlet		AMFICOM/v1/mapper-servlet
+mapper-servlet_v1	AMFICOM/v1/mapper-servlet
 
 akp		hw/akp
 trc		hw/trc
@@ -191,9 +284,5 @@ t4		hw/t4
 r6		hw/r6
 r7		hw/r7
 
-mapper-servlet	AMFICOM/v1/mapper-servlet
-
 tools		tools
 util		util
-
-
