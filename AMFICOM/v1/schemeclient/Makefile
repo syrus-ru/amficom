@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/12/21 09:43:45 cvsadmin Exp $
+# $Id: Makefile,v 1.4 2005/07/03 19:08:17 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -16,7 +16,7 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
-.mach:	$(CLASSDIR)
+.mach: $(CLASSDIR)
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(AMFICOMCLASSPATH):$(DEPRECATEDCLASSPATH):$(EXTCLASSPATH) \
@@ -27,17 +27,17 @@ $(call checkenve,IDL2JAVA)
 $(CLASSDIR):
 	mkdir -p $@
 
-.PHONY:	clean
-clean:	cleanmach
+.PHONY: clean
+clean: cleanmach
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(shell find $(CLASSDIR) -name '*\.class')
 	$(RM) .mach
 
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile 
