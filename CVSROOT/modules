@@ -232,8 +232,8 @@ cmserver_v1		AMFICOM/v1/cmserver
 #M	mscharserver_interface
 mscharserver_interface	AMFICOM/v1/mscharserver_interface
 #M	mscharserver	Map, Scheme and Resource Server
-mscharserver		AMFICOM/v1/mscharserver
-mshserver_v1		AMFICOM/v1/mscharserver
+mscharserver		AMFICOM/v1/mshserver
+mshserver_v1		AMFICOM/v1/mshserver
 #M	leserver_interface
 leserver_interface	AMFICOM/v1/leserver_interface
 #M	leserver	Login/event server
